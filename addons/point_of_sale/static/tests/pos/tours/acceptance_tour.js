@@ -6,15 +6,17 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
 registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
     steps: () =>
         [
             waitForLoading(),
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1", "5.10"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2", "10.20"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing", true, "1", "5.10"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing", true, "2", "10.20"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
@@ -36,15 +38,16 @@ registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quanti
         [
             waitForLoading(),
             Chrome.startPoS(),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing", true, "1"),
             inLeftSide([
-                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                { ...ProductScreen.clickLine("Awesome Thing")[0], isActive: ["mobile"] },
                 Numpad.click("."),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0"),
+                ...ProductScreen.selectedOrderlineHasDirect("Awesome Thing", "0"),
                 Numpad.click("9"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.9"),
+                ...ProductScreen.selectedOrderlineHasDirect("Awesome Thing", "0.9"),
                 Numpad.click("9"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Organizer", "0.99"),
+                ...ProductScreen.selectedOrderlineHasDirect("Awesome Thing", "0.99"),
             ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash", true, { amount: "5.05" }),
@@ -57,7 +60,8 @@ registry.category("web_tour.tours").add("pos_basic_order_03_tax_position", {
         [
             waitForLoading(),
             Chrome.startPoS(),
-            ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product for pricelist 6", true, "1"),
             inLeftSide(...Order.hasTotal("5.28")),
             ProductScreen.clickFiscalPosition("FP-POS-2M", true),
             inLeftSide(...Order.hasTotal("5.52")),

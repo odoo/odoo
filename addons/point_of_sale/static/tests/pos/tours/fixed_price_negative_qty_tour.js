@@ -24,7 +24,6 @@ registry.category("web_tour.tours").add("FixedTaxNegativeQty", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
             PaymentScreen.clickValidate(),
-
             ReceiptScreen.receiptIsThere(),
         ].flat(),
 });

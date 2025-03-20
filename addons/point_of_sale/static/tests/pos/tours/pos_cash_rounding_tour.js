@@ -15,11 +15,11 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -70,11 +70,11 @@ registry
                     Dialog.confirm("Open Register"),
 
                     // Order.
-                    ProductScreen.addOrderline("random_product", "1"),
+                    ProductScreen.addOrderline("Awesome Thing", "1"),
                     ProductScreen.checkTaxAmount("2.05"),
                     ProductScreen.checkTotalAmount("15.72"),
                     ProductScreen.clickPartnerButton(),
-                    ProductScreen.clickCustomer("AAAAAA"),
+                    ProductScreen.clickCustomer("Partner One"),
                     ProductScreen.clickPayButton(),
 
                     PaymentScreen.totalIs("15.72"),
@@ -131,11 +131,11 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -194,11 +194,11 @@ registry
                     Dialog.confirm("Open Register"),
 
                     // Order.
-                    ProductScreen.addOrderline("random_product", "1"),
+                    ProductScreen.addOrderline("Awesome Thing", "1"),
                     ProductScreen.checkTaxAmount("2.05"),
                     ProductScreen.checkTotalAmount("15.72"),
                     ProductScreen.clickPartnerButton(),
-                    ProductScreen.clickCustomer("AAAAAA"),
+                    ProductScreen.clickCustomer("Partner One"),
                     ProductScreen.clickPayButton(),
 
                     PaymentScreen.totalIs("15.72"),
@@ -255,11 +255,11 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -315,12 +315,12 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -369,12 +369,12 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -431,12 +431,12 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.03"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("15.70"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.70"),
@@ -483,12 +483,12 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.03"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("15.70"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.70"),
@@ -545,12 +545,12 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -599,12 +599,12 @@ registry
                 Dialog.confirm("Open Register"),
 
                 // Order.
-                ProductScreen.addOrderline("random_product", "1"),
+                ProductScreen.addOrderline("Awesome Thing", "1"),
                 ProductScreen.checkTaxAmount("2.05"),
                 ProductScreen.checkRoundingAmountIsNotThere(),
                 ProductScreen.checkTotalAmount("15.72"),
                 ProductScreen.clickPartnerButton(),
-                ProductScreen.clickCustomer("AAAAAA"),
+                ProductScreen.clickCustomer("Partner One"),
                 ProductScreen.clickPayButton(),
 
                 PaymentScreen.totalIs("15.72"),
@@ -658,11 +658,11 @@ registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
-            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.addOrderline("Awesome Thing", "1"),
             ProductScreen.checkTaxAmount("2.05"),
             ProductScreen.checkTotalAmount("15.72"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickCustomer("Partner One"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("15.72"),
@@ -687,11 +687,11 @@ registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_wit
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
 
-            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.addOrderline("Awesome Thing", "1"),
             ProductScreen.checkTaxAmount("2.05"),
             ProductScreen.checkTotalAmount("15.72"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickCustomer("Partner One"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("15.72"),

@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add("pos_global_discount_tax_group", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickDisplayedProduct("Awesome Item"),
             ProductScreen.clickControlButton("Discount"),
             Dialog.confirm(),
             ProductScreen.totalAmountIs(90),
@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add("pos_global_discount_tax_group_2", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Product"),
+            ProductScreen.clickDisplayedProduct("Awesome Item"),
             ProductScreen.clickControlButton("Discount"),
             Dialog.confirm(),
             ProductScreen.totalAmountIs(108),

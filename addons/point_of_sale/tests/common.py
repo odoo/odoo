@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
+import logging
+
 from random import randint
 from datetime import datetime
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form
-
-import logging
+from odoo.addons.point_of_sale.tests.test_common import TestPointOfSaleDataHttpCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 
 _logger = logging.getLogger(__name__)
 
@@ -16,130 +16,8 @@ def archive_products(env):
     tip = env.ref('point_of_sale.product_product_tip').product_tmpl_id
     (all_pos_product - tip)._write({'active': False})
 
-class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.company_data_2 = cls.setup_other_company()
-
-        cls.company_data['company'].write({
-            'point_of_sale_update_stock_quantities': 'real',
-        })
-
-        cls.AccountBankStatement = cls.env['account.bank.statement']
-        cls.AccountBankStatementLine = cls.env['account.bank.statement.line']
-        cls.PosMakePayment = cls.env['pos.make.payment']
-        cls.PosOrder = cls.env['pos.order']
-        cls.PosSession = cls.env['pos.session']
-        cls.company = cls.company_data['company']
-        cls.product3 = cls.env['product.product'].create({
-            'name': 'Product 3',
-            'list_price': 450,
-        })
-        cls.product4 = cls.env['product.product'].create({
-            'name': 'Product 4',
-            'list_price': 750,
-        })
-        cls.partner1 = cls.env['res.partner'].create({'name': 'Partner 1'})
-        cls.partner4 = cls.env['res.partner'].create({'name': 'Partner 4'})
-        cls.pos_config = cls.env['pos.config'].create({
-            'name': 'Main',
-            'journal_id': cls.company_data['default_journal_sale'].id,
-            'invoice_journal_id': cls.company_data['default_journal_sale'].id,
-        })
-        cls.led_lamp = cls.env['product.product'].create({
-            'name': 'LED Lamp',
-            'available_in_pos': True,
-            'list_price': 0.90,
-        })
-        cls.whiteboard_pen = cls.env['product.product'].create({
-            'name': 'Whiteboard Pen',
-            'available_in_pos': True,
-            'list_price': 1.20,
-        })
-        cls.newspaper_rack = cls.env['product.product'].create({
-            'name': 'Newspaper Rack',
-            'available_in_pos': True,
-            'list_price': 1.28,
-        })
-        cls.company_data['default_journal_cash'].pos_payment_method_ids.unlink()
-        cls.cash_payment_method = cls.env['pos.payment.method'].create({
-            'name': 'Cash',
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'journal_id': cls.company_data['default_journal_cash'].id,
-            'company_id': cls.env.company.id,
-        })
-        cls.bank_payment_method = cls.env['pos.payment.method'].create({
-            'name': 'Bank',
-            'journal_id': cls.company_data['default_journal_bank'].id,
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'company_id': cls.env.company.id,
-        })
-        cls.credit_payment_method = cls.env['pos.payment.method'].create({
-            'name': 'Credit',
-            'receivable_account_id': cls.company_data['default_account_receivable'].id,
-            'split_transactions': True,
-            'company_id': cls.env.company.id,
-        })
-        cls.pos_config.write({'payment_method_ids': [(4, cls.credit_payment_method.id), (4, cls.bank_payment_method.id), (4, cls.cash_payment_method.id)]})
-
-        # Create POS journal
-        cls.pos_config.journal_id = cls.env['account.journal'].create({
-            'type': 'general',
-            'name': 'Point of Sale - Test',
-            'code': 'POSS - Test',
-            'company_id': cls.env.company.id,
-            'sequence': 20
-        })
-
-        # create a VAT tax of 10%, included in the public price
-        Tax = cls.env['account.tax']
-        account_tax_10_incl = Tax.create({
-            'name': 'VAT 10 perc Incl',
-            'amount_type': 'percent',
-            'amount': 10.0,
-            'price_include_override': 'tax_included',
-        })
-
-        # assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product
-        # as a sale tax
-        cls.product3.taxes_id = [(6, 0, [account_tax_10_incl.id])]
-
-        # create a VAT tax of 5%, which is added to the public price
-        account_tax_05_incl = Tax.create({
-            'name': 'VAT 5 perc Incl',
-            'amount_type': 'percent',
-            'amount': 5.0,
-            'price_include_override': 'tax_excluded',
-        })
-
-        # create a second VAT tax of 5% but this time for a child company, to
-        # ensure that only product taxes of the current session's company are considered
-        #(this tax should be ignore when computing order's taxes in following tests)
-        account_tax_05_incl_chicago = Tax.create({
-            'name': 'VAT 05 perc Excl (US)',
-            'amount_type': 'percent',
-            'amount': 5.0,
-            'price_include_override': 'tax_excluded',
-            'company_id': cls.company_data_2['company'].id,
-        })
-
-        cls.product4.company_id = False
-        # I assign those 5 percent taxes on the PCSC349 product as a sale taxes
-        cls.product4.write(
-            {'taxes_id': [(6, 0, [account_tax_05_incl.id, account_tax_05_incl_chicago.id])]})
-
-        # Set account_id in the generated repartition lines. Automatically, nothing is set.
-        invoice_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('invoice_repartition_line_ids')
-        refund_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('refund_repartition_line_ids')
-
-        # Expense account, should just be something else than receivable/payable
-        (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.company_data['default_account_tax_sale'].id})
-
-
-class TestPoSCommon(ValuationReconciliationTestCommon):
+class TestPoSCommon(TestPointOfSaleDataHttpCommon, ValuationReconciliationTestCommon):
     """ Set common values for different special test cases.
 
     The idea is to set up common values here for the tests

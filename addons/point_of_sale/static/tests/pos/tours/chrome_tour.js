@@ -5,9 +5,9 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
-import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ChromeTour", {
     checkDelay: 50,
@@ -22,13 +22,13 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.clickMenuButton(),
 
             // Order 1 is at Product Screen
-            ProductScreen.addOrderline("Desk Pad", "1", "2", "2.0"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "2", "2.0"),
             Chrome.clickOrders(),
             TicketScreen.checkStatus("001", "Ongoing"),
 
             // Order 2 is at Payment Screen
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Monitor Stand", "3", "4", "12.0"),
+            ProductScreen.addOrderline("Product for pricelist 4", "3", "4", "12.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             Chrome.clickOrders(),
@@ -36,7 +36,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
 
             // Order 3 is at Receipt Screen
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Whiteboard Pen", "5", "6", "30.0"),
+            ProductScreen.addOrderline("Awesome Item", "5", "6", "30.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.validateButtonIsHighlighted(true),
@@ -48,10 +48,10 @@ registry.category("web_tour.tours").add("ChromeTour", {
             // Select order 1, should be at Product Screen
             TicketScreen.selectOrder("001"),
             TicketScreen.loadSelectedOrder(),
-            ProductScreen.productIsDisplayed("Desk Pad"),
+            ProductScreen.productIsDisplayed("Product for pricelist 5"),
             inLeftSide([
-                ...ProductScreen.clickLine("Desk Pad"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1", "2.0"),
+                ...ProductScreen.clickLine("Product for pricelist 5"),
+                ...ProductScreen.selectedOrderlineHasDirect("Product for pricelist 5", "1", "2.0"),
             ]),
 
             // Select order 2, should be at Payment Screen
@@ -104,9 +104,9 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.clickRegister(),
 
             // Invoice an order
-            ProductScreen.addOrderline("Whiteboard Pen", "5", "6"),
+            ProductScreen.addOrderline("Awesome Item", "5", "6"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner One"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickInvoiceButton(),
@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Test Product", true, "1"),
+            ProductScreen.clickDisplayedProduct("Awesome Item", true, "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.0" }),
             PaymentScreen.clickValidate(),
@@ -141,7 +141,7 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
             ProductScreen.isShown(),
 
             // Allow order changes after the error
-            ProductScreen.clickDisplayedProduct("Test Product", true, "2"),
+            ProductScreen.clickDisplayedProduct("Awesome Item", true, "2"),
         ].flat(),
 });
 
@@ -151,7 +151,7 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing", true, "1.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -161,10 +161,20 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             Utils.selectButton("Close Register"),
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Desk Pad", true, "1.0"),
+            ProductScreen.clickDisplayedProduct("Product for pricelist 5", true, "1.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("chrome_without_cash_move_permission", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuButton(),
+            Chrome.isCashMoveButtonHidden(),
         ].flat(),
 });
 
@@ -174,11 +184,11 @@ registry.category("web_tour.tours").add("test_reload_page_before_payment_with_cu
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing", true, "1.0"),
             refresh(),
-            ProductScreen.productIsDisplayed("Desk Organizer"),
+            ProductScreen.productIsDisplayed("Awesome Thing"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner One"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Customer Account"),
             PaymentScreen.clickValidate(),

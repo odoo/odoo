@@ -9,9 +9,9 @@ registry.category("web_tour.tours").add("LoyaltyHistoryTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Whiteboard Pen", "1"),
+            ProductScreen.addOrderline("Awesome Item", "1"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAA Test Partner"),
+            ProductScreen.clickCustomer("Partner One"),
             PosLoyalty.orderTotalIs("10"),
 
             PosLoyalty.finalizeOrder("Cash", "10"),

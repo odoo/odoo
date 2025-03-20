@@ -11,7 +11,7 @@ registry.category("web_tour.tours").add("VivaComTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Desk Pad", "1", "5.1", "5.1"),
+            ProductScreen.addOrderline("Awesome Item", "1", "5.1", "5.1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Viva"),

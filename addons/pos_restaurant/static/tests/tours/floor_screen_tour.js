@@ -18,6 +18,7 @@ registry.category("web_tour.tours").add("FloorScreenTour", {
         [
             // check floors if they contain their corresponding tables
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             FloorScreen.selectedFloorIs("Main Floor"),
             FloorScreen.hasTable("2"),
             FloorScreen.hasTable("4"),
@@ -153,10 +154,11 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             // Check the linking of tables
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing"),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.linkTables("5", "4"),
@@ -167,12 +169,12 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check that tables are unlinked automatically when the order is done
             FloorScreen.clickTable("5"),
             Chrome.isTabActive("4 & 5"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Thing", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.goTo("5"),
             Chrome.isTabActive("4 & 5"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Thing", "1")),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
@@ -187,12 +189,12 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Verify that tables are unlinked and original orders are restored after dragging a child table.
             FloorScreen.isShown(),
             FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing"),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
             FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.clickDisplayedProduct("Awesome Item"),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
@@ -203,8 +205,8 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             // Check merged orders
             FloorScreen.clickTable("5"),
             Chrome.isTabActive("4 & 5"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Thing", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Item", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
 
@@ -214,7 +216,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
 
             // Check original orders for table 4
             FloorScreen.clickTable("4"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Thing", "1")),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -226,7 +228,7 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
 
             // Check original orders for table 5
             FloorScreen.clickTable("5"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Item", "1")),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -243,8 +245,8 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
             ProductScreen.orderlinesHaveNoChange(),
 
             // Add a new product to the merged order
-            ProductScreen.clickDisplayedProduct("Minute Maid"),
-            ProductScreen.orderlineIsToOrder("Minute Maid"),
+            ProductScreen.clickDisplayedProduct("Awesome Item"),
+            ProductScreen.orderlineIsToOrder("Awesome Item"),
             ProductScreen.clickOrderButton(),
             {
                 ...Dialog.confirm(),
@@ -260,11 +262,11 @@ registry.category("web_tour.tours").add("TableMergeUnmergeTour", {
 
             // Verify orders after unlinking
             FloorScreen.clickTable("5"),
-            inLeftSide(ProductScreen.orderLineHas("Minute Maid", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Item", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
             FloorScreen.clickTable("4"),
-            inLeftSide(ProductScreen.orderLineHas("Coca-Cola", "1")),
+            inLeftSide(ProductScreen.orderLineHas("Awesome Thing", "1")),
             Chrome.clickPlanButton(),
             FloorScreen.isShown(),
         ].flat(),
@@ -287,13 +289,13 @@ registry.category("web_tour.tours").add("test_tax_in_merge_table_order_line_tour
             Dialog.confirm("Open Register"),
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickTable("4"),
-            ProductScreen.clickDisplayedProduct("product_1"),
-            ProductScreen.orderlineIsToOrder("product_1"),
+            ProductScreen.clickDisplayedProduct("Awesome Item"),
+            ProductScreen.orderlineIsToOrder("Awesome Item"),
             ProductScreen.clickOrderButton(),
             FloorScreen.clickFloor("Main Floor"),
             FloorScreen.clickTable("5"),
-            ProductScreen.clickDisplayedProduct("product_2"),
-            ProductScreen.orderlineIsToOrder("product_2"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
+            ProductScreen.orderlineIsToOrder("Awesome Article"),
             ProductScreen.clickOrderButton(),
             FloorScreen.isShown(),
             FloorScreen.linkTables("5", "4"),

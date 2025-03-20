@@ -18,28 +18,28 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
-            ProductScreen.addOrderline("Water", "5", "2", "10.0"),
+            ProductScreen.addOrderline("Awesome Article", "5", "2", "10.0"),
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
-            ProductScreen.addOrderline("Minute Maid", "3", "2", "6.0"),
+            ProductScreen.addOrderline("Awesome Item", "3", "2", "6.0"),
             // Extra line is added to test merging table.
             // Merging this order to another should also include this extra line.
-            ProductScreen.clickDisplayedProduct("Coca-Cola"),
-            ProductScreen.selectedOrderlineHas("Coca-Cola", "1"),
+            ProductScreen.clickDisplayedProduct("Awesome Thing"),
+            ProductScreen.selectedOrderlineHas("Awesome Thing", "1"),
 
             ProductScreen.clickControlButton("Transfer"),
             FloorScreen.clickTable("2"),
-            Order.hasLine({ productName: "Water", quantity: "5" }),
-            Order.hasLine({ productName: "Minute Maid", quantity: "3" }),
-            Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
+            Order.hasLine({ productName: "Awesome Article", quantity: "5" }),
+            Order.hasLine({ productName: "Awesome Item", quantity: "3" }),
+            Order.hasLine({ productName: "Awesome Thing", quantity: "1" }),
 
             // Test SplitBillButton
             ProductScreen.clickControlButton("Split"),
             SplitBillScreen.clickBack(),
-            ProductScreen.clickLine("Water", "5"),
+            ProductScreen.clickLine("Awesome Article", "5"),
             ProductScreen.addInternalNote("test note", "Note"),
             Order.hasLine({
-                productName: "Water",
+                productName: "Awesome Article",
                 quantity: "5",
                 price: "10.0",
                 internalNote: "test note",
@@ -49,13 +49,13 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("2"),
             Order.hasLine({
-                productName: "Water",
+                productName: "Awesome Article",
                 quantity: "5",
                 price: "10.0",
                 internalNote: "test note",
             }),
 
-            ProductScreen.addOrderline("Water", "8", "1", "8.0"),
+            ProductScreen.addOrderline("Awesome Article", "8", "1", "8.0"),
 
             // Test PrintBillButton
             ProductScreen.clickControlButton("Bill"),
@@ -93,7 +93,7 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
 
             // Test Cancel Order Button
             Dialog.cancel(),
-            Order.hasLine({ productName: "Water", quantity: "5" }),
+            Order.hasLine({ productName: "Awesome Article", quantity: "5" }),
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.confirm(),
             Order.doesNotHaveLine(),

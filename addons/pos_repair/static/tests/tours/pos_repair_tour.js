@@ -10,6 +10,6 @@ registry.category("web_tour.tours").add("PosRepairSettleOrder", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Test Product", 1),
+            ProductScreen.selectedOrderlineHas("Awesome Item", 1),
         ].flat(),
 });

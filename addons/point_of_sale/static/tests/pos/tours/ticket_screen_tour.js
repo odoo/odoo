@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             Dialog.confirm("Continue with limited functionality"),
             OfflineUtil.setOnlineMode(),
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Desk Pad", "1", "3"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "3"),
             Chrome.clickOrders(),
             TicketScreen.deleteOrder("002"),
             Dialog.confirm(),
@@ -29,28 +29,28 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.nthRowIsHighlighted(1),
             Chrome.clickRegister(),
             ProductScreen.orderIsEmpty(),
-            ProductScreen.addOrderline("Desk Pad", "1", "2"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "2"),
             Chrome.clickOrders(),
             TicketScreen.deleteOrder("001"),
             Dialog.confirm(),
             TicketScreen.nthRowContains(1, "003"),
             TicketScreen.nthRowIsHighlighted(1),
             Chrome.clickRegister(),
-            ProductScreen.addOrderline("Desk Pad", "1", "2"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "2"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.clickCustomer("Partner One"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Partner Test 1", false),
+            TicketScreen.nthRowContains(1, "Partner One", false),
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Desk Pad", "1", "3"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "3"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Test 2"),
+            ProductScreen.clickCustomer("Partner Two"),
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Partner Test 2", false),
+            TicketScreen.nthRowContains(1, "Partner Two", false),
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Desk Pad", "2", "4"),
+            ProductScreen.addOrderline("Product for pricelist 5", "2", "4"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -67,10 +67,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.nthRowContains(3, "Receipt"),
             TicketScreen.search("Receipt Number", "-00005"),
             TicketScreen.nthRowContains(1, "Receipt"),
-            TicketScreen.search("Customer", "Partner Test 1"),
-            TicketScreen.nthRowContains(1, "Partner Test 1", false),
-            TicketScreen.search("Customer", "Partner Test 2"),
-            TicketScreen.nthRowContains(1, "Partner Test 2", false),
+            TicketScreen.search("Customer", "Partner One"),
+            TicketScreen.nthRowContains(1, "Partner One", false),
+            TicketScreen.search("Customer", "Partner Two"),
+            TicketScreen.nthRowContains(1, "Partner Two", false),
             // Close the TicketScreen to see the current order which is in ReceiptScreen.
             // This is just to remove the search string in the search bar.
             Chrome.clickRegister(),
@@ -92,14 +92,14 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             // Check that the Paid filter will show the 2 synced orders.
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
-            TicketScreen.nthRowContains(1, "Partner Test 2", false),
+            TicketScreen.nthRowContains(1, "Partner Two", false),
             TicketScreen.nthRowContains(2, "-00005"),
             // Invoice order
             TicketScreen.selectOrder("005"),
             inLeftSide(Order.hasLine()),
             TicketScreen.clickControlButton("Invoice"),
             Dialog.confirm(),
-            PartnerList.clickPartner("Partner Test 3"),
+            PartnerList.clickPartner("Partner Three"),
             TicketScreen.invoicePrinted(),
             TicketScreen.back(),
             // When going back, the ticket screen should be in its previous state.
@@ -113,7 +113,10 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("005"),
             inLeftSide([
-                ...Order.hasLine({ productName: "Desk Pad", withClass: ".selected" }),
+                ...Order.hasLine({
+                    productName: "Product for pricelist 5",
+                    withClass: ".selected",
+                }),
                 Numpad.click("3"),
                 Dialog.confirm(),
             ]),
@@ -123,15 +126,17 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
             ProductScreen.orderIsEmpty(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("005"),
-            inLeftSide(Order.hasLine({ productName: "Desk Pad", withClass: ".selected" })),
+            inLeftSide(
+                Order.hasLine({ productName: "Product for pricelist 5", withClass: ".selected" })
+            ),
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("To Refund: 1"),
             TicketScreen.confirmRefund(),
             { ...ProductScreen.back(), isActive: ["mobile"] },
             ProductScreen.isShown(),
             inLeftSide([
-                ...ProductScreen.clickLine("Desk Pad"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-1"),
+                ...ProductScreen.clickLine("Product for pricelist 5"),
+                ...ProductScreen.selectedOrderlineHasDirect("Product for pricelist 5", "-1"),
                 // Try changing the refund line to positive number.
                 // Error popup should show.
                 Numpad.click("2"),
@@ -142,7 +147,7 @@ registry.category("web_tour.tours").add("TicketScreenTour", {
                 Dialog.confirm(),
                 // Change the refund line quantity to -2 -- allowed.
                 ...["+/-", "2"].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "-2"),
+                ...ProductScreen.selectedOrderlineHasDirect("Product for pricelist 5", "-2"),
             ]),
             // Check if the amount being refunded changed to 2.
             ...ProductScreen.clickRefund(),
@@ -169,7 +174,7 @@ registry.category("web_tour.tours").add("FiscalPositionNoTaxRefund", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickDisplayedProduct("Taxed Product"),
             ProductScreen.totalAmountIs("100.00"),
             ProductScreen.clickFiscalPosition("No Tax"),
             ProductScreen.totalAmountIs("100.00"),
@@ -194,9 +199,9 @@ registry.category("web_tour.tours").add("LotRefundTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             ProductScreen.enterLotNumber("123456789"),
-            ProductScreen.selectedOrderlineHas("Product A", "1"),
+            ProductScreen.selectedOrderlineHas("Awesome Article", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
@@ -219,12 +224,12 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Sugar"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             inLeftSide([
                 ...["0", "."].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0", "0.00"),
+                ...ProductScreen.selectedOrderlineHasDirect("Awesome Article", "0", "0.00"),
                 ...["0", "2"].map(Numpad.click),
-                ...ProductScreen.selectedOrderlineHasDirect("Sugar", "0.02", "0.06"),
+                ...ProductScreen.selectedOrderlineHasDirect("Awesome Article", "0.02", "0.06"),
             ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -238,7 +243,7 @@ registry.category("web_tour.tours").add("RefundFewQuantities", {
             TicketScreen.toRefundTextContains("To Refund: 0.02"),
             TicketScreen.confirmRefund(),
             ProductScreen.isShown(),
-            Order.hasLine("Sugar", "-0.02", "-0.06"),
+            Order.hasLine("Awesome Article", "-0.02", "-0.06"),
         ].flat(),
 });
 
@@ -248,37 +253,37 @@ registry.category("web_tour.tours").add("LotTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             ProductScreen.enterLotNumber("1"),
-            ProductScreen.selectedOrderlineHas("Product A", "1"),
+            ProductScreen.selectedOrderlineHas("Awesome Article", "1"),
             inLeftSide(
                 [
                     ProductScreen.clickLotIcon(),
                     ProductScreen.enterLotNumber("2"),
                     Order.hasLine({
-                        productName: "Product A",
+                        productName: "Awesome Article",
                         quantity: 1,
                     }),
                     ProductScreen.clickLotIcon(),
                     ProductScreen.enterLastLotNumber("1"),
                     Order.hasLine({
-                        productName: "Product A",
+                        productName: "Awesome Article",
                         quantity: 2.0,
                     }),
                 ].flat()
             ),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             ProductScreen.enterLastLotNumber("3"),
-            ProductScreen.selectedOrderlineHas("Product A", "3"),
+            ProductScreen.selectedOrderlineHas("Awesome Article", "3"),
             inLeftSide({
                 trigger: ".info-list:contains('SN 3')",
             }),
 
             // Verify if the serial number can be reused for the current order
             Chrome.createFloatingOrder(),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             ProductScreen.enterLastLotNumber("5"),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             ProductScreen.enterLastLotNumber("3"),
             inLeftSide({
                 trigger: ".info-list:not(:contains('SN 3'))",

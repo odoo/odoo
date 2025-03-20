@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("PosResTicketScreenTour", {
 
             // Make sure that order is deleted properly.
             FloorScreen.clickTable("5"),
-            ProductScreen.addOrderline("Minute Maid", "1", "3"),
+            ProductScreen.addOrderline("Awesome Article", "1", "3"),
             ProductScreen.totalAmountIs("3.0"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("5", "1"),

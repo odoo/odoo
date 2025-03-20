@@ -1621,15 +1621,18 @@ export class PosStore extends WithLazyGetterTrap {
 
     async printChanges(order, orderChange, reprint = false) {
         const unsuccedPrints = [];
-
-        for (const printer of this.unwatched.printers) {
-            const { orderData, changes } = this.generateOrderChange(
+        const printerChanges = this.unwatched.printers.reduce((acc, printer) => {
+            acc[printer.config.id] = this.generateOrderChange(
                 order,
                 orderChange,
                 printer.config.product_categories_ids,
                 reprint
             );
+            return acc;
+        }, {});
 
+        for (const printer of this.unwatched.printers) {
+            const { orderData, changes } = printerChanges[printer.config.id];
             if (changes.new.length) {
                 orderData.changes = {
                     title: _t("NEW"),

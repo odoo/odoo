@@ -2,55 +2,68 @@
 
 import odoo
 
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.point_of_sale.tests.test_common import TestPointOfSaleDataHttpCommon
 from odoo.tests import Form
 from odoo import fields, Command
 from odoo.tools import format_date
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSSale(TestPointOfSaleHttpCommon):
+class TestPoSSale(TestPointOfSaleDataHttpCommon):
+    @classmethod
+    def setUpClass(self):
+        super().setUpClass()
+        self.env.user.group_ids += self.env.ref('sales_team.group_sale_manager')
+        self.env.user.group_ids += self.env.ref('stock.group_stock_manager')
+        self.product_awesome_article.write({
+            'list_price': 10.0,
+            'is_storable': True,
+        })
+        self.product_awesome_item.write({
+            'list_price': 10.0,
+            'is_storable': True,
+        })
+        self.product_awesome_thing.write({
+            'list_price': 10.0,
+            'is_storable': True,
+        })
+        self.item_product_variant = self.product_awesome_item.product_variant_ids[0]
+        self.thing_product_variant = self.product_awesome_thing.product_variant_ids[0]
+        self.article_product_variant = self.product_awesome_article.product_variant_ids[0]
+
     def test_settle_order_with_kit(self):
         if not self.env["ir.module.module"].search([("name", "=", "mrp"), ("state", "=", "installed")]):
             self.skipTest("mrp module is required for this test")
 
-        self.kit = self.env['product.product'].create({
-            'name': 'Pizza Chicken',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
+        self.env.user.write({
+            'group_ids': [(4, self.env.ref('stock.group_stock_manager').id), (4, self.env.ref('mrp.group_mrp_manager').id)],
         })
-
-        self.component_a = self.env['product.product'].create({
-            'name': 'Chicken',
+        self.product_awesome_item.write({
             'is_storable': True,
-            'available_in_pos': True,
-            'uom_id': self.env.ref('uom.product_uom_gram').id,
-            'lst_price': 10.0,
+        })
+        self.product_awesome_article.write({
+            'is_storable': True,
         })
         self.location = self.env['stock.location'].create({
             'name': 'Test location',
             'usage': 'internal',
         })
-
-        self.env['stock.quant']._update_available_quantity(self.component_a, self.location, 100000)
-
+        self.env['stock.quant']._update_available_quantity(self.product_awesome_article.product_variant_id, self.location, 100000)
         bom_product_form = Form(self.env['mrp.bom'])
-        bom_product_form.product_id = self.kit
-        bom_product_form.product_tmpl_id = self.kit.product_tmpl_id
+        bom_product_form.product_tmpl_id = self.product_awesome_item
         bom_product_form.product_qty = 1.0
         bom_product_form.type = 'phantom'
         with bom_product_form.bom_line_ids.new() as bom_line:
-            bom_line.product_id = self.component_a
+            bom_line.product_id = self.product_awesome_article.product_variant_id
             bom_line.product_qty = 300.0
         self.bom_a = bom_product_form.save()
 
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': self.kit.id,
-                'name': self.kit.name,
+                'product_id': self.product_awesome_item.product_variant_id.id,
+                'name': self.product_awesome_item.name,
                 'product_uom_qty': 10,
-                'price_unit': self.kit.lst_price,
+                'price_unit': self.product_awesome_item.product_variant_id.lst_price,
             })],
         })
         sale_order.action_confirm()
@@ -69,10 +82,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 (4, self.env.ref('base.group_system').id), # FIXME refacto
             ]
         })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder', login="pos_user")
-
-        #assert that sales order qty are correctly updated
+        self.start_pos_tour('PosSettleOrder')
         self.assertEqual(sale_order.order_line.qty_delivered, 3)
         self.assertEqual(sale_order.picking_ids[0].move_ids.product_qty, 2100) # 7 left to deliver => 300 * 7 = 2100
         self.assertEqual(sale_order.picking_ids[0].move_ids.quantity, 0)
@@ -80,69 +90,34 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.picking_ids[1].move_ids.quantity, 300) # 1 delivered => 300 * 2 = 600
 
     def test_settle_order_with_incompatible_partner(self):
-        """ If the partner of the sale order is not compatible with the current pos order,
-            then a new pos order should be to settle the newly selected sale order.
-        """
-
-        product1 = self.env['product.product'].create({
-            'name': 'product1',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10,
-            'taxes_id': [odoo.Command.clear()],
-        })
-        product2 = self.env['product.product'].create({
-            'name': 'product2',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 11,
-            'taxes_id': [odoo.Command.clear()],
-        })
-        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
-        partner_2 = self.env['res.partner'].create({'name': 'Test Partner 2'})
         self.env['sale.order'].create({
-            'partner_id': partner_1.id,
-            'partner_shipping_id': partner_2.id,
-            'order_line': [(0, 0, {'product_id': product1.id})],
+            'partner_id': self.partner_one.id,
+            'partner_shipping_id': self.partner_two.id,
+            'order_line': [(0, 0, {'product_id': self.product_awesome_item.product_variant_ids[0].id})],
         })
         self.env['sale.order'].create({
-            'partner_id': partner_1.id,
-            'partner_shipping_id': partner_1.id,
-            'order_line': [(0, 0, {'product_id': product2.id})],
+            'partner_id': self.partner_one.id,
+            'partner_shipping_id': self.partner_one.id,
+            'order_line': [(0, 0, {'product_id': self.product_awesome_article.product_variant_ids[0].id})],
         })
-        self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrderIncompatiblePartner', login="accountman")
 
     def test_settle_order_with_different_product(self):
         """This test create an order and settle it in the PoS. But only one of the product is delivered.
             And we need to make sure the quantity are correctly updated on the sale order.
         """
-        #create 2 products
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
-        })
-        product_b = self.env['product.product'].create({
-            'name': 'Product B',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
-        })
-        #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.product_awesome_item.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             }), (0, 0, {
-                'product_id': product_b.id,
-                'name': product_b.name,
+                'product_id': self.article_product_variant.id,
+                'name': self.product_awesome_article.name,
                 'product_uom_qty': 1,
-                'price_unit': product_b.lst_price,
+                'price_unit': self.article_product_variant.lst_price,
             }), (0, 0, {
                 # Add this line to test that it should not cause any issue when settling this order.
                 'name': 'section line',
@@ -154,26 +129,23 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
         self.assertEqual(sale_order.order_line[1].qty_delivered, 0)
 
-        self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrder2', login="accountman")
-
         sale_order = self.env['sale.order'].browse(sale_order.id)
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.order_line[1].qty_delivered, 0)
-        orderline_product_a = sale_order.order_line.filtered(lambda l: l.product_id.id == product_a.id)
-        orderline_product_b = sale_order.order_line.filtered(lambda l: l.product_id.id == product_b.id)
+        orderline_product_a = sale_order.order_line.filtered(lambda l: l.product_id.id == self.item_product_variant.id)
+        orderline_product_b = sale_order.order_line.filtered(lambda l: l.product_id.id == self.article_product_variant.id)
         # nothing to deliver for product a because already handled in pos.
         self.assertEqual(orderline_product_a.move_ids.product_uom_qty, 0)
         # 1 item to deliver for product b.
         self.assertEqual(orderline_product_b.move_ids.product_uom_qty, 1)
 
     def test_downpayment_refund(self):
-        #create a sale order
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': self.product_a.id,
-                'name': self.product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
                 'price_unit': 100,
             })],
@@ -185,10 +157,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'type': 'service',
         })
-        self.main_pos_config.write({
+        self.pos_config.write({
             'down_payment_product_id': self.downpayment_product.id,
         })
-        self.main_pos_config.open_ui()
         self.start_pos_tour('PosRefundDownpayment', login="accountman")
         self.assertEqual(len(sale_order.order_line), 4)
         self.assertEqual(sale_order.order_line[2].qty_invoiced, 1)
@@ -201,16 +172,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Product Category',
             'removal_strategy_id': self.removal_strategy.id,
         })
-
-        self.product = self.env['product.product'].create({
-            'name': 'Product',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
-            'taxes_id': False,
+        self.product_awesome_item.write({
             'categ_id': self.product_category.id,
         })
-
         #create 2 stock location Shelf 1 and Shelf 2
         self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         self.shelf_1 = self.env['stock.location'].create({
@@ -225,12 +189,12 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
 
         quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product.id,
+            'product_id': self.item_product_variant.id,
             'inventory_quantity': 2,
             'location_id': self.shelf_1.id,
         })
         quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
-            'product_id': self.product.id,
+            'product_id': self.item_product_variant.id,
             'inventory_quantity': 5,
             'location_id': self.shelf_2.id,
         })
@@ -239,10 +203,10 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': self.product.id,
-                'name': self.product.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 4,
-                'price_unit': self.product.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
@@ -252,10 +216,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].quantity, 2)
         self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
 
-        self.main_pos_config.company_id.write({'point_of_sale_update_stock_quantities': 'real'})
-        self.main_pos_config.open_ui()
+        self.pos_config.company_id.write({'point_of_sale_update_stock_quantities': 'real'})
         self.start_pos_tour('PosSettleOrderRealTime', login="accountman")
-        self.main_pos_config.current_session_id.close_session_from_ui()
+        self.pos_config.current_session_id.close_session_from_ui()
         pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertEqual(pos_order.picking_ids.move_line_ids[0].quantity, 2)
         self.assertEqual(pos_order.picking_ids.move_line_ids[0].location_id.id, self.shelf_1.id)
@@ -267,36 +230,23 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
         """
-
-        #get the warehouse
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
+        self.env['stock.quant']._update_available_quantity(self.item_product_variant, warehouse.lot_stock_id, 1)
 
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
-        })
-        self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 1)
-
-        #create a sale order with 2 lines
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
 
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
-
-        self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrder3', login="accountman")
-
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
         self.assertEqual(sale_order.picking_ids.mapped('state'), ['cancel'])
 
@@ -305,42 +255,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         uom = self.env['uom.uom'].create({
             'name': 'Test',
         })
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
+        self.product_awesome_item.write({
             'uom_id': uom.id,
+            'taxes_id': False,
         })
-        #create a sale order with product_a
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 3.5,
                 'price_unit': 8,  # manually set a different price than the lst_price
                 'discount': 10,
             })],
         })
-        self.assertEqual(sale_order.amount_total, 28.98)  # 3.5 * 8 * 1.15 * 90%
-        self.main_pos_config.open_ui()
+        self.assertEqual(sale_order.amount_total, 25.2)  # 3.5 * 8 - 10%
         self.start_pos_tour('PosSettleOrderNotGroupable', login="accountman")
 
     def test_customer_notes(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
             and we need to make sure that all the picking are cancelled if the order is fully delivered.
         """
-
-        #create a sale order with 2 customer notes
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'partner_id': self.partner_one.id,
             'note': 'Customer note 1',
             'order_line': [(0, 0, {
-                'product_id': self.whiteboard_pen.product_variant_id.id,
-                'name': self.whiteboard_pen.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': self.whiteboard_pen.product_variant_id.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             }), (0, 0, {
                 'name': 'Customer note 2',
                 'display_type': 'line_note',
@@ -349,32 +292,28 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'display_type': 'line_note',
             })],
         })
-
         sale_order.action_confirm()
-
-        self.main_pos_config.open_ui()
         self.start_pos_tour('PosSettleOrderWithNote', login="accountman")
 
     def test_order_sales_count(self):
-        self.main_pos_config.open_ui()
-        current_session = self.main_pos_config.current_session_id
-        partner_1 = self.env['res.partner'].create({'name': 'Test Partner'})
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
         order = self.env['pos.order'].create({
             'company_id': self.env.company.id,
             'session_id': current_session.id,
-            'partner_id': partner_1.id,
-            'pricelist_id': partner_1.property_product_pricelist.id,
+            'partner_id': self.partner_one.id,
+            'pricelist_id': self.partner_one.property_product_pricelist.id,
             'lines': [(0, 0, {
                 'name': "OL/0001",
-                'product_id': self.desk_pad.product_variant_id.id,
-                'price_unit': self.desk_pad.product_variant_id.lst_price,
+                'product_id': self.item_product_variant.id,
+                'price_unit': self.item_product_variant.lst_price,
                 'discount': 0.0,
                 'qty': 1.0,
                 'tax_ids': [],
-                'price_subtotal': self.desk_pad.product_variant_id.lst_price,
-                'price_subtotal_incl': self.desk_pad.product_variant_id.lst_price,
+                'price_subtotal': self.item_product_variant.lst_price,
+                'price_subtotal_incl': self.item_product_variant.lst_price,
             })],
-            'amount_total': self.desk_pad.product_variant_id.lst_price,
+            'amount_total': self.item_product_variant.lst_price,
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
@@ -386,49 +325,30 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'payment_method_id': current_session.payment_method_ids[0].id,
         })
         order_payment.with_context(**payment_context).check()
-
         current_session.close_session_from_ui()
         self.env.flush_all()
-        self.assertEqual(self.desk_pad.sales_count, 1)
+        self.assertEqual(self.item_product_variant.sales_count, 1)
 
     def test_untaxed_invoiced_amount(self):
         """Make sure that orders invoiced in the pos gets their untaxed invoiced
            amount updated accordingly"""
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'lst_price': 10.0,
-            'taxes_id': [],
-        })
-
-        product_b = self.env['product.product'].create({
-            'name': 'Product B',
-            'available_in_pos': True,
-            'lst_price': 5.0,
-            'taxes_id': [],
-        })
-
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             }), (0, 0, {
-                'product_id': product_b.id,
-                'name': product_b.name,
+                'product_id': self.article_product_variant.id,
+                'name': self.article_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_b.lst_price,
+                'price_unit': self.article_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-        self.main_pos_config.open_ui()
-        current_session = self.main_pos_config.current_session_id
-
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
         pos_order = {
            'amount_paid': 10,
            'amount_return': 0,
@@ -437,14 +357,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
            'fiscal_position_id': False,
            'to_invoice': True,
-           'partner_id': partner_test.id,
-           'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
+           'partner_id': self.partner_one.id,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,
               'pack_lot_ids': [],
               'price_unit': 10,
-              'product_id': product_a.id,
+              'product_id': self.item_product_variant.id,
               'price_subtotal': 10,
               'price_subtotal_incl': 10,
               'sale_order_line_id': sale_order.order_line[0].id,
@@ -456,7 +376,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
              0,
              {'amount': 10,
               'name': fields.Datetime.now(),
-              'payment_method_id': self.main_pos_config.payment_method_ids[0].id}]],
+              'payment_method_id': self.pos_config.payment_method_ids[0].id}]],
            'user_id': self.env.uid,
             }
 
@@ -466,87 +386,66 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
     def test_order_does_not_remain_in_list(self):
         """Verify that a paid order doesn't remain in the orders list"""
-
-        # Create a sale order
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': self.whiteboard_pen.product_variant_id.id,
-                'name': self.whiteboard_pen.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
                 'price_unit': 100,
             })],
         })
 
         sale_order.action_confirm()
-
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosOrderDoesNotRemainInList', login="accountman")
+        self.start_pos_tour("PosOrderDoesNotRemainInList", login="accountman")
 
     def test_settle_draft_order_service_product(self):
         """
         Checks that, when settling a draft order (quotation), the quantity set on the corresponding
         PoS order, for service products, is set correctly.
         """
-
-        product_a = self.env['product.product'].create({
-            'name': 'Test service product',
-            'available_in_pos': True,
+        self.item_product_variant.write({
             'type': 'service',
             'invoice_policy': 'order',
             'lst_price': 50.0,
-            'taxes_id': [],
         })
-
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
 
         self.assertEqual(sale_order.state, 'draft')
-
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleDraftOrder', login="accountman")
+        self.start_pos_tour('PosSettleDraftOrder', login="accountman", debug=True)
 
     def test_settle_order_change_customer(self):
         """
         When settling an order, the price set on the sol shouldn't reset to
         the sale price of the product when changing customer.
         """
-        self.product_a.lst_price = 150
-        self.product_a.taxes_id = None
-        self.product_a.available_in_pos = True
-        self.product_a.name = 'Product A'
-        self.env['res.partner'].create({'name': 'A Test Partner AAA'})
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': self.product_a.id,
-                'name': self.product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
                 'price_unit': 100,
             })],
         })
         sale_order.action_confirm()
-
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleCustomPrice', login="accountman")
+        self.start_pos_tour('PosSettleCustomPrice', login="accountman")
 
     def test_so_with_downpayment(self):
-        self.product_a.available_in_pos = True
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
-                    'name': self.product_a.name,
-                    'product_id': self.product_a.id,
+                    'name': self.item_product_variant.name,
+                    'product_id': self.item_product_variant.id,
                     'product_uom_qty': 10.0,
                     'price_unit': 100,
                     'tax_ids': False,
@@ -563,10 +462,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         # Invoice the delivered part from the down payment
         down_payment_invoices = so.invoice_ids
         down_payment_invoices.action_post()
-        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
-        self.main_pos_config.down_payment_product_id.write({'active': True})
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSSaleOrderWithDownpayment', login="accountman")
+        self.pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.pos_config.down_payment_product_id.write({'active': True})
+        self.start_pos_tour('PoSSaleOrderWithDownpayment', login="accountman")
 
     def test_downpayment_with_taxed_product(self):
         tax_1 = self.env['account.tax'].create({
@@ -579,79 +477,64 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'amount': 5,
             'price_include_override': 'tax_included',
         })
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'lst_price': 10.0,
+        self.item_product_variant.write({
             'taxes_id': [tax_1.id],
         })
-
-        product_b = self.env['product.product'].create({
-            'name': 'Product B',
-            'available_in_pos': True,
+        self.article_product_variant.write({
             'lst_price': 5.0,
             'taxes_id': [tax_2.id],
         })
-
-        product_c = self.env['product.product'].create({
-            'name': 'Product C',
-            'available_in_pos': True,
+        self.thing_product_variant.write({
             'lst_price': 15.0,
-            'taxes_id': [],
         })
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             }), (0, 0, {
-                'product_id': product_b.id,
-                'name': product_b.name,
+                'product_id': self.article_product_variant.id,
+                'name': self.article_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_b.lst_price,
+                'price_unit': self.article_product_variant.lst_price,
             }), (0, 0, {
-                'product_id': product_c.id,
-                'name': product_c.name,
+                'product_id': self.thing_product_variant.id,
+                'name': self.thing_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_c.lst_price,
+                'price_unit': self.thing_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-
         self.downpayment_product = self.env['product.product'].create({
             'name': 'Down Payment',
             'available_in_pos': True,
             'type': 'service',
             'taxes_id': [],
         })
-        self.main_pos_config.write({
+        self.pos_config.write({
             'down_payment_product_id': self.downpayment_product.id,
         })
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerTax', login="accountman")
+        self.start_pos_tour('PoSDownPaymentLinesPerTax', login="accountman")
 
         # We check the content of the invoice to make sure Product A/B/C only appears only once
         invoice_pdf_content = str(self.env['pos.order'].search([]).account_move._get_invoice_legal_documents('pdf', allow_fallback=True).get('content'))
-        self.assertEqual(invoice_pdf_content.count('Product A'), 1)
-        self.assertEqual(invoice_pdf_content.count('Product B'), 1)
-        self.assertEqual(invoice_pdf_content.count('Product C'), 1)
+        self.assertEqual(invoice_pdf_content.count('Awesome Item'), 1)
+        self.assertEqual(invoice_pdf_content.count('Awesome Article'), 1)
+        self.assertEqual(invoice_pdf_content.count('Awesome Thing'), 1)
 
         for order_line in sale_order.order_line.filtered(lambda l: l.product_id == self.downpayment_product):
-            order_line = order_line.with_context(lang=partner_test.lang)
+            order_line = order_line.with_context(lang=self.partner_one.lang)
             self.assertIn(format_date(order_line.env, order_line.order_id.date_order), order_line.name)
 
     def test_settle_so_with_pos_downpayment(self):
         so = self.env['sale.order'].create({
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner_one.id,
             'order_line': [
                 (0, 0, {
-                    'name': self.product_a.name,
-                    'product_id': self.product_a.id,
+                    'name': self.item_product_variant.name,
+                    'product_id': self.item_product_variant.id,
                     'product_uom_qty': 1.0,
                     'price_unit': 100,
                     'tax_ids': False,
@@ -660,48 +543,32 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         so.action_confirm()
 
         # Apply 10% down payment
-        self.main_pos_config.open_ui()
-        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSApplyDownpayment', login="accountman")
-
+        self.pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_pos_tour('PoSApplyDownpayment', login="accountman")
         invoice = so._create_invoices(final=True)
         invoice.action_post()
         self.assertEqual(invoice.amount_total, 90)
 
     def test_ship_later_no_default(self):
         """ Verify that when settling an order the ship later is not activated by default"""
-        product = self.env['product.product'].create({
-            'name': 'Product',
-            'available_in_pos': True,
-            'lst_price': 10.0,
-            'taxes_id': False,
-        })
-
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': product.id,
-                'name': product.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 4,
-                'price_unit': product.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-        self.main_pos_config.write({'ship_later': True})
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosShipLaterNoDefault', login="accountman")
+        self.pos_config.write({'ship_later': True})
+        self.start_pos_tour('PosShipLaterNoDefault', login="accountman")
 
     def test_order_sale_team(self):
-        self.env['product.product'].create({
-            'name': 'Test Product',
-            'available_in_pos': True,
-            'lst_price': 100.0,
-            'taxes_id': False,
-        })
         sale_team = self.env['crm.team'].create({'name': 'Test team'})
-        self.main_pos_config.write({'crm_team_id': sale_team})
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleTeam', login="accountman")
+        self.pos_config.write({'crm_team_id': sale_team})
+        self.pos_config.open_ui()
+        self.start_pos_tour('PosSaleTeam', login="accountman")
         order = self.env['pos.order'].search([])
         self.assertEqual(len(order), 1)
         self.assertEqual(order.crm_team_id, sale_team)
@@ -718,52 +585,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'name': 'Pricelist Different Currency',
             'currency_id': currency.id,
         })
-        product = self.env['product.product'].create({
-            'name': 'Product',
-            'available_in_pos': True,
-            'lst_price': 10,
-            'taxes_id': False,
-        })
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
             'order_line': [(0, 0, {
-                'product_id': product.id,
-                'name': product.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 4,
-                'price_unit': product.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
             'pricelist_id': pricelist.id
         })
         sale_order.action_confirm()
-        self.main_pos_config.with_user(self.pos_admin).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosOrdersListDifferentCurrency', login="pos_admin")
+        self.start_pos_tour('PosOrdersListDifferentCurrency', login="pos_admin")
 
     def test_downpayment_amount_to_invoice(self):
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'lst_price': 100.0,
-            'taxes_id': [],
-        })
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentAmount', login="accountman")
-        self.assertEqual(sale_order.amount_to_invoice, 80.0, "Downpayment amount not considered!")
-        self.assertEqual(sale_order.amount_invoiced, 20.0, "Downpayment amount not considered!")
-
-        self.assertEqual(sale_order.order_line[2].price_unit, 20)
+        self.pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.start_pos_tour('PoSDownPaymentAmount', login="accountman")
+        self.assertEqual(sale_order.amount_to_invoice, 8.0, "Downpayment amount not considered!")
+        self.assertEqual(sale_order.amount_invoiced, 2.0, "Downpayment amount not considered!")
+        self.assertEqual(sale_order.order_line[2].price_unit, 2)
 
         # Update delivered quantity of SO line
         sale_order.order_line[0].write({'qty_delivered': 1.0})
@@ -780,7 +630,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         # Confirm all invoices
         sale_order.invoice_ids.action_post()
-        self.assertEqual(sale_order.order_line[2].price_unit, 20)
+        self.assertEqual(sale_order.order_line[2].price_unit, 2)
 
     def test_settle_order_with_multistep_delivery_receipt(self):
         """This test create an order and settle it in the PoS. It also uses multistep delivery
@@ -796,38 +646,21 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         route_buy = self.env.ref('purchase_stock.route_warehouse0_buy')
         route_mto = self.env.ref('stock.route_warehouse0_mto')
         route_mto.rule_ids.procure_method = 'mts_else_mto'
-        self.partner_test = self.env['res.partner'].create({
-            'name': 'Partner Test A',
-            'is_company': True,
-            'street': '77 Santa Barbara Rd',
-            'city': 'Pleasant Hill',
-            'country_id': self.env.ref('base.nl').id,
-            'zip': '1105AA',
-            'state_id': False,
-            'email': 'deco.addict82@example.com',
-            'phone': '(603)-996-3829',
-        })
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
+        self.item_product_variant.write({
             'seller_ids': [(0, 0, {
-                'partner_id': self.partner_test.id,
+                'partner_id': self.partner_one.id,
                 'min_qty': 1.0,
                 'price': 1.0,
             })],
             'route_ids': [(6, 0, [route_buy.id, route_mto.id])],
         })
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
@@ -840,31 +673,29 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env['stock.picking'].search([('group_id', '=', po.group_id.id)]).filtered(lambda p: p.state == 'assigned').button_validate()
         self.env['stock.picking'].search([('group_id', '=', po.group_id.id)]).filtered(lambda p: p.state == 'assigned').button_validate()
 
-        self.main_pos_config.ship_later = True
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder4', login="accountman")
+        self.pos_config.ship_later = True
+        self.start_pos_tour('PosSettleOrder4', login="accountman")
 
         self.assertEqual(sale_order.picking_ids.state, 'cancel')
         self.assertEqual(sale_order.pos_order_line_ids.order_id.picking_ids.state, 'assigned')
-        self.assertEqual(self.env['purchase.order.line'].search_count([('product_id', '=', product_a.id)]), 1)
+        self.assertEqual(self.env['purchase.order.line'].search_count([('product_id', '=', self.item_product_variant.id)]), 1)
 
     def test_pos_sale_warnings(self):
         self.env['res.partner'].create([
             {'name': 'A Test Customer', 'sale_warn': 'warning', 'sale_warn_msg': 'Highly infectious disease'},
             {'name': 'A Test Customer 2', 'sale_warn': 'block', 'sale_warn_msg': 'Cannot afford our services'}
         ])
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSaleWarning', login="accountman")
+        self.start_pos_tour('PosSaleWarning', login="accountman")
 
     def test_downpayment_invoice(self):
         """This test check that users that don't have the pos user group can invoice downpayments"""
         self.env['res.partner'].create({'name': 'Test Partner AAA'})
 
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': self.product_a.id,
-                'name': self.product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
                 'price_unit': 100,
                 'tax_ids': False,
@@ -897,38 +728,19 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         """This test create an order, settle it in the PoS and ship it later.
             We need to make sure that the quantity delivered on the original sale is updated correctly
         """
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'lst_price': 10.0,
-        })
-
-        partner_test = self.env['res.partner'].create({
-            'name': 'Test Partner',
-            'city': 'San Francisco',
-            'state_id': self.env.ref('base.state_us_5').id,
-            'country_id': self.env.ref('base.us').id,
-            'zip': '94134',
-            'street': 'Rue du burger',
-        })
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
-
-        self.main_pos_config.ship_later = True
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderShipLater', login="pos_user")
+        self.pos_config.ship_later = True
+        self.start_pos_tour('PosSettleOrderShipLater', login="pos_user")
 
         # The pos order is being shipped later so the qty_delivered should still be 0
         self.assertEqual(sale_order.order_line[0].qty_delivered, 0)
@@ -943,26 +755,17 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         """This test create an order and settle it in the PoS. It will let the PoS order in draft state.
            As the order is still in draft state it shouldn't have impact on invoiced qty of the linked sale order.
         """
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10.0,
-        })
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder5', login="accountman")
+        self.start_pos_tour('PosSettleOrder5', login="accountman")
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
         self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
@@ -973,97 +776,73 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'amount': 10,
             'amount_type': 'fixed',
         })
-
         tax_2 = self.env['account.tax'].create({
             'name': '5 incl',
             'amount': 5,
             'price_include_override': 'tax_included',
         })
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
+        self.item_product_variant.write({
             'lst_price': 100.0,
             'taxes_id': [tax_1.id],
         })
-
-        product_b = self.env['product.product'].create({
-            'name': 'Product B',
-            'available_in_pos': True,
+        self.article_product_variant.write({
             'lst_price': 5.0,
             'taxes_id': [tax_2.id],
         })
-
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
         sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
+            'partner_id': self.partner_one.id,
             'order_line': [(0, 0, {
-                'product_id': product_a.id,
-                'name': product_a.name,
+                'product_id': self.item_product_variant.id,
+                'name': self.item_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_a.lst_price,
+                'price_unit': self.item_product_variant.lst_price,
             }), (0, 0, {
-                'product_id': product_b.id,
-                'name': product_b.name,
+                'product_id': self.article_product_variant.id,
+                'name': self.article_product_variant.name,
                 'product_uom_qty': 1,
-                'price_unit': product_b.lst_price,
+                'price_unit': self.article_product_variant.lst_price,
             })],
         })
         sale_order.action_confirm()
-
         self.downpayment_product = self.env['product.product'].create({
             'name': 'Down Payment',
             'available_in_pos': True,
             'type': 'service',
             'taxes_id': [],
         })
-        self.main_pos_config.write({
+        self.pos_config.write({
             'down_payment_product_id': self.downpayment_product.id,
         })
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentFixedTax', login="accountman")
+        self.start_pos_tour('PoSDownPaymentFixedTax', login="accountman")
 
     def test_settle_quotation_delivered_qty(self):
         """ Test if a quotation (unconfirmed sale order) is settled in the PoS, the delivered quantity is updated correctly """
-
-        product1 = self.env['product.product'].create({
-            'name': 'product1',
-            'available_in_pos': True,
-            'is_storable': True,
-            'lst_price': 10,
-            'taxes_id': [odoo.Command.clear()],
-        })
-        partner_1 = self.env['res.partner'].create({'name': 'Test Partner 1'})
         order = self.env['sale.order'].create({
-            'partner_id': partner_1.id,
-            'order_line': [odoo.Command.create({'product_id': product1.id})],
+            'partner_id': self.partner_one.id,
+            'order_line': [odoo.Command.create({'product_id': self.item_product_variant.id})],
         })
-        self.main_pos_config.open_ui()
         self.start_pos_tour('PoSSettleQuotation', login="accountman")
         self.assertEqual(order.order_line.qty_delivered, 1)
 
     def test_edit_invoice_with_pos_order(self):
-        self.main_pos_config.open_ui()
-        current_session = self.main_pos_config.current_session_id
-        partner_1 = self.env['res.partner'].create({'name': 'Test Partner'})
-
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
         pos_order = self.env['pos.order'].create({
             'company_id': self.env.company.id,
             'session_id': current_session.id,
-            'partner_id': partner_1.id,
-            'pricelist_id': partner_1.property_product_pricelist.id,
+            'partner_id': self.partner_one.id,
+            'pricelist_id': self.partner_one.property_product_pricelist.id,
             'lines': [(0, 0, {
                 'name': "OL/0001",
-                'product_id': self.desk_pad.product_variant_id.id,
-                'price_unit': self.desk_pad.product_variant_id.lst_price,
+                'product_id': self.item_product_variant.id,
+                'price_unit': self.item_product_variant.lst_price,
                 'discount': 0.0,
                 'qty': 1.0,
                 'tax_ids': [],
-                'price_subtotal': self.desk_pad.product_variant_id.lst_price,
-                'price_subtotal_incl': self.desk_pad.product_variant_id.lst_price,
+                'price_subtotal': self.item_product_variant.lst_price,
+                'price_subtotal_incl': self.item_product_variant.lst_price,
             })],
-            'amount_total': self.desk_pad.product_variant_id.lst_price,
+            'amount_total': self.item_product_variant.lst_price,
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,

@@ -13,10 +13,10 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity1", {
             Dialog.confirm("Open Register"),
 
             // Not valid -> date
-            ProductScreen.addOrderline("Whiteboard Pen", "5"),
+            ProductScreen.addOrderline("Awesome Item", "5"),
             PosLoyalty.isRewardButtonHighlighted(false, true),
-            PosLoyalty.orderTotalIs("16.00"),
-            PosLoyalty.finalizeOrder("Cash", "16"),
+            PosLoyalty.orderTotalIs("500"),
+            PosLoyalty.finalizeOrder("Cash", "500"),
         ].flat(),
 });
 
@@ -26,14 +26,14 @@ registry.category("web_tour.tours").add("PosLoyaltyValidity2", {
             // Second tour
             // Valid
             Chrome.startPoS(),
-            ProductScreen.addOrderline("Whiteboard Pen", "5"),
-            PosLoyalty.hasRewardLine("90% on the cheapest product", "-2.88"),
-            PosLoyalty.finalizeOrder("Cash", "20"),
+            ProductScreen.addOrderline("Awesome Item", "5"), // 500
+            PosLoyalty.hasRewardLine("90% on the cheapest product", "-90"),
+            PosLoyalty.finalizeOrder("Cash", "410"),
 
             // Not valid -> usage
-            ProductScreen.addOrderline("Whiteboard Pen", "5"),
+            ProductScreen.addOrderline("Awesome Item", "5"),
             PosLoyalty.isRewardButtonHighlighted(false, true),
-            PosLoyalty.orderTotalIs("16.00"),
-            PosLoyalty.finalizeOrder("Cash", "16.00"),
+            PosLoyalty.orderTotalIs("500"),
+            PosLoyalty.finalizeOrder("Cash", "500"),
         ].flat(),
 });

@@ -1,12 +1,12 @@
 from requests import Response
 from unittest.mock import patch
-from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
+from odoo.addons.point_of_sale.tests.test_common import TestPointOfSaleDataHttpCommon
 from odoo.tests.common import tagged
 
 @tagged('post_install', '-at_install')
-class TestAdyenPoS(TestPointOfSaleHttpCommon):
+class TestAdyenPoS(TestPointOfSaleDataHttpCommon):
     def test_adyen_basic_order(self):
-        self.main_pos_config.write({
+        self.pos_config.write({
             "payment_method_ids": [
                 (0, 0, {
                     "name": "Adyen",
@@ -20,8 +20,6 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
                 }),
             ],
         })
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-
         def post(url, **kwargs):
             # TODO: check that the data passed by pos to adyen is correct
             response = Response()

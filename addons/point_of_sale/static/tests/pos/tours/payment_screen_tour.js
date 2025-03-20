@@ -9,8 +9,9 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
-            ProductScreen.addOrderline("Letter Tray", "10"),
+            ProductScreen.addOrderline("Product for pricelist 6", "10"),
             ProductScreen.clickPayButton(),
             PaymentScreen.emptyPaymentlines("52.8"),
 
@@ -67,106 +68,12 @@ registry.category("web_tour.tours").add("PaymentScreenTour2", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Letter Tray", "1", "10"),
+            ProductScreen.addOrderline("Product for pricelist 6", "1", "10"),
             ProductScreen.clickPayButton(),
-
-            // check that ship later button is present
             { trigger: ".payment-buttons button:contains('Ship Later')" },
-
+            PaymentScreen.clickPaymentMethod("Bank", true),
             PaymentScreen.enterPaymentLineAmount("Bank", "99"),
-            // trying to put 99 as an amount should throw an error. We thus confirm the dialog.
-            Dialog.confirm(),
-            PaymentScreen.remainingIs("0.0"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.96"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "2.00" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            // To get negative of existing quantity just send -
-            ProductScreen.addOrderline("Product Test", "-"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("-1.96"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "-2.00" }),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.98"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.95" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            // To get negative of existing quantity just send -
-            ProductScreen.addOrderline("Product Test", "-"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("-1.98"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "-1.95" }),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.20"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.00" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            ProductScreen.addOrderline("Product Test 1.25", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.25"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            ProductScreen.addOrderline("Product Test 1.4", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.4"),
-            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
-
-            Chrome.clickOrders(),
-            Chrome.createFloatingOrder(),
-
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
-            ProductScreen.clickPayButton(),
-
-            PaymentScreen.totalIs("1.20"),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickNumpad("2"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "2"),
-
-            PaymentScreen.changeIs("1.0"),
+            PaymentScreen.changeIs("88.00"),
         ].flat(),
 });
 
@@ -174,7 +81,7 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
     steps: () =>
         [
             Chrome.startPoS(),
-            ProductScreen.addOrderline("Product Test", "1"),
+            ProductScreen.addOrderline("Awesome Thing", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.98"),
@@ -207,7 +114,7 @@ registry.category("web_tour.tours").add("CashRoundingPayment", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Magnetic Board", "1"),
+            ProductScreen.addOrderline("Product for pricelist 3", "1"),
             ProductScreen.clickPayButton(),
 
             // Pay it with exact amount but with incorrect rounding so there should be an error popup.

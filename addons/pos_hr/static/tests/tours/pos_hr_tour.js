@@ -14,10 +14,10 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Pos Employee1"),
-            SelectionPopup.has("Pos Employee2"),
+            SelectionPopup.has("Test Employee 1"),
+            SelectionPopup.has("Test Employee 2"),
             SelectionPopup.has("Mitchell Admin"),
-            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            SelectionPopup.has("Test Employee 1", { run: "click" }),
             NumberPopup.enterValue("25"),
             NumberPopup.isShown("••"),
             NumberPopup.enterValue("81"),
@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             // after trying to close the number popup, the error popup should be shown
             // successfully confirming the dialog would imply that the error popup is actually shown
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            SelectionPopup.has("Test Employee 1", { run: "click" }),
 
             NumberPopup.enterValue("25"),
             NumberPopup.isShown("••"),
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.clickCashierName(),
-            SelectionPopup.has("Pos Employee2", { run: "click" }),
+            SelectionPopup.has("Test Employee 2", { run: "click" }),
             NumberPopup.enterValue("12"),
             NumberPopup.isShown("••"),
             NumberPopup.enterValue("34"),
@@ -48,21 +48,21 @@ registry.category("web_tour.tours").add("PosHrTour", {
 
             // Create orders and check if the ticket list has the right employee for each order
             // order for employee 2
-            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.addOrderline("Awesome Item", "1"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Pos Employee2", false),
+            TicketScreen.nthRowContains(1, "Test Employee 2", false),
 
             // order for employee 1
             PosHr.clickLockButton(),
             Chrome.clickBtn("Unlock Register"),
-            PosHr.login("Pos Employee1", "2580"),
+            PosHr.login("Test Employee 1", "2580"),
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.addOrderline("Awesome Item", "1"),
             ProductScreen.totalAmountIs("1.98"),
             Chrome.clickOrders(),
-            TicketScreen.nthRowContains(1, "Pos Employee2", false),
-            TicketScreen.nthRowContains(2, "Pos Employee1", false),
+            TicketScreen.nthRowContains(1, "Test Employee 2", false),
+            TicketScreen.nthRowContains(2, "Test Employee 1", false),
 
             // Cash in/out should be accessible for all users.
             Chrome.clickMenuOption("Cash In/Out"),
@@ -72,7 +72,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             PosHr.clickCashierName(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.createFloatingOrder(),
-            ProductScreen.addOrderline("Desk Pad", "1", "8"),
+            ProductScreen.addOrderline("Awesome Item", "1", "8"),
             ProductScreen.totalAmountIs("8.0"),
             Chrome.clickOrders(),
             TicketScreen.nthRowContains(3, "Mitchell Admin", false),
@@ -89,8 +89,8 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Pos Employee1"),
-            SelectionPopup.has("Pos Employee2"),
+            SelectionPopup.has("Test Employee 1"),
+            SelectionPopup.has("Test Employee 2"),
             SelectionPopup.has("Mitchell Admin"),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
@@ -111,7 +111,7 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             PosHr.clickLoginButton(),
             SelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickInfoProduct("product_a"),
+            ProductScreen.clickInfoProduct("Awesome Item"),
             Dialog.confirm("Close"),
             Dialog.isNot(),
         ].flat(),

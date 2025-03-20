@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("PosSaleLoyaltyTour1", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             PosSale.settleNthOrder(1),
-            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickDisplayedProduct("Awesome Item"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),

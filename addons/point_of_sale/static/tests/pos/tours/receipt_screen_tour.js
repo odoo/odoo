@@ -16,10 +16,11 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
         [
             // press close button in receipt screen
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
-            ProductScreen.addOrderline("Letter Tray", "10", "5"),
+            ProductScreen.addOrderline("Product for pricelist 6", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickCustomer("Partner One"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
@@ -31,14 +32,14 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
             ReceiptScreen.shippingDateIsToday(),
-            // letter tray has 10% tax (search SRC)
+            // Product for pricelist 6 has 10% tax (search SRC)
             ReceiptScreen.totalAmountContains("55.0"),
             ReceiptScreen.clickNextOrder(),
 
             // send email in receipt screen
-            ProductScreen.addOrderline("Desk Pad", "6", "5", "30.0"),
-            ProductScreen.addOrderline("Whiteboard Pen", "6", "6", "36.0"),
-            ProductScreen.addOrderline("Monitor Stand", "6", "1", "6.0"),
+            ProductScreen.addOrderline("Product for pricelist 5", "6", "5", "30.0"),
+            ProductScreen.addOrderline("Quality Thing", "6", "6", "36.0"),
+            ProductScreen.addOrderline("Product for pricelist 4", "6", "1", "6.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "70", true, { remaining: "2.0" }),
@@ -57,7 +58,7 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
 
             // order with tip
             // check if tip amount is displayed
-            ProductScreen.addOrderline("Desk Pad", "6", "5"),
+            ProductScreen.addOrderline("Product for pricelist 5", "6", "5"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickTipButton(),
             {
@@ -75,9 +76,9 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ReceiptScreen.clickNextOrder(),
 
             // Test customer note in receipt
-            ProductScreen.addOrderline("Desk Pad", "1", "5"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "5"),
             inLeftSide([
-                { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
+                { ...ProductScreen.clickLine("Product for pricelist 5")[0], isActive: ["mobile"] },
                 ...ProductScreen.addCustomerNote("Test customer note"),
             ]),
             ProductScreen.clickPayButton(),
@@ -87,52 +88,23 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             ReceiptScreen.clickNextOrder(),
 
             // Test discount and original price
-            ProductScreen.addOrderline("Desk Pad", "1", "20"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1", "20"),
             inLeftSide([
-                { ...ProductScreen.clickLine("Desk Pad")[0], isActive: ["mobile"] },
+                { ...ProductScreen.clickLine("Product for pricelist 5")[0], isActive: ["mobile"] },
                 Numpad.click("%"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1", "20"),
+                ...ProductScreen.selectedOrderlineHasDirect("Product for pricelist 5", "1", "20"),
                 Numpad.click("5"),
-                ...ProductScreen.selectedOrderlineHasDirect("Desk Pad", "1", "19.0"),
+                ...ProductScreen.selectedOrderlineHasDirect("Product for pricelist 5", "1", "19.0"),
                 Numpad.click("."),
             ]),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.receiptIsThere(),
-            Order.hasLine({ productName: "Desk Pad", priceNoDiscount: "20" }),
+            Order.hasLine({ productName: "Product for pricelist 5", priceNoDiscount: "20" }),
             ReceiptScreen.totalAmountContains("19.00"),
             ReceiptScreen.clickNextOrder(),
             OfflineUtil.setOnlineMode(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour", {
-    checkDelay: 50,
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Test Product", "1"),
-            ProductScreen.clickPriceList("special_pricelist"),
-            inLeftSide(Order.hasLine({ productName: "Test Product", price: "6.30" })),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            Order.hasLine({ price: "6.30" }),
-
-            ReceiptScreen.clickNextOrder(),
-            ProductScreen.addOrderline("Test Product", "1"),
-            inLeftSide([
-                { ...ProductScreen.clickLine("Test Product")[0], isActive: ["mobile"] },
-                Numpad.click("Price"),
-                Numpad.isActive("Price"),
-                Numpad.click("9"),
-            ]),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Cash"),
-            PaymentScreen.clickValidate(),
-            ReceiptScreen.noDiscountAmount(),
         ].flat(),
 });
 
@@ -142,8 +114,8 @@ registry.category("web_tour.tours").add("OrderPaidInCash", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Desk Pad", "5", "5"),
-            inLeftSide(ProductScreen.orderLineHas("Desk Pad", "5")),
+            ProductScreen.addOrderline("Product for pricelist 5", "5", "5"),
+            inLeftSide(ProductScreen.orderLineHas("Product for pricelist 5", "5")),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.validateButtonIsHighlighted(true),
@@ -167,7 +139,7 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product A"),
+            ProductScreen.clickDisplayedProduct("Awesome Article"),
             ProductScreen.enterLotNumber("123456789"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),

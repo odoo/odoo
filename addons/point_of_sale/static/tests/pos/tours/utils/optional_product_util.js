@@ -20,9 +20,9 @@ export function addOptionalProduct(productName, quantity, configurable) {
             // Choose the color attribute for the configurable product
             ...ProductConfigurator.pickColor("Blue"),
             // Select the material type from dropdown options
-            ...ProductConfigurator.pickSelect("Metal"),
+            ...ProductConfigurator.pickSelect("One"),
             // Choose the texture or fabric type via radio buttons
-            ...ProductConfigurator.pickRadio("wool"),
+            ...ProductConfigurator.pickRadio("One"),
             // confirm Attribute Selection dialogue
             {
                 trigger: ".o-overlay-item:nth-child(2) .modal-footer button:contains('Add')",

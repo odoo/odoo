@@ -4,39 +4,72 @@
 from odoo import tools
 import odoo
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+from odoo.addons.point_of_sale.tests.test_common import TestPointOfSaleDataHttpCommon
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestPoSStock(TestPoSCommon):
+class TestPoSStock(TestPointOfSaleDataHttpCommon):
     """ Tests for anglo saxon accounting scenario.
     """
     def setUp(self):
         super(TestPoSStock, self).setUp()
+        self.category_anglo = self.env['product.category'].create({
+            'name': 'Anglo',
+            'parent_id': False,
+            'property_cost_method': 'fifo',
+            'property_valuation': 'real_time',
+            'property_stock_account_input_categ_id': self.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': self.company_data['default_account_stock_out'].id,
+        })
+        self.product_awesome_item.product_variant_id.write({
+            'categ_id': self.category_anglo.id,
+            'lst_price': 10.0,
+            'list_price': 5.0,
+        })
+        self.product_awesome_article.product_variant_id.write({
+            'categ_id': self.category_anglo.id,
+            'lst_price': 20.0,
+            'list_price': 10.0,
+        })
+        self.product_awesome_thing.product_variant_id.write({
+            'categ_id': self.product_category.id,
+            'lst_price': 30.0,
+            'list_price': 15.0,
+        })
+        self.product_quality_item.product_variant_id.write({
+            'categ_id': self.category_anglo.id,
+            'lst_price': 10.0,
+            'list_price': 5.0,
+            'type': 'consu',
+            'is_storable': False,
+        })
 
-        self.config = self.basic_config
-        self.product1 = self.create_product('Product 1', self.categ_anglo, 10.0, 5.0)
-        self.product2 = self.create_product('Product 2', self.categ_anglo, 20.0, 10.0)
-        self.product3 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
-        self.product4 = self.create_product('Product 4', self.categ_anglo, 10.0, 5.0)
-        self.product4.type = 'consu'
-        self.product4.is_storable = False
         # start inventory with 10 items for each product
-        self.adjust_inventory([self.product1, self.product2, self.product3], [10, 10, 10])
+        self.adjust_inventory([
+            self.product_awesome_item.product_variant_id,
+            self.product_awesome_article.product_variant_id,
+            self.product_awesome_thing.product_variant_id], [10, 10, 10])
 
         # change cost(standard_price) of anglo products
         # then set inventory from 10 -> 15
-        self.product1.write({'standard_price': 6.0})
-        self.product2.write({'standard_price': 6.0})
-        self.adjust_inventory([self.product1, self.product2, self.product3], [15, 15, 15])
+        self.product_awesome_item.product_variant_id.write({'standard_price': 6.0})
+        self.product_awesome_article.product_variant_id.write({'standard_price': 6.0})
+        self.adjust_inventory([
+            self.product_awesome_item.product_variant_id,
+            self.product_awesome_article.product_variant_id,
+            self.product_awesome_thing.product_variant_id], [15, 15, 15])
 
         # change cost(standard_price) of anglo products
         # then set inventory from 15 -> 25
-        self.product1.write({'standard_price': 13.0})
-        self.product2.write({'standard_price': 13.0})
-        self.adjust_inventory([self.product1, self.product2, self.product3], [25, 25, 25])
+        self.product_awesome_item.product_variant_id.write({'standard_price': 13.0})
+        self.product_awesome_article.product_variant_id.write({'standard_price': 13.0})
+        self.adjust_inventory([
+            self.product_awesome_item.product_variant_id,
+            self.product_awesome_article.product_variant_id,
+            self.product_awesome_thing.product_variant_id], [25, 25, 25])
 
-        self.output_account = self.categ_anglo.property_stock_account_output_categ_id
-        self.expense_account = self.categ_anglo.property_account_expense_categ_id
-        self.valuation_account = self.categ_anglo.property_stock_valuation_account_id
+        self.output_account = self.category_anglo.property_stock_account_output_categ_id
+        self.expense_account = self.category_anglo.property_account_expense_categ_id
+        self.valuation_account = self.category_anglo.property_stock_valuation_account_id
 
     def test_01_orders_no_invoiced(self):
         """

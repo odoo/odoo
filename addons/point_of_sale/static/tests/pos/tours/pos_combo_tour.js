@@ -39,7 +39,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             ]),
             // check that you can select a customer which triggers a recomputation of the price
             ...ProductScreen.clickPartnerButton(),
-            ...ProductScreen.clickCustomer("Partner Test 1"),
+            ...ProductScreen.clickCustomer("Partner One"),
 
             // check that you can change the quantity of a combo product
             inLeftSide([
@@ -124,10 +124,10 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             inLeftSide(Order.hasTax("4.55")),
 
             // Test than changing the fp, doesn't change the price of the combo
-            ProductScreen.clickFiscalPosition("test fp"),
+            ProductScreen.clickFiscalPosition("FP-POS-2M"),
             inLeftSide([...ProductScreen.orderLineHas("Office Combo", "1", "50.00")]),
             ProductScreen.totalAmountIs("50.00"),
-            inLeftSide(Order.hasTax("2.38")),
+            inLeftSide(Order.hasTax("6.51")),
             ProductScreen.isShown(),
         ].flat(),
 });

@@ -14,27 +14,30 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-
-            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1"),
             pay(),
             checkSimplifiedInvoiceNumber("0001"),
             ReceiptScreen.clickNextOrder(),
-
-            ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT - 1),
+            ProductScreen.addOrderline(
+                "Product for pricelist 5",
+                "1",
+                SIMPLIFIED_INVOICE_LIMIT - 1
+            ),
             pay(),
             checkSimplifiedInvoiceNumber("0002"),
             ReceiptScreen.clickNextOrder(),
-
-            ProductScreen.addOrderline("Desk Pad", "1", SIMPLIFIED_INVOICE_LIMIT + 1),
+            ProductScreen.addOrderline(
+                "Product for pricelist 5",
+                "1",
+                SIMPLIFIED_INVOICE_LIMIT + 1
+            ),
             pay(),
             Dialog.confirm(),
-
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             // verify that the pos requires the selection of a partner
             Dialog.confirm(),
             PartnerList.clickPartner(""),
-
             PaymentScreen.isInvoiceOptionSelected(),
             PaymentScreen.clickValidate(),
             {
@@ -44,11 +47,11 @@ registry.category("web_tour.tours").add("spanish_pos_tour", {
             },
             ReceiptScreen.clickNextOrder(),
 
-            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1"),
             pay(),
             checkSimplifiedInvoiceNumber("0003"),
             ReceiptScreen.clickNextOrder(),
-            ProductScreen.addOrderline("Desk Pad", "1"),
+            ProductScreen.addOrderline("Product for pricelist 5", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Customer Account"),
             PaymentScreen.clickValidate(),
@@ -62,7 +65,7 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            PartnerList.clickPartnerOptions("Partner Test 1"),
+            PartnerList.clickPartnerOptions("Partner One"),
             {
                 isActive: ["auto"],
                 trigger: "div.o_popover :contains('Settle Due Accounts')",
@@ -70,7 +73,7 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
                 run: "click",
             },
             {
-                trigger: "tr.o_data_row td[name='name']:contains('Shop/0001')",
+                trigger: "tr.o_data_row td[name='name']:contains('Main Point of Sale/0001')",
                 content: "Check the settle due account line is present",
                 run: "click",
             },

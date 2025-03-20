@@ -50,47 +50,45 @@ export function setUp() {
             content: "waiting for loading to finish",
             trigger: "body:not(:has(.pos-loader))", // Pos has finished loading
             run: function () {
-                var product_wall_shelf = posmodel.data.models["product.template"]
-                    .getAll()
-                    .find((p) => p.display_name === "Wall Shelf Unit");
-                var product_small_shelf = posmodel.data.models["product.template"]
-                    .getAll()
-                    .find((p) => p.display_name === "Small Shelf");
-                var product_magnetic_board = posmodel.data.models["product.template"]
-                    .getAll()
-                    .find((p) => p.display_name === "Magnetic Board");
-                var product_monitor_stand = posmodel.data.models["product.template"]
-                    .getAll()
-                    .find((p) => p.display_name === "Monitor Stand");
-                var product_desk_pad = posmodel.data.models["product.template"]
-                    .getAll()
-                    .find((p) => p.display_name === "Desk Pad");
-                var product_letter_tray = posmodel.data.models["product.template"]
-                    .getAll()
-                    .find((p) => p.display_name === "Letter Tray");
+                const product1 = posmodel.data.models["product.template"].find(
+                    (p) => p.display_name === "Product for pricelist 1"
+                );
+                const product2 = posmodel.data.models["product.template"].find(
+                    (p) => p.display_name === "Product for pricelist 2"
+                );
+                const product3 = posmodel.data.models["product.template"].find(
+                    (p) => p.display_name === "Product for pricelist 3"
+                );
+                const product4 = posmodel.data.models["product.template"].find(
+                    (p) => p.display_name === "Product for pricelist 4"
+                );
+                const product5 = posmodel.data.models["product.template"].find(
+                    (p) => p.display_name === "Product for pricelist 5"
+                );
+                const product6 = posmodel.data.models["product.template"].find(
+                    (p) => p.display_name === "Product for pricelist 6"
+                );
 
-                assertProductPrice(product_letter_tray, "Public Pricelist", 0, 4.8)()
-                    .then(assertProductPrice(product_letter_tray, "Public Pricelist", 1, 4.8))
-                    .then(assertProductPrice(product_letter_tray, "Fixed", 1, 1))
-                    .then(assertProductPrice(product_wall_shelf, "Fixed", 1, 2))
-                    .then(assertProductPrice(product_small_shelf, "Fixed", 1, 13.95))
-                    .then(assertProductPrice(product_wall_shelf, "Percentage", 1, 0))
-                    .then(assertProductPrice(product_small_shelf, "Percentage", 1, 0.03))
-                    .then(assertProductPrice(product_magnetic_board, "Percentage", 1, 1.98))
-                    .then(assertProductPrice(product_wall_shelf, "Formula", 1, 6.86))
-                    .then(assertProductPrice(product_small_shelf, "Formula", 1, 2.99))
-                    .then(assertProductPrice(product_magnetic_board, "Formula", 1, 11.98))
-                    .then(assertProductPrice(product_monitor_stand, "Formula", 1, 8.19))
-                    .then(assertProductPrice(product_desk_pad, "Formula", 1, 6.98))
-                    .then(assertProductPrice(product_wall_shelf, "min_quantity ordering", 1, 2))
-                    .then(assertProductPrice(product_wall_shelf, "min_quantity ordering", 2, 1))
-                    .then(assertProductPrice(product_letter_tray, "Category vs no category", 1, 2))
-                    .then(assertProductPrice(product_letter_tray, "Category", 1, 2))
-                    .then(assertProductPrice(product_wall_shelf, "Product template", 1, 1))
-                    .then(assertProductPrice(product_wall_shelf, "Dates", 1, 2))
-                    .then(
-                        assertProductPrice(product_small_shelf, "Pricelist base rounding", 1, 13.95)
-                    )
+                assertProductPrice(product6, "Public Pricelist", 0, 4.8)()
+                    .then(assertProductPrice(product6, "Public Pricelist", 1, 4.8))
+                    .then(assertProductPrice(product6, "Fixed", 1, 1))
+                    .then(assertProductPrice(product1, "Fixed", 1, 2))
+                    .then(assertProductPrice(product2, "Fixed", 1, 13.95))
+                    .then(assertProductPrice(product1, "Percentage", 1, 0))
+                    .then(assertProductPrice(product2, "Percentage", 1, 0.03))
+                    .then(assertProductPrice(product3, "Percentage", 1, 1.98))
+                    .then(assertProductPrice(product1, "Formula", 1, 6.86))
+                    .then(assertProductPrice(product2, "Formula", 1, 2.99))
+                    .then(assertProductPrice(product3, "Formula", 1, 11.98))
+                    .then(assertProductPrice(product4, "Formula", 1, 8.19))
+                    .then(assertProductPrice(product5, "Formula", 1, 6.98))
+                    .then(assertProductPrice(product1, "min_quantity ordering", 1, 2))
+                    .then(assertProductPrice(product1, "min_quantity ordering", 2, 1))
+                    .then(assertProductPrice(product6, "Category vs no category", 1, 2))
+                    .then(assertProductPrice(product6, "Category", 1, 2))
+                    .then(assertProductPrice(product1, "Product template", 1, 1))
+                    .then(assertProductPrice(product1, "Dates", 1, 2))
+                    .then(assertProductPrice(product2, "Pricelist base rounding", 1, 13.95))
                     .then(function () {
                         document.querySelector(".pos").classList.add("done-testing");
                     });

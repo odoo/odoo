@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add("PosAdyenTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Desk Pad"),
+            ProductScreen.addOrderline("Awesome Item"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Adyen"),
             {

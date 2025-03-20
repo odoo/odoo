@@ -2,18 +2,22 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.l10n_es_edi_tbai.tests.common import TestEsEdiTbaiCommonGipuzkoa
-from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
+from odoo.addons.point_of_sale.tests.test_common import TestPointOfSaleDataHttpCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
+class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleDataHttpCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.product_awesome_item.write({
+            'list_price': 100.0,
+        })
+        cls.product_a = cls.product_awesome_item.product_variant_id
         cls.partner_es = cls.env['res.partner'].create({
             'name': 'ES Partner',
             'vat': 'ESF35999705',
@@ -23,7 +27,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
 
     @classmethod
     def create_pos_order(cls, session, price_unit):
-        return cls.PosOrder.create({
+        return cls.env['pos.order'].create({
             'session_id': session.id,
             'lines': [
                 Command.create({
@@ -47,7 +51,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
             'active_ids': pos_order.ids,
             'active_id': pos_order.id,
         }
-        pos_make_payment = cls.PosMakePayment.with_context(context_make_payment).create({
+        pos_make_payment = cls.env['pos.make.payment'].with_context(context_make_payment).create({
             'amount': pos_order.amount_total,
         })
         with patch(

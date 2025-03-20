@@ -19,7 +19,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("2"),
-            ProductScreen.addOrderline("Minute Maid", "1", "2"),
+            ProductScreen.addOrderline("Awesome Thing", "1", "2"),
             ProductScreen.totalAmountIs("2.0"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("2", "1"),
@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.clickPlanButton(),
             FloorScreen.clickTable("4"),
             // order 2
-            ProductScreen.addOrderline("Coca-Cola", "2", "2"),
+            ProductScreen.addOrderline("Awesome Item", "2", "2"),
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // Create without syncing the draft.
             // order 3
             FloorScreen.clickTable("5"),
-            ProductScreen.addOrderline("Minute Maid", "3", "2"),
+            ProductScreen.addOrderline("Awesome Thing", "3", "2"),
             ProductScreen.totalAmountIs("6.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             Chrome.clickPlanButton(),
             FloorScreen.clickNewOrder(),
             // order 4
-            ProductScreen.addOrderline("Coca-Cola", "4", "2"),
+            ProductScreen.addOrderline("Awesome Item", "4", "2"),
             ProductScreen.totalAmountIs("8.0"),
             ProductScreen.clickControlButton("Guests"),
             NumberPopup.enterValue("2"),
@@ -143,7 +143,7 @@ registry.category("web_tour.tours").add("PosResTipScreenTour", {
             // Click directly on "settle" without selecting a Tip
             ReceiptScreen.clickNextOrder(),
             FloorScreen.clickTable("2"),
-            ProductScreen.addOrderline("Minute Maid", "3", "2"),
+            ProductScreen.addOrderline("Awesome Thing", "3", "2"),
             ProductScreen.totalAmountIs("6.0"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
