@@ -30,6 +30,44 @@
     <BuilderRow label.translate="Speed" t-if="this.state.isSlideShow">
         <BuilderNumberInput applyTo="'.carousel'" action="'setCarouselSpeed'" unit="'s'" saveUnit="''" step="0.1"/>
     </BuilderRow>
+
+    <BuilderRow label.translate="Style" t-if="this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Classic</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_indicators_outside'">Indicators outside</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside'">Outside, center</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_left'">Outside, at right</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right'">Outside, at left</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Invert colors" level="1" t-if="this.state.isSlideShow">
+        <BuilderCheckbox applyTo="'.carousel'" classAction="'carousel-dark'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Arrows" level="1" t-if="this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_default'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_boxed'">Boxed</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_rounded'">Rounded</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_arrows_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+     </BuilderRow>
+
+    <BuilderRow label.translate="Indicators" level="1" t-if="this.state.isSlideShow">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_bars'">Bars</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_dots'">Dots</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_numbers'">Numbers</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_squared'">Squared Miniatures</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_rounded'">Rounded Miniatures</BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_image_gallery_indicators_hidden'">Hidden</BuilderSelectItem>
+        </BuilderSelect>
+     </BuilderRow>
+
+    <BuilderContext applyTo="'img'">
+        <BorderConfigurator label.translate="Border"/>
+    </BuilderContext>
 </t>
 <t t-name="html_builder.s_image_gallery_slideshow">
     <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
