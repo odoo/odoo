@@ -9,7 +9,7 @@ export class SelectNumberColumn extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => {
-            const columnEls = editingElement?.querySelector(":scope > .row")?.children;
+            const columnEls = editingElement.querySelector(":scope > .row")?.children;
             return {
                 isCustomColumn:
                     columnEls && areColsCustomized(columnEls, isMobileView(editingElement)),

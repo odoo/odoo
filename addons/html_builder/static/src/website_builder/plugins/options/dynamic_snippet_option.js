@@ -25,8 +25,8 @@ export class DynamicSnippetOption extends BaseOptionComponent {
             dynamicFilters: {}, // per id, to locate default filter
             dynamicFilterTemplates: [],
         });
-        this.domState = useDomState(() => ({
-            filterId: this.env.getEditingElement().dataset.filterId,
+        this.domState = useDomState((editingElement) => ({
+            filterId: editingElement.dataset.filterId,
         }));
     }
 

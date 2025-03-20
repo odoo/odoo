@@ -7,8 +7,7 @@ export class GridColumnsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
-            isGridMode:
-                editingElement && editingElement.parentElement.classList.contains("o_grid_mode"),
+            isGridMode: editingElement.parentElement.classList.contains("o_grid_mode"),
         }));
     }
 }
