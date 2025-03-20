@@ -167,10 +167,10 @@ class AccountMoveSend(models.AbstractModel):
             else:
                 email_to = ''
 
-        for mail_data in tools.email_split(email_cc):
-            partners |= partners.find_or_create(mail_data)
-        for mail_data in tools.email_split(email_to):
-            partners |= partners.find_or_create(mail_data)
+        partners |= move._partner_find_from_emails_single(
+            tools.email_split(email_cc or '') + tools.email_split(email_to or ''),
+            no_create=False,
+        )
 
         if not mail_template.use_default_to and mail_template.partner_to:
             partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
