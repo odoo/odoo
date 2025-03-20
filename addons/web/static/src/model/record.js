@@ -1,7 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
-import { pick } from "@web/core/utils/objects";
+import { isObject, pick } from "@web/core/utils/objects";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { getFieldsSpec } from "@web/model/relational_model/utils";
+import { createMany2OneValue, getFieldsSpec } from "@web/model/relational_model/utils";
 import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
@@ -82,27 +82,42 @@ class _Record extends Component {
                     if (typeof values[fieldName] === "number") {
                         const prom = loadDisplayName(values[fieldName]);
                         prom.then((displayName) => {
-                            values[fieldName] = {
+                            values[fieldName] = createMany2OneValue({
                                 id: values[fieldName],
                                 display_name: displayName,
-                            };
+                            });
                         });
                         proms.push(prom);
                     } else if (Array.isArray(values[fieldName])) {
                         if (values[fieldName][1] === undefined) {
                             const prom = loadDisplayName(values[fieldName][0]);
                             prom.then((displayName) => {
-                                values[fieldName] = {
+                                values[fieldName] = createMany2OneValue({
                                     id: values[fieldName][0],
                                     display_name: displayName,
-                                };
+                                });
                             });
                             proms.push(prom);
                         }
-                        values[fieldName] = {
+                        values[fieldName] = createMany2OneValue({
                             id: values[fieldName][0],
                             display_name: values[fieldName][1],
-                        };
+                        });
+                    } else if (isObject(values[fieldName])) {
+                        if (values[fieldName].display_name === undefined) {
+                            const prom = loadDisplayName(values[fieldName].id);
+                            prom.then((displayName) => {
+                                values[fieldName] = createMany2OneValue({
+                                    id: values[fieldName].id,
+                                    display_name: displayName,
+                                });
+                            });
+                            proms.push(prom);
+                        }
+                        values[fieldName] = createMany2OneValue({
+                            id: values[fieldName].id,
+                            display_name: values[fieldName].display_name,
+                        });
                     }
                 }
                 await Promise.all(proms);
