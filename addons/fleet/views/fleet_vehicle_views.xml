@@ -256,9 +256,9 @@
                 <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                     domain="[('activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="1" string="Group By">
-                    <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
                     <filter string="Model" name="groupby_model" context="{'group_by': 'model_id'}"/>
                     <filter string="Brand" name="groupby_make" context="{'group_by': 'brand_id'}"/>
+                    <filter string="Status" name="groupby_status" context="{'group_by': 'state_id'}"/>
                     <filter string="Fuel Type" name="groupby_fueltype" context="{'group_by': 'fuel_type'}"/>
                     <filter string="Properties" name="group_by_vehicle_properties" context="{'group_by': 'vehicle_properties'}"/>
                 </group>

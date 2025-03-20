@@ -205,7 +205,7 @@
         <field name="name">fleet.vehicle.model.brandkanban</field>
         <field name="model">fleet.vehicle.model.brand</field>
         <field name="arch" type="xml">
-            <kanban default_order="name">
+            <kanban action="action_brand_model" type="object" default_order="name">
                 <field name="active"/>
                 <templates>
                     <t t-name="menu">
@@ -216,13 +216,15 @@
                     </t>
                     <t t-name="card" class="flex-row p-1">
                         <aside>
-                            <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}"/>
+                            <a type="object" name="action_open_brand_form">
+                                <field name="image_128" widget="image" options="{'img_class': 'object-fit-contain'}"/>
+                            </a>
                         </aside>
                         <main class="ms-2 mt-1">
                             <field class="fw-bold fs-5" name="name"/>
-                            <a type="object" name="action_brand_model" class="mt-2 text-black">
+                            <span class="mt-2 text-black">
                                 <field name="model_count"/> MODELS
-                            </a>
+                            </span>
                         </main>
                     </t>
                 </templates>
