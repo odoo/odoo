@@ -24,6 +24,7 @@ patch(PosStore.prototype, {
             {
                 timeout: 180000, // 3 minutes
                 action: () =>
+                    this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
                     !["PaymentScreen", "TicketScreen", "ActionScreen"].includes(
                         this.mainScreen.component.name
