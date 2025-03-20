@@ -142,7 +142,65 @@ beforeEach(() => {
 });
 
 test.tags("desktop");
-test("multi_create: render and basic functionalities", async () => {
+test("multi_create: render and basic creation (simple use case)", async () => {
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            expect.step(`${record.name}_${record.date_start}`);
+        }
+    });
+
+    await mountView({
+        type: "calendar",
+        resModel: "event",
+        arch: `<calendar date_start="date_start" scales="month" multi_create_view="multi_create_form" aggregate="id:count">
+            <!-- Popover -->
+            <field name="name"/>
+            <field name="date_start" invisible="1"/>
+        </calendar>`,
+    });
+
+    expect(".fc .fc-event").toHaveCount(5, {
+        message: "All events of this month should be visible",
+    });
+    expect(".o_calendar_sidebar .btn-group .btn").toHaveCount(3, {
+        message: "Multi create should be enabled",
+    });
+    expect(".o_calendar_filter_item").toHaveCount(0, {
+        message: "No filters should be visible",
+    });
+
+    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
+    await edit("Time off");
+
+    const { drop, moveTo } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await moveTo(".fc-day[data-date='2019-03-14']");
+    await animationFrame();
+    expect(".fc-day.o-highlight").toHaveCount(8);
+    await drop();
+    await animationFrame();
+    expect.verifySteps([
+        "Time off_2019-03-04",
+        "Time off_2019-03-05",
+        "Time off_2019-03-06",
+        "Time off_2019-03-07",
+        "Time off_2019-03-11",
+        "Time off_2019-03-12",
+        "Time off_2019-03-13",
+        "Time off_2019-03-14",
+    ]);
+    expect(".fc .fc-event").toHaveCount(13, {
+        message: "All new events should be added",
+    });
+
+    await click(".fc-event[data-event-id='8']");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover .o_field_widget[name='name']").toHaveText("Time off");
+});
+
+test.tags("desktop");
+test("multi_create: render and basic functionalities (complex with filters use case)", async () => {
     onRpc("event", "create", ({ args: [records] }) => {
         for (const record of records) {
             if (record.name !== "Time off" || record.type !== 3) {
