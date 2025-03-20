@@ -1972,3 +1972,35 @@ test("Copy Message Link", async () => {
     await press("Enter");
     await contains(".o-mail-Message", { text: url(`/mail/message/${messageId_2}`) });
 });
+
+test("deleted message should not have translate feature", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "not empty",
+        message_type: "comment",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message:contains('not empty')");
+    await click(".o-mail-Message [title='Expand']");
+    await contains(".dropdown-menu");
+    await contains(".dropdown-item:contains('Translate')");
+    await click(".dropdown-item:contains('Delete')");
+    await click("button:contains('Confirm')");
+    await contains(".o-mail-Message:contains('This message has been removed')");
+    await contains(".o-mail-Message [title='Add a Reaction']");
+    await contains(".o-mail-Message [title='Mark as Todo']");
+    await contains(".o-mail-Message [title*='Translate']", { count: 0 });
+    await animationFrame(); // in case some extra rendering for expand
+    if (queryFirst(".o-mail-Message [title='Expand']")) {
+        // Translate could hide itself in 'Expand' menu
+        await click(".o-mail-Message [title='Expand']");
+        await contains(".dropdown-menu");
+        await animationFrame(); // in case some rendering
+        await contains(".dropdown-item:contains('Translate')", { count: 0 });
+    }
+});
