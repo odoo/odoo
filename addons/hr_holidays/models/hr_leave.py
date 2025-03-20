@@ -434,7 +434,7 @@ class HrLeave(models.Model):
             if calendar.flexible_hours:
                 days = (leave.date_to - leave.date_from).days + (1 if not leave.request_unit_half else 0.5)
                 hours = min(leave.request_hour_to - leave.request_hour_from, calendar.hours_per_day) if leave.request_unit_hours \
-                    else ceil(days * calendar.hours_per_day)
+                    else (days * calendar.hours_per_day)
                 result[leave.id] = (days, hours)
                 continue
             hours, days = (0, 0)
