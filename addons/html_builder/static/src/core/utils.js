@@ -280,7 +280,6 @@ export function useClickableBuilderComponent() {
     const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
-    const shouldToggle = !comp.env.selectableContext;
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
     const hasPreview =

@@ -9,7 +9,8 @@ class ContentWidthOptionPlugin extends Plugin {
                 template: "html_builder.ContentWidthOption",
                 selector: "section, .s_carousel .carousel-item, .s_carousel_intro_item",
                 exclude: "[data-snippet] :not(.oe_structure) > [data-snippet]",
-                applyTo: ":scope > .container, :scope > .container-fluid, :scope > .o_container_small"
+                applyTo:
+                    ":scope > .container, :scope > .container-fluid, :scope > .o_container_small",
             },
         ],
     };
