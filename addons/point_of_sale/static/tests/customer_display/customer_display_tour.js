@@ -2,26 +2,51 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import { registry } from "@web/core/registry";
 import { run } from "@point_of_sale/../tests/generic_helpers/utils";
 
-function postMessage(message, description = "") {
+export function postMessage(message, description = "") {
     return run(() => {
-        window.customerDisplayChannel.postMessage(JSON.parse(message));
+        window.customerDisplayChannel.postMessage(
+            typeof message === "string" ? JSON.parse(message) : message
+        );
     }, `send message to customer display: ${description},  with value: ${message}`);
 }
-function amountIs(method, amount) {
+
+export function amountIs(method, amount) {
     return {
         content: `Check that the ${method} amount is ${amount}`,
         trigger: `div.row:has(div:contains('${method}')):has(div:contains('${amount}'))`,
     };
 }
 const ADD_PRODUCT =
+<<<<<<< 3fc3535a658d6bba129ee38042e8b59ab0b42b9b
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
 const ADD_PRODUCT_SELECTED =
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+||||||| 772f9607be55f5b4b301cc7e4aad8649f5034275
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+const ADD_PRODUCT_SELECTED =
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+=======
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+export const ADD_PRODUCT_SELECTED =
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[],"change":0,"onlinePaymentData":{}}';
+>>>>>>> 4d5e0440557839c050cc48fd8a3ed40966a95b2e
 const PAY_WITH_CASH =
+<<<<<<< 3fc3535a658d6bba129ee38042e8b59ab0b42b9b
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
 const ORDER_IS_FINALIZED =
     '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"[]","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":true,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
 const NEW_ORDER =
+||||||| 772f9607be55f5b4b301cc7e4aad8649f5034275
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
+const ORDER_IS_FINALIZED =
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":true,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
+const NEW_ORDER =
+=======
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":true,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":false,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
+export const ORDER_IS_FINALIZED =
+    '{"lines":[{"productName":"Letter Tray","price":"$ 2,972.75","qty":"1.00","unit":"Units","unitPrice":"$ 2,972.75","customerNote":"","internalNote":"","comboParent":"","packLotLines":[],"price_without_discount":"$ 2,972.75","isSelected":false,"imageSrc":"/web/image/product.product/855/image_128"}],"finalized":true,"amount":"2,972.75","paymentLines":[{"name":"Cash","amount":"2,972.75"}],"change":0,"onlinePaymentData":{}}';
+export const NEW_ORDER =
+>>>>>>> 4d5e0440557839c050cc48fd8a3ed40966a95b2e
     '{"lines":[],"finalized":false,"amount":"0.00","paymentLines":[],"change":0,"onlinePaymentData":{}}';
 
 registry.category("web_tour.tours").add("CustomerDisplayTour", {
