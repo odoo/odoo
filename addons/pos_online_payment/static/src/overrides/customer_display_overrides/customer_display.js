@@ -18,7 +18,11 @@ patch(CustomerDisplay.prototype, {
                     // If the popup is already open, we don't want to open a new one
                     return;
                 }
-                this.qrCodePopupCloser = this.dialog.add(OnlinePaymentPopup, details);
+                this.qrCodePopupCloser = this.dialog.add(OnlinePaymentPopup, details, {
+                    onClose: () => {
+                        this.qrCodePopupCloser = null;
+                    },
+                });
             },
             () => [this.order.onlinePaymentData]
         );
