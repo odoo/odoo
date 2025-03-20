@@ -6,7 +6,6 @@ import {
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
-// TODO: adapt and use BuilderTextInputBase?
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
     static props = {

@@ -6,13 +6,17 @@ import {
     useBuilderComponent,
 } from "../utils";
 import { BuilderComponent } from "./builder_component";
+import {
+    BuilderTextInputBase,
+    textInputBasePassthroughProps,
+} from "@html_builder/core/building_blocks/builder_text_input_base";
+import { pick } from "@web/core/utils/objects";
 
-// TODO: use BuilderTextInputBase
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
     static props = {
         ...basicContainerBuilderComponentProps,
-        tooltip: { type: String, optional: true },
+        ...textInputBasePassthroughProps,
         default: { type: Number, optional: true },
         unit: { type: String, optional: true },
         saveUnit: { type: String, optional: true },
@@ -20,12 +24,9 @@ export class BuilderNumberInput extends Component {
         min: { type: Number, optional: true },
         max: { type: Number, optional: true },
         id: { type: String, optional: true },
-        placeholder: { type: String, optional: true },
-        style: { type: String, optional: true },
         composable: { type: Boolean, optional: true },
-        title: { type: String, optional: true },
     };
-    static components = { BuilderComponent };
+    static components = { BuilderComponent, BuilderTextInputBase };
     static defaultProps = {
         composable: false,
     };
@@ -134,10 +135,6 @@ export class BuilderNumberInput extends Component {
         e.target.value = normalizedDisplayValue;
     }
 
-    onInput(e) {
-        this.preview(e.target.value);
-    }
-
     get displayValue() {
         return this.formatRawValue(this.state.value);
     }
@@ -160,5 +157,9 @@ export class BuilderNumberInput extends Component {
         e.target.value = values.join(" ");
         // OK because it only uses event.target.value.
         this.onChange(e);
+    }
+
+    get textInputBaseProps() {
+        return pick(this.props, ...Object.keys(textInputBasePassthroughProps));
     }
 }
