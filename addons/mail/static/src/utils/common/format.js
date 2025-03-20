@@ -323,7 +323,7 @@ export function wrapEmojisWithTitles(content) {
         return content;
     }
     const doc = createDocumentFragmentFromContent(content);
-    const nodes = document.evaluate(
+    const nodes = doc.evaluate(
         ".//text()",
         doc.body,
         null,
