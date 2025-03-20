@@ -356,7 +356,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _get_additional_document_reference_list(self, invoice):
         return [{
             'id': 'ICV',
-            'uuid': invoice.id,
+            'uuid': invoice.l10n_jo_invoice_counter,
         }]
 
     def _get_seller_supplier_party_vals(self, invoice):
