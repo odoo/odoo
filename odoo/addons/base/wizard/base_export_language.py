@@ -42,10 +42,10 @@ class BaseLanguageExport(models.TransientModel):
         with io.BytesIO() as buf:
             if this.export_type == 'model':
                 ids = self.env[this.model_name].search(ast.literal_eval(this.domain)).ids
-                trans_export_records(lang, this.model_name, ids, buf, this.format, self._cr)
+                trans_export_records(lang, this.model_name, ids, buf, this.format, self.env)
             else:
                 mods = sorted(this.mapped('modules.name')) or ['all']
-                trans_export(lang, mods, buf, this.format, self._cr)
+                trans_export(lang, mods, buf, this.format, self.env)
             out = base64.encodebytes(buf.getvalue())
 
         filename = 'new'
