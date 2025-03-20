@@ -2035,10 +2035,8 @@ class MailThread(models.AbstractModel):
         # fetch information used to find existing partners, beware portal/public who
         # cannot read followers
         followers = self.sudo().message_partner_ids if 'message_partner_ids' in self else self.env['res.partner']
-        aliases = self.env['mail.alias'].sudo().search(
-            [('alias_full_name', 'in', emails_key_all)]
-        ) if avoid_alias else self.env['mail.alias'].sudo()
-        ban_emails = (ban_emails or []) + aliases.mapped('alias_full_name')
+        alias_emails = self.env['mail.alias.domain'].sudo()._find_aliases(emails_key_all) if avoid_alias else []
+        ban_emails = (ban_emails or []) + alias_emails
 
         # inspired notably from odoo/odoo@80a0b45df806ffecfb068b5ef05ae1931d655810; final
         # ordering is search order defined in '_find_or_create_from_emails', which is id ASC

@@ -446,19 +446,33 @@ class TestMailgateway(MailGatewayCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_email_author_exclude_alias(self):
         """ Do not set alias as author to avoid including aliases in discussions """
-        from_1 = self.env['res.partner'].create({
-            'name': 'Brice Denisse',
-            'email': f'from.test@{self.mail_alias_domain.name}',
-        })
         self.env['mail.alias'].create({
             'alias_domain_id': self.mail_alias_domain.id,
             'alias_name': 'from.test',
             'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id
         })
+        alias_impostors = self.env['res.partner'].create([
+            {
+                'name': 'Alias Impostor',
+                'email': f'from.test@{self.mail_alias_domain.name}',
+            }, {
+                'name': 'Alias Domain Impostor',
+                'email': self.mail_alias_domain.catchall_email,
+            },
+        ])
 
-        record = self.format_and_process(MAIL_TEMPLATE, from_1.email_formatted, f'groups@{self.alias_domain}')
-        self.assertFalse(record.message_ids[0].author_id, f'Should not link a partner, especially not {from_1}')
-        self.assertEqual(record.message_ids[0].email_from, from_1.email_formatted)
+        for email_from, impostor in [
+            (f'from.test@{self.mail_alias_domain.name}', alias_impostors[0]),
+            (f'"Brice Denisse" <from.test@{self.mail_alias_domain.name}>', alias_impostors[0]),
+            (f'"Catchall Impostor" <{self.mail_alias_domain.catchall_email}>', alias_impostors[1]),
+        ]:
+            with self.subTest(email_from=email_from):
+                record = self.format_and_process(
+                    MAIL_TEMPLATE, email_from, f'groups@{self.alias_domain}',
+                    subject=f'Incoming email from {email_from}',
+                )
+                self.assertFalse(record.message_ids[0].author_id, f'Should not link a partner, especially not {impostor.name}')
+                self.assertEqual(record.message_ids[0].email_from, email_from)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_alias_owner_author_notify(self):
