@@ -78,7 +78,7 @@ def directory(p, create=False):
     if create and not os.path.exists(expanded):
         os.makedirs(expanded)
     if not os.path.isdir(expanded):
-        die("%s is not a directory" % p)
+        sys.exit("%s is not a directory" % p)
     return expanded
 
 env = jinja2.Environment()
@@ -96,7 +96,7 @@ class template(object):
         self.path = identifier
         if os.path.isdir(self.path):
             return
-        die("{} is not a valid module template".format(identifier))
+        sys.exit(f"{identifier} is not a valid module template")
 
     def __str__(self):
         return self.id
@@ -136,10 +136,6 @@ class template(object):
                        .stream(params or {})\
                        .dump(f, encoding='utf-8')
                     f.write(b'\n')
-
-def die(message, code=1):
-    print(message, file=sys.stderr)
-    sys.exit(code)
 
 def warn(message):
     # ASK: shall we use logger ?

@@ -1014,15 +1014,21 @@ class TarFileWriter:
 
         self.tar.close()
 
+
 # Methods to export the translation file
-def trans_export(lang, modules, buffer, format, cr):
-    reader = TranslationModuleReader(cr, modules=modules, lang=lang)
+# pylint: disable=redefined-builtin
+def trans_export(lang, modules, buffer, format, env):
+    reader = TranslationModuleReader(env.cr, modules=modules, lang=lang)
+    if not reader:
+        raise UserError(env._("No translatable terms were found in %s.", modules))
     writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
     writer.write_rows(reader)
 
-# pylint: disable=redefined-builtin
-def trans_export_records(lang, model_name, ids, buffer, format, cr):
-    reader = TranslationRecordReader(cr, model_name, ids, lang=lang)
+
+def trans_export_records(lang, model_name, ids, buffer, format, env):
+    reader = TranslationRecordReader(env.cr, model_name, ids, lang=lang)
+    if not reader:
+        raise UserError(env._("No translatable terms were found in %s.", model_name))
     writer = TranslationFileWriter(buffer, fileformat=format, lang=lang)
     writer.write_rows(reader)
 
@@ -1159,6 +1165,9 @@ class TranslationReader:
         from odoo import api  # noqa: PLC0415
         self.env = api.Environment(cr, api.SUPERUSER_ID, {})
         self._to_translate = []
+
+    def __bool__(self):
+        return bool(self._to_translate)
 
     def __iter__(self):
         for module, source, name, res_id, ttype, comments, _record_id, value in self._to_translate:
