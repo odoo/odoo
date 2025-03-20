@@ -448,3 +448,49 @@ test("Should change the speed of an animated shape", async () => {
     expect(`:iframe .test-options-target img`).toHaveAttribute("data-shape-animation-speed", "2");
     expect(`:iframe .test-options-target img`).not.toHaveAttribute("src", originalSrc);
 });
+describe("toggle ratio", () => {
+    test("Should not be able to toggle the ratio of a pattern_wave_4", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/pattern/pattern_wave_4']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+        await animationFrame();
+
+        expect(`[data-action-id="toggleImageShapeRatio"]`).not.toBeVisible();
+    });
+    test("A shape with togglable ratio should be added cropped and crop when clicked", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Shape'] .dropdown").click();
+        await contains("[data-action-value='html_builder/geometric/geo_shuriken']").click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+        await animationFrame();
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const croppedSrc = queryFirst(":iframe .test-options-target img").src;
+
+        // debugger;
+        await contains(`[data-action-id="toggleImageShapeRatio"] input`).click();
+
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+        await animationFrame();
+
+        expect(`:iframe .test-options-target img`).not.toHaveAttribute("src", croppedSrc);
+    });
+});
