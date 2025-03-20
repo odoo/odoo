@@ -39,7 +39,7 @@ class _Relational(Field[M], typing.Generic[M]):
     auto_join: bool = False         # whether joins are generated upon search
     check_company: bool = False
 
-    def __get__(self, records, owner=None):
+    def __get__(self, records: BaseModel, owner=None):
         # base case: do the regular access
         if records is None or len(records._ids) <= 1:
             return super().__get__(records, owner)
@@ -50,22 +50,26 @@ class _Relational(Field[M], typing.Generic[M]):
         if self.compute and self.store:
             self.recompute(records)
 
-        # retrieve values in cache, and fetch missing ones
+        # get the cache
         env = records.env
-        vals = env.cache.get_until_miss(records, self)
+        field_cache = self._get_cache(env)
 
-        if self.store and len(vals) < len(records) - PREFETCH_MAX:
-            # a lot of missing records, just fetch that field
-            remaining = records[len(vals):]
-            remaining.fetch([self.name])
-            vals += records.env.cache.get_until_miss(remaining, self)
+        # retrieve values in cache, and fetch missing ones
+        vals = []
+        for record_id in records._ids:
+            try:
+                vals.append(field_cache[record_id])
+            except KeyError:
+                if self.store and len(vals) < len(records) - PREFETCH_MAX:
+                    # a lot of missing records, just fetch that field
+                    remaining = records[len(vals):]
+                    remaining.fetch([self.name])
+                else:
+                    remaining = records.__class__(env, (record_id,), records._prefetch_ids)
+                    super().__get__(remaining, owner)
+                # we have the record now
+                vals.append(field_cache[record_id])
 
-        while len(vals) < len(records):
-            remaining = records.__class__(records.env, records._ids[len(vals):], records._prefetch_ids)
-            self.__get__(next(iter(remaining)))
-            vals += records.env.cache.get_until_miss(remaining, self)
-
-        assert len(vals) == len(records), "Some records are not in cache"
         return self.convert_to_record_multi(vals, records)
 
     def convert_to_record_multi(self, values, records):

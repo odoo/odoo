@@ -847,20 +847,12 @@ class Cache:
 
     def get_until_miss(self, records: BaseModel, field: Field) -> list[typing.Any]:
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
-        field_cache = self._get_field_cache(records, field)
-        if field.translate:
-            lang = (records.env.lang or 'en_US') if field.translate is True else records.env._lang
-
-            def get_value(id_):
-                cache_value = field_cache[id_]
-                return None if cache_value is None else cache_value[lang]
-        else:
-            get_value = field_cache.__getitem__
-
+        warnings.warn("Since 19.0, this is managed directly by Field")
+        field_cache = field._cache_view(records.env)
         vals = []
         for record_id in records._ids:
             try:
-                vals.append(get_value(record_id))
+                vals.append(field_cache[record_id])
             except KeyError:
                 break
         return vals
