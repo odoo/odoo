@@ -1565,6 +1565,7 @@ class Test_New_ApiComputeContainer(models.Model):
     _description = 'test_new_api.compute.container'
 
     name = fields.Char()
+    name_translated = fields.Char(translate=True)
     member_ids = fields.One2many('test_new_api.compute.member', 'container_id')
     member_count = fields.Integer(compute='_compute_member_count', store=True)
 
@@ -1580,12 +1581,37 @@ class Test_New_ApiComputeMember(models.Model):
 
     name = fields.Char()
     container_id = fields.Many2one('test_new_api.compute.container', compute='_compute_container', store=True)
+    container_super_id = fields.Many2one(
+        'test_new_api.compute.container', string='Container For SUPERUSER',
+    )
+    container_context_id = fields.Many2one(
+        'test_new_api.compute.container',
+        compute='_compute_container_context_id',
+        search='_search_container_context',
+    )
+    container_context_name = fields.Char(
+        related='container_context_id.name', string='Container Context Name',
+    )
+    container_context_name_translated = fields.Char(
+        related='container_context_id.name_translated', string='Container Context Name Translated',
+    )
 
     @api.depends('name')
     def _compute_container(self):
         container = self.env['test_new_api.compute.container']
         for member in self:
             member.container_id = container.search([('name', '=', member.name)], limit=1)
+
+    @api.depends('container_id', 'container_super_id')
+    @api.depends_context('uid')
+    def _compute_container_context_id(self):
+        field_name = 'container_super_id' if self.env.user._is_superuser() else 'container_id'
+        for member in self:
+            member.container_context_id = member[field_name]
+
+    def _search_container_context(self, operator, value):
+        field_name = 'container_super_id' if self.env.user._is_superuser() else 'container_id'
+        return [(field_name, operator, value)]
 
 
 class Test_New_ApiUser(models.Model):
