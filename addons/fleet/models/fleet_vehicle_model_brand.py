@@ -36,3 +36,13 @@ class FleetVehicleModelBrand(models.Model):
         }
 
         return view
+
+    def action_manufacturer(self):
+        self.ensure_one()
+        return {
+            'name': 'Manufacturer',
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'fleet.vehicle.model.brand',
+            'res_id': self.id
+        }
