@@ -390,7 +390,7 @@ describe("Selection collapsed", () => {
                             </ul>`),
                     stepFunction: splitBlock,
                     contentAfter: unformat(`
-                        <ul>
+                        <ul style="padding-inline-start: 36px;">
                             <li style="list-style: cambodian;">a</li>
                             <li style="list-style: cambodian;">[]<br></li>
                         </ul>`),
