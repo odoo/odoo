@@ -672,6 +672,7 @@ class EventEvent(models.Model):
 
         for event in self:
             cal = vobject.iCalendar()
+            cal.add('method').value = 'PUBLISH'
             cal_event = cal.add('vevent')
 
             cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
