@@ -211,6 +211,9 @@ class MrpProduction(models.Model):
     procurement_group_id = fields.Many2one(
         'procurement.group', 'Procurement Group',
         copy=False, index='btree_not_null')
+    reference_ids = fields.Many2many(
+        'stock.reference', 'stock_reference_production_rel', 'production_id', 'reference_id', 'References',
+    )
     product_description_variants = fields.Char('Custom Description')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
     propagate_cancel = fields.Boolean(

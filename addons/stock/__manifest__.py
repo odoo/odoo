@@ -84,6 +84,7 @@
         'views/stock_package_level_views.xml',
         'views/stock_package_type_view.xml',
         'views/stock_forecasted.xml',
+        'views/stock_reference_views.xml',
         'views/uom_uom_views.xml',
     ],
     'installable': True,
