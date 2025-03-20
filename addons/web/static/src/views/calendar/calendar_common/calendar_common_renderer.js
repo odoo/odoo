@@ -6,7 +6,7 @@ import { useBus } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
-import { getColor } from "@web/views/calendar/colors";
+import { getColor } from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
