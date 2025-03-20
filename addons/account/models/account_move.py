@@ -5584,24 +5584,14 @@ class AccountMove(models.Model):
     def _check_draftable(self):
         exchange_move_ids = set()
         if self:
-            self.env['account.full.reconcile'].flush_model(['exchange_move_id'])
             self.env['account.partial.reconcile'].flush_model(['exchange_move_id'])
             sql = SQL(
                 """
-                    SELECT DISTINCT sub.exchange_move_id
-                    FROM (
-                        SELECT exchange_move_id
-                        FROM account_full_reconcile
-                        WHERE exchange_move_id IN %s
-
-                        UNION ALL
-
-                        SELECT exchange_move_id
-                        FROM account_partial_reconcile
-                        WHERE exchange_move_id IN %s
-                    ) AS sub
+                    SELECT DISTINCT exchange_move_id
+                    FROM account_partial_reconcile
+                    WHERE exchange_move_id IN %s
                 """,
-                tuple(self.ids), tuple(self.ids),
+                tuple(self.ids),
             )
             exchange_move_ids = {id_ for id_, in self.env.execute_query(sql)}
 
