@@ -43,7 +43,7 @@
     </t>
 
     <t t-name="mail.DiscussSidebarCategory.main">
-        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'mx-1 my-2 position-relative': store.discuss.isSidebarCompact, 'mt-1 ms-1 me-2': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
+        <div class="o-mail-DiscussSidebarCategory d-flex align-items-center" t-att-class="{ 'm-2 position-relative': store.discuss.isSidebarCompact, 'mt-1 ms-1 me-2 pe-1': !store.discuss.isSidebarCompact }" t-attf-class="#{category.extraClass}" name="header" t-ref="root">
             <button class="o-mail-DiscussSidebarCategory-toggler btn btn-link text-reset flex-grow-1 d-flex p-0 text-start opacity-100-hover" t-att-class="{ 'align-items-baseline opacity-75 o-gap-0_5': !store.discuss.isSidebarCompact, 'align-items-center justify-content-center border-0 o-compact opacity-50 gap-1': store.discuss.isSidebarCompact }" t-on-click="() => this.toggle()" name="toggler">
                 <t t-if="store.discuss.isSidebarCompact">
                     <i class="o-mail-DiscussSidebarCategory-chevronCompact position-absolute fa-fw o-xxsmaller" t-att-class="{
@@ -67,7 +67,7 @@
 
     <t t-name="mail.DiscussSidebarCategory.actions">
         <div class="d-flex">
-            <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm mx-1 o-gap-0_5': !store.discuss.isSidebarCompact }">
+            <div class="o-mail-DiscussSidebarCategory-actions" t-att-class="{ 'd-flex flex-column align-items-start pt-1': store.discuss.isSidebarCompact, 'btn-group btn-group-sm ms-1 o-gap-0_5': !store.discuss.isSidebarCompact }">
                 <t name="action-group">
                     <t t-foreach="actions" t-as="action" t-key="action_index">
                         <button class="btn w-100 o-opacity-35 opacity-100-hover" t-on-click="() => action.onSelect()" t-att-class="{ 'd-flex align-items-center px-1 py-0 gap-1 text-start smaller btn-secondary': store.discuss.isSidebarCompact, 'btn-light bg-transparent rounded-3 p-0 border-transparent': !store.discuss.isSidebarCompact }" t-attf-class="#{action.class}" t-att-title="store.discuss.isSidebarCompact ? '' : action.label" t-att-data-hotkey="action.hotkey">
