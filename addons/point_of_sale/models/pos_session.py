@@ -1895,8 +1895,8 @@ class PosSession(models.Model):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):

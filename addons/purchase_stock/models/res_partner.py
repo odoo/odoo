@@ -18,6 +18,24 @@ class ResPartner(models.Model):
     suggest_based_on = fields.Char(store=True, default='30_days')
     suggest_days = fields.Integer(store=True, default=7)
     suggest_percent = fields.Integer(store=True, default=100)
+    group_rfq = fields.Selection(
+        [('default', 'On Order'), ('day', 'Daily'), ('week', 'Weekly'), ('all', 'Always')],
+        string='Group RFQ', required=True, default='default', help="Define if RFQ should be grouped \
+        together based on expected arrival.\n \
+        On Order: Replenishment needs will be grouped together except for MTO.\n \
+        Daily: Replenishment needs will be grouped if the expected arrival is the same day\n \
+        Weekly: Replenishment needs will be grouped if the expected arrival is the same week or week day\n \
+        Always: Replenishment needs will always be grouped.")
+    group_on = fields.Selection([
+        ('default', 'Expected Date'),
+        ('1', 'Monday'),
+        ('2', 'Tuesday'),
+        ('3', 'Wednesday'),
+        ('4', 'Thursday'),
+        ('5', 'Friday'),
+        ('6', 'Saturday'),
+        ('7', 'Sunday'),
+    ], string='Week Day', required=True, default='default')
 
     @api.depends('purchase_line_ids')
     def _compute_on_time_rate(self):

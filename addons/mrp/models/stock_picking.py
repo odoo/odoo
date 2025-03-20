@@ -132,23 +132,27 @@ class StockPicking(models.Model):
         compute='_compute_mrp_production_ids',
         groups='mrp.group_mrp_user')
 
-    production_ids = fields.Many2many(
+    production_ids = fields.One2many(
         'mrp.production',
-        compute='_compute_mrp_production_ids',
+        related='move_ids.production_group_id.production_ids',
         groups='mrp.group_mrp_user')
+    production_group_id = fields.Many2one(
+        'mrp.production.group',
+        string="Production Group",
+        related='move_ids.production_group_id',
+    )
 
     @api.depends('move_ids')
     def _compute_has_kits(self):
         for picking in self:
             picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
 
-    @api.depends('group_id')
+    @api.depends('production_ids')
     def _compute_mrp_production_ids(self):
         for picking in self:
-            production_ids = picking.group_id.mrp_production_ids | picking.move_ids.move_dest_ids.raw_material_production_id
-            # Filter out unwanted MO types
-            picking.production_ids = production_ids.filtered(lambda p: p.picking_type_id.active)
-            picking.production_count = len(picking.production_ids)
+            # hide subcontracting MO from resupply picking
+            mo = picking.production_ids.filtered(lambda mo: mo.picking_type_id.active)
+            picking.production_count = len(mo)
 
     def action_detailed_operations(self):
         action = super().action_detailed_operations()

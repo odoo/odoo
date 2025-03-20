@@ -375,7 +375,7 @@ class TestPickShip(TestStockCommon):
         picking_ship.action_cancel()
         picking_ship.move_ids.procure_method = 'make_to_order'
 
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         next_activity = self.env['mail.activity'].search([('res_model', '=', 'product.template'), ('res_id', '=', self.productA.product_tmpl_id.id)])
         self.assertEqual(picking_ship.state, 'cancel')
         self.assertFalse(next_activity, 'If a next activity has been created if means that scheduler failed\
@@ -2425,10 +2425,10 @@ class TestSinglePicking(TestStockCommon):
         picking.action_confirm()
         self.assertFalse(picking.move_line_ids)
         self.env['stock.quant']._update_available_quantity(product, self.stock_location, 5)
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         self.assertRecordValues(picking.move_line_ids, [{'state': 'partially_available', 'quantity': 5.0}])
         self.env['stock.quant']._update_available_quantity(product, self.stock_location, 10)
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         self.assertRecordValues(picking.move_line_ids, [{'state': 'assigned', 'quantity': 10.0}])
 
     def test_create_picked_move_line(self):
@@ -2962,7 +2962,7 @@ class TestRoutes(TestStockCommon):
         })
 
         # We alter one rule and we set it to 'mts_else_mto'
-        rule = self.env['procurement.group']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
+        rule = self.env['stock.rule']._get_rule(product_A, final_location, {'warehouse_id': warehouse})
         rule.procure_method = 'mts_else_mto'
 
         self.env['stock.quant']._update_available_quantity(product_A, warehouse.lot_stock_id, 5.0)

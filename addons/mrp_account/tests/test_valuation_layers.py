@@ -63,7 +63,7 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo = mo.procurement_group_id.mrp_production_ids[-1]
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.component.value_svl, 20)
         self.assertEqual(self.product1.value_svl, 10)
         self.assertEqual(self.component.quantity_svl, 1)
@@ -115,7 +115,7 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo = mo.procurement_group_id.mrp_production_ids[-1]
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.component.value_svl, 20)
         self.assertEqual(self.product1.value_svl, 10 * (100 - byproduct_cost_share) / 100)
         self.assertEqual(byproduct.value_svl, 10 * byproduct_cost_share / 100)
@@ -189,7 +189,7 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo = mo.procurement_group_id.mrp_production_ids[-1]
+        mo = mo.production_group_id.production_ids[-1]
         self.assertEqual(self.component.value_svl, 20)
         self.assertEqual(self.product1.value_svl, 10)
         self.assertEqual(self.component.quantity_svl, 1)

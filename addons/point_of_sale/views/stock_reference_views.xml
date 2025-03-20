@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_reference_pos_view_form" model="ir.ui.view">
+        <field name="name">stock.reference.pos</field>
+        <field name="model">stock.reference</field>
+        <field name="inherit_id" ref="stock.stock_reference_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_ids']" position="after">
+               <field name="pos_order_ids" widget="many2many_tags" readonly="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

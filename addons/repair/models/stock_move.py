@@ -99,7 +99,7 @@ class StockMove(models.Model):
         for move in moves:
             if not move.repair_id:
                 continue
-            move.group_id = move.repair_id.procurement_group_id.id
+            move.reference_ids = [Command.link(r.id) for r in move.repair_id.reference_ids]
             move.picking_type_id = move.repair_id.picking_type_id.id
             repair_moves |= move
         no_repair_moves = moves - repair_moves

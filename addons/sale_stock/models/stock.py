@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -121,18 +121,19 @@ class StockMove(models.Model):
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.sale_line_id.product_id == product)
 
+    def _prepare_procurement_values(self):
+        res = super()._prepare_procurement_values()
+        # to pass sale_line_id fom SO to MO in mto
+        if self.sale_line_id:
+            res['sale_line_id'] = self.sale_line_id.id
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     def _should_show_lot_in_invoice(self):
         return 'customer' in {self.location_id.usage, self.location_dest_id.usage}
-
-
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    sale_id = fields.Many2one('sale.order', 'Sale Order')
 
 
 class StockRule(models.Model):
@@ -149,25 +150,33 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
 
-    @api.depends('group_id')
+    @api.depends('reference_ids.sale_ids', 'move_ids.sale_line_id.order_id')
     def _compute_sale_id(self):
         for picking in self:
-            picking.sale_id = picking.group_id.sale_id
+            # picking and move should have a link to the SO to see the picking on the stat button.
+            # This will filter the move chain to the delivery moves only.
+            picking.sale_id = picking.move_ids.sale_line_id.order_id
+
+    @api.depends('move_ids.sale_line_id')
+    def _compute_move_type(self):
+        super()._compute_move_type()
+        for picking in self:
+            sale_orders = picking.move_ids.sale_line_id.order_id
+            if sale_orders:
+                if any(so.picking_policy == "direct" for so in sale_orders):
+                    picking.move_type = "direct"
+                else:
+                    picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.group_id:
-            self.group_id.sale_id = self.sale_id
+        if self.reference_ids and self.sale_id:
+            self.reference_ids.sale_ids = Command.link(self.sale_id)
         else:
             if self.sale_id:
-                vals = {
-                    'sale_id': self.sale_id.id,
+                self.env['stock.reference'].create({
+                    'sale_ids': [Command.link(self.sale_id.id)],
                     'name': self.sale_id.name,
-                }
-            else:
-                vals = {}
-
-            pg = self.env['procurement.group'].create(vals)
-            self.group_id = pg
+                })
 
     def _auto_init(self):
         """
@@ -180,6 +189,51 @@ class StockPicking(models.Model):
         if not column_exists(self.env.cr, 'stock_picking', 'sale_id'):
             create_column(self.env.cr, 'stock_picking', 'sale_id', 'int4')
         return super()._auto_init()
+
+    def _action_done(self):
+        res = super()._action_done()
+        sale_order_lines_vals = []
+        for move in self.move_ids:
+            ref_sale = move.picking_id.reference_ids.sale_ids
+            sale_order = ref_sale and ref_sale[0] or move.sale_line_id.order_id
+            # Creates new SO line only when pickings linked to a sale order and
+            # for moves with qty. done and not already linked to a SO line.
+            if not sale_order or move.sale_line_id or not move.picked or not (
+                (move.location_dest_id.usage in ['customer', 'transit'] and not move.move_dest_ids)
+                or (move.location_id.usage == 'customer' and move.to_refund)
+            ):
+                continue
+            product = move.product_id
+            quantity = move.quantity
+            if move.location_id.usage in ['customer', 'transit']:
+                quantity *= -1
+
+            so_line_vals = {
+                'move_ids': [(4, move.id, 0)],
+                'name': product.display_name,
+                'order_id': sale_order.id,
+                'product_id': product.id,
+                'product_uom_qty': 0,
+                'qty_delivered': quantity,
+                'product_uom_id': move.product_uom.id,
+            }
+            so_line = sale_order.order_line.filtered(lambda sol: sol.product_id == product)
+            if product.invoice_policy == 'delivery':
+                # Check if there is already a SO line for this product to get
+                # back its unit price (in case it was manually updated).
+                if so_line:
+                    so_line_vals['price_unit'] = so_line[0].price_unit
+            elif product.invoice_policy == 'order':
+                # No unit price if the product is invoiced on the ordered qty.
+                so_line_vals['price_unit'] = 0
+            # New lines should be added at the bottom of the SO (higher sequence number)
+            if not so_line:
+                so_line_vals['sequence'] = max(sale_order.order_line.mapped('sequence')) + len(sale_order_lines_vals) + 1
+            sale_order_lines_vals.append(so_line_vals)
+
+        if sale_order_lines_vals:
+            self.env['sale.order.line'].with_context(skip_procurement=True).create(sale_order_lines_vals)
+        return res
 
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The

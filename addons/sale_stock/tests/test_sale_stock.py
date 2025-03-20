@@ -1682,48 +1682,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(so.picking_ids.move_ids.mapped('state'), ['cancel', 'cancel'])
 
-    def test_2_steps_fixed_procurement_propagation_with_backorder(self):
-        """
-        When validating a picking (partially coming from a backorder) linked to 2 destinations moves in a 2-steps delivery,
-        stock.move.line should be created for the 2 OUT moves.
-        Steps:
-        - Warehouse with Outgoing Shipments in 2 steps and propagation of rule set to Fixed
-        - Create a SO with 3 Product X
-        - on PICK_1 picking: set 1 unit in done, validate and create a backorder
-        - Create a SO with 1 Product X
-        - on PICK_2 picking: set 3 units in done and validate
-        """
-        warehouse = self.company_data.get('default_warehouse')
-        warehouse.delivery_steps = 'pick_ship'
-        rule = warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.procure_method == 'make_to_stock')[0]
-        rule.group_propagation_option = 'fixed'
-        fixedGroup = self.env['procurement.group'].create({})
-        rule.group_id = fixedGroup
-        self.env['stock.quant']._update_available_quantity(self.test_product_delivery, warehouse.lot_stock_id, 4)
-        # create a SO with 3 products
-        so1 = self._get_new_sale_order(product=self.test_product_delivery, amount=3)
-        so1.action_confirm()
-        pick1 = fixedGroup.stock_move_ids.filtered(lambda m: m.origin == so1.name)[0].picking_id
-        # set 1 done on the PICK move
-        pick1.move_ids.write({'quantity': 1, 'picked': True})
-        # create a backorder for the 2 remaining products
-        Form.from_action(self.env, pick1.button_validate()).save().process()
-        out = pick1.move_ids.move_dest_ids.picking_id.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
-        self.assertEqual(out.move_line_ids.quantity, 1)
-
-        # create another SO with 1 product
-        so2 = self._get_new_sale_order(product=self.test_product_delivery, amount=1)
-        so2.action_confirm()
-
-        # PICK move of this SO will be added to the first PICK backorder but not merged, as they are linked to different sale_line_id.
-        pick2 = pick1.backorder_ids[0]
-        for move in pick2.move_ids:
-            move.write({'quantity': move.product_uom_qty, 'picked': True})
-        pick2.button_validate()
-        self.assertEqual(out.state, 'assigned')
-        self.assertEqual(out.move_ids.filtered(lambda m: m.sale_line_id == so1.order_line).quantity, 3)
-        self.assertEqual(out.move_ids.filtered(lambda m: m.sale_line_id == so2.order_line).quantity, 1)
-
     def test_delivery_on_negative_delivered_qty(self):
         """
             Tests that returns created from SO lines with negative quantities update the delivered
@@ -1965,7 +1923,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.picking_policy = "one"
         so.action_confirm()
 
-        self.assertEqual(so.procurement_group_id.move_type, "one")
         self.assertEqual(so.picking_ids[0].picking_type_id, picking_type_out)
         self.assertEqual(so.picking_ids[0].move_type, "one")
 
