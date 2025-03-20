@@ -197,7 +197,6 @@ export class Many2XAutocomplete extends Component {
         id: { type: String, optional: true },
         isToMany: { type: Boolean, optional: true },
         nameCreateField: { type: String, optional: true },
-        noSearchMore: { type: Boolean, optional: true },
         otherSources: { type: Array, optional: true },
         placeholder: { type: String, optional: true },
         quickCreate: { type: [Function, { value: null }], optional: true },
@@ -439,7 +438,7 @@ export class Many2XAutocomplete extends Component {
             }
         }
 
-        if (!this.props.noSearchMore && addSearchMore) {
+        if (addSearchMore) {
             options.push({
                 cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
                 label: this.SearchMoreButtonLabel,

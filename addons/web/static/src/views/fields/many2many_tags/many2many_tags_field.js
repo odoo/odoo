@@ -54,7 +54,6 @@ export class Many2ManyTagsField extends Component {
         nameCreateField: { type: String, optional: true },
         searchThreshold: { type: Number, optional: true },
         string: { type: String, optional: true },
-        noSearchMore: { type: Boolean, optional: true },
     };
     static defaultProps = {
         canCreate: true,
