@@ -6,7 +6,7 @@
         <field name="res_model">sale.order</field>
         <field name="view_mode">list,kanban,form,graph</field>
         <field name="domain">[('partner_id', 'child_of', active_ids)]</field>
-        <field name="context">{'default_partner_id': active_id, 'active_test': False}</field>
+        <field name="context">{'default_partner_id': active_id}</field>
         <field name="group_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
