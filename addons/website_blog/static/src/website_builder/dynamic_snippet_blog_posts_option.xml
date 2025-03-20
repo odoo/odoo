@@ -38,8 +38,11 @@
         <BuilderRow label.translate="Category" preview="false" t-if="!!showCategoryOption()">
             <BuilderCheckbox id="'category_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_category_active'"/>
         </BuilderRow>
+        <BuilderRow label.translate="New Tag" preview="false" t-if="!!showNewTagOption()">
+            <BuilderCheckbox id="'new_opt'" action="'customizeTemplate'" actionParam="'blog_posts_post_new_active'"/>
+        </BuilderRow>
         <!-- TODO noWidgetRefresh="true" => refreshInteraction="false" ? -->
-        <BuilderRow label.translate="Hover Effect" t-if="templateKeyState.templateKey === 'website_blog.dynamic_filter_template_blog_post_big_picture'">
+        <BuilderRow label.translate="Hover Effect" t-if="!!showHoverEffectOption()">
             <BuilderSelect>
                 <BuilderSelectItem classAction="''">None</BuilderSelectItem>
                 <BuilderSelectItem classAction="'s_blog_posts_effect_marley'">Marley</BuilderSelectItem>
