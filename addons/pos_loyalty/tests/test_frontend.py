@@ -404,6 +404,36 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(loyalty_program.pos_order_count, 1)
         self.assertAlmostEqual(aaa_loyalty_card.points, 5.2)
 
+    def test_loyalty_free_product_rewards_2(self):
+        free_product = self.env['loyalty.program'].create({
+            'name': 'Buy 2 Take 1 desk_organizer',
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'rule_ids': [(0, 0, {
+                'product_ids': self.desk_organizer,
+                'reward_point_amount': 1,
+                'reward_point_mode': 'order',
+                'minimum_qty': 2,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.desk_organizer.id,
+                'reward_product_qty': 1,
+                'required_points': 1,
+            })],
+        })
+        (self.promo_programs | self.coupon_program).write({'active': False})
+
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+        self.start_pos_tour("test_loyalty_free_product_rewards_2")
+
+        self.assertEqual(free_product.pos_order_count, 1)
+
     def test_pos_loyalty_tour_max_amount(self):
         """Test the loyalty program with a maximum amount and product with different taxe."""
 
@@ -813,6 +843,41 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
 
         self.start_pos_tour("PosLoyaltyFreeProductTour2")
+
+    def test_loyalty_program_different_orders(self):
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 10,
+                'minimum_amount': 5,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'required_points': 30,
+                'reward_product_id': self.product_a.id,
+                'reward_product_qty': 1,
+            })],
+        })
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        card = self.env['loyalty.card'].create({
+            'partner_id': partner.id,
+            'program_id': loyalty_program.id,
+            'points': 0,
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_pos_tour("PosLoyaltyMultipleOrders")
+
+        self.assertEqual(card.points, 0, "Loyalty card credited for a draft order")
 
     def test_refund_with_gift_card(self):
         """When adding a gift card when there is a refund in the order, the amount
