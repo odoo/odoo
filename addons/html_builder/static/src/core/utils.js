@@ -17,15 +17,16 @@ import { useDebounced } from "@web/core/utils/timing";
 
 export function useDomState(getState, { checkEditingElement = true } = {}) {
     const env = useEnv();
-    const editingElement = env.getEditingElement();
+    const state = useState(getState(env.getEditingElement()));
     const isValid = (el) => (!el && !checkEditingElement) || (el && el.isConnected);
-    const state = useState(isValid(editingElement) ? getState(editingElement) : {});
-    useBus(env.editorBus, "DOM_UPDATED", () => {
+    const handler = () => {
         const editingElement = env.getEditingElement();
         if (isValid(editingElement)) {
             Object.assign(state, getState(editingElement));
         }
-    });
+    };
+    env.editorBus.addEventListener("DOM_UPDATED", handler);
+    onWillDestroy(() => env.editorBus.removeEventListener("DOM_UPDATED", handler));
     return state;
 }
 
@@ -233,6 +234,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
                 refreshCurrentItem();
                 return currentSelectedItem;
             },
+            items: selectableItems,
         },
     });
 }
@@ -282,6 +284,22 @@ export function useClickableBuilderComponent() {
     const comp = useComponent();
     const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
+    const asyncActions = [];
+    for (const a of getAllActions()) {
+        if (a.actionId) {
+            const b = getAction(a.actionId);
+            if (b.prepare) {
+                asyncActions.push({ action: b, descr: a });
+            }
+        }
+    }
+    if (asyncActions.length) {
+        onWillStart(async function () {
+            await Promise.all(asyncActions.map((obj) => obj.action.prepare(obj.descr)));
+            comp.env.editorBus.trigger("DOM_UPDATED");
+        });
+    }
+
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
@@ -321,6 +339,7 @@ export function useClickableBuilderComponent() {
                     param: actionParam,
                     value: actionValue,
                     dependencyManager: comp.env.dependencyManager,
+                    selectableContext: comp.env.selectableContext,
                     get nextAction() {
                         nextAction =
                             nextAction || nextApplySpecs.find((a) => a.actionId === actionId) || {};
@@ -351,6 +370,7 @@ export function useClickableBuilderComponent() {
                     param: applySpec.actionParam,
                     value: applySpec.actionValue,
                     dependencyManager: comp.env.dependencyManager,
+                    selectableContext: comp.env.selectableContext,
                 });
             } else {
                 applySpec.apply({
@@ -359,6 +379,7 @@ export function useClickableBuilderComponent() {
                     value: applySpec.actionValue,
                     loadResult: applySpec.loadResult,
                     dependencyManager: comp.env.dependencyManager,
+                    selectableContext: comp.env.selectableContext,
                 });
             }
         }

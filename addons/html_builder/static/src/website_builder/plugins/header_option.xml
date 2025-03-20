@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.headerElementOption">
+    <BuilderRow label.translate="Elements" action="'websiteConfig'">
+        <div class="flex-grow-1">
+            <div class="d-flex mb-1">
+                <BuilderButton
+                    title.translate="Show/hide text element"
+                    className="'flex-grow-1 me-1'"
+                    actionParam="{
+                        xmlId: 'website.header_text_element',
+                        resetViewArch: true,
+                    }"
+                >
+                    <img src="/website/static/src/img/snippets_options/header_extra_element_text.svg"/>
+                </BuilderButton>
+                <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
+                <BuilderButton 
+                    t-if="language_ids.length > 1"
+                    title.translate="Show/hide language selector"
+                    className="'flex-grow-1 me-1 fa fa-flag'"
+                    actionParam="{
+                        xmlId: 'website.header_language_selector',
+                        resetViewArch: true,
+                    }"
+                >
+                </BuilderButton>
+                <BuilderButton
+                    title.translate="Show/hide search bar"
+                    className="'fa fa-search flex-grow-1 me-1'"
+                    actionParam="{
+                        xmlId: 'website.header_search_box',
+                        resetViewArch: true,
+                    }"/>
+                <BuilderButton
+                    title.translate="Show/hide sign in button"
+                    className="'fa fa-sign-in flex-grow-1'"
+                    actionParam="{
+                        xmlId: 'portal.user_sign_in',
+                        resetViewArch: true,
+                    }"/>
+            </div>
+            <div class="d-flex">
+                <BuilderButton
+                    title.translate="Show/hide social links"
+                    className="'flex-grow-1 me-1'"
+                    actionParam="{
+                        xmlId: 'website.header_social_links',
+                        resetViewArch: true,
+                    }"                    
+                >
+                    <img src="/website/static/src/img/snippets_options/header_extra_element_social.svg"/>
+                </BuilderButton>
+                <BuilderButton
+                    title.translate="Show/hide button"
+                    className="'flex-grow-1 me-1'"
+                    actionParam="{
+                        xmlId: 'website.header_call_to_action',
+                        resetViewArch: true,
+                    }" 
+                >
+                    <img src="/website/static/src/img/snippets_options/header_extra_element_cta.svg"/>
+                </BuilderButton>
+                <BuilderButton
+                    title.translate="Show/hide logo"
+                    className="'flex-grow-1'"
+                    actionParam="{
+                        xmlId: ['website.option_header_brand_name', 'website.option_header_brand_logo'],
+                        resetViewArch: true,
+                    }" 
+                >
+                    <img src="/website/static/src/img/snippets_options/header_extra_element_logo.svg"/>
+                </BuilderButton>
+            </div>
+        </div>
+    </BuilderRow>
+</t>
+
+</templates>

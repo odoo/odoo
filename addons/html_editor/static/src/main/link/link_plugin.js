@@ -631,7 +631,7 @@ export class LinkPlugin extends Plugin {
             }
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
-            if (closestLinkElement) {
+            if (closestLinkElement && closestLinkElement.isContentEditable) {
                 if (closestLinkElement !== this.linkInDocument) {
                     this.openLinkTools(closestLinkElement);
                 }

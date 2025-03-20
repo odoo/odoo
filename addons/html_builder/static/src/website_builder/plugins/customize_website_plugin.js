@@ -6,13 +6,21 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { isCSSColor } from "@web/core/utils/colors";
 
+const toList = (e) => (Array.isArray(e) ? e : [e]);
+
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = ["builderActions", "history", "savePlugin"];
     static shared = ["makeSCSSCusto"];
+
     resources = {
         builder_actions: this.getActions(),
     };
+
+    cache = {};
+    activeViews = {};
+    pendingRequests = new Set();
+    resolves = {};
 
     getActions() {
         return {
@@ -180,6 +188,16 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 apply: () => this.stuffHappened(),
             },
+            websiteConfig: {
+                prepare: async ({ actionParam }) =>
+                    this.loadConfigKey(actionParam.mainParam || actionParam.xmlId),
+                isApplied: ({ param }) => {
+                    const views = toList(param.mainParam || param.xmlId);
+                    return views.every((v) => this.getConfigKey(v));
+                },
+                apply: (action) => this.toggleConfig(action, true),
+                clean: (action) => this.toggleConfig(action, false),
+            },
         };
     }
     stuffHappened() {
@@ -279,6 +297,101 @@ export class CustomizeWebsitePlugin extends Plugin {
                 el.remove();
             }
         });
+    }
+
+    // -------------------------------------------------------------------------
+    // customize website action
+    // -------------------------------------------------------------------------
+    loadConfigKey(keys) {
+        if (!Array.isArray(keys)) {
+            keys = [keys];
+        }
+        for (const key of keys) {
+            if (!(key in this.cache)) {
+                this.cache[key] = this._loadBatchKey(key);
+            }
+        }
+        return Promise.all(keys.map((key) => this.cache[key]));
+    }
+
+    _loadBatchKey(key) {
+        this.pendingRequests.add(key);
+        return new Promise((resolve) => {
+            this.resolves[key] = resolve;
+            setTimeout(() => {
+                if (this.pendingRequests.size && !this.isDestroyed) {
+                    const keys = [...this.pendingRequests];
+                    this.pendingRequests.clear();
+                    rpc("/website/theme_customize_data_get", {
+                        keys,
+                        is_view_data: true,
+                    }).then((r) => {
+                        if (!this.isDestroyed) {
+                            for (const key of keys) {
+                                this.activeViews[key] = r.includes(key);
+                                this.resolves[key]();
+                            }
+                        }
+                    });
+                }
+            }, 0);
+        });
+    }
+
+    async toggleConfig(action, apply) {
+        if (this.dependencies.history.getIsPreviewing()) {
+            // ignore previews!
+            return;
+        }
+        const toEnable = new Set();
+        const toDisable = new Set();
+        const shouldReset = !!action.param.resetViewArch;
+        const views = toList(action.param.mainParam || action.param.xmlId);
+        if (action.selectableContext) {
+            if (!apply) {
+                // do nothing, we will do it anyway in the apply call
+                return;
+            }
+            for (const item of action.selectableContext.items) {
+                for (const a of item.getActions()) {
+                    if (a.actionId === "websiteConfig") {
+                        for (const view of toList(a.actionParam.mainParam)) {
+                            toDisable.add(view);
+                        }
+                    }
+                }
+            }
+            for (const view of views) {
+                toDisable.delete(view);
+                toEnable.add(view);
+            }
+        } else {
+            for (const view of views) {
+                if (this.activeViews[view]) {
+                    toDisable.add(view);
+                } else {
+                    toEnable.add(view);
+                }
+            }
+        }
+        const updateTheme = rpc("/website/theme_customize_data", {
+            is_view_data: true,
+            enable: [...toEnable],
+            disable: [...toDisable],
+            reset_view_arch: shouldReset,
+        });
+        const saveProm = this.dependencies.savePlugin.save();
+        await Promise.all([updateTheme, saveProm]);
+        if (this.isDestroyed) {
+            return true;
+        }
+        const inHeader = action.editingElement.closest("header");
+        const target = inHeader ? "header" : null;
+        this.dispatchTo("reload_editor", { target });
+    }
+
+    getConfigKey(key) {
+        return this.activeViews[key];
     }
 }
 
