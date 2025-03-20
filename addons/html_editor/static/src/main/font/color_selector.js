@@ -8,6 +8,8 @@ import {
 import { effect } from "@web/core/utils/reactive";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { useChildRef } from "@web/core/utils/hooks";
+import { useDropdownAutoVisibility } from "@html_editor/dropdown_autovisibility_hook";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
@@ -46,6 +48,7 @@ export class ColorSelector extends Component {
             [this.props.getSelectedColors()]
         );
 
+        const colorPickerRef = useChildRef();
         this.colorPicker = useColorPicker(
             "root",
             {
@@ -61,8 +64,10 @@ export class ColorSelector extends Component {
                     this.props.applyColorResetPreview();
                     this.props.onClose();
                 },
+                ref: colorPickerRef,
             }
         );
+        useDropdownAutoVisibility(this.env.overlayState, colorPickerRef);
     }
 
     getCorrespondingColorTab(color) {

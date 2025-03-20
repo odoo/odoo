@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.FontSizeSelector">
-        <Dropdown state="dropdown" menuClass="'o_font_size_selector_menu'">
+        <Dropdown state="dropdown" menuClass="'o_font_size_selector_menu'" menuRef="menuRef">
             <button class="btn btn-light" t-att-title="props.title" name="font_size_selector">
                 <iframe t-ref="iframeContent" style="width: 4ch; height:100%;"/>
             </button>
