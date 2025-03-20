@@ -21,6 +21,10 @@ export class EditInteractionPlugin extends Plugin {
         window.parent.document.dispatchEvent(new CustomEvent("edit_interaction_plugin_loaded"));
     }
 
+    destroy() {
+        this.stopInteractions(this.editable);
+    }
+
     updateEditInteraction({ detail: { websiteEditService } }) {
         this.websiteEditService = websiteEditService;
     }
@@ -30,6 +34,13 @@ export class EditInteractionPlugin extends Plugin {
             throw new Error("website edit service not loaded");
         }
         this.websiteEditService.update(element, true);
+    }
+
+    stopInteractions(element) {
+        if (!this.websiteEditService) {
+            throw new Error("website edit service not loaded");
+        }
+        this.websiteEditService.stop(element);
     }
 }
 
