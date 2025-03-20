@@ -259,6 +259,7 @@ class SaleOrderLine(models.Model):
         date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,
+            'reference_ids': self.order_id.stock_reference_ids,
             'sale_line_id': self.id,
             'date_planned': date_planned,
             'date_deadline': date_deadline,
@@ -334,6 +335,12 @@ class SaleOrderLine(models.Model):
             'partner_id': self.order_id.partner_shipping_id.id,
         }
 
+    def _prepare_reference_vals(self):
+        return {
+            'name': self.order_id.name,
+            'sale_ids': [(4, self.order_id.id)],
+        }
+
     def _create_procurements(self, product_qty, procurement_uom, values):
         self.ensure_one()
         return [self.env['procurement.group'].Procurement(
@@ -359,6 +366,9 @@ class SaleOrderLine(models.Model):
                 continue
 
             group_id = line._get_procurement_group()
+            references = line.order_id.stock_reference_ids
+            if not references:
+                self.env['stock.reference'].create(line._prepare_reference_vals())
             if not group_id:
                 group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
                 line.order_id.procurement_group_id = group_id

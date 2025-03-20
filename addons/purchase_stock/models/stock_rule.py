@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from odoo.tools import float_compare
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID, _, Command
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
 
@@ -120,7 +120,11 @@ class StockRule(models.Model):
                     # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
+                reference_ids = set()
+                for procurement in procurements:
+                    reference_ids |= set(procurement.values.get('reference_ids', self.env['stock.reference']).ids)
                 # If a purchase order is found, adapt its `origin` field.
+                po.reference_ids = [Command.link(ref_id) for ref_id in reference_ids]
                 if po.origin:
                     missing_origins = origins - set(po.origin.split(', '))
                     if missing_origins:
@@ -304,7 +308,6 @@ class StockRule(models.Model):
         gpo = self.group_propagation_option
         group = (gpo == 'fixed' and self.group_id.id) or \
                 (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False
-
         return {
             'partner_id': partner.id,
             'user_id': partner.buyer_id.id,
@@ -316,7 +319,8 @@ class StockRule(models.Model):
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
             'fiscal_position_id': fpos.id,
-            'group_id': group
+            'group_id': group,
+            'reference_ids': [Command.set(values.get('reference_ids', self.env['stock.reference']).ids)],
         }
 
     def _make_po_get_domain(self, company_id, values, partner):
@@ -345,6 +349,10 @@ class StockRule(models.Model):
             )
         if group:
             domain += (('group_id', '=', group.id),)
+        if values.get('reference_ids'):
+            domain += (('reference_ids', 'in', tuple(values['reference_ids'].ids)),)
+        else:
+            domain += (('reference_ids', '=', False),)
         return domain
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):

@@ -143,10 +143,10 @@ class TestOldRules(TestStockCommon):
             lambda r: r.procure_method == "make_to_order"
         ).procure_method = 'mts_else_mto'
 
-        pg = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mto'})
+        reference = self.env['stock.reference'].create({'name': 'Test-pg-mtso-mto'})
 
-        self.env['procurement.group'].run([
-            pg.Procurement(
+        self.env['stock.rule'].run([
+            StockRule.Procurement(
                 self.productA,
                 5.0,
                 self.productA.uom_id,
@@ -156,7 +156,7 @@ class TestOldRules(TestStockCommon):
                 self.warehouse_3_steps.company_id,
                 {
                     'warehouse_id': self.warehouse_3_steps,
-                    'group_id': pg
+                    'reference_ids': reference,
                 }
             )
         ])
@@ -164,7 +164,7 @@ class TestOldRules(TestStockCommon):
         qty_available = self.env['stock.quant']._get_available_quantity(self.productA, self.warehouse_3_steps.wh_output_stock_loc_id)
 
         # 3 pickings should be created.
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        picking_ids = self.env['stock.picking'].search([('reference_ids', 'in', reference.id)])
         self.assertEqual(len(picking_ids), 3)
         for picking in picking_ids:
             self.assertEqual(picking.move_ids.procure_method, 'make_to_stock')
@@ -211,6 +211,7 @@ class TestOldRules(TestStockCommon):
                 {
                     'warehouse_id': warehouse,
                     'group_id': pg1
+                    'reference_ids': reference_1,
                 }
             ),
             pg2.Procurement(
@@ -224,6 +225,7 @@ class TestOldRules(TestStockCommon):
                 {
                     'warehouse_id': warehouse,
                     'group_id': pg2
+                    'reference_ids': reference_2,
                 }
             ),
             pg3.Procurement(
@@ -237,6 +239,7 @@ class TestOldRules(TestStockCommon):
                 {
                     'warehouse_id': warehouse,
                     'group_id': pg3
+                    'reference_ids': reference_3,
                 }
             )
         ])

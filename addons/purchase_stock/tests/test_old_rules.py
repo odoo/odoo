@@ -23,6 +23,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'product_uom': self.product.uom_id.id,
             'picking_id': picking_out.id,
             'group_id': self.group.id,
+            'reference_ids': [Command.link(self.reference.id)],
             'location_id': warehouse.out_type_id.default_location_src_id.id,
             'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
@@ -34,6 +35,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         super().setUpClass()
         cls.customer = cls.env['res.partner'].create({'name': 'abc'})
         cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
+        cls.reference = cls.env['stock.reference'].create({'name': 'New Group'})
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,

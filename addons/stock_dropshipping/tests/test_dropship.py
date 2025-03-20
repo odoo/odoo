@@ -363,6 +363,7 @@ class TestDropship(common.TransactionCase):
         })
         sale_order.action_confirm()
         purchase_order = sale_order.procurement_group_id.purchase_line_ids.order_id
+        purchase_order = sale_order.reference_ids.purchase_ids
         purchase_order.button_confirm()
         dropship_picking = purchase_order.picking_ids
         dropship_picking.move_line_ids.lot_name = 'dropship lot'
