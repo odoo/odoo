@@ -19,5 +19,7 @@ export function patchCommonRenderer(CommonRenderer) {
     });
 }
 
-export class ProjectTaskCalendarCommonRenderer extends CalendarCommonRenderer { }
+export class ProjectTaskCalendarCommonRenderer extends CalendarCommonRenderer {
+    static template = "project.ProjectTaskCalendarCommonRenderer";
+}
 patchCommonRenderer(ProjectTaskCalendarCommonRenderer);

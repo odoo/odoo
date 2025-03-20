@@ -103,6 +103,10 @@ export class ProjectTask extends models.Model {
     is_closed = fields.Boolean();
     is_template = fields.Boolean({ string: "Is Template", default: false });
 
+    plan_task_in_calendar(idOrIds, values) {
+        return this.write(idOrIds, values);
+    }
+
     _records = [
         {
             id: 1,
