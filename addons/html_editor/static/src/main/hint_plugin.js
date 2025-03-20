@@ -99,7 +99,6 @@ export class HintPlugin extends Plugin {
     removeHint(el) {
         el.removeAttribute("o-we-hint-text");
         removeClass(el, "o-we-hint");
-        this.getResource("system_style_properties").forEach((n) => el.style.removeProperty(n));
         if (this.hint === el) {
             this.hint = null;
         }

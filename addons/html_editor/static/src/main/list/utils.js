@@ -30,7 +30,6 @@ export function insertListAfter(document, afterNode, mode, content = []) {
                 } else if (fontSizeStyle.type === "class") {
                     li.classList.add(fontSizeStyle.value);
                 }
-                li.style.listStylePosition = "inside";
                 li.append(...c[0].childNodes);
             } else {
                 li.append(...[].concat(c));
