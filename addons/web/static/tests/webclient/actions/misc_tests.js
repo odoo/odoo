@@ -203,6 +203,10 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_control_panel .o_breadcrumb");
         // push another action flagged with 'no_breadcrumbs=true'
         await doAction(webClient, 4);
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.containsNone(target, ".o_control_panel .o_breadcrumb");
+        await click(target, ".o_switch_view.o_list");
+        assert.containsOnce(target, ".o_list_view");
         assert.containsNone(target, ".o_control_panel .o_breadcrumb");
     });
 
