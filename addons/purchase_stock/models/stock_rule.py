@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from odoo.tools import float_compare
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, SUPERUSER_ID, _, Command
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.tools import groupby
 
@@ -41,6 +41,19 @@ class StockRule(models.Model):
     def _onchange_action(self):
         if self.action == 'buy':
             self.location_src_id = False
+
+    @api.model
+    def run(self, procurements, raise_user_error=True):
+        wh_by_comp = dict()
+        for procurement in procurements:
+            routes = procurement.values.get('route_ids')
+            if routes and any(r.action == 'buy' for r in routes.rule_ids):
+                company = procurement.company_id
+                if company not in wh_by_comp:
+                    wh_by_comp[company] = self.env['stock.warehouse'].search([('company_id', '=', company.id)])
+                wh = wh_by_comp[company]
+                procurement.values['route_ids'] |= wh.reception_route_id
+        return super().run(procurements, raise_user_error=raise_user_error)
 
     @api.model
     def _run_buy(self, procurements):
@@ -101,7 +114,11 @@ class StockRule(models.Model):
                     # Indeed, the current user may be a user without access to Purchase, or even be a portal user.
                     po = self.env['purchase.order'].with_company(company_id).with_user(SUPERUSER_ID).create(vals)
             else:
+                reference_ids = set()
+                for procurement in procurements:
+                    reference_ids |= set(procurement.values.get('reference_ids', self.env['stock.reference']).ids)
                 # If a purchase order is found, adapt its `origin` field.
+                po.reference_ids = [Command.link(ref_id) for ref_id in reference_ids]
                 if po.origin:
                     missing_origins = origins - set(po.origin.split(', '))
                     if missing_origins:
@@ -255,7 +272,7 @@ class StockRule(models.Model):
                 'move_dest_ids': move_dest_ids,
                 'orderpoint_id': orderpoint_id,
             })
-            merged_procurement = self.env['procurement.group'].Procurement(
+            merged_procurement = self.env['stock.rule'].Procurement(
                 procurement.product_id, quantity, procurement.product_uom,
                 procurement.location_id, procurement.name, procurement.origin,
                 procurement.company_id, values
@@ -309,10 +326,6 @@ class StockRule(models.Model):
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
-        gpo = self.group_propagation_option
-        group = (gpo == 'fixed' and self.group_id.id) or \
-                (gpo == 'propagate' and values.get('group_id') and values['group_id'].id) or False
-
         return {
             'partner_id': partner.id,
             'user_id': partner.buyer_id.id,
@@ -324,17 +337,13 @@ class StockRule(models.Model):
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
             'date_order': purchase_date,
             'fiscal_position_id': fpos.id,
-            'group_id': group
+            'reference_ids': [Command.set(values.get('reference_ids', self.env['stock.reference']).ids)],
         }
 
     def _make_po_get_domain(self, company_id, values, partner):
-        gpo = self.group_propagation_option
-        group = (gpo == 'fixed' and self.group_id) or \
-                (gpo == 'propagate' and 'group_id' in values and values['group_id']) or False
         currency = ('supplier' in values and values['supplier'].currency_id) or \
                    partner.with_company(company_id).property_purchase_currency_id or \
                    company_id.currency_id
-
         domain = (
             ('partner_id', '=', partner.id),
             ('state', '=', 'draft'),
@@ -343,16 +352,20 @@ class StockRule(models.Model):
             ('user_id', '=', partner.buyer_id.id),
             ('currency_id', '=', currency.id),
         )
-        delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
-        if values.get('orderpoint_id') and delta_days is not False:
-            procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
-            delta_days = int(delta_days)
-            domain += (
-                ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
-                ('date_order', '>=', datetime.combine(procurement_date - relativedelta(days=delta_days), datetime.min.time()))
-            )
-        if group:
-            domain += (('group_id', '=', group.id),)
+        if partner.group_rfq == 'default':
+            if values.get('reference_ids'):
+                domain += (('reference_ids', 'in', tuple(values['reference_ids'].ids)),)
+            else:
+                domain += (('reference_ids', '=', False),)
+        date_planned = fields.Datetime.from_string(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
+        if partner.group_rfq == 'day':
+            start_dt = datetime.combine(date_planned, datetime.min.time())
+            end_dt = datetime.combine(date_planned, datetime.max.time())
+            domain += (('date_planned', '>=', start_dt), ('date_planned', '<=', end_dt))
+        if partner.group_rfq == 'week':
+            start_dt = datetime.combine(date_planned - relativedelta(days=date_planned.weekday()), datetime.min.time())
+            end_dt = datetime.combine(date_planned + relativedelta(days=6 - date_planned.weekday()), datetime.max.time())
+            domain += (('date_planned', '>=', start_dt), ('date_planned', '<=', end_dt))
         return domain
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -363,4 +376,4 @@ class StockRule(models.Model):
         return res
 
     def _get_partner_id(self, values, rule):
-        return values.get("supplierinfo_name") or (values.get("force_uom") and values.get("group_id") and values.get("group_id").partner_id)
+        return values.get("supplierinfo_name") or (values.get("force_uom") and values.get("partner"))

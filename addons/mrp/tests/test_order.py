@@ -327,7 +327,7 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
         self.assertEqual(mo_backorder.product_qty, 1)
 
         update_quantity_wizard = self.env['change.production.qty'].create({
@@ -666,7 +666,7 @@ class TestMrpOrder(TestMrpCommon):
         backorder.save().action_backorder()
 
         # Check MO backorder
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
 
         mo_form = Form(mo_backorder)
         mo_form.qty_producing = 1
@@ -1112,7 +1112,7 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo2 = mo.procurement_group_id.mrp_production_ids[-1]
+        mo2 = mo.production_group_id.production_ids[-1]
 
         mo_form = Form(mo2)
         mo_form.qty_producing = 1
@@ -1600,7 +1600,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(move.reference, mo.name)
         self.assertEqual(move.origin, mo._get_origin())
-        self.assertEqual(move.group_id, mo.procurement_group_id)
+        self.assertEqual(move.production_group_id, mo.production_group_id)
         self.assertEqual(move.propagate_cancel, mo.propagate_cancel)
         self.assertFalse(move.raw_material_production_id)
         self.assertEqual(move.location_id, mo.production_location_id)
@@ -1884,8 +1884,8 @@ class TestMrpOrder(TestMrpCommon):
         Form.from_action(self.env, action).save().action_backorder()
         self.assertEqual(mo.qty_producing, 1)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [1, 1])
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(len(mo.production_group_id.production_ids), 2)
+        mo_backorder = mo.production_group_id.production_ids[-1]
         self.assertEqual(mo_backorder.product_qty, 1)
         self.assertEqual(mo_backorder.move_raw_ids.mapped('product_uom_qty'), [1, 1])
 
@@ -1908,8 +1908,8 @@ class TestMrpOrder(TestMrpCommon):
         Form.from_action(self.env, action).save().action_backorder()
         self.assertEqual(mo.qty_producing, 1)
         self.assertEqual(mo.move_raw_ids.mapped('quantity'), [1, 1])
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(len(mo.production_group_id.production_ids), 2)
+        mo_backorder = mo.production_group_id.production_ids[-1]
         self.assertEqual(mo_backorder.product_qty, 1)
         self.assertEqual(mo_backorder.move_raw_ids.mapped('product_uom_qty'), [1, 1])
 
@@ -2387,7 +2387,7 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
 
         # Check quantities of the original MO
         self.assertEqual(mo.product_uom_qty, 10.0)
@@ -2428,7 +2428,7 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
 
         # Check quantities of the original MO
         self.assertEqual(mo.product_uom_qty, 10.0)
@@ -2983,7 +2983,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo.state, 'done')
 
-        mo_2 = mo.procurement_group_id.mrp_production_ids - mo
+        mo_2 = mo.production_group_id.production_ids - mo
         wo_4, wo_5, wo_6 = mo_2.workorder_ids
 
         self.assertEqual(wo_4.state, 'cancel')
@@ -3012,7 +3012,7 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo_2.state, 'done')
 
-        mo_3 = mo.procurement_group_id.mrp_production_ids - (mo | mo_2)
+        mo_3 = mo.production_group_id.production_ids - (mo | mo_2)
         wo_7, wo_8, wo_9 = mo_3.workorder_ids
 
         self.assertEqual(wo_7.state, 'cancel')
@@ -3488,7 +3488,7 @@ class TestMrpOrder(TestMrpCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
         mo_backorder.button_plan()
 
         self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
@@ -3871,7 +3871,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids[1].quantity, 48, "line without consumption issue was incorrectly changed")
         self.assertEqual(mo.state, 'done')
         # double check that backorder qtys are also correct
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
         self.assertEqual(mo_backorder.move_raw_ids[0].product_uom_qty, 120, "backorder values are based on original MO, not current bom")
         self.assertEqual(mo_backorder.move_raw_ids[1].product_uom_qty, 72, "backorder values incorrectly calculated")
 
@@ -3932,7 +3932,7 @@ class TestMrpOrder(TestMrpCommon):
                 self.assertEqual(move.quantity, 0, "additional component should have nothing reserved")
         self.assertEqual(mo2.state, 'done')
         # double check that backorder qtys are also correct
-        mo2_backorder = mo2.procurement_group_id.mrp_production_ids[-1]
+        mo2_backorder = mo2.production_group_id.production_ids[-1]
         self.assertEqual(len(mo2_backorder.move_raw_ids), 2, "missing line should NOT have been added in but additional line should")
         self.assertEqual(mo2_backorder.move_raw_ids.product_id.ids, [p1.id, self.product_1.id])
         self.assertEqual(mo2_backorder.move_raw_ids[0].product_uom_qty, 12, "backorder values are based on original MO, not current bom")
@@ -4220,7 +4220,7 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(production.workorder_ids.duration_expected, current_duration_expected + 10)
 
         # One should not recompute the expected duration of a full production
-        production = production.procurement_group_id.mrp_production_ids[-1]
+        production = production.production_group_id.production_ids[-1]
 
         init_duration_expected = production.workorder_ids.duration_expected
 
@@ -5081,12 +5081,11 @@ class TestMrpOrder(TestMrpCommon):
             'mo_id': grandparent_production.id,
             'product_qty': 2,
         })
-        # Update the quantity to produce of the grandparent to 2, this should create a new MO for both the parent and the child.
+        # Update the quantity to produce of the grandparent to 2, this should update the quantity for both the parent and the child.
         update_quantity_wizard.change_prod_qty()
         self.assertEqual(grandparent_production.move_raw_ids.product_uom_qty, 2)
-        child_production_2, parent_production_2 = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids), ('id', 'not in', [parent_production.id, child_production.id])], order='id desc', limit=2)
-        self.assertEqual(grandparent_production._get_children(), (parent_production | parent_production_2))
-        self.assertEqual(parent_production_2._get_children(), child_production_2)
+        self.assertEqual(parent_production.product_qty, 2)
+        self.assertEqual(child_production.product_qty, 2)
 
     def test_workcenter_with_resource_calendar_from_another_company(self):
         """Test that only the resource calendars from the same

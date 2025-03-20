@@ -90,7 +90,7 @@ class PosOrder(models.Model):
             # track the waiting pickings
             waiting_picking_ids = set()
             for so_line in so_lines:
-                so_line_stock_move_ids = so_line.move_ids.group_id.stock_move_ids
+                so_line_stock_move_ids = so_line.move_ids.reference_ids.move_ids
                 for stock_move in so_line.move_ids:
                     picking = stock_move.picking_id
                     if not picking.state in ['waiting', 'confirmed', 'assigned']:

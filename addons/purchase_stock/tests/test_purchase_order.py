@@ -506,7 +506,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         orderpoint_form.product_max_qty = 1.000
         orderpoint_form.save()
 
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
 
         pol = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
         self.assertEqual(pol.name, "[C01] Name01")

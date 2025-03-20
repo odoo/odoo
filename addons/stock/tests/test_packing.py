@@ -1748,9 +1748,8 @@ class TestPackagePropagation(TestPackingCommon):
             'tracking': 'none',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
-        pg = self.env['procurement.group'].create({'name': 'propagation_test'})
-        self.env['procurement.group'].run([
-            pg.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.productA,
                 2.0,
                 self.productA.uom_id,
@@ -1760,12 +1759,11 @@ class TestPackagePropagation(TestPackingCommon):
                 self.warehouse.company_id,
                 {
                     'warehouse_id': self.warehouse,
-                    'group_id': pg
                 }
             )
         ])
         picking = self.env['stock.picking'].search([
-            ('group_id', '=', pg.id),
+            ('product_id', '=', self.productA.id),
             ('location_id', '=', self.stock_location.id),
         ])
         picking.action_assign()
@@ -1775,7 +1773,7 @@ class TestPackagePropagation(TestPackingCommon):
         picking.button_validate()
         self.assertEqual(picking.state, 'done')
         pack_lines = self.env['stock.picking'].search([
-            ('group_id', '=', pg.id),
+            ('product_id', '=', self.productA.id),
             ('location_id', '=', self.pack_location.id),
         ]).move_line_ids
 
@@ -1834,9 +1832,9 @@ class TestPackagePropagation(TestPackingCommon):
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 6)
 
-        pg = self.env['procurement.group'].create({'name': 'package_propagation'})
-        self.env['procurement.group'].run([
-            pg.Procurement(
+        ref = self.env['stock.reference'].create({'name': 'package_propagation'})
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.productA,
                 6.0,
                 self.productA.uom_id,
@@ -1846,11 +1844,11 @@ class TestPackagePropagation(TestPackingCommon):
                 self.warehouse.company_id,
                 {
                     'warehouse_id': self.warehouse,
-                    'group_id': pg,
+                    'reference_ids': ref,
                 }
             )
         ])
-        pick = self.env['stock.picking'].search([('group_id', '=', pg.id)])
+        pick = self.env['stock.picking'].search([('reference_ids', '=', ref.id)])
 
         pick.move_ids.quantity = 1
         smol_pack = pick.action_put_in_pack(package_name='Smol')

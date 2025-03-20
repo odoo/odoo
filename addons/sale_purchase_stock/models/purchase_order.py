@@ -7,16 +7,12 @@ from odoo import Command, api, models
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    @api.depends('order_line.move_dest_ids.group_id.sale_id', 'order_line.move_ids.move_dest_ids.group_id.sale_id')
+    @api.depends('reference_ids', 'reference_ids.sale_ids')
     def _compute_sale_order_count(self):
         super()._compute_sale_order_count()
 
     def _get_sale_orders(self):
-        linked_so = self.order_line.move_dest_ids.group_id.sale_id \
-                  | self.env['stock.move'].browse(self.order_line.move_ids._rollup_move_dests()).group_id.sale_id
-        group_so = self.order_line.group_id.sale_id
-
-        return super()._get_sale_orders() | linked_so | group_so
+        return super()._get_sale_orders() | self.reference_ids.sale_ids
 
 
 class PurchaseOrderLine(models.Model):
@@ -25,9 +21,12 @@ class PurchaseOrderLine(models.Model):
     def _prepare_stock_moves(self, picking):
         res = super()._prepare_stock_moves(picking)
         for re in res:
-            re['sale_line_id'] = self.sale_line_id.id
+            if self.sale_line_id and re.get('location_final_id'):
+                final_loc = self.env['stock.location'].browse(re.get('location_final_id'))
+                if final_loc.usage == 'customer' or final_loc.usage == 'transit':
+                    re['sale_line_id'] = self.sale_line_id.id
             if self.sale_line_id.route_ids:
-               re['route_ids'] = [Command.link(route_id) for route_id in self.sale_line_id.route_ids.ids]
+                re['route_ids'] = [Command.link(route_id) for route_id in self.sale_line_id.route_ids.ids]
         return res
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):

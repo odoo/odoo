@@ -44,7 +44,9 @@ class SaleOrder(models.Model):
         search='_search_late_availability',
         help="True if any related picking has late availability"
     )
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    stock_reference_ids = fields.Many2many(
+        'stock.reference', 'stock_reference_sale_rel',
+        'sale_id', 'reference_id', string='References', copy=False)
     effective_date = fields.Datetime("Effective Date", compute='_compute_effective_date', store=True, help="Completion date of the first delivery order.")
     expected_date = fields.Datetime( help="Delivery date you can promise to the customer, computed from the minimum lead time of "
                                           "the order lines in case of Service products. In case of shipping, the shipping policy of "
@@ -172,9 +174,12 @@ class SaleOrder(models.Model):
             # TODO: Log a note on each down document
             deadline_datetime = values.get('commitment_date')
             for order in self:
-                order.order_line.move_ids.date_deadline = deadline_datetime or order.expected_date
+                moves = order.order_line.move_ids.filtered(
+                    lambda m: m.state not in ('done', 'cancel') and m.location_dest_id.usage == 'customer'
+                )
+                moves.date_deadline = deadline_datetime or order.expected_date
 
-        res = super(SaleOrder, self).write(values)
+        res = super().write(values)
         if values.get('order_line') and self.state == 'sale':
             for order in self:
                 to_log = {}
@@ -283,7 +288,7 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_reference_ids=self.stock_reference_ids[:-1].id)
         return action
 
     def _prepare_invoice(self):

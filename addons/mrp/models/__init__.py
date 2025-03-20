@@ -17,6 +17,7 @@ from . import stock_move_line
 from . import stock_orderpoint
 from . import stock_picking
 from . import stock_lot
+from . import stock_reference
 from . import stock_rule
 from . import stock_scrap
 from . import stock_warehouse

@@ -234,7 +234,7 @@ class TestTraceability(TestMrpCommon):
         action = mo.button_mark_done()
         backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder.save().action_backorder()
-        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder = mo.production_group_id.production_ids[-1]
         mo_form = Form(mo_backorder)
         mo_form.lot_producing_ids.set(self.env['stock.lot'].create({
             'product_id': product_final.id,

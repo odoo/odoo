@@ -94,7 +94,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
             'name': 'orderpoint test',
             'product_id': product.id,
             'product_min_qty': 0,
-            'product_max_qty': 1,
+            'product_max_qty': 0,
             'route_id': self.env.ref('purchase_stock.route_warehouse0_buy').id,
         })
         # Create a SO that will automatically generate a PO since we have an orderpoint"
@@ -109,15 +109,14 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
                 })]
         })
         so.action_confirm()
-        # Create a second SO, and since a PO has already been created but not yet validated, it will be updated.
-        so_2 = so.copy()
-        # Find the PO that will be updated in order to invalidate its cache,
-        # so the fields will be reloaded with the sales user.
         po = self.env['purchase.order'].search([('partner_id', '=', self.partner_a.id)])
-        self.assertEqual(po.order_line[0].product_qty, 11)
-        po.order_line[0].invalidate_recordset()
-        # Confirm the second SO and verify if PO has been updated.
-        so_2.action_confirm()
+        self.assertEqual(po.order_line[0].product_qty, 10)
+        so.order_line = [Command.create({
+            'product_id': product.id,
+            'product_uom_qty': 11,
+            'price_unit': product.list_price,
+        })]
+
         self.assertEqual(po.order_line[0].product_qty, 21)
         po.button_confirm()
         self.assertEqual(po.state, 'purchase')

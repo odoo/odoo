@@ -730,7 +730,7 @@ class StockWarehouse(models.Model):
                     values={'route_id': inter_wh_route.id})
             pull_rules_list += self._get_supply_pull_rules_values(
                 [self.Routing(transit_location, self.lot_stock_id, self.in_type_id, 'pull')],
-                values={'route_id': inter_wh_route.id, 'propagate_warehouse_id': supplier_wh.id})
+                values={'route_id': inter_wh_route.id})
             for pull_rule_vals in pull_rules_list:
                 Rule.create(pull_rule_vals)
 

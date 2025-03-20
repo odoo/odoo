@@ -11,7 +11,9 @@ class StockRule(models.Model):
         if 'partner_id' not in values[0] \
             and (company_id.subcontracting_location_id.parent_path in self.location_dest_id.parent_path
                  or self.location_dest_id.is_subcontract()):
-            values[0]['partner_id'] = values[0]['group_id'].partner_id.id
+            move = values[0].get('move_dest_ids')
+            if move and move.raw_material_production_id.subcontractor_id:
+                values[0]['partner_id'] = move.raw_material_production_id.subcontractor_id.id
         return super()._prepare_purchase_order(company_id, origins, values)
 
     def _make_po_get_domain(self, company_id, values, partner):

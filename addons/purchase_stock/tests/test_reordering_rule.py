@@ -97,7 +97,7 @@ class TestReorderingRule(TransactionCase):
         customer_picking = picking_form.save()
         customer_picking.action_confirm()
         # Run scheduler
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
 
         # Check purchase order created or not
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id), ('state', '!=', 'cancel')])
@@ -183,7 +183,7 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, -10)
 
         # Run scheduler
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
 
         # Check purchase order created or not
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', self.partner.id)])
@@ -591,8 +591,8 @@ class TestReorderingRule(TransactionCase):
         po_line = self.env["purchase.order.line"].search(
             [("product_id", "=", product.id)])
         self.assertFalse(po_line)
-        self.env["procurement.group"].run(
-            [self.env["procurement.group"].Procurement(
+        self.env["stock.rule"].run(
+            [self.env["stock.rule"].Procurement(
                 product, 100, uom_unit,
                 warehouse.lot_stock_id, "Test default vendor", "/",
                 self.env.company,
@@ -615,8 +615,8 @@ class TestReorderingRule(TransactionCase):
         po_line = self.env["purchase.order.line"].search(
             [("product_id", "=", product.id)])
         self.assertFalse(po_line)
-        self.env["procurement.group"].run(
-            [self.env["procurement.group"].Procurement(
+        self.env["stock.rule"].run(
+            [self.env["stock.rule"].Procurement(
                 product, 100, uom_unit,
                 warehouse.lot_stock_id, "Test default vendor", "/",
                 self.env.company,
@@ -693,10 +693,7 @@ class TestReorderingRule(TransactionCase):
             "name": "Customer",
             "lang": "fr_FR"
         })
-        proc_group = self.env["procurement.group"].create({
-            "partner_id": customer.id
-        })
-        procurement = self.env["procurement.group"].Procurement(
+        procurement = self.env["stock.rule"].Procurement(
                 product, 100, uom_unit,
                 customer.property_stock_customer,
                 "Test default vendor",
@@ -705,13 +702,12 @@ class TestReorderingRule(TransactionCase):
                 {
                     "warehouse_id": warehouse,
                     "date_planned": dt.today() + td(days=15),
-                    "group_id": proc_group,
                     "route_ids": [],
                 }
             )
         self.env.invalidate_all()
 
-        self.env["procurement.group"].run([procurement])
+        self.env["stock.rule"].run([procurement])
 
         po_line = self.env["purchase.order.line"].search(
             [("product_id", "=", product.id)])
@@ -799,7 +795,7 @@ class TestReorderingRule(TransactionCase):
         # run the scheduler to test the use case where the user is always the SUPERUSER
         # we invalidate the cache to force a recompute of the qty_to_order_computed in batch
         (orderpoint | dummy).invalidate_recordset()
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 20.0}])
         self.assertEqual(len(po_line.order_id.order_line), 1)
 
@@ -1008,91 +1004,6 @@ class TestReorderingRule(TransactionCase):
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
         ])
 
-    def test_add_line_to_existing_draft_po(self):
-        """
-        Days to purchase = 10
-        Two products P1, P2 from the same supplier
-        Several use cases, each time we run the RR one by one. Then, according
-        to the dates and the configuration, it should use the existing PO or not
-        """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-
-        self.env.company.days_to_purchase = 10
-        expected_order_date = dt.combine(dt.today() + td(days=10), time(12))
-        expected_delivery_date = expected_order_date + td(days=1.0)
-
-        product_02 = self.env['product.product'].create({
-            'name': 'Super Product',
-            'is_storable': True,
-            'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
-        })
-
-        op_01, op_02 = self.env['stock.warehouse.orderpoint'].create([{
-            'warehouse_id': warehouse.id,
-            'location_id': warehouse.lot_stock_id.id,
-            'product_id': p.id,
-            'product_min_qty': 1,
-            'product_max_qty': 1,
-        } for p in [self.product_01, product_02]])
-
-        op_01.action_replenish()
-        po01 = self.env['purchase.order'].search([], order='id desc', limit=1)
-        self.assertEqual(po01.date_order, expected_order_date)
-
-        op_02.action_replenish()
-        self.assertEqual(po01.date_order, expected_order_date)
-        self.assertRecordValues(po01.order_line, [
-            {'product_id': self.product_01.id, 'date_planned': expected_delivery_date},
-            {'product_id': product_02.id, 'date_planned': expected_delivery_date},
-        ])
-
-        # Reset and try another flow
-        po01.button_cancel()
-        op_01.action_replenish()
-        po02 = self.env['purchase.order'].search([], order='id desc', limit=1)
-        self.assertNotEqual(po02, po01)
-
-        with freeze_time(dt.today() + td(days=1)):
-            op_02.invalidate_recordset(fnames=['lead_horizon_date'])
-            op_02.action_replenish()
-            self.assertEqual(po02.date_order, expected_order_date)
-            self.assertRecordValues(po02.order_line, [
-                {'product_id': self.product_01.id, 'date_planned': expected_delivery_date},
-                {'product_id': product_02.id, 'date_planned': expected_delivery_date + td(days=1)},
-            ])
-
-        # Restrict the merge with POs that have their order deadline in [today - 2 days, today + 2 days]
-        self.env['ir.config_parameter'].set_param('purchase_stock.delta_days_merge', '2')
-
-        # Reset and try with a second RR executed in the dates range (-> should still use the existing PO)
-        po02.button_cancel()
-        op_01.action_replenish()
-        po03 = self.env['purchase.order'].search([], order='id desc', limit=1)
-        self.assertNotEqual(po03, po02)
-
-        with freeze_time(dt.today() + td(days=2)):
-            op_02.invalidate_recordset(fnames=['lead_horizon_date'])
-            op_02.action_replenish()
-            self.assertEqual(po03.date_order, expected_order_date)
-            self.assertRecordValues(po03.order_line, [
-                {'product_id': self.product_01.id, 'date_planned': expected_delivery_date},
-                {'product_id': product_02.id, 'date_planned': expected_delivery_date + td(days=2)},
-            ])
-
-        # Reset and try with a second RR executed after the dates range (-> should not use the existing PO)
-        po03.button_cancel()
-        op_01.action_replenish()
-        po04 = self.env['purchase.order'].search([], order='id desc', limit=1)
-        self.assertNotEqual(po04, po03)
-
-        with freeze_time(dt.today() + td(days=3)):
-            op_02.invalidate_recordset(fnames=['lead_horizon_date'])
-            op_02.action_replenish()
-            self.assertEqual(po04.order_line.product_id, self.product_01, 'There should be only a line for product 01')
-            po05 = self.env['purchase.order'].search([], order='id desc', limit=1)
-            self.assertNotEqual(po05, po04, 'A new PO should be generated')
-            self.assertEqual(po05.order_line.product_id, product_02)
-
     def test_reordering_rule_horizon_days(self):
         """
             Test the horizon days on the reordering rule update the qty_to_order but do not
@@ -1219,7 +1130,7 @@ class TestReorderingRule(TransactionCase):
             'product_max_qty': 5,
         })
         # run the scheduler
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         # check that the PO line is created
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
         self.assertEqual(len(po_line), 1, 'There should be only one PO line')
@@ -1296,7 +1207,7 @@ class TestReorderingRule(TransactionCase):
             'product_max_qty': 10,
         })
         # run the scheduler
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         # check that the PO line is created
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
         self.assertEqual(len(po_line), 1, 'There should be only one PO line')
@@ -1419,8 +1330,8 @@ class TestReorderingRule(TransactionCase):
         po_line = self.env["purchase.order.line"].search(
             [("product_id", "=", self.product_01.id)])
         self.assertFalse(po_line)
-        self.env["procurement.group"].run(
-            [self.env["procurement.group"].Procurement(
+        self.env["stock.rule"].run(
+            [self.env["stock.rule"].Procurement(
                 self.product_01, 100, self.product_01.uom_id,
                 warehouse.lot_stock_id, "Test default vendor", "/",
                 self.env.company,
@@ -1516,18 +1427,18 @@ class TestReorderingRule(TransactionCase):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         buy_product.route_ids |= mto_route
-        pg = self.env["procurement.group"].create({'name': 'Test mto buy procurement'})
-        self.env["procurement.group"].run(
-            [pg.Procurement(
+        reference = self.env['stock.reference'].create({'name': 'test_backorder_mto_buy'})
+        self.env["stock.rule"].run(
+            [self.env['stock.rule'].Procurement(
                 buy_product, 100, buy_product.uom_id,
                 self.env.ref('stock.stock_location_customers'), "Test mto buy", "/",
                 self.env.company,
                 {
                     "warehouse_id": self.env.ref('stock.warehouse0'),
-                    "group_id": pg,
+                    "reference_ids": reference
                 },
             )])
-        po_line = self.env["purchase.order.line"].search([("product_id", "=", buy_product.id)], limit=1)
+        po_line = reference.purchase_ids.order_line
         self.assertEqual(po_line.product_uom_qty, 100)
         delivery = po_line.move_dest_ids.picking_id
         # Deliver only 30 units and backorder the rest
@@ -1540,8 +1451,8 @@ class TestReorderingRule(TransactionCase):
         self.assertRecordValues(delivery.backorder_ids.move_ids, [{
             'product_uom_qty': 70, 'procure_method': 'make_to_order', 'state': 'waiting', 'created_purchase_line_ids': purchase_order_line.ids,
         }])
-        # Check that the backorder belongs to the same procurement group
-        self.assertEqual(delivery.backorder_ids.group_id, delivery.group_id)
+        # Check that the backorder belongs to the same reference
+        self.assertEqual(delivery.backorder_ids.reference_ids, delivery.reference_ids)
         # Check that the qty of the PO was not updated but that both pickings are referenced by the current
         self.assertRecordValues(purchase_order_line, [
             {'product_uom_qty': 100, 'move_dest_ids': [delivery.move_ids.id, delivery.backorder_ids.move_ids.id]}

@@ -586,9 +586,8 @@ class StockPicking(models.Model):
              " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
              " * Done: The transfer has been processed.\n"
              " * Cancelled: The transfer has been cancelled.")
-    group_id = fields.Many2one(
-        'procurement.group', 'Procurement Group',
-        readonly=True, related='move_ids.group_id', store=True)
+    reference_ids = fields.Many2many(
+        'stock.reference', related="move_ids.reference_ids", string="References", readonly=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Products will be reserved first for the transfers with the highest priorities.")
@@ -717,8 +716,7 @@ class StockPicking(models.Model):
     @api.depends('picking_type_id')
     def _compute_move_type(self):
         for record in self:
-            if not record.group_id.move_type:
-                record.move_type = record.picking_type_id.move_type
+            record.move_type = record.picking_type_id.move_type
 
     @api.depends('date_deadline', 'scheduled_date')
     def _compute_has_deadline_issue(self):
@@ -1102,10 +1100,6 @@ class StockPicking(models.Model):
                 if picking_type.sequence_id:
                     vals['name'] = picking_type.sequence_id.next_by_id()
 
-            if 'move_type' not in vals and vals.get('group_id'):
-                procurement_group = self.env['procurement.group'].browse(vals.get('group_id'))
-                if procurement_group.move_type:
-                    vals['move_type'] = procurement_group.move_type
             # make sure to write `schedule_date` *after* the `stock.move` creation in
             # order to get a determinist execution of `_set_scheduled_date`
             scheduled_dates.append(vals.pop('scheduled_date', False))

@@ -49,8 +49,8 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    def _prepare_procurement_values(self, group_id=False):
-        values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
+    def _prepare_procurement_values(self):
+        values = super()._prepare_procurement_values()
         if not values.get("route_ids") and self.order_id.carrier_id.route_ids:
             values['route_ids'] = self.order_id.carrier_id.route_ids
         return values

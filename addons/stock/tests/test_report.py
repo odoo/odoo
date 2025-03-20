@@ -708,14 +708,12 @@ class TestReports(TestReportsCommon):
         # Product config.
         self.product.write({'route_ids': [(4, self.env.ref('stock.route_warehouse0_mto').id)]})
         # Create a RR
-        pg1 = self.env['procurement.group'].create({})
         reordering_rule = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Product RR',
             'location_id': warehouse.lot_stock_id.id,
             'product_id': self.product.id,
             'product_min_qty': 5,
             'product_max_qty': 10,
-            'group_id': pg1.id,
         })
         reordering_rule.action_replenish()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)

@@ -329,7 +329,6 @@
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" invisible="picking_type_code == 'incoming'" readonly="state in ['cancel', 'done']"/>
                                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" readonly="state in ['cancel', 'done']"/>
-                                    <field name="group_id" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
                                 </group>
                             </group>
@@ -698,12 +697,6 @@
             }
             </field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
-        </record>
-        <record id="do_view_pickings" model="ir.actions.act_window">
-            <field name="name">Transfers for Groups</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,form</field>
-            <field name="domain">[('group_id','=',active_id)]</field>
         </record>
         <record id="stock_split_picking" model="ir.actions.server">
             <field name="name">Split</field>

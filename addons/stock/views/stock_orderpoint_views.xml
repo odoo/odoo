@@ -44,7 +44,6 @@
                 <button name="action_stock_replenishment_info" type="object" icon="fa-info-circle" title="Replenishment Information" invisible="not id or show_supply_warning"/>
                 <button name="action_stock_replenishment_info" type="object" icon="fa-warning text-warning" title="Your product is missing a way to be replenished (Route, Vendor, Bill of Materials)." invisible="not (id and show_supply_warning)"/>
                 <field name="trigger" optional="hide"/>
-                <field name="group_id" optional="hide" groups="stock.group_adv_location"/>
                 <field name="product_min_qty" string="Min" optional="show"/>
                 <field name="product_max_qty" string="Max" optional="show"/>
                 <field name="replenishment_uom_id" widget="stock.forced_placeholder" options="{'no_create': True, 'placeholder_field': 'replenishment_uom_id_placeholder'}" optional="hide" decoration-muted="not replenishment_uom_id"/>
@@ -73,7 +72,6 @@
                 <field name="product_id"/>
                 <field name="product_category_id"/>
                 <field name="effective_route_id" string="Route"/>
-                <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
@@ -108,7 +106,6 @@
                 <field name="product_id"/>
                 <field name="name" string="Reordering Rule"/>
                 <field name="trigger"/>
-                <field name="group_id" groups="stock.group_adv_location"/>
                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses"/>
                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
@@ -156,10 +153,6 @@
                             <field name="allowed_location_ids" invisible="1"/>
                             <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="stock.group_stock_multi_locations"/>
                             <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" domain="[('id', 'in', allowed_location_ids)]"/>
-                            <label for="group_id" groups="base.group_no_one"/>
-                            <div groups="base.group_no_one">
-                                <field name="group_id" groups="stock.group_adv_location"/>
-                            </div>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                         </group>
                     </group>

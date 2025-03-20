@@ -14,7 +14,6 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'location_id': warehouse.out_type_id.default_location_src_id.id,
             'location_dest_id': self.customer_location.id,
             'partner_id': self.customer.id,
-            'group_id': self.group.id,
             'picking_type_id': warehouse.out_type_id.id,
         })
         self.env['stock.move'].create({
@@ -22,7 +21,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
             'product_uom_qty': 10,
             'product_uom': self.product.uom_id.id,
             'picking_id': picking_out.id,
-            'group_id': self.group.id,
+            'reference_ids': [Command.link(self.reference.id)],
             'location_id': warehouse.out_type_id.default_location_src_id.id,
             'location_dest_id': self.customer_location.id,
             'procure_method': 'make_to_order',
@@ -33,7 +32,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.customer = cls.env['res.partner'].create({'name': 'abc'})
-        cls.group = cls.env['procurement.group'].create({'partner_id': cls.customer.id, 'name': 'New Group'})
+        cls.reference = cls.env['stock.reference'].create({'name': 'New Group'})
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
             'is_storable': True,
@@ -102,10 +101,12 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Purchase order should be created for picking.
         self.assertTrue(purchase_order, 'No purchase order created.')
 
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', self.group.id)])
+        picking_ids = self.env['stock.picking'].search([('reference_ids', '=', self.reference.id)])
 
-        storage = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.store_type_id and r.group_id.id == self.group.id)
-        pick = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.pick_type_id and r.group_id.id == self.group.id)
+        storage = picking_ids.filtered(lambda r: r.picking_type_id ==
+            self.warehouse_2_steps.store_type_id and r.reference_ids.id == self.reference.id)
+        pick = picking_ids.filtered(lambda r: r.picking_type_id ==
+            self.warehouse_2_steps.pick_type_id and r.reference_ids.id == self.reference.id)
 
         # Check status of Purchase Order
         self.assertEqual(purchase_order.state, 'draft', "Purchase order should be in 'draft' state.")
@@ -134,7 +135,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Po should be create related picking.
         self.assertTrue(purchase_order, 'purchase order is created.')
 
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', self.group.id)])
+        picking_ids = self.env['stock.picking'].search([('reference_ids', '=', self.reference.id)])
 
         internal = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.int_type_id)
         pick = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_2_steps.pick_type_id)
@@ -169,7 +170,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Po should be create related picking.
         self.assertTrue(purchase_order, 'No purchase order created.')
 
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', self.group.id)])
+        picking_ids = self.env['stock.picking'].search([('reference_ids', '=', self.reference.id)])
 
         internal = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_3_steps.int_type_id)
         pick = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_3_steps.pick_type_id)
@@ -203,7 +204,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         # Po should be create related picking.
         self.assertTrue(purchase_order, 'No purchase order created.')
 
-        picking_ids = self.env['stock.picking'].search([('group_id', '=', self.group.id)])
+        picking_ids = self.env['stock.picking'].search([('reference_ids', '=', self.reference.id)])
 
         internal = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_3_steps.int_type_id)
         pick = picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_3_steps.pick_type_id)
@@ -237,14 +238,13 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         rule_delay = sum(warehouse.reception_route_id.rule_ids.mapped('delay'))
         date_planned = fields.Datetime.now() + timedelta(days=10)
         # Create procurement order of product_1
-        self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+        self.env['stock.rule'].run([self.env['stock.rule'].Procurement(
             self.product_1, 5.000, self.uom_unit, warehouse.lot_stock_id, 'Test scheduler for RFQ', '/', self.env.company,
             {
                 'warehouse_id': warehouse,
                 'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
                 'date_deadline': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
                 'rule_id': warehouse.buy_pull_id,
-                'group_id': False,
                 'route_ids': [],
             }
         )])

@@ -213,8 +213,8 @@ class StockWarehouseOrderpoint(models.Model):
                         prod.product_qty, orderpoint.product_uom, round=False)
         return res
 
-    def _prepare_procurement_values(self, date=False, group=False):
-        values = super()._prepare_procurement_values(date=date, group=group)
+    def _prepare_procurement_values(self, date=False):
+        values = super()._prepare_procurement_values(date=date)
         values['bom_id'] = self.bom_id
         return values
 

@@ -371,9 +371,8 @@ class TestProcurement(TestMrpCommon):
             'product_qty': 1.0,
         })
 
-        pg = self.env['procurement.group'].create({'name': 'Test-mtso'})
-        self.env['procurement.group'].run([
-            pg.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 product,
                 1.0,
                 product.uom_id,
@@ -383,7 +382,6 @@ class TestProcurement(TestMrpCommon):
                 self.warehouse_1.company_id,
                 {
                     'warehouse_id': self.warehouse_1,
-                    'group_id': pg,
                 },
             ),
         ])
@@ -569,9 +567,9 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mo_assign_at_confirm.move_raw_ids.quantity, 5, "Components should have been auto-reserved")
 
     def test_check_update_qty_mto_chain(self):
-        """ Simulate a mto chain with a manufacturing order. Updating the
-        initial demand should also impact the initial move but not the
-        linked manufacturing order.
+        """Simulate a mto chain with a manufacturing order. Updating the
+        initial demand should also impact the initial move and the linked
+        manufacturing order.
         Secondary test: set the MTO route company-specific and ensure that make
         sure no new routes have been created
         """
@@ -580,9 +578,8 @@ class TestProcurement(TestMrpCommon):
                 values = {
                     'warehouse_id': self.warehouse_1,
                     'action': 'pull_push',
-                    'group_id': procurement_group,
                 }
-            return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            return self.env['stock.rule'].run([self.env['stock.rule'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
                 product.name, '/', self.env.company, values)
             ])
@@ -623,17 +620,16 @@ class TestProcurement(TestMrpCommon):
             ]
         })
 
-        procurement_group = self.env['procurement.group'].create({
-            'move_type': 'direct',
-            'partner_id': vendor.id
+        reference = self.env['stock.reference'].create({
+            'name': 'reference',
         })
         # Create initial procurement that will generate the initial move and its picking.
         create_run_procurement(product, 10, {
-            'group_id': procurement_group,
+            'reference_ids': reference,
             'warehouse_id': self.warehouse_1,
             'partner_id': vendor,
         })
-        customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
+        customer_move = self.env['stock.move'].search([('reference_ids', 'in', reference.id), ('picking_type_id', '=', self.picking_type_out.id)])
         manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertTrue(manufacturing_order, 'No manufacturing order created.')
 
@@ -641,11 +637,15 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(manufacturing_order.product_qty, 10, 'The manufacturing order qty should be the same as the move.')
 
         # Create procurement to decrease quantity in the initial move but not in the related MO.
-        create_run_procurement(product, -5.00)
+        create_run_procurement(product, -5.00, {
+            'reference_ids': reference,
+            'warehouse_id': self.warehouse_1,
+            'partner_id': vendor,
+        })
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should have been decreased when merged with the procurement.')
         self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the manufacturing order should not have been decreased.')
 
-        # Create procurement to increase quantity on the initial move and should create a new MO for the missing qty.
+        # Create procurement without reference to increase quantity on the initial move and should create a new MO for the missing qty.
         create_run_procurement(product, 2.00)
         self.assertEqual(customer_move.product_uom_qty, 5, 'The demand on the initial move should not have been increased since it should be a new move.')
         self.assertEqual(manufacturing_order.product_qty, 10, 'The demand on the initial manufacturing order should not have been increased.')
@@ -670,12 +670,12 @@ class TestProcurement(TestMrpCommon):
             'route_ids': [(6, 0, [route_manufacture.id, route_mto.id])]
         })
         product_3 = self.env['product.product'].create({
-            'name': 'Product B',
+            'name': 'Product C',
             'is_storable': True,
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_4 = self.env['product.product'].create({
-            'name': 'Product C',
+            'name': 'Product D',
             'type': 'consu',
         })
 
@@ -802,7 +802,7 @@ class TestProcurement(TestMrpCommon):
             'product_max_qty': 2,
         }])
 
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
 
         mos = self.env['mrp.production'].search([('product_id', '=', finished.id)], order='origin')
         self.assertRecordValues(mos, [
@@ -908,7 +908,7 @@ class TestProcurement(TestMrpCommon):
         mo.move_raw_ids[0].product_uom_qty = 3
 
         # any required qty is added to first picking by procurement
-        self.assertEqual(mo.picking_ids[0].move_ids[0].product_uom_qty, 2, 'Comp1 qty increase should reflect in picking')
+        self.assertEqual(sum(mo.picking_ids.move_ids.filtered(lambda m: m.product_id == comp1).mapped('product_uom_qty')), 3)
 
         # add new comp3
         comp3 = self.env['product.product'].create({
@@ -921,8 +921,8 @@ class TestProcurement(TestMrpCommon):
                 'product_uom_qty': 2,
             })]
         })
-        self.assertEqual(len(mo.picking_ids[0].move_ids), 3, 'Picking should have 3 moves')
-        self.assertEqual(mo.picking_ids[0].move_ids[2].product_uom_qty, 2, 'Comp3 move should have same qty as MO')
+        self.assertEqual(len(mo.picking_ids.move_ids), 5, 'Picking should have 3 moves')
+        self.assertEqual(mo.picking_ids.move_ids.filtered(lambda m: m.product_id == comp3).product_uom_qty, 2, 'Comp3 move should have same qty as MO')
 
         # increase qty to produce
         wiz = self.env['change.production.qty'].create({
@@ -935,7 +935,7 @@ class TestProcurement(TestMrpCommon):
         # comp1 (2 + 3 extra) = 5
         # comp2 (2 + 4 extra) = 6
         # comp3 (2 + 2 extra) = 4
-        self.assertEqual(mo.picking_ids[0].move_ids.mapped('product_uom_qty'), [5, 6, 4], 'Comp qty do not match expected')
+        self.assertEqual(sorted(mo.picking_ids.move_ids.mapped('product_uom_qty')), [1, 2, 4, 5, 6], 'Comp qty do not match expected')
 
     def test_pbm_and_additionnal_components(self):
         """
@@ -1034,12 +1034,9 @@ class TestProcurement(TestMrpCommon):
                 })],
             })
             picking.action_confirm()
-            if not mo:
-                mo = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
-            self.assertEqual(delta_hours(mo.date_finished - mo.date_start), i * 15)
-
-        # Check the generated MO
-        self.assertEqual(mo.product_qty, 45)
+            mo = self.env['mrp.production'].search([('product_id', '=', product_1.id)])
+            self.assertEqual(len(mo), i, 'One mo per picking')
+            self.assertEqual(delta_hours(mo[i - 1].date_finished - mo[i - 1].date_start), 15)
 
     def test_mo_split_with_batch_size_mto(self):
         """ Check the MO is split with the correct product_qty when we apply a batch size in BoM
@@ -1053,19 +1050,17 @@ class TestProcurement(TestMrpCommon):
             'enable_batch_size': True,
             'batch_size': 200.0,
         })
-        procurement_group = self.env['procurement.group'].create({'name': 'batch_size'})
-        self.env['procurement.group'].run([
-            procurement_group.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.product_4,
                 300,
                 self.uom_unit,
                 self.customer_location,
-                procurement_group.name,
-                procurement_group.name,
+                'Batch Size Test',
+                'Batch Size Test',
                 self.warehouse_1.company_id,
                 {
                     'warehouse_id': self.warehouse_1,
-                    'group_id': procurement_group,
                 },
             ),
         ])

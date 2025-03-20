@@ -5,6 +5,7 @@ from datetime import timedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tools.float_utils import float_compare
 from dateutil.relativedelta import relativedelta
 
@@ -65,9 +66,9 @@ class StockPicking(models.Model):
 
     def _prepare_subcontract_mo_vals(self, subcontract_move, bom):
         subcontract_move.ensure_one()
-        group = self.env['procurement.group'].create({
+        reference = self.env['stock.reference'].create({
             'name': self.name,
-            'partner_id': self.partner_id.id,
+            'move_ids': [Command.link(subcontract_move.id)],
         })
         product = subcontract_move.product_id
         warehouse = self._get_warehouse(subcontract_move)
@@ -76,7 +77,6 @@ class StockPicking(models.Model):
             or subcontract_move.company_id.subcontracting_location_id
         vals = {
             'company_id': subcontract_move.company_id.id,
-            'procurement_group_id': group.id,
             'subcontractor_id': subcontract_move.picking_id.partner_id.commercial_partner_id.id,
             'picking_ids': [subcontract_move.picking_id.id],
             'product_id': product.id,
@@ -88,6 +88,7 @@ class StockPicking(models.Model):
             'picking_type_id': warehouse.subcontracting_type_id.id,
             'date_start': subcontract_move.date - relativedelta(days=bom.produce_delay),
             'origin': self.name,
+            'reference_ids': [Command.link(reference.id)],
         }
         return vals
 
@@ -99,9 +100,9 @@ class StockPicking(models.Model):
 
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
-        group_move = defaultdict(list)
-        group_by_company = defaultdict(list)
+        group_by_company = defaultdict(lambda: ([], []))
         for move, bom in subcontract_details:
+            # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
                 # Magic spicy sauce for the backorder case:
                 # To ensure correct splitting of the component moves of the SBC MO, we will invoke a split of the SBC
@@ -121,27 +122,16 @@ class StockPicking(models.Model):
                 continue
 
             mo_subcontract = self._prepare_subcontract_mo_vals(move, bom)
-            # Link the move to the id of the MO's procurement group
-            group_move[mo_subcontract['procurement_group_id']] = move
             # Group the MO by company
-            group_by_company[move.company_id.id].append(mo_subcontract)
+            group_by_company[move.company_id.id][0].append(mo_subcontract)
+            group_by_company[move.company_id.id][1].append(move)
 
-        all_mo = set()
         for company, group in group_by_company.items():
-            grouped_mo = self.env['mrp.production'].with_company(company).create(group)
-            all_mo.update(grouped_mo.ids)
-
-        all_mo = self.env['mrp.production'].browse(sorted(all_mo))
-        ctx = self._get_subcontract_mo_confirmation_ctx()
-        all_mo.with_context(ctx).action_confirm()
-        if ctx.get('no_procurement'):
-            # Make sure to check availability to the backorder
-            all_mo.action_assign()
-
-        for mo in all_mo:
-            move = group_move[mo.procurement_group_id.id][0]
-            mo.write({'date_finished': move.date})
-            finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
-            finished_move.write({'move_dest_ids': [(4, move.id, False)]})
-
-        all_mo.action_assign()
+            vals_list, moves = group
+            grouped_mo = self.env['mrp.production'].with_company(company).create(vals_list)
+            grouped_mo.with_context(self._get_subcontract_mo_confirmation_ctx()).action_confirm()
+            for mo, move in zip(grouped_mo, moves):
+                mo.date_finished = move.date
+                finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
+                finished_move.move_dest_ids = [Command.link(move.id)]
+            grouped_mo.action_assign()

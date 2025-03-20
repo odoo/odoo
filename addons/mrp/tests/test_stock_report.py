@@ -164,7 +164,7 @@ class TestMrpStockReports(TestReportsCommon):
         backorder = backorder_form.save()
         backorder.action_backorder()
 
-        mo_2 = (mo_1.procurement_group_id.mrp_production_ids - mo_1)
+        mo_2 = (mo_1.production_group_id.production_ids - mo_1)
         # Checks the forecast report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
         self.assertEqual(len(lines), 1, "Must have only one line about the backorder")

@@ -165,7 +165,7 @@ class StockScrap(models.Model):
     def do_replenish(self, values=False):
         self.ensure_one()
         values = values or {}
-        self.with_context(clean_context(self.env.context)).env['procurement.group'].run([self.env['procurement.group'].Procurement(
+        self.with_context(clean_context(self.env.context)).env['stock.rule'].run([self.env['stock.rule'].Procurement(
             self.product_id,
             self.scrap_qty,
             self.product_uom_id,

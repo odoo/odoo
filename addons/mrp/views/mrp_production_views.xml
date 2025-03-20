@@ -375,7 +375,6 @@
                                     <field name="company_id"/>
                                     <field name="warehouse_id"/>
                                     <field name="origin"/>
-                                    <field name="group_id"/>
                                     <field name="propagate_cancel"/>
                                     <field name="move_dest_ids"/>
                                     <field name="state"/>
@@ -470,7 +469,6 @@
                                         options="{'create': [('parent.use_create_components_lots', '!=', False)]}"
                                         context="{'default_product_id': product_id}"
                                         domain="[('product_id','=',product_id)]"/>
-                                    <field name="group_id" column_invisible="True"/>
                                     <button name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="not show_details_visible or has_tracking == 'none'"/>
                                     <button class="o_optional_button btn" name="action_show_details" type="object" title="Show Details" string="Details" context="{'default_product_uom_qty': 0}" invisible="has_tracking != 'none' or not show_details_visible"/>
                                 </list>
@@ -688,7 +686,6 @@
                         <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
                         <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
                         <filter string="Material Availability" name="groupby_reservation_state" domain="[]" context="{'group_by': 'reservation_state'}"/>
-                        <filter string="Procurement Group" name="procurement_group_id" domain="[]" context="{'group_by': 'procurement_group_id'}"/>
                         <filter string="Date" name="date" domain="[]" context="{'group_by': 'date_start'}" help="Date by Month"/>
                     </group>
                </search>

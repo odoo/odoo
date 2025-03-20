@@ -106,9 +106,9 @@ class RepairOrder(models.Model):
         default=_default_picking_type_id,
         domain="[('code', '=', 'repair_operation'), ('company_id', '=', company_id)]",
         required=True, precompute=True, check_company=True, index=True)
-    procurement_group_id = fields.Many2one(
-        'procurement.group', 'Procurement Group',
-        copy=False)
+    reference_ids = fields.Many2many(
+        'stock.reference', 'stock_reference_repair_rel',
+        'repair_id', 'reference_id', string='References', copy=False)
     location_id = fields.Many2one(
         'stock.location', 'Component Source Location',
         compute="_compute_location_id",
@@ -379,8 +379,8 @@ class RepairOrder(models.Model):
                 vals['picking_type_id'] = picking_type.id
             if not vals.get('name', False) or vals['name'] == 'New':
                 vals['name'] = picking_type.sequence_id.next_by_id()
-            if not vals.get('procurement_group_id'):
-                vals['procurement_group_id'] = self.env["procurement.group"].create({'name': vals['name']}).id
+            if not vals.get('reference_ids'):
+                vals['reference_ids'] = [Command.link(self.env["stock.reference"].create({'name': vals['name']}).id)]
         return super().create(vals_list)
 
     def write(self, vals):

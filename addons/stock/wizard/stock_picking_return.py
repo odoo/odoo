@@ -38,7 +38,7 @@ class StockReturnPickingLine(models.TransientModel):
             'warehouse_id': picking.picking_type_id.warehouse_id.id,
             'origin_returned_move_id': self.move_id.id,
             'procure_method': 'make_to_stock',
-            'group_id': self.wizard_id.picking_id.group_id.id,
+            'reference_ids': self.wizard_id.picking_id.reference_ids.ids,
         }
         if picking.picking_type_id.code == 'outgoing':
             vals['partner_id'] = picking.partner_id.id
@@ -252,20 +252,20 @@ class StockReturnPicking(models.TransientModel):
             if not line.move_id:
                 continue
             proc_values = self._get_proc_values(line)
-            proc_list.append(self.env["procurement.group"].Procurement(
+            proc_list.append(self.env["stock.rule"].Procurement(
                 line.product_id, line.quantity, line.uom_id,
                 line.move_id.location_dest_id or self.picking_id.location_dest_id,
                 line.product_id.display_name, self.picking_id.origin, self.picking_id.company_id,
                 proc_values,
             ))
         if proc_list:
-            self.env['procurement.group'].run(proc_list)
+            self.env['stock.rule'].run(proc_list)
         return action
 
     def _get_proc_values(self, line):
         self.ensure_one()
         return {
-            'group_id': self.picking_id.group_id,
+            'reference_ids': self.picking_id.reference_ids,
             'date_planned': line.move_id.date or fields.Datetime.now(),
             'warehouse_id': self.picking_id.picking_type_id.warehouse_id,
             'partner_id': self.picking_id.partner_id.id,

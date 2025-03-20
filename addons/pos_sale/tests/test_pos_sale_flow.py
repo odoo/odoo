@@ -835,16 +835,19 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         # We validate the purchase and receipt steps
         po = sale_order._get_purchase_orders()
         po.button_confirm()
-        picking = po.picking_ids[0]
+        picking = po.picking_ids
+        # validate the 3 picking in order
         picking.button_validate()
-        self.env['stock.picking'].search([('group_id', '=', po.group_id.id)]).filtered(lambda p: p.state == 'assigned').button_validate()
-        self.env['stock.picking'].search([('group_id', '=', po.group_id.id)]).filtered(lambda p: p.state == 'assigned').button_validate()
+        picking = picking._get_next_transfers()
+        picking.button_validate()
+        picking = picking._get_next_transfers()
+        picking.button_validate()
 
         self.main_pos_config.ship_later = True
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PosSettleOrder4', login="accountman")
 
-        self.assertEqual(sale_order.picking_ids.state, 'cancel')
+        self.assertEqual(sale_order.picking_ids[0].state, 'cancel')
         self.assertEqual(sale_order.pos_order_line_ids.order_id.picking_ids.state, 'assigned')
         self.assertEqual(self.env['purchase.order.line'].search_count([('product_id', '=', product_a.id)]), 1)
 

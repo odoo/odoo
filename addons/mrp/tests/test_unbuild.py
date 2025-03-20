@@ -435,7 +435,7 @@ class TestUnbuild(TestMrpCommon):
             'product_id': p_final.id,
         })
 
-        mo = mo.procurement_group_id.mrp_production_ids[1]
+        mo = mo.production_group_id.production_ids[1]
         # FIXME sle: issue in backorder?
         mo.move_raw_ids.move_line_ids.unlink()
         self.assertEqual(mo.product_qty, 2)
@@ -450,7 +450,7 @@ class TestUnbuild(TestMrpCommon):
         details_operation_form.save()
         action = mo.button_mark_done()
 
-        mo1 = mo.procurement_group_id.mrp_production_ids[0]
+        mo1 = mo.production_group_id.production_ids[0]
         ml = mo1.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and lot_finished_1 in m.produce_line_ids.lot_id)
         self.assertEqual(sum(ml.mapped('quantity')), 12.0, 'Should have consumed 12 for the first lot')
         ml = mo.finished_move_line_ids[0].consume_line_ids.filtered(lambda m: m.product_id == p1 and lot_finished_2 in m.produce_line_ids.lot_id)

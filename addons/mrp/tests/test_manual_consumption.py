@@ -167,7 +167,7 @@ class TestManualConsumption(TestMrpCommon):
         action = consumption.action_set_qty()
         backorder_form = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
         backorder_form.save().action_backorder()
-        backorder = mo.procurement_group_id.mrp_production_ids - mo
+        backorder = mo.production_group_id.production_ids - mo
 
         # Check that backorders move have the same manual consumption values as BoM
         move_auto, move_manual = get_moves(backorder)

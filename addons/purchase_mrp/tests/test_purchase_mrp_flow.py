@@ -543,7 +543,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             ('product_id', '=', component.id),
         ]).order_id
         self.assertTrue(purchase)
-        self.assertEqual(purchase.order_line.product_qty, 5)
+        self.assertEqual(len(purchase), 2)
+        self.assertEqual(sum(purchase.order_line.mapped('product_qty')), 5)
 
     def test_01_purchase_mrp_kit_qty_change(self):
         self.partner = self.env['res.partner'].create({'name': 'Test Partner'})
@@ -1117,7 +1118,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             production = prod_form.save()
         production.action_confirm()
         self.assertEqual(production.purchase_order_count, 1)
-        purchase = production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+        purchase = production.reference_ids.purchase_ids
         self.assertEqual(len(purchase), 1)
 
         with Form(production) as prod_form:
@@ -1127,7 +1128,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         backorder_wizard = Form(self.env['mrp.production.backorder'].with_context(**backorder_action['context']))
         backorder_wizard.save().action_backorder()
 
-        backorder = production.procurement_group_id.mrp_production_ids - production
+        backorder = production.production_group_id.production_ids - production
         self.assertEqual(len(backorder), 1)
         self.assertEqual(backorder.product_qty, 2)
         report_values = self.env['report.mrp.report_mo_overview']._get_report_data(backorder.id)
@@ -1170,7 +1171,7 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
             production = prod_form.save()
         production.action_confirm()
         self.assertEqual(production.purchase_order_count, 1)
-        purchase = production.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id
+        purchase = production.reference_ids.purchase_ids
         self.assertEqual(len(purchase), 1)
         # Cancel the MO and check that an activity was created on the PO
         self.assertFalse(purchase.activity_ids)
