@@ -66,6 +66,14 @@ export class FontSizeSelector extends Component {
             },
             () => [this.dropdown.isOpen]
         );
+        useEffect(
+            (isToolbarVisible) => {
+                if (!isToolbarVisible) {
+                    this.dropdown.close();
+                }
+            },
+            () => [this.props.isToolbarVisible]
+        );
     }
 
     onCustomFontSizeInput(ev) {

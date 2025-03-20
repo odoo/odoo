@@ -1,4 +1,4 @@
-import { Component, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { Colorpicker } from "@web/core/colorpicker/colorpicker";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -60,6 +60,14 @@ export class ColorSelector extends Component {
         this.currentCustomColor = useState({ color: this.selectedColors[this.mode] });
 
         this.usedCustomColors = this.props.getUsedCustomColors();
+        useEffect(
+            (isToolbarVisible) => {
+                if (!isToolbarVisible) {
+                    this.dropdown.close();
+                }
+            },
+            () => [this.props.isToolbarVisible]
+        );
     }
 
     setTab(tab) {

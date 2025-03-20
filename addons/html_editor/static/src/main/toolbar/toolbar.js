@@ -1,9 +1,11 @@
-import { Component, useState, validate } from "@odoo/owl";
+import { Component, useExternalListener, useRef, useState, validate } from "@odoo/owl";
+import { closestScrollableY } from "@web/core/utils/scrolling";
 
 export class Toolbar extends Component {
     static template = "html_editor.Toolbar";
     static props = {
         class: { type: String, optional: true },
+        editable: { validate: (node) => node.nodeType === Node.ELEMENT_NODE, optional: true },
         toolbar: {
             type: Object,
             shape: {
@@ -68,6 +70,18 @@ export class Toolbar extends Component {
 
     setup() {
         this.state = useState(this.props.toolbar.state);
+        this.visibilityStatus = useState({ isToolbarVisible: true });
+        this.scrollContainer = closestScrollableY(this.props.editable);
+        if (this.scrollContainer) {
+            useExternalListener(this.scrollContainer, "scroll", this.onScroll);
+        }
+        this.toolbarRef = useRef("toolbarRef");
+    }
+
+    onScroll() {
+        const overlayContainer = this.toolbarRef.el.closest(".overlay");
+        this.visibilityStatus.isToolbarVisible =
+            overlayContainer.style.visibility === "hidden" ? false : true;
     }
 
     getFilteredButtonGroups() {
@@ -91,4 +105,5 @@ export class Toolbar extends Component {
 export const toolbarButtonProps = {
     title: String,
     getSelection: Function,
+    isToolbarVisible: Boolean,
 };

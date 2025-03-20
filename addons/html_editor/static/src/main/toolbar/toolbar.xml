@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.Toolbar">
-        <div class="o-we-toolbar d-flex align-items-center m-0" t-on-pointerdown.prevent="" style="overflow-x: auto; overflow-y:hidden"  t-att-class="props.class">
+        <div class="o-we-toolbar d-flex align-items-center m-0" t-on-pointerdown.prevent="" style="overflow-x: auto; overflow-y:hidden" t-ref="toolbarRef" t-att-class="props.class">
             <t t-foreach="this.getFilteredButtonGroups()" t-as="buttonGroup" t-key="buttonGroup.id">
                 <span class="o-we-toolbar-vertical-seperator"></span>
                 <div class="btn-group" t-att-name="buttonGroup.id">
@@ -10,7 +10,8 @@
                                 <t t-component="button.Component"
                                     t-props="button.props"
                                     title="button.title"
-                                    getSelection.bind="props.toolbar.getSelection"/>
+                                    getSelection.bind="props.toolbar.getSelection"
+                                    isToolbarVisible="visibilityStatus.isToolbarVisible"/>
                             </t>
                             <button t-else=""
                                 class="btn btn-light"

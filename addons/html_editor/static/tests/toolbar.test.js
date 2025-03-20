@@ -21,6 +21,10 @@ import {
     onRpc,
     patchTranslations,
     patchWithCleanup,
+    defineModels,
+    fields,
+    models,
+    mountView,
 } from "@web/../tests/web_test_helpers";
 import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
@@ -1081,4 +1085,88 @@ describe("toolbar open and close on user interaction", () => {
             expect(".o-we-toolbar").toHaveCount(1);
         });
     });
+});
+
+test.tags("desktop");
+test("dropdown menu should not overflow scroll container", async () => {
+    class Test extends models.Model {
+        name = fields.Char();
+        txt = fields.Html();
+        _records = [{ id: 1, name: "Test", txt: "<p>text</p>".repeat(50) }];
+    }
+
+    defineModels([Test]);
+    await mountView({
+        type: "form",
+        resId: 1,
+        resModel: "test",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    const top = (element) => element.getBoundingClientRect().top;
+    const scrollableElement = queryOne(".o_content");
+    const editable = queryOne(".odoo-editor-editable");
+
+    // Select a paragraph in the middle of the text
+    const fifthParagraph = editable.children[5];
+    setSelection({
+        anchorNode: fifthParagraph,
+        anchorOffset: 0,
+        focusNode: fifthParagraph,
+        focusOffset: 1,
+    });
+
+    const toolbar = await waitFor(".o-we-toolbar");
+
+    // Color selector
+    await contains(".o-we-toolbar .o-select-color-foreground").click();
+    await animationFrame();
+    const colorSelector = queryOne(".o_font_color_selector");
+
+    // Scroll down to bring the toolbar close to the top
+    let scrollStep = top(toolbar) - top(scrollableElement);
+    scrollableElement.scrollTop += scrollStep;
+    await animationFrame();
+
+    // Toolbar should not overflow the scroll container
+    expect(top(toolbar)).toBeGreaterThan(top(scrollableElement));
+    expect(top(colorSelector)).toBeGreaterThan(top(toolbar));
+
+    // Scroll down to make the toolbar overflow the scroll container
+    scrollStep = top(toolbar) - top(scrollableElement);
+    scrollableElement.scrollTop += scrollStep;
+    await animationFrame();
+
+    // Toolbar should be invisible
+    expect(toolbar).not.toBeVisible();
+
+    // Color selector should get closed
+    await advanceTime(200);
+    expect(colorSelector).not.toBeDisplayed();
+
+    // Scroll up to make toolbar visible
+    scrollableElement.scrollTop -= scrollStep;
+    await animationFrame();
+    expect(toolbar).toBeVisible();
+
+    // Font selector
+    await contains(".o-we-toolbar [name='font'] .dropdown-toggle").click();
+    await animationFrame();
+    const fontSelector = queryOne(".o_font_selector_menu");
+
+    // Scroll down again to bring the toolbar close to the top
+    scrollStep = top(toolbar) - top(scrollableElement);
+    scrollableElement.scrollTop += scrollStep;
+    await animationFrame();
+
+    // Toolbar should be invisible
+    expect(toolbar).not.toBeVisible();
+
+    // Font selector should get closed
+    await advanceTime(200);
+    expect(fontSelector).not.toBeDisplayed();
 });
