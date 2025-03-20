@@ -20,6 +20,7 @@ export class RecordAutocomplete extends Component {
         className: { type: String, optional: true },
         fieldString: { type: String, optional: true },
         placeholder: { type: String, optional: true },
+        slots: { optional: true },
     };
     static components = { AutoComplete };
     static template = "web.RecordAutocomplete";
@@ -32,6 +33,7 @@ export class RecordAutocomplete extends Component {
             {
                 placeholder: _t("Loading..."),
                 options: this.loadOptionsSource.bind(this),
+                optionSlot: this.props.slots?.autoCompleteItem ? "option" : undefined,
             },
         ];
     }
@@ -50,9 +52,12 @@ export class RecordAutocomplete extends Component {
             this.lastProm.abort(false);
         }
         this.lastProm = this.search(name, SEARCH_LIMIT + 1);
-        const nameGets = (await this.lastProm).map(([id, label]) => ([id, label ? label.split("\n")[0] : _t("Unnamed")]));
+        const nameGets = (await this.lastProm).map(([id, label]) => [
+            id,
+            label ? label.split("\n")[0] : _t("Unnamed"),
+        ]);
         this.addNames(nameGets);
-        const options = nameGets.map(([value, label]) => ({value, label}));
+        const options = nameGets.map(([value, label]) => ({ value, label, record: true }));
         if (SEARCH_LIMIT < nameGets.length) {
             options.push({
                 label: _t("Search More..."),

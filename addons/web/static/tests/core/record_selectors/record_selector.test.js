@@ -12,7 +12,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import { click } from "@odoo/hoot-dom";
 
 class Partner extends models.Model {
-    _name = "partner";
+    _name = "res.partner";
 
     name = fields.Char();
 
@@ -52,7 +52,7 @@ async function mountRecordSelector(props) {
 
 test("Can be renderer with no values", async () => {
     await mountRecordSelector({
-        resModel: "partner",
+        resModel: "res.partner",
         resId: false,
     });
 
@@ -62,7 +62,7 @@ test("Can be renderer with no values", async () => {
 
 test("Can be renderer with a value", async () => {
     await mountRecordSelector({
-        resModel: "partner",
+        resModel: "res.partner",
         resId: 1,
     });
 
@@ -71,7 +71,7 @@ test("Can be renderer with a value", async () => {
 
 test("Can be updated from autocomplete", async () => {
     await mountRecordSelector({
-        resModel: "partner",
+        resModel: "res.partner",
         resId: 1,
     });
 
@@ -85,14 +85,40 @@ test("Can be updated from autocomplete", async () => {
     expect(".o_record_selector input").toHaveValue("Bob");
 });
 
+test("Can display avatars with the right model", async () => {
+    await mountRecordSelector({
+        resModel: "res.partner",
+        resId: 1,
+    });
+
+    expect(".o_record_selector input").toHaveValue("Alice");
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
+    await click(".o_record_selector input");
+    await animationFrame();
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(1);
+    expect(".o-autocomplete--dropdown-menu span.o_avatar img").toHaveCount(3);
+    expect(".o-autocomplete--dropdown-menu span.o_avatar img:eq(1)").toHaveAttribute(
+        "data-src",
+        "/web/image/res.partner/2/avatar_128"
+    );
+    await click("li.o-autocomplete--dropdown-item:eq(1)");
+    await animationFrame();
+    expect(".o_record_selector input").toHaveValue("Bob");
+    expect(".o_record_selector .o_m2o_avatar").toHaveCount(1);
+    expect(".o_record_selector .o_m2o_avatar img").toHaveAttribute(
+        "data-src",
+        "/web/image/res.partner/2/avatar_128"
+    );
+});
+
 test("Display name is correctly fetched", async () => {
     expect.assertions(3);
-    onRpc("partner", "web_search_read", ({ kwargs }) => {
+    onRpc("res.partner", "web_search_read", ({ kwargs }) => {
         expect.step("web_search_read");
         expect(kwargs.domain).toEqual([["id", "in", [1]]]);
     });
     await mountRecordSelector({
-        resModel: "partner",
+        resModel: "res.partner",
         resId: 1,
     });
 
@@ -102,13 +128,13 @@ test("Display name is correctly fetched", async () => {
 
 test("Can give domain and context props for the name search", async () => {
     expect.assertions(5);
-    onRpc("partner", "name_search", ({ kwargs }) => {
+    onRpc("res.partner", "name_search", ({ kwargs }) => {
         expect.step("name_search");
         expect(kwargs.domain).toEqual(["&", ["display_name", "=", "Bob"], "!", ["id", "in", []]]);
         expect(kwargs.context.blip).toBe("blop");
     });
     await mountRecordSelector({
-        resModel: "partner",
+        resModel: "res.partner",
         resId: 1,
         domain: [["display_name", "=", "Bob"]],
         context: { blip: "blop" },
@@ -123,7 +149,7 @@ test("Can give domain and context props for the name search", async () => {
 
 test("Support placeholder", async () => {
     await mountRecordSelector({
-        resModel: "partner",
+        resModel: "res.partner",
         resId: false,
         placeholder: "Select a partner",
     });
