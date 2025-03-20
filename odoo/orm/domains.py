@@ -58,7 +58,7 @@ import logging
 import operator
 import typing
 import warnings
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 
 from odoo.exceptions import UserError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
@@ -1278,10 +1278,17 @@ def _optimize_type_date(condition, _):
 
 
 def _value_to_datetime(value):
-    if isinstance(value, (SQL, datetime)) or value is False:
+    if isinstance(value, datetime):
+        if value.tzinfo:
+            # cast to a naive datetime
+            warnings.warn("Use naive datetimes in domains")
+            value = value.astimezone(timezone.utc).replace(tzinfo=None)
+        return value, False
+    if isinstance(value, SQL) or value is False:
         return value, False
     if isinstance(value, str):
-        return datetime.fromisoformat(value), len(value) == 10
+        dt, _ = _value_to_datetime(datetime.fromisoformat(value))
+        return dt, len(value) == 10
     if isinstance(value, date):
         return datetime.combine(value, time.min), True
     if isinstance(value, COLLECTION_TYPES):
