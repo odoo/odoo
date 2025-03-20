@@ -1415,3 +1415,20 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 .with_company(new_company)
                 .with_context({"default_holiday_status_id": new_leave_type.id})) as leave_form:
             self.assertEqual(leave_form.employee_id, new_employee)
+
+    def test_time_off_hours_when_flexible(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8.5,
+            'flexible_hours': True
+        })
+
+        self.employee_emp.resource_calendar_id = calendar
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': (datetime.today() - relativedelta(days=2)),
+            'date_to': datetime.today()
+        })
+        self.assertEqual(leave.number_of_hours, 8.5)
