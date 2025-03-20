@@ -35,6 +35,7 @@ export const odooExceptionTitleMap = new Map(
         "odoo.addons.web.controllers.action.MissingActionError": _t("Missing Action"),
         "odoo.exceptions.UserError": _t("Invalid Operation"),
         "odoo.exceptions.ValidationError": _t("Validation Error"),
+        "odoo.exceptions.InfoError": _t("Information"),
         "odoo.exceptions.AccessError": _t("Access Error"),
         "odoo.exceptions.Warning": _t("Warning"),
     })
@@ -226,6 +227,7 @@ registry
     .add("odoo.addons.web.controllers.action.MissingActionError", WarningDialog)
     .add("odoo.exceptions.UserError", WarningDialog)
     .add("odoo.exceptions.ValidationError", WarningDialog)
+    .add("odoo.exceptions.InfoError", WarningDialog)
     .add("odoo.exceptions.RedirectWarning", RedirectWarningDialog)
     .add("odoo.http.SessionExpiredException", SessionExpiredDialog)
     .add("werkzeug.exceptions.Forbidden", SessionExpiredDialog)

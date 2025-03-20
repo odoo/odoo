@@ -127,3 +127,11 @@ class ValidationError(UserError):
 
         When you try to create a new user with a login which already exist in the db.
     """
+
+class InfoError(UserError):
+    """A custom popup with a normal title.
+
+    .. admonition:: Example
+
+        If you finish an action and want to display information to the front-end.
+    """
