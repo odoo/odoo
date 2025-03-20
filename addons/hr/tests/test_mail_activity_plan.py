@@ -237,3 +237,14 @@ class TestActivitySchedule(ActivityScheduleHRCase):
                 form.save()
             self.employee_coach.user_id = self.user_coach
             self.employee_manager.user_id = self.user_manager
+
+    def test_activity_plans(self):
+        form = self._instantiate_activity_schedule_wizard(self.employee_1)
+        form.plan_id = self.plan_onboarding
+        self.assertFalse(form.has_error)
+        wizard = form.save()
+        wizard.action_schedule_plan()
+        activities = self.get_last_activities(self.employee_1, 1)
+        self.assertEqual(len(activities), 1)
+        self.assertEqual(activities.plan_id, self.plan_onboarding)
+        self.assertEqual(activities.summary, 'Test Onboarding - Training')
