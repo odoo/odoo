@@ -1,3 +1,5 @@
+import { roundDecimals } from "@web/core/utils/numbers";
+
 export const computeComboItems = (
     parentProduct,
     childLineConf,
@@ -9,7 +11,7 @@ export const computeComboItems = (
     const comboItems = [];
     const parentLstPrice = parentProduct.getPrice(pricelist, 1, 0, false, parentProduct);
     const originalTotal = childLineConf.reduce((acc, conf) => {
-        const originalPrice = conf.combo_item_id.combo_id.base_price * conf.qty;
+        const originalPrice = conf.combo_item_id.combo_id.base_price || 0;
         return acc + originalPrice;
     }, 0);
 
@@ -23,9 +25,11 @@ export const computeComboItems = (
     for (const conf of childLineConf) {
         const comboItem = conf.combo_item_id;
         const combo = comboItem.combo_id;
-        let priceUnit = ProductPrice.round((combo.base_price * parentLstPrice) / originalTotal);
-        remainingTotal -= priceUnit * conf.qty;
-
+        let priceUnit = roundDecimals(
+            originalTotal ? (combo.base_price * parentLstPrice) / originalTotal : 0.0,
+            decimalPrecision.find((dp) => dp.name === "Product Price").digits
+        );
+        remainingTotal -= priceUnit;
         if (comboItem.id == childLineConf[childLineConf.length - 1].combo_item_id.id) {
             priceUnit += remainingTotal;
         }
