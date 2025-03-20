@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
 import {
@@ -77,4 +77,31 @@ test("ensure order of operations when hovering an option", async () => {
     await contains(":iframe .test-options-target").click();
     await contains("[data-action-id='customAction']").hover();
     expect.verifySteps(["load", "apply", "restartInteractions"]);
+});
+
+describe("exit builder", () => {
+    beforeEach(async () => {
+        const { openBuilderSidebar } = await setupWebsiteBuilderWithSnippet("s_text_block", {
+            openEditor: false,
+        });
+        patchWithCleanup(EditInteractionPlugin.prototype, {
+            setup() {
+                super.setup();
+                this.websiteEditService.stop = () => expect.step("stop");
+            },
+        });
+        await openBuilderSidebar();
+    });
+    test("saving stops the interactions", async () => {
+        await waitFor(":iframe [data-snippet='s_text_block']");
+        await contains("[data-action='save']").click();
+        await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
+        expect.verifySteps(["stop"]);
+    });
+    test("discarding stops the interactions", async () => {
+        await waitFor(":iframe [data-snippet='s_text_block']");
+        await contains("[data-action='cancel']").click();
+        await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
+        expect.verifySteps(["stop"]);
+    });
 });
