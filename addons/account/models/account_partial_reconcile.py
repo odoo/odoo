@@ -110,6 +110,8 @@ class AccountPartialReconcile(models.Model):
         if not self:
             return True
 
+        # Get the payments without journal entry to reset once the amount residual is reset
+        to_update_payments = self._get_to_update_payments(from_state='paid')
         # Retrieve the CABA entries to reverse.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
         # Same for the exchange difference entries.
@@ -140,28 +142,30 @@ class AccountPartialReconcile(models.Model):
 
         all_reconciled = all_reconciled.exists()
         self._update_matching_number(all_reconciled)
+        to_update_payments.state = 'in_process'
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
         partials = super().create(vals_list)
-        self._pay_matched_payment(partials)
+        partials._get_to_update_payments(from_state='in_process').state = 'paid'
         self._update_matching_number(partials.debit_move_id + partials.credit_move_id)
         return partials
 
-    @api.model
-    def _pay_matched_payment(self, partials):
-        for partial in partials:
+    def _get_to_update_payments(self, from_state):
+        to_update = []
+        for partial in self:
             matched_payments = (partial.credit_move_id | partial.debit_move_id).move_id.matched_payment_ids
-            to_check_payments = matched_payments.filtered(lambda payment: not payment.outstanding_account_id and payment.state == 'in_process')
+            to_check_payments = matched_payments.filtered(lambda payment: not payment.outstanding_account_id and payment.state == from_state)
             for payment in to_check_payments:
                 if payment.payment_type == 'inbound':
                     amount = partial.debit_amount_currency
                 else:
                     amount = -partial.credit_amount_currency
                 if not payment.currency_id.compare_amounts(payment.amount_signed, amount):
-                    payment.state = 'paid'
+                    to_update.append(payment)
                     break
+        return self.env['account.payment'].union(*to_update)
 
     @api.model
     def _update_matching_number(self, amls):

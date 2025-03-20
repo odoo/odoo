@@ -2880,7 +2880,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_draft_cash_basis_surprise_use_case(self):
         ''' Use case: a reconciliation is made on a draft invoice, with no caba move created, but a cash basis tax is added
-            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation 
+            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation
             will create the caba move.
         '''
         self.env.company.tax_exigibility = True
@@ -3008,7 +3008,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(tax_cash_basis_moves.state, 'posted')
 
     def test_reconcile_draft_cash_basis_use_case(self):
-        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves, 
+        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves,
             instead the cash basis entry is created normally but stays in draft until all the moves are posted.
         '''
         cash_basis_move = self._prepare_cash_basis_move()
@@ -5552,6 +5552,12 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             self.assertEqual(payment2.state, 'paid')
             reconcile_move(payment1.move_id, 12, lines_filter=lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable'))
             self.assertEqual(payment1.state, 'paid')
+
+            customer_invoice_outstanding.line_ids.remove_move_reconcile()
+            self.assertEqual(payment1.state, 'paid')
+            self.assertEqual(payment2.state, 'in_process')
+            payment1.move_id.line_ids.filtered(lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable')).remove_move_reconcile()
+            self.assertEqual(payment1.state, 'in_process')
 
     def test_reconcile_partial_reconciliations(self):
         """
