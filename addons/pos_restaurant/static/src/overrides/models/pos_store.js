@@ -191,12 +191,9 @@ patch(PosStore.prototype, {
     async setTable(table, orderUuid = null) {
         this.deviceSync.readDataFromServer();
         this.selectedTable = table;
-
-        const tableOrders = table.orders;
-
-        let currentOrder = tableOrders.find((order) =>
-            orderUuid ? order.uuid === orderUuid : !order.finalized
-        );
+        let currentOrder = table
+            ? table.orders.find((o) => o.uuid === orderUuid || !o.finalized)
+            : null;
 
         if (currentOrder) {
             this.set_order(currentOrder);
