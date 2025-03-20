@@ -3655,25 +3655,36 @@ class TestMrpOrder(TestMrpCommon):
         """
         Test that when changing the operation type, the name of the MO should be changed too
         """
+        stock_location_1 = self.env.ref('stock.stock_location_stock')
+        stock_location_2 = stock_location_1.copy()
         picking_type_1 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_1',
             'code': 'mrp_operation',
             'sequence_code': 'PT1',
-            'default_location_src_id': self.stock_location_components.id,
-            'default_location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'default_location_src_id': stock_location_1.id,
+            'default_location_dest_id': stock_location_1.id,
             'warehouse_id': self.warehouse_1.id,
         })
         picking_type_2 = picking_type_1.copy({
             'name': 'new_picking_type_2',
-            'sequence_code': 'PT2'
+            'sequence_code': 'PT2',
+            'default_location_src_id': stock_location_2.id,
+            'default_location_dest_id': stock_location_2.id,
         })
+        self.env['stock.quant']._update_available_quantity(self.product_2, stock_location_2, 1)
         mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_1
+        mo_form.product_id = self.product_4
         mo_form.picking_type_id = picking_type_1
         mo = mo_form.save()
+        mo.action_confirm()
+        move = mo.move_raw_ids[0]
         self.assertEqual(mo.name, "BWH/PT1/00001")
+        self.assertEqual(move.location_id, stock_location_1)
+        self.assertEqual(move.quantity, 0.0)
         mo.picking_type_id = picking_type_2
         self.assertEqual(mo.name, "BWH/PT2/00001")
+        self.assertEqual(move.location_id, stock_location_2)
+        self.assertEqual(move.quantity, 1.0)
         mo.picking_type_id = picking_type_1
         self.assertEqual(mo.name, "BWH/PT1/00002")
         mo.picking_type_id = picking_type_1
