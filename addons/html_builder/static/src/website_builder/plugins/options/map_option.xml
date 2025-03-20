@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="html_builder.mapOption">
-    <BuilderRow label.translate="Address" action="'mapUpdateSrc'" preview="false">       
-        <!-- TODO: .o_we_large -->                     
-        <BuilderTextInput  
+    <BuilderRow label.translate="Address" action="'mapUpdateSrc'" preview="false">
+        <BuilderTextInput
             dataAttributeAction="'mapAddress'"
             placeholder.translate="e.g. Grand Place, Brussels"
-        />    
+            inputClasses="'o_we_large'"
+        />
     </BuilderRow>
     <BuilderRow label.translate="Type">
         <BuilderSelect dataAttributeAction="'mapType'" action="'mapUpdateSrc'" preview="false">
