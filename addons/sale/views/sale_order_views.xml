@@ -470,6 +470,7 @@
                             mode="list,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>
+                                <field name="technical_price_unit" invisible="1"/>
                                 <!--
                                     We need the sequence field to be here for new lines to be added at the correct position.
                                     TODO: at some point we want to fix this in the framework so that an invisible field is not required.
