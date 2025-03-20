@@ -61,17 +61,6 @@ class IrQWeb(models.AbstractModel):
                 snippet_name = compile_context.get('snippet-name')
                 if snippet_name and 'data-name' not in snippet_base_node.attrib:
                     snippet_base_node.attrib['data-name'] = snippet_name
-
-            sub_call = el.get('t-call')
-            # If the node is a t-call, we create the snippet-sub-call-key 
-            # to still be able to add the "data-snippet" attrib of the sub 
-            # called snippet
-            if sub_call:
-                el.set(
-                    't-options',
-                    f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}"
-                )
-
         return super()._compile_node(el, compile_context, indent)
 
     # compile directives
