@@ -294,7 +294,12 @@
         </t>
     </div>
     <t t-set="editor_message">BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS</t>
-    <div class="oe_structure oe_empty" id="oe_structure_website_slides_lesson_top_1" t-att-data-editor-message="editor_message"/>
+    <t t-set="tooltip_message">Shared between all lessons</t>
+    <div class="oe_structure oe_empty"
+        id="oe_structure_website_slides_lesson_top_1"
+        t-att-data-editor-message="editor_message"
+        t-att-data-shared-block-message="tooltip_message"
+    />
     <div t-if="slide.slide_category == 'infographic'" class="o_wslides_lesson_content_type" t-field='slide.image_1920' t-options="{'widget': 'image', 'style': 'width: 100%;'}"/>
     <div t-else="" class="o_wslides_lesson_content_type">
         <div t-if="slide.slide_category == 'document'" class="ratio ratio-4x3 embed-responsive-item mb8" style="height: 600px;">

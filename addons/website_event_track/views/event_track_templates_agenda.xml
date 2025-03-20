@@ -30,14 +30,23 @@
             </div>
             <!-- Drag/Drop Area -->
             <t t-set="editor_message">Available on all event Agenda pages</t>
-            <div class="oe_structure oe_empty" id="oe_structure_website_event_track_agenda_1" t-att-data-editor-message="editor_message"/>
+            <t t-set="tooltip_message">Shared between all event Agenda pages</t>
+            <div class="oe_structure oe_empty"
+                id="oe_structure_website_event_track_agenda_1"
+                t-att-data-editor-message="editor_message"
+                t-att-data-shared-block-message="tooltip_message"
+            />
 
             <!-- Content -->
             <div class="o_wevent_online o_weagenda_index mb-3">
                 <t t-call="website_event_track.agenda_main"/>
             </div>
             <!-- Drag/Drop Area -->
-            <div class="oe_structure oe_empty" id="oe_structure_website_event_track_agenda_2" t-att-data-editor-message="editor_message"/>
+            <div class="oe_structure oe_empty"
+                id="oe_structure_website_event_track_agenda_2"
+                t-att-data-editor-message="editor_message"
+                t-att-data-shared-block-message="tooltip_message"
+            />
         </t>
     </t>
 </template>
