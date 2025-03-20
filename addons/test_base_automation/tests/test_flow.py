@@ -932,6 +932,10 @@ action = {
         lead.unlink()
         self.assertEqual(called_count, 1)
 
+    @property
+    def automation_cron(self):
+        return self.env.ref('base_automation.ir_cron_data_base_automation_check')
+
     def test_004_check_method_trigger_field(self):
         model = self.env["ir.model"]._get("base.automation.lead.test")
         TIME_TRIGGERS = [
@@ -951,13 +955,13 @@ action = {
         # this does not happen using the UI where the trigger is forced to be set
         self.assertFalse(automation.last_run)
         with self.assertLogs('odoo.addons.base_automation', 'WARNING') as capture, self.enter_registry_test_mode():
-            self.env["base.automation"]._cron_process_time_based_actions()
+            self.automation_cron.method_direct_trigger()
         self.assertRegex(capture.output[0], r"Missing date trigger")
         automation.trg_date_id = model.field_id.filtered(lambda f: f.name == 'date_automation_last')
 
         # normal run
         with self.enter_registry_test_mode():
-            self.env["base.automation"]._cron_process_time_based_actions()
+            self.automation_cron.method_direct_trigger()
         self.assertTrue(automation.last_run)
 
     @common.freeze_time('2020-01-01 03:00:00')
@@ -990,13 +994,13 @@ action = {
                 } for i in range(15)])
             with common.freeze_time('2020-01-01 03:01:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # process records
-                self.env["base.automation"]._cron_process_time_based_actions()
+                self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 10)
                 self.assertEqual(automation.last_run, self.env.cr.now())
             with common.freeze_time('2020-01-01 03:11:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # 2 in the future (because of timing)
                 # 10 previously done records because we use the date_automation_last as trigger without delay
-                self.env["base.automation"]._cron_process_time_based_actions()
+                self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 22)
                 self.assertEqual(automation.last_run, self.env.cr.now())
                 # test triggering using a calendar
@@ -1004,7 +1008,7 @@ action = {
                 automation.trg_date_range_type = 'day'
                 self.env["base.automation.lead.test"].create({'name': 'calendar'})  # for the run
             with common.freeze_time('2020-02-02 03:11:00'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
-                self.env["base.automation"]._cron_process_time_based_actions()
+                self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 38)
 
     def test_005_check_model_with_different_rec_name_char(self):

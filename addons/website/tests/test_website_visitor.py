@@ -150,7 +150,7 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
         inactive_visitor_ids = inactive_visitors.ids
         active_visitor_ids = active_visitors.ids
 
-        WebsiteVisitor._cron_unlink_old_visitors()
+        self.env.ref('website.website_visitor_cron').method_direct_trigger()
         if inactive_visitor_ids:
             # all inactive visitors should be deleted
             self.assertFalse(bool(WebsiteVisitor.search([('id', 'in', inactive_visitor_ids)])))
