@@ -33,6 +33,7 @@ class StockReturnPickingLine(models.TransientModel):
             'origin_returned_move_id': self.move_id.id,
             'procure_method': 'make_to_stock',
             'group_id': self.wizard_id.picking_id.group_id.id,
+            'reference_ids': self.wizard_id.picking_id.reference_ids.ids,
         }
         if picking.picking_type_id.code == 'outgoing':
             vals['partner_id'] = picking.partner_id.id
@@ -248,6 +249,7 @@ class StockReturnPicking(models.TransientModel):
         self.ensure_one()
         return {
             'group_id': self.picking_id.group_id,
+            'reference_ids': self.picking_id.reference_ids,
             'date_planned': line.move_id.date or fields.Datetime.now(),
             'warehouse_id': self.picking_id.picking_type_id.warehouse_id,
             'partner_id': self.picking_id.partner_id.id,

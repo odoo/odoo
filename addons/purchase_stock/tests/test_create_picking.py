@@ -258,6 +258,11 @@ class TestCreatePicking(ProductVariantsCommon):
             })],
         })
 
+        ref1, ref2 = self.env['stock.reference'].create([{
+            'name': 'ref 1',
+        }, {
+            'name': 'ref 2',
+        }])
         pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
         pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})
 
@@ -272,7 +277,8 @@ class TestCreatePicking(ProductVariantsCommon):
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
-                    'group_id': pg1
+                    'group_id': pg1,
+                    'reference_ids': ref1,
                 }
             ),
             pg2.Procurement(
@@ -285,7 +291,8 @@ class TestCreatePicking(ProductVariantsCommon):
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
-                    'group_id': pg2
+                    'group_id': pg2,
+                    'reference_ids': ref2,
                 }
             ),
         ])

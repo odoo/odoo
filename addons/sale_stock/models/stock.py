@@ -109,13 +109,10 @@ class StockPicking(models.Model):
             self.group_id.sale_id = self.sale_id
         else:
             if self.sale_id:
-                vals = {
-                    'sale_id': self.sale_id.id,
+                self.env['stock.reference'].create({
+                    'sale_ids': [Command.link(self.sale_id.id)],
                     'name': self.sale_id.name,
                 }
-            else:
-                vals = {}
-
             pg = self.env['procurement.group'].create(vals)
             self.group_id = pg
 
