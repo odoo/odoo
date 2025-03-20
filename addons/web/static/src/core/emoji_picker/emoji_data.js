@@ -21860,42 +21860,6 @@ const _getEmojisData8 = () => `{
     "shortcodes": [
         ":pirate_flag:"
     ]
-},
-{
-    "category": "Symbols",
-    "codepoints": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-    "emoticons": [],
-    "keywords": [
-        "` + _t("flag") + `"
-    ],
-    "name": "` + _t("flag: England") + `",
-    "shortcodes": [
-        ":england:"
-    ]
-},
-{
-    "category": "Symbols",
-    "codepoints": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-    "emoticons": [],
-    "keywords": [
-        "` + _t("flag") + `"
-    ],
-    "name": "` + _t("flag: Scotland") + `",
-    "shortcodes": [
-        ":scotland:"
-    ]
-},
-{
-    "category": "Symbols",
-    "codepoints": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
-    "emoticons": [],
-    "keywords": [
-        "` + _t("flag") + `"
-    ],
-    "name": "` + _t("flag: Wales") + `",
-    "shortcodes": [
-        ":wales:"
-    ]
 }`;
 
 /** @type {string} */
