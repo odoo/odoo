@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ColorSelector">
-        <Dropdown state="dropdown">
+        <Dropdown state="dropdown" menuRef="menuRef">
             <button class="btn btn-light" t-attf-class="o-select-color-{{props.type}} {{dropdown.isOpen ? 'active' : ''}}" t-att-title="props.title">
                 <t t-if="mode === 'color'">
                     <i class="fa fa-fw fa-font py-1" t-att-style="this.getSelectedColorStyle()"/>
