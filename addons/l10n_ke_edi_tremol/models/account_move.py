@@ -176,7 +176,7 @@ class AccountMove(models.Model):
                     price_total = abs(line_tax_details['base_amount_currency']) + abs(line_tax_details['tax_amount_currency'])
                     percentage = tax['tax'].amount
 
-            price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate
+            price = round(price_total / abs(line.quantity) * 100 / (100 - line.discount), line.currency_id.decimal_places) * currency_rate
             price = ('%.5f' % price).rstrip('0').rstrip('.')
 
             # Letter to classify tax, 0% taxes are handled conditionally, as the tax can be zero-rated or exempt
