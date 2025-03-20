@@ -209,6 +209,35 @@
 </template>
 <!-- Aside Layout -->
 <template id="dynamic_filter_template_blog_post_single_aside" name="Solo Aside">
+    <t t-if="len(records)" class="s_blog_posts_post" data-column-classes="col-lg-12">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="s_dynamic_snippet_content_position row">
+            <div class="col-lg-7 order-2 order-lg-1 align-content-center">
+                <h2 t-field="record.name"/>
+                <div class="d-flex flex-wrap mb-2">
+                    <span class="w-100 w-sm-auto">
+                        <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                    </span>
+                    <span class="d-none d-sm-inline text-muted mx-0 mx-sm-2" t-if="blog_posts_post_date_active and blog_posts_post_author_active">•</span>
+                    <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                    <span class="text-muted mx-2" t-if="blog_posts_post_category_active and (blog_posts_post_date_active or blog_posts_post_author_active)">•</span>
+                    <t t-call="website_blog.s_dynamic_snippet_template_category"/>
+                </div>
+                <t t-call="website_blog.s_dynamic_snippet_template_teaser">
+                    <t t-set="teaser_custom_class" t-value="'lead'"/>
+                </t>
+                <a class="btn btn-primary" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="fa fa-long-arrow-right" role="presentation"/></a>
+            </div>
+            <div class="col-lg-5 order-1 order-lg-2 h-auto mb-4 mb-lg-0">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="record"/>
+                    <t t-set="additionnal_classes" t-value="'ratio ratio-16x9 rounded overflow-hidden'"/>
+                </t>
+            </div>
+        </div>
+    </t>
 </template>
 <!-- Circle Layout -->
 <template id="dynamic_filter_template_blog_post_single_circle" name="Solo Circle">
