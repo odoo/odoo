@@ -1,21 +1,12 @@
 import { resizeGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { AddElementOption } from "./add_element_option";
 
 export class AddElementOptionPlugin extends Plugin {
     static id = "AddElementOption";
     static dependencies = ["history", "media"];
     resources = {
-        builder_options: [
-            withSequence(11, {
-                OptionComponent: AddElementOption,
-                selector: ".s_masonry_block",
-                applyTo: ".o_grid_mode",
-            }),
-        ],
         builder_actions: this.getActions(),
     };
 
