@@ -255,3 +255,42 @@ class TestAnalyticAccount(AnalyticCommon):
             plan_1_col: False,
             plan_2_col: self.analytic_account_1.id,
         }])
+
+    def test_change_parent_plan(self):
+        """Changing the parent of a plan updates account columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+
+        # Setting a parent plan should lead to the line having analytic_account_1 under Plan 2
+        self.analytic_plan_1.parent_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_2_col: self.analytic_account_1.id,
+        }])
+        # plan_1_col should no longer be a field of the analytic line
+        self.assertNotIn(plan_1_col, line)
+
+        # Removing the parent plan should fully reverse the analytic line
+        self.analytic_plan_1.parent_id = False
+        self.assertRecordValues(line, [{
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: False,
+        }])
+
+    def test_change_parent_plan_conflict(self):
+        """
+        Test case where changing the parent plan leads to more than one account under the same
+        plan in an analytic line.
+        """
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_2.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "Making this change would wipe out"):
+            self.analytic_plan_1.parent_id = self.analytic_plan_2
