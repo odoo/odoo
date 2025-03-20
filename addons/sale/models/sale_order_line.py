@@ -1158,6 +1158,13 @@ class SaleOrderLine(models.Model):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
 
+        if 'product_id' in values and any(
+            sol.product_id.id != values['product_id']
+            and not sol.product_updatable
+            for sol in self
+        ):
+            raise UserError(_("You cannot modify the product of this order line."))
+
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit')
             self.filtered(
