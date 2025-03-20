@@ -82,8 +82,8 @@ class HrContract(models.Model):
     def _get_leave_domain(self, start_dt, end_dt):
         domain = [
             ('resource_id', 'in', [False] + self.employee_id.resource_id.ids),
-            ('date_from', '<=', end_dt),
-            ('date_to', '>=', start_dt),
+            ('date_from', '<=', end_dt.replace(tzinfo=None)),
+            ('date_to', '>=', start_dt.replace(tzinfo=None)),
             ('company_id', 'in', [False, self.company_id.id]),
         ]
         return expression.AND([domain, self._get_sub_leave_domain()])
@@ -92,6 +92,7 @@ class HrContract(models.Model):
         return self.env['resource.calendar.leaves'].search(self._get_leave_domain(start_dt, end_dt))
 
     def _get_attendance_intervals(self, start_dt, end_dt):
+        assert start_dt.tzinfo and end_dt.tzinfo, "function expects localized date"
         # {resource: intervals}
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         for contract in self:

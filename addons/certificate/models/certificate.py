@@ -1,5 +1,4 @@
 import base64
-import datetime
 from importlib import metadata
 
 from cryptography import x509
@@ -75,13 +74,13 @@ class CertificateCertificate(models.Model):
     )
     date_start = fields.Datetime(
         string='Available date',
-        help='The date on which the certificate starts to be valid (UTC)',
+        help='The date on which the certificate starts to be valid',
         compute='_compute_pem_certificate',
         store=True,
     )
     date_end = fields.Datetime(
         string='Expiration date',
-        help='The date on which the certificate expires (UTC)',
+        help='The date on which the certificate expires',
         compute='_compute_pem_certificate',
         store=True,
     )
@@ -204,25 +203,25 @@ class CertificateCertificate(models.Model):
 
     @api.depends('date_start', 'date_end', 'loading_error')
     def _compute_is_valid(self):
-        # Certificate dates are UTC timezoned
+        # Certificate dates and Odoo datetimes are UTC timezoned
         # https://cryptography.io/en/latest/x509/reference/#cryptography.x509.Certificate.not_valid_after
-        utc_now = datetime.datetime.now(datetime.timezone.utc)
+        now = fields.Datetime.now()
         for certificate in self:
             if not certificate.date_start or not certificate.date_end or certificate.loading_error:
                 certificate.is_valid = False
             else:
-                date_start = certificate.date_start.replace(tzinfo=datetime.timezone.utc)
-                date_end = certificate.date_end.replace(tzinfo=datetime.timezone.utc)
-                certificate.is_valid = date_start <= utc_now <= date_end
+                date_start = certificate.date_start
+                date_end = certificate.date_end
+                certificate.is_valid = date_start <= now <= date_end
 
     def _search_is_valid(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        utc_now = datetime.datetime.now(datetime.timezone.utc)
+        now = fields.Datetime.now()
         return [
             ('pem_certificate', '!=', False),
-            ('date_start', '<=', utc_now),
-            ('date_end', '>=', utc_now),
+            ('date_start', '<=', now),
+            ('date_end', '>=', now),
             ('loading_error', '=', '')
         ]
 

@@ -101,7 +101,11 @@ class ResPartner(models.Model):
         :return dict[int, <calendar.event>]:
         """
         events = self.env['calendar.event'].search([
-            ('stop', '>=', start_datetime), ('start', '<=', end_datetime), ('partner_ids', 'in', self.ids), ('show_as', '=', 'busy')])
+            ('stop', '>=', start_datetime.replace(tzinfo=None)),
+            ('start', '<=', end_datetime.replace(tzinfo=None)),
+            ('partner_ids', 'in', self.ids),
+            ('show_as', '=', 'busy'),
+        ])
 
         event_by_partner_id = defaultdict(lambda: self.env['calendar.event'])
         for event in events:
