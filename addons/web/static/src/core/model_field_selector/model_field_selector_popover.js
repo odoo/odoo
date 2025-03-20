@@ -142,6 +142,10 @@ export class ModelFieldSelectorPopover extends Component {
         );
     }
 
+    get fieldNames() {
+        return this.state.page.fieldNames;
+    }
+
     get showDebugInput() {
         return this.props.showDebugInput ?? this.props.isDebugMode;
     }
