@@ -1484,8 +1484,8 @@ class SaleOrder(models.Model):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
 
         for line in self.order_line:
-            if line.display_type == 'line_section':
-                # Only invoice the section if one of its lines is invoiceable
+            if line.display_type == 'line_section' or line.product_type == 'combo':
+                # Only invoice the section or combo line if one of its lines is invoiceable
                 pending_section = line
                 continue
             if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
@@ -1528,7 +1528,7 @@ class SaleOrder(models.Model):
 
         # 1) Create invoices.
         invoice_vals_list = []
-        invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
+        invoice_item_sequence = 1 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
             if order.partner_invoice_id.lang:
                 order = order.with_context(lang=order.partner_invoice_id.lang)

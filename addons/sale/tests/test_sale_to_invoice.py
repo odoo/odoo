@@ -610,7 +610,7 @@ class TestSaleToInvoice(TestSaleCommon):
 
         self.assertRecordValues(invoice.invoice_line_ids, [
             {
-                'name': 'Meal Menu x 3',
+                'name': 'Meal Menu',
                 'display_type': 'line_section',
                 'product_id': False,
                 'quantity': 0,

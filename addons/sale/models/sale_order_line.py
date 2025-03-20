@@ -946,7 +946,7 @@ class SaleOrderLine(models.Model):
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
         """
         for line in self:
-            if line.state == 'sale' and not line.display_type:
+            if line.state == 'sale' and not line.display_type and line.product_type != 'combo':
                 if line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
@@ -1350,7 +1350,7 @@ class SaleOrderLine(models.Model):
         """
         return new or old
 
-    def _prepare_invoice_line(self, **optional_values):
+    def _prepare_invoice_line(self, sequence=False, **optional_values):
         """Prepare the values to create the new invoice line for a sales order line.
 
         :param optional_values: any parameter that should be added to the returned invoice line
@@ -1359,16 +1359,14 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
 
         if self.product_id.type == 'combo':
-            # If the quantity to invoice is a whole number, format it as an integer (with no decimal point)
-            qty_to_invoice = int(self.qty_to_invoice) if self.qty_to_invoice == int(self.qty_to_invoice) else self.qty_to_invoice
             return {
                 'display_type': 'line_section',
-                'sequence': self.sequence,
-                'name': f'{self.product_id.name} x {qty_to_invoice}',
+                'sequence': sequence or self.sequence,
+                'name': self.product_id.name,
             }
         res = {
             'display_type': self.display_type or 'product',
-            'sequence': self.sequence,
+            'sequence': sequence or self.sequence,
             'name': self.env['account.move.line']._get_journal_items_full_name(self.name, self.product_id.display_name),
             'product_id': self.product_id.id,
             'product_uom_id': self.product_uom.id,
