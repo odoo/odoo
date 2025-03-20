@@ -1,13 +1,6 @@
 import { unformat } from "@html_editor/../tests/_helpers/format";
 import { beforeEach, expect, test } from "@odoo/hoot";
-import {
-    animationFrame,
-    click,
-    queryAll,
-    queryAllTexts,
-    queryFirst,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { animationFrame, click, queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addDropZoneSelector,
@@ -22,8 +15,9 @@ defineWebsiteModels();
 
 function getBasicSection(content, { name, withColoredLevelClass = false }) {
     const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-    return unformat(`<section class="${className}" data-snippet="s_test" ${name ? `data-name="${name}"` : ""
-        }>
+    return unformat(`<section class="${className}" data-snippet="s_test" ${
+        name ? `data-name="${name}"` : ""
+    }>
         <div class="test_a o-paragraph">${content}</div>
     </section>`);
 }
@@ -330,7 +324,8 @@ test("insert snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(
-        `<section class="o_colored_level"><p>Text</p></section>${snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
+        `<section class="o_colored_level"><p>Text</p></section>${
+            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
         }`
     );
 });
@@ -387,7 +382,8 @@ test("drag&drop snippet structure", async () => {
     await contains(previewSelector).click();
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML(
-        `${snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
+        `${
+            snippetsDescription({ withName: true, withColoredLevelClass: true })[0].content
         }<section class="o_colored_level"><p>Text</p></section>`
     );
 });

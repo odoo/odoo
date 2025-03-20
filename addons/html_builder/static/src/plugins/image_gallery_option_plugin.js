@@ -284,7 +284,7 @@ class ImageGalleryOption extends Plugin {
         row.classList.add("row", "s_nb_column_fixed");
         const container = this.getContainer(imageGalleryElement);
         container.replaceChildren(row);
-        for (const [index, img] of images.entries()) {
+        for (const [, img] of images.entries()) {
             let wrapClass = "col-lg-3";
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = "col-lg-6";
