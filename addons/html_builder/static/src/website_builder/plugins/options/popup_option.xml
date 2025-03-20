@@ -44,7 +44,11 @@
     </BuilderRow>
     <BuilderRow label.translate="Hide For" t-if="!isActiveItem('onclick_opt')">
         <BuilderNumberInput tooltip.translate="Once the user closes the popup, it won't be shown again for that period of time."
-                dataAttributeAction="'consentsDuration'" default="7" unit.translate="days" saveUnit="''"/>
+                inputClasses="'o_we_large'"
+                dataAttributeAction="'consentsDuration'"
+                default="7"
+                unit.translate="days"
+                saveUnit="''"/>
     </BuilderRow>
     <BuilderRow label.translate="Show on">
         <BuilderSelect action="'moveBlock'" preview="false">
