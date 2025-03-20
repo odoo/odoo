@@ -273,6 +273,10 @@ function makeActionManager(env) {
                 const searchViewId = action.search_view_id ? action.search_view_id[0] : false;
                 action.views.push([searchViewId, "search"]);
             }
+            if ("no_breadcrumbs" in action.context) {
+                action._noBreadcrumbs = action.context.no_breadcrumbs;
+                delete action.context.no_breadcrumbs;
+            }
         }
         return action;
     }
@@ -541,8 +545,7 @@ function makeActionManager(env) {
         }
 
         viewProps.noBreadcrumbs =
-            "no_breadcrumbs" in action.context ? action.context.no_breadcrumbs : target === "new";
-        delete action.context.no_breadcrumbs;
+            "_noBreadcrumbs" in action ? action._noBreadcrumbs : target === "new";
         return {
             props: viewProps,
             config: {
