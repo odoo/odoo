@@ -31,6 +31,7 @@ export class Builder extends Component {
     static components = { BlockTab, CustomizeTab, InvisibleElementsPanel, ThemeTab };
     static props = {
         closeEditor: { type: Function },
+        reloadEditor: { type: Function, optional: true },
         snippetsName: { type: String },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
@@ -38,6 +39,7 @@ export class Builder extends Component {
         iframeLoaded: { type: Object },
         isMobile: { type: Boolean },
         Plugins: { type: Array, optional: true },
+        config: { type: Object, optional: true },
     };
 
     setup() {
@@ -67,6 +69,8 @@ export class Builder extends Component {
         this.editor = new Editor(
             {
                 Plugins,
+                isTranslation: this.props.isTranslation,
+                ...this.props.config,
                 onChange: ({ isPreviewing }) => {
                     if (!isPreviewing) {
                         this.state.canUndo = this.editor.shared.history.canUndo();
@@ -77,6 +81,7 @@ export class Builder extends Component {
                     }
                 },
                 resources: {
+                    reload_editor: this.props.reloadEditor,
                     on_mobile_preview_clicked: () => {
                         editorBus.trigger("DOM_UPDATED");
                     },
