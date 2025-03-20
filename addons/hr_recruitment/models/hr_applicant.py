@@ -240,11 +240,9 @@ class HrApplicant(models.Model):
                 )
             if applicant.partner_name and not applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
-            if email_normalized != tools.email_normalize(applicant.partner_id.email):
-                # change email on a partner will trigger other heavy code, so avoid to change the email when
-                # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
+            if email_normalized and not applicant.partner_id.email:
                 applicant.partner_id.email = applicant.email_from
-            if applicant.partner_phone:
+            if applicant.partner_phone and not applicant.partner_id.phone:
                 applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile")
