@@ -220,6 +220,13 @@ export class CalendarModel extends Model {
         const [section] = this.filterSections;
         for (const date of dates) {
             const rawRecord = this.buildRawRecord({ start: date });
+            if (!section) {
+                records.push({
+                    ...rawRecord,
+                    ...values,
+                });
+                continue;
+            }
             for (const filter of section.filters) {
                 if (filter.active && filter.type === "record") {
                     records.push({
