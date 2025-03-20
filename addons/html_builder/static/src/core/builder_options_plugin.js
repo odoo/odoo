@@ -7,7 +7,14 @@ import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 export class BuilderOptionsPlugin extends Plugin {
     static id = "builder-options";
-    static dependencies = ["selection", "overlay", "operation", "history"];
+    static dependencies = [
+        "selection",
+        "overlay",
+        "operation",
+        "history",
+        "builderOverlay",
+        "overlayButtons",
+    ];
     static shared = ["getContainers", "updateContainers"];
     resources = {
         step_added_handlers: () => this.updateContainers(),
@@ -30,6 +37,10 @@ export class BuilderOptionsPlugin extends Plugin {
         });
 
         this.lastContainers = [];
+        if (this.config.initialTarget) {
+            const el = this.editable.querySelector(this.config.initialTarget);
+            this.updateContainers(el);
+        }
     }
 
     updateContainers(target) {

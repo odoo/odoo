@@ -31,7 +31,7 @@ export class SavePlugin extends Plugin {
         ],
     };
 
-    async save(isTranslation) {
+    async save() {
         const proms = [];
         for (const fn of this.getResource("before_save_handlers")) {
             proms.push(fn());
@@ -42,7 +42,7 @@ export class SavePlugin extends Plugin {
             const cleanedEl = dirtyEl.cloneNode(true);
             this.dispatchTo("clean_for_save_handlers", { root: cleanedEl });
 
-            if (isTranslation) {
+            if (this.config.isTranslation) {
                 await this.saveTranslationElement(cleanedEl);
             } else {
                 await this.saveView(cleanedEl);
