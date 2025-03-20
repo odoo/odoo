@@ -594,24 +594,44 @@ class TestRepair(common.TransactionCase):
         """
         Test that when changing the picking_type_id, the name of the repair order should be changed too
         """
-        repair_order = self.env['repair.order'].create({
-            'product_id': self.product_product_3.id,
-            'picking_type_id': self.stock_warehouse.repair_type_id.id,
-        })
+        stock_location_1 = self.env.ref('stock.stock_location_stock')
+        stock_location_2 = stock_location_1.copy()
         picking_type_1 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_1',
             'code': 'repair_operation',
             'sequence_code': 'PT1/',
+            'default_location_src_id': stock_location_1.id,
         })
         picking_type_2 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_2',
             'code': 'repair_operation',
             'sequence_code': 'PT2/',
+            'default_location_src_id': stock_location_2.id,
         })
-        repair_order.picking_type_id = picking_type_1
+        repair_order = self.env['repair.order'].create({
+            'product_id': self.product_product_3.id,
+            'picking_type_id': picking_type_1.id,
+        })
+        part = self.env['product.product'].create({
+            'name': 'Part',
+            'is_storable': True,
+        })
+        self.env['stock.move'].create({
+            'repair_line_type': 'add',
+            'product_id': part.id,
+            'product_uom_qty': 1,
+            'repair_id': repair_order.id,
+        })
+        self.env['stock.quant']._update_available_quantity(part, stock_location_2, 1)
+        repair_order._action_repair_confirm()
+        move = repair_order.move_ids[0]
         self.assertEqual(repair_order.name, "PT1/00001")
+        self.assertEqual(move.location_id, stock_location_1)
+        self.assertEqual(move.quantity, 0.0)
         repair_order.picking_type_id = picking_type_2
         self.assertEqual(repair_order.name, "PT2/00001")
+        self.assertEqual(move.location_id, stock_location_2)
+        self.assertEqual(move.quantity, 1.0)
         repair_order.picking_type_id = picking_type_1
         self.assertEqual(repair_order.name, "PT1/00002")
         repair_order.picking_type_id = picking_type_1
