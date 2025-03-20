@@ -86,9 +86,15 @@
                             <div>
                                 <span class="fs-4" t-esc="combo.combo_item_id.product_id.display_name"/>
                                 <ul t-if="combo.configuration.attribute_value_ids.length > 0">
-                                    <li t-foreach="this.getSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
-                                        <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
-                                    </li>
+                                    <t t-foreach="this.getGroupedSelectedValues(combo.configuration.attribute_value_ids)" t-as="attrVal" t-key="attrVal.attribute_id.id">
+                                        <li>
+                                            <span t-esc="attrVal.attribute_id.name" /> : 
+                                            <t t-foreach="attrVal.values" t-as="value" t-key="value.id">
+                                                <span t-esc="value.name" />
+                                                <t t-if="!value_last">, </t>
+                                            </t>
+                                        </li>
+                                    </t>
                                 </ul>
                             </div>
                         </div>
