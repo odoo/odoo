@@ -138,13 +138,16 @@ class WebsiteEventBoothController(WebsiteEventController):
     def _prepare_booth_registration_partner_values(self, event, kwargs):
         if request.env.user._is_public():
             contact_email_normalized = tools.email_normalize(kwargs['contact_email'])
-            partner = request.env['res.partner'].sudo()._find_or_create_from_emails(
-                [contact_email_normalized],
-                additional_values={contact_email_normalized: {
-                    'phone': kwargs.get('contact_phone'),
-                    'name': kwargs.get('contact_name'),
-                }}
-            )[0]
+            if contact_email_normalized:
+                partner = event._partner_find_from_emails_single(
+                    [contact_email_normalized],
+                    additional_values={contact_email_normalized: {
+                        'phone': kwargs.get('contact_phone'),
+                        'name': kwargs.get('contact_name'),
+                    }},
+                )
+            else:
+                partner = request.env['res.partner']
         else:
             partner = request.env.user.partner_id
         return {
