@@ -11,7 +11,16 @@
             sources="sources"
             onSelect.bind="onSelect"
             onChange.bind="onChange"
-        />
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <t t-if="optionScope.option.record">
+                    <t t-slot="autoCompleteItem" t-props="optionScope.option"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="optionScope.option.label"/>
+                </t>
+            </t>
+        </AutoComplete>
     </t>
 
 </templates>

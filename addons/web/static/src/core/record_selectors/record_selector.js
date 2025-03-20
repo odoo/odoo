@@ -22,6 +22,13 @@ export class RecordSelector extends Component {
         onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
     }
 
+    get isAvatarModel() {
+        // bof
+        return ["res.partner", "res.users", "hr.employee", "hr.employee.public"].includes(
+            this.props.resModel
+        );
+    }
+
     async computeDerivedParams(props = this.props) {
         const displayNames = await this.getDisplayNames(props);
         this.displayName = this.getDisplayName(props, displayNames);
