@@ -27,42 +27,42 @@ registerWebsitePreviewTour(
     },
     () => [
         {
-            content: "Select the confirm password field to proceed",
+            content: "Select the 'Confirm Password' field to proceed",
             trigger: ":iframe input#confirm_password",
             run: "click",
         },
         {
-            content: "Click the `Field` button to add a new field",
+            content: "Click the 'Field' button to add a new field",
             trigger: ".o_we_bg_brand_primary",
             run: "click",
         },
         {
-            content: "Open the field type dropdown",
+            content: "Open the field's type dropdown",
             trigger: "we-select[data-name='type_opt']",
             run: "click",
         },
         {
-            content: "Select the company_name from existing field",
+            content: "Select the 'company_name' from existing fields",
             trigger: "we-button[data-existing-field='company_name']",
             run: "click",
         },
         {
-            content: "Click the `Field` button to add a new field",
+            content: "Click the 'Field' button to add another field",
             trigger: ".o_we_bg_brand_primary",
             run: "click",
         },
         {
-            content: "Open the field type dropdown",
+            content: "Open the field's type dropdown",
             trigger: "we-select[data-name='type_opt']",
             run: "click",
         },
         {
-            content: "Select the city from existing field",
+            content: "Select the 'city' from existing fields",
             trigger: "we-button[data-existing-field='city']",
             run: "click",
         },
         {
-            content: "Click the `Field` button to add a new field",
+            content: "Click the 'Field' button to add another field",
             trigger: ".o_we_bg_brand_primary",
             run: "click",
         },
@@ -73,28 +73,28 @@ registerWebsitePreviewTour(
         },
         ...clickOnSave(),
         {
-            content: "click the profile button",
+            content: "Click the profile button",
             trigger: ".o_user_menu .dropdown-toggle",
             run: "click",
         },
         {
-            content: "click the Log out button",
+            content: "Click the 'Log out' button",
             trigger: ".dropdown-item[data-menu=logout]",
             run: "click",
         },
         {
-            content: "click the sign-in button",
+            content: "Click the 'Sign in' button",
             trigger: "nav a:contains('Sign in')",
             run: "click",
         },
         {
-            content: "click the 'Dont have an account?' button",
+            content: "Click the 'Dont have an account?' link",
             trigger: ".oe_website_login_container p a",
             run: "click",
         },
         {
-            content: "Verify signup form is displayed",
-            trigger: ".s_website_form_send",
+            content: "Verify that the signup form is displayed",
+            trigger: ".o_signup",
             run: () => {}, // This is a check
         },
         ...fillInputField("input#login", "odoo@odoo.com"),
