@@ -4,12 +4,7 @@ import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { getImageMimetype, getShapeURL } from "./image_helpers";
-import {
-    applyModifications,
-    createDataURL,
-    loadImage,
-    loadImageInfo,
-} from "@html_editor/utils/image_processing";
+import { activateCropper, createDataURL, loadImage } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "./image_shapes_definition";
 
@@ -29,24 +24,32 @@ const CSS_ANIMATION_RATIO_REGEX = /(--animation_ratio: (?<ratio>\d*(\.\d+)?));/m
 
 class ImageShapeOptionPlugin extends Plugin {
     static id = "imageShapeOption";
-    static dependencies = ["history", "userCommand"];
-    static shared = ["getImageShapeGroups", "isTransformableShape", "isAnimableShape"];
+    static dependencies = ["history", "userCommand", "imagePostProcess"];
+    static shared = [
+        "getImageShapeGroups",
+        "isTransformableShape",
+        "isAnimableShape",
+        "isTogglableRatioShape",
+    ];
     resources = {
         builder_actions: this.getActions(),
+        process_image_warmup_handlers: this.processImageWarmup.bind(this),
+        process_image_post_handlers: this.processImagePost.bind(this),
     };
     setup() {
-        this.shapeDataCache = {};
+        this.shapeSvgTextCache = {};
         this.imageShapes = this.makeImageShapes();
     }
     getActions() {
         return {
             setImageShape: {
-                load: async ({ editingElement, value: shapeName }) =>
-                    this.loadShape(editingElement, { shape: shapeName }),
-                apply: ({ editingElement: img, loadResult }) => {
-                    img.dataset.shape = loadResult.shape;
-                    img.dataset.shapeColors = loadResult.shapeColors;
-                    img.src = loadResult.shapeDataURL;
+                load: async ({ editingElement: img, value: shapeId }) => {
+                    const params = { shape: shapeId };
+                    // todo nby: re-read the old option method `setImgShape` and be sure all the logic is in there
+                    return this.loadShape(img, params);
+                },
+                apply: ({ editingElement: img, loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                     const imgFilename = img.dataset.originalSrc.split("/").pop().split(".")[0];
                     img.dataset.fileName = `${imgFilename}.svg`;
                 },
@@ -68,10 +71,8 @@ class ImageShapeOptionPlugin extends Plugin {
                     );
                     return this.loadShape(img, { shapeColors: newColors.join(";") });
                 },
-                apply: ({ editingElement: img, loadResult }) => {
-                    img.dataset.shapeColors = loadResult.shapeColors;
-                    img.src = loadResult.shapeDataURL;
-                    img.classList.add("o_modified_image_to_save");
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                 },
             },
             flipImageShape: {
@@ -82,14 +83,8 @@ class ImageShapeOptionPlugin extends Plugin {
                         : currentAxis + axis;
                     return this.loadShape(img, { shapeFlip: newAxis === "yx" ? "xy" : newAxis });
                 },
-                apply: ({ editingElement: img, loadResult }) => {
-                    if (loadResult.shapeFlip) {
-                        img.dataset.shapeFlip = loadResult.shapeFlip;
-                    } else {
-                        delete img.dataset.shapeFlip;
-                    }
-                    img.src = loadResult.shapeDataURL;
-                    img.classList.add("o_modified_image_to_save");
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                 },
             },
             rotateImageShape: {
@@ -99,14 +94,8 @@ class ImageShapeOptionPlugin extends Plugin {
                     const newRotateValue = (currentRotateValue + rotation + 360) % 360;
                     return this.loadShape(img, { shapeRotate: newRotateValue });
                 },
-                apply: ({ editingElement: img, loadResult }) => {
-                    if (loadResult.shapeRotate) {
-                        img.dataset.shapeRotate = loadResult.shapeRotate;
-                    } else {
-                        delete img.dataset.shapeRotate;
-                    }
-                    img.src = loadResult.shapeDataURL;
-                    img.classList.add("o_modified_image_to_save");
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                 },
             },
             setImageShapeSpeed: {
@@ -115,55 +104,145 @@ class ImageShapeOptionPlugin extends Plugin {
                     this.loadShape(img, {
                         shapeAnimationSpeed: speed,
                     }),
-                apply: ({ editingElement: img, loadResult }) => {
-                    img.dataset.shapeAnimationSpeed = loadResult.shapeAnimationSpeed;
-                    img.src = loadResult.shapeDataURL;
-                    img.classList.add("o_modified_image_to_save");
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                 },
             },
         };
     }
-    async getShapeData(shapeName) {
-        let shape = this.shapeDataCache[shapeName];
-        if (shape) {
-            return shape;
+    async getShapeSvgText(shapeName) {
+        let shapeSvgText = this.shapeSvgTextCache[shapeName];
+        if (shapeSvgText) {
+            return shapeSvgText;
         }
         const shapeURL = getShapeURL(shapeName);
-        shape = await (await fetch(shapeURL)).text();
-        this.shapeDataCache[shapeName] = shape;
-        return shape;
+        shapeSvgText = await (await fetch(shapeURL)).text();
+        this.shapeSvgTextCache[shapeName] = shapeSvgText;
+        return shapeSvgText;
     }
     async loadShape(img, newData = {}) {
-        // todo: ensure that there is no problem having mutation on the image here.
-        await this.loadImageInfos(img);
-        const shapeName = newData.shape ?? img.dataset.shape;
-        const shapeData = await this.getShapeData(shapeName);
-
-        // Map the default palette colors to an array if the shape includes them
-        // If they do not map a NULL, this way we know if a default color is in
-        // the shape
-        const oldColors = Object.values(DEFAULT_PALETTE).map((color) =>
-            shapeData.includes(color) ? color : null
-        );
-        const shapeColors = newData.shapeColors ?? img.dataset.defaultShapeColors;
-        const newColors = shapeColors?.split(";") || this.getDefaultNewColors(oldColors);
-        const coloredShapeData = this.getColoredShapeData(shapeData, oldColors, newColors);
-
-        const shapeDataURL = await this.computeShape(coloredShapeData, img, newData);
+        return this.dependencies.imagePostProcess.processImage(img, newData);
         //todo: handle hover effect before
-
         // todo: is it still needed?
         // await loadImage(shapeDataURL, img);
-        return {
-            ...newData,
-            shapeColors: newColors.join(";"),
-            shapeDataURL,
-        };
+        // return {
+        //     ...newData,
+        //     shapeColors: newColors.join(";"),
+        //     shapeDataURL,
+        // };
         //todo: handle hover effect after
         // todo: find a way to apply to carousel thumbnail
     }
-    async loadImageInfos(img) {
-        await loadImageInfo(img);
+    async processImageWarmup(img, newDataset) {
+        const getData = (propName) =>
+            propName in newDataset ? newDataset[propName] : img.dataset[propName];
+        const shapeId = getData("shape");
+        // todo: should we reset some data if shapeName is not defined?
+        if (!shapeId) {
+            return;
+        }
+        const isNewShape = "shape" in newDataset && newDataset.shape !== img.dataset.shape;
+        const shapeSvgText = await this.getShapeSvgText(shapeId);
+
+        // Get colors.
+        const defaultShapeColors = this.getThemedSvgColors(shapeSvgText).join(";");
+        newDataset.shapeColors =
+            newDataset.shapeColors ??
+            (isNewShape ? defaultShapeColors : img.dataset.shapeColors ?? defaultShapeColors);
+        // Get mimetype.
+        newDataset.mimetype = getImageMimetype(img);
+
+        const getNaturalWidth = async () => {
+            if (img.naturalWidth) {
+                return img.naturalWidth;
+            }
+            await new Promise((resolve, reject) => {
+                img.addEventListener("load", () => resolve(img), { once: true });
+                img.addEventListener("error", reject, { once: true });
+            });
+            return img.naturalWidth;
+        };
+        const svgWidth = getData("resizeWidth") || getData("width") || (await getNaturalWidth());
+
+        // Get the svg element.
+        const svg = this.computeShape(shapeSvgText, {
+            shapeId,
+            shapeFlip: getData("shapeFlip") || "",
+            shapeRotate: getData("shapeRotate") || 0,
+            shapeAnimationSpeed: Number(getData("shapeAnimationSpeed")) || 0,
+            shapeColors: newDataset.shapeColors,
+        });
+
+        const svgAspectRatio =
+            parseInt(svg.getAttribute("width")) / parseInt(svg.getAttribute("height"));
+        const imgAspectRatio = svg.dataset.imgAspectRatio;
+
+        if (isNewShape && !("aspectRatio" in newDataset)) {
+            // The togglable ratio is squared by default.
+            const shouldBeSquared =
+                this.imageShapes[shapeId].togglableRatio && !img.dataset.aspectRatio;
+            if (shouldBeSquared) {
+                newDataset.aspectRatio = "1/1";
+            }
+        }
+
+        /**
+         * @param {HTMLCanvasElement} canvas
+         * @param {Object} data dataset containing the cropperDataFields
+         */
+        const postProcessCroppedCanvas = async (canvas) => {
+            const img = await loadImage(canvas.toDataURL());
+            document.createElement("div").appendChild(img);
+            const cropper = await activateCropper(img, 1, { y: 0 });
+            const croppedCanvas = cropper.getCroppedCanvas();
+            cropper.destroy();
+            return croppedCanvas;
+        };
+
+        return {
+            getHeight: svg.dataset.imgPerspective && ((canvas) => canvas.width / svgAspectRatio),
+            perspective: svg.dataset.imgPerspective || null,
+            newDataset,
+            // If imgAspectRatio is defined, the image is cropped a second time
+            // after the first crop to ensure that the ratio of the shape and the
+            // image are the same.
+            postProcessCroppedCanvas: imgAspectRatio && postProcessCroppedCanvas,
+
+            svg,
+            svgAspectRatio,
+            svgWidth,
+        };
+    }
+    async processImagePost(b64url, processContext) {
+        const { svg, svgAspectRatio, svgWidth } = processContext;
+        if (!svg) {
+            return;
+        }
+        svg.querySelectorAll("image").forEach((image) => {
+            image.setAttribute("xlink:href", b64url);
+        });
+        // Force natural width & height (note: loading the original image is
+        // needed for Safari where natural width & height of SVG does not return
+        // the correct values).
+        const loadedImage = await loadImage(b64url);
+        // If the svg forces the size of the shape we still want to have the resized
+        // width
+        if (!svg.dataset.forcedSize) {
+            svg.setAttribute("width", loadedImage.naturalWidth);
+            svg.setAttribute("height", loadedImage.naturalHeight);
+        } else {
+            const imageWidth = Math.trunc(svgWidth);
+            const newHeight = imageWidth / svgAspectRatio;
+            svg.setAttribute("width", imageWidth);
+            svg.setAttribute("height", newHeight);
+        }
+
+        // Transform the current SVG in a base64 file to be saved by the server
+        const blob = new Blob([svg.outerHTML], {
+            type: "image/svg+xml",
+        });
+        const dataURL = await createDataURL(blob);
+        return dataURL;
     }
 
     /**
@@ -171,33 +250,20 @@ class ImageShapeOptionPlugin extends Plugin {
      *
      * @param {string} svgText svg text file
      * @param {HTMLImageElement} img
-     * @returns {Promise} resolved once the svg is properly loaded
-     * in the document
+     * @returns {SVGElement}
      */
-    async computeShape(svgText, img, newData = {}) {
-        const getData = (propName) =>
-            typeof newData[propName] !== "undefined" ? newData[propName] : img.dataset[propName];
-        const params = {
-            shape: getData("shape"),
-            shapeAnimationSpeed: Number(getData("shapeAnimationSpeed")) || 0,
-            shapeFlip: getData("shapeFlip") || "",
-            shapeRotate: getData("shapeRotate") || 0,
-            hoverEffect: getData("hoverEffect"),
-            width: getData("resizeWidth") || getData("width") || img.naturalWidth,
-        };
-
+    computeShape(svgText, { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors }) {
+        // Apply the colors to the shape.
+        svgText = this.replaceSvgColors(svgText, shapeColors.split(";"));
         // Apply the right animation speed if there is an animated shape.
-        const shapeAnimationSpeed = params.shapeAnimationSpeed;
         if (shapeAnimationSpeed) {
-            svgText = this.replaceAnimationDuration(shapeAnimationSpeed, svgText);
+            svgText = this.replaceAnimationDuration(svgText, shapeAnimationSpeed);
         }
 
         const svg = new DOMParser().parseFromString(svgText, "image/svg+xml").documentElement;
 
         // Modifies the SVG according to the "flip" or/and "rotate" options.
-        const shapeFlip = params.shapeFlip;
-        const shapeRotate = params.shapeRotate;
-        if ((shapeFlip || shapeRotate) && this.isTransformableShape(params.shape)) {
+        if ((shapeFlip || shapeRotate) && this.isTransformableShape(shapeId)) {
             const shapeTransformValues = [];
             if (shapeFlip) {
                 // Possible values => "x", "y", "xy"
@@ -225,43 +291,8 @@ class ImageShapeOptionPlugin extends Plugin {
         //     this._addImageShapeHoverEffect(svg, img);
         // }
 
-        const svgAspectRatio =
-            parseInt(svg.getAttribute("width")) / parseInt(svg.getAttribute("height"));
-        // We will store the image in base64 inside the SVG.
-        // applyModifications will return a dataURL with the current filters
-        // and size options.
-        const options = {
-            mimetype: getImageMimetype(img),
-            perspective: svg.dataset.imgPerspective || null,
-            imgAspectRatio: svg.dataset.imgAspectRatio || null,
-            svgAspectRatio: svgAspectRatio,
-        };
-        const imgDataURL = await applyModifications(img, options);
         svg.removeChild(svg.querySelector("#preview"));
-        svg.querySelectorAll("image").forEach((image) => {
-            image.setAttribute("xlink:href", imgDataURL);
-        });
-        // Force natural width & height (note: loading the original image is
-        // needed for Safari where natural width & height of SVG does not return
-        // the correct values).
-        const originalImage = await loadImage(imgDataURL);
-        // If the svg forces the size of the shape we still want to have the resized
-        // width
-        if (!svg.dataset.forcedSize) {
-            svg.setAttribute("width", originalImage.naturalWidth);
-            svg.setAttribute("height", originalImage.naturalHeight);
-        } else {
-            const imageWidth = Math.trunc(params.width);
-            const newHeight = imageWidth / svgAspectRatio;
-            svg.setAttribute("width", imageWidth);
-            svg.setAttribute("height", newHeight);
-        }
-        // Transform the current SVG in a base64 file to be saved by the server
-        const blob = new Blob([svg.outerHTML], {
-            type: "image/svg+xml",
-        });
-        const dataURL = await createDataURL(blob);
-        return dataURL;
+        return svg;
     }
     /**
      * Replace animation durations in SVG and CSS with modified values.
@@ -271,14 +302,14 @@ class ImageShapeOptionPlugin extends Plugin {
      * CSS animation rules and SVG duration attributes based on the provided
      * ratio.
      *
+     * @param {string} svgText The SVG string containing animations.
      * @param {number} speed The speed used to calculate the new animation
      *                       durations. If speed is 0.0, the original
      *                       durations are preserved.
-     * @param {string} svg The SVG string containing animations.
      * @returns {string} The modified SVG string with updated animation
      *                   durations.
      */
-    replaceAnimationDuration(speed, svg) {
+    replaceAnimationDuration(svgText, speed) {
         const ratio = (speed >= 0.0 ? 1.0 + speed : 1.0 / (1.0 - speed)).toFixed(3);
         // Callback for CSS 'animation' and 'animation-duration' declarations
         function callbackCssAnimationRule(match, declaration, value, unit, separator) {
@@ -296,32 +327,42 @@ class ImageShapeOptionPlugin extends Plugin {
 
         // Applying regex substitutions to modify animation speed in the 'svg'
         // variable.
-        svg = svg.replace(CSS_ANIMATION_RULE_REGEX, callbackCssAnimationRule);
-        svg = svg.replace(SVG_DUR_TIMECOUNT_VAL_REGEX, callbackSvgDurTimecountVal);
-        if (CSS_ANIMATION_RATIO_REGEX.test(svg)) {
+        svgText = svgText.replace(CSS_ANIMATION_RULE_REGEX, callbackCssAnimationRule);
+        svgText = svgText.replace(SVG_DUR_TIMECOUNT_VAL_REGEX, callbackSvgDurTimecountVal);
+        if (CSS_ANIMATION_RATIO_REGEX.test(svgText)) {
             // Replace the CSS --animation_ratio variable for future purpose.
-            svg = svg.replace(CSS_ANIMATION_RATIO_REGEX, `--animation_ratio: ${ratio};`);
+            svgText = svgText.replace(CSS_ANIMATION_RATIO_REGEX, `--animation_ratio: ${ratio};`);
         } else {
             // Add the style tag with the root variable --animation ratio for
             // future purpose.
             const regex = /<svg .*>/m;
             const subst = `$&\n\t<style>\n\t\t:root { \n\t\t\t--animation_ratio: ${ratio};\n\t\t}\n\t</style>`;
-            svg = svg.replace(regex, subst);
+            svgText = svgText.replace(regex, subst);
         }
-        return svg;
+        return svgText;
     }
 
-    getColoredShapeData(shapeData, oldColors, newColors) {
-        for (const [i, color] of newColors.entries()) {
-            shapeData = shapeData.replace(
-                new RegExp(oldColors[i], "g"),
+    replaceSvgColors(shapeSvgText, colors) {
+        const svgColors = this.getSvgColors(shapeSvgText);
+        for (const [i, color] of colors.entries()) {
+            shapeSvgText = shapeSvgText.replace(
+                new RegExp(svgColors[i], "g"),
                 this.getCSSColorValue(color)
             );
         }
-        return shapeData;
+        return shapeSvgText;
     }
-    getDefaultNewColors(oldColors) {
-        return oldColors.map((color, i) =>
+    getSvgColors(shapeSvgText) {
+        // Map the default palette colors to an array if the shape includes them
+        // If they do not map a NULL, this way we know if a default color is in
+        // the shape
+        return Object.values(DEFAULT_PALETTE).map((color) =>
+            shapeSvgText.includes(color) ? color : null
+        );
+    }
+    getThemedSvgColors(shapeSvgText) {
+        const svgColors = this.getSvgColors(shapeSvgText);
+        return svgColors.map((color, i) =>
             color !== null ? this.getCSSColorValue(`o-color-${i + 1}`) : null
         );
     }
@@ -338,11 +379,11 @@ class ImageShapeOptionPlugin extends Plugin {
         }
         return getCSSVariableValue(color);
     }
-    isTransformableShape(shape) {
-        if (!shape) {
+    isTransformableShape(shapeId) {
+        if (!shapeId) {
             return false;
         }
-        const canTransform = this.imageShapes[shape].transform;
+        const canTransform = this.imageShapes[shapeId].transform;
         return typeof canTransform === "undefined" ? true : canTransform;
     }
     isAnimableShape(shape) {
@@ -350,6 +391,12 @@ class ImageShapeOptionPlugin extends Plugin {
             return false;
         }
         return this.imageShapes[shape].animated;
+    }
+    isTogglableRatioShape(shape) {
+        if (!shape) {
+            return false;
+        }
+        return this.imageShapes[shape].togglableRatio;
     }
     getImageShapeGroups() {
         return imageShapeDefinitions;

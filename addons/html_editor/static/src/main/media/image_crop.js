@@ -1,9 +1,8 @@
 import {
-    applyModifications,
-    cropperDataFields,
     activateCropper,
     loadImage,
     loadImageInfo,
+    cropperDataFieldsWithAspectRatio,
 } from "@html_editor/utils/image_processing";
 import { IMAGE_SHAPES } from "./image_plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -88,7 +87,7 @@ export class ImageCrop extends Component {
                 this.aspectRatio = "0/0";
                 this.cropper.setAspectRatio(cropperAspectRatios[this.aspectRatio].value);
             }
-            await this.save(false);
+            await this.save();
         }
     }
 
@@ -101,7 +100,9 @@ export class ImageCrop extends Component {
         const mimetype = getMimetype(this.media);
         this.mimetype = this.props.mimetype || mimetype;
 
-        await loadImageInfo(this.media);
+        // todo: there is probably a problem mutating this.media this moment at
+        // it will make a mutation in the currentStep of the history.
+        Object.assign(this.media, await loadImageInfo(this.media));
         const isIllustration = /^\/(?:html|web)_editor\/shape\/illustration\//.test(
             this.media.dataset.originalSrc
         );
@@ -170,7 +171,7 @@ export class ImageCrop extends Component {
 
         this.cropper = await activateCropper(
             cropperImage,
-            cropperAspectRatios[this.aspectRatio].value,
+            cropperAspectRatios[this.aspectRatio]?.value || 0,
             this.media.dataset
         );
 
@@ -193,17 +194,16 @@ export class ImageCrop extends Component {
      * @private
      * @param {boolean} [cropped=true]
      */
-    async save(cropped = true) {
-        this.initialSrc = await processImageCrop(
-            this.media,
-            this.cropper,
-            this.mimetype,
-            this.aspectRatio,
-            { cropped }
-        );
-
+    async save() {
+        const cropperData = this.getCropperData(this.cropper);
         this.closeCropper();
-        this.props.onSave?.();
+        this.props.onSave?.({
+            mimetype: this.mimetype,
+            aspectRatio: this.aspectRatio,
+            ...cropperData,
+            // todo nby: what about `delete image.dataset.resizeWidth;` ? (see previously `processImageCrop`)
+            // todo nby: what about `forceModification: true,`? (see previously `processImageCrop`)
+        });
     }
     /**
      * Resets the crop box to prevent it going outside the image.
@@ -297,6 +297,16 @@ export class ImageCrop extends Component {
         }
     }
     /**
+     * @param {Cropper} cropper
+     */
+    getCropperData(cropper) {
+        return Object.fromEntries(
+            cropperDataFieldsWithAspectRatio
+                .map((field) => [field, cropper.getData()[field]])
+                .filter(([, value]) => value)
+        );
+    }
+    /**
      * Resets the cropbox on zoom to prevent crop box overflowing.
      *
      * @private
@@ -322,43 +332,4 @@ export function getMimetype(image) {
         (src.endsWith(".jpeg") && "image/jpeg") ||
         null
     );
-}
-
-/**
- * @param {HTMLImageElement} image
- * @param {Cropper} cropper
- * @param {string} mimetype
- * @param {string} aspectRatio
- * @param {Object} [options={}]
- * @param {boolean} [options.cropped=false]
- */
-export async function processImageCrop(
-    image,
-    cropper,
-    mimetype,
-    aspectRatio,
-    { cropped = false } = {}
-) {
-    // Mark the media for later creation of cropped attachment
-    image.classList.add("o_modified_image_to_save");
-
-    const setAttribute = (attribute, value) => {
-        delete image.dataset[attribute];
-        if (value) {
-            image.dataset[attribute] = value;
-        }
-    };
-    for (const attribute of cropperDataFields) {
-        setAttribute(attribute, cropper.getData()[attribute]);
-    }
-    setAttribute("aspectRatio", aspectRatio);
-
-    delete image.dataset.resizeWidth;
-    const initialSrc = await applyModifications(image, {
-        forceModification: true,
-        mimetype,
-    });
-    image.classList.toggle("o_we_image_cropped", cropped);
-
-    return initialSrc;
 }
