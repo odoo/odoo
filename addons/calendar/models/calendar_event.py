@@ -1494,6 +1494,7 @@ class CalendarEvent(models.Model):
 
         for meeting in self:
             cal = vobject.iCalendar()
+            cal.add('method').value = 'REQUEST'
             event = cal.add('vevent')
 
             if not meeting.start or not meeting.stop:
