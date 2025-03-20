@@ -111,12 +111,6 @@ PublicRoot.include({
 // Patch Colibri.
 
 patch(Colibri.prototype, {
-    async start() {
-        if (this.el.closest("[data-invisible='1']")) {
-            return;
-        }
-        return super.start();
-    },
     protectSyncAfterAsync(interaction, name, fn) {
         fn = super.protectSyncAfterAsync(interaction, name, fn);
         const fullName = `${interaction.constructor.name}/${name}`;
