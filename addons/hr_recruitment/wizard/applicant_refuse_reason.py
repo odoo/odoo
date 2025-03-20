@@ -19,16 +19,12 @@ class ApplicantGetRefuseReason(models.TransientModel):
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', 'Refuse Reason', required=True, default=_default_refuse_reason_id)
     applicant_ids = fields.Many2many('hr.applicant')
     send_mail = fields.Boolean("Send Email", default=False)
-    template_id = fields.Many2one('mail.template', string='Email Template', precompute=True,
-        related="refuse_reason_id.template_id", store=True, readonly=False,
-        domain="[('model', '=', 'hr.applicant')]")
     applicant_without_email = fields.Text(compute='_compute_applicant_without_email',
         string='Applicant(s) not having email')
     duplicates = fields.Boolean(string='Refuse Duplicate Applications')
     duplicates_count = fields.Integer('Duplicates Count', compute='_compute_duplicate_applicant_ids_domain')
-    duplicate_applicant_ids = fields.Many2many('hr.applicant', relation='applicant_get_refuse_reason_duplicate_applicants_rel', string='Duplicate Applicantions')
+    duplicate_applicant_ids = fields.Many2many('hr.applicant', relation='applicant_get_refuse_reason_duplicate_applicants_rel', string='Duplicate Applications')
     duplicate_applicant_ids_domain = fields.Binary(compute="_compute_duplicate_applicant_ids_domain")
-    attachment_ids = fields.Many2many('ir.attachment', string='Attachments')
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
@@ -65,8 +61,6 @@ class ApplicantGetRefuseReason(models.TransientModel):
         if self.send_mail:
             if not self.env.user.email:
                 raise UserError(_("Unable to post message, please configure the sender's email address."))
-            if not self.template_id:
-                raise UserError(_("Email template must be selected to send a mail"))
             if any(not (applicant.email_from or applicant.partner_id.email) for applicant in self.applicant_ids):
                 raise UserError(_("At least one applicant doesn't have a email; you can't use send email option."))
 
@@ -119,7 +113,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
         mail_values = {
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
             'author_id': self.env.user.partner_id.id,
-            'auto_delete': self.template_id.auto_delete if self.template_id else True,
+            'auto_delete': True,
             'body_html': body,
             'email_to': applicant.email_from or applicant.partner_id.email,
             'email_from': self.env.user.email_formatted,

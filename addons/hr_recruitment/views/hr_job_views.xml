@@ -75,10 +75,10 @@
                                 <div class="col-6 col-lg-4 col-xl-3 mb-2">
                                     <div class="d-flex align-items-center">
                                         <field name="is_favorite" class="align-content-center" widget="boolean_favorite" nolabel="1"/>
-                                        <field name="name" class="fw-bold fs-5"/>
+                                        <field name="name" class="fw-bold fs-6"/>
                                     </div>
                                     <div t-if="record.alias_email.value" class="small o_job_alias">
-                                        <i class="fa fa-envelope-o" role="img" aria-label="alias" title="alias"></i> <field name="alias_id"/>
+                                        <field name="alias_id"/>
                                     </div>
                                 </div>
                                 <div class="col-6 col-lg-4 col-xl align-items-center mb-2">
@@ -151,7 +151,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div name="kanban_boxes" class="row g-0 flex-nowrap mt-auto" groups="hr_recruitment.group_hr_recruitment_user"></div>
                     </t>
                 </templates>
             </kanban>
@@ -163,80 +162,65 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="view_hr_job_kanban"/>
         <field name="arch" type="xml">
-            <div name="kanban_boxes" position="before">
-                <div class="o_recruitment_kanban_card_grouped">
-                    <div class="m-3">
-                        <div class="d-flex justify-content-center">
+            <xpath expr="//div[contains(@class, 'o_recruitment_kanban_card_ungrouped')]" position="after">
+                <div class="d-flex flex-column o_recruitment_kanban_card_grouped">
+                    <div class="mb-4">
+                        <div class="d-flex">
                             <field name="is_favorite" class="align-content-center" widget="boolean_favorite" nolabel="1"/>
                             <field name="name" class="fw-bold fs-5"/>
                         </div>
-                        <div t-if="record.alias_email.value" class="d-flex justify-content-center align-items-center small o_job_alias">
-                            <i class="fa fa-envelope-o mx-1" role="img" aria-label="alias" title="alias"></i> <field name="alias_id"/>
+                        <div t-if="record.alias_email.value" class="small o_job_alias">
+                            <field name="alias_id"/>
                         </div>
                     </div>
-                    <div class="m-3">
-                        <span class="mx-1 d-flex justify-content-center">Recruiter</span>
-                        <field name="user_id" widget="many2one_avatar_user"
-                            options="{'display_avatar_name': True}" class="d-flex justify-content-center"/>
-                    </div>
-                    <div class="content_centered">
-                        <a
-                            name="edit_job"
-                            type="open"
-                            t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}"
-                            groups="hr_recruitment.group_hr_recruitment_user"
-                        >
-                            <div class="d-flex justify-content-center">
-                                <field name="no_of_recruitment" class="align-content-center fs-2 me-2"/>
-                                <div class="d-flex flex-column">
-                                    <span>Open</span>
-                                    <span>
+                    <div class="d-flex flex-row justify-content-center">
+                        <div class="p-2" style="align-self: end">
+                            <button class="btn btn-secondary" name="%(action_hr_job_applications)d" type="action">
+                                Job Page
+                            </button>
+                        </div>
+                        <div class="p-2">
+                            <div>
+                                <field name="user_id" widget="many2one_avatar_user"
+                                    options="{'display_avatar_name': True}"/>
+                            </div>
+                            <div>
+                                <a
+                                    name="edit_job"
+                                    type="open"
+                                    t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}"
+                                    groups="hr_recruitment.group_hr_recruitment_user"
+                                >
+                                    <div>
+                                        <field name="no_of_recruitment" class="align-content-center me-1"/>
+                                        Open
                                         <t t-if="record.no_of_recruitment.raw_value == 1">Position</t>
                                         <t t-else="">Positions</t>
-                                    </span>
-                                </div>
-                            </div>
-                        </a>
-                        <span
-                            name="edit_job"
-                            type="open"
-                            t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}"
-                            groups="!hr_recruitment.group_hr_recruitment_user"
-                        >
-                            <div class="d-flex justify-content-center">
-                                <field name="no_of_recruitment" class="align-content-center fs-2 me-2"/>
-                                <div class="d-flex flex-column">
-                                    <span>Open</span>
-                                    <span>
+                                    </div>
+                                </a>
+                                <span
+                                    name="edit_job"
+                                    type="open"
+                                    t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}"
+                                    groups="!hr_recruitment.group_hr_recruitment_user"
+                                >
+                                    <div>
+                                        <field name="no_of_recruitment" class="align-content-center me-1"/>
+                                        Open
                                         <t t-if="record.no_of_recruitment.raw_value == 1">Position</t>
                                         <t t-else="">Positions</t>
-                                    </span>
-                                </div>
+                                    </div>
+                                </span>
                             </div>
-                        </span>
-                    </div>
-                    <div class="content_centered">
-                        <field name="application_count" class="me-1"/>
-                        <t t-if="record.application_count.raw_value == 1">Applicant</t>
-                        <t t-else="">Applicants</t>
-                    </div>
-                    <div class="content_centered">
-                        <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
-                            Job Page
-                        </button>
-                    </div>
-                    <div class="content_centered" groups="base.group_multi_company">
-                        <i class="fa fa-building-o me-1" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/>
-                    </div>
-                    <div name="activities" class="text-center">
-                        <div class="d-inline-block" invisible="not activities_today and not activities_overdue">
-                            <a t-if="record.activities_overdue.raw_value > 0" name="action_open_late_activities" type="object" class="text-danger"><field name="activities_overdue"/> Late Activities</a>
-                            <br t-if="record.activities_today.raw_value > 0 and record.activities_overdue.raw_value > 0"/>
-                            <a t-if="record.activities_today.raw_value > 0" name="action_open_today_activities" type="object" class="text-warning"><field name="activities_today"/> Activities Today</a>
+                            <div>
+                                <field name="application_count" class="me-1"/>
+                                <t t-if="record.application_count.raw_value == 1">Applicant</t>
+                                <t t-else="">Applicants</t>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </xpath>
         </field>
     </record>
 
@@ -265,7 +249,7 @@
                     <div name="alias_def">
                         <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                         <div class="oe_edit_only" name="edit_alias">
-                            <field name="alias_name" class="oe_inline o_job_alias border-bottom border-2 border-info" placeholder="e.g. sales-manager"/>@
+                            <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@
                             <field name="alias_domain_id" class="oe_inline" placeholder="e.g. mycompany.com"
                                    options="{'no_create': True, 'no_open': True}"/>
                         </div>
@@ -294,7 +278,13 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-           <xpath expr="//form" position="attributes">
+            <xpath expr="//div[@name='job_name']" position="attributes">
+                <attribute name="class" add="d-flex" separator=" "/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="before">
+                    <field name="is_favorite" class="align-content-center" widget="boolean_favorite" nolabel="1"/>
+            </xpath>
+            <xpath expr="//form" position="attributes">
                 <attribute name="js_class">recruitment_form_view</attribute>
             </xpath>
             <page name="recruitment_page" position="attributes">
@@ -306,6 +296,8 @@
              <div name="recruitment_target" position="after">
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="interviewer_ids" widget="many2many_tags_avatar" options="{'no_create': True, 'no_create_edit': True}" />
+            </div>
+            <xpath expr="//field[@name='department_id']" position="before">
                 <label for="alias_name" string="Email Alias"
                        help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                 <div name="alias_def">
@@ -316,7 +308,7 @@
                                options="{'no_create': True, 'no_open': True}"/>
                     </div>
                 </div>
-            </div>
+            </xpath>
             <xpath expr="//field[@name='department_id']" position="after">
                 <label for="address_id"/>
                 <div class="o_row">
@@ -325,9 +317,8 @@
                 </div>
             </xpath>
             <xpath expr="//field[@name='contract_type_id']" position="after">
-                <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                 <field name="compensation" />
-                <field name="industry_id"  placeholder="e.g. Health, IT Services, Agriculture ..."/>
+                <field name="industry_id" placeholder="e.g. Health, IT Services, Agriculture ..."/>
             </xpath>
             <xpath expr="//group" position="after">
                 <field name="job_properties" columns="2"/>
