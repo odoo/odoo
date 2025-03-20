@@ -56,6 +56,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'display_follow_button',
     'is_template',
     'has_template_ancestor',
+    'stage_id_color',
 }
 
 PROJECT_TASK_WRITABLE_FIELDS = {
@@ -154,6 +155,7 @@ class ProjectTask(models.Model):
         store=True, readonly=False, ondelete='restrict', tracking=True, index=True,
         default=_get_default_stage_id, group_expand='_read_group_stage_ids',
         domain="[('project_ids', '=', project_id)]")
+    stage_id_color = fields.Integer(string='Stage Color', related="stage_id.color", export_string_translation=False)
     tag_ids = fields.Many2many('project.tags', string='Tags')
 
     state = fields.Selection([

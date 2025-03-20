@@ -24,6 +24,7 @@
                 <field name="name" readonly="1"/>
                 <field name="is_won"/>
                 <field name="team_id"/>
+                <field name="color" optional="hide" widget="color_picker"/>
             </list>
         </field>
     </record>
@@ -45,6 +46,7 @@
                         <group>
                             <field name="is_won"/>
                             <field name="fold"/>
+                            <field name="color" widget="color_picker"/>
                             <field name="team_id" options='{"no_open": True, "no_create": True}' invisible="team_count &lt;= 1" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                         </group>
                         <field name="team_count" invisible="1"/>

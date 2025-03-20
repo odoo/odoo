@@ -18,6 +18,7 @@ class ProjectProjectStage(models.Model):
     fold = fields.Boolean('Folded in Kanban',
         help="If enabled, this stage will be displayed as folded in the Kanban view of your projects. Projects in a folded stage are considered as closed.")
     company_id = fields.Many2one('res.company', string="Company")
+    color = fields.Integer(string='Color', export_string_translation=False)
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

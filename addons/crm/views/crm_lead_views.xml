@@ -528,7 +528,8 @@
                                 <div class="d-flex justify-content-between">
                                     <field name="partner_id" muted="1" display="full" class="o_text_block"/>
                                     <div class="m-1"/>
-                                    <field name="stage_id" widget="badge"/>
+                                    <field name="stage_id_color" invisible="1"/>
+                                    <field name="stage_id" widget="badge" options="{'color_field': 'stage_id_color'}"/>
                                 </div>
                             </div>
                         </div>
@@ -775,7 +776,8 @@
                     <field name="recurring_revenue" sum="Recurring Revenue" optional="hide" widget="monetary"
                         options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                     <field name="recurring_plan" optional="hide" groups="crm.group_use_recurring_revenues"/>
-                    <field name="stage_id" optional="show" decoration-bf="1"/>
+                    <field name="stage_id_color" column_invisible="1"/>
+                    <field name="stage_id" optional="show" widget="selection_badge" options="{'color_field': 'stage_id_color'}"/>
                     <field name="active" column_invisible="True"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
                     <field name="lost_reason_id" optional="hide"/>
