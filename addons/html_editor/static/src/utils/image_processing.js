@@ -1,415 +1,26 @@
 import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
-import { getAffineApproximation, getProjective } from "./perspective_utils";
 import { loadBundle } from "@web/core/assets";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
 export const cropperDataFields = ["x", "y", "width", "height", "rotate", "scaleX", "scaleY"];
+export const cropperDataFieldsWithAspectRatio = [...cropperDataFields, "aspectRatio"];
 export const isGif = (mimetype) => mimetype === "image/gif";
 const modifierFields = [
-    'filter',
-    'quality',
-    'mimetype',
-    'glFilter',
-    'originalId',
-    'originalSrc',
-    'resizeWidth',
-    'aspectRatio',
+    "filter",
+    "quality",
+    "mimetype",
+    "glFilter",
+    "originalId",
+    "originalSrc",
+    "resizeWidth",
+    "aspectRatio",
     "bgSrc",
     "mimetypeBeforeConversion",
 ];
 
 export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
-
-// webgl color filters
-const _applyAll = (result, filter, filters) => {
-    filters.forEach((f) => {
-        if (f[0] === "blend") {
-            const cv = f[1];
-            const ctx = result.getContext("2d");
-            ctx.globalCompositeOperation = f[2];
-            ctx.globalAlpha = f[3];
-            ctx.drawImage(cv, 0, 0);
-            ctx.globalCompositeOperation = "source-over";
-            ctx.globalAlpha = 1.0;
-        } else {
-            filter.addFilter(...f);
-        }
-    });
-};
-let applyAll;
-
-const glFilters = {
-    blur: (filter) => filter.addFilter("blur", 10),
-
-    1977: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        ctx.fillStyle = "rgb(243, 106, 188)";
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "screen", 0.3],
-            ["brightness", 0.1],
-            ["contrast", 0.1],
-            ["saturation", 0.3],
-        ]);
-    },
-
-    aden: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        ctx.fillStyle = "rgb(66, 10, 14)";
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "darken", 0.2],
-            ["brightness", 0.2],
-            ["contrast", -0.1],
-            ["saturation", -0.15],
-            ["hue", 20],
-        ]);
-    },
-
-    brannan: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        ctx.fillStyle = "rgb(161, 44, 191)";
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "lighten", 0.31],
-            ["sepia", 0.5],
-            ["contrast", 0.4],
-        ]);
-    },
-
-    earlybird: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        const gradient = ctx.createRadialGradient(
-            cv.width / 2,
-            cv.height / 2,
-            0,
-            cv.width / 2,
-            cv.height / 2,
-            Math.hypot(cv.width, cv.height) / 2
-        );
-        gradient.addColorStop(0.2, "#D0BA8E");
-        gradient.addColorStop(1, "#1D0210");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "overlay", 0.2],
-            ["sepia", 0.2],
-            ["contrast", -0.1],
-        ]);
-    },
-
-    inkwell: (filter, cv) => {
-        applyAll(filter, [
-            ["sepia", 0.3],
-            ["brightness", 0.1],
-            ["contrast", -0.1],
-            ["desaturateLuminance"],
-        ]);
-    },
-
-    // Needs hue blending mode for perfect reproduction. Close enough?
-    maven: (filter, cv) => {
-        applyAll(filter, [
-            ["sepia", 0.25],
-            ["brightness", -0.05],
-            ["contrast", -0.05],
-            ["saturation", 0.5],
-        ]);
-    },
-
-    toaster: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        const gradient = ctx.createRadialGradient(
-            cv.width / 2,
-            cv.height / 2,
-            0,
-            cv.width / 2,
-            cv.height / 2,
-            Math.hypot(cv.width, cv.height) / 2
-        );
-        gradient.addColorStop(0, "#0F4E80");
-        gradient.addColorStop(1, "#3B003B");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "screen", 0.5],
-            ["brightness", -0.1],
-            ["contrast", 0.5],
-        ]);
-    },
-
-    walden: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        ctx.fillStyle = "#CC4400";
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "screen", 0.3],
-            ["sepia", 0.3],
-            ["brightness", 0.1],
-            ["saturation", 0.6],
-            ["hue", 350],
-        ]);
-    },
-
-    valencia: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        ctx.fillStyle = "#3A0339";
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "exclusion", 0.5],
-            ["sepia", 0.08],
-            ["brightness", 0.08],
-            ["contrast", 0.08],
-        ]);
-    },
-
-    xpro: (filter, cv) => {
-        const ctx = cv.getContext("2d");
-        const gradient = ctx.createRadialGradient(
-            cv.width / 2,
-            cv.height / 2,
-            0,
-            cv.width / 2,
-            cv.height / 2,
-            Math.hypot(cv.width, cv.height) / 2
-        );
-        gradient.addColorStop(0.4, "#E0E7E6");
-        gradient.addColorStop(1, "#2B2AA1");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, cv.width, cv.height);
-        applyAll(filter, [
-            ["blend", cv, "color-burn", 0.7],
-            ["sepia", 0.3],
-        ]);
-    },
-
-    custom: (filter, cv, filterOptions) => {
-        const options = Object.assign(
-            {
-                blend: "normal",
-                filterColor: "",
-                blur: "0",
-                desaturateLuminance: "0",
-                saturation: "0",
-                contrast: "0",
-                brightness: "0",
-                sepia: "0",
-            },
-            JSON.parse(filterOptions || "{}")
-        );
-        const filters = [];
-        if (options.filterColor) {
-            const ctx = cv.getContext("2d");
-            ctx.fillStyle = options.filterColor;
-            ctx.fillRect(0, 0, cv.width, cv.height);
-            filters.push(["blend", cv, options.blend, 1]);
-        }
-        delete options.blend;
-        delete options.filterColor;
-        filters.push(
-            ...Object.entries(options).map(([filter, amount]) => [filter, parseInt(amount) / 100])
-        );
-        applyAll(filter, filters);
-    },
-};
-
-/**
- * Applies data-attributes modifications to an img tag and returns a dataURL
- * containing the result. This function does not modify the original image.
- *
- * @param {HTMLImageElement} img the image to which modifications are applied
- * @param {Cropper} cropper the cropper instance
- * @returns {string} dataURL of the image with the applied modifications
- */
-export async function applyModifications(img, dataOptions = {}) {
-    const data = Object.assign(
-        {
-            glFilter: "",
-            filter: "#0000",
-            quality: "75",
-            forceModification: false,
-        },
-        img.dataset,
-        dataOptions
-    );
-    let {
-        width,
-        height,
-        resizeWidth,
-        quality,
-        filter,
-        mimetype,
-        originalSrc,
-        glFilter,
-        filterOptions,
-        forceModification,
-        perspective,
-        svgAspectRatio,
-        imgAspectRatio,
-    } = data;
-    [width, height, resizeWidth] = [width, height, resizeWidth].map((s) => parseFloat(s));
-    quality = parseInt(quality);
-
-    // Skip modifications (required to add shapes on animated GIFs).
-    if (isGif(mimetype) && !forceModification) {
-        return await _loadImageDataURL(originalSrc);
-    }
-
-    // Crop
-    const container = document.createElement("div");
-    const original = await loadImage(originalSrc);
-    // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
-    originalSrc = original.getAttribute("src");
-    container.appendChild(original);
-    const cropper = await activateCropper(original, 0, data);
-    let croppedImg = cropper.getCroppedCanvas(width, height);
-    cropper.destroy();
-
-    // Aspect Ratio
-    if (imgAspectRatio) {
-        document.createElement("div").appendChild(croppedImg);
-        imgAspectRatio = imgAspectRatio.split(":");
-        imgAspectRatio = parseFloat(imgAspectRatio[0]) / parseFloat(imgAspectRatio[1]);
-        const croppedCropper = await activateCropper(croppedImg, imgAspectRatio, { y: 0 });
-        croppedImg = croppedCropper.getCroppedCanvas();
-        croppedCropper.destroy();
-    }
-
-    // Width
-    const result = document.createElement("canvas");
-    result.width = resizeWidth || croppedImg.width;
-    result.height = perspective
-        ? result.width / svgAspectRatio
-        : (croppedImg.height * result.width) / croppedImg.width;
-    const ctx = result.getContext("2d");
-    ctx.imageSmoothingQuality = "high";
-    ctx.mozImageSmoothingEnabled = true;
-    ctx.webkitImageSmoothingEnabled = true;
-    ctx.msImageSmoothingEnabled = true;
-    ctx.imageSmoothingEnabled = true;
-
-    // Perspective 3D
-    if (perspective) {
-        // x, y coordinates of the corners of the image as a percentage
-        // (relative to the width or height of the image) needed to apply
-        // the 3D effect.
-        const points = JSON.parse(perspective);
-        const divisions = 10;
-        const w = croppedImg.width,
-            h = croppedImg.height;
-
-        const project = getProjective(w, h, [
-            [(result.width / 100) * points[0][0], (result.height / 100) * points[0][1]], // Top-left [x, y]
-            [(result.width / 100) * points[1][0], (result.height / 100) * points[1][1]], // Top-right [x, y]
-            [(result.width / 100) * points[2][0], (result.height / 100) * points[2][1]], // bottom-right [x, y]
-            [(result.width / 100) * points[3][0], (result.height / 100) * points[3][1]], // bottom-left [x, y]
-        ]);
-
-        for (let i = 0; i < divisions; i++) {
-            for (let j = 0; j < divisions; j++) {
-                const [dx, dy] = [w / divisions, h / divisions];
-
-                const upper = {
-                    origin: [i * dx, j * dy],
-                    sides: [dx, dy],
-                    flange: 0.1,
-                    overlap: 0,
-                };
-                const lower = {
-                    origin: [i * dx + dx, j * dy + dy],
-                    sides: [-dx, -dy],
-                    flange: 0,
-                    overlap: 0.1,
-                };
-
-                for (const { origin, sides, flange, overlap } of [upper, lower]) {
-                    const [[a, c, e], [b, d, f]] = getAffineApproximation(project, [
-                        origin,
-                        [origin[0] + sides[0], origin[1]],
-                        [origin[0], origin[1] + sides[1]],
-                    ]);
-
-                    const ox = (i !== divisions ? overlap * sides[0] : 0) + flange * sides[0];
-                    const oy = (j !== divisions ? overlap * sides[1] : 0) + flange * sides[1];
-
-                    origin[0] += flange * sides[0];
-                    origin[1] += flange * sides[1];
-
-                    sides[0] -= flange * sides[0];
-                    sides[1] -= flange * sides[1];
-
-                    ctx.save();
-                    ctx.setTransform(a, b, c, d, e, f);
-
-                    ctx.beginPath();
-                    ctx.moveTo(origin[0] - ox, origin[1] - oy);
-                    ctx.lineTo(origin[0] + sides[0], origin[1] - oy);
-                    ctx.lineTo(origin[0] + sides[0], origin[1]);
-                    ctx.lineTo(origin[0], origin[1] + sides[1]);
-                    ctx.lineTo(origin[0] - ox, origin[1] + sides[1]);
-                    ctx.closePath();
-                    ctx.clip();
-                    ctx.drawImage(croppedImg, 0, 0);
-
-                    ctx.restore();
-                }
-            }
-        }
-    } else {
-        ctx.drawImage(
-            croppedImg,
-            0,
-            0,
-            croppedImg.width,
-            croppedImg.height,
-            0,
-            0,
-            result.width,
-            result.height
-        );
-    }
-
-    // GL filter
-    if (glFilter) {
-        const glf = new window.WebGLImageFilter();
-        const cv = document.createElement("canvas");
-        cv.width = result.width;
-        cv.height = result.height;
-        applyAll = _applyAll.bind(null, result);
-        glFilters[glFilter](glf, cv, filterOptions);
-        const filtered = glf.apply(result);
-        ctx.drawImage(
-            filtered,
-            0,
-            0,
-            filtered.width,
-            filtered.height,
-            0,
-            0,
-            result.width,
-            result.height
-        );
-    }
-
-    // Color filter
-    ctx.fillStyle = filter || "#0000";
-    ctx.fillRect(0, 0, result.width, result.height);
-
-    // Quality
-    const dataURL = result.toDataURL(mimetype, quality / 100);
-    const newSize = getDataURLBinarySize(dataURL);
-    const originalSize = _getImageSizeFromCache(originalSrc);
-    const isChanged =
-        !!perspective ||
-        !!glFilter ||
-        original.width !== result.width ||
-        original.height !== result.height ||
-        original.width !== croppedImg.width ||
-        original.height !== croppedImg.height;
-    return isChanged || originalSize >= newSize ? dataURL : await _loadImageDataURL(originalSrc);
-}
 
 /**
  * Loads an src into an HTMLImageElement.
@@ -465,7 +76,7 @@ function _loadImageObjectURL(src) {
  * @param {String} src
  * @returns {Promise}
  */
-function _loadImageDataURL(src) {
+export function loadImageDataURL(src) {
     return _updateImageData(src, "dataURL");
 }
 
@@ -498,7 +109,7 @@ async function _updateImageData(src, key = "objectURL") {
  * @param {String} src used as a key on the image cache map.
  * @returns {Number} size of the image in bytes.
  */
-function _getImageSizeFromCache(src) {
+export function getImageSizeFromCache(src) {
     return imageCache.get(src).size;
 }
 
@@ -509,7 +120,7 @@ function _getImageSizeFromCache(src) {
  * @param {Number} aspectRatio the aspectRatio of the crop box
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
-export async function activateCropper(image, aspectRatio, dataset, cropperOptions) {
+export async function activateCropper(image, aspectRatio, dataset) {
     await loadBundle("html_editor.assets_image_cropper");
     const oldSrc = image.src;
     const newSrc = await _loadImageObjectURL(image.getAttribute("src"));
@@ -532,7 +143,6 @@ export async function activateCropper(image, aspectRatio, dataset, cropperOption
         minContainerWidth: 1,
         minContainerHeight: 1,
         ready: readyResolve,
-        ...cropperOptions,
     });
     if (oldSrc === newSrc && image.complete) {
         return;
@@ -571,6 +181,7 @@ export async function loadImageInfo(img, attachmentSrc = "") {
     const relativeSrc = srcUrl.pathname;
 
     const { original } = await rpc("/html_editor/get_image_info", { src: relativeSrc });
+    const newDataset = {};
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
@@ -591,12 +202,13 @@ export async function loadImageInfo(img, attachmentSrc = "") {
         if (!img.dataset.mimetype) {
             // The mimetype has to be added only if it is not already present as
             // we want to avoid to reset a mimetype set by the user.
-            img.dataset.mimetype = original.mimetype;
+            newDataset.mimetype = original.mimetype;
         }
-        img.dataset.originalId = original.id;
-        img.dataset.originalSrc = original.image_src;
-        img.dataset.mimetypeBeforeConversion = original.mimetype;
+        newDataset.originalId = original.id;
+        newDataset.originalSrc = original.image_src;
+        newDataset.mimetypeBeforeConversion = original.mimetype;
     }
+    return newDataset;
 }
 
 /**
@@ -620,4 +232,24 @@ export function createDataURL(blob) {
 export function getDataURLBinarySize(dataURL) {
     // Every 4 bytes of base64 represent 3 bytes.
     return (dataURL.split(",")[1].length / 4) * 3;
+}
+
+/**
+ * Returns the aspect ratio from a string or number.
+ * If the input is a string, it can be a ratio (e.g. "16:9") or a single number.
+ * If the input is a number, it is returned as is.
+ *
+ * @param {string|number} ratio
+ * @returns {number}
+ */
+export function getAspectRatio(ratio) {
+    if (typeof ratio === "number") {
+        return ratio;
+    }
+    const [a, b] = ratio.split(/[:/]/).map((n) => parseFloat(n));
+    // If the ratio is invalid, return only a.
+    if (!b) {
+        return a;
+    }
+    return a / b;
 }
