@@ -24,27 +24,37 @@ const CACHEABLE_ROUTES = {
     // /\/web\/dataset\/call_kw\/[^/]+\/web_read_group/,
     // /\/web\/dataset\/call_kw\/[^/]+\/read_progress_bar/,
 };
-const cachedRoutes = JSON.parse(browser.localStorage.getItem("cached_routes") || "[]");
+
+window.directCP = JSON.parse(browser.localStorage.getItem("show_cp_asap") || false);
+window.cacheRoutes = JSON.parse(browser.localStorage.getItem("cache_routes") || false);
+let cachedRoutes = window.cacheRoutes ? Object.keys(CACHEABLE_ROUTES) : ["actions", "views"];
 
 class Cache extends Component {
     static props = [];
     static template = xml`
         <Dropdown>
             <button class="py-1 py-lg-0">
-                Cache
+                <i class="fa fa-cog"/>
             </button>
             <t t-set-slot="content">
-                <t t-foreach="Object.keys(CACHEABLE_ROUTES)" t-as="route" t-key="route_index">
-                    <DropdownItem>
+                <DropdownItem>
+                    <CheckBox
+                        value="cacheRoutes"
+                        className="'form-switch d-flex flex-row-reverse justify-content-between p-0 w-100'"
+                        onChange="() => this.toggleCache()"
+                    >
+                        Cache
+                    </CheckBox>
+                </DropdownItem>
+                <DropdownItem>
                         <CheckBox
-                            value="selectedRoutes.has(route)"
+                            value="directCP"
                             className="'form-switch d-flex flex-row-reverse justify-content-between p-0 w-100'"
-                            onChange="() => this.toggle(route)"
+                            onChange="() => this.toggleDirectCP()"
                         >
-                            <t t-out="route"/>
+                            Show CP asap
                         </CheckBox>
                     </DropdownItem>
-                </t>
             </t>
         </Dropdown>`;
     static components = { Dropdown, DropdownItem, CheckBox };
@@ -55,13 +65,23 @@ class Cache extends Component {
         this.reload = debounce(() => browser.location.reload(), 1000);
     }
 
-    toggle(route) {
-        if (this.selectedRoutes.has(route)) {
-            this.selectedRoutes.delete(route);
-        } else {
-            this.selectedRoutes.add(route);
-        }
-        browser.localStorage.setItem("cached_routes", JSON.stringify([...this.selectedRoutes]));
+    get directCP() {
+        return window.directCP;
+    }
+
+    get cacheRoutes() {
+        return window.cacheRoutes;
+    }
+
+    toggleDirectCP() {
+        window.directCP = !window.directCP;
+        browser.localStorage.setItem("show_cp_asap", window.directCP);
+    }
+
+    toggleCache() {
+        window.cacheRoutes = !window.cacheRoutes;
+        cachedRoutes = window.cacheRoutes ? Object.keys(CACHEABLE_ROUTES) : ["actions", "views"];
+        browser.localStorage.setItem("cache_routes", window.cacheRoutes);
         this.render();
         this.reload();
     }

@@ -172,6 +172,9 @@ export class RelationalModel extends Model {
      */
     async load(params = {}) {
         const config = this._getNextConfig(this.config, params);
+        if (!window.directCP) {
+            this.isReady = true;
+        }
         if (!this.isReady && !config.isMonoRecord) {
             this.root = this._createRoot(config, { groups: [], records: [], length: 0 });
             this.config = config;
