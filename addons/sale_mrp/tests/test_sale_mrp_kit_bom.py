@@ -664,6 +664,7 @@ class TestSaleMrpKitBom(TransactionCase):
         Test that the delivered quantity is updated on a sale order line when selling a kit
         through an inter-company transaction.
         """
+        self.env.user.write({'groups_id': [(4, self.env.ref('base.group_multi_company').id)]})
         # Create the kit product and BoM
         kit_product = self._create_product('Kit', 'product', 1)
         component_product = self._create_product('Component', 'product', 1)
