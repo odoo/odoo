@@ -10,7 +10,7 @@ from odoo import _, api, Command, fields, models, modules
 from odoo.addons.base.models.ir_qweb_fields import Markup, nl2br, nl2br_enclose
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.models.account_payment_method_line import L10N_IT_PAYMENT_METHOD_SELECTION
-from odoo.exceptions import UserError
+from odoo.exceptions import LockError, UserError
 from odoo.tools import cleanup_xml_node, float_compare, float_is_zero, float_repr, html2plaintext
 from odoo.tools.sql import column_exists, create_column
 
@@ -1629,6 +1629,10 @@ class AccountMove(models.Model):
         }
 
     def _l10n_it_edi_send(self, attachments_vals):
+        try:
+            self.lock_for_update()
+        except LockError:
+            raise UserError(_('This document is being sent by another process already.')) from None
         files_to_upload = []
         filename_move = {}
 
