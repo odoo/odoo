@@ -983,6 +983,7 @@ class MrpProduction(models.Model):
                 vals['procurement_group_id'] = self.env["procurement.group"].create(procurement_group_vals).id
         res = super().create(vals_list)
         # Make sure that the date passed in vals_list are taken into account and not modified by a compute
+        reference_vals_list = []
         for rec, vals in zip(res, vals_list):
             if (rec.move_raw_ids
                 and rec.move_raw_ids[0].date
@@ -1003,6 +1004,8 @@ class MrpProduction(models.Model):
                   and not vals.get('date_finished')):
                 # if no value is specified, do take the workorder duration (etc) into account
                 rec.move_finished_ids.write({'date': rec.date_finished})
+        if reference_vals_list:
+            self.env['stock.reference'].create(reference_vals_list)
         return res
 
     def unlink(self):
@@ -1162,6 +1165,7 @@ class MrpProduction(models.Model):
             'warehouse_id': self.location_dest_id.warehouse_id.id,
             'origin': self.product_id.partner_ref,
             'group_id': self.procurement_group_id.id,
+            'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
             'move_dest_ids': [(4, x.id) for x in self.move_dest_ids if not byproduct_id],
             'cost_share': cost_share,
@@ -1252,6 +1256,7 @@ class MrpProduction(models.Model):
             'state': 'draft',
             'warehouse_id': source_location.warehouse_id.id,
             'group_id': self.procurement_group_id.id,
+            'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
             'manual_consumption': self.env['stock.move']._determine_is_manual_consumption(bom_line),
         }
@@ -1311,6 +1316,8 @@ class MrpProduction(models.Model):
                 # procurement and assigning is now run in write
                 move.write({'product_uom_qty': new_qty})
                 update_info.append((move, old_qty, new_qty))
+            if move.reference_ids != self.reference_ids:
+                move.reference_ids = self.reference_ids.ids
         return update_info
 
     @api.ondelete(at_uninstall=False)
@@ -2395,6 +2402,7 @@ class MrpProduction(models.Model):
             'product_qty': sum(production.product_uom_qty for production in self),
             'product_uom_id': product_id.uom_id.id,
             'user_id': user_id.id,
+            'reference_ids': [Command.link(r.id) for r in self.reference_ids],
             'origin': ",".join(sorted([production.name for production in self])),
         })
 

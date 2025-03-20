@@ -5,7 +5,7 @@ import logging
 from collections import defaultdict, namedtuple, OrderedDict
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.modules.registry import Registry
 from odoo.osv import expression
@@ -357,6 +357,7 @@ class StockRule(models.Model):
             'location_final_id': location_dest_id.id,
             'move_dest_ids': move_dest_ids,
             'rule_id': self.id,
+            'reference_ids': [Command.set(values.get('reference_ids', self.env['stock.reference']).ids)],
             'procure_method': self.procure_method,
             'origin': origin,
             'picking_type_id': self.picking_type_id.id,

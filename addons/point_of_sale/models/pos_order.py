@@ -308,7 +308,8 @@ class PosOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    procurement_group_id = fields.Many2one('stock.rule', 'Procurement Group', copy=False)
+    stock_reference_ids = fields.Many2many('stock.reference', 'Reference', copy=False)
     preset_id = fields.Many2one('pos.preset', string='Preset')
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
@@ -1587,11 +1588,13 @@ class PosOrderLine(models.Model):
         return self.order_id.procurement_group_id
 
     def _prepare_procurement_group_vals(self):
+    def _prepare_reference_vals(self):
         return {
             'name': self.order_id.name,
             'move_type': self.order_id.config_id.picking_policy,
             'pos_order_id': self.order_id.id,
             'partner_id': self.order_id.partner_id.id,
+            'pos_order_ids': [Command.link(self.order_id.id)],
         }
 
     def _prepare_procurement_values(self, group_id=False):
@@ -1632,10 +1635,10 @@ class PosOrderLine(models.Model):
             if line.product_id.type != 'consu':
                 continue
 
-            group_id = line._get_procurement_group()
-            if not group_id:
-                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.write({'procurement_group_id': group_id})
+            reference_ids = line.order_id.reference_ids
+            if not reference_ids:
+                reference_ids = self.env['stock.reference'].create(line._prepare_reference_vals())
+                line.order_id.reference_ids = Command.set(reference_ids)
 
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.qty
