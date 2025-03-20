@@ -858,7 +858,7 @@ class One2many(_RelationalMulti[M]):
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
-        records.env.cache.insert_missing(records, self, values)
+        self._cache_insert_missing(records, values)
 
     def write_real(self, records_commands_list, create=False):
         """ Update real records. """
@@ -1282,7 +1282,7 @@ class Many2many(_RelationalMulti[M]):
 
         # store result in cache
         values = [tuple(group[id_]) for id_ in records._ids]
-        records.env.cache.insert_missing(records, self, values)
+        self._cache_insert_missing(records, values)
 
     def write_real(self, records_commands_list, create=False):
         # records_commands_list = [(records, commands), ...]

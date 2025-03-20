@@ -3,6 +3,7 @@
 """ High-level objects for fields. """
 from __future__ import annotations
 
+import collections
 import itertools
 import logging
 import typing
@@ -1403,6 +1404,19 @@ class Field(typing.Generic[T]):
     #
     # Cache management methods
     #
+
+    def _cache_insert_missing(self, records: BaseModel, values: Iterable) -> None:
+        """ Update the cache by setting the given values on records only when
+        a value was not already set in the cache.
+        """
+        cache = self._get_cache(records.env)
+        # call setdefault for all ids, values (looping in C)
+        # this is ~15% faster than the equivalent:
+        # ```
+        # for record, value in zip(records._ids, values):
+        #   cache.setdefault(record, value)
+        # ```
+        collections.deque(map(cache.setdefault, records._ids, values), maxlen=0)
 
     def _invalidate_cache(self, transaction: Transaction, ids: Collection[IdType] | None) -> None:
         """ Invalidate the cache for the given ids.

@@ -149,7 +149,7 @@ class Binary(Field):
             att.res_id: att.datas
             for att in records.env['ir.attachment'].sudo().search(domain)
         }
-        records.env.cache.insert_missing(records, self, map(data.get, records._ids))
+        self._cache_insert_missing(records, map(data.get, records._ids))
 
     def create(self, record_values):
         assert self.attachment

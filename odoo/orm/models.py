@@ -3590,10 +3590,9 @@ class BaseModel(metaclass=MetaModel):
             # If we assume that the value of a pending update is in cache, we
             # can avoid flushing pending updates if the fetched values do not
             # overwrite values in cache.
-            for field in column_fields:
-                values = next(column_values)
+            for field, values in zip(column_fields, column_values, strict=True):
                 # store values in cache, but without overwriting
-                self.env.cache.insert_missing(fetched, field, values)
+                field._cache_insert_missing(fetched, values)
         else:
             fetched = self.browse(query)
 
