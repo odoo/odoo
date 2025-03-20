@@ -1,72 +1,84 @@
 import { _t } from "@web/core/l10n/translation";
 import { loadBundle } from "@web/core/assets";
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+
+// The given colors are the same as those used by D3
+const D3_COLORS = [
+    "#1f77b4",
+    "#ff7f0e",
+    "#aec7e8",
+    "#ffbb78",
+    "#2ca02c",
+    "#98df8a",
+    "#d62728",
+    "#ff9896",
+    "#9467bd",
+    "#c5b0d5",
+    "#8c564b",
+    "#c49c94",
+    "#e377c2",
+    "#f7b6d2",
+    "#7f7f7f",
+    "#c7c7c7",
+    "#bcbd22",
+    "#dbdb8d",
+    "#17becf",
+    "#9edae5",
+];
 
 /**
  * Widget responsible for the initialization and the drawing of the various charts.
  *
  */
-publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
-
-    //--------------------------------------------------------------------------
-    // Widget
-    //--------------------------------------------------------------------------
+export class SurveyResultChart extends Interaction {
+    static selector = ".survey_graph";
 
     /**
      * Initializes the widget based on its defined graph_type and loads the chart.
      *
-     * @override
      */
-    start: function () {
-        var self = this;
-
-        return this._super.apply(this, arguments).then(function () {
-            self.graphData = self.$el.data("graphData");
-            self.rightAnswers = self.$el.data("rightAnswers") || [];
-
-            if (self.graphData && self.graphData.length !== 0) {
-                switch (self.$el.data("graphType")) {
-                    case 'multi_bar':
-                        self.chartConfig = self._getMultibarChartConfig();
-                        break;
-                    case 'bar':
-                        self.chartConfig = self._getBarChartConfig();
-                        break;
-                    case 'pie':
-                        self.chartConfig = self._getPieChartConfig();
-                        break;
-                    case 'doughnut':
-                        self.chartConfig = self._getDoughnutChartConfig();
-                        break;
-                    case 'by_section':
-                        self.chartConfig = self._getSectionResultsChartConfig();
-                        break;
-                }
-                self.chart = self._loadChart();
+    start() {
+        this.graphData = JSON.parse(this.el.dataset["graphData"]);
+        this.rightAnswers = this.el.dataset["rightAnswers"] || [];
+        if (this.graphData && this.graphData.length !== 0) {
+            switch (this.el.dataset["graphType"]) {
+                case "multi_bar":
+                    this.chartConfig = this.getMultibarChartConfig();
+                    break;
+                case "bar":
+                    this.chartConfig = this.getBarChartConfig();
+                    break;
+                case "pie":
+                    this.chartConfig = this.getPieChartConfig();
+                    break;
+                case "doughnut":
+                    this.chartConfig = this.getDoughnutChartConfig();
+                    break;
+                case "by_section":
+                    this.chartConfig = this.getSectionResultsChartConfig();
+                    break;
             }
-        });
-    },
+            this.chart = this.loadChart();
+            this.registerCleanup(() => this.chart?.destroy());
+        }
+    }
 
-    willStart: async function () {
+    async willStart() {
         await loadBundle("web.chartjs_lib");
-    },
-
-    // -------------------------------------------------------------------------
-    // Private
-    // -------------------------------------------------------------------------
+    }
 
     /**
      * Returns a standard multi bar chart configuration.
      *
-     * @private
      */
-    _getMultibarChartConfig: function () {
+    getMultibarChartConfig() {
         return {
-            type: 'bar',
+            type: "bar",
             data: {
-                labels: this.graphData[0].values.map(this._markIfCorrect, this),
+                labels: this.graphData[0].values.map(this.markIfCorrect, this),
                 datasets: this.graphData.map(function (group, index) {
-                    var data = group.values.map(function (value) {
+                    const data = group.values.map(function (value) {
                         return value.count;
                     });
                     return {
@@ -74,7 +86,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         data: data,
                         backgroundColor: D3_COLORS[index % 20],
                     };
-                })
+                }),
             },
             options: {
                 scales: {
@@ -108,20 +120,19 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 },
             },
         };
-    },
+    }
 
     /**
      * Returns a standard bar chart configuration.
      *
-     * @private
      */
-    _getBarChartConfig: function () {
+    getBarChartConfig() {
         return {
-            type: 'bar',
+            type: "bar",
             data: {
-                labels: this.graphData[0].values.map(this._markIfCorrect, this),
+                labels: this.graphData[0].values.map(this.markIfCorrect, this),
                 datasets: this.graphData.map(function (group) {
-                    var data = group.values.map(function (value) {
+                    const data = group.values.map(function (value) {
                         return value.count;
                     });
                     return {
@@ -131,7 +142,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                             return D3_COLORS[index % 20];
                         }),
                     };
-                })
+                }),
             },
             options: {
                 plugins: {
@@ -164,54 +175,61 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 },
             },
         };
-    },
+    }
 
     /**
      * Returns a standard pie chart configuration.
      *
-     * @private
      */
-    _getPieChartConfig: function () {
-        var counts = this.graphData.map(function (point) {
+    getPieChartConfig() {
+        const counts = this.graphData.map(function (point) {
             return point.count;
         });
 
         return {
-            type: 'pie',
+            type: "pie",
             data: {
-                labels: this.graphData.map(this._markIfCorrect, this),
-                datasets: [{
-                    label: '',
-                    data: counts,
-                    backgroundColor: counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
-                    }),
-                }]
+                labels: this.graphData.map(this.markIfCorrect, this),
+                datasets: [
+                    {
+                        label: "",
+                        data: counts,
+                        backgroundColor: counts.map(function (val, index) {
+                            return D3_COLORS[index % 20];
+                        }),
+                    },
+                ],
             },
             options: {
                 aspectRatio: 2,
             },
         };
-    },
+    }
 
-    _getDoughnutChartConfig: function () {
-        var totalsGraphData = this.graphData.totals;
-        var counts = totalsGraphData.map(function (point) {
+    /**
+     * Returns a standard doughnut chart configuration.
+     *
+     */
+    getDoughnutChartConfig() {
+        const totalsGraphData = this.graphData.totals;
+        const counts = totalsGraphData.map(function (point) {
             return point.count;
         });
 
         return {
-            type: 'doughnut',
+            type: "doughnut",
             data: {
-                labels: totalsGraphData.map(this._markIfCorrect, this),
-                datasets: [{
-                    label: '',
-                    data: counts,
-                    backgroundColor: counts.map(function (val, index) {
-                        return D3_COLORS[index % 20];
-                    }),
-                    borderColor: 'rgba(0, 0, 0, 0.1)'
-                }]
+                labels: totalsGraphData.map(this.markIfCorrect, this),
+                datasets: [
+                    {
+                        label: "",
+                        data: counts,
+                        backgroundColor: counts.map(function (val, index) {
+                            return D3_COLORS[index % 20];
+                        }),
+                        borderColor: "rgba(0, 0, 0, 0.1)",
+                    },
+                ],
             },
             options: {
                 plugins: {
@@ -221,9 +239,9 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                     },
                 },
                 aspectRatio: 2,
-            }
+            },
         };
-    },
+    }
 
     /**
      * Displays the survey results grouped by section.
@@ -247,24 +265,26 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
      * - Partially correct 50%
      * - Unanswered 50%
      *
-     *
-     * @private
      */
-    _getSectionResultsChartConfig: function () {
-        var sectionGraphData = this.graphData.by_section;
+    getSectionResultsChartConfig() {
+        const sectionGraphData = this.graphData.by_section;
 
-        var resultKeys = {
-            'correct': _t('Correct'),
-            'partial': _t('Partially'),
-            'incorrect': _t('Incorrect'),
-            'skipped': _t('Unanswered'),
+        const resultKeys = {
+            correct: _t("Correct"),
+            partial: _t("Partially"),
+            incorrect: _t("Incorrect"),
+            skipped: _t("Unanswered"),
         };
-        var resultColorIndex = 0;
-        var datasets = [];
-        for (var resultKey in resultKeys) {
-            var data = [];
-            for (var section in sectionGraphData) {
-                data.push((sectionGraphData[section][resultKey]) / sectionGraphData[section]['question_count'] * 100);
+        let resultColorIndex = 0;
+        const datasets = [];
+        for (const resultKey in resultKeys) {
+            const data = [];
+            for (const section in sectionGraphData) {
+                data.push(
+                    (sectionGraphData[section][resultKey] /
+                        sectionGraphData[section]["question_count"]) *
+                        100
+                );
             }
             datasets.push({
                 label: resultKeys[resultKey],
@@ -275,10 +295,10 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
         }
 
         return {
-            type: 'bar',
+            type: "bar",
             data: {
                 labels: Object.keys(sectionGraphData),
-                datasets: datasets
+                datasets: datasets,
             },
             options: {
                 plugins: {
@@ -293,7 +313,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         callbacks: {
                             label: (tooltipItem) => {
                                 const xLabel = tooltipItem.label;
-                                var roundedValue = Math.round(tooltipItem.parsed.y * 100) / 100;
+                                const roundedValue = Math.round(tooltipItem.parsed.y * 100) / 100;
                                 return `${xLabel}: ${roundedValue}%`;
                             },
                         },
@@ -319,7 +339,7 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                         ticks: {
                             precision: 0,
                             callback: function (label) {
-                                return label + '%';
+                                return label + "%";
                             },
                             maxTicksLimit: 5,
                             stepSize: 25,
@@ -331,32 +351,28 @@ publicWidget.registry.SurveyResultChart = publicWidget.Widget.extend({
                 },
             },
         };
-    },
+    }
+
+    /**
+     * Adds a unicode 'check' mark if the answer's text is among the question's right answers.
+     *
+     * @param  value
+     * @param  value.text The original text of the answer
+     */
+    markIfCorrect(value) {
+        return value.text + (this.rightAnswers.indexOf(value.text) >= 0 ? " \u2713" : "");
+    }
 
     /**
      * Loads the chart using the provided Chart library.
      *
-     * @private
      */
-    _loadChart: function () {
-        this.$el.css({position: 'relative'});
-        var $canvas = this.$('canvas');
-        var ctx = $canvas.get(0).getContext('2d');
+    loadChart() {
+        this.el.style.position = "relative";
+        const canvas = this.el.querySelector("canvas");
+        const ctx = canvas.getContext("2d");
         return new Chart(ctx, this.chartConfig);
-    },
+    }
+}
 
-    /**
-     * Adds a unicode 'check' mark if the answer's text is among the question's right answers.
-     * @private
-     * @param  {Object} value
-     * @param  {String} value.text The original text of the answer
-     */
-    _markIfCorrect: function (value) {
-        return `${value.text}${this.rightAnswers.indexOf(value.text) >= 0 ? " \u2713": ''}`;
-    },
-
-});
-
-export default {
-    chartWidget: publicWidget.registry.SurveyResultChart,
-};
+registry.category("public.interactions").add("survey.survey_result_chart", SurveyResultChart);

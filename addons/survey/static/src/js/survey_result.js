@@ -1,11 +1,6 @@
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import publicWidget from "@web/legacy/js/public/public_widget";
 
-// The given colors are the same as those used by D3
-var D3_COLORS = ["#1f77b4","#ff7f0e","#aec7e8","#ffbb78","#2ca02c","#98df8a","#d62728",
-                    "#ff9896","#9467bd","#c5b0d5","#8c564b","#c49c94","#e377c2","#f7b6d2",
-                    "#7f7f7f","#c7c7c7","#bcbd22","#dbdb8d","#17becf","#9edae5"];
-
 // TODO awa: this widget loads all records and only hides some based on page
 // -> this is ugly / not efficient, needs to be refactored
 publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
@@ -113,10 +108,6 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
                 allPromises.push(new publicWidget.registry.SurveyResultPagination(self, {
                     'questionsEl': self.$('#survey_table_question_'+ questionId)
                 }).attachTo($(this)));
-            });
-            self.$('.survey_graph').each(function () {
-                allPromises.push(new publicWidget.registry.SurveyResultChart(self)
-                    .attachTo($(this)));
             });
 
             // Set the size of results tables so that they do not resize when switching pages.
