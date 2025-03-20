@@ -4,14 +4,13 @@ import base64
 import binascii
 import contextlib
 import itertools
-import reprlib
 import typing
 import warnings
 from operator import attrgetter
 
 import psycopg2
 
-from odoo.exceptions import CacheMiss, UserError
+from odoo.exceptions import UserError
 from odoo.tools import SQL, human_size, image_process, lazy_property
 from odoo.tools.mimetypes import guess_mimetype
 
@@ -89,8 +88,7 @@ class Binary(Field):
         # since the field depends on context, force the value where we have the data
         bin_size_name = 'bin_size_' + self.name
         record_no_bin_size = record.with_context(**{'bin_size': False, bin_size_name: False})
-        cache = self._cache_view(record_no_bin_size.env)
-        return cache[record.id]
+        return self._get_cache(record_no_bin_size.env)[record.id]
 
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
@@ -122,10 +120,11 @@ class Binary(Field):
             records_no_bin_size = records.with_context(**{'bin_size': False, bin_size_name: False})
             super().compute_value(records_no_bin_size)
             # manually update the bin_size cache
-            cache = records.env.cache
-            for record_no_bin_size, record in zip(records_no_bin_size, records):
+            field_cache_data = self._get_cache(records_no_bin_size.env)
+            field_cache_size = self._get_cache(records.env)
+            for record in records:
                 try:
-                    value = cache.get(record_no_bin_size, self)
+                    value = field_cache_data[record.id]
                     # don't decode non-attachments to be consistent with pg_size_pretty
                     if not (self.store and self.column_type):
                         with contextlib.suppress(TypeError, binascii.Error):
@@ -137,8 +136,8 @@ class Binary(Field):
                         pass
                     cache_value = self.convert_to_cache(value, record)
                     # the dirty flag is independent from this assignment
-                    cache.set(record, self, cache_value, check_dirty=False)
-                except CacheMiss:
+                    field_cache_size[record.id] = cache_value
+                except KeyError:
                     pass
         else:
             super().compute_value(records)
