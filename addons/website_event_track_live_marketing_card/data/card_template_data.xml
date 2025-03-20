@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- TODO More design -->
+    <record id="card_template_youtube_thumbnail" model="card.template">
+        <field name="name">YouTube Thumbnail</field>
+        <field name="body" type="html">
+            <t t-call="website_event_track_live_marketing_card.template_youtube_thumbnail"/>
+        </field>
+        <field name="card_dimension_id" ref="website_event_track_live_marketing_card.card_dimension_youtube_thumbnail" />
+    </record>
+</odoo>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Notable pitfalls-->
+    <!--Unpatched wkhtmltoimage uses an old version of webkit, meaning things like standard flexbox
+    are not supported and -webkit flags should be used.-->
+    <!--Your
+    local fonts may diverge from production fonts, make sure the designs work as intended
+    in their final production environment.-->
+    <template id="template_youtube_thumbnail" inherit_id="marketing_card.common_template" primary="True">
+        <xpath expr="//html/head/style" position="after">
+            <style>
+                .center_column {
+                    display: -webkit-box;                   /* Older WebKit */
+                    display: -webkit-flex;                  /* Newer WebKit */
+                    display: flex;                          /* Standard */
+
+                    -webkit-flex-direction: column;         /* Newer WebKit for flex-direction */
+                    flex-direction: column;                 /* Standard */
+
+                    -webkit-box-pack: center;               /* Older WebKit for justify-content */
+                    -webkit-justify-content: center;        /* Newer WebKit for justify-content */
+                    justify-content: center;                /* Standard */
+
+                    -webkit-box-align: center;              /* Older WebKit for align-items */
+                    -webkit-align-items: center;            /* Newer WebKit for align-items */
+                    align-items: center;                    /* Standard */
+
+                    text-align: center;
+                    height: 100%;
+                    width: 100%;
+                }
+                .title {
+                    width: 100%;
+                    font-family: 'Caveat', Roboto, Ubuntu, "Noto Sans", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                }
+                h1 {
+                    display: -webkit-box;                   /* For older WebKit compatibility */
+                    -webkit-box-orient: vertical;           /* Required for multiline truncation in WebKit */
+                    -webkit-line-clamp: 3;                  /* Limits text to 3 lines */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-size: 7em;
+                }
+                h2 {
+                    display: -webkit-box;                   /* For older WebKit compatibility */
+                    -webkit-box-orient: vertical;           /* Required for multiline truncation in WebKit */
+                    -webkit-line-clamp: 1;                  /* Limits text to 3 lines */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    font-size: 4em;
+                }
+            </style>
+        </xpath>
+        <xpath expr="//html/body" position="inside">
+            <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&amp;display=swap" rel="stylesheet"></link>
+            <div class="center_column">
+                <div class="title">
+                    <h1 class="header" t-out="values['header']" t-att-style="'color: %s;' % card_campaign.content_header_color" />
+                    <h2 class="subheader" t-out="values['sub_header']" t-att-style="'color: %s;' % card_campaign.content_sub_header_color" />
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- TODO More design -->
+</odoo>

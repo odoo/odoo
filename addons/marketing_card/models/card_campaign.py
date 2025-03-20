@@ -2,8 +2,6 @@ import base64
 
 from odoo import _, api, fields, models, exceptions
 
-from .card_template import TEMPLATE_DIMENSIONS
-
 
 class CardCampaign(models.Model):
     _name = 'card.campaign'
@@ -11,6 +9,9 @@ class CardCampaign(models.Model):
     _inherit = ['mail.activity.mixin', 'mail.render.mixin', 'mail.thread']
     _order = 'id DESC'
     _unrestricted_rendering = True
+
+    def _default_card_dimension_id(self):
+        return self.env['card.dimension'].search([], limit=1)
 
     def _default_card_template_id(self):
         return self.env['card.template'].search([], limit=1)
@@ -25,6 +26,9 @@ class CardCampaign(models.Model):
     active = fields.Boolean(default=True)
     body_html = fields.Html(related='card_template_id.body', render_engine="qweb")
 
+    card_dimension_id = fields.Many2one('card.dimension', string="Dimension", default=_default_card_dimension_id, required=True, ondelete='restrict')
+    card_dimension_ratio = fields.Float(related='card_dimension_id.ratio')
+
     card_count = fields.Integer(compute='_compute_card_stats')
     card_click_count = fields.Integer(compute='_compute_card_stats')
     card_share_count = fields.Integer(compute='_compute_card_stats')
@@ -33,7 +37,7 @@ class CardCampaign(models.Model):
     mailing_count = fields.Integer(compute='_compute_mailing_count')
 
     card_ids = fields.One2many('card.card', inverse_name='campaign_id')
-    card_template_id = fields.Many2one('card.template', string="Design", default=_default_card_template_id, required=True)
+    card_template_id = fields.Many2one('card.template', string="Design", default=_default_card_template_id, required=True, domain="[['card_dimension_id.ratio', '=', card_dimension_ratio]]")
     image_preview = fields.Image(compute='_compute_image_preview', compute_sudo=False, readonly=True, store=True, attachment=False)
     link_tracker_id = fields.Many2one('link.tracker', ondelete="restrict")
     res_model = fields.Selection(
@@ -157,6 +161,10 @@ class CardCampaign(models.Model):
         for campaign in self:
             preview_model = campaign.preview_record_ref and campaign.preview_record_ref._name
             campaign.res_model = preview_model or campaign.res_model or 'res.partner'
+
+    @api.onchange('card_dimension_id')
+    def _onchange_dimension(self):
+        self.card_template_id = self.env['card.template'].search([('card_dimension_id.ratio', '=', self.card_dimension_id.ratio)], limit=1)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -308,7 +316,7 @@ class CardCampaign(models.Model):
 
         image_bytes = self.env['ir.actions.report']._run_wkhtmltoimage(
             [self._render_field('body_html', record.ids, add_context={'card_campaign': self})[record.id]],
-            *TEMPLATE_DIMENSIONS
+            self.card_dimension_id.width, self.card_dimension_id.height
         )[0]
         return image_bytes and base64.b64encode(image_bytes)
 

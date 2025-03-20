@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_event_track_post_wizard_form" model="ir.ui.view">
+        <field name="name">event.track.post.wizard.form</field>
+        <field name="model">event.track.post.wizard</field>
+        <field name="inherit_id" ref="website_event_track_live.view_event_track_post_wizard_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='youtube_privacy']" position="after">
+                <field name="card_campaign_id" options='{"no_create":true}' placeholder="Track Image will be used if not set"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

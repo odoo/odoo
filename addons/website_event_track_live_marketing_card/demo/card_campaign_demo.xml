@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="card_campaign_tag_youtube_demo" model="card.campaign.tag">
+        <field name="name">YouTube</field>
+    </record>
+
+    <record id="card_campaign_campaign_youtube" model="card.campaign">
+        <field name="name">YouTube Track</field>
+        <field name="card_dimension_id" ref='website_event_track_live_marketing_card.card_dimension_youtube_thumbnail'/>
+        <field name="preview_record_ref" eval="'event.track,%d' % ref('website_event_track.event_track1')"/>
+        <field name="card_template_id" ref="website_event_track_live_marketing_card.card_template_youtube_thumbnail"/>
+        <field name="tag_ids" eval="[Command.link(ref('card_campaign_tag_youtube_demo'))]"/>
+        <field name="user_id" ref="base.user_admin"/>
+
+        <field name="content_header_dyn" eval="True"/>
+        <field name="content_header_path">name</field>
+        <field name="content_header_color">#404040</field>
+        <field name="content_sub_header_dyn" eval="True"/>
+        <field name="content_sub_header_path">partner_name</field>
+        <field name="content_sub_header_color">#FBB130</field>
+
+    </record>
+</odoo>

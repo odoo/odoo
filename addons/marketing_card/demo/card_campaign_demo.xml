@@ -6,6 +6,7 @@
 
     <record id="card_campaign_campaign_1" model="card.campaign">
         <field name="name">Employee Card</field>
+        <field name="card_dimension_id" ref='marketing_card.marketing_card_dimension_business_card'/>
         <field name="preview_record_ref" eval="'res.partner,%d' % ref('base.res_partner_1')"/>
         <field name="card_template_id" ref="marketing_card.card_template_drawings"/>
         <field name="post_suggestion">Checkout who joined Odoo.</field>
