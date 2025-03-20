@@ -35,7 +35,7 @@
             </div>
             <div class="o_model_field_selector_popover_body overflow-auto">
                 <ul class="o_model_field_selector_popover_page list-unstyled mb-0">
-                    <t t-foreach="state.page.fieldNames" t-as="fieldName" t-key="fieldName">
+                    <t t-foreach="fieldNames" t-as="fieldName" t-key="fieldName">
                         <t t-set="fieldDef" t-value="state.page.fieldDefs[fieldName]" />
                         <li class="o_model_field_selector_popover_item d-flex border-bottom" t-att-class="{ 'active': fieldName === state.page.focusedFieldName }" t-att-data-name="fieldName">
                             <button t-attf-class="o_model_field_selector_popover_item_name btn btn-light flex-fill border-0 rounded-0 text-break text-start fw-normal" t-on-click="() => this.selectField(fieldDef)">
@@ -52,15 +52,13 @@
                     </t>
                 </ul>
             </div>
-            <t t-if="showDebugInput">
-                <div class="o_model_field_selector_popover_footer border-top py-1 px-2">
-                    <input type="text" class="o_model_field_selector_debug o_input"
-                        t-att-value="state.page.path"
-                        t-on-change="(ev) => this.loadNewPath(ev.target.value)"
-                        t-on-keydown="onDebugInputKeydown"
-                        t-on-input="(ev) => this.props.update(ev.target.value, null, true)"/>
-                </div>
-            </t>
+            <div t-if="showDebugInput" class="o_model_field_selector_popover_footer border-top py-1 px-2">
+                <input type="text" class="o_model_field_selector_debug o_input"
+                    t-att-value="state.page.path"
+                    t-on-change="(ev) => this.loadNewPath(ev.target.value)"
+                    t-on-keydown="onDebugInputKeydown"
+                    t-on-input="(ev) => this.props.update(ev.target.value, null, true)"/>
+            </div>
         </div>
     </t>
 
