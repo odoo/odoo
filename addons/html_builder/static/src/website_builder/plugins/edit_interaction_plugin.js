@@ -6,7 +6,6 @@ export class EditInteractionPlugin extends Plugin {
 
     resources = {
         normalize_handlers: this.restartInteractions.bind(this),
-        option_visibility_updated: this.restartInteractions.bind(this),
         content_manually_updated_handlers: this.restartInteractions.bind(this),
         before_save_handlers: () => this.stopInteractions(),
         on_will_clone_handlers: ({ originalEl }) => {
