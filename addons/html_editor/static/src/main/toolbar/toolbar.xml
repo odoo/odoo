@@ -10,7 +10,8 @@
                                 <t t-component="button.Component"
                                     t-props="button.props"
                                     title="button.title"
-                                    getSelection.bind="props.toolbar.getSelection"/>
+                                    getSelection.bind="props.toolbar.getSelection"
+                                    overlayState="props.overlayState"/>
                             </t>
                             <button t-else=""
                                 class="btn btn-light"
