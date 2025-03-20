@@ -13,8 +13,8 @@
     </t>
 
     <t t-name="web.StatusBarField">
-        <div class="o_statusbar_status" t-ref="root" role="radiogroup" aria-label="Statusbar">
-            <Dropdown position="'bottom-end'">
+        <div class="o_statusbar_status" t-att-class="{'o_statusbar_mobile': env.isSmall}" t-ref="root" role="radiogroup" aria-label="Statusbar">
+            <Dropdown t-if="!env.isSmall" position="'bottom-end'">
                 <button
                     t-ref="after"
                     type="button"
@@ -30,7 +30,7 @@
                     </t>
                 </t>
             </Dropdown>
-            <t t-foreach="items.inline" t-as="item" t-key="item.value">
+            <t t-if="!env.isSmall" t-foreach="items.inline" t-as="item" t-key="item.value">
                 <button
                     type="button"
                     class="btn btn-secondary o_arrow_button"
@@ -48,7 +48,7 @@
                     t-on-click="() => this.selectItem(item)"
                 />
             </t>
-            <Dropdown position="'bottom-start'">
+            <Dropdown t-if="!env.isSmall" position="'bottom-start'">
                 <button
                     t-ref="before"
                     type="button"
@@ -82,6 +82,19 @@
                     </t>
                 </t>
             </Dropdown>
+
+            <!-- Mobile view - only show current status button -->
+            <t t-if="env.isSmall">
+                <button
+                    type="button"
+                    class="btn btn-secondary o_statusbar_mobile_button"
+                    t-att-disabled="props.isDisabled"
+                    t-on-click="openBottomSheet"
+                >
+                    <span t-esc="getCurrentLabel()" />
+                    <i class="fa fa-sort ms-2" aria-hidden="true"/>
+                </button>
+            </t>
         </div>
     </t>
 </templates>
