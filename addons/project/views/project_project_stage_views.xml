@@ -9,6 +9,7 @@
                 <field name="name" placeholder="e.g. To Do"/>
                 <field name="mail_template_id" optional="hide" context="{'default_model': 'project.project'}"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" options="{'no_create': True}"/>
+                <field name="color" optional="hide" widget="color_picker"/>
                 <field name="fold" optional="show"/>
             </list>
         </field>
@@ -40,6 +41,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="mail_template_id" context="{'default_model': 'project.project'}"/>
+                            <field name="color" widget="color_picker"/>
                             <field name="sequence" groups="base.group_no_one"/>
                         </group>
                         <group>
@@ -56,8 +58,11 @@
         <field name="name">project.project.stage.view.kanban</field>
         <field name="model">project.project.stage</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" sample="1" quick_create_view="project.project_project_stage_view_form_quick_create">
+            <kanban highlight_color="color" class="o_kanban_mobile" sample="1" quick_create_view="project.project_project_stage_view_form_quick_create">
                 <templates>
+                    <t t-name="menu" t-if="!selection_mode" groups="base.group_user">
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
                     <t t-name="card">
                         <field name="name" class="fw-bolder mb-4"/>
                         <field name="mail_template_id" class="text-muted mb-2" invisible="not mail_template_id"/>

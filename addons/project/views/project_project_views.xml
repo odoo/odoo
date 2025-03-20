@@ -233,7 +233,8 @@
                     <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" width="20px" optional="show" widget="project_state_selection"/>
-                    <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
+                    <field name="stage_id_color" column_invisible="1"/>
+                    <field name="stage_id" domain="[('company_id', 'in', (company_id, False))]" optional="show" widget="badge" options="{'no_open': True, 'color_field': 'stage_id_color'}" />
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </list>
             </field>
