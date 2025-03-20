@@ -14,6 +14,7 @@ import { standardActionServiceProps } from "@web/webclient/actions/action_servic
 import { WebsiteSystrayItem } from "./website_systray_item";
 import { uniqueId } from "@web/core/utils/functions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
+import { _t } from "@web/core/l10n/translation";
 
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
@@ -21,12 +22,14 @@ export class WebsiteBuilder extends Component {
     static props = { ...standardActionServiceProps };
 
     setup() {
+        this.target = null;
         this.orm = useService("orm");
+        this.notification = useService("notification");
         this.websiteContent = useRef("iframe");
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, isMobile: false });
+        this.state = useState({ isEditing: false, isMobile: false, value: 1 });
         this.websiteService = useService("website");
         this.ui = useService("ui");
         // TODO: to remove: this is only needed to not use the website systray
@@ -73,6 +76,7 @@ export class WebsiteBuilder extends Component {
         const WebsitePlugins = registry.category("website-plugins").getAll();
         return {
             closeEditor: this.reloadIframeAndCloseEditor.bind(this),
+            reloadEditor: this.reloadEditor.bind(this),
             snippetsName: "website.snippets",
             toggleMobile: this.toggleMobile.bind(this),
             overlayRef: this.overlayRef,
@@ -80,6 +84,7 @@ export class WebsiteBuilder extends Component {
             iframeLoaded: this.iframeLoaded,
             isMobile: this.state.isMobile,
             Plugins: WebsitePlugins,
+            config: { initialTarget: this.target },
         };
     }
 
@@ -160,15 +165,45 @@ export class WebsiteBuilder extends Component {
         return path;
     }
 
+    async reloadEditor(param) {
+        this.target = param.target || null;
+        await this.reloadIframe(this.state.isEditing);
+        // trigger an new instance of the builder menu
+        this.state.value++;
+
+        this.notification.add(_t("Your modifications were saved to apply this option."), {
+            title: _t("Content saved."),
+            type: "success",
+        });
+    }
+
     async reloadIframeAndCloseEditor() {
+        const isEditing = false;
+        await this.reloadIframe(isEditing);
+        document.querySelector(".o_main_navbar").removeAttribute("style");
+        this.state.isEditing = isEditing;
+        this.addSystrayItems();
+    }
+
+    async reloadIframe(isEditing = true) {
         this.ui.block();
         this.setIframeLoaded();
         this.websiteContent.el.contentWindow.location.reload();
         await this.iframeLoaded;
+        if (isEditing) {
+            await new Promise((resolve) => {
+                this.websiteContent.el.contentWindow.addEventListener(
+                    "PUBLIC-ROOT-READY",
+                    (event) => {
+                        this.websiteContent.el.setAttribute("is-ready", "true");
+                        resolve();
+                    },
+                    { once: true }
+                );
+            });
+            await this.loadAssetsEditBundle();
+        }
         this.ui.unblock();
-        document.querySelector(".o_main_navbar").removeAttribute("style");
-        this.state.isEditing = false;
-        this.addSystrayItems();
     }
 
     setIframeLoaded() {
