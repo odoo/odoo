@@ -303,6 +303,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             'code': 'cash.basis.transfer.account',
             'name': 'cash_basis_transfer_account',
             'account_type': 'income',
+            'reconcile': True,
         })
 
         tax_account_1 = self.env['account.account'].create({
