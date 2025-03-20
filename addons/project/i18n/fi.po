@@ -86,7 +86,7 @@ msgstr ""
 "export class ProjectTaskFormController extends FormControllerWithHTMLExpander {\n"
 "    setup() {\n"
 "        super.setup();\n"
-"        this.notifications = useService(\"notification\");\n"
+"        this.notifications = useService(\"ilmoitus\");\n"
 "    }\n"
 "\n"
 "    /**\n"
@@ -98,7 +98,7 @@ msgstr ""
 "            openHistoryDialog: {\n"
 "                sequence: 50,\n"
 "                icon: \"fa fa-history\",\n"
-"                description: _t(\"Version History\"),\n"
+"                description: _t(\"Versiohistoria\"),\n"
 "                callback: () => this.openHistoryDialog(),\n"
 "            },\n"
 "        };\n"
@@ -131,7 +131,7 @@ msgstr ""
 "        this.dialogService.add(\n"
 "            HistoryDialog,\n"
 "            {\n"
-"                title: _t(\"Task Description History\"),\n"
+"                title: _t(\"Tehtäväkuvaushistoria\"),\n"
 "                noContentHelper: markup(\n"
 "                    "
 
@@ -3786,7 +3786,7 @@ msgstr "Julkaiseminen"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__quarterly
 msgid "Quarterly"
-msgstr "Neljännesvuosittain"
+msgstr "Kvartaaleittain"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -4910,9 +4910,9 @@ msgid ""
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
 "He voivat muokata jaettuja projektitehtäviä ja tarkastella tiettyjä "
-"asiakirjoja lukutilassa verkkosivustollasi. Näihin kuuluvat liidit ja "
-"myyntimahdollisuudet, tarjoukset tai myyntitilaukset, ostotilaukset, laskut "
-"ja laskut, työaikataulut ja tukipyynnöt."
+"asiakirjoja lukutilassa verkkosivullasi. Näihin kuuluvat liidit ja "
+"myyntimahdollisuudet, tarjoukset tai myyntitilaukset, ostotilaukset, myynti-"
+" ja ostolaskut, työaikakirjaukset ja tukipyynnöt."
 
 #. module: project
 #. odoo-python
@@ -5206,7 +5206,7 @@ msgid ""
 "associated with the project on relevant documents."
 msgstr ""
 "Seuraa projektin kustannuksia, tuloja ja katetta asettamalla projektiin "
-"liittyvä analyyttinen tili asiaankuuluviin asiakirjoihin."
+"liittyvä kustannuspaikka asiaankuuluviin asiakirjoihin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
