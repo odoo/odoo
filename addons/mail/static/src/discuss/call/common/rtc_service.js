@@ -1098,7 +1098,7 @@ export class Rtc extends Record {
                 const session = await this.store["discuss.channel.rtc.session"].getWhenReady(
                     Number(id)
                 );
-                if (!session || !this.state.channel) {
+                if (!session || !this.channel) {
                     return;
                 }
                 if (
