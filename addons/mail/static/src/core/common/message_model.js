@@ -285,6 +285,7 @@ export class Message extends Record {
 
     isTranslatable(thread) {
         return (
+            !this.isEmpty &&
             this.store.hasMessageTranslationFeature &&
             !["discuss.channel", "mail.box"].includes(thread?.model)
         );
