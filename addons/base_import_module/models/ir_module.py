@@ -21,6 +21,7 @@ from odoo.modules.module import adapt_version, MANIFEST_NAMES
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
+from odoo.tools.misc import topological_sort
 
 _logger = logging.getLogger(__name__)
 
@@ -273,16 +274,16 @@ class IrModuleModule(models.Model):
                     raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
 
             with file_open_temporary_directory(self.env) as module_dir:
-                manifest_files = [
-                    file
+                manifest_files = sorted(
+                    (file.filename.split('/')[0], file)
                     for file in z.infolist()
                     if file.filename.count('/') == 1
                     and file.filename.split('/')[1] in MANIFEST_NAMES
-                ]
+                )
                 module_data_files = defaultdict(list)
-                for manifest in manifest_files:
+                dependencies = defaultdict(list)
+                for mod_name, manifest in manifest_files:
                     manifest_path = z.extract(manifest, module_dir)
-                    mod_name = manifest.filename.split('/')[0]
                     try:
                         with file_open(manifest_path, 'rb', env=self.env) as f:
                             terp = ast.literal_eval(f.read().decode())
@@ -295,6 +296,16 @@ class IrModuleModule(models.Model):
                         if os.path.splitext(filename)[1].lower() not in ('.xml', '.csv', '.sql'):
                             continue
                         module_data_files[mod_name].append('%s/%s' % (mod_name, filename))
+                    dependencies[mod_name] = terp.get('depends', [])
+
+                dirs = {d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))}
+                sorted_dirs = topological_sort(dependencies)
+                if wrong_modules := dirs.difference(sorted_dirs):
+                    raise UserError(_(
+                        "No manifest found in '%(modules)s'. Can't import the zip file.",
+                        modules=", ".join(wrong_modules)
+                    ))
+
                 for file in z.infolist():
                     filename = file.filename
                     mod_name = filename.split('/')[0]
@@ -304,8 +315,7 @@ class IrModuleModule(models.Model):
                     if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
-                dirs = [d for d in os.listdir(module_dir) if os.path.isdir(opj(module_dir, d))]
-                for mod_name in dirs:
+                for mod_name in sorted_dirs:
                     module_names.append(mod_name)
                     try:
                         # assert mod_name.startswith('theme_')
