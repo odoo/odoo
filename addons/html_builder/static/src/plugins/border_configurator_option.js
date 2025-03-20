@@ -23,9 +23,6 @@ export class BorderConfigurator extends BaseOptionComponent {
         return `border-${this.props.direction ? this.props.direction + "-" : ""}${param}`;
     }
     hasBorder(editingElement) {
-        if (!editingElement) {
-            return false;
-        }
         const getAction = this.env.editor.shared.builderActions.getAction;
         const styleActionValue = getAction("styleAction").getValue({
             editingElement,

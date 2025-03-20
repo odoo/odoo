@@ -8,8 +8,11 @@ export class BuilderComponent extends Component {
     };
 
     setup() {
-        this.state = useDomState((editingElement) => ({
-            isVisible: !!editingElement,
-        }));
+        this.state = useDomState(
+            (editingElement) => ({
+                isVisible: !!editingElement,
+            }),
+            { checkEditingElement: false }
+        );
     }
 }
