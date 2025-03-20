@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ListSelector">
-        <Dropdown menuClass="'o-we-toolbar-dropdown'">
+        <Dropdown menuClass="'o-we-toolbar-dropdown'" menuRef="menuRef">
             <button class="btn btn-light fa fa-list-ul" t-att-title="props.title" name="list_selector"/>
             <t t-set-slot="content" t-key="props.key.value">
             <t t-set="activeMode" t-value="getActiveMode()"/>

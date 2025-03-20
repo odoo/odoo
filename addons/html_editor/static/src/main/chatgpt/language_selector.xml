@@ -5,7 +5,7 @@
                 <t t-set="onClick" t-value="() => this.onSelected(state.languages[0][1])"/>
             </t>
         </t>
-        <Dropdown t-else="">
+        <Dropdown t-else="" menuRef="menuRef">
             <t t-call="html_editor.translateButton">
                 <t t-set="onClick" t-value="() => {}"/>
             </t>
