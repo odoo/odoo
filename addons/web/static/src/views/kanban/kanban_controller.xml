@@ -74,6 +74,9 @@
                             </DropdownItem>
                         </t>
                     </CogMenu>
+                    <t t-if="model.root._config.cached">
+                        <i class="fa fa-solid fa-spinner fa-spin m-auto"/>
+                    </t>
                 </t>
                 <t t-set-slot="layout-actions">
                     <SearchBar toggler="searchBarToggler"/>
@@ -81,7 +84,7 @@
                 <t t-set-slot="control-panel-navigation-additional">
                     <t t-if="!hasSelectedRecords" t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
-                <t t-component="props.Renderer"
+                <t t-component="props.Renderer" t-if="model.isReady"
                     list="model.root"
                     archInfo="props.archInfo"
                     Compiler="props.Compiler"

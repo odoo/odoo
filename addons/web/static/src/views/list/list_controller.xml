@@ -60,6 +60,9 @@
                             </DropdownItem>
                         </t>
                     </CogMenu>
+                    <t t-if="model.root._config.cached">
+                        <i class="fa fa-solid fa-spinner fa-spin m-auto"/>
+                    </t>
                 </t>
                 <t t-set-slot="control-panel-selection-actions">
                     <div t-if="hasSelectedRecords" class="o_selection_container m-1 m-md-0 d-flex gap-1">
@@ -85,7 +88,7 @@
                         </t>
                     </div>
                 </t>
-                <t t-component="props.Renderer"
+                <t t-component="props.Renderer" t-if="model.isReady"
                     list="model.root"
                     activeActions="activeActions"
                     archInfo="archInfo"

@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { rpc } from "@web/core/network/rpc";
+import { rpc, rpcBus } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Domain } from "@web/core/domain";
 
@@ -99,11 +99,16 @@ export class ORM {
         this.rpc = rpc; // to be overridable by the SampleORM
         /** @protected */
         this._silent = false;
+        this._cached = false;
     }
 
     /** @returns {ORM} */
     get silent() {
         return Object.assign(Object.create(this), { _silent: true });
+    }
+
+    get cached() {
+        return Object.assign(Object.create(this), { _cached: true });
     }
 
     /**
@@ -124,6 +129,38 @@ export class ORM {
             args,
             kwargs: fullKwargs,
         };
+        if (this._cached) {
+            let rpcId;
+            let _resolve;
+            let cached = false;
+            const actualProm = new Promise((r) => (_resolve = r));
+            const onRpcRequest = (ev) => (rpcId = ev.detail.data.id);
+            const onRpcResponse = (ev) => {
+                if (ev.detail.data.id === rpcId) {
+                    cached = ev.detail.cached;
+                    rpcBus.removeEventListener("RPC:RESPONSE", onRpcResponse);
+                }
+            };
+            rpcBus.addEventListener("RPC:REQUEST", onRpcRequest, { once: true });
+            rpcBus.addEventListener("RPC:RESPONSE", onRpcResponse);
+            const onRpcActualized = (ev) => {
+                if (rpcId === ev.detail.id) {
+                    console.info(`ACTUAL RESPONSE RECEIVED ${ev.detail.id}`);
+                    rpcBus.removeEventListener("RPC:ACTUAL_RESPONSE", onRpcActualized);
+                    _resolve(ev.detail.result);
+                }
+            };
+            rpcBus.addEventListener("RPC:ACTUAL_RESPONSE", onRpcActualized);
+            const cachedCall = async () => {
+                const result = await this.rpc(url, params, { silent: this._silent });
+                if (cached) {
+                    return { cached: result, actual: actualProm };
+                }
+                rpcBus.removeEventListener("RPC:ACTUAL_RESPONSE", onRpcActualized);
+                return result;
+            };
+            return cachedCall();
+        }
         return this.rpc(url, params, { silent: this._silent });
     }
 
