@@ -385,6 +385,39 @@ describe("keyboard triggers", () => {
         expect("[data-action-id='customAction'] input").toHaveValue("-1");
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "-1");
     });
+    test("apply preview on keydown and debounce commit operation", async () => {
+        addActionOption({
+            customAction: {
+                getValue: ({ editingElement }) => editingElement.innerHTML,
+                apply: ({ editingElement, value }) => {
+                    expect.step(`customAction ${value}`);
+                    editingElement.innerHTML = value;
+                },
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderNumberInput action="'customAction'"/>`,
+        });
+        await setupWebsiteBuilder(`
+            <div class="test-options-target">10</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container input").focus();
+        // Simulate a single keydown hold down for a while.
+        await contains(".options-container input").keyDown("ArrowUp");
+        await advanceTime(500); // Default browser delay between 1st & 2nd keydown.
+        await contains(".options-container input").keyDown("ArrowUp");
+        await advanceTime();
+        await contains(".options-container input").keyDown("ArrowUp");
+        await advanceTime();
+        expect(":iframe .test-options-target").toHaveInnerHTML("13");
+        // 3 previews
+        expect.verifySteps(["customAction 11", "customAction 12", "customAction 13"]);
+        await advanceTime(560); // Debounce = 550
+        // 1 commit
+        expect.verifySteps(["customAction 13"]);
+    });
 });
 describe("unit & saveUnit", () => {
     test("should handle unit", async () => {

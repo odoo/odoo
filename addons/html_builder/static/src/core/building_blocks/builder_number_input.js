@@ -10,7 +10,9 @@ import {
     BuilderTextInputBase,
     textInputBasePassthroughProps,
 } from "@html_builder/core/building_blocks/builder_text_input_base";
+import { useChildRef } from "@web/core/utils/hooks";
 import { pick } from "@web/core/utils/objects";
+import { useDebounced } from "@web/core/utils/timing";
 
 export class BuilderNumberInput extends Component {
     static template = "html_builder.BuilderNumberInput";
@@ -46,6 +48,16 @@ export class BuilderNumberInput extends Component {
         this.commit = commit;
         this.preview = preview;
         this.state = state;
+
+        this.inputRef = useChildRef();
+        this.debouncedCommitValue = useDebounced(() => {
+            const normalizedDisplayValue = this.commit(this.inputRef.el.value);
+            this.inputRef.el.value = normalizedDisplayValue;
+        }, 550);
+        // ↑ 500 is the delay when holding keydown between the 1st and 2nd event
+        // fired. Some additional delay by the browser may add another ~5-10ms.
+        // We debounce above that threshold to keep a single history step when
+        // holding up/down on a number input.
     }
 
     /**
@@ -130,16 +142,10 @@ export class BuilderNumberInput extends Component {
         });
     }
 
-    onChange(e) {
-        const normalizedDisplayValue = this.commit(e.target.value);
-        e.target.value = normalizedDisplayValue;
-    }
-
     get displayValue() {
         return this.formatRawValue(this.state.value);
     }
 
-    // TODO: use this.preview or this.commit?
     onKeydown(e) {
         if (!["ArrowUp", "ArrowDown"].includes(e.key)) {
             return;
@@ -155,8 +161,8 @@ export class BuilderNumberInput extends Component {
             });
         }
         e.target.value = values.join(" ");
-        // OK because it only uses event.target.value.
-        this.onChange(e);
+        this.preview(e.target.value);
+        this.debouncedCommitValue();
     }
 
     get textInputBaseProps() {
