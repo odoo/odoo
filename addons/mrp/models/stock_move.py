@@ -245,7 +245,19 @@ class StockMove(models.Model):
             elif not move.manual_consumption:
                 move.manual_consumption = move._is_manual_consumption()
 
-    @api.depends('raw_material_production_id', 'raw_material_production_id.location_dest_id', 'production_id', 'production_id.location_dest_id')
+    @api.depends('raw_material_production_id.location_src_id', 'production_id.location_src_id')
+    def _compute_location_id(self):
+        ids_to_super = set()
+        for move in self:
+            if move.production_id:
+                move.location_id = move.product_id.with_company(move.company_id).property_stock_production.id
+            elif move.raw_material_production_id:
+                move.location_id = move.raw_material_production_id.location_src_id
+            else:
+                ids_to_super.add(move.id)
+        return super(StockMove, self.browse(ids_to_super))._compute_location_id()
+
+    @api.depends('raw_material_production_id.location_dest_id', 'production_id.location_dest_id')
     def _compute_location_dest_id(self):
         ids_to_super = set()
         for move in self:
