@@ -492,9 +492,17 @@ export class Record extends DataPoint {
             return pair && createMany2OneValue(pair);
         }
         if (resId && displayName === undefined) {
+            const fieldSpec = { display_name: {} };
+            if (this.activeFields[fieldName].related) {
+                Object.assign(fieldSpec, getFieldsSpec(
+                    this.activeFields[fieldName].related.activeFields,
+                    this.activeFields[fieldName].related.fields,
+                    getBasicEvalContext(this.config),
+                ));
+            }
             const kwargs = {
                 context,
-                specification: { display_name: {} },
+                specification: fieldSpec,
             };
             const records = await this.model.orm.webRead(resModel, [resId], kwargs);
             return createMany2OneValue(records[0]);
