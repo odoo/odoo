@@ -182,12 +182,12 @@ class Binary(Field):
         # update the cache, and discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = self._cache_filter_different_from(records, cache_value)
         if not records:
             return
         if self.store:
             # determine records that are known to be not null
-            not_null = cache.get_records_different_from(records, self, None)
+            not_null = self._cache_filter_different_from(records, None)
 
         cache.update(records, self, itertools.repeat(cache_value))
 

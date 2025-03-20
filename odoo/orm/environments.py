@@ -859,28 +859,8 @@ class Cache:
 
     def get_records_different_from(self, records: M, field: Field, value: typing.Any) -> M:
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
-        field_cache = self._get_field_cache(records, field)
-        if field.translate:
-            lang = records.env.lang or 'en_US'
-
-            def get_value(id_):
-                cache_value = field_cache[id_]
-                return None if cache_value is None else cache_value[lang]
-        else:
-            get_value = field_cache.__getitem__
-
-        ids = []
-        for record_id in records._ids:
-            try:
-                val = get_value(record_id)
-            except KeyError:
-                ids.append(record_id)
-            else:
-                if field.type == "monetary":
-                    value = field.convert_to_cache(value, records.browse((record_id,)))
-                if val != value:
-                    ids.append(record_id)
-        return records.browse(ids)
+        warnings.warn("Since 19.0, becomes internal function of fields", DeprecationWarning)
+        return field._cache_filter_different_from(records, value)
 
     def get_fields(self, record: BaseModel) -> Iterator[Field]:
         """ Return the fields with a value for ``record``. """

@@ -1392,7 +1392,7 @@ class Field(typing.Generic[T]):
         # discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = self._cache_filter_different_from(records, cache_value)
         if not records:
             return
 
@@ -1478,6 +1478,17 @@ class Field(typing.Generic[T]):
         if self in env._field_depends_context:
             cache = cache.setdefault(env.cache_key(self), {})
         return cache
+
+    def _cache_filter_different_from(self, records: BaseModel, cache_value: typing.Any) -> BaseModel:
+        """ Filter records to exclude the ones that have already the given value
+        in the cache.
+        """
+        field_cache = self._get_cache(records.env)
+        return records.browse(
+            record_id
+            for record_id in records._ids
+            if field_cache.get(record_id, SENTINEL) != cache_value
+        )
 
     ############################################################################
     #

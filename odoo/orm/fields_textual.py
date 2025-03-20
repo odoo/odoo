@@ -244,7 +244,7 @@ class BaseString(Field[str | typing.Literal[False]]):
             return
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
+        records = self._cache_filter_different_from(records, cache_value)
         if not records:
             return
         dirty_ids = records.env._field_dirty.get(self, ())
