@@ -9,6 +9,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ChannelInvitation } from "../common/channel_invitation";
+import { UseSuggestion } from "@mail/core/common/suggestion_hook";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
@@ -134,7 +135,7 @@ export class DiscussCommandPalette {
         /** @type {import("models").Store} */
         this.store = env.services["mail.store"];
         this.orm = env.services.orm;
-        this.suggestion = env.services["mail.suggestion"];
+        this.suggestion = new UseSuggestion({ env, store: this.store });
         this.ui = env.services.ui;
         this.commands = [];
         this.options = options;

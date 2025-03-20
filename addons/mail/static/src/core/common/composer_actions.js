@@ -1,5 +1,6 @@
 import { toRaw, useComponent, useEffect, useRef, useState } from "@odoo/owl";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
+import { UseSuggestion } from "@mail/core/common/suggestion_hook";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -133,9 +134,7 @@ composerActionsRegistry
         condition: (component) =>
             component.store.hasCannedResponses &&
             component.thread &&
-            component.env.services["mail.suggestion"]
-                .getSupportedDelimiters(component.thread)
-                .find(([delimiter]) => delimiter === "::"),
+            UseSuggestion.getSupportedDelimiters(component.thread).find(([delimiter]) => delimiter === "::"),
         icon: "fa fa-file-text-o",
         name: _t("Insert a Canned response"),
         onClick: (component, action, ev) => component.onClickInsertCannedResponse(ev),

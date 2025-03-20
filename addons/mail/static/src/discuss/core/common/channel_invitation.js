@@ -5,8 +5,8 @@ import { Component, onMounted, onWillStart, useEffect, useRef, useState } from "
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { useSequential } from "@mail/utils/common/hooks";
-import { useDebounced } from "@web/core/utils/timing";
+import { useOrmOnInput } from "@mail/utils/common/hooks";
+import { useSuggestion } from "@mail/core/common/suggestion_hook";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus, ActionPanel };
@@ -24,22 +24,21 @@ export class ChannelInvitation extends Component {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.ormOnInput = useOrmOnInput();
         this.store = useService("mail.store");
         this.notification = useService("notification");
-        this.suggestionService = useService("mail.suggestion");
+        this.suggestion = useSuggestion();
         this.ui = useService("ui");
         this.inputRef = useRef("input");
-        this.sequential = useSequential();
         this.state = useState({
             selectablePartners: [],
             selectedPartners: [],
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
         onWillStart(() => {
             if (this.store.self.type === "partner") {
-                this.fetchPartnersToInvite();
+                this.fetchPartnersToInvite(true);
             }
         });
         onMounted(() => {
@@ -107,18 +106,21 @@ export class ChannelInvitation extends Component {
         return _t("Search people to invite");
     }
 
-    async fetchPartnersToInvite() {
-        const results = await this.sequential(() =>
-            this.orm.call("res.partner", "search_for_channel_invite", [
-                this.searchStr,
-                this.props.thread?.id ?? false,
-            ])
-        );
+    async fetchPartnersToInvite(initial = false) {
+        const results = initial
+            ? await this.orm.call("res.partner", "search_for_channel_invite", [
+                  this.searchStr,
+                  this.props.thread?.id ?? false,
+              ])
+            : await this.ormOnInput("res.partner", "search_for_channel_invite", [
+                  this.searchStr,
+                  this.props.thread?.id ?? false,
+              ]);
         if (!results) {
             return;
         }
         const { Persona: selectablePartners = [] } = this.store.insert(results.data);
-        this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.selectablePartners = this.suggestion.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.thread
@@ -128,7 +130,7 @@ export class ChannelInvitation extends Component {
 
     onInput() {
         this.searchStr = this.inputRef.el.value;
-        this.debouncedFetchPartnersToInvite();
+        this.fetchPartnersToInvite(true);
     }
 
     onClickSelectablePartner(partner) {

@@ -13,7 +13,6 @@ declare module "services" {
     import { rtcService } from "@mail/discuss/call/common/rtc_service";
     import { soundEffects } from "@mail/core/common/sound_effects_service";
     import { storeService } from "@mail/core/common/store_service";
-    import { suggestionService } from "@mail/core/common/suggestion_service";
 
     export interface Services {
         "discuss.core.common": typeof discussCoreCommon;
@@ -29,6 +28,5 @@ declare module "services" {
         "mail.out_of_focus": typeof outOfFocusService;
         "mail.sound_effects": typeof soundEffects;
         "mail.store": typeof storeService;
-        "mail.suggestion": typeof suggestionService;
     }
 }

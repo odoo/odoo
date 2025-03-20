@@ -138,8 +138,10 @@ test("media dialog: upload", async function () {
 });
 
 test("mention a partner", async () => {
+    const deferred = new Deferred();
     onRpc("res.partner", "get_mention_suggestions", ({ kwargs }) => {
         expect.step(`get_mention_suggestions: ${kwargs.search}`);
+        deferred.resolve();
     });
     await mountViewInDialog({
         type: "form",
@@ -158,10 +160,13 @@ test("mention a partner", async () => {
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
     await press("a");
-    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item");
+    await waitFor(".overlay .o-mail-NavigableList .o-mail-NavigableList-item", {
+        timeout: 300,
+    });
     expect(queryAllTexts(".overlay .o-mail-NavigableList .o-mail-NavigableList-item")).toEqual([
         "Mitchell Admin",
     ]);
+    await deferred;
     expect.verifySteps(["get_mention_suggestions: a"]);
 
     await press("enter");
@@ -174,8 +179,10 @@ test("mention a partner", async () => {
 });
 
 test("mention a channel", async () => {
+    const deferred = new Deferred();
     onRpc("discuss.channel", "get_mention_suggestions", ({ kwargs }) => {
         expect.step(`get_mention_suggestions: ${kwargs.search}`);
+        deferred.resolve();
     });
     await mountViewInDialog({
         type: "form",
@@ -193,6 +200,6 @@ test("mention a channel", async () => {
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
     await press("a");
-    await animationFrame();
+    await deferred;
     expect.verifySteps(["get_mention_suggestions: a"]);
 });

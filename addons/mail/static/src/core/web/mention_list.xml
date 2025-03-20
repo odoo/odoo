@@ -14,7 +14,7 @@
 
     <t t-name="mail.MentionList">
         <div class="search d-flex">
-            <input type="text" class="form-control border-0 flex-grow-1 rounded-end-0" t-ref="autofocus" t-att-placeholder="placeholder" t-model="state.searchTerm" t-on-keydown="onKeydown"/>
+            <input type="text" class="form-control border-0 flex-grow-1 rounded-end-0" t-ref="autofocus" t-att-placeholder="placeholder" t-model="suggestion.state.term" t-on-keydown="onKeydown"/>
             <i class="oi oi-search p-2 fs-5 rounded-end" title="Search..." role="img" aria-label="Search..."/>
         </div>
         <NavigableList t-props="navigableListProps"/>

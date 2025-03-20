@@ -4,6 +4,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSequential } from "@mail/utils/common/hooks";
+import { useSuggestion } from "@mail/core/common/suggestion_hook";
 
 export class MentionList extends Component {
     static template = "mail.MentionList";
@@ -20,43 +21,28 @@ export class MentionList extends Component {
     setup() {
         super.setup();
         this.state = useState({
-            searchTerm: "",
             options: [],
-            isFetching: false,
         });
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.suggestionService = useService("mail.suggestion");
+        this.suggestion = useSuggestion();
         this.sequential = useSequential();
         this.ref = useAutofocus({ mobile: true });
 
         useEffect(
             () => {
-                if (!this.state.searchTerm) {
+                if (!this.suggestion.state.term) {
                     this.state.options = [];
                     return;
                 }
                 this.sequential(async () => {
-                    this.state.isFetching = true;
-                    try {
-                        await this.suggestionService.fetchSuggestions({
-                            delimiter: this.props.type === "partner" ? "@" : "#",
-                            term: this.state.searchTerm,
-                        });
-                    } finally {
-                        this.state.isFetching = false;
-                    }
-                    const { suggestions } = this.suggestionService.searchSuggestions(
-                        {
-                            delimiter: this.props.type === "partner" ? "@" : "#",
-                            term: this.state.searchTerm,
-                        },
-                        { sort: true }
-                    );
+                    this.suggestion.search.delimiter = this.props.type === "partner" ? "@" : "#";
+                    await this.suggestion.fetchSuggestions();
+                    const { suggestions } = this.suggestion.searchSuggestions({ sort: true });
                     this.state.options = suggestions;
                 });
             },
-            () => [this.state.searchTerm]
+            () => [this.suggestion.state.term]
         );
     }
 
@@ -75,7 +61,7 @@ export class MentionList extends Component {
         const props = {
             anchorRef: this.ref.el,
             position: "bottom-fit",
-            isLoading: !!this.state.searchTerm && this.state.isFetching,
+            isLoading: !!this.suggestion.state.term && this.suggestion.state.isFetching,
             onSelect: (...args) => {
                 this.props.onSelect(...args);
                 this.props.close();

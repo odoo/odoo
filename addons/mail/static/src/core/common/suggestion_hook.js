@@ -1,59 +1,54 @@
-import { status, useComponent, useEffect, useState } from "@odoo/owl";
+import { useComponent, useEffect, useState, toRaw } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { fuzzyLookup } from "@web/core/utils/search";
 
-class UseSuggestion {
-    constructor(comp) {
-        this.comp = comp;
-        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), 250);
-        useEffect(
-            () => {
-                this.update();
-                if (this.search.position === undefined || !this.search.delimiter) {
-                    return; // nothing else to fetch
-                }
-                if (this.composer.store.self.type !== "partner") {
-                    return; // guests cannot access fetch suggestion method
-                }
-                if (
-                    this.lastFetchedSearch?.count === 0 &&
-                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
-                ) {
-                    return; // no need to fetch since this is more specific than last and last had no result
-                }
-                this.fetchSuggestions();
-            },
-            () => [this.search.delimiter, this.search.position, this.search.term]
-        );
-        useEffect(
-            () => {
-                this.detect();
-            },
-            () => [this.composer.selection.start, this.composer.selection.end, this.composer.text]
-        );
+import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
+import { cleanTerm } from "@mail/utils/common/format";
+import { ormOnInput } from "@mail/utils/common/hooks";
+
+/**
+ * @property {import("@mail/core/common/composer").Composer} param.composer
+ */
+export class UseSuggestion {
+
+    /**
+     * Returns list of supported delimiters, each supported
+     * delimiter is in an array [a, b, c] where:
+     * - a: chars to trigger
+     * - b: (optional) if set, the exact position in composer text input to allow using this delimiter
+     * - c: (optional) if set, this is the minimum amount of extra char after delimiter to allow using this delimiter
+     *
+     * @param {import('models').Thread} [thread]
+     * @returns {Array<[string, number, number]>}
+     */
+    static getSupportedDelimiters(thread) {
+        return [["@"], ["#"], ["::"], [":", undefined, 2]];
     }
-    /** @type {import("@mail/core/common/composer").Composer} */
-    comp;
-    get composer() {
-        return this.comp.props.composer;
+
+    constructor({
+        thread,
+        composer,
+        env,
+        store,
+    }) {
+        this.thread = thread;
+        this.composer = composer;
+        this.store = store;
+        this.emojis;
+        this.env = env;
+        this.ormOnInput = ormOnInput(this.env.services["orm"]);
     }
-    suggestionService = useService("mail.suggestion");
-    state = useState({
-        count: 0,
-        items: undefined,
-        isFetching: false,
-    });
     search = {
         delimiter: undefined,
         position: undefined,
-        term: "",
     };
     lastFetchedSearch;
     get isSearchMoreSpecificThanLastFetch() {
         return (
             this.lastFetchedSearch.delimiter === this.search.delimiter &&
-            this.search.term.startsWith(this.lastFetchedSearch.term) &&
+            this.state.term.startsWith(this.lastFetchedSearch.term) &&
             this.lastFetchedSearch.position >= this.search.position
         );
     }
@@ -65,11 +60,9 @@ class UseSuggestion {
         this.composer.cannedResponses = [];
     }
     clearSearch() {
-        Object.assign(this.search, {
-            delimiter: undefined,
-            position: undefined,
-            term: "",
-        });
+        this.search.delimiter = undefined;
+        this.search.position = undefined;
+        this.state.term = "";
         this.state.items = undefined;
     }
     detect() {
@@ -100,7 +93,7 @@ class UseSuggestion {
         if (this.search.position !== undefined && this.search.position < start) {
             candidatePositions.push(this.search.position);
         }
-        const supportedDelimiters = this.suggestionService.getSupportedDelimiters(this.thread);
+        const supportedDelimiters = UseSuggestion.getSupportedDelimiters(this.thread);
         for (const candidatePosition of candidatePositions) {
             if (candidatePosition < 0 || candidatePosition >= text.length) {
                 continue;
@@ -130,18 +123,14 @@ class UseSuggestion {
             if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                 continue;
             }
-            Object.assign(this.search, {
-                delimiter: candidateDelimiter,
-                position: candidatePosition,
-                term: text.substring(candidatePosition + candidateDelimiter.length, start),
-            });
+
+            this.search.delimiter = candidateDelimiter;
+            this.search.position = candidatePosition;
+            this.state.term = text.substring(candidatePosition + candidateDelimiter.length, start);
             this.state.count++;
             return;
         }
         this.clearSearch();
-    }
-    get thread() {
-        return this.composer.thread || this.composer.message.thread;
     }
     insert(option) {
         const position = this.composer.selection.start;
@@ -177,10 +166,7 @@ class UseSuggestion {
         if (!this.search.delimiter) {
             return;
         }
-        const { type, suggestions } = this.suggestionService.searchSuggestions(this.search, {
-            thread: this.thread,
-            sort: true,
-        });
+        const { type, suggestions } = this.searchSuggestions({ sort: true });
         if (!suggestions.length) {
             this.state.items = undefined;
             return;
@@ -195,13 +181,24 @@ class UseSuggestion {
     async fetchSuggestions() {
         let resetFetchingState = true;
         try {
-            this.abortController?.abort();
-            this.abortController = new AbortController();
-            this.state.isFetching = true;
-            await this.suggestionService.fetchSuggestions(this.search, {
-                thread: this.thread,
-                abortSignal: this.abortController.signal,
-            });
+            const cleanedSearchTerm = cleanTerm(this.state.term);
+            switch (this.search.delimiter) {
+                case "@": {
+                    await this.fetchPartners(cleanedSearchTerm, this.thread);
+                    break;
+                }
+                case "#":
+                    await this.fetchThreads(cleanedSearchTerm);
+                    break;
+                case "::":
+                    await this.store.cannedReponses.fetch();
+                    break;
+                case ":": {
+                    const { emojis } = await loadEmoji();
+                    this.emojis = emojis;
+                    break;
+                }
+            }
         } catch (e) {
             this.lastFetchedSearch = null;
             if (e instanceof ConnectionAbortedError) {
@@ -214,20 +211,306 @@ class UseSuggestion {
                 this.state.isFetching = false;
             }
         }
-        if (status(this.comp) === "destroyed") {
-            return;
-        }
         this.update();
         this.lastFetchedSearch = {
             ...this.search,
+            term: this.state.term,
             count: this.state.items?.suggestions.length ?? 0,
         };
         if (!this.state.items?.suggestions.length) {
             this.clearSearch();
         }
     }
+
+    /**
+     * @param {string} term
+     * @param {import("models").Thread} [thread]
+     */
+    async fetchPartners(term, thread) {
+        const kwargs = { search: term };
+        if (thread?.model === "discuss.channel") {
+            kwargs.channel_id = thread.id;
+        }
+        const data = await this.ormOnInput(
+            "res.partner",
+            thread?.model === "discuss.channel"
+                ? "get_mention_suggestions_from_channel"
+                : "get_mention_suggestions",
+            [],
+            kwargs,
+        );
+        this.store.insert(data);
+    }
+
+    /**
+     * @param {string} term
+     */
+    async fetchThreads(term) {
+        const suggestedThreads = await this.ormOnInput(
+            "discuss.channel",
+            "get_mention_suggestions",
+            [],
+            { search: term },
+        );
+        this.store.Thread.insert(suggestedThreads);
+    }
+
+    searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
+        const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
+            (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
+        );
+        const sortFunc = (c1, c2) => {
+            const cleanedName1 = cleanTerm(c1.source);
+            const cleanedName2 = cleanTerm(c2.source);
+            if (
+                cleanedName1.startsWith(cleanedSearchTerm) &&
+                !cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return -1;
+            }
+            if (
+                !cleanedName1.startsWith(cleanedSearchTerm) &&
+                cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return 1;
+            }
+            if (cleanedName1 < cleanedName2) {
+                return -1;
+            }
+            if (cleanedName1 > cleanedName2) {
+                return 1;
+            }
+            return c1.id - c2.id;
+        };
+        return {
+            type: "mail.canned.response",
+            suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
+        };
+    }
+
+    searchEmojisSuggestions(cleanedSearchTerm) {
+        let emojis = [];
+        if (this.emojis && cleanedSearchTerm) {
+            emojis = fuzzyLookup(cleanedSearchTerm, this.emojis, (emoji) => emoji.shortcodes);
+        }
+        return {
+            type: "emoji",
+            suggestions: emojis,
+        };
+    }
+
+    /**
+     * Returns suggestions that match the given search term from specified type.
+     */
+    searchSuggestions({ sort } = { sort: false }) {
+        const cleanedSearchTerm = cleanTerm(this.state.term);
+        switch (this.search.delimiter) {
+            case "@": {
+                return this.searchPartnerSuggestions(cleanedSearchTerm, sort);
+            }
+            case "#":
+                return this.searchChannelSuggestions(cleanedSearchTerm, sort);
+            case "::":
+                return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
+            case ":":
+                return this.searchEmojisSuggestions(cleanedSearchTerm);
+        }
+        return {
+            type: undefined,
+            suggestions: [],
+        };
+    }
+
+    getPartnerSuggestions(thread) {
+        let partners;
+        const isNonPublicChannel =
+            thread &&
+            (thread.channel_type === "group" ||
+                thread.channel_type === "chat" ||
+                (thread.channel_type === "channel" &&
+                    (thread.parent_channel_id || thread).group_public_id));
+        if (isNonPublicChannel) {
+            // Only return the channel members when in the context of a
+            // group restricted channel. Indeed, the message with the mention
+            // would be notified to the mentioned partner, so this prevents
+            // from inadvertently leaking the private message to the
+            // mentioned partner.
+            partners = thread.channel_member_ids
+                .map((member) => member.persona)
+                .filter((persona) => persona.type === "partner");
+            if (thread.channel_type === "channel") {
+                const group = (thread.parent_channel_id || thread).group_public_id;
+                partners = new Set([...partners, ...(group?.personas ?? [])]);
+            }
+        } else {
+            partners = Object.values(this.store.Persona.records).filter((persona) => {
+                if (thread?.model !== "discuss.channel" && persona.eq(this.store.odoobot)) {
+                    return false;
+                }
+                return persona.type === "partner";
+            });
+        }
+        return partners;
+    }
+
+    searchPartnerSuggestions(cleanedSearchTerm, sort) {
+        const partners = this.getPartnerSuggestions(toRaw(this.thread));
+        const suggestions = [];
+        for (const partner of partners) {
+            if (!partner.name) {
+                continue;
+            }
+            if (
+                cleanTerm(partner.name).includes(cleanedSearchTerm) ||
+                (partner.email && cleanTerm(partner.email).includes(cleanedSearchTerm))
+            ) {
+                suggestions.push(partner);
+            }
+        }
+        suggestions.push(
+            ...this.store.specialMentions.filter(
+                (special) =>
+                    this.thread &&
+                    special.channel_types.includes(this.thread.channel_type) &&
+                    cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
+                    (special.label.startsWith(cleanedSearchTerm) ||
+                        cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
+            )
+        );
+        return {
+            type: "Partner",
+            suggestions: sort
+                ? [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm)]
+                : suggestions,
+        };
+    }
+
+    /**
+     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention]} [partners]
+     * @param {String} [searchTerm]
+     * @param {import("models").Thread} thread
+     * @returns {[import("models").Persona]}
+     */
+    sortPartnerSuggestions(partners, searchTerm = "") {
+        const cleanedSearchTerm = cleanTerm(searchTerm);
+        const compareFunctions = partnerCompareRegistry.getAll();
+        const context = this.sortPartnerSuggestionsContext();
+        return partners.sort((p1, p2) => {
+            p1 = toRaw(p1);
+            p2 = toRaw(p2);
+            if (p1.isSpecial || p2.isSpecial) {
+                return 0;
+            }
+            for (const fn of compareFunctions) {
+                const result = fn(p1, p2, {
+                    env: this.env,
+                    searchTerm: cleanedSearchTerm,
+                    thread: this.thread,
+                    context,
+                });
+                if (result !== undefined) {
+                    return result;
+                }
+            }
+        });
+    }
+
+    sortPartnerSuggestionsContext() {
+        return {};
+    }
+
+    searchChannelSuggestions(cleanedSearchTerm, sort) {
+        const suggestionList = Object.values(this.store.Thread.records).filter(
+            (thread) =>
+                thread.channel_type === "channel" &&
+                thread.displayName &&
+                cleanTerm(thread.displayName).includes(cleanedSearchTerm)
+        );
+        const sortFunc = (c1, c2) => {
+            const isPublicChannel1 = c1.channel_type === "channel" && !c2.authorizedGroupFullName;
+            const isPublicChannel2 = c2.channel_type === "channel" && !c2.authorizedGroupFullName;
+            if (isPublicChannel1 && !isPublicChannel2) {
+                return -1;
+            }
+            if (!isPublicChannel1 && isPublicChannel2) {
+                return 1;
+            }
+            if (c1.hasSelfAsMember && !c2.hasSelfAsMember) {
+                return -1;
+            }
+            if (!c1.hasSelfAsMember && c2.hasSelfAsMember) {
+                return 1;
+            }
+            const cleanedDisplayName1 = cleanTerm(c1.displayName);
+            const cleanedDisplayName2 = cleanTerm(c2.displayName);
+            if (
+                cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
+                !cleanedDisplayName2.startsWith(cleanedSearchTerm)
+            ) {
+                return -1;
+            }
+            if (
+                !cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
+                cleanedDisplayName2.startsWith(cleanedSearchTerm)
+            ) {
+                return 1;
+            }
+            if (cleanedDisplayName1 < cleanedDisplayName2) {
+                return -1;
+            }
+            if (cleanedDisplayName1 > cleanedDisplayName2) {
+                return 1;
+            }
+            return c1.id - c2.id;
+        };
+        return {
+            type: "Thread",
+            suggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
+        };
+    }
 }
 
 export function useSuggestion() {
-    return new UseSuggestion(useComponent());
+    const comp = useComponent();
+    const store = useService("mail.store");
+    const suggestion = new UseSuggestion({
+        env: comp.env,
+        composer: comp.props.composer,
+        thread: comp.props.composer?.thread || comp.props.composer?.message.thread,
+        store
+    });
+    suggestion.state = useState({
+        term: "",
+        count: 0,
+        items: undefined,
+        isFetching: false,
+    });
+    useEffect(
+        () => {
+            suggestion.update();
+            if (suggestion.search.position === undefined || !suggestion.search.delimiter) {
+                return; // nothing else to fetch
+            }
+            if (suggestion.composer.store.self.type !== "partner") {
+                return; // guests cannot access fetch suggestion method
+            }
+            if (
+                suggestion.lastFetchedSearch?.count === 0 &&
+                (!suggestion.search.delimiter || suggestion.isSearchMoreSpecificThanLastFetch)
+            ) {
+                return; // no need to fetch since this is more specific than last and last had no result
+            }
+            suggestion.fetchSuggestions();
+        },
+        () => [suggestion.search.delimiter, suggestion.search.position, suggestion.state.term]
+    );
+    useEffect(
+        () => {
+            if (suggestion.composer) {
+                suggestion.detect();
+            }
+        },
+        () => [suggestion.composer?.selection.start, suggestion.composer?.selection.end, suggestion.composer?.text]
+    );
+    return suggestion;
 }
