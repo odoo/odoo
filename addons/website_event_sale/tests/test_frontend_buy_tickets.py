@@ -196,7 +196,7 @@ class TestRoutes(HttpCaseWithUserDemo, TestWebsiteEventSaleCommon, PaymentHttpCo
 
         # Replace VIP ticket with 2 regular tickets
         sale_order.order_line.write({
-            'product_id': self.ticket.product_id,
+            'product_id': self.ticket.product_id.id,
             'product_uom_qty': 2,
             'event_id': self.event.id,
             'event_ticket_id': self.ticket.id,
