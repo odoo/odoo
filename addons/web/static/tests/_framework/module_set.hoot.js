@@ -202,13 +202,11 @@ const getSuitePath = (name) => name.replace("../tests/", "");
  *
  * @param {string} name
  */
-const makeFixedFactory = (name) => {
-    return () => {
-        if (!loader.modules.has(name)) {
-            loader.startModule(name);
-        }
-        return loader.modules.get(name);
-    };
+const makeFixedFactory = (name) => () => {
+    if (!loader.modules.has(name)) {
+        loader.startModule(name);
+    }
+    return loader.modules.get(name);
 };
 
 /**
@@ -585,7 +583,12 @@ export async function runTests(options) {
     // Run all test files
     const filteredSuitePaths = new Set(suites.map((s) => s.fullName));
     let currentAddonsKey = "";
+    let lastSuiteName = undefined;
+    let lastNumberTests = 0;
     for (const moduleName of testModuleNames) {
+        if (lastSuiteName) {
+            await __gcAndLogMemory(lastSuiteName, lastNumberTests);
+        }
         const suitePath = getSuitePath(moduleName);
         if (!filteredSuitePaths.has(suitePath)) {
             continue;
@@ -614,11 +617,15 @@ export async function runTests(options) {
         const running = await start(suite);
 
         moduleSetLoader.cleanup();
-        await __gcAndLogMemory(suite.fullName, suite.reporting.tests);
+        lastSuiteName = suite.fullName;
+        lastNumberTests = suite.reporting.tests;
 
         if (!running) {
             break;
         }
+    }
+    if (lastSuiteName) {
+        await __gcAndLogMemory(lastSuiteName, lastNumberTests);
     }
 
     await stop();
