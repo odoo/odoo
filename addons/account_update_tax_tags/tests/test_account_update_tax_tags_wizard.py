@@ -30,6 +30,12 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         }
         cls.tax_1 = cls._create_tax('update_test_tax', 15, tag_names=cls.tag_names)
         cls.wizard = cls.env['account.update.tax.tags.wizard'].create({'date_from': '2023-02-01'})
+        cls.cash_basis_transfer_account = cls.env['account.account'].create({
+            'code': 'cash.basis.transfer.account',
+            'name': 'cash_basis_transfer_account',
+            'account_type': 'income',
+            'reconcile': True,
+        })
 
     def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False, taxes=None, state=None):
         if move_type == 'entry':
@@ -87,7 +93,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
         })
 
     @classmethod
-    def _create_tax(cls, name, amount, amount_type='percent', type_tax_use='sale', tag_names=None, children_taxes=None, tax_exigibility='on_invoice', **kwargs):
+    def _create_tax(cls, name, amount, amount_type='percent', type_tax_use='sale', tag_names=None, children_taxes=None, tax_exigibility='on_invoice', cash_basis_transfer_account=None, **kwargs):
         if not tag_names:
             tag_names = {}
         tag_commands = {
@@ -100,6 +106,7 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
             'amount_type': amount_type,
             'type_tax_use': type_tax_use,
             'tax_exigibility': tax_exigibility,
+            'cash_basis_transition_account_id': cash_basis_transfer_account.id if cash_basis_transfer_account else None,
             'children_tax_ids': [Command.set(children_taxes.ids)] if children_taxes else None,
             'invoice_repartition_line_ids': [
                 Command.create({
@@ -360,7 +367,13 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
     def test_update_with_caba_taxes(self):
         """  Ensure the CABA (cash basis) moves linked to the invoices are updated too. """
         self.env.company.tax_exigibility = True
-        tax = self._create_tax('caba_tax', 15, tag_names=self.tag_names, tax_exigibility='on_payment')
+        tax = self._create_tax(
+            'caba_tax',
+            15,
+            tag_names=self.tag_names,
+            tax_exigibility='on_payment',
+            cash_basis_transition_account_id=self.cash_basis_transfer_account.id,
+        )
         invoice = self._create_invoice(taxes=tax, state='posted')
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
@@ -387,7 +400,13 @@ class TestAccountUpdateTaxTagsWizard(AccountTestInvoicingCommon):
 
     def test_update_caba_taxes_with_negative_line(self):
         self.company.tax_exigibility = True
-        tax = self._create_tax('caba_tax', 15, tag_names=self.tag_names, tax_exigibility='on_payment')
+        tax = self._create_tax(
+            'caba_tax',
+            15,
+            tag_names=self.tag_names,
+            tax_exigibility='on_payment',
+            cash_basis_transition_account_id=self.cash_basis_transfer_account.id,
+            )
         invoice = self.init_invoice('out_invoice', invoice_date='2023-02-23', amounts=[-50, 100], taxes=tax, post=True)
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
