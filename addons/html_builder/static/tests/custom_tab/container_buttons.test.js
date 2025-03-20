@@ -13,7 +13,6 @@ import {
     waitForSnippetDialog,
 } from "../website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { animationFrame } from "@odoo/hoot-mock";
 import { Deferred, queryText, tick } from "@odoo/hoot-dom";
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
