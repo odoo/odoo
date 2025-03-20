@@ -265,7 +265,7 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 activeField.required = "False";
             }
         }
-        if (fields[fieldName].type === "many2one_reference" && fieldNode.views) {
+        if (["many2one", "many2one_reference"].includes(fields[fieldName].type) && fieldNode.views) {
             const viewDescr = fieldNode.views.default;
             activeField.related = extractFieldsFromArchInfo(viewDescr, viewDescr.fields);
         }
@@ -393,6 +393,13 @@ export function getFieldsSpec(activeFields, fields, evalContext, { orderBys, wit
             case "reference": {
                 fieldsSpec[fieldName].fields = {};
                 if (!isAlwaysInvisible) {
+                    if (related) {
+                        fieldsSpec[fieldName].fields = getFieldsSpec(
+                            related.activeFields,
+                            related.fields,
+                            evalContext
+                        );
+                    }
                     fieldsSpec[fieldName].fields.display_name = {};
                     fieldsSpec[fieldName].context = getFieldContextForSpec(
                         activeFields,
