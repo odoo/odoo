@@ -298,7 +298,7 @@ class MailThread(models.AbstractModel):
 
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
-        if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active:
+        if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active and not self.env.user.share:
             self.env['mail.followers']._insert_followers(
                 threads._name, threads.ids,
                 self.env.user.partner_id.ids, subtypes=None,
@@ -2300,8 +2300,9 @@ class MailThread(models.AbstractModel):
         # posted 'in behalf of'). Limit to active and internal partners, as external
         # customers should be proposed through suggested recipients.
         author_subscribe = (
-            not self._context.get('mail_post_autofollow_author_skip')
-            and msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment')
+            not self._context.get('mail_post_autofollow_author_skip') and
+            msg_values['message_type'] not in ('notification', 'user_notification', 'auto_comment') and
+            subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
         )
         if author_subscribe:
             real_author = self._message_compute_real_author(msg_values['author_id'])

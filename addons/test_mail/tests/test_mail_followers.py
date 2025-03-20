@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import copy
+
 import re
 from unittest.mock import patch
 from urllib.parse import urlparse
@@ -339,7 +339,18 @@ class AdvancedFollowersTest(MailCommon):
 
     def test_auto_subscribe_create(self):
         """ Creator of records are automatically added as followers """
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        for user, should_subscribe in [
+            (self.user_root, False),
+            (self.user_employee, True),
+            (self.user_portal, False),
+        ]:
+            with self.subTest(user_name=user.name):
+                # sudo, as done through mailgateway for example
+                if user == self.user_portal:
+                    new_rec = self.env['mail.test.track'].with_user(user).sudo().create({})
+                else:
+                    new_rec = self.env['mail.test.track'].with_user(user).create({})
+                self.assertEqual(new_rec.message_partner_ids, user.partner_id if should_subscribe else self.env['res.partner'])
 
     @mute_logger('odoo.models.unlink')
     def test_auto_subscribe_inactive(self):
@@ -367,19 +378,27 @@ class AdvancedFollowersTest(MailCommon):
                          'Does not subscribe inactive partner')
 
     def test_auto_subscribe_post(self):
-        """ People posting a message are automatically added as followers """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='comment')
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
-
-    def test_auto_subscribe_post_email(self):
-        """ People posting an email are automatically added as followers """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='email_outgoing')
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id | self.user_admin.partner_id)
-
-    def test_auto_subscribe_not_on_notification(self):
-        """ People posting an automatic notification are not subscribed """
-        self.test_track.with_user(self.user_admin).message_post(body='Coucou hibou', message_type='notification')
-        self.assertEqual(self.test_track.message_partner_ids, self.user_employee.partner_id)
+        """ People posting a discussion message are automatically added as
+        followers """
+        record = self.test_track.with_user(self.user_admin)
+        for message_type, subtype, should_subscribe in [
+            ('comment', self.env.ref('mail.mt_note'), False),
+            ('comment', self.env.ref('mail.mt_comment'), True),
+            ('email_outgoing', self.env.ref('mail.mt_note'), False),
+            ('email_outgoing', self.env.ref('mail.mt_comment'), True),
+            ('notification', self.env.ref('mail.mt_comment'), False),
+        ]:
+            with self.subTest(message_type=message_type, subtype_name=subtype.name):
+                record.message_unsubscribe(partner_ids=self.user_admin.partner_id.ids)
+                record.message_post(
+                    body=f'Posting with {message_type} {subtype.name}',
+                    message_type=message_type,
+                    subtype_id=subtype.id,
+                )
+                if should_subscribe:
+                    self.assertIn(self.user_admin.partner_id, record.message_partner_ids)
+                else:
+                    self.assertNotIn(self.user_admin.partner_id, record.message_partner_ids)
 
     def test_auto_subscribe_responsible(self):
         """ Responsibles are tracked and added as followers """
