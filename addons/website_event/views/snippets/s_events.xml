@@ -35,6 +35,7 @@
 <template id="s_events_single_entry" name="Single Event Entry">
     <t t-set="is_single_record" t-value="True"/>
     <t t-set="snippet_extra_classes" t-value="'s_event_event_single_entry'"/>
+    <t t-set="content_classes" t-value="'o_cc o_cc5 bg-transparent'"/>
     <t t-call="website_event.s_events">
         <t t-call="website_event.s_dynamic_snippet_events_single_entry_preview_data"/>
     </t>
@@ -171,6 +172,36 @@
 </template>
 <!-- Entry Layout -->
 <template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="bg" t-value="record._get_background()"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
+            <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
+            <div class="position-relative d-flex flex-column gap-5 w-100 h-100 p-4 p-lg-5">
+                <div class="d-flex flex-column flex-lg-row gap-lg-5">
+                    <div class="flex-grow-1 order-1 order-lg-0">
+                        <h2 t-field="record.name"/>
+                        <p class="lead" t-field="record.subtitle"/>
+                    </div>
+                    <p class="h3-fs text-end">
+                        <span class="" t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                        <span class="text-nowrap" t-if="events_event_time_active">at <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/></span>
+                    </p>
+                </div>
+                <div class="d-flex flex-column flex-md-row align-items-md-center gap-3 gap-md-5">
+                    <div class="flex-grow-1 order-1 order-md-0">
+                        <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="btn btn-lg btn-primary w-100 w-lg-auto text-nowrap">Register Now</a>
+                    </div>
+                    <div t-if="events_event_location_active" class="d-flex align-items-center fs-5">
+                        <i class="fa fa-map-marker me-2" role="img"/>
+                        <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 </template>
 <!-- Card Layout -->
 <template id="dynamic_filter_template_event_event_single_card" name="Solo Card">
