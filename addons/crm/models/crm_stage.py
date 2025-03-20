@@ -44,6 +44,7 @@ class CrmStage(models.Model):
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
     # This field for interface only
     team_count = fields.Integer('team_count', compute='_compute_team_count')
+    color = fields.Integer(string='Color', export_string_translation=False)
 
     @api.depends('team_id')
     def _compute_team_count(self):

@@ -240,7 +240,8 @@
                     <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" width="20px" optional="show" widget="project_state_selection" invisible="is_template"/>
-                    <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
+                    <field name="stage_id_color" column_invisible="1"/>
+                    <field name="stage_id" domain="[('company_id', 'in', (company_id, False))]" optional="show" widget="badge" options="{'no_open': True, 'color_field': 'stage_id_color'}" />
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </list>
             </field>
@@ -551,11 +552,12 @@
                     scales="month,year"
                     event_open_popup="true"
                     quick_create="0"
-                    color="color"
+                    color="stage_id_color"
                     js_class="project_project_calendar">
                     <field name="partner_id" invisible="not partner_id"/>
                     <field name="user_id" widget="many2one_avatar_user" invisible="not user_id"/>
                     <field name="is_favorite" widget="project_is_favorite" nolabel="1" string="Favorite"/>
+                    <field name="stage_id_color" invisible="1"/>
                     <field name="stage_id" groups="project.group_project_stages" invisible="not stage_id"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="last_update_status" string="Status" widget="status_with_color" invisible="last_update_status == 'to_define'"/>

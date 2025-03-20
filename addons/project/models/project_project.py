@@ -175,6 +175,7 @@ class ProjectProject(models.Model):
     # Not `required` since this is an option to enable in project settings.
     stage_id = fields.Many2one('project.project.stage', string='Stage', ondelete='restrict', groups="project.group_project_stages",
         tracking=True, index=True, copy=False, default=_default_stage_id, group_expand='_read_group_expand_full')
+    stage_id_color = fields.Integer(string='Stage Color', related="stage_id.color", export_string_translation=False)
     duration_tracking = fields.Json(groups="project.group_project_stages")
 
     update_ids = fields.One2many('project.update', 'project_id', export_string_translation=False)

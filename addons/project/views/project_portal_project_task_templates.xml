@@ -13,6 +13,11 @@
             t-attf-class="#{'fa' if task.state in ['1_done','1_canceled','04_waiting_normal'] else 'o_status rounded-circle' } #{'fa-check-circle text-success' if task.state == '1_done' else 'fa-times-circle text-danger' if task.state == '1_canceled' else 'bg-warning' if task.state == '02_changes_requested' else 'bg-success' if task.state == '03_approved' else 'fa-hourglass-o' if task.state == '04_waiting_normal' else ''}"
         />
     </template>
+    <template id="portal_my_tasks_badge_widget_template" name="badge Widget Template">
+        <span t-attf-class="badge rounded-pill o_tag o_badge_color_#{task.stage_id_color}"
+            t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"
+        />
+    </template>
 
     <template id="portal_tasks_list" name="Tasks List">
         <t t-if="grouped_tasks">
@@ -110,7 +115,7 @@
                                     </t>
                                 </td>
                                 <td t-if="groupby != 'stage_id'" class="text-end lh-1">
-                                    <span class="fw-normal o_text_overflow" t-attf-title="#{task.stage_id.name}" t-out="task.stage_id.name"/>
+                                    <t t-call="project.portal_my_tasks_badge_widget_template"/>
                                 </td>
                             </tr>
                         </t>
@@ -239,7 +244,7 @@
                                 </div>
                                 <div class="col-auto">
                                     <small class="text-end">Stage:</small>
-                                    <span t-field="task.stage_id.name" class=" badge rounded-pill text-bg-info" title="Current stage of this task"/>
+                                    <t t-call="project.portal_my_tasks_badge_widget_template"/>
                                 </div>
                             </div>
                         </div>

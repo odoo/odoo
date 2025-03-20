@@ -21,20 +21,30 @@ class Partner extends models.Model {
         ],
         default: "red",
     });
+    product_color_id = fields.Integer({
+        relation: "product",
+        related: "product_id.color",
+        default: 20,
+    });
 
-    _records = [{ id: 1 }, { id: 2, product_id: 37 }];
+    _records = [{ id: 1 }, { id: 2, product_id: 37, product_color_id: 6 }];
 }
 
 class Product extends models.Model {
     _rec_name = "display_name";
 
+    name = fields.Char("name");
+    color = fields.Integer("color");
+
     _records = [
-        { id: 37, display_name: "xphone" },
-        { id: 41, display_name: "xpad" },
+        { id: 37, display_name: "xphone", name: "xphone", color: 6 },
+        { id: 41, display_name: "xpad", name: "xpad", color: 7 },
     ];
 }
 
 defineModels([Partner, Product]);
+
+onRpc("has_group", () => true);
 
 test("BadgeSelectionField widget on a many2one in a new record", async () => {
     onRpc("web_save", ({ args }) => {
@@ -158,4 +168,85 @@ test("BadgeSelectionField widget on a selection unchecking selected value (requi
     expect(MockServer.env["res.partner"].at(-1).color).toBe("red", {
         message: "the new value should be red",
     });
+});
+
+test("BadgeSelectionField widget in list with the color_field option", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "list",
+        arch: `
+            <list editable="top">
+                <field name="product_color_id" invisible="1"/>
+                <field name="product_id" widget="selection_badge" options="{'color_field': 'product_color_id'}"/>
+            </list>
+        `,
+    });
+
+
+    // Ensure that the correct o_badge_color is used.
+    expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_6`).toHaveCount(1);
+    expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_7`).toHaveCount(0);
+    expect(`div.o_field_selection_badge span:contains(xphone)`).toHaveCount(1);
+    expect(`div.o_field_selection_badge span:contains(xpad)`).toHaveCount(0);
+
+    // Open the M2O selection.
+    await contains(`.o_field_selection_badge[name="product_id"] .o_badge_color_6`).click();
+
+    // Ensure that the 'badge' display is used.
+    expect("span.btn-secondary.badge").toHaveCount(2);
+    expect(`span.btn-secondary.active:contains(xphone)`).toHaveCount(1);
+    expect(`span.btn-secondary.active:contains(xpad)`).toHaveCount(0);
+
+    // Select the second product.
+    await contains(`span.btn-secondary:contains(xpad)`).click();
+
+    expect(`span.btn-secondary.active:contains(xphone)`).toHaveCount(0);
+    expect(`span.btn-secondary.active:contains(xpad)`).toHaveCount(1);
+
+    // Save changes.
+    await contains(".o_list_button_save").click();
+
+    expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_6`).toHaveCount(0);
+    expect(`.o_field_selection_badge[name="product_id"] .o_badge_color_7`).toHaveCount(1);
+    expect(`div.o_field_selection_badge span:contains(xphone)`).toHaveCount(0);
+    expect(`div.o_field_selection_badge span:contains(xpad)`).toHaveCount(1);
+});
+
+test("BadgeSelectionField widget in list without the color_field option", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "list",
+        arch: `
+            <list editable="top">
+                <field name="id"/>
+                <field name="product_id" widget="selection_badge"/>
+            </list>
+        `,
+    });
+
+    // Ensure that the 'btn btn-secondary' display is used instead of the 'o_badge_color' one.
+    expect(`div.o_field_selection_badge span.btn-secondary`).toHaveCount(1);
+    expect(`div.o_field_selection_badge span.btn-secondary:contains(xphone)`).toHaveCount(1);
+    expect(`div.o_field_selection_badge span.btn-secondary:contains(xpad)`).toHaveCount(0);
+
+    // Open the M2O selection.
+    await contains(`div.o_field_selection_badge span:contains(xphone)`).click();
+
+    // Ensure that the 'badge' display is used.
+    expect("span.btn-secondary.badge").toHaveCount(2);
+    expect(`span.btn-secondary.active:contains(xphone)`).toHaveCount(1);
+    expect(`span.btn-secondary.active:contains(xpad)`).toHaveCount(0);
+
+    // Select the second product.
+    await contains(`span.btn-secondary:contains(xpad)`).click();
+
+    expect(`span.btn-secondary.active:contains(xphone)`).toHaveCount(0);
+    expect(`span.btn-secondary.active:contains(xpad)`).toHaveCount(1);
+
+    // Save changes.
+    await contains(".o_list_button_save").click();
+
+    expect(`div.o_field_selection_badge span.btn-secondary`).toHaveCount(1);
+    expect(`div.o_field_selection_badge span.btn-secondary:contains(xphone)`).toHaveCount(0);
+    expect(`div.o_field_selection_badge span.btn-secondary:contains(xpad)`).toHaveCount(1);
 });
