@@ -57,9 +57,11 @@
             }
 
             .o_kanban_colorpicker {
+                --KanbanColorPickerField-padding: 0 0 0 #{map-get($spacers, 2)};
+                --KanbanColorPickerField-columns: 4;
+                --KanbanColorPickerField-Entry-minWidth: 1.6rem;
+
                 max-width: none;
-                padding: 0;
-                margin-left: 2px !important;
             }
 
             div[class*="col-"] + div[class*="col-"] {
