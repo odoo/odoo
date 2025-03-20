@@ -550,11 +550,18 @@ class ProductTemplate(models.Model):
         # Only use the product.product heuristics if there is a search term and the domain
         # does not specify a match on `product.template` IDs.
         domain = domain or []
-        if not name or any(term[0] == 'id' for term in domain):
+        search_pp = self.env.context.get('search_product_product')
+        if not search_pp and (not name or any(term[0] == 'id' for term in domain)):
             return super()._name_search(name, domain, operator, limit, order)
 
         Product = self.env['product.product']
         templates = self.browse()
+
+        product_domain = domain.copy()
+        if search_pp:
+            for term in product_domain:  # Replace id related leaf to product_tmpl_id
+                if term[0] == 'id':
+                    term[0] = 'product_tmpl_id'
         while True:
             extra = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             # Pathological case: there is no limit, so we'll need to search on all products.
@@ -562,7 +569,7 @@ class ProductTemplate(models.Model):
             # performance regressions or OOM errors while manipulating extremely large list of ids.
             # For other cases, we use PREFETCH_MAX as an upper bound.
             search_limit = PREFETCH_MAX * 10 if not limit else PREFETCH_MAX
-            products_ids = Product._name_search(name, domain + extra, operator, limit=search_limit)
+            products_ids = Product._name_search(name, product_domain + extra, operator, limit=search_limit)
             products = Product.browse(products_ids)
             new_templates = products.product_tmpl_id
             if new_templates & templates:
