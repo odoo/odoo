@@ -10,7 +10,7 @@ import { showAddFontDialog } from "./add_font_dialog";
 class FontPlugin extends Plugin {
     static id = "websiteFont";
     static shared = ["addFont", "deleteFont", "getFontsData"];
-    static dependencies = ["savePlugin", "themeTab"];
+    static dependencies = ["savePlugin", "customizeWebsite"];
     resources = {
         // Lists CSS variables that will be reset when a font is deleted if
         // they refer to that font.
@@ -56,7 +56,7 @@ class FontPlugin extends Plugin {
         } else {
             values["uploaded-local-fonts"] = "null";
         }
-        await this.dependencies.themeTab.makeSCSSCusto(
+        await this.dependencies.customizeWebsite.makeSCSSCusto(
             "/website/static/src/scss/options/user_values.scss",
             values
         );
