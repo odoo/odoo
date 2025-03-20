@@ -1,10 +1,11 @@
 import { expect, test, beforeEach, describe } from "@odoo/hoot";
 import { mockDate, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 
-import { mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels, ProjectTask } from "./project_models";
+import { serializeDateTime } from "@web/core/l10n/dates";
 
 describe.current.tags("desktop");
 defineProjectModels();
@@ -32,6 +33,25 @@ beforeEach(() => {
             state: "01_in_progress",
             user_ids: [],
             display_name: "Task-1",
+        },
+        {
+            id: 10,
+            name: "Task-10",
+            project_id: 1,
+            stage_id: 1,
+            state: "01_in_progress",
+            user_ids: [],
+            display_name: "Task-10",
+        },
+        {
+            id: 11,
+            name: "Task-11",
+            project_id: 1,
+            stage_id: 1,
+            state: "1_done",
+            user_ids: [],
+            display_name: "Task-11",
+            is_closed: true,
         },
     ];
 
@@ -150,4 +170,112 @@ test("Display closed tasks as past event", async () => {
     await mountView(calendarMountParams);
     expect(".o_event").toHaveCount(4);
     expect(".o_event.o_past_event").toHaveCount(3);
+});
+
+test("tasks to schedule should not be visible in the sidebar if no default project set in the context", async () => {
+    onRpc("project.task", "search_read", ({ method }) => {
+        expect.step(method);
+    });
+    onRpc("project.task", "web_search_read", () => {
+        expect.step("fetch tasks to schedule");
+    });
+
+    await mountView(calendarMountParams);
+    expect(".o_calendar_view").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveCount(0);
+    expect.verifySteps(["search_read"]);
+});
+
+test("tasks to plan should be visible in the sidebar when `default_project_id` is set in the context", async () => {
+    onRpc("project.task", "search_read", ({ method }) => {
+        expect.step(method);
+    });
+    onRpc("project.task", "web_search_read", () => {
+        expect.step("fetch tasks to schedule");
+    });
+
+    await mountView({
+        ...calendarMountParams,
+        context: { default_project_id: 1 },
+    });
+    expect(".o_calendar_view").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveCount(2);
+    expect(queryAllTexts(".o_task_to_plan_draggable")).toEqual(['Task-10', 'Task-11']);
+    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("Drag Tasks to Schedule");
+    expect.verifySteps(["search_read", "fetch tasks to schedule"]);
+});
+
+test("search domain should be taken into account in Tasks to Schedule", async () => {
+    onRpc("project.task", "search_read", ({ method }) => {
+        expect.step(method);
+    });
+    onRpc("project.task", "web_search_read", ({ method }) => {
+        expect.step("fetch tasks to schedule");
+    });
+
+    await mountView({
+        ...calendarMountParams,
+        context: { default_project_id: 1 },
+        domain: [['is_closed', '=', false]],
+    });
+    expect(".o_calendar_view").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveText('Task-10');
+    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("Drag Tasks to Schedule");
+    expect.verifySteps(["search_read", "fetch tasks to schedule"]);
+});
+
+test("planned dates used in search domain should not be taken into account in Tasks to Schedule", async () => {
+    onRpc("project.task", "search_read", ({ method }) => {
+        expect.step(method);
+    });
+    onRpc("project.task", "web_search_read", ({ method }) => {
+        expect.step("fetch tasks to schedule");
+    });
+
+    await mountView({
+        ...calendarMountParams,
+        context: { default_project_id: 1 },
+        domain: [['is_closed', '=', false], ['date_deadline', '!=', false], ['planned_date_begin', '!=', false]],
+    });
+    expect(".o_calendar_view").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveText('Task-10');
+    expect(".o_calendar_view .o_calendar_sidebar h5").toHaveText("Drag Tasks to Schedule");
+    expect.verifySteps(["search_read", "fetch tasks to schedule"]);
+});
+
+test("test drag and drop a task to schedule in calendar view in month scale", async () => {
+    let expectedDate = null;
+
+    onRpc("project.task", "search_read", ({ method }) => {
+        expect.step(method);
+    });
+    onRpc("project.task", "web_search_read", ({ method }) => {
+        expect.step("fetch tasks to schedule");
+    });
+    onRpc("project.task", "plan_task_in_calendar", ({ args }) => {
+        const [taskIds, vals] = args;
+        expect(taskIds).toEqual([10]);
+        const expectedDateDeadline = serializeDateTime(expectedDate.set({ hours: 19 }));
+        expect(vals).toEqual({
+            date_deadline: expectedDateDeadline,
+        });
+        expect.step("plan task");
+    });
+
+    await mountView({
+        ...calendarMountParams,
+        context: { default_project_id: 1 },
+    });
+    expect(".o_task_to_plan_draggable").toHaveCount(2);
+    const { drop, moveTo } = await contains(".o_task_to_plan_draggable:first").drag();
+    const dateCell = queryFirst(".fc-day.fc-day-today.fc-daygrid-day");
+    expectedDate = luxon.DateTime.fromISO(dateCell.dataset.date);
+    await moveTo(dateCell);
+    expect(dateCell).toHaveClass("o-highlight");
+    await drop();
+    expect.verifySteps(["search_read", "fetch tasks to schedule", "plan task", "search_read"]);
+    expect(".o_task_to_plan_draggable").toHaveCount(1);
+    expect(".o_task_to_plan_draggable").toHaveText("Task-11");
 });
