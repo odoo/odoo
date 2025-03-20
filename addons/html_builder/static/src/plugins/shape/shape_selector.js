@@ -1,8 +1,8 @@
-import { Component, useRef } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { useRef } from "@odoo/owl";
 import { getShapeURL } from "../image/image_helpers";
-import { useBuilderComponents } from "@html_builder/core/utils";
 
-export class ShapeSelector extends Component {
+export class ShapeSelector extends BaseOptionComponent {
     static template = "html_builder.shapeSelector";
     static props = {
         onClose: Function,
@@ -14,7 +14,7 @@ export class ShapeSelector extends Component {
     };
 
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.rootRef = useRef("root");
     }
     getShapeUrl(shapePath) {

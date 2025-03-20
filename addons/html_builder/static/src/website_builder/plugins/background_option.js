@@ -1,4 +1,4 @@
-import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
+import { useDomState } from "@html_builder/core/utils";
 import { BackgroundImageOption } from "@html_builder/plugins/background_option/background_image_option";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { BackgroundPositionOption } from "@html_builder/plugins/background_option/background_position_option";
@@ -21,7 +21,6 @@ export class WebsiteBackgroundOption extends BackgroundOption {
         withVideos: false,
     };
     setup() {
-        useBuilderComponents();
         super.setup();
         this.websiteBgOptionDomState = useDomState((el) => ({
             applyTo: el.querySelector(".s_parallax_bg") ? ".s_parallax_bg" : "",

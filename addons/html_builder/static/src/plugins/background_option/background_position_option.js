@@ -1,11 +1,6 @@
-import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class BackgroundPositionOption extends Component {
+export class BackgroundPositionOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundPositionOption";
     static props = {};
-    setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
-    }
 }

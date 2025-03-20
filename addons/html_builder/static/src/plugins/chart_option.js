@@ -1,10 +1,10 @@
-import { Component, useState } from "@odoo/owl";
-import { useDomState, useIsActiveItem, useBuilderComponents } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
+import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export const DATASET_KEY_PREFIX = "chart_dataset_";
 
-export class ChartOption extends Component {
+export class ChartOption extends BaseOptionComponent {
     static template = "html_builder.ChartOption";
     static props = {
         isPieChart: Function,
@@ -12,8 +12,7 @@ export class ChartOption extends Component {
     };
 
     setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
+        super.setup();
 
         // Here for compatibility with previous versions (< 18.3).
         this.env.getEditingElement().dataset.data = JSON.stringify(

@@ -1,14 +1,9 @@
-import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { getBgImageURLFromEl, normalizeColor } from "@html_builder/utils/utils_css";
-import { Component } from "@odoo/owl";
 
-export class BackgroundImageOption extends Component {
+export class BackgroundImageOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundImageOption";
     static props = {};
-    setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
-    }
     showMainColorPicker() {
         const editingEl = this.env.getEditingElement();
         const src = new URL(getBgImageURLFromEl(editingEl), window.location.origin);

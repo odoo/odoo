@@ -1,5 +1,4 @@
-import { Component } from "@odoo/owl";
-import { useBuilderComponents, useIsActiveItem } from "../core/utils";
+import { BaseOptionComponent } from "../core/utils";
 
 export const connectorOptionParams = [
     { key: "", param: "None" },
@@ -8,13 +7,12 @@ export const connectorOptionParams = [
     { key: "s_process_steps_connector_curved_arrow", param: "Curved arrow" },
 ];
 
-export class ProcessStepsOption extends Component {
+export class ProcessStepsOption extends BaseOptionComponent {
     static template = "html_builder.ProcessStepsOption";
     static props = {};
 
     setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
+        super.setup();
         this.connectorOptionParams = connectorOptionParams;
     }
 
