@@ -1,14 +1,8 @@
-import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class VisibilityOption extends Component {
+export class VisibilityOption extends BaseOptionComponent {
     static template = "html_builder.VisibilityOption";
     static props = {
         websiteSession: true,
     };
-
-    setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
-    }
 }

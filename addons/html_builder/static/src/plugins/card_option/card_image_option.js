@@ -1,12 +1,11 @@
-import { useBuilderComponents, useDomState, useIsActiveItem } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
-export class CardImageOption extends Component {
+export class CardImageOption extends BaseOptionComponent {
     static template = "html_builder.CardImageOption";
     static props = {};
 
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.state = useDomState((editingElement) => {
             const imageToWrapperRatio = this.getImageToWrapperRatio(editingElement);
             return {
@@ -16,7 +15,6 @@ export class CardImageOption extends Component {
                 hasShape: !!editingElement.querySelector(".o_card_img[data-shape]"),
             };
         });
-        this.isActiveItem = useIsActiveItem();
     }
 
     /**

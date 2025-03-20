@@ -1,4 +1,4 @@
-import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { describe, expect, test } from "@odoo/hoot";
@@ -30,15 +30,12 @@ test("Open custom tab with template option", async () => {
 });
 
 test("Open custom tab with Component option", async () => {
-    class TestOption extends Component {
+    class TestOption extends BaseOptionComponent {
         static template = xml`
             <BuilderRow label="'Row 1'">
                 Test
             </BuilderRow>`;
         static props = {};
-        setup() {
-            useBuilderComponents();
-        }
     }
     addOption({
         selector: ".test-options-target",

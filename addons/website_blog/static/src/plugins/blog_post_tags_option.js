@@ -1,10 +1,9 @@
-import { Component } from "@odoo/owl";
-import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
-export class BlogPostTagsOption extends Component {
+export class BlogPostTagsOption extends BaseOptionComponent {
     static template = "website_blog.BlogPostTagsOption";
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.domState = useDomState((el) => {
             return {
                 blogId: parseInt(el.dataset.resId),

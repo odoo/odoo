@@ -1,7 +1,6 @@
-import { Component } from "@odoo/owl";
-import { useDomState, useBuilderComponents } from "../core/utils";
+import { BaseOptionComponent, useDomState } from "../core/utils";
 
-export class BorderConfigurator extends Component {
+export class BorderConfigurator extends BaseOptionComponent {
     static template = "html_builder.BorderConfiguratorOption";
     static props = {
         label: { type: String },
@@ -15,7 +14,7 @@ export class BorderConfigurator extends Component {
     };
 
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.state = useDomState((editingElement) => ({
             hasBorder: this.hasBorder(editingElement),
         }));
