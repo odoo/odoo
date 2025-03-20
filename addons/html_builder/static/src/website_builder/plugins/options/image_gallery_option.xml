@@ -31,5 +31,31 @@
         <BuilderNumberInput applyTo="'.carousel'" action="'setCarouselSpeed'" unit="'s'" saveUnit="''" step="0.1"/>
     </BuilderRow>
 </t>
+<t t-name="html_builder.s_image_gallery_slideshow">
+    <div t-attf-id="#{id}" t-attf-class="carousel slide #{colorContrast}" t-att-data-bs-ride="ride" t-attf-data-bs-interval="#{interval}" style="margin: 0 12px;">
+        <div class="carousel-inner">
+            <t t-foreach="images" t-as="image" t-key="image_index">
+                <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
+                    <img t-if="!hideImage" class="img img-fluid d-block" t-att-src="image.getAttribute('src')" t-att-alt="image.alt" data-name="Image"/>
+                </div>
+            </t>
+        </div>
+        <div class="o_carousel_controllers">
+            <button class="carousel-control-prev o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <div class="carousel-indicators s_image_gallery_indicators_bars">
+                <t t-foreach="images" t-as="image" t-key="image_index">
+                    <button type="button" aria-label="Carousel indicator" t-attf-data-bs-target="##{id}" t-att-data-bs-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.getAttribute('src')})"/>
+                </t>
+            </div>
+            <button class="carousel-control-next o_we_no_overlay o_not_editable" contenteditable="false" t-attf-data-bs-target="##{id}" data-bs-slide="next" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</t>
 
 </templates>
