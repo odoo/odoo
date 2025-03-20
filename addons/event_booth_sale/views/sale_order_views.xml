@@ -19,7 +19,7 @@
                 <field name="event_booth_pending_ids" optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='order_line']//tree//field[@name='product_uom_qty']" position="attributes">
-                <attribute name="readonly">is_event_booth</attribute>
+                <attribute name="readonly" add="is_event_booth" separator=" or "/>
             </xpath>
         </field>
     </record>
