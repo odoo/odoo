@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageToolbarDropdown">
-        <Dropdown menuClass="`${props.name}_selector`">
+        <Dropdown menuClass="`${props.name}_selector`" menuRef="menuRef">
             <button t-att-title="props.title" class="btn btn-light">
                 <t t-if="props.icon" t-call="{{props.icon}}"/>
                 <t t-elif="state &amp;&amp; state.displayName" t-esc="state.displayName"/>
