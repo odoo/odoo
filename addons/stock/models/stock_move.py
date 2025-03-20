@@ -142,6 +142,8 @@ class StockMove(models.Model):
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True, index='btree_not_null')
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
+    reference_ids = fields.Many2many(
+        'stock.reference', 'stock_reference_move_rel', 'move_id', 'reference_id', string='References')
     rule_id = fields.Many2one(
         'stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move',
         check_company=True)
@@ -687,6 +689,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                 move.product_id.code and '%s: ' % move.product_id.code or '',
                 move.location_id.name, move.location_dest_id.name)
 
+    def _set_references(self):
+        for move in self:
+            if not move.reference_ids and move.picking_id:
+                move.reference_ids = move.picking_id.reference_ids
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -701,6 +708,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 vals['picked'] = True
         res = super().create(vals_list)
         res._update_orderpoints()
+        res._set_references()
         return res
 
     def write(self, vals):
@@ -769,6 +777,8 @@ Please change the quantity done or the rounding precision in your settings.""",
         if ('product_id' in vals or 'state' in vals or 'date' in vals or 'product_uom_qty' in vals or
                 'location_id' in vals or 'location_dest_id' in vals):
             self._update_orderpoints()
+        if 'picking_id' in vals:
+            self._set_references()
         return res
 
     def _update_orderpoints(self):

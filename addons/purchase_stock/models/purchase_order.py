@@ -25,6 +25,9 @@ class PurchaseOrder(models.Model):
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',
         help="Technical field used to display the Drop Ship Address", readonly=True)
     group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
+    reference_ids = fields.Many2many(
+        'stock.reference', 'stock_reference_purchase_rel', 'purchase_id',
+        'reference_id', string='References', copy=False)
     is_shipped = fields.Boolean(compute="_compute_is_shipped")
     effective_date = fields.Datetime("Arrival", compute='_compute_effective_date', store=True, copy=False,
         help="Completion date of the first receipt order.")
