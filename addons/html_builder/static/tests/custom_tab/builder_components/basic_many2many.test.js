@@ -1,10 +1,10 @@
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
-import { Component, reactive, xml } from "@odoo/owl";
-import { delay } from "@web/core/utils/concurrency";
+import { reactive, xml } from "@odoo/owl";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { delay } from "@web/core/utils/concurrency";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "../../website_helpers";
-import { useBuilderComponents } from "@html_builder/core/utils";
 
 defineWebsiteModels();
 
@@ -14,15 +14,12 @@ test.tags("focus required")("basic many2many: find tag, select tag, unselect tag
         [2, "Second"],
         [3, "Third"],
     ]);
-    class TestComponent extends Component {
+    class TestComponent extends BaseOptionComponent {
         static template = xml`<BasicMany2Many selection="props.selection" model="'test'" setSelection="props.setSelection.bind(this)"/>`;
         static props = {
             selection: Array,
             setSelection: Function,
         };
-        setup() {
-            useBuilderComponents();
-        }
     }
     const selection = reactive([]);
     addOption({

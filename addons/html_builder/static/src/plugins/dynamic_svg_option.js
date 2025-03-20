@@ -1,12 +1,11 @@
-import { Component } from "@odoo/owl";
-import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
-export class DynamicSvgOption extends Component {
+export class DynamicSvgOption extends BaseOptionComponent {
     static template = "html_builder.DynamicSvgOption";
     static props = {};
 
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.domState = useDomState((imgEl) => {
             const colors = {};
             const searchParams = new URL(imgEl.src, window.location.origin).searchParams;

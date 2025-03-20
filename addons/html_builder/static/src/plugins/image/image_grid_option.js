@@ -1,12 +1,11 @@
-import { Component } from "@odoo/owl";
-import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
-export class ImageGridOption extends Component {
+export class ImageGridOption extends BaseOptionComponent {
     static template = "html_builder.ImageGridOption";
     static props = {};
 
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.state = useDomState((editingElement) => {
             const imageGridItemEl = editingElement.closest(".o_grid_item_image");
             return {

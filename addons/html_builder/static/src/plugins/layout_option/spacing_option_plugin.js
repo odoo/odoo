@@ -1,9 +1,8 @@
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { Component } from "@odoo/owl";
-import { useBuilderComponents } from "@html_builder/core/utils";
 
-export class SpacingOption extends Component {
+export class SpacingOption extends BaseOptionComponent {
     static template = "html_builder.SpacingOption";
     static props = {
         level: { type: Number, optional: true },
@@ -12,9 +11,6 @@ export class SpacingOption extends Component {
     static defaultProps = {
         level: 0,
     };
-    setup() {
-        useBuilderComponents();
-    }
 }
 class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";

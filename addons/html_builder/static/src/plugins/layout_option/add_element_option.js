@@ -1,7 +1,6 @@
-import { useBuilderComponents } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class AddElementOption extends Component {
+export class AddElementOption extends BaseOptionComponent {
     static template = "html_builder.AddElementOption";
     static props = {
         level: { type: Number, optional: true },
@@ -10,8 +9,4 @@ export class AddElementOption extends Component {
     static defaultProps = {
         level: 0,
     };
-
-    setup() {
-        useBuilderComponents();
-    }
 }

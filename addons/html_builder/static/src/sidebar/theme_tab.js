@@ -1,6 +1,5 @@
 import { Component, useState } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
-import { useIsActiveItem } from "@html_builder/core/utils";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
 
 export class ThemeTab extends Component {
@@ -15,7 +14,6 @@ export class ThemeTab extends Component {
 
     setup() {
         useOptionsSubEnv(() => [this.env.editor.document.body]);
-        this.isActiveItem = useIsActiveItem();
         this.state = useState({
             fontsData: {},
         });

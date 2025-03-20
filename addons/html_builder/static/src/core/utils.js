@@ -1,5 +1,6 @@
 import { isTextNode } from "@html_editor/utils/dom_info";
 import {
+    Component,
     onMounted,
     onWillDestroy,
     onWillStart,
@@ -99,7 +100,7 @@ export function useDependencies(dependencies) {
     return isDependenciesVisible;
 }
 
-export function useIsActiveItem() {
+function useIsActiveItem() {
     const env = useEnv();
     const listenedKeys = new Set();
 
@@ -694,12 +695,17 @@ function _shouldClean(comp, hasClean, isApplied) {
     return comp.props.inverseAction ? !shouldClean : shouldClean;
 }
 
-export function useBuilderComponents() {
-    const comp = useComponent();
-    const editor = comp.env.editor;
-    if (!comp.constructor.components) {
-        comp.constructor.components = {};
+export class BaseOptionComponent extends Component {
+    static components = {};
+
+    setup() {
+        this.isActiveItem = useIsActiveItem();
+        const comp = useComponent();
+        const editor = comp.env.editor;
+        if (!comp.constructor.components) {
+            comp.constructor.components = {};
+        }
+        const Components = editor.shared.builderComponents.getComponents();
+        Object.assign(comp.constructor.components, Components);
     }
-    const Components = editor.shared.builderComponents.getComponents();
-    Object.assign(comp.constructor.components, Components);
 }

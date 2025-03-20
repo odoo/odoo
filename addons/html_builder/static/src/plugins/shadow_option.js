@@ -1,11 +1,6 @@
-import { Component } from "@odoo/owl";
-import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class ShadowOption extends Component {
+export class ShadowOption extends BaseOptionComponent {
     static template = "html_builder.ShadowOption";
     static props = {};
-    setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
-    }
 }

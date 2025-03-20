@@ -1,10 +1,9 @@
-import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
-import { BackgroundPositionOption } from "./background_position_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { BackgroundImageOption } from "./background_image_option";
+import { BackgroundPositionOption } from "./background_position_option";
 import { BackgroundShapeOption } from "./background_shape_option";
 
-export class BackgroundOption extends Component {
+export class BackgroundOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundOption";
     static components = {
         BackgroundImageOption,
@@ -21,10 +20,7 @@ export class BackgroundOption extends Component {
     static defaultProps = {
         withShapes: false,
     };
-    setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
-    }
+
     showColorFilter() {
         return this.isActiveItem("toggle_bg_image_id");
     }

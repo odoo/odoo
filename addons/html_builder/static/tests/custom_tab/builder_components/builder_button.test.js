@@ -1,7 +1,7 @@
-import { useBuilderComponents, useDomState } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, hover, runAllTimers } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addActionOption,
@@ -654,7 +654,7 @@ test("do not load when an operation is cleaned", async () => {
     expect.verifySteps(["load", "apply", "clean"]);
 });
 
-class SubTestOption extends Component {
+class SubTestOption extends BaseOptionComponent {
     static template = xml`
         <BuilderContext applyTo="this.domState.applyTo">
             <BuilderButton classAction="'actionClass'">actionClass</BuilderButton>
@@ -662,14 +662,14 @@ class SubTestOption extends Component {
     `;
     static props = {};
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.domState = useDomState((el) => ({
             applyTo: el.matches(".first") ? ".a" : ".b",
         }));
     }
 }
 
-class TestOption extends Component {
+class TestOption extends BaseOptionComponent {
     static template = xml`
         <BuilderButton classAction="'secondCase'">secondCase</BuilderButton>
         <BuilderContext applyTo="this.domState.applyTo">
@@ -681,7 +681,7 @@ class TestOption extends Component {
         SubTestOption,
     };
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.domState = useDomState((el) => ({
             applyTo: el.matches(".secondCase") ? ".second" : ".first",
         }));

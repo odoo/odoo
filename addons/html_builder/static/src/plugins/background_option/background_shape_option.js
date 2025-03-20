@@ -1,16 +1,14 @@
-import { useBuilderComponents, useDomState, useIsActiveItem } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { toRatio } from "@html_builder/utils/utils";
 import { getBgImageURLFromEl } from "@html_builder/utils/utils_css";
-import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
-export class BackgroundShapeOption extends Component {
+export class BackgroundShapeOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundShapeOption";
     static props = {};
     setup() {
-        useBuilderComponents();
+        super.setup();
         this.backgroundShapePlugin = this.env.editor.shared.backgroundShapeOption;
-        this.isActiveItem = useIsActiveItem();
         this.toRatio = toRatio;
         this.state = useDomState((editingElement) => {
             const shapeData = this.backgroundShapePlugin.getShapeData(editingElement);

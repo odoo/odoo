@@ -1,10 +1,9 @@
-import { useBuilderComponents, useIsActiveItem } from "@html_builder/core/utils";
-import { Component } from "@odoo/owl";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 import { AddElementOption } from "./add_element_option";
 import { SelectNumberColumn } from "./select_number_column";
 import { SpacingOption } from "./spacing_option_plugin";
 
-export class LayoutOption extends Component {
+export class LayoutOption extends BaseOptionComponent {
     static template = "html_builder.LayoutOption";
     static components = {
         SelectNumberColumn,
@@ -12,32 +11,21 @@ export class LayoutOption extends Component {
         AddElementOption,
     };
     static props = {};
-
-    setup() {
-        useBuilderComponents();
-        this.isActiveItem = useIsActiveItem();
-    }
 }
 
-export class LayoutGridOption extends Component {
+export class LayoutGridOption extends BaseOptionComponent {
     static template = "html_builder.LayoutGridOption";
     static components = {
         SpacingOption,
         AddElementOption,
     };
     static props = {};
-    setup() {
-        useBuilderComponents();
-    }
 }
 
-export class LayoutColumnOption extends Component {
+export class LayoutColumnOption extends BaseOptionComponent {
     static template = "html_builder.LayoutColumnOption";
     static components = {
         SelectNumberColumn,
     };
     static props = {};
-    setup() {
-        useBuilderComponents();
-    }
 }
