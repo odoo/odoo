@@ -894,6 +894,7 @@ class TestExpenses(TestExpenseCommon):
             'name': 'Cash Basis Tax Transition Account',
             'account_type': 'asset_current',
             'code': '131001',
+            'reconcile': True,
         })
         caba_tax = self.env['account.tax'].create({
             'name': 'Cash Basis Tax',

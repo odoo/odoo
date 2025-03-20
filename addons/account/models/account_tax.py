@@ -236,6 +236,16 @@ class AccountTax(models.Model):
             if record.tax_group_id.country_id and record.tax_group_id.country_id != record.country_id:
                 raise ValidationError(_("The tax group must have the same country_id as the tax using it."))
 
+    @api.constrains('tax_exigibility', 'cash_basis_transition_account_id')
+    def _constrains_cash_basis_transition_account(self):
+        for record in self:
+            if (
+                record.tax_exigibility == 'on_payment'
+                and not record.cash_basis_transition_account_id.reconcile
+                and not self._context.get('chart_template_load')
+            ):
+                raise ValidationError(_("The cash basis transition account needs to allow reconciliation."))
+
     @api.depends('company_id')
     def _compute_country_id(self):
         for tax in self:
