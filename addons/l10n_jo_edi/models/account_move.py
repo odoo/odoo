@@ -14,6 +14,7 @@ class AccountMove(models.Model):
 
     l10n_jo_edi_uuid = fields.Char(string="Invoice UUID", copy=False, compute="_compute_l10n_jo_edi_uuid", store=True)
     l10n_jo_edi_qr = fields.Char(string="QR", copy=False)
+    l10n_jo_edi_invoice_counter = fields.Integer(compute='_compute_l10n_jo_edi_invoice_counter')
 
     l10n_jo_edi_is_needed = fields.Boolean(
         compute="_compute_l10n_jo_edi_is_needed",
@@ -50,6 +51,11 @@ class AccountMove(models.Model):
         help="Jordan: e-invoice XML.",
     )
     reversed_entry_id = fields.Many2one(tracking=True)
+
+    def _compute_l10n_jo_edi_invoice_counter(self):
+        next_counter = self.env['account.move'].search_count([('company_id', '=', self.company_id.id), ('l10n_jo_edi_state', '=', 'sent')]) + 1
+        for move in self:
+            move.l10n_jo_edi_invoice_counter = next_counter
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_jo_edi_is_needed(self):
