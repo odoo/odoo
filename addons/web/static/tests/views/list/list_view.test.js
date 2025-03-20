@@ -15488,7 +15488,7 @@ test(`fieldDependencies support for fields`, async () => {
 test(`fieldDependencies support for fields: dependence on a relational field`, async () => {
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
-            static template = xml`<span t-esc="props.record.data.m2o[0]"/>`;
+            static template = xml`<span t-esc="props.record.data.m2o.id"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "m2o", type: "many2one", relation: "bar" }],

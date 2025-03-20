@@ -12057,7 +12057,7 @@ test("fieldDependencies support for fields", async () => {
 test("fieldDependencies support for fields: dependence on a relational field", async () => {
     const customField = {
         component: class CustomField extends Component {
-            static template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+            static template = xml`<span t-esc="props.record.data.product_id.display_name"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],

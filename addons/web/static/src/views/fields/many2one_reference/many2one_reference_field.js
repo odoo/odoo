@@ -18,7 +18,7 @@ export class Many2OneReferenceField extends Component {
         return {
             ...props,
             relation,
-            value: value ? [value.resId, value.displayName] : false,
+            value: value ? { id: value.resId, display_name: value.displayName } : false,
             readonly: this.props.readonly || !relation,
             update: (changes) => this.update(changes),
         };
@@ -32,8 +32,8 @@ export class Many2OneReferenceField extends Component {
         return this.props.record.data[modelField];
     }
 
-    update([resId, displayName]) {
-        const nextVal = { resId, displayName };
+    update(record) {
+        const nextVal = record && { resId: record.id, displayName: record.display_name };
         return this.props.record.update({ [this.props.name]: nextVal });
     }
 }

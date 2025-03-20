@@ -7,6 +7,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
+    createMany2OneValue,
     createPropertyActiveField,
     getBasicEvalContext,
     getFieldContext,
@@ -467,27 +468,28 @@ export class Record extends DataPoint {
     }
 
     /**
-     * Given a possibily incomplete value for a many2one field (i.e. a pair [id, display_name] but
+     * Given a possibily incomplete value for a many2one field (i.e. a object { id, display_name } but
      * with id and/or display_name being undefined), return the complete value as follows:
      *  - if a display_name is given but no id, perform a name_create to get an id
      *  - if an id is given but display_name is undefined, call web_read to get the display_name
      *  - if both id and display_name are given, return the value as is
      *  - in any other cases, return false
      *
-     * @param {Array | false} value a (possibly incomplete) pair [id, display_name] or false
+     * @param {{ id?: number; display_name?: string }} value
      * @param {string} fieldName
      * @param {string} resModel
-     * @returns the completed pair [id, display_name] or false
+     * @returns {Promise<false | { id: number; display_name: string; }>} the completed record { id, display_name } or false
      */
     async _completeMany2OneValue(value, fieldName, resModel) {
-        const resId = value[0];
-        const displayName = value[1];
+        const resId = value.id;
+        const displayName = value.display_name;
         if (!resId && !displayName) {
             return false;
         }
         const context = getFieldContext(this, fieldName);
         if (!resId && displayName !== undefined) {
-            return this.model.orm.call(resModel, "name_create", [displayName], { context });
+            const pair = await this.model.orm.call(resModel, "name_create", [displayName], { context });
+            return pair && createMany2OneValue(pair);
         }
         if (resId && displayName === undefined) {
             const kwargs = {
@@ -495,9 +497,9 @@ export class Record extends DataPoint {
                 specification: { display_name: {} },
             };
             const records = await this.model.orm.webRead(resModel, [resId], kwargs);
-            return [resId, records[0].display_name];
+            return createMany2OneValue(records[0]);
         }
-        return value;
+        return createMany2OneValue(value);
     }
 
     _computeDataContext() {
@@ -525,7 +527,7 @@ export class Record extends DataPoint {
             } else if (value && field.type === "datetime") {
                 dataContext[fieldName] = serializeDateTime(value);
             } else if (value && field.type === "many2one") {
-                dataContext[fieldName] = value[0];
+                dataContext[fieldName] = value.id;
             } else if (value && field.type === "reference") {
                 dataContext[fieldName] = `${value.resModel},${value.resId}`;
             } else if (field.type === "properties") {
@@ -598,7 +600,7 @@ export class Record extends DataPoint {
         } else if (fieldType === "html") {
             return value && value.length ? value : false;
         } else if (fieldType === "many2one") {
-            return value ? value[0] : false;
+            return value ? value.id : false;
         } else if (fieldType === "many2one_reference") {
             return value ? value.resId : 0;
         } else if (fieldType === "reference") {
@@ -776,7 +778,7 @@ export class Record extends DataPoint {
             } else if (property.type === "many2one") {
                 data[propertyFieldName] =
                     property.value.length && property.value[1] === null
-                        ? [property.value[0], _t("No Access")]
+                        ? createMany2OneValue([property.value.id, _t("No Access")])
                         : property.value;
             } else {
                 data[propertyFieldName] = property.value ?? false;
@@ -838,6 +840,7 @@ export class Record extends DataPoint {
         const proms = Object.entries(changes)
             .filter(([fieldName]) => this.fields[fieldName].type === "many2one")
             .map(async ([fieldName, value]) => {
+                value = createMany2OneValue(value);
                 if (!value) {
                     changes[fieldName] = false;
                 } else if (!this.activeFields[fieldName]) {
@@ -864,11 +867,11 @@ export class Record extends DataPoint {
                 } else {
                     const relation = this.data[this.fields[fieldName].model_field];
                     return this._completeMany2OneValue(
-                        [value.resId, value.displayName],
+                        { id: value.resId, display_name: value.displayName },
                         fieldName,
                         relation
                     ).then((v) => {
-                        changes[fieldName] = { resId: v[0], displayName: v[1] };
+                        changes[fieldName] = { resId: v.id, displayName: v.display_name };
                     });
                 }
             });
@@ -883,14 +886,14 @@ export class Record extends DataPoint {
                     changes[fieldName] = false;
                 } else {
                     return this._completeMany2OneValue(
-                        [value.resId, value.displayName],
+                        { id: value.resId, display_name: value.displayName },
                         fieldName,
                         value.resModel
                     ).then((v) => {
                         changes[fieldName] = {
-                            resId: v[0],
+                            resId: v.id,
                             resModel: value.resModel,
-                            displayName: v[1],
+                            displayName: v.display_name,
                         };
                     });
                 }
@@ -1268,7 +1271,7 @@ export class Record extends DataPoint {
             if (this.fields[fieldName].type === "many2one") {
                 const curVal = toRaw(this.data[fieldName]);
                 const nextVal = changes[fieldName];
-                if (curVal && nextVal && curVal[0] === nextVal[0] && curVal[1] === nextVal[1]) {
+                if (curVal && nextVal && curVal.id === nextVal.id && curVal.display_name === nextVal.display_name) {
                     delete changes[fieldName];
                 }
             }

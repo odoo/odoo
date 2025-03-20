@@ -305,6 +305,66 @@ test(`can access record changes`, async () => {
 });
 
 test.tags("desktop");
+test(`handles many2one fields: value is an object`, async () => {
+    class Bar extends models.Model {
+        name = fields.Char();
+
+        _records = [
+            { id: 1, name: "bar1" },
+            { id: 3, name: "abc" },
+        ];
+    }
+    defineModels([Bar]);
+
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { Record, Many2OneField };
+        static template = xml`
+            <Record resModel="'foo'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" hooks="hooks">
+                <Many2OneField name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        setup() {
+            this.fields = {
+                foo: {
+                    name: "foo",
+                    type: "many2one",
+                    relation: "bar",
+                },
+            };
+            this.values = {
+                foo: { id: 1, display_name: "bar1" },
+            };
+            this.hooks = {
+                onRecordChanged: this.onRecordChanged.bind(this),
+            };
+        }
+
+        onRecordChanged(record, changes) {
+            expect.step("record changed");
+            expect(changes).toEqual({ foo: 3 });
+            // data is an array with properties defined on it
+            // Object.assign([id, name], { id, name, ... })
+            expect(record.data).toEqual({ foo: [3, "abc"] });
+        }
+    }
+
+    onRpc(({ route }) => expect.step(route));
+    await mountWithCleanup(Parent);
+    expect.verifySteps([]);
+    expect(`.o_field_many2one_selection input`).toHaveValue("bar1");
+
+    await contains(`.o_field_many2one_selection input`).edit("abc", { confirm: false });
+    await runAllTimers();
+    expect.verifySteps(["/web/dataset/call_kw/bar/web_name_search"]);
+
+    await contains(`.o-autocomplete--dropdown-item a:eq(0)`).click();
+    expect.verifySteps(["record changed"]);
+    expect(`.o_field_many2one_selection input`).toHaveValue("abc");
+});
+
+test.tags("desktop");
 test(`handles many2one fields: value is a pair id, display_name`, async () => {
     class Bar extends models.Model {
         name = fields.Char();

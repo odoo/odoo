@@ -6,7 +6,7 @@
         <KanbanMany2One t-props="m2oProps">
             <t t-set-slot="avatar">
                 <span class="o_avatar o_m2o_avatar">
-                    <img t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name][0]}}/avatar_128" class="rounded"/>
+                    <img t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name].id}}/avatar_128" class="rounded"/>
                 </span>
             </t>
             <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">

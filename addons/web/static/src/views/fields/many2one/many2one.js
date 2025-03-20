@@ -7,7 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { useService } from "@web/core/utils/hooks";
-import { getFieldDomain } from "@web/model/relational_model/utils";
+import { createMany2OneValue, getFieldDomain } from "@web/model/relational_model/utils";
 import { Many2XAutocomplete, useOpenMany2XRecord } from "../relational_utils";
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ export class Many2One extends Component {
         specification: { type: Object, optional: true },
         string: { type: String, optional: true },
         update: { type: Function },
-        value: { type: [Array, { value: false }] },
+        value: { type: [Array, Object, { value: false }] },
     };
     static defaultProps = {
         canCreate: true,
@@ -240,7 +240,7 @@ export class Many2One extends Component {
 
     get value() {
         const value = this.props.value;
-        return value ? { id: value[0], display_name: value[1] } : null;
+        return value ? createMany2OneValue(value) : null;
     }
 
     async openBarcodeScanner() {
@@ -319,7 +319,7 @@ export class Many2One extends Component {
 
     update(idNamePair) {
         this.state.isFloating = false;
-        return this.props.update(idNamePair);
+        return this.props.update(createMany2OneValue(idNamePair));
     }
 }
 
