@@ -1952,6 +1952,10 @@ class ProjectTask(models.Model):
             },
         }
 
+    def plan_task_in_calendar(self, vals):
+        self.ensure_one()
+        return self.write(vals)
+
     @api.model
     def _get_template_default_context_whitelist(self):
         """
