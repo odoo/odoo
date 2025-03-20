@@ -27,23 +27,23 @@ class TestReorderingRuleProjectPurchase(TransactionCase):
         mto_route.active = True
         buy_product.route_ids |= mto_route | self.env.ref('purchase_stock.route_warehouse0_buy')
 
-        pg = self.env["procurement.group"].create({'name': 'Test mto buy procurement'})
+        ref = self.env["stock.reference"].create({'name': 'Test mto buy procurement'})
         # 1. First procurement → creates a PO with no project
-        self.env["procurement.group"].run([pg.Procurement(
+        self.env["stock.rule"].run([self.env['stock.rule'].Procurement(
             buy_product, 1, buy_product.uom_id,
             self.env.ref('stock.stock_location_customers'),
             "Test mto buy", "/", self.env.company,
-            {"warehouse_id": self.env.ref('stock.warehouse0'), "group_id": pg},
+            {"warehouse_id": self.env.ref('stock.warehouse0'), "reference_ids": ref},
         )])
         po = self.env["purchase.order"].search([("partner_id", "=", partner.id)])
         self.assertEqual(len(po), 1, "Expected exactly one purchase order after first procurement")
         # 2. Add a project to the first PO → next procurement should not reuse it
         po.project_id = self.env['project.project'].create({'name': 'Test Project'})
-        self.env["procurement.group"].run([pg.Procurement(
+        self.env["stock.rule"].run([self.env['stock.rule'].Procurement(
             buy_product, 1, buy_product.uom_id,
             self.env.ref('stock.stock_location_customers'),
             "Test mto buy", "/", self.env.company,
-            {"warehouse_id": self.env.ref('stock.warehouse0'), "group_id": pg},
+            {"warehouse_id": self.env.ref('stock.warehouse0'), "reference_ids": ref},
         )])
         second_po = self.env["purchase.order"].search([
             ("partner_id", "=", partner.id),
@@ -53,11 +53,11 @@ class TestReorderingRuleProjectPurchase(TransactionCase):
         self.assertEqual(second_po.order_line.product_uom_qty, 1)
 
         # 3. Another procurement without project → should reuse the second PO
-        self.env["procurement.group"].run([pg.Procurement(
+        self.env["stock.rule"].run([self.env['stock.rule'].Procurement(
             buy_product, 1, buy_product.uom_id,
             self.env.ref('stock.stock_location_customers'),
             "Test mto buy", "/", self.env.company,
-            {"warehouse_id": self.env.ref('stock.warehouse0'), "group_id": pg},
+            {"warehouse_id": self.env.ref('stock.warehouse0'), "reference_ids": ref},
         )])
         extra_po = self.env["purchase.order"].search([
             ("partner_id", "=", partner.id),

@@ -477,8 +477,8 @@ class SaleOrderLine(models.Model):
         """
         return {}
 
-    def _prepare_procurement_values(self, group_id=False):
-        values = super()._prepare_procurement_values(group_id=group_id)
+    def _prepare_procurement_values(self):
+        values = super()._prepare_procurement_values()
         if self.order_id.project_id:
             values['project_id'] = self.order_id.project_id.id
         return values

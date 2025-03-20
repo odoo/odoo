@@ -26,10 +26,6 @@ class StockRule(models.Model):
             if rule.action == 'buy':
                 rule.picking_type_code_domain += ['dropship']
 
-
-class ProcurementGroup(models.Model):
-    _inherit = "procurement.group"
-
     @api.model
     def _get_rule_domain(self, location, values):
         domain = super()._get_rule_domain(location, values)

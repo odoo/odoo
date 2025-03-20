@@ -1441,7 +1441,7 @@ class SaleOrderLine(models.Model):
         if self.analytic_distribution and not self.display_type:
             inv_line_vals['analytic_distribution'] = self.analytic_distribution
 
-    def _prepare_procurement_values(self, group_id=False):
+    def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         coming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.

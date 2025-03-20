@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!--
-        Procurement
-        -->
-
-        <record id="procurement_group_form_view" model="ir.ui.view">
-            <field name="name">procurement.group.form</field>
-            <field name="model">procurement.group</field>
-            <field name="arch" type="xml">
-                <form string="Procurement group">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="%(do_view_pickings)d" string="Transfers" type="action" class="oe_stat_button" icon="fa-truck"/>
-                        </div>
-                        <group>
-                            <field name="name"/>
-                            <field name="move_type"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <!-- Stock Rules -->
 
         <record id="view_stock_rule_filter" model="ir.ui.view">
@@ -98,14 +76,9 @@
                                 <field name="company_id" options="{'no_create': True}" required="action == 'push'" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="sequence" string="Sequence" groups="base.group_no_one"/>
                             </group>
-                            <group name="propagation_group" string="Propagation">
-                                <field name="group_propagation_option"/>
-                                <field name="group_id" invisible="group_propagation_option != 'fixed'" required="group_propagation_option == 'fixed'"/>
-                                <field name="propagate_cancel" invisible="action == 'push'"/>
-                                <field name="propagate_warehouse_id" invisible="action == 'push'"/>
-                            </group>
                             <group string="Options" invisible="action not in ['pull', 'push', 'pull_push']">
                                 <field name="partner_address_id" invisible="action == 'push'"/>
+                                <field name="propagate_cancel" invisible="action == 'push'"/>
                                 <label for="delay"/>
                                 <div><field name="delay" class="oe_inline"/> days</div>
                             </group>

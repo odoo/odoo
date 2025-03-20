@@ -310,7 +310,7 @@ class PosOrder(models.Model):
     picking_count = fields.Integer(compute='_compute_picking_count')
     failed_pickings = fields.Boolean(compute='_compute_picking_count')
     picking_type_id = fields.Many2one('stock.picking.type', related='session_id.config_id.picking_type_id', string="Operation Type", readonly=False)
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    stock_reference_ids = fields.Many2many('stock.reference', 'stock_reference_pos_order_rel', 'pos_order_id', 'reference_id', string="Reference")
     preset_id = fields.Many2one('pos.preset', string='Preset')
     floating_order_name = fields.Char(string='Order Name')
     general_customer_note = fields.Text(string='General Customer Note')
@@ -1629,18 +1629,13 @@ class PosOrderLine(models.Model):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids)
 
-    def _get_procurement_group(self):
-        return self.order_id.procurement_group_id
-
-    def _prepare_procurement_group_vals(self):
+    def _prepare_reference_vals(self):
         return {
             'name': self.order_id.name,
-            'move_type': self.order_id.config_id.picking_policy,
-            'pos_order_id': self.order_id.id,
-            'partner_id': self.order_id.partner_id.id,
+            'pos_order_ids': [Command.link(self.order_id.id)],
         }
 
-    def _prepare_procurement_values(self, group_id=False):
+    def _prepare_procurement_values(self):
         """ Prepare specific key for moves or other components that will be created from a stock rule
         coming from a sale order line. This method could be override in order to add other custom key that could
         be used in move/po creation.
@@ -1659,7 +1654,6 @@ class PosOrderLine(models.Model):
             date_deadline = self.order_id.date_order
 
         values = {
-            'group_id': group_id,
             'date_planned': date_deadline,
             'date_deadline': date_deadline,
             'route_ids': self.order_id.config_id.route_id,
@@ -1667,6 +1661,7 @@ class PosOrderLine(models.Model):
             'partner_id': self.order_id.partner_id.id,
             'product_description_variants': self.full_product_name,
             'company_id': self.order_id.company_id,
+            'reference_ids': self.order_id.stock_reference_ids,
         }
         return values
 
@@ -1678,21 +1673,21 @@ class PosOrderLine(models.Model):
             if line.product_id.type != 'consu':
                 continue
 
-            group_id = line._get_procurement_group()
-            if not group_id:
-                group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.write({'procurement_group_id': group_id})
+            reference_ids = line.order_id.stock_reference_ids
+            if not reference_ids:
+                reference_ids = self.env['stock.reference'].create(line._prepare_reference_vals())
+                line.order_id.stock_reference_ids = [Command.set(reference_ids.ids)]
 
-            values = line._prepare_procurement_values(group_id=group_id)
+            values = line._prepare_procurement_values()
             product_qty = line.qty
 
             procurement_uom = line.product_id.uom_id
-            procurements.append(self.env['procurement.group'].Procurement(
+            procurements.append(self.env['stock.rule'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_id.property_stock_customer,
                 line.name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
-            self.env['procurement.group'].run(procurements)
+            self.env['stock.rule'].run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
         orders = self.mapped('order_id')

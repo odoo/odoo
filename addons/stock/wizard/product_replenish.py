@@ -92,8 +92,8 @@ class ProductReplenish(models.TransientModel):
             raise UserError(_("You need to select a route to replenish your products"))
         try:
             now = self.env.cr.now()
-            self.env['procurement.group'].with_context(clean_context(self.env.context)).run([
-                self.env['procurement.group'].Procurement(
+            self.env['stock.rule'].with_context(clean_context(self.env.context)).run([
+                self.env['stock.rule'].Procurement(
                     self.product_id,
                     self.quantity,
                     self.product_uom_id,
@@ -129,12 +129,10 @@ class ProductReplenish(models.TransientModel):
         return values
 
     def _prepare_run_values(self):
-        replenishment = self.env['procurement.group'].create({})
         values = {
             'warehouse_id': self.warehouse_id,
             'route_ids': self.route_id,
             'date_planned': self.date_planned,
-            'group_id': replenishment,
             'force_uom': True,
         }
         return values

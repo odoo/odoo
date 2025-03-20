@@ -12,10 +12,10 @@ class RepairOrder(models.Model):
         groups='mrp.group_mrp_user',
     )
 
-    @api.depends('procurement_group_id.stock_move_ids.created_production_id')
+    @api.depends('reference_ids.production_ids')
     def _compute_production_count(self):
         for repair in self:
-            repair.production_count = len(repair.procurement_group_id.stock_move_ids.created_production_id)
+            repair.production_count = len(repair.reference_ids.production_ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -48,7 +48,7 @@ class RepairOrder(models.Model):
 
     def action_view_mrp_productions(self):
         self.ensure_one()
-        production_order_ids = self.procurement_group_id.stock_move_ids.created_production_id
+        production_order_ids = self.reference_ids.production_ids
         action = {
             'type': 'ir.actions.act_window',
             'res_model': 'mrp.production',

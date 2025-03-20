@@ -123,7 +123,7 @@ class TestProcRule(TransactionCase):
         # method won't be an attribute of stock.procurement at this moment. For that reason
         # we mute the logger when running the scheduler.
         with mute_logger('odoo.addons.stock.models.procurement'):
-            self.env['procurement.group'].run_scheduler()
+            self.env['stock.rule'].run_scheduler()
 
         # Check that a picking was created from stock to output.
         moves = self.env['stock.move'].search([
@@ -169,11 +169,8 @@ class TestProcRule(TransactionCase):
         # will be forced to sort the routes by their sequence.
         product.write({'route_ids': [(4, route_low_priority.id), (4, route_high_priority.id)]})
 
-        # Create a procurement group for testing rule selection.
-        procurement_group = self.env['procurement.group'].create({'name': 'Test Procurement Group'})
-
         # Call the _get_rule method to simulate rule selection.
-        rule = procurement_group._get_rule(
+        rule = self.env['stock.rule']._get_rule(
             product_id=product,
             location_id=warehouse.lot_stock_id,
             values={
@@ -248,7 +245,7 @@ class TestProcRule(TransactionCase):
         })
         delivery_move._action_confirm()
         orderpoint._compute_qty()
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
 
         receipt_move = self.env['stock.move'].search([
             ('product_id', '=', self.product.id),
@@ -963,7 +960,7 @@ class TestProcRuleLoad(TransactionCase):
         (products[50] | products[99] | products[150] | products[199]).write({
             'route_ids': [(4, wrong_route.id)]
         })
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
         self.assertTrue(self.env['stock.move'].search([('product_id', 'in', products.ids)]))
         for index in [50, 99, 150, 199]:
             self.assertTrue(self.env['mail.activity'].search([
