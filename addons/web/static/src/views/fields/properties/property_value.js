@@ -166,7 +166,7 @@ export class PropertyValue extends Component {
             return [];
         }
         let domain = new Domain(this.props.domain);
-        if (this.props.type === "many2many" && this.props.value) {
+        if (this.props.type === "many2many" && this.props.value?.length) {
             domain = Domain.and([
                 domain,
                 [["id", "not in", this.props.value.map((rec) => rec[0])]],
