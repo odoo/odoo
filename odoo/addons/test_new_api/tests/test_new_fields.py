@@ -250,6 +250,35 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         """)
         # setting up models should not crash
         self.registry._setup_models__(self.cr)
+    
+    def test_10_context_dependent_related(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+
+        container = self.env['test_new_api.compute.container'].create({'name': 'test', 'name_translated': 'test_en'})
+        container.with_context(lang='fr_FR').name_translated = 'test_fr'
+
+        member_root = self.env['test_new_api.compute.member'].create({'name': 'test'})
+        member_user = member_root.with_user(self.user_demo)
+
+        # computed field container_context_id depends on env.uid
+        self.assertEqual(member_user.container_context_id, container)
+        self.assertFalse(member_root.container_context_id)
+
+        # related field container_context_name also depends on env.uid
+        self.assertEqual(member_user.container_context_name, 'test')
+        self.assertFalse(member_root.container_context_name)
+
+        # related field container_context_name_translated depends on env.uid and lang
+        self.assertEqual(member_user.container_context_name_translated, 'test_en')
+        self.assertFalse(member_root.container_context_name_translated)
+        self.assertEqual(member_user.with_context(lang='fr_FR').container_context_name_translated, 'test_fr')
+        self.assertFalse(member_root.with_context(lang='fr_FR').container_context_name_translated)
+
+        member_user.sudo().update_field_translations('container_context_name_translated', {'fr_FR': 'test_fr_new'})
+        self.assertEqual(member_user.container_context_name_translated, 'test_en')
+        self.assertFalse(member_root.container_context_name_translated)
+        self.assertEqual(member_user.with_context(lang='fr_FR').container_context_name_translated, 'test_fr_new')
+        self.assertFalse(member_root.with_context(lang='fr_FR').container_context_name_translated)
 
     def test_10_display_name(self):
         """ test definition of automatic field 'display_name' """
