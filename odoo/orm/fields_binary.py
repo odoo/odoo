@@ -85,6 +85,13 @@ class Binary(Field):
         except UnicodeEncodeError:
             raise UserError(record.env._("ASCII characters are required for %(value)s in %(field)s", value=value, field=self.name))
 
+    def convert_to_column_update(self, record: BaseModel):
+        # since the field depends on context, force the value where we have the data
+        bin_size_name = 'bin_size_' + self.name
+        record_no_bin_size = record.with_context(**{'bin_size': False, bin_size_name: False})
+        cache = self._cache_view(record_no_bin_size.env)
+        return cache[record.id]
+
     def convert_to_cache(self, value, record, validate=True):
         if isinstance(value, _BINARY):
             return bytes(value)

@@ -4,7 +4,6 @@ import typing
 from datetime import date, datetime, time
 
 import pytz
-from psycopg2.extras import Json as PsycopgJson
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -48,11 +47,6 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
         granularity = READ_GROUP_NUMBER_GRANULARITY[property_name]
         sql_expr = SQL('date_part(%s, %s)', granularity, sql_expr)
         return sql_expr
-
-    def convert_to_column_update(self, value, record):
-        if self.company_dependent:
-            return PsycopgJson({k: self.convert_to_column(v, record) for k, v in value.items()})
-        return super().convert_to_column_update(value, record)
 
     def convert_to_column(self, value, record, values=None, validate=True):
         # we can write date/datetime directly using psycopg

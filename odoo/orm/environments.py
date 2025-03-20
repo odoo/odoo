@@ -985,35 +985,6 @@ class Cache:
         if invalids:
             _logger.warning("Invalid cache: %s", pformat(invalids))
 
-    def _get_grouped_company_dependent_field_cache(self, field: Field) -> GroupedCompanyDependentFieldCache:
-        """
-        get a field cache proxy to group up field cache value for a company
-        dependent field
-        cache data: {field: {(company_id,): {id: value}}}
-
-        :param field: a company dependent field
-        :return: a dict like field cache proxy which is logically similar to
-              {id: {company_id, value}}
-        """
-        field_caches = self.transaction.data.get(field, EMPTY_DICT)
-        company_field_cache = {
-            context_key[0]: field_cache
-            for context_key, field_cache in field_caches.items()
-        }
-        return GroupedCompanyDependentFieldCache(company_field_cache)
-
-
-class GroupedCompanyDependentFieldCache:
-    def __init__(self, company_field_cache):
-        self._company_field_cache = company_field_cache
-
-    def __getitem__(self, id_):
-        return {
-            company_id: field_cache[id_]
-            for company_id, field_cache in self._company_field_cache.items()
-            if id_ in field_cache
-        }
-
 
 class Starred:
     """ Simple helper class to ``repr`` a value with a star suffix. """

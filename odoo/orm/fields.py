@@ -998,14 +998,28 @@ class Field(typing.Generic[T]):
             return None
         return PsycopgJson({record.env.company.id: value})
 
-    def convert_to_column_update(self, value, record):
-        """ Convert ``value`` from the ``to_flush`` format to the SQL parameter
-        format for UPDATE queries. The ``to_flush`` format is the same as the
-        cache format, except for translated fields (``{'lang_code': 'value', ...}``
-        or ``None``) and company-dependent fields (``{company_id: value, ...}``).
+    def convert_to_column_update(self, record: BaseModel):
+        """ Convert value from the cache to the SQL parameter formatted for
+        UPDATE queries.
         """
+        field_cache = record.env.transaction.data[self]
+        record_id = record.id
         if self.company_dependent:
-            return PsycopgJson(value)
+            values = {}
+            for ctx_key, cache in field_cache.items():
+                if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
+                    values[ctx_key[0]] = self.convert_to_column(value, record)
+            return PsycopgJson(values) if values else None
+        if self in record.env._field_depends_context:
+            # field that will be written to the database depends on context;
+            # find the first value
+            for ctx_key, cache in field_cache.items():
+                if (value := cache.get(record_id, SENTINEL)) is not SENTINEL:
+                    break
+            else:
+                raise AssertionError(f"Value not in cache for field {self} and id={record_id}")
+        else:
+            value = field_cache[record_id]
         return self.convert_to_column_insert(value, record, validate=False)
 
     def convert_to_cache(self, value, record, validate=True):

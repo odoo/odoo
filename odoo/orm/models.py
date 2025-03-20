@@ -6166,18 +6166,6 @@ class BaseModel(metaclass=MetaModel):
         # be found with a context where the context keys are all None
         model = self.with_context({})
 
-        # Memory optimization: get a reference to each dirty field's cache.
-        # This avoids allocating extra memory for storing the data taken
-        # from cache. Beware that this breaks the cache abstraction!
-        dirty_field_cache = {
-            field: (
-                self.env.cache._get_field_cache(model, field)
-                if not field.company_dependent else
-                self.env.cache._get_grouped_company_dependent_field_cache(field)
-            )
-            for field in dirty_field_ids
-        }
-
         # sort dirty record ids so that records with the same set of modified
         # fields are grouped together; for that purpose, map each dirty id to
         # an integer that represents its subset of dirty fields (bitmask)
@@ -6198,7 +6186,7 @@ class BaseModel(metaclass=MetaModel):
                 for id_ in some_ids:
                     record = model.browse((id_,))
                     vals_list.append({
-                        f.name: f.convert_to_column_update(dirty_field_cache[f][id_], record)
+                        f.name: f.convert_to_column_update(record)
                         for f, ids in dirty_field_ids.items()
                         if id_ in ids
                     })

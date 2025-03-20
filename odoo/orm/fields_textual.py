@@ -93,10 +93,12 @@ class BaseString(Field[str | typing.Literal[False]]):
             return PsycopgJson({'en_US': value, record.env.lang or 'en_US': value})
         return super().convert_to_column_insert(value, record, values, validate)
 
-    def convert_to_column_update(self, value, record):
+    def convert_to_column_update(self, record):
         if self.translate:
-            return PsycopgJson(value) if value else value
-        return super().convert_to_column_update(value, record)
+            assert self not in record.env._field_depends_context, f"translated field {self} cannot depend on context"
+            value = record.env.transaction.data[self][record.id]
+            return PsycopgJson(value) if value else None
+        return super().convert_to_column_update(record)
 
     def convert_to_cache(self, value, record, validate=True):
         if value is None or value is False:
