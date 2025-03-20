@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryOne, scroll } from "@odoo/hoot-dom";
+import { queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import {
@@ -332,12 +332,13 @@ test("action cache: additionalContext is used on the key", async () => {
     expect(action.context).toEqual(actionParams);
 });
 
-test('action with "no_breadcrumbs" set to true', async () => {
+test.tags("desktop")('action with "no_breadcrumbs" set to true', async () => {
     defineActions([
         {
             id: 42,
             res_model: "partner",
-            views: [[1, "kanban"]],
+            type: "ir.actions.act_window",
+            views: [[1, "kanban"], [false, "list"]],
             context: { no_breadcrumbs: true },
         },
     ]);
@@ -346,6 +347,10 @@ test('action with "no_breadcrumbs" set to true', async () => {
     expect(".o_breadcrumb").toHaveCount(1);
     // push another action flagged with 'no_breadcrumbs=true'
     await getService("action").doAction(42);
+    await waitFor(".o_kanban_view");
+    expect(".o_breadcrumb").toHaveCount(0);
+    await contains(".o_switch_view.o_list").click();
+    await waitFor(".o_list_view");
     expect(".o_breadcrumb").toHaveCount(0);
 });
 
