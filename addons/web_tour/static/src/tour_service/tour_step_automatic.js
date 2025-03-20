@@ -80,20 +80,16 @@ export class TourStepAutomatic extends TourStep {
     }
 
     /**
-     * When return true, macro stops.
-     * @returns {Boolean}
+     * When return null or false, macro continues.
      */
     async doAction() {
-        let result = false;
-        if (!this.skipped) {
-            // TODO: Delegate the following routine to the `ACTION_HELPERS` in the macro module.
+        if (this.skipped) {
+            return;
+        }
+        return await callWithUnloadCheck(async () => {
             const actionHelper = new TourHelpers(this.element);
-
             if (typeof this.run === "function") {
-                const willUnload = await callWithUnloadCheck(async () => {
-                    await this.run.call({ anchor: this.element }, actionHelper);
-                });
-                result = willUnload && "will unload";
+                await this.run.call({ anchor: this.element }, actionHelper);
             } else if (typeof this.run === "string") {
                 for (const todo of this.run.split("&&")) {
                     const m = String(todo)
@@ -102,8 +98,7 @@ export class TourStepAutomatic extends TourStep {
                     await actionHelper[m.groups?.action](m.groups?.arguments);
                 }
             }
-        }
-        return result;
+        });
     }
 
     /**

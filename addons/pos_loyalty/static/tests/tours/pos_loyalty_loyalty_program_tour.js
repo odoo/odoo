@@ -269,3 +269,21 @@ registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
             PosLoyalty.orderTotalIs("6.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("PosLoyaltyMultipleOrders", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Order1: Add a product and leave the order in draft.
+            ProductScreen.addOrderline("Whiteboard Pen", "2"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+
+            // Order2: Finalize a different order.
+            Chrome.createFloatingOrder(),
+            ProductScreen.addOrderline("Desk Organizer", "1"),
+            PosLoyalty.finalizeOrder("Cash", "10"),
+        ].flat(),
+});

@@ -32,7 +32,7 @@
                             product="product"
                             class="pos.productViewMode"
                             name="getProductName(product)"
-                            color="product.pos_categ_ids?.at(-1)?.color"
+                            color="product.color || product.pos_categ_ids?.at(-1)?.color"
                             imageUrl="pos.config.show_product_images and this.getProductImage(product)"
                             onClick.bind="() => this.addProductToOrder(product)"
                             productInfo="true"

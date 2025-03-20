@@ -283,14 +283,18 @@ class SaleOrderLine(models.Model):
         store=True)
     amount_invoiced = fields.Monetary(
         string="Invoiced Amount",
-        compute='_compute_amount_invoiced')
+        compute='_compute_amount_invoiced',
+        compute_sudo=True,  # ensure same access as `untaxed_amount_invoiced`
+    )
     untaxed_amount_to_invoice = fields.Monetary(
         string="Untaxed Amount To Invoice",
         compute='_compute_untaxed_amount_to_invoice',
         store=True)
     amount_to_invoice = fields.Monetary(
         string="Un-invoiced Balance",
-        compute='_compute_amount_to_invoice')
+        compute='_compute_amount_to_invoice',
+        compute_sudo=True,  # ensure same access as `untaxed_amount_to_invoice`
+    )
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.type', depends=['product_id'])

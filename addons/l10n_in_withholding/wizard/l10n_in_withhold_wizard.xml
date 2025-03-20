@@ -34,7 +34,7 @@
                         <page string="TDS Tax Details">
                             <field name="withhold_line_ids">
                                 <list editable="bottom">
-                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="currency_id" column_invisible="True"/> <!-- used to display the currency symbol -->
                                     <field name="tax_id" domain="[('l10n_in_tds_tax_type', '=', l10n_in_tds_tax_type)]"/>
                                     <field name="base" sum="Total Base" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     <field name="amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>

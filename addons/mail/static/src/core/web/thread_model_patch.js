@@ -51,7 +51,7 @@ patch(Thread.prototype, {
         this.store.insert(data);
     },
     open(options) {
-        if (this.model === "discuss.channel") {
+        if (this.model === "discuss.channel" && !this.selfMember) {
             this.store.env.services["bus_service"].addChannel(this.busChannel);
         }
         if (!this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {

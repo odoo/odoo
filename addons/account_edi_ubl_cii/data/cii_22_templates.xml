@@ -105,7 +105,7 @@
                         <ram:CompleteNumber t-out="partner.phone or partner.mobile"/>
                     </ram:TelephoneUniversalCommunication>
                     <ram:EmailURIUniversalCommunication t-if="partner.email">
-                        <ram:URIID schemeID='SMTP' t-out="partner.email"/>
+                        <ram:URIID t-out="partner.email"/>
                     </ram:EmailURIUniversalCommunication>
                 </ram:DefinedTradeContact>
 

@@ -5,9 +5,9 @@ from odoo import models
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, force_create=True):
         # EXTENDS account to set up default accounts on stock locations
-        res = super()._load(template_code, company, install_demo)
+        res = super()._load(template_code, company, install_demo, force_create)
         if template_code == 'ec':
             self._l10n_ec_setup_location_accounts(company)
         return res

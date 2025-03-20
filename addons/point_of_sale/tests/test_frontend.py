@@ -1638,6 +1638,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'ProductCardUoMPrecision', login="pos_user")
 
+    def test_add_multiple_serials_at_once(self):
+        self.product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'is_storable': True,
+            'tracking': 'serial',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'available_in_pos': True,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AddMultipleSerialsAtOnce", login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
