@@ -9,7 +9,6 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
 from odoo.tools import SQL, date_utils
-from odoo.tools.misc import get_lang
 
 from .fields import Field, _logger
 from .utils import READ_GROUP_NUMBER_GRANULARITY
@@ -49,6 +48,19 @@ class BaseDate(Field[T | typing.Literal[False]], typing.Generic[T]):
         granularity = READ_GROUP_NUMBER_GRANULARITY[property_name]
         sql_expr = SQL('date_part(%s, %s)', granularity, sql_expr)
         return sql_expr
+
+    def convert_to_column_update(self, value, record):
+        if self.company_dependent:
+            return PsycopgJson({k: self.convert_to_column(v, record) for k, v in value.items()})
+        return super().convert_to_column_update(value, record)
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        # we can write date/datetime directly using psycopg
+        # except for company_dependent fields where we expect a string value
+        value = self.convert_to_cache(value, record, validate=validate)
+        if value and self.company_dependent:
+            value = self.to_string(value)
+        return value
 
 
 class Date(BaseDate[date]):
@@ -125,11 +137,6 @@ class Date(BaseDate[date]):
             type :class:`datetime`, the hours, minute, seconds, tzinfo will be truncated.
         """
         return value.strftime(DATE_FORMAT) if value else False
-
-    def convert_to_column_update(self, value, record):
-        if self.company_dependent:
-            return PsycopgJson({k: self.to_string(v) or None for k, v in value.items()})
-        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         if not value:
@@ -229,11 +236,6 @@ class Datetime(BaseDate[datetime]):
             the time portion will be midnight (00:00:00).
         """
         return value.strftime(DATETIME_FORMAT) if value else False
-
-    def convert_to_column_update(self, value, record):
-        if self.company_dependent:
-            return PsycopgJson({k: self.to_string(v) or None for k, v in value.items()})
-        return super().convert_to_column_update(value, record)
 
     def convert_to_cache(self, value, record, validate=True):
         return self.to_datetime(value)
