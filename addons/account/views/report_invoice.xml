@@ -103,7 +103,7 @@
                                     <t name="proforma_vendor_bill_title">Proforma Vendor Bill</t>
                                 </span>
                             </t>
-                            <span t-if="o.name != '/'" t-field="o.name">INV/2023/0001</span>
+                            <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
                         </t>
                         <div class="oe_structure"></div>
                         <div id="informations" class="row mb-4">
