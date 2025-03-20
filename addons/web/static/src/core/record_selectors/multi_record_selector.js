@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { RecordAutocomplete } from "./record_autocomplete";
 import { _t } from "@web/core/l10n/translation";
 import { useTagNavigation } from "./tag_navigation_hook";
+import { imageUrl } from "@web/core/utils/urls";
 
 export class MultiRecordSelector extends Component {
     static props = {
@@ -23,6 +24,13 @@ export class MultiRecordSelector extends Component {
         this.onTagKeydown = useTagNavigation("multiRecordSelector", this.deleteTag.bind(this));
         onWillStart(() => this.computeDerivedParams());
         onWillUpdateProps((nextProps) => this.computeDerivedParams(nextProps));
+    }
+
+    get isAvatarModel() {
+        // bof
+        return ["res.partner", "res.users", "hr.employee", "hr.employee.public"].includes(
+            this.props.resModel
+        );
     }
 
     async computeDerivedParams(props = this.props) {
@@ -60,6 +68,7 @@ export class MultiRecordSelector extends Component {
                     this.deleteTag(index);
                 },
                 onKeydown: this.onTagKeydown,
+                img: this.isAvatarModel && imageUrl(this.props.resModel, id, "avatar_128"),
             };
         });
     }
