@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { applyModifications, loadImageInfo } from "@html_editor/utils/image_processing";
 import { ImageGalleryComponent } from "./image_gallery_option";
+import { renderToElement } from "@web/core/utils/render";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -71,6 +72,12 @@ class ImageGalleryOption extends Plugin {
         };
     }
 
+    setup() {
+        const slideshowCarousels = this.document.querySelectorAll(".s_image_gallery .carousel");
+        for (const carousel of slideshowCarousels) {
+            this.addDomListener(carousel, "slid.bs.carousel", this.onCarouselSlid);
+        }
+    }
     restoreSelection(imageToSelect) {
         if (imageToSelect && !this.dependencies.history.getIsPreviewing()) {
             // We want to update the container to the equivalent cloned image.
@@ -108,7 +115,27 @@ class ImageGalleryOption extends Plugin {
                     itemsEls.push(elementToReorder);
                     break;
             }
-            this.reorderItems(itemsEls, itemsEls.indexOf(elementToReorder));
+
+            const newItemPosition = itemsEls.indexOf(elementToReorder);
+            itemsEls.forEach((img, index) => {
+                img.dataset.index = index;
+            });
+            const mode = this.getMode(editingGalleryElement);
+            this.setImages(editingGalleryElement, mode, itemsEls);
+
+            if (mode === "slideshow") {
+                const carouselEl = editingGalleryElement.querySelector(".carousel");
+                const carouselInstance = window.Carousel.getOrCreateInstance(carouselEl, {
+                    ride: false,
+                    pause: true,
+                });
+
+                carouselInstance.to(newItemPosition);
+                const activeImageEl = editingGalleryElement.querySelector(
+                    ".carousel-item.active img"
+                );
+                this.dependencies["builder-options"].updateContainers(activeImageEl);
+            }
         }
     }
 
@@ -152,7 +179,6 @@ class ImageGalleryOption extends Plugin {
             imageGalleryElement.classList.remove("o_nomode", "o_masonry", "o_grid", "o_slideshow");
             imageGalleryElement.classList.add(`o_${mode}`);
         }
-        //TODO: apply other layouts
         switch (mode) {
             case "masonry":
                 this.masonry(imageGalleryElement, images);
@@ -162,6 +188,9 @@ class ImageGalleryOption extends Plugin {
                 break;
             case "nomode":
                 this.nomode(imageGalleryElement, images);
+                break;
+            case "slideshow":
+                this.slideshow(imageGalleryElement, images);
                 break;
         }
     }
@@ -240,7 +269,7 @@ class ImageGalleryOption extends Plugin {
         row.classList.add("row", "s_nb_column_fixed");
         const container = this.getContainer(imageGalleryElement);
         container.replaceChildren(row);
-        for (const [, img] of images.entries()) {
+        for (const img of images) {
             let wrapClass = "col-lg-3";
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = "col-lg-6";
@@ -251,6 +280,36 @@ class ImageGalleryOption extends Plugin {
             wrap.appendChild(img);
             row.appendChild(wrap);
         }
+    }
+
+    slideshow(imageGalleryElement, images) {
+        const container = this.getContainer(imageGalleryElement);
+        const currentInterval = imageGalleryElement.querySelector(".carousel").dataset.bsInterval;
+        const carouselEl = imageGalleryElement.querySelector(".carousel");
+        const colorContrast =
+            carouselEl && carouselEl.classList.contains("carousel-dark") ? "carousel-dark" : " ";
+        const slideshowEl = renderToElement("html_builder.s_image_gallery_slideshow", {
+            images: images,
+            index: 0,
+            interval: currentInterval || 0,
+            ride: !currentInterval ? "false" : "carousel",
+            id: "slideshow_" + new Date().getTime(),
+            colorContrast,
+        });
+        carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
+        container.replaceChildren(slideshowEl);
+        slideshowEl.querySelectorAll("img").forEach((img, index) => {
+            img.setAttribute("data-index", index);
+        });
+
+        imageGalleryElement.style.height = window.innerHeight * 0.7 + "px";
+        this.addDomListener(slideshowEl, "slid.bs.carousel", this.onCarouselSlid);
+    }
+
+    onCarouselSlid(ev) {
+        // When the carousel slides, update the builder options to select the active image
+        const activeImageEl = ev.target.querySelector(".carousel-item.active img");
+        this.dependencies["builder-options"].updateContainers(activeImageEl);
     }
 
     async processImages(editingElement, newImages = []) {
@@ -389,23 +448,6 @@ class ImageGalleryOption extends Plugin {
             const images = this.getImages(this.imageRemovedGalleryElement);
             this.setImages(this.imageRemovedGalleryElement, mode, images);
             this.imageRemovedGalleryElement = undefined;
-        }
-    }
-
-    reorderItems(itemsEls, newItemPosition) {
-        itemsEls.forEach((img, index) => {
-            img.dataset.index = index;
-        });
-        const editingImageElement = itemsEls[newItemPosition];
-        const editingGalleryElement = editingImageElement.closest(".s_image_gallery");
-        const mode = this.getMode(editingGalleryElement);
-
-        // relayout the gallery
-        this.setImages(editingGalleryElement, mode, itemsEls);
-        if (mode === "slideshow") {
-            // todo: wait for implementation in CarouselHandler, convert it to a
-            // handler and dispatch to it
-            // this._updateIndicatorAndActivateSnippet(newItemPosition);
         }
     }
 }
