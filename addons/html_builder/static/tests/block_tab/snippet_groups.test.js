@@ -200,7 +200,7 @@ test("search snippet in add snippet dialog", async () => {
     );
 
     // Search base on snippet name
-    await contains(".o_add_snippet_dialog aside input[type='search']").edit("ban");
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("Ban");
     expect("aside .list-group .list-group-item").toHaveCount(0);
     expect(
         queryAll(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap").map(
