@@ -1,7 +1,7 @@
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
-import { getColor } from "@web/views/calendar/colors";
+import { getColor } from "@web/views/calendar/utils";
 import { patch } from "@web/core/utils/patch";
 
 const { Interval } = luxon;
