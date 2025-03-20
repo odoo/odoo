@@ -14,7 +14,7 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import Query, SQL, lazy_property, sql
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.misc import SENTINEL, OrderedSet, Sentinel
+from odoo.tools.misc import SENTINEL, OrderedSet, Sentinel, unique
 
 from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
@@ -536,8 +536,14 @@ class Field(typing.Generic[T]):
             if self._depends_context is not None:
                 depends_context = self._depends_context
             else:
-                related_model = model.env[self.related_field.model_name]
-                depends, depends_context = self.related_field.get_depends(related_model)
+                depends_context = []
+                field_model_name = model._name
+                for field_name in self.related.split('.'):
+                    field_model = model.env[field_model_name]
+                    field = field_model._fields[field_name]
+                    depends_context.extend(field.get_depends(field_model)[1])
+                    field_model_name = field.comodel_name
+                depends_context = tuple(unique(depends_context))
             return [self.related], depends_context
 
         if not self.compute:
