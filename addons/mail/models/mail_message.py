@@ -1119,8 +1119,11 @@ class MailMessage(models.Model):
                 data["author"] = Store.One(guest_author, ["avatar_128", "name"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                data["author"] = Store.One(author, ["avatar_128", "name", "is_company", "user"])
+                data["author"] = Store.One(author, self._author_to_store_partner_fields())
             store.add(message, data)
+
+    def _author_to_store_partner_fields(self):
+        return ["avatar_128", "name", "is_company", "user"]
 
     def _extras_to_store(self, store: Store, format_reply):
         pass

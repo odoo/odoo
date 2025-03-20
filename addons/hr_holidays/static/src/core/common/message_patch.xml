@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//img[hasclass('o-mail-Message-avatar')]" position="after">
+            <ImStatus t-if="message.author?.isOnLeave" persona="message.author" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+        </xpath>
+    </t>
+</templates>

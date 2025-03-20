@@ -5,6 +5,7 @@ export class HrEmployee extends models.Model {
 
     name = fields.Char();
     department_id = fields.Many2one({ relation: "hr.department" });
+    leave_date_to = fields.Date();
 
     _records = [
         {

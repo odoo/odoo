@@ -226,11 +226,15 @@ export class MailMessage extends models.ServerModel {
             } else if (message.author_id) {
                 data.author = mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
-                    makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
+                    makeKwArgs({ fields: this._author_to_store_partner_fields() })
                 );
             }
             store.add(this.browse(message.id), data);
         }
+    }
+
+    _author_to_store_partner_fields() {
+        return ["avatar_128", "is_company", "name", "user", "im_status"];
     }
 
     /**
