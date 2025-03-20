@@ -786,7 +786,7 @@ class IrCron(models.Model):
         is subtracted from the existing remaining count.
 
         If called from outside the cron job, the progress function call will
-        have no effect.
+        just commit.
 
         :param processed: number of processed items in this step
         :param remaining: set the remaining count to the given count
@@ -796,7 +796,8 @@ class IrCron(models.Model):
         ctx = self.env.context
         progress = self.env['ir.cron.progress'].sudo().browse(ctx.get('ir_cron_progress_id'))
         if not progress:
-            # not called during a cron, ignore
+            # not called during a cron, just commit
+            self.env.cr.commit()
             return float('inf')
         assert processed >= 0, 'processed must be positive'
         assert (remaining or 0) >= 0, "remaining must be positive"

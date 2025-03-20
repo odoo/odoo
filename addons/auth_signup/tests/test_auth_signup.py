@@ -95,4 +95,5 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         ])
         for u in users:
             u.create_date = datetime.now() - timedelta(days=5, minutes=10)
-        users.send_unregistered_user_reminder(after_days=5, batch_size=100)
+        with self.registry.cursor() as cr:
+            users.with_env(users.env(cr=cr)).send_unregistered_user_reminder(after_days=5, batch_size=100)
