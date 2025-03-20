@@ -15,12 +15,14 @@ import {
 import { useBus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
-export function useDomState(getState) {
+export function useDomState(getState, { checkEditingElement = true } = {}) {
     const env = useEnv();
-    const state = useState(getState(env.getEditingElement()));
+    const editingElement = env.getEditingElement();
+    const isValid = (el) => (!el && !checkEditingElement) || (el && el.isConnected);
+    const state = useState(isValid(editingElement) ? getState(editingElement) : {});
     useBus(env.editorBus, "DOM_UPDATED", () => {
         const editingElement = env.getEditingElement();
-        if (!editingElement || editingElement.isConnected) {
+        if (isValid(editingElement)) {
             Object.assign(state, getState(editingElement));
         }
     });

@@ -19,12 +19,12 @@ export class ChartOption extends BaseOptionComponent {
             this.prepareData(this.env.getEditingElement())
         );
 
+        this.state = useState({ currentCell: {} });
+
         this.domState = useDomState((editingElement) => ({
             data: this.getData(editingElement),
             isPieChart: this.isPieChart(editingElement),
         }));
-
-        this.state = useState({ currentCell: {} });
     }
 
     getData(editingElement) {
@@ -53,7 +53,7 @@ export class ChartOption extends BaseOptionComponent {
 
     isPieChart(editingElement) {
         const isPieChart = this.props.isPieChart(editingElement);
-        if (this.state && this.domState.isPieChart !== isPieChart) {
+        if (!this.domState || this.domState.isPieChart !== isPieChart) {
             // Pie charts set color on a data cell basis, whereas the
             // other ones set it on a dataset basis. Just reset the
             // current cell to avoid bugs.

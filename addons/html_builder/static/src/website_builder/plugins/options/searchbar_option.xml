@@ -14,7 +14,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Order by">
         <BuilderSelect id="'order_opt'" dataAttributeAction="'orderBy'" action="'setOrderBy'">
-            <t t-foreach="state.orderByItems" t-as="item" t-key="item.id">
+            <t t-foreach="this.orderByItems" t-as="item" t-key="item.id">
                 <BuilderSelectItem t-if="!item.dependency or this.isActiveItem(item.dependency)"
                     actionValue="item.orderBy"
                     dataAttributeActionValue="item.orderBy"
@@ -28,7 +28,7 @@
         <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" unit.translate="results" saveUnit="''" min="0"/>
     </BuilderRow>
 
-    <t t-if="this.getItemValue('limit_opt') > 0" t-foreach="state.displayItems" t-as="item" t-key="`${item.label}_${item.dataAttributeAction}`">
+    <t t-if="this.getItemValue('limit_opt') > 0" t-foreach="this.displayItems" t-as="item" t-key="`${item.label}_${item.dataAttributeAction}`">
         <BuilderRow label="item.label" t-if="this.isActiveItem(item.dependency)">
             <BuilderCheckbox dataAttributeAction="item.dataAttributeAction" dataAttributeActionValue="'true'"/>
         </BuilderRow>
