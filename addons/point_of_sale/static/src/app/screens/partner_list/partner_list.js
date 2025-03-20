@@ -186,28 +186,40 @@ export class PartnerListScreen extends Component {
         }
         return result;
     }
+    /**
+     * Returns the default search fields for filtering partners.
+    */
+    defaultSearchFields() {
+        return [
+            "name",
+            "parent_name",
+            "phone",
+            "mobile",
+            "email",
+            "barcode",
+            "street",
+            "zip",
+            "city",
+            "state_id",
+            "country_id",
+            "vat",
+       ];
+    }
+    /**
+     * Builds the dynamic search domain based on the current query.
+     */
+    _buildPartnerDomain() {
+        const search_fields = this.defaultSearchFields();
+        return [
+           ...Array(search_fields.length - 1).fill('|'),
+           ...search_fields.map(field => [field, "ilike", this.state.query + "%"])
+        ];
+    }
     async getNewPartners() {
         let domain = [];
         const limit = 30;
         if (this.state.query) {
-            const search_fields = [
-                "name",
-                "parent_name",
-                "phone",
-                "mobile",
-                "email",
-                "barcode",
-                "street",
-                "zip",
-                "city",
-                "state_id",
-                "country_id",
-                "vat",
-            ];
-            domain = [
-                ...Array(search_fields.length - 1).fill('|'),
-                ...search_fields.map(field => [field, "ilike", this.state.query + "%"])
-            ];
+            domain = this._buildPartnerDomain();
         }
         // FIXME POSREF timeout
         const result = await this.orm.silent.call(
