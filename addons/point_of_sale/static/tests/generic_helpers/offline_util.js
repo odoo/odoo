@@ -4,6 +4,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 const originalFetch = window.fetch;
 const originalSend = XMLHttpRequest.prototype.send;
 const originalConsoleError = console.error;
+const originalNavigatorOnLine = navigator.onLine;
 
 export function setOfflineMode() {
     return run(() => {
@@ -20,6 +21,11 @@ export function setOfflineMode() {
             } else {
                 originalConsoleError.apply(console, args);
             }
+
+            Object.defineProperty(navigator, "onLine", {
+                get: () => false,
+                configurable: true,
+            });
         };
     }, "Offline mode is now enabled");
 }
@@ -29,5 +35,9 @@ export function setOnlineMode() {
         window.fetch = originalFetch;
         XMLHttpRequest.prototype.send = originalSend;
         console.error = originalConsoleError;
+        Object.defineProperty(navigator, "onLine", {
+            get: () => originalNavigatorOnLine,
+            configurable: true,
+        });
     }, "Offline mode is now disabled");
 }
