@@ -108,6 +108,22 @@ class ImageShapeOptionPlugin extends Plugin {
                     updateImageAttributes();
                 },
             },
+            toggleImageShapeRatio: {
+                isApplied: ({ editingElement: img }) => img.dataset.aspectRatio !== "1/1",
+                load: async ({ editingElement: img }) => {
+                    const isStretched = img.dataset.aspectRatio !== "1/1";
+                    return this.loadShape(img, {
+                        aspectRatio: isStretched ? "1/1" : "0/0",
+                        x: undefined,
+                        y: undefined,
+                        width: undefined,
+                        height: undefined,
+                    });
+                },
+                apply: ({ editingElement: img, loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
+                },
+            },
         };
     }
     async getShapeSvgText(shapeName) {

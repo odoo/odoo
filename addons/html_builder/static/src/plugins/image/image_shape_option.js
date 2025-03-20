@@ -23,6 +23,9 @@ export class ImageShapeOption extends BaseOptionComponent {
             showImageShapeAnimation: this.imageShapeOption.isAnimableShape(
                 editingElement.dataset.shape
             ),
+            togglableRatio: this.imageShapeOption.isTogglableRatioShape(
+                editingElement.dataset.shape
+            ),
         }));
     }
     isShapeVisible(img, shapeIndex) {

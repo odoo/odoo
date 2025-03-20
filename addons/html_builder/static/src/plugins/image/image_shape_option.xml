@@ -34,6 +34,10 @@
                 displayRangeValue="true"
                 computedOutput="this.toRatio" />
         </BuilderRow>
+
+        <BuilderRow label.translate="Stretch" level="1" t-if="this.state.togglableRatio" preview="false">
+            <BuilderCheckbox action="'toggleImageShapeRatio'" />
+        </BuilderRow>
     </t>
 </t>
 
