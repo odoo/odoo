@@ -398,9 +398,11 @@ class CalendarEvent(models.Model):
         elif self.env.user.partner_id.email not in emails:
             commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
             commands_partner += [(4, self.env.user.partner_id.id)]
-        partners = self.env['mail.thread']._mail_find_partner_from_emails(emails, records=self, force_create=True)
+        partners = self.env['mail.thread']._partner_find_from_emails_single(emails, no_create=False)
         attendees_by_emails = {a.email: a for a in existing_attendees}
-        for email, partner, attendee_info in zip(emails, partners, microsoft_attendees):
+        partners_by_emails = {p.email_normalized: p for p in partners}
+        for email, attendee_info in zip(emails, microsoft_attendees):
+            partner = partners_by_emails.get(email_normalize(email) or email, self.env['res.partner'])
             # Responses from external invitations are stored in the 'responseStatus' field.
             # This field only carries the current user's event status because Microsoft hides other user's status.
             if self.env.user.email == email and microsoft_event.responseStatus:
