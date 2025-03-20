@@ -1,14 +1,5 @@
-import {
-    cropperAspectRatios,
-    getMimetype,
-    processImageCrop,
-} from "@html_editor/main/media/image_crop";
-import {
-    activateCropper,
-    applyModifications,
-    isGif,
-    loadImage,
-} from "@html_editor/utils/image_processing";
+import { getMimetype } from "@html_editor/main/media/image_crop";
+import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { isImageCorsProtected } from "@html_builder/utils/utils_css";
@@ -17,7 +8,7 @@ import { ImageToolOption } from "./image_tool_option";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
-    static dependencies = ["history", "userCommand"];
+    static dependencies = ["history", "userCommand", "imagePostProcess"];
     resources = {
         builder_options: [
             {
@@ -42,49 +33,20 @@ class ImageToolOptionPlugin extends Plugin {
         return {
             cropImage: {
                 isApplied: ({ editingElement }) =>
-                    editingElement.classList.contains("o_we_image_cropped"),
+                    cropperDataFieldsWithAspectRatio.some((field) => editingElement.dataset[field]),
                 apply: () => {
                     this.dependencies.userCommand.getCommand("cropImage").run();
                 },
             },
             resetCrop: {
-                load: async ({ editingElement }) => {
-                    // todo: This seems quite heavy for a simple reset. Retrieve some
-                    // metadata, to load the image crop, to call processImageCrop, just to
-                    // reset the crop. We might want to simplify this.
-                    const croppedImage = editingElement;
-
-                    const container = document.createElement("div");
-                    container.style.display = "none";
-                    const originalImage = document.createElement("img");
-                    container.append(originalImage);
-                    document.body.append(container);
-
-                    const mimetime = getImageMimetype(croppedImage);
-                    await loadImage(croppedImage.dataset.originalSrc, originalImage);
-                    let aspectRatio = croppedImage.dataset.aspectRatio || "0/0";
-                    const cropper = await activateCropper(
-                        originalImage,
-                        cropperAspectRatios[aspectRatio].value,
-                        croppedImage.dataset
+                load: async ({ editingElement: img }) => {
+                    const newDataset = Object.fromEntries(
+                        cropperDataFieldsWithAspectRatio.map((field) => [field, undefined])
                     );
-                    cropper.reset();
-                    if (aspectRatio !== "0/0") {
-                        aspectRatio = "0/0";
-                        cropper.setAspectRatio(0);
-                    }
-                    const newSrc = await processImageCrop(
-                        croppedImage,
-                        cropper,
-                        mimetime,
-                        aspectRatio
-                    );
-                    container.remove();
-                    cropper.destroy();
-                    return newSrc;
+                    return await this.dependencies.imagePostProcess.processImage(img, newDataset);
                 },
-                apply: ({ editingElement, editor, loadResult: newSrc }) => {
-                    editingElement.setAttribute("src", newSrc);
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                 },
             },
             transformImage: {
@@ -112,15 +74,13 @@ class ImageToolOptionPlugin extends Plugin {
                         return !editingElement.dataset.glFilter;
                     }
                 },
-                load: async ({ editingElement, param: { mainParam: glFilterName } }) => {
-                    editingElement.dataset.glFilter = glFilterName;
-                    const newSrc = await applyModifications(editingElement, {
-                        mimetype: getImageMimetype(editingElement),
-                    });
-                    return newSrc;
-                },
-                apply: ({ editingElement, editor, loadResult: newSrc }) => {
-                    editingElement.setAttribute("src", newSrc);
+                load: async ({ editingElement: img, param: { mainParam: glFilterName } }) =>
+                    await this.dependencies.imagePostProcess.processImage(img, {
+                        mimetype: getImageMimetype(img),
+                        glFilter: glFilterName,
+                    }),
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
                 },
             },
         };

@@ -1,12 +1,20 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { applyModifications, loadImageInfo } from "@html_editor/utils/image_processing";
+import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { ImageGalleryComponent } from "./image_gallery_option";
 import { renderToElement } from "@web/core/utils/render";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
-    static dependencies = ["media", "dom", "history", "operation", "selection", "builder-options"];
+    static dependencies = [
+        "media",
+        "dom",
+        "history",
+        "operation",
+        "selection",
+        "builder-options",
+        "imagePostProcess",
+    ];
     resources = {
         builder_options: [
             {
@@ -340,7 +348,8 @@ class ImageGalleryOption extends Plugin {
         for (const imgEl of images) {
             imagePromises.push(
                 new Promise((resolve) => {
-                    loadImageInfo(imgEl).then(() => {
+                    loadImageInfo(imgEl).then((newDataset) => {
+                        Object.assign(imgEl.dataset, newDataset);
                         if (
                             imgEl.dataset.mimetype &&
                             !["image/gif", "image/svg+xml", "image/webp"].includes(
@@ -348,14 +357,14 @@ class ImageGalleryOption extends Plugin {
                             )
                         ) {
                             // Convert to webp but keep original width.
-                            imgEl.dataset.mimetype = "image/webp";
-                            applyModifications(imgEl, {
-                                mimetype: "image/webp",
-                            }).then((src) => {
-                                imgEl.src = src;
-                                imgEl.classList.add("o_modified_image_to_save");
-                                resolve();
-                            });
+                            this.dependencies.imagePostProcess
+                                .processImage(imgEl, {
+                                    mimetype: "image/webp",
+                                })
+                                .then((updateImgAttributes) => {
+                                    updateImgAttributes();
+                                    resolve();
+                                });
                         } else {
                             resolve();
                         }

@@ -64,6 +64,7 @@ import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugi
 import { VideoPlugin } from "@html_editor/others/embedded_components/plugins/video_plugin/video_plugin";
 import { QWebPlugin } from "./others/qweb_plugin";
 import { EditorVersionPlugin } from "./core/editor_version_plugin";
+import { ImagePostProcessPlugin } from "./main/media/image_post_process_plugin";
 
 /**
  * @typedef { Object } SharedMethods
@@ -148,6 +149,7 @@ export const MAIN_PLUGINS = [
     YoutubePlugin,
     IconPlugin,
     ImagePlugin,
+    ImagePostProcessPlugin,
     ImageCropPlugin,
     LinkPlugin,
     LinkPastePlugin,
