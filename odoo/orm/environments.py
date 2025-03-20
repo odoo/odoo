@@ -682,15 +682,7 @@ class Cache:
 
     def contains(self, record: BaseModel, field: Field) -> bool:
         """ Return whether ``record`` has a value for ``field``. """
-        field_cache = self._get_field_cache(record, field)
-        if field.translate:
-            cache_value = field_cache.get(record.id, EMPTY_DICT)
-            if cache_value is None:
-                return True
-            lang = (record.env.lang or 'en_US') if field.translate is True else record.env._lang
-            return lang in cache_value
-
-        return record.id in field_cache
+        return record.id in field._cache_view(record.env)
 
     def contains_field(self, field: Field) -> bool:
         """ Return whether ``field`` has a value for at least one record. """
@@ -705,12 +697,8 @@ class Cache:
     def get(self, record: BaseModel, field: Field, default=SENTINEL):
         """ Return the value of ``field`` for ``record``. """
         try:
-            field_cache = self._get_field_cache(record, field)
-            cache_value = field_cache[record._ids[0]]
-            if field.translate and cache_value is not None:
-                lang = (record.env.lang or 'en_US') if field.translate is True else record.env._lang
-                return cache_value[lang]
-            return cache_value
+            field_cache = field._cache_view(record.env)
+            return field_cache[record._ids[0]]
         except KeyError:
             if default is SENTINEL:
                 raise CacheMiss(record, field) from None
@@ -923,17 +911,10 @@ class Cache:
 
     def get_missing_ids(self, records: BaseModel, field: Field) -> Iterator[IdType]:
         """ Return the ids of ``records`` that have no value for ``field``. """
-        field_cache = self._get_field_cache(records, field)
-        if field.translate:
-            lang = (records.env.lang or 'en_US') if field.translate is True else records.env._lang
-            for record_id in records._ids:
-                cache_value = field_cache.get(record_id, False)
-                if cache_value is False or not (cache_value is None or lang in cache_value):
-                    yield record_id
-        else:
-            for record_id in records._ids:
-                if record_id not in field_cache:
-                    yield record_id
+        field_cache = field._cache_view(records.env)
+        for record_id in records._ids:
+            if record_id not in field_cache:
+                yield record_id
 
     def get_dirty_fields(self) -> Collection[Field]:
         """ Return the fields that have dirty records in cache. """

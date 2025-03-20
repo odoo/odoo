@@ -1496,20 +1496,26 @@ class Field(typing.Generic[T]):
             record._check_field_access(self, 'read')
 
         record_len = len(record._ids)
-        if not record_len:
+        if record_len != 1:
+            if record_len:
+                # let ensure_one() raise the proper exception
+                record.ensure_one()
+                assert False, "unreachable"
             # null record -> return the null value for this field
             value = self.convert_to_cache(False, record, validate=False)
             return self.convert_to_record(value, record)
-        if record_len != 1:
-            # let ensure_one() raise the proper exception
-            record.ensure_one()
 
         if self.compute and self.store:
             # process pending computations
             self.recompute(record)
 
+        record_id = record._ids[0]
+        field_cache = self._get_cache(env)
         try:
-            value = env.cache.get(record, self)
+            value = field_cache[record_id]
+            # convert to record may also throw a KeyError if the value is not
+            # in cache, in that case, the fallbacks should be implemented to
+            # read it correctly
             return self.convert_to_record(value, record)
         except KeyError:
             pass
@@ -1532,7 +1538,7 @@ class Field(typing.Generic[T]):
         #       not stored and computed -> compute
         #       not stored and not computed -> default
         #
-        if self.store and record.id:
+        if self.store and record_id:
             # real record: fetch from database
             recs = self._in_cache_without(record, PREFETCH_MAX)
             try:
@@ -1541,12 +1547,12 @@ class Field(typing.Generic[T]):
                 if len(recs) == 1:
                     raise
                 record._fetch_field(self)
-            if not env.cache.contains(record, self):
+            value = field_cache.get(record_id, SENTINEL)
+            if value is SENTINEL:
                 raise MissingError("\n".join([
                     env._("Record does not exist or has been deleted."),
                     env._("(Record: %(record)s, User: %(user)s)", record=record, user=env.uid),
                 ])) from None
-            value = env.cache.get(record, self)
 
         elif self.store and record._origin and not (self.compute and self.readonly):
             # new record with origin: fetch from origin, and assign the
