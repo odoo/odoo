@@ -13,78 +13,78 @@ export const imageShapeDefinitions = {
                     "html_builder/geometric/geo_shuriken": {
                         selectLabel: "Shuriken",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_diamond": {
                         selectLabel: "Diamond",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_triangle": {
                         selectLabel: "Triangle",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_cornered_triangle": {
                         selectLabel: "Corner Triangle",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_pentagon": {
                         selectLabel: "Pentagon",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_hexagon": {
                         selectLabel: "Hexagon",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_heptagon": {
                         selectLabel: "Heptagon",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_star": {
                         selectLabel: "Star 1",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_star_8pin": {
                         selectLabel: "Star 2",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_star_16pin": {
                         selectLabel: "Star 3",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_slanted": {
                         selectLabel: "Slanted",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_emerald": {
                         selectLabel: "Emerald",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_tetris": {
                         selectLabel: "Tetris",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_kayak": {
                         selectLabel: "Kayak",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_tear": {
                         selectLabel: "Tear",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_gem": {
                         selectLabel: "Gem",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_sonar": {
                         selectLabel: "Sonar",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_door": {
                         selectLabel: "Door",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric/geo_square_1": {
                         selectLabel: "Square 1",
@@ -118,98 +118,98 @@ export const imageShapeDefinitions = {
                     "html_builder/geometric_round/geo_round_circle": {
                         selectLabel: "Circle",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_square": {
                         selectLabel: "Square (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_diamond": {
                         selectLabel: "Diamond (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_shuriken": {
                         selectLabel: "Shuriken (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_triangle": {
                         selectLabel: "Triangle (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_pentagon": {
                         selectLabel: "Pentagon (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_hexagon": {
                         selectLabel: "Hexagon (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_heptagon": {
                         selectLabel: "Heptagon (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_star": {
                         selectLabel: "Star 1 (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_star_7pin": {
                         selectLabel: "Star 2 (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_star_8pin": {
                         selectLabel: "Star 3 (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_star_16pin": {
                         selectLabel: "Star 4 (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_emerald": {
                         selectLabel: "Emerald (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_lemon": {
                         selectLabel: "Lemon (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_tear": {
                         selectLabel: "Tear (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_pill": {
                         selectLabel: "Pill (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_gem": {
                         selectLabel: "Gem (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_cornered": {
                         selectLabel: "Cornered",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_door": {
                         selectLabel: "Door (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_sonar": {
                         selectLabel: "Sonar (R)",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_clover": {
                         selectLabel: "Clover (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_bread": {
                         selectLabel: "Bread (R)",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/geometric_round/geo_round_square_1": {
                         selectLabel: "Square 1 (R)",
@@ -257,7 +257,7 @@ export const imageShapeDefinitions = {
                     "html_builder/panel/panel_window": {
                         selectLabel: "Window",
                         transform: false,
-                        stretch: false,
+                        togglableRatio: true,
                     },
                 },
             },
@@ -291,15 +291,15 @@ export const imageShapeDefinitions = {
                 shapes: {
                     "html_builder/brushed/brush_1": {
                         selectLabel: "Brush 1",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/brushed/brush_2": {
                         selectLabel: "Brush 2",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/brushed/brush_3": {
                         selectLabel: "Brush 3",
-                        stretch: false,
+                        togglableRatio: true,
                     },
                     "html_builder/brushed/brush_4": {
                         selectLabel: "Brush 4",
