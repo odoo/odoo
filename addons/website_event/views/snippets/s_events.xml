@@ -43,6 +43,7 @@
 <template id="s_events_single_card" name="Single Event Card">
     <t t-set="is_single_record" t-value="True"/>
     <t t-set="snippet_extra_classes" t-value="'s_event_event_single_card'"/>
+    <t t-set="content_classes" t-value="'o_cc o_cc5 bg-transparent'"/>
     <t t-call="website_event.s_events">
         <t t-call="website_event.s_dynamic_snippet_events_single_card_preview_data"/>
     </t>
@@ -205,6 +206,39 @@
 </template>
 <!-- Card Layout -->
 <template id="dynamic_filter_template_event_event_single_card" name="Solo Card">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="bg" t-value="record._get_background()"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
+            <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
+            <div class="position-relative d-flex align-items-center justify-content-between gap-4 flex-wrap flex-md-nowrap w-100 h-100 p-4 p-lg-5">
+                <div>
+                    <h2 t-field="record.name"/>
+                    <p class="lead" t-field="record.subtitle"/>
+                </div>
+                <div class="s_card card o_cc o_cc1 w-100 w-md-auto border-0 shadow" data-snippet="s_card" data-name="Card" data-vxml="001">
+                    <div class="card-body p-4">
+                        <strong>Date</strong>
+                        <p><i class="fa fa-calendar me-2" role="img"/><span t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/></p>
+                        <div t-if="events_event_time_active" class="s_events_event_time">
+                            <strong>Time</strong>
+                            <p><i class="fa fa-clock-o me-2" role="img"/><span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/></p>
+                        </div>
+                        <div t-if="events_event_location_active">
+                            <strong>Location</strong>
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-map-marker me-2" role="img"/>
+                                <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                            </div>
+                        </div>
+                        <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="btn btn-primary w-100"><t t-out="cta_btn_text">Register<i class="fa fa-long-arrow-right ms-2" role="img"/></t></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 </template>
 <!-- CTA Badge Layout -->
 <template id="dynamic_filter_template_event_event_single_badge" name="Solo Badge">
