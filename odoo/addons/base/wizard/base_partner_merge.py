@@ -156,6 +156,7 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                     # keeping record with nonexistent partner_id is useless, better delete it
                     query = 'DELETE FROM "%(table)s" WHERE "%(column)s" IN %%s' % query_dic
                     self._cr.execute(query, (tuple(src_records.ids),))
+                    self.env.cr.cache.pop('cache_exists', None)
 
     @api.model
     def _update_reference_fields_generic(self, referenced_model, src_records, dst_record, additional_update_records=None):

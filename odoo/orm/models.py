@@ -3954,6 +3954,7 @@ class BaseModel(metaclass=MetaModel):
 
         # invalidate the *whole* cache, since the orm does not handle all
         # changes made in the database, like cascading delete!
+        self.env.cr.cache.pop('cache_exists', None)
         self.env.invalidate_all(flush=False)
         if ir_model_data_unlink:
             ir_model_data_unlink.unlink()
@@ -5192,14 +5193,20 @@ class BaseModel(metaclass=MetaModel):
 
         By convention, new records are returned as existing.
         """
-        new_ids, ids = partition(lambda i: isinstance(i, NewId), self._ids)
+        if not self:
+            return self
+        cache_exists = self.env.cr.cache.setdefault('cache_exists', defaultdict(set))[self._name]
+
+        new_or_cached_ids, ids = partition(lambda id_: isinstance(id_, NewId) or id_ in cache_exists, self._ids)
         if not ids:
             return self
+
         query = Query(self.env, self._table, self._table_sql)
         query.add_where(SQL("%s IN %s", SQL.identifier(self._table, 'id'), tuple(ids)))
-        real_ids = (id_ for [id_] in self.env.execute_query(query.select()))
-        valid_ids = {*real_ids, *new_ids}
-        return self.browse(i for i in self._ids if i in valid_ids)
+        valid_ids = {id_ for [id_] in self.env.execute_query(query.select())}
+        cache_exists.update(valid_ids)
+        valid_ids.update(new_or_cached_ids)
+        return self.browse(id_ for id_ in self._ids if id_ in valid_ids)
 
     @api.private
     def lock_for_update(self, *, allow_referencing: bool = False) -> None:
