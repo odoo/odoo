@@ -95,3 +95,22 @@ test("BadgeField component with decoration-xxx attributes", async () => {
     expect(`.o_field_badge[name="display_name"] .text-bg-danger`).toHaveCount(1);
     expect(`.o_field_badge[name="display_name"] .text-bg-warning`).toHaveCount(1);
 });
+
+test("BadgeField component with color_field option", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "list",
+        arch: `
+            <list>
+                <field name="id" column_invisible="1"/>
+                <field name="display_name" widget="badge" options="{'color_field': 'id'}"/>
+            </list>
+        `,
+    });
+
+    expect(`.o_field_badge[name="display_name"]`).toHaveCount(4);
+    expect(`.o_field_badge[name="display_name"] .o_badge_color_1`).toHaveCount(1);
+    expect(`.o_field_badge[name="display_name"] .o_badge_color_2`).toHaveCount(1);
+    expect(`.o_field_badge[name="display_name"] .o_badge_color_3`).toHaveCount(0); //empty value
+    expect(`.o_field_badge[name="display_name"] .o_badge_color_4`).toHaveCount(1);
+});

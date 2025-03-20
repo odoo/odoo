@@ -1,0 +1,8 @@
+.badge {
+    @for $size from 1 through length($o-colors) {
+        &.o_badge_color_#{$size - 1} {
+            background-color: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%) !important;
+            color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%) !important;
+        }
+    }
+}

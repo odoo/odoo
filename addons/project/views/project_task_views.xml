@@ -746,7 +746,8 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="date_last_stage_update" optional="hide" column_invisible="context.get('default_is_template', False)"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" options="{'is_toggle_mode': false}"/>
-                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show"/>
+                    <field name="stage_id_color" column_invisible="1"/>
+                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show" widget="selection_badge" options="{'color_field': 'stage_id_color'}"/>
                 </list>
             </field>
         </record>
@@ -806,7 +807,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <calendar date_start="date_deadline" string="Tasks" mode="month"
-                          color="stage_id" event_limit="5" hide_time="true"
+                          color="stage_id_color" event_limit="5" hide_time="true"
                           event_open_popup="true" quick_create="0" show_unusual_days="True"
                           js_class="project_task_calendar"
                           scales="day,week,month,year">
@@ -819,7 +820,8 @@
                     <field name="partner_id" invisible="not partner_id"/>
                     <field name="priority" widget="priority" readonly="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not tag_ids"/>
-                    <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection"/>
+                    <field name="stage_id_color" invisible="1"/>
+                    <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection" filters="1"/>
                     <field name="personal_stage_id" string="Personal Stage" options="{'no_open': True}" invisible="project_id or not personal_stage_id"/>
                     <field name="task_properties" invisible="not task_properties"/>
                 </calendar>
@@ -837,6 +839,9 @@
                 </xpath>
                 <xpath expr="//field[@name='project_id']" position="attributes">
                     <attribute name="filters">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='stage_id']" position="replace">
+                    <field name="stage_id" invisible="not project_id or not stage_id" widget="task_stage_with_state_selection"/>
                 </xpath>
             </field>
         </record>

@@ -16,6 +16,7 @@ export class BadgeSelectionField extends Component {
             validate: (s) => ["sm", "md", "lg"].includes(s),
             default: "md",
         },
+        colorField: { type: String, optional: true },
     };
 
     setup() {
@@ -63,6 +64,18 @@ export class BadgeSelectionField extends Component {
         return JSON.stringify(value);
     }
 
+    get badgeColor() {
+        if (this.props.record.data[this.props.name]) {
+            if (this.props.colorField) {
+                return `o_badge_color_${
+                    this.props.record.data[this.props.colorField]
+                }`;
+            }
+            return "btn btn-secondary";
+        }
+        return "";
+    }
+
     /**
      * @param {string | number | false} value
      */
@@ -108,11 +121,19 @@ export const badgeSelectionField = {
             ],
             default: "md",
         },
+        {
+            label: _t("Color field"),
+            name: "color_field",
+            type: "field",
+            availableTypes: ["integer"],
+            help: _t("Set an integer field to use colors with the badge."),
+        },
     ],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
     extractProps: (fieldInfo, dynamicInfo) => ({
         domain: dynamicInfo.domain,
         size: fieldInfo.options.size,
+        colorField: fieldInfo.options.color_field,
     }),
 };
 
