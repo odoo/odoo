@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.TableAlignSelector">
-        <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false">
+        <Dropdown menuClass="'o-we-toolbar-dropdown'" bottomSheet="false" menuRef="menuRef">
             <button class="btn btn-light" t-att-title="props.title" name="vertical_align">
                 <t t-set="selectedItem" t-value="items.find(item => item.mode === state.displayName)" />
                 <t t-call="{{ selectedItem ? selectedItem.template : 'html_editor.VerticalAlignTop' }}" />
