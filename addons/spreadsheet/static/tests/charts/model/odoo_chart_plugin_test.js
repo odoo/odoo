@@ -516,6 +516,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 4]
@@ -528,6 +529,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 3]
@@ -574,6 +576,66 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         const chartId = model.getters.getChartIds(sheetId)[0];
         await waitForDataSourcesLoaded(model);
 
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [15, 19, 24]
+        );
+    });
+
+    QUnit.test("update existing chart to cumulate past data", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            { date: "2020-01-01", probability: 10 },
+            { date: "2021-01-01", probability: 2 },
+            { date: "2022-01-01", probability: 3 },
+            { date: "2022-03-01", probability: 4 },
+            { date: "2022-06-01", probability: 5 },
+        ];
+        const definition = {
+            type: "odoo_line",
+            metaData: {
+                groupBy: ["date"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: {
+                comparison: null,
+                context: {},
+                domain: [
+                    ["date", ">=", "2022-01-01"],
+                    ["date", "<=", "2022-12-31"],
+                ],
+                groupBy: [],
+                orderBy: [],
+            },
+            cumulative: false,
+            title: "Partners",
+            dataSourceId: "42",
+            id: "42",
+        };
+        const { model } = await createSpreadsheetWithChart({
+            type: "odoo_line",
+            serverData,
+            definition,
+        });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        await waitForDataSourcesLoaded(model);
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [3, 4, 5]
+        );
+
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                cumulative: true,
+            },
+            id: chartId,
+            sheetId,
+        });
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [15, 19, 24]
