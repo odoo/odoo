@@ -13,7 +13,7 @@
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="job_title"/>
+                    <field name="job_id"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
@@ -56,7 +56,7 @@
                                         style="font-size: min(4vw, 2.6rem);"/>
                                 </h1>
                                 <h2>
-                                    <field name="job_title" placeholder="Job Title" />
+                                    <field name="job_id" placeholder="Job Position" options="{'no_open': True}"/>
                                 </h2>
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
@@ -73,14 +73,14 @@
                             </group>
                             <group>
                                 <field name="department_id" context="{'open_employees_kanban': 1}"/>
-                                <field name="job_id"/>
+                                <field name="job_id" options="{'no_open': True}"/>
                                 <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                                 <field name="parent_id" widget="many2one_avatar_employee"/>
                                 <field name="coach_id" widget="many2one_avatar_employee"/>
                             </group>
                         </group>
                         <notebook>
-                            <page name="public" string="Work Information">
+                            <page name="contract_information" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">
                                         <group string="Location" name="location">
@@ -111,7 +111,7 @@
                     <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="department_id"/>
-                    <field name="job_title"/>
+                    <field name="job_id" options="{'no_open': True}"/>
                     <field name="parent_id" widget="many2one_avatar_employee"/>
                     <field name="coach_id" widget="many2one_avatar_employee" optional="show"/>
                 </list>
@@ -145,7 +145,7 @@
                                     </div>
                                     <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
                                 </div>
-                                <field t-if="record.job_title.raw_value" name="job_title"/>
+                                <field t-if="record.job_id.raw_value" name="job_id"/>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email"/>

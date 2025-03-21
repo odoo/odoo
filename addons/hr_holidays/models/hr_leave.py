@@ -333,6 +333,7 @@ class HrLeave(models.Model):
 
     @api.depends('employee_id')
     def _compute_resource_calendar_id(self):
+        # YTI TODO: Clean that brol to improve performance
         employees_by_dates = defaultdict(lambda: self.env['hr.employee'])
         for leave in self:
             if leave.employee_id and leave.request_date_from:
@@ -343,6 +344,61 @@ class HrLeave(models.Model):
             if leave.employee_id and leave.request_date_from:
                 calendar = calendar_by_dates[leave.request_date_from][leave.employee_id.id]
             leave.resource_calendar_id = calendar or self.env.company.resource_calendar_id
+        for leave in self:
+            # We use the request dates to find the contracts, because date_from
+            # and date_to are not set yet at this point. Since these dates are
+            # used to get the contracts for which these leaves apply and
+            # contract start- and end-dates are just dates (and not datetimes)
+            # these dates are comparable.
+            if not leave.employee_id:
+                continue
+            contracts = self.env['hr.version'].search([('employee_id', '=', leave.employee_id.id)]).filtered(
+                lambda c: c.date_start <= leave.request_date_to and
+                          (not c.date_end or c.date_end >= leave.request_date_from))
+            if contracts:
+                # If there are more than one contract they should all have the
+                # same calendar, otherwise a constraint is violated.
+                leave.resource_calendar_id = contracts[:1].resource_calendar_id
+
+    def _get_overlapping_contracts(self):
+        self.ensure_one()
+        domain = [
+            ('employee_id', '=', self.employee_id.id),
+            ('contract_date_start', '<=', self.date_to),
+            '|',
+                ('contract_date_end', '>=', self.date_from),
+                ('contract_date_end', '=', False),
+        ]
+        return self.env['hr.version'].sudo().search(domain)
+
+    @api.constrains('date_from', 'date_to')
+    def _check_contracts(self):
+        """
+            A leave cannot be set across multiple contracts.
+            Note: a leave can be across multiple contracts despite this constraint.
+            It happens if a leave is correctly created (not across multiple contracts) but
+            contracts are later modifed/created in the middle of the leave.
+        """
+        for holiday in self.filtered('employee_id'):
+            contracts = holiday._get_overlapping_contracts()
+            if len(contracts.resource_calendar_id) > 1:
+                raise ValidationError(
+                    _("""A leave cannot be set across multiple contracts with different working schedules.
+
+Please create one time off for each contract.
+
+Time off:
+%(time_off)s
+
+Contracts:
+%(contracts)s""",
+                      time_off=holiday.display_name,
+                      contracts='\n'.join(_(
+                          "Contract %(contract)s from %(start_date)s to %(end_date)s",
+                          contract=contract.name or contract.employee_id.name,
+                          start_date=format_date(self.env, contract.date_start),
+                          end_date=format_date(self.env, contract.date_end) if contract.date_end else _("undefined"),
+                      ) for contract in contracts)))
 
     @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
                  'request_unit_half', 'request_unit_hours', 'employee_id')
@@ -421,7 +477,8 @@ class HrLeave(models.Model):
     def _compute_has_mandatory_day(self):
         date_from, date_to = min(self.mapped('date_from')), max(self.mapped('date_to'))
         if date_from and date_to:
-            mandatory_days = self.employee_id._get_mandatory_days(
+            # Sudo to get access to version fields on employee (job_id)
+            mandatory_days = self.employee_id.sudo()._get_mandatory_days(
                 date_from.date(),
                 date_to.date())
 
@@ -507,7 +564,8 @@ class HrLeave(models.Model):
                 continue
             hours, days = (0, 0)
             if leave.employee_id:
-                if leave.employee_id.is_flexible and leave.leave_type_request_unit in ['day','half_day']:
+                # sudo as is_flexible is on version model and employee does not have access to it.
+                if leave.employee_id.sudo().is_flexible and leave.leave_type_request_unit in ['day', 'half_day']:
                     duration = leave.date_to - leave.date_from
                     days = ceil(duration.total_seconds() / (24 * 3600))
                 elif leave.leave_type_request_unit == 'day' and check_leave_type:
@@ -1344,13 +1402,13 @@ is approved, validated or refused.')
             if self.holiday_status_id.responsible_ids:
                 responsible = self.holiday_status_id.responsible_ids
         return responsible
-    
+
     def _get_to_clean_activities(self):
         return ['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval']
 
     def activity_update(self):
         if self.env.context.get('mail_activity_automation_skip'):
-            return False
+            return
 
         to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
         activity_vals = []

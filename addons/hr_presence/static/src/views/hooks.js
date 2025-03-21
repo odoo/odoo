@@ -1,5 +1,5 @@
 export async function getActionRecords(orm) {
-    return await orm.call("hr.employee.base", "get_presence_server_action_data", [[]]);
+    return await orm.call("hr.employee", "get_presence_server_action_data", [[]]);
 }
 export function getPresenceActionItems(actions, records) {
     const presenceActionItems = [];

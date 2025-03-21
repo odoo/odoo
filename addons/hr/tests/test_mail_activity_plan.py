@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 
-from odoo import Command
+from odoo import fields, Command
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common_activity import ActivityScheduleCase
 from odoo.exceptions import UserError, ValidationError
@@ -114,6 +115,21 @@ class ActivityScheduleHRCase(ActivityScheduleCase):
         cls.employee_2.parent_id = cls.employee_manager
         cls.employee_coach.parent_id = cls.employee_manager
         cls.employee_dep_b.coach_id = cls.employee_coach
+
+        cls.employee_3 = cls.employee_coach
+        cls.employee_4 = cls.employee_manager
+        cls.employee_4.coach_id = cls.employee_coach
+        for employee, date_start in ((cls.employee_1, '2023-08-01'),
+                                     (cls.employee_2, '2023-09-01'),
+                                     (cls.employee_3, '2023-12-01'),
+                                     (cls.employee_4, '2024-01-01')):
+            employee.version_id.write({
+                'contract_date_end': fields.Date.from_string('2025-12-31'),
+                'contract_date_start': fields.Date.from_string(date_start),
+                'date_version': fields.Date.from_string(date_start),
+                'name': 'Contract',
+                'wage': 1,
+            })
 
 
 @tagged('mail_activity', 'mail_activity_plan')
@@ -243,3 +259,30 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             form.save()
             self.employee_coach.user_id = self.user_coach
             self.employee_manager.user_id = self.user_manager
+
+    @freeze_time('2023-08-31')
+    @users('admin')
+    def test_default_due_date(self):
+        for employees, plan_date in (
+                (self.employee_1, '2023-09-30'),
+                (self.employee_2, '2023-09-30'),
+                (self.employee_3, '2023-12-01'),
+                (self.employee_4, '2024-01-01'),
+                (self.employee_1 + self.employee_2 + self.employee_3, '2023-09-30'),
+                (self.employee_2 + self.employee_3, '2023-09-30'),
+                (self.employee_1 + self.employee_3, '2023-09-30'),
+                (self.employee_3 + self.employee_4, '2023-12-01'),
+                (self.employee_4 + self.employee_3, '2023-12-01'),
+        ):
+            with self._instantiate_activity_schedule_wizard(employees) as form:
+                form.plan_id = self.plan_onboarding
+                self.assertEqual(form.plan_date, fields.Date.from_string(plan_date))
+
+        # not applicable on other models
+        customers = self.env['res.partner'].create([
+            {'name': 'Customer1'},
+            {'name': 'Customer2'},
+        ])
+        with self._instantiate_activity_schedule_wizard(customers) as form:
+            form.plan_id = self.plan_party
+            self.assertEqual(form.plan_date, fields.Date.from_string('2023-08-31'))

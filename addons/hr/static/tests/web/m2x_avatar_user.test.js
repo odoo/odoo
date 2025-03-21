@@ -17,13 +17,23 @@ test("avatar card preview with hr", async () => {
         email: "Mario@odoo.test",
         phone: "+7878698799",
     });
+    const jobId = env["hr.job"].create({
+        name: "sub manager",
+    });
+    const workLocationId = env["hr.work.location"].create({
+        name: "Odoo",
+        location_type: "office",
+    });
+    const versionId = env["hr.version"].create({
+        job_id: jobId,
+        work_location_id: workLocationId,
+        work_location_type: "office",
+        department_id: departmentId,
+    })
     const employeeId = env["hr.employee"].create({
+        version_id: versionId,
         work_email: "Mario@odoo.pro",
         work_phone: "+585555555",
-        job_title: "sub manager",
-        department_id: departmentId,
-        work_location_name: "Odoo",
-        work_location_type: "office",
     });
     const userId = env["res.users"].create({
         partner_id: partnerId,
@@ -42,7 +52,7 @@ test("avatar card preview with hr", async () => {
             "partner_id",
             "work_phone",
             "work_email",
-            "work_location_name",
+            "work_location_id",
             "work_location_type",
             "job_title",
             "department_id",

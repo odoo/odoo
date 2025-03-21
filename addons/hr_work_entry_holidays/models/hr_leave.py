@@ -44,7 +44,7 @@ class HrLeave(models.Model):
         # 1. Create a work entry for each leave
         work_entries_vals_list = []
         for leave in self:
-            contracts = leave.employee_id.sudo()._get_contracts(leave.date_from, leave.date_to, states=['open', 'close'])
+            contracts = leave.employee_id.sudo()._get_versions_with_contract_overlap_with_period(leave.date_from.date(), leave.date_to.date())
             for contract in contracts:
                 # Generate only if it has aleady been generated
                 if leave.date_to >= contract.date_generated_from and leave.date_from <= contract.date_generated_to:
@@ -154,7 +154,7 @@ class HrLeave(models.Model):
         # Re-create attendance work entries
         vals_list = []
         for work_entry in work_entries:
-            vals_list += work_entry.contract_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
+            vals_list += work_entry.version_id._get_work_entries_values(work_entry.date_start, work_entry.date_stop)
         self.env['hr.work.entry'].create(vals_list)
 
     def _compute_can_cancel(self):

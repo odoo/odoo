@@ -5,8 +5,8 @@ from odoo import api, fields, models
 from .hr_homeworking import DAYS
 
 
-class HrEmployeeBase(models.AbstractModel):
-    _inherit = "hr.employee.base"
+class HrEmployee(models.Model):
+    _inherit = "hr.employee"
 
     monday_location_id = fields.Many2one('hr.work.location', string='Monday')
     tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')
@@ -18,7 +18,7 @@ class HrEmployeeBase(models.AbstractModel):
     exceptional_location_id = fields.Many2one(
         'hr.work.location', string='Current',
         compute='_compute_exceptional_location_id',
-        help='This is the exceptional, non-weekly, location set for today.')
+        help='This is the exceptional, non-weekly, location set for today.', groups="hr.group_hr_user")
     hr_icon_display = fields.Selection(selection_add=[('presence_home', 'At Home'),
                                                       ('presence_office', 'At Office'),
                                                       ('presence_other', 'At Other')])

@@ -18,3 +18,9 @@ class TestHrCommon(common.TransactionCase):
             groups='base.group_user,hr.group_hr_user,base.group_partner_manager',
             name='HR Officer',
         )
+
+        cls.employee = cls.env['hr.employee'].create({
+            'name': 'Richard',
+            'sex': 'male',
+            'country_id': cls.env.ref('base.be').id,
+        })

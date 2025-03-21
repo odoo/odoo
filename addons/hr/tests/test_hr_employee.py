@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from dateutil.relativedelta import relativedelta
 from psycopg2.errors import UniqueViolation
 
+from odoo import fields
 from odoo.fields import Domain
 from odoo.tests import Form, users, new_test_user, HttpCase, tagged
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -22,6 +24,23 @@ class TestHrEmployee(TestHrCommon):
             'user_id': self.user_without_image.id,
             'image_1920': False
         })
+
+    def test_employee_must_have_active_version(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Batman'
+        })
+        self.assertEqual(len(employee.version_ids), 1)
+        employee_version = employee.version_id
+        with self.assertRaises(ValidationError, msg="An employee should always have a version"):
+            employee.write({'version_ids': False})
+        with self.assertRaises(ValidationError, msg="An employee should always have a version"):
+            employee_version.unlink()
+        with self.assertRaises(ValidationError, msg="An employee should always have a version"):
+            employee_version.write({
+                'employee_id': self.employee_without_image.id
+            })
+        with self.assertRaises(ValidationError, msg="An employee should always have an active version"):
+            employee_version.write({'active': False})
 
     def test_employee_smart_button_multi_company(self):
         partner = self.env['res.partner'].create({'name': 'Partner Test'})
@@ -154,10 +173,10 @@ class TestHrEmployee(TestHrCommon):
         self.assertFalse(emp_parent.member_of_department)
         employees = emp + emp_sub + emp_sub_sub + emp_other + emp_parent
         self.assertEqual(
-            employees.filtered_domain(employees._search_part_of_department('in', [True])),
+            employees.filtered_domain(employees.version_id._search_part_of_department('in', [True])),
             emp + emp_sub + emp_sub_sub)
         self.assertEqual(
-            employees.filtered_domain(['!'] + employees._search_part_of_department('in', [True])),
+            employees.filtered_domain(['!'] + employees.version_id._search_part_of_department('in', [True])),
             emp_other + emp_parent)
 
     def test_employee_create_from_user(self):
@@ -488,6 +507,27 @@ class TestHrEmployee(TestHrCommon):
         employee.resource_calendar_id = False
         self.assertTrue(employee.is_flexible)
         self.assertTrue(employee.is_fully_flexible)
+
+    def test_resource_calendar_sync_with_employee_one(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'test calendar',
+            'flexible_hours': True,
+        })
+        self.assertTrue(self.employee.resource_id)
+        self.assertTrue(self.employee.resource_calendar_id)
+        self.assertEqual(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
+        self.assertNotEqual(self.employee.resource_calendar_id, calendar)
+        self.assertTrue(self.employee.resource_calendar_id, self.employee.resource_id.calendar_id)
+        old_calendar = self.employee.resource_calendar_id
+        old_version = self.employee.version_id
+        old_version.date_version = old_version.date_version - relativedelta(days=1)
+        self.employee.resource_calendar_id = calendar
+        self.assertEqual(self.employee.resource_id.calendar_id, calendar)
+        version = self.employee.create_version({'resource_calendar_id': old_calendar.id, 'date_version': fields.Date.today()})
+        self.assertEqual(self.employee.current_version_id, version)
+        self.assertNotEqual(self.employee.current_version_id, old_version)
+        self.assertEqual(self.employee.resource_calendar_id, old_calendar)
+        self.assertEqual(self.employee.resource_id.calendar_id, old_calendar)
 
 
 @tagged('-at_install', 'post_install')

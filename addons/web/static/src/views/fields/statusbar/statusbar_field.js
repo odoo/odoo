@@ -100,7 +100,8 @@ export class StatusBarField extends Component {
                     fieldNames.push(foldField);
                 }
                 const value = record.data[fieldName];
-                let domain = getFieldDomain(record, fieldName, props.domain);
+                let domain = getFieldDomain(record, fieldName, props.domain)
+                domain = Domain.and([this.getDomain(), domain]).toList();
                 if (domain.length && value) {
                     domain = Domain.or([[["id", "=", value.id]], domain]).toList(
                         record.evalContext
@@ -155,6 +156,13 @@ export class StatusBarField extends Component {
      */
     get field() {
         return this.props.record.fields[this.props.name];
+    }
+
+    /**
+     * Override this to force a dynamic domain on the records
+     */
+    getDomain() {
+        return [];
     }
 
     /**

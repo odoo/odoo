@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    applicant_ids = fields.One2many('hr.applicant', 'employee_id', 'Applicant', groups="hr.group_hr_user")
+    applicant_ids = fields.One2many('hr.applicant', 'employee_id', 'Applicants', groups="hr.group_hr_user")
 
     def _get_partner_count_depends(self):
         return super()._get_partner_count_depends() + ['applicant_ids']
@@ -18,10 +18,10 @@ class HrEmployee(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         employees = super().create(vals_list)
-        for employee in employees:
-            if employee.applicant_ids:
-                employee.applicant_ids._message_log_with_view(
+        for employee_sudo in employees.sudo():
+            if employee_sudo.applicant_ids:
+                employee_sudo.applicant_ids._message_log_with_view(
                     'hr_recruitment.applicant_hired_template',
-                    render_values={'applicant': employee.applicant_ids}
+                    render_values={'applicant': employee_sudo.applicant_ids}
                 )
         return employees
