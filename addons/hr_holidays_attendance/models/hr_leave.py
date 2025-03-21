@@ -91,7 +91,8 @@ class HrLeave(models.Model):
         for leave in self:
             if leave.employee_id:
                 for d in range((leave.date_to - leave.date_from).days + 1):
-                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id, leave.date_from + timedelta(days=d)))
+                    # Sudo employee to get info from version.
+                    employee_dates[leave.employee_id].add(self.env['hr.attendance']._get_day_start_and_day(leave.employee_id.sudo(), leave.date_from + timedelta(days=d)))
         if employee_dates:
             self.env['hr.attendance'].sudo()._update_overtime(employee_dates)
 

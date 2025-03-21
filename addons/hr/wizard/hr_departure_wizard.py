@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 
 class HrDepartureWizard(models.TransientModel):
@@ -29,7 +30,7 @@ class HrDepartureWizard(models.TransientModel):
         default=lambda self: self.env['hr.departure.reason'].search([], limit=1),
     )
     departure_description = fields.Html(string="Additional Information")
-    departure_date = fields.Date(string="Departure Date", required=True, default=_get_default_departure_date)
+    departure_date = fields.Date(string="Contract End Date", required=True, default=_get_default_departure_date)
     employee_ids = fields.Many2many(
         'hr.employee', string='Employees', required=True,
         default=_get_default_employee_ids,
@@ -37,7 +38,15 @@ class HrDepartureWizard(models.TransientModel):
         domain=_get_domain_employee_ids,
     )
 
+    set_date_end = fields.Boolean(string="Set Contract End Date", default=lambda self: self.env.user.has_group('hr.group_hr_user'),
+        help="Set the end date on the current contract.")
+
     def action_register_departure(self):
+        active_versions = self.employee_ids.version_id
+
+        if any(v.contract_date_start and v.contract_date_start > self.departure_date for v in active_versions):
+            raise UserError(self.env._("Departure date can't be earlier than the start date of current contract."))
+
         for employee in self.employee_ids.filtered(lambda emp: emp.active):
             if self.env.context.get('employee_termination', False):
                 employee.with_context(no_wizard=True).action_archive()
@@ -46,3 +55,8 @@ class HrDepartureWizard(models.TransientModel):
             'departure_description': self.departure_description,
             'departure_date': self.departure_date,
         })
+
+        if self.set_date_end:
+            # Write date and update state of current contracts
+            active_versions = active_versions.filtered(lambda v: v.contract_date_start)
+            active_versions.write({'contract_date_end': self.departure_date})

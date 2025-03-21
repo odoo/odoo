@@ -30,14 +30,14 @@
             <field name="name">Jessica Johnson</field>
             <field name="parent_id" ref="hr.employee_al"/>
             <field name="job_id" ref="sale_timesheet.job_engineer"/>
-            <field name="job_title">Site Manager</field>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
             <field name="work_location_id" ref="hr.work_location_1"/>
             <field name="work_phone">(535)-495-4164</field>
             <field name="work_contact_id" ref="sale_timesheet.work_contact_jjo"/>
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jjo-image.jpg"/>
             <field name="create_date">2020-02-02 00:00:00</field>
-            <field name="gender">female</field>
+            <field name="sex">female</field>
         </record>
 
         <record id="work_contact_awa" model="res.partner">
@@ -50,14 +50,13 @@
             <field name="name">Amy Watson</field>
             <field name="parent_id" ref="sale_timesheet.employee_jjo"/>
             <field name="job_id" ref="sale_timesheet.job_interior_designer"/>
-            <field name="job_title">Interior Designer</field>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
             <field name="work_location_id" ref="hr.work_location_1"/>
             <field name="work_phone">(535)-495-4222</field>
             <field name="work_contact_id" ref="sale_timesheet.work_contact_awa"/>
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_awa-image.jpg"/>
             <field name="create_date">2020-01-01 00:00:00</field>
-            <field name="gender">female</field>
+            <field name="sex">female</field>
         </record>
 
         <record id="work_contact_jsm" model="res.partner">
@@ -70,14 +69,13 @@
             <field name="name">Justin Smith</field>
             <field name="parent_id" ref="sale_timesheet.employee_jjo"/>
             <field name="job_id" ref="sale_timesheet.job_labour"/>
-            <field name="job_title">Handyman</field>
             <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
             <field name="work_location_id" ref="hr.work_location_1"/>
             <field name="work_phone">(535)-495-4444</field>
             <field name="work_contact_id" ref="sale_timesheet.work_contact_jsm"/>
             <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jsm-image.jpg"/>
             <field name="create_date">2020-02-02 00:00:00</field>
-            <field name="gender">male</field>
+            <field name="sex">male</field>
         </record>
 
         <record id="sale_line_services" model="sale.order.line">

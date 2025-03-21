@@ -53,7 +53,7 @@ class HrLeaveReport(models.Model):
                     allocation.name as name,
                     allocation.number_of_days as number_of_days,
                     allocation.number_of_hours_display as number_of_hours,
-                    employee.department_id as department_id,
+                    v.department_id as department_id,
                     allocation.holiday_status_id as holiday_status_id,
                     allocation.state as state,
                     allocation.date_from as date_from,
@@ -62,6 +62,7 @@ class HrLeaveReport(models.Model):
                     allocation.employee_company_id as company_id
                 from hr_leave_allocation as allocation
                 inner join hr_employee as employee on (allocation.employee_id = employee.id)
+                LEFT JOIN hr_version v ON v.id = employee.current_version_id
                 where employee.active IS True
                 union all select
                     null as allocation_id,
@@ -70,7 +71,7 @@ class HrLeaveReport(models.Model):
                     request.private_name as name,
                     (request.number_of_days * -1) as number_of_days,
                     (request.number_of_hours * -1) as number_of_hours,
-                    employee.department_id as department_id,
+                    v.department_id as department_id,
                     request.holiday_status_id as holiday_status_id,
                     request.state as state,
                     request.date_from as date_from,
@@ -79,6 +80,7 @@ class HrLeaveReport(models.Model):
                     request.employee_company_id as company_id
                 from hr_leave as request
                 inner join hr_employee as employee on (request.employee_id = employee.id)
+                LEFT JOIN hr_version v ON v.id = employee.current_version_id
                 where employee.active IS True
                 ) leaves
             );

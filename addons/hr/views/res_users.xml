@@ -113,7 +113,7 @@
                     </group>
                 </notebook>
                 <notebook position="inside">
-                    <page name="public" string="Work Information">
+                    <page name="contract_information" string="Work Information">
                         <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                             <div id="o_work_employee_main" class="flex-grow-1">
                                 <group string="Location">
@@ -145,7 +145,7 @@
                                 <field name="private_email" string="Email" readonly="not can_edit"/>
                                 <field name="private_phone" string="Phone" class="o_force_ltr" readonly="not can_edit"/>
                                 <field name="private_lang" string="Language" readonly="not can_edit"/>
-                                <field name="employee_bank_account_id" readonly="not can_edit"/>
+                                <field name="employee_bank_account_id" context="{'display_partner': True}" readonly="not can_edit"/>
                                 <label for="distance_home_work"/>
                                 <div class="o_row">
                                     <field name="distance_home_work" readonly="not can_edit" class="o_hr_narrow_field"/>
@@ -157,7 +157,7 @@
                                 <field name="identification_id" readonly="not can_edit"/>
                                 <field name="ssnid" readonly="not can_edit"/>
                                 <field name="passport_id" readonly="not can_edit"/>
-                                <field name="gender" readonly="not can_edit"/>
+                                <field name="sex" readonly="not can_edit"/>
                                 <label for="birthday"/>
                                         <div class="oe_inline">
                                             <field name="birthday" class="o_hr_narrow_field" readonly="not can_edit"/>

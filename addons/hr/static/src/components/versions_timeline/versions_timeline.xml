@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.VersionsTimeline" t-inherit="web.StatusBarField">
+        <div t-ref="root" position="after">
+            <button
+                t-ref="datetime-picker-target-version"
+                title="New Version"
+                t-on-click="onClickDateTimePickerBtn"
+                class="btn btn-primary">
+                <i class="fa fa-plus"/>
+            </button>
+        </div>
+    </t>
+</templates>

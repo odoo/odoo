@@ -22,7 +22,7 @@
         <field name="model">hr.employee.public</field>
         <field name="inherit_id" ref="hr.hr_employee_public_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='job_title']" position="after">
+            <xpath expr="//field[@name='job_id']" position="after">
                 <field name="employee_skill_ids"/>
                 <field name="resume_line_ids" string="Resume" filter_domain="['|', ('resume_line_ids.name', 'ilike', self), ('resume_line_ids.description', 'ilike', self)]"/>
             </xpath>
@@ -63,7 +63,7 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='public']" position="before">
+            <xpath expr="//page[@name='global_information']" position="before">
                 <page name="skills_resume" string="Resume">
                     <div class="row">
                         <div class="o_hr_skills_editable o_hr_skills_group o_group_resume col-lg-7 d-flex flex-column">
@@ -105,7 +105,7 @@
         <field name="model">hr.employee.public</field>
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='public']" position="before">
+            <xpath expr="//page[@name='contract_information']" position="before">
                 <page name="skills_resume" string="Resume">
                     <div class="row">
                         <div class="o_hr_skills_group o_group_resume col-lg-6 d-flex flex-column">
@@ -145,7 +145,7 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="hr.res_users_view_form_profile" />
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='public']" position="before">
+            <xpath expr="//page[@name='contract_information']" position="before">
                 <page name="skills_resume" string="Resume">
                     <div class="row">
                         <field name="employee_id" invisible="1" />

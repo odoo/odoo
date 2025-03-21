@@ -14,6 +14,7 @@
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
+                    <field name="contract_date_start"/>
                     <field name="job_id"/>
                     <field name="coach_id" domain="[('company_id', 'in', allowed_company_ids)]"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
@@ -38,6 +39,28 @@
                     <separator/>
                     <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
                     <separator/>
+                    <filter string="In Contract" name="in_contract"
+                            domain="[
+                                ('contract_date_start', '!=', False),
+                                ('contract_date_start', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                                '|',
+                                    ('contract_date_end', '=', False),
+                                    ('contract_date_end', '>=', context_today().strftime('%Y-%m-%d'))
+                            ]"/>
+                    <filter string="Out of Contract" name="out_of_contract"
+                            domain="[
+                                '|',
+                                    ('contract_date_start', '=', False),
+                                    '|',
+                                        ('contract_date_start', '>', context_today().strftime('%Y-%m-%d')),
+                                        '&amp;',
+                                            ('contract_date_end', '!=', False),
+                                            ('contract_date_end', '&lt;', context_today().strftime('%Y-%m-%d'))
+                            ]"/>
+                    <separator />
+                    <filter string="Contract Start Date" name="contract_date_start" date="contract_date_start"/>
+                    <filter string="Contract End Date" name="contract_date_end" date="contract_date_end"/>
+                    <separator />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
@@ -46,7 +69,7 @@
                         <filter name="group_employee_type" string="Employee Type" domain="[]" context="{'group_by': 'employee_type'}"/>
                         <separator name="main_groupby_separator"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday'}"/>
-                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'create_date'}"/>
+                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'contract_date_start'}"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
@@ -62,20 +85,28 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <form string="Employee" js_class="hr_employee_form">
-                    <field name="active" invisible="1"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="user_partner_id" invisible="1"/>
-                    <field name="image_128" invisible="1" />
-                    <field name="company_id" invisible="1"/>
-                    <field name="last_activity_time" invisible="1"/>
-                    <field name="last_activity" invisible="1"/>
-                    <field name="work_contact_id" invisible="1"/>
-                    <header>
+                    <header groups="hr.group_hr_user">
+                        <button string="Create User" name="action_create_user" type="object"
+                                class="btn btn-primary" invisible="user_id" groups="hr.group_hr_user"
+                                context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
+                        <field name="version_id" widget="versions_timeline" invisible="not id" options="{'clickable': True}" readonly="False"/>
                     </header>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
+                            <button name="action_open_versions"
+                                class="oe_stat_button"
+                                icon="fa-address-book"
+                                type="object"
+                                groups="hr.group_hr_user">
+                                <div class="o_stat_info">
+                                    Versions
+                                    <span class="o_stat_value">
+                                        <field name="versions_count"/>
+                                    </span>
+                                </div>
+                            </button>
                         </div>
                         <div class="d-flex align-items-center">
                             <div class="o_employee_avatar m-0 p-0">
@@ -94,7 +125,7 @@
                                     </h1>
                                     <h2 class="d-flex align-items-baseline">
                                         <i class="fa fa-suitcase fa-fw me-1 text-primary" title="Position"/>
-                                        <field name="job_title" placeholder="Job Title"/>
+                                        <field name="job_id" placeholder="Job Position"/>
                                     </h2>
                                 </div>
                             </div>
@@ -102,78 +133,39 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <group>
                             <group>
-                                <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com"/>
-                                <field name="work_phone" widget="phone"/>
-                                <field name="mobile_phone" widget="phone"/>
                                 <field name="category_ids" widget="many2many_tags"
                                     options="{'color_field': 'color', 'no_create_edit': True}"
                                     placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
+                                <field name="user_id" string="User" placeholder="Create User"
+                                    domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                    context="{
+                                        'default_create_employee_id': id,
+                                        'default_name': name,
+                                        'default_phone': work_phone,
+                                        'default_mobile': mobile_phone,
+                                        'default_login': work_email,
+                                        'default_partner_id': work_contact_id,
+                                    }"
+                                    widget="many2one_avatar_user"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="company_country_id" invisible="1"/>
-                                <field name="company_country_code" invisible="1"/>
-                            </group>
-                            <group>
-                                <field name="department_id"/>
-                                <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
-                                <field name="parent_id" widget="many2one_avatar_employee"/>
-                                <field name="coach_id" widget="many2one_avatar_employee"/>
                             </group>
                         </group>
-                        <field name="employee_properties" columns="2"/>
                         <notebook>
-                            <page name="public" string="Work Information">
-                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
-                                    <div id="o_work_employee_main" class="flex-grow-1">
-                                        <group string="Location">
-                                            <field name="address_id"
-                                                context="{'show_address': 1}"
-                                                options='{"highlight_first_line": True}'/>
-                                            <field name="work_location_id" context="{'default_address_id': address_id}" placeholder="e.g. Building 2, Remote, etc."/>
-                                        </group>
-                                        <group name="managers" string="Approvers" class="hide-group-if-empty" invisible="1">
-                                            <!-- is overridden in other hr related modules -->
-                                        </group>
-                                        <group name="departure" string="Departure" invisible="active">
-                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                            <field name="departure_description"/>
-                                            <field name="departure_date"/>
-                                        </group>
-                                        <group name="schedule" string="Schedule">
-                                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
-                                            <field name="id" invisible="1"/>
-                                            <field name="tz" required="id"/>
-                                        </group>
-                                    </div>
-                                </div>
-                            </page>
-                            <page name="personal_information" string="Private Information" groups="hr.group_hr_user">
+                            <page name="global_information" string="Global Information" groups="hr.group_hr_user">
                                 <group>
                                     <group string="Private Contact">
-                                        <label for="private_street" string="Private Address"/>
-                                        <div class="o_address_format">
-                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
-                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
-                                            <field name="private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
-                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
-                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
-                                        </div>
-                                        <field name="private_email" placeholder="e.g. myprivateemail@example.com"/>
-                                        <field name="private_phone"/>
-                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}" options="{'no_quick_create': True}" readonly="not id"/>
-                                        <label for="distance_home_work"/>
-                                        <div class="o_row" name="div_km_home_work">
-                                            <field name="distance_home_work" class="o_hr_narrow_field"/>
-                                            <span><field name="distance_home_work_unit"/></span>
-                                        </div>
-                                        <field name="private_car_plate" />
+                                        <field name="private_email" placeholder="e.g. myprivateemail@example.com" string="Email"/>
+                                        <field name="private_phone" widget="phone" string="Phone"/>
+                                        <field name="bank_account_id" context="{'default_partner_id': work_contact_id}"
+                                               options="{'no_quick_create': True}" readonly="not id"/>
                                     </group>
-                                    <group string="Citizenship">
-                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
-                                        <field name="identification_id"/>
-                                        <field name="ssnid"/>
-                                        <field name="passport_id"/>
-                                        <field name="gender"/>
+                                    <group string="Work Contact">
+                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Email"/>
+                                        <field name="work_phone" widget="phone" string="Phone"/>
+                                        <field name="mobile_phone" widget="phone" string="Mobile"/>
+                                    </group>
+                                    <group string="Birth Information">
+                                        <field name="legal_name"/>
                                         <label for="birthday"/>
                                         <div class="o_row" name="div_km_home_work">
                                             <field name="birthday" class="o_hr_narrow_field"/>
@@ -182,51 +174,26 @@
                                                 <field name="birthday_public_display" class="ms-3"/>
                                             </span>
                                         </div>
-                                        <field name="place_of_birth"/>
-                                        <field name="country_of_birth"/>
-                                    </group>
-                                    <group string="Emergency" name="emergency">
-                                        <field name="emergency_contact"/>
-                                        <field name="emergency_phone" class="o_force_ltr"/>
-                                        <separator string="Family Status"/>
-                                        <field name="marital"/>
-                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
-                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
-                                        <field name="children"/>
-                                    </group>
-                                    <group string="Education">
-                                        <field name="certificate"/>
-                                        <field name="study_field"/>
-                                        <field name="study_school"/>
-                                        <separator name="has_work_permit" string="Work Permit"/>
-                                        <field name="visa_no"/>
-                                        <field name="permit_no"/>
-                                        <field name="visa_expire"/>
-                                        <field name="work_permit_expiration_date"/>
-                                        <field name="work_permit_name" invisible="1"/>
-                                        <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name"/>
-                                    </group>
-                                </group>
-                            </page>
-                            <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
-                                <group>
-                                    <group string='Status' name="active_group">
-                                        <field name="employee_type"/>
-                                        <label for="user_id"/>
-                                        <div class="o_row">
-                                            <field name="user_id"
-                                                string="Related User"
-                                                help=""
-                                                domain="[('company_ids', 'in', company_id)]"
-                                                context="{'default_create_employee_id': id}"
-                                                widget="many2one_avatar_user"/>
-                                            <button string="Create User"
-                                                class="btn btn-link"
-                                                type="object"
-                                                name="action_create_user"
-                                                context="{'default_create_employee': True}"
-                                                invisible="user_id"/>
+                                        <label for="place_of_birth"/>
+                                        <div class="o_row" name="contract_type">
+                                            <field name="place_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="City"/>
+                                            <div class="mx-3 flex-grow-0">─</div>
+                                            <field name="country_of_birth" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Country"/>
                                         </div>
+                                    </group>
+                                    <group string="Emergency Contact">
+                                        <field name="emergency_contact" string="Contact"/>
+                                        <field name="emergency_phone" class="o_force_ltr" string="Phone"/>
+                                    </group>
+                                    <group string="Visa">
+                                        <field name="visa_no"/>
+                                        <field name="visa_expire"/>
+                                    </group>
+                                    <group string="Work Permit">
+                                        <field name="permit_no"/>
+                                        <field name="work_permit_expiration_date" string="Expiration Date"/>
+                                        <field name="work_permit_name" invisible="1"/>
+                                        <field name="has_work_permit" widget="work_permit_upload" filename="work_permit_name" string="Document"/>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -237,8 +204,110 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" invisible="not barcode"/>
                                         </div>
                                     </group>
-                                    <group name="application_group" string="Application Settings" invisible="1"/>
                                 </group>
+                            </page>
+                            <page name="personal_information" string="Personal Information" groups="hr.group_hr_user">
+                                <group>
+                                    <group name="citizenship" string="Citizenship">
+                                        <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                                        <field name="identification_id"/>
+                                        <field name="ssnid"/>
+                                        <field name="passport_id"/>
+                                        <field name="sex"/>
+                                    </group>
+                                    <group string="Location">
+                                        <label for="private_street" string="Private Address"/>
+                                        <div class="o_address_format">
+                                            <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                            <field name="private_city" placeholder="City" class="o_address_city"/>
+                                            <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                            <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                            <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                        </div>
+                                        <label for="distance_home_work"/>
+                                        <div class="o_row" name="div_km_home_work">
+                                            <field name="distance_home_work" class="o_hr_narrow_field"/>
+                                            <span><field name="distance_home_work_unit"/></span>
+                                        </div>
+                                    </group>
+                                    <group string="Family">
+                                        <field name="marital"/>
+                                        <field name="spouse_complete_name" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="spouse_birthdate" invisible="marital not in ['married', 'cohabitant']"/>
+                                        <field name="children"/>
+                                    </group>
+                                    <group string="Education">
+                                        <field name="certificate"/>
+                                        <field name="study_field"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="contract_information" string="Contract Information">
+                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main" class="flex-grow-1">
+                                        <group name="contract" string="Contract Overview" groups="hr.group_hr_user">
+                                            <field name="contract_template_id"
+                                                   domain="[('company_id', '=', company_id), ('employee_id', '=', False)]"
+                                                   options="{'no_create': True, 'no_create_edit': True}"
+                                                   context="{'form_view_ref': 'hr.hr_contract_template_form_view'}"/>
+                                            <field name="contract_date_start" string="Start Date" placeholder="Not Employed"/>
+                                            <field name="contract_date_end" string="End Date" placeholder="Indefinite" invisible="not contract_date_start"/>
+                                            <field name="employee_type"/>
+                                            <label for="contract_type_id" string="Contract Type"/>
+                                            <div class="o_row" name="contract_type">
+                                                <field name="contract_type_id" class="oe_inline o_hr_narrow_field" nolabel="1" placeholder="Contract Type"/>
+                                                <div class="mx-3 flex-grow-0">─</div>
+                                                <field name="structure_type_id" class="oe_inline" nolabel="1" placeholder="Salary Structure Type"
+                                                       domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
+                                            </div>
+                                        </group>
+                                        <group name="organization" string="Organization">
+                                            <field name="department_id"/>
+                                            <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                            <field name="parent_id" widget="many2one_avatar_employee"/>
+                                            <field name="coach_id" widget="many2one_avatar_employee"/>
+                                        </group>
+                                        <group name="application_group" string="Application Settings" invisible="1"/>
+                                        <group string="Location">
+                                            <field name="address_id"
+                                                context="{'show_address': 1}"
+                                                options='{"highlight_first_line": True}'/>
+                                            <field name="work_location_id"
+                                                   context="{'default_address_id': address_id}"
+                                                   placeholder="e.g. Building 2, Remote, etc."/>
+                                        </group>
+                                        <group name="managers" string="Approvers">
+                                            <field name="hr_responsible_id" widget="many2one_avatar_user"/>
+                                        </group>
+                                        <group name="departure" string="Departure" invisible="active">
+                                            <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
+                                            <field name="departure_description"/>
+                                            <field name="departure_date"/>
+                                        </group>
+                                        <group name="schedule" string="Schedule">
+                                            <field name="resource_calendar_id" help="The default working hours are set in configuration."/>
+                                            <field name="tz" required="id"/>
+                                        </group>
+                                        <group name="notes" string="Notes">
+                                            <field name="notes" placeholder="Type in notes about this contract..."/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </page>
+                            <page name="salary_information" string="Salary Information" groups="hr.group_hr_user">
+                                <group name="salary">
+                                    <group name="wage" string="Salary">
+                                        <field name="currency_id" invisible="1"/>
+                                        <label for="wage"/>
+                                        <div class="o_row" name="wage">
+                                            <field name="wage" class="oe_inline o_hr_narrow_field" nolabel="1"/>
+                                            <div class="mb-3" name="wage_period_label">/ month</div>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page name="hr_settings" string="Settings">
                             </page>
                         </notebook>
                     </sheet>
@@ -252,7 +321,7 @@
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
                 <graph string="New Employees Over Time" type="line" sample="1" js_class="hr_graph_view">
-                    <field name="create_date" interval="month"/>
+                    <field name="contract_date_start" interval="month"/>
                     <field name="id"/>
                     <field name="color" type="measure" invisible="1"/>
                     <field name="distance_home_work" type="measure" invisible="1"/>
@@ -268,7 +337,7 @@
             <field name="arch" type="xml">
                 <pivot string="New Employees Over Time" sample="1" js_class="hr_pivot_view">
                     <field name="job_id" type="row"/>
-                    <field name="create_date" interval="year" type="col"/>
+                    <field name="contract_date_start" interval="year" type="col"/>
                     <field name="id"/>
                     <field name="color" type="measure" invisible="1"/>
                     <field name="distance_home_work" type="measure" invisible="1"/>
@@ -290,13 +359,19 @@
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email" optional="hide"/>
+                    <field name="contract_date_start" optional="hide"/>
+                    <field name="contract_date_end" optional="hide"/>
+                    <field name="currency_id" column_invisible="1"/>
+                    <field name="wage" widget="monetary" optional="hide"/>
                     <field name="employee_type" optional="hide"/>
+                    <field name="contract_type_id" optional="hide"/>
+                    <field name="structure_type_id" optional="hide"/>
                     <field name="activity_ids" widget="list_activity" optional="hide"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
                     <field name="activity_date_deadline" widget="remaining_days" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
-                    <field name="department_id"/>
-                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="show"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="show"/>
                     <field name="address_id" column_invisible="True"/>
                     <field name="company_id" column_invisible="True"/>
@@ -321,6 +396,7 @@
                     <field name="department_id" optional="hide"/>
                     <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" optional="hide"/>
                     <field name="parent_id" widget="many2one_avatar_employee" optional="hide"/>
+                    <field name="contract_date_start" optional="hide"/>
                     <field name="resource_calendar_id" optional="show"/>
                 </list>
             </field>
@@ -368,6 +444,17 @@
                                 <div t-if="record.work_phone.raw_value">
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" />
+                                </div>
+                                <div t-if="record.contract_date_start.raw_value">
+                                    <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
+                                    <field name="contract_date_start"/>
+                                    <span> - </span>
+                                    <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
+                                    <span t-else="">Indefinitely</span>
+                                </div>
+                                <div t-else="">
+                                    <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
+                                    <span>No Contract</span>
                                 </div>
                                 <div invisible="birthday_public_display_string == 'hidden'">
                                     <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>

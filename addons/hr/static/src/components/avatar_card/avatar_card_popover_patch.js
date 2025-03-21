@@ -11,7 +11,7 @@ export const patchAvatarCardPopover = {
         return fields.concat([
             "work_phone",
             "work_email",
-            "work_location_name",
+            "work_location_id",
             "work_location_type",
             "job_title",
             "department_id",

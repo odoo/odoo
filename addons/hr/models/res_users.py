@@ -22,6 +22,7 @@ HR_READABLE_FIELDS = [
     'is_system',
     'employee_resource_calendar_id',
     'work_contact_id',
+    'bank_account_id',
 ]
 
 HR_WRITABLE_FIELDS = [
@@ -48,7 +49,7 @@ HR_WRITABLE_FIELDS = [
     'emergency_phone',
     'employee_bank_account_id',
     'employee_country_id',
-    'gender',
+    'sex',
     'identification_id',
     'ssnid',
     'job_title',
@@ -123,7 +124,7 @@ class ResUsers(models.Model):
     identification_id = fields.Char(related='employee_id.identification_id', readonly=False, related_sudo=False)
     ssnid = fields.Char(related='employee_id.ssnid', readonly=False, related_sudo=False)
     passport_id = fields.Char(related='employee_id.passport_id', readonly=False, related_sudo=False)
-    gender = fields.Selection(related='employee_id.gender', readonly=False, related_sudo=False)
+    sex = fields.Selection(related='employee_id.sex', readonly=False, related_sudo=False)
     birthday = fields.Date(related='employee_id.birthday', readonly=False, related_sudo=False)
     birthday_public_display = fields.Boolean(related='employee_id.birthday_public_display', readonly=False, related_sudo=False)
     place_of_birth = fields.Char(related='employee_id.place_of_birth', readonly=False, related_sudo=False)
@@ -149,6 +150,7 @@ class ResUsers(models.Model):
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
     employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
+    bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
 
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")

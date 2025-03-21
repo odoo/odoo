@@ -20,17 +20,15 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         cls.start = datetime(2015, 11, 1, 1, 0, 0)
         cls.end = datetime(2015, 11, 30, 23, 59, 59)
         cls.resource_calendar_id = cls.env['resource.calendar'].create({'name': 'Zboub'})
-        contract = cls.env['hr.contract'].create({
-            'date_start': cls.start.date() - relativedelta(days=5),
+        cls.richard_emp.create_version({
+            'date_version': cls.start.date() - relativedelta(days=5),
+            'contract_date_start': cls.start.date() - relativedelta(days=5),
+            'contract_date_end': Date.to_date('2017-12-31'),
             'name': 'dodo',
             'resource_calendar_id': cls.resource_calendar_id.id,
             'wage': 1000,
-            'employee_id': cls.richard_emp.id,
-            'state': 'open',
             'date_generated_from': cls.end.date() + relativedelta(days=5),
         })
-        cls.richard_emp.resource_calendar_id = cls.resource_calendar_id
-        cls.richard_emp.contract_id = contract
 
     def test_time_week_leave_work_entry(self):
         # /!\ this is a week day => it exists an calendar attendance at this time
@@ -46,81 +44,27 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         })
         leave.action_approve()
 
-        work_entries = self.richard_emp.contract_id.generate_work_entries(self.start.date(), self.end.date())
+        work_entries = self.richard_emp.generate_work_entries(self.start.date(), self.end.date())
         work_entries.action_validate()
         leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
         sum_hours = sum(leave_work_entry.mapped('duration'))
 
         self.assertEqual(sum_hours, 5.0, "It should equal the number of hours richard should have worked")
 
-    def test_contract_on_another_company(self):
-        """ Test that the work entry generation still work if
-            the contract is not on the same company than
-            the employee (Internal Use Case)
-            So when generating the work entries in Belgium,
-            there is an issue when accessing to the time off
-            in Hong Kong.
-        """
-        company = self.env['res.company'].create({'name': 'Another Company'})
-
-        employee = self.env['hr.employee'].create({
-            'name': 'New Employee',
-            'company_id': company.id,
-        })
-
-        self.env['hr.contract'].create({
-            'name': 'Employee Contract',
-            'employee_id': employee.id,
-            'date_start': Date.from_string('2015-01-01'),
-            'state': 'open',
-            'company_id': self.env.ref('base.main_company').id,
-            'wage': 4000,
-        })
-
-        leave_type = self.env['hr.leave.type'].create({
-            'name': 'Sick',
-            'request_unit': 'hour',
-            'leave_validation_type': 'both',
-            'requires_allocation': False,
-            'company_id': company.id,
-        })
-        leave1 = self.env['hr.leave'].create({
-            'name': 'Sick 1 week during christmas snif',
-            'employee_id': employee.id,
-            'holiday_status_id': leave_type.id,
-            'request_date_from': '2019-12-23',
-            'request_date_to': '2019-12-27',
-        })
-        leave1.action_approve()
-
-        # The work entries generation shouldn't raise an error
-
-        user = self.env['res.users'].create({
-            'name': 'Classic User',
-            'login': 'Classic User',
-            'company_id': self.env.ref('base.main_company').id,
-            'company_ids': self.env.ref('base.main_company').ids,
-            'group_ids': [(6, 0, [self.env.ref('hr_contract.group_hr_contract_manager').id, self.env.ref('base.group_user').id])],
-        })
-        self.env['hr.employee'].with_user(user).generate_work_entries('2019-12-01', '2019-12-31')
-
     def test_work_entries_generation_if_parent_leave_zero_hours(self):
         # Test case: The employee has a parental leave at 0 hours per week
         # The employee has a leave during that period
 
-        employee = self.env['hr.employee'].create({'name': 'My employee'})
         calendar = self.env['resource.calendar'].create({
             'name': 'Parental 0h',
             'attendance_ids': False,
         })
-        employee.resource_calendar_id = calendar
-        contract = self.env['hr.contract'].create({
-            'date_start': self.start.date() - relativedelta(years=1),
-            'name': 'Contract - Parental 0h',
+        employee = self.env['hr.employee'].create({
+            'name': 'My employee',
+            'contract_date_start': self.start.date() - relativedelta(years=1),
+            'contract_date_end': False,
             'resource_calendar_id': calendar.id,
             'wage': 1000,
-            'employee_id': employee.id,
-            'state': 'open',
         })
 
         leave_type = self.env['hr.leave.type'].create({
@@ -144,7 +88,7 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         with self.assertRaises(ValidationError):
             leave.action_approve()
 
-        work_entries = contract.generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
+        work_entries = employee.version_id.generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
 
         self.assertEqual(len(work_entries), 0)
 

@@ -271,9 +271,9 @@ class HrExpense(models.Model):
     )
 
     # Security fields
-    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True)
-    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True)
-    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True)
+    is_editable = fields.Boolean(string="Is Editable By Current User", compute='_compute_is_editable', readonly=True, compute_sudo=True)
+    can_reset = fields.Boolean(string='Can Reset', compute='_compute_can_reset', readonly=True, compute_sudo=True)
+    can_approve = fields.Boolean(string='Can Approve', compute='_compute_can_approve', readonly=True, compute_sudo=True)
 
     # Legacy sheet field, allow grouping of expenses to keep the grouping mechanic data and allow it to be re-used when re-implemented
     former_sheet_id = fields.Integer(string='Former Report')

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, fields, _
@@ -37,3 +36,13 @@ class HrEmployee(models.Model):
             'context': ctx,
             'domain': [('employee_id', '=', self.id)],
         }
+
+    def generate_work_entries(self, date_start, date_stop, force=False):
+        date_start = fields.Date.to_date(date_start)
+        date_stop = fields.Date.to_date(date_stop)
+
+        if self:
+            versions = self._get_versions_with_contract_overlap_with_period(date_start, date_stop)
+        else:
+            versions = self._get_all_versions_with_contract_overlap_with_period(date_start, date_stop)
+        return versions.generate_work_entries(date_start, date_stop, force=force)

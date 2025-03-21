@@ -12,7 +12,7 @@
         <field name="sequence">10</field>
         <field name="privilege_id" ref="res_groups_privilege_employees"/>
         <field name="implied_ids" eval="[(6, 0, [ref('base.group_user')])]"/>
-        <field name="comment">The user will be able to approve document created by employees.</field>
+        <field name="comment">The user will be able to create and edit employees.</field>
     </record>
 
     <record id="group_hr_manager" model="res.groups">
@@ -101,5 +101,24 @@
         <field name="domain_force">[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]</field>
     </record>
 
+    <record id="ir_rule_hr_contract_manager" model="ir.rule">
+        <field name="name">HR Contract: Contract Manager</field>
+        <field name="model_id" ref="model_hr_version"/>
+        <field name="groups" eval="[(4, ref('group_hr_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="ir_rule_hr_contract_multi_company" model="ir.rule">
+        <field name="name">HR Contract: Multi Company</field>
+        <field name="model_id" ref="model_hr_version"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ir_rule_hr_payroll_structure_type_multi_company" model="ir.rule">
+        <field name="name">HR Payroll Structure Type: Multi Company</field>
+        <field name="model_id" ref="model_hr_payroll_structure_type"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]</field>
+    </record>
 </data>
 </odoo>

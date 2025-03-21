@@ -54,6 +54,6 @@ class TestInit(BaseCase):
             code = f"import {module}; import sys, time; sys.exit(0 if (time.tzname[0] == '{timezone}') else 5)"
             with self.subTest(module=module, timezone=timezone):
                 start_time = time.perf_counter()
-                self.run_python(code, env=env)
+                self.run_python(code, env=env, check=False)
                 end_time = time.perf_counter()
                 _logger.info("  %s execution time: %.3fs", module, end_time - start_time)

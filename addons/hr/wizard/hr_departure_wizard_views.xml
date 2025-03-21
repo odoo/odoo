@@ -14,12 +14,13 @@
                                 <field name="departure_date"/>
                             </group>
                             <group id="action">
-                                <!-- Override invisible="1" when inheriting -->
-                                <div class="o_td_label" id="activities_label" invisible="1">
+                                <div class="o_td_label" id="activities_label">
                                     <span class="o_form_label o_hr_form_label cursor-default">Close Activities</span>
                                 </div>
-                                <!-- Override invisible="1" when inheriting -->
-                                <div class="column" id="activities" invisible="1">
+                                <div class="column" id="activities">
+                                    <div>
+                                        <field name="set_date_end"/><label for="set_date_end" string="Contract"/>
+                                    </div>
                                 </div>
                                 <div class="column" id="info"/>
                             </group>

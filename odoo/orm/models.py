@@ -4178,7 +4178,7 @@ class BaseModel(metaclass=MetaModel):
             for fields in determine_inverses.values():
                 # write again on non-stored fields that have been invalidated from cache
                 for field in fields:
-                    if not field.store and any(field._cache_missing_ids(real_recs)):
+                    if not field.store and (not field.inherited or field.type not in ('one2many', 'many2many')) and any(field._cache_missing_ids(real_recs)):
                         field.write(real_recs, vals[field.name])
 
                 # inverse records that are not being computed

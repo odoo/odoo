@@ -35,7 +35,7 @@
         <field name="job_id" ref="job_developer_{{name}}"/>
         <field name="country_id" ref="base.{{code}}"/>
         <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
-        <field name="gender">male</field>
+        <field name="sex">male</field>
     </record>
 
     <record id="l10n_{{code}}_res_partner_antonina" model="res.partner">
@@ -77,7 +77,7 @@
 
     <record id="l10n_{{code}}_hr_employee_antonina" model="hr.employee">
         <field name="name">Antonina Kaczmarczyk (fpo)</field>
-        <field name="gender">female</field>
+        <field name="sex">female</field>
         <field name="marital">single</field>
         <field name="job_title">Software Developer</field>
         <field name="address_id" ref="l10n_{{code}}_hr_payroll.res_partner_antonina_work_address"/>

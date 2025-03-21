@@ -14,9 +14,11 @@
         'security/hr_work_entry_security.xml',
         'security/ir.model.access.csv',
         'data/hr_work_entry_type_data.xml',
+        'data/ir_cron_data.xml',
         'views/hr_work_entry_views.xml',
         'views/hr_employee_views.xml',
         'views/resource_calendar_views.xml',
+        'wizard/hr_work_entry_regeneration_wizard_views.xml',
     ],
     'demo': [
         'data/hr_work_entry_demo.xml',
