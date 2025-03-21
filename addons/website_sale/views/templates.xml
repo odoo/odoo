@@ -1775,6 +1775,7 @@
                 </del>
             </div>
             <div
+                t-if="editable"
                 name="product_list_price_container"
                 class="css_non_editable_mode_hidden decimal_precision h3"
                 t-att-data-precision="str(website.currency_id.decimal_places)"
