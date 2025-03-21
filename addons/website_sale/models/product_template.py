@@ -563,6 +563,11 @@ class ProductTemplate(models.Model):
                 ),
             })
 
+        if combination_info['prevent_zero_price_sale']:
+            # If price is zero and prevent_zero_price_sale is enabled we don't want to send any
+            # price information regarding the product
+            combination_info['compare_list_price'] = 0
+
         return combination_info
 
     @api.model
