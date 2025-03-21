@@ -749,6 +749,13 @@ class AccountMove(models.Model):
             expressions=['journal_id', 'company_id', 'date'],
             where="made_sequence_gap = TRUE",
         )  # used in <account.journal>._query_has_sequence_holes
+        create_index(
+            self.env.cr,
+            indexname='account_move_duplicate_bills_idx',
+            tablename='account_move',
+            expressions=['ref'],
+            where="move_type IN ('in_invoice', 'in_refund')",
+        )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -1879,6 +1886,7 @@ class AccountMove(models.Model):
         if in_moves:
             in_moves_sql_condition = SQL("""
                 move.move_type in ('in_invoice', 'in_refund')
+                AND duplicate_move.move_type in ('in_invoice', 'in_refund')
                 AND (
                    move.ref = duplicate_move.ref
                    AND (
