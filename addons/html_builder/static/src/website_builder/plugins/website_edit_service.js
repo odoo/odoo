@@ -50,6 +50,7 @@ registry.category("services").add("website_edit", {
         let editMode = false;
         const patches = [];
         const historyCallbacks = {};
+        const shared = {};
 
         const update = (target, mode) => {
             // editMode = true;
@@ -133,6 +134,23 @@ registry.category("services").add("website_edit", {
             }
             patches.length = 0;
         };
+        const applyAction = (actionId, spec) => {
+            const action = shared.builderActions.getAction(actionId);
+            shared.operation.next(
+                () => {
+                    action.apply(spec);
+                    shared.history.addStep();
+                },
+                {
+                    load: async () => {
+                        if (action.load) {
+                            const loadResult = await action.load(spec);
+                            spec.loadResult = loadResult;
+                        }
+                    },
+                }
+            );
+        };
 
         const websiteEditService = {
             isEditingTranslations,
@@ -140,6 +158,7 @@ registry.category("services").add("website_edit", {
             stop,
             installPatches,
             uninstallPatches,
+            applyAction,
         };
 
         // Transfer the iframe website_edit service to the EditInteractionPlugin
@@ -151,7 +170,8 @@ registry.category("services").add("website_edit", {
                     },
                 })
             );
-            Object.assign(historyCallbacks, ev.historyCallbacks);
+            Object.assign(shared, ev.shared);
+            historyCallbacks.ignoreDOMMutations = shared.history.ignoreDOMMutations;
         });
 
         return websiteEditService;

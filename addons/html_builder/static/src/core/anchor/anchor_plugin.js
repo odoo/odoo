@@ -19,14 +19,14 @@ export class AnchorPlugin extends Plugin {
     static dependencies = ["history"];
     static shared = ["createOrEditAnchorLink"];
     resources = {
-        on_clone_handlers: this.onClone.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
         get_options_container_top_buttons: withSequence(
             0,
             this.getOptionsContainerTopButtons.bind(this)
         ),
     };
 
-    onClone({ cloneEl }) {
+    onCloned({ cloneEl }) {
         const anchorEls = getElementsWithOption(cloneEl, anchorSelector, anchorExclude);
         anchorEls.forEach((anchorEl) => this.deleteAnchor(anchorEl));
     }
