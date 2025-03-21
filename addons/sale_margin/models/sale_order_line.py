@@ -38,5 +38,11 @@ class SaleOrderLine(models.Model):
     @api.depends('price_subtotal', 'product_uom_qty', 'purchase_price')
     def _compute_margin(self):
         for line in self:
-            line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)
-            line.margin_percent = line.price_subtotal and line.margin/line.price_subtotal
+            # Find alternative calculation when line is added to order from delivery
+            if line.qty_delivered and not line.product_uom_qty:
+                calculated_subtotal = line.price_unit * line.qty_delivered
+                line.margin = calculated_subtotal - (line.purchase_price * line.qty_delivered)
+                line.margin_percent = calculated_subtotal and line.margin / calculated_subtotal
+            else:
+                line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)
+                line.margin_percent = line.price_subtotal and line.margin / line.price_subtotal
