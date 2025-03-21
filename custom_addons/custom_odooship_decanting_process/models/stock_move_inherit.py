@@ -12,7 +12,8 @@ class StockMoveLine(models.Model):
                                               string='Delivery Receipt Status', default='draft')
     packed = fields.Boolean('Packed', default=False)
     released_manual = fields.Boolean('Released', default=False)
-    xdock_qty = fields.Float(string='XDOC Quantity')
+    xdock_qty = fields.Float(string='XDOCk Quantity')
+    xdock_remaining_qty = fields.Float(string='XDOCk Remaining Quantity')
 
     @api.depends('quantity')
     def _compute_remaining_qty(self):
