@@ -448,7 +448,7 @@ export class Thread extends Record {
         }
         try {
             const { data, messages } = await this.fetchMessagesData({ after, around, before });
-            this.store.insert(data, { html: true });
+            this.store.insert(data);
             return this.store["mail.message"].insert(messages.reverse());
         } catch (e) {
             this.hasLoadingFailed = true;
@@ -815,15 +815,12 @@ export class Thread extends Record {
                     mentionedPartners,
                 }),
             });
-            tmpMsg = this.store["mail.message"].insert(
-                {
-                    ...tmpData,
-                    body: prettyContent,
-                    isPending: true,
-                    thread: this,
-                },
-                { html: true }
-            );
+            tmpMsg = this.store["mail.message"].insert({
+                ...tmpData,
+                body: prettyContent,
+                isPending: true,
+                thread: this,
+            });
             this.messages.push(tmpMsg);
             this.onNewSelfMessage(tmpMsg);
         }
@@ -831,7 +828,7 @@ export class Thread extends Record {
         if (!data) {
             return;
         }
-        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
+        const { "mail.message": messages = [] } = this.store.insert(data);
         /** @type {import("models").Message} */
         const message = messages[0];
         this.addOrReplaceMessage(message, tmpMsg);

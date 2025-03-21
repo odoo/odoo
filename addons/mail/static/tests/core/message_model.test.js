@@ -1,8 +1,10 @@
 import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+
 import { describe, expect, test } from "@odoo/hoot";
-import { getService, serverState } from "@web/../tests/web_test_helpers";
+import { markup } from "@odoo/owl";
 
 import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -26,7 +28,7 @@ test("Message model properties", async () => {
     const message = store["mail.message"].insert({
         attachment_ids: 750,
         author: { id: 5, name: "Demo" },
-        body: "<p>Test</p>",
+        body: markup("<p>Test</p>"),
         date: deserializeDateTime("2019-05-05 10:00:00"),
         id: 4000,
         starred: true,
@@ -34,7 +36,7 @@ test("Message model properties", async () => {
         thread: { id: serverState.partnerId, model: "res.partner" },
         res_id: serverState.partnerId,
     });
-    expect(message.body).toBe("<p>Test</p>");
+    expect(message.body?.toString()).toBe("<p>Test</p>");
     expect(serializeDateTime(message.date)).toBe("2019-05-05 10:00:00");
     expect(message.id).toBe(4000);
     expect(message.attachment_ids[0].name).toBe("test.txt");

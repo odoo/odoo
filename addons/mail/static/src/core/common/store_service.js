@@ -258,7 +258,7 @@ export class Store extends BaseStore {
             }
         ).then(
             (data) => {
-                const recordsByModel = this.insert(data, { html: true });
+                const recordsByModel = this.insert(data);
                 fetchDeferred.resolve(recordsByModel);
             },
             (error) => fetchDeferred.reject(error)
@@ -601,7 +601,7 @@ export class Store extends BaseStore {
                 before,
             },
         });
-        this.insert(data, { html: true });
+        this.insert(data);
         return {
             count,
             loadMore: messages.length === this.FETCH_LIMIT,
@@ -620,7 +620,7 @@ export const storeService = {
      */
     start(env, services) {
         const store = makeStore(env);
-        store.insert(session.storeData, { html: true });
+        store.insert(session.storeData);
         /**
          * Add defaults for `self` and `settings` because in livechat there could be no user and no
          * guest yet (both undefined at init), but some parts of the code that loosely depend on

@@ -80,7 +80,7 @@ export class Chatbot extends Record {
             channel_id: this.thread.id,
             chatbot_script_id: this.script.id,
         });
-        this.store.insert(store_data, { html: true });
+        this.store.insert(store_data);
         this.thread.messages.push(this.store["mail.message"].get(message_id));
         if (this.currentStep) {
             this.currentStep.isLast = false;
@@ -119,15 +119,12 @@ export class Chatbot extends Record {
         if (this.thread.isTransient) {
             // Thread is not persisted thus messages do not exist on the server,
             // create them now on the client side.
-            this.currentStep.message = this.store["mail.message"].insert(
-                {
-                    id: this.store.getNextTemporaryId(),
-                    author: this.script.operator_partner_id,
-                    body: this.currentStep.scriptStep.message,
-                    thread: this.thread,
-                },
-                { html: true }
-            );
+            this.currentStep.message = this.store["mail.message"].insert({
+                id: this.store.getNextTemporaryId(),
+                author: this.script.operator_partner_id,
+                body: this.currentStep.scriptStep.message,
+                thread: this.thread,
+            });
         }
         if (this.currentStep.message) {
             this.thread.messages.add(this.currentStep.message);
@@ -163,7 +160,7 @@ export class Chatbot extends Record {
                 this.currentStep.isLast = true;
                 return;
             }
-            const { ChatbotStep: steps } = this.store.insert(storeData, { html: true });
+            const { ChatbotStep: steps } = this.store.insert(storeData);
             this.steps.push(steps[0]);
         } else {
             const nextStepIndex = this.steps.lastIndexOf(this.currentStep) + 1;
@@ -276,7 +273,7 @@ export class Chatbot extends Record {
         const { success, data } = await rpc("/chatbot/step/validate_email", {
             channel_id: this.thread.id,
         });
-        const { "mail.message": messages = [] } = this.store.insert(data, { html: true });
+        const { "mail.message": messages = [] } = this.store.insert(data);
         /** @type {import("models").Message} */
         const message = messages[0];
         if (message) {

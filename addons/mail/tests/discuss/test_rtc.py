@@ -932,12 +932,15 @@ class TestChannelRTC(MailCommon):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                "body": [
+                                    "markup",
+                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                ],
                                 "id": channel.last_call_message_id.id,
                                 "pinned_at": False,
-                                "recipients":[],
+                                "recipients": [],
                                 "translationValue": False,
-                                "write_date": channel.last_call_message_id.write_date
+                                "write_date": channel.last_call_message_id.write_date,
                             },
                         ],
                     },
@@ -1190,12 +1193,15 @@ class TestChannelRTC(MailCommon):
                         "mail.message": [
                             {
                                 "attachment_ids": [],
-                                "body": '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                "body": [
+                                    "markup",
+                                    '<div data-oe-type="call" class="o_mail_notification"></div><span class="o-mail-Message-edited"></span>',
+                                ],
                                 "id": channel.last_call_message_id.id,
                                 "pinned_at": False,
-                                "recipients":[],
+                                "recipients": [],
                                 "translationValue": False,
-                                "write_date": channel.last_call_message_id.write_date
+                                "write_date": channel.last_call_message_id.write_date,
                             },
                         ],
                     },

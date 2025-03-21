@@ -79,7 +79,7 @@ const threadPatch = {
             from_message_id: initialMessage?.id,
             name,
         });
-        this.store.insert(data, { html: true });
+        this.store.insert(data);
         this.store.Thread.get({ model: "discuss.channel", id: sub_channel }).open({ focus: true });
     },
     /**
@@ -98,7 +98,7 @@ const threadPatch = {
             parent_channel_id: this.id,
             search_term: searchTerm,
         });
-        const { Thread: threads = [] } = this.store.insert(data, { html: true });
+        const { Thread: threads = [] } = this.store.insert(data);
         if (searchTerm) {
             // Ignore holes in the sub-channel list that may arise when
             // searching for a specific term.
