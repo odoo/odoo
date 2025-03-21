@@ -15,9 +15,9 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
         leave.action_approve()
         start = datetime(2015, 11, 1, 0, 0, 0)
         end_generate = datetime(2015, 11, 30, 23, 59, 59)
-        work_entries = self.jules_emp.contract_ids._generate_work_entries(start, end_generate)
+        work_entries = self.jules_emp.version_ids._generate_work_entries(start, end_generate)
         work_entries.action_validate()
-        work_entries = work_entries.filtered(lambda we: we.contract_id == self.contract_cdi)
+        work_entries = work_entries.filtered(lambda we: we.version_id == self.contract_cdi)
 
         work = work_entries.filtered(lambda line: line.work_entry_type_id == self.env.ref('hr_work_entry.work_entry_type_attendance'))
         leave = work_entries.filtered(lambda line: line.work_entry_type_id == self.work_entry_type_leave)

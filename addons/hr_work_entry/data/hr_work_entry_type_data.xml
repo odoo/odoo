@@ -4,6 +4,7 @@
         <field name="name">Attendance</field>
         <field name="color">0</field>
         <field name="code">WORK100</field>
+        <field name="is_leave">False</field>
     </record>
 
     <record id="work_entry_type_overtime" model="hr.work.entry.type">
@@ -16,42 +17,90 @@
         <field name="name">Generic Time Off</field>
         <field name="code">LEAVE100</field>
         <field name="color">3</field>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="work_entry_type_compensatory" model="hr.work.entry.type">
         <field name="name">Compensatory Time Off</field>
         <field name="code">LEAVE105</field>
         <field name="color">3</field>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="work_entry_type_home_working" model="hr.work.entry.type">
         <field name="name">Remote Work</field>
         <field name="code">WORK110</field>
         <field name="color">2</field>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="work_entry_type_unpaid_leave" model="hr.work.entry.type">
         <field name="name">Unpaid</field>
         <field name="color">5</field>
         <field name="code">LEAVE90</field>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="work_entry_type_sick_leave" model="hr.work.entry.type">
         <field name="name">Sick Time Off</field>
         <field name="code">LEAVE110</field>
         <field name="color">5</field>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="work_entry_type_legal_leave" model="hr.work.entry.type">
         <field name="name">Paid Time Off</field>
         <field name="code">LEAVE120</field>
         <field name="color">5</field>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="hr_work_entry_type_out_of_contract" model="hr.work.entry.type">
         <field name="name">Out of Contract</field>
         <field name="color">0</field>
         <field name="code">OUT</field>
+    </record>
+
+     <record id="work_entry_type_leave" model="hr.work.entry.type">
+        <field name="name">Generic Time Off</field>
+        <field name="code">LEAVE100</field>
+        <field name="color">3</field>
+        <field name="is_leave">True</field>
+    </record>
+
+    <record id="work_entry_type_compensatory" model="hr.work.entry.type">
+        <field name="name">Compensatory Time Off</field>
+        <field name="code">LEAVE105</field>
+        <field name="color">3</field>
+        <field name="is_leave">True</field>
+    </record>
+
+    <record id="work_entry_type_home_working" model="hr.work.entry.type">
+        <field name="name">Home Working</field>
+        <field name="code">WORK110</field>
+        <field name="color">2</field>
+        <field name="is_leave">True</field>
+    </record>
+
+    <record id="work_entry_type_unpaid_leave" model="hr.work.entry.type">
+        <field name="name">Unpaid</field>
+        <field name="color">5</field>
+        <field name="code">LEAVE90</field>
+        <field name="is_leave">True</field>
+    </record>
+
+    <record id="work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Sick Time Off</field>
+        <field name="code">LEAVE110</field>
+        <field name="color">5</field>
+        <field name="is_leave">True</field>
+    </record>
+
+     <record id="work_entry_type_legal_leave" model="hr.work.entry.type">
+        <field name="name">Paid Time Off</field>
+        <field name="code">LEAVE120</field>
+        <field name="color">5</field>
+        <field name="is_leave">True</field>
     </record>
 
 <!-- AE : United Arab Emirates -->
@@ -81,6 +130,7 @@
         <field name="color">5</field>
         <field name="code">AU.PT</field>
         <field name="country_id" ref="base.au"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_au_work_entry_type_long_service_leave" model="hr.work.entry.type">
@@ -88,6 +138,7 @@
         <field name="color">5</field>
         <field name="code">AU.LS</field>
         <field name="country_id" ref="base.au"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_au_work_entry_type_personal_leave" model="hr.work.entry.type">
@@ -95,6 +146,7 @@
         <field name="color">5</field>
         <field name="code">AU.PL</field>
         <field name="country_id" ref="base.au"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_au_work_entry_type_other" model="hr.work.entry.type">
@@ -188,18 +240,21 @@
         <field name="code">LEAVE500</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_solicitation_time_off" model="hr.work.entry.type">
         <field name="name">Solicitation Time Off</field>
         <field name="code">LEAVE600</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_unjustified_reason" model="hr.work.entry.type">
         <field name="name">Unjustified Reason</field>
         <field name="code">LEAVE700</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_small_unemployment" model="hr.work.entry.type">
@@ -207,6 +262,7 @@
         <field name="code">LEAVE205</field>   <!-- YTI: 1 as it is paid, would be 70 otherwise -->
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_economic_unemployment" model="hr.work.entry.type">
@@ -214,6 +270,7 @@
         <field name="code">LEAVE6665</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_corona" model="hr.work.entry.type">
@@ -221,6 +278,7 @@
         <field name="code">LEAVE6666</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_maternity" model="hr.work.entry.type">
@@ -228,6 +286,7 @@
         <field name="code">LEAVE210</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_paternity_company" model="hr.work.entry.type">
@@ -235,6 +294,7 @@
         <field name="code">LEAVE220</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_paternity_legal" model="hr.work.entry.type">
@@ -242,6 +302,7 @@
         <field name="code">LEAVE230</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_unpredictable" model="hr.work.entry.type">
@@ -249,6 +310,7 @@
         <field name="code">LEAVE250</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_training" model="hr.work.entry.type">
@@ -263,6 +325,7 @@
         <field name="code">LEAVE260</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_flemish_training_time_off" model="hr.work.entry.type">
@@ -270,6 +333,7 @@
         <field name="code">LEAVE261</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_long_sick" model="hr.work.entry.type">
@@ -277,6 +341,7 @@
         <field name="code">LEAVE280</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_breast_feeding" model="hr.work.entry.type">
@@ -284,6 +349,7 @@
         <field name="code">LEAVE290</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_medical_assistance" model="hr.work.entry.type">
@@ -291,6 +357,7 @@
         <field name="code">MEDIC01</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_youth_time_off" model="hr.work.entry.type">
@@ -298,6 +365,7 @@
         <field name="code">YOUNG01</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_recovery_additional" model="hr.work.entry.type">
@@ -305,6 +373,7 @@
         <field name="code">LEAVE295</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_additional_paid" model="hr.work.entry.type">
@@ -319,6 +388,7 @@
         <field name="code">LEAVE211</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_phc" model="hr.work.entry.type">
@@ -326,6 +396,7 @@
         <field name="code">PHC1</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_extra_legal" model="hr.work.entry.type">
@@ -333,6 +404,7 @@
         <field name="code">LEAVE213</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_part_sick" model="hr.work.entry.type">
@@ -340,6 +412,7 @@
         <field name="code">LEAVE214</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_recovery" model="hr.work.entry.type">
@@ -347,6 +420,7 @@
         <field name="code">LEAVE215</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_european" model="hr.work.entry.type">
@@ -354,6 +428,7 @@
         <field name="code">LEAVE216</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_credit_time" model="hr.work.entry.type">
@@ -361,6 +436,7 @@
         <field name="code">LEAVE300</field>
         <field name="color">8</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_parental_time_off" model="hr.work.entry.type">
@@ -368,6 +444,7 @@
         <field name="code">LEAVE301</field>
         <field name="color">8</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_simple_holiday_pay_variable_salary" model="hr.work.entry.type">
@@ -375,6 +452,7 @@
         <field name="code">LEAVE1731</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_work_accident" model="hr.work.entry.type">
@@ -382,6 +460,7 @@
         <field name="code">LEAVE115</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_partial_incapacity" model="hr.work.entry.type">
@@ -389,6 +468,7 @@
         <field name="code">LEAVE281</field>
         <field name="color">4</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="False"/>
     </record>
 
     <record id="l10n_be_work_entry_type_strike" model="hr.work.entry.type">
@@ -396,6 +476,7 @@
         <field name="code">LEAVE251</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_be_work_entry_type_small_unemployment_birth" model="hr.work.entry.type">
@@ -403,6 +484,7 @@
         <field name="code">LEAVE206</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.be"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- CH : Switzerland -->
@@ -411,6 +493,7 @@
         <field name="code">CHPUBHOL</field>
         <field name="color">3</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_monthly_wt" model="hr.work.entry.type">
@@ -419,6 +502,7 @@
         <field name="sequence">0</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="False"/>
     </record>
 
     <record id="l10n_ch_swissdec_hourly_wt" model="hr.work.entry.type">
@@ -427,6 +511,7 @@
         <field name="sequence">5</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="False"/>
     </record>
 
     <record id="l10n_ch_swissdec_lesson_wt" model="hr.work.entry.type">
@@ -435,6 +520,7 @@
         <field name="sequence">10</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="False"/>
     </record>
 
     <record id="l10n_ch_swissdec_overtime_wt" model="hr.work.entry.type">
@@ -443,6 +529,7 @@
         <field name="sequence">6</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="False"/>
     </record>
 
     <record id="l10n_ch_swissdec_overtime_125_wt" model="hr.work.entry.type">
@@ -451,6 +538,7 @@
         <field name="sequence">7</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="False"/>
     </record>
 
     <record id="l10n_ch_swissdec_unpaid_wt" model="hr.work.entry.type">
@@ -459,6 +547,7 @@
         <field name="sequence">15</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_illness_wt" model="hr.work.entry.type">
@@ -467,6 +556,7 @@
         <field name="sequence">20</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_accident_wt" model="hr.work.entry.type">
@@ -475,6 +565,7 @@
         <field name="sequence">25</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_maternity_wt" model="hr.work.entry.type">
@@ -483,6 +574,7 @@
         <field name="sequence">30</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_military_wt" model="hr.work.entry.type">
@@ -491,6 +583,7 @@
         <field name="sequence">35</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_illness_wt_hourly" model="hr.work.entry.type">
@@ -499,6 +592,7 @@
         <field name="sequence">20</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_accident_wt_hourly" model="hr.work.entry.type">
@@ -507,6 +601,7 @@
         <field name="sequence">25</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_maternity_wt_hourly" model="hr.work.entry.type">
@@ -515,6 +610,7 @@
         <field name="sequence">30</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_military_wt_hourly" model="hr.work.entry.type">
@@ -523,6 +619,7 @@
         <field name="sequence">35</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_ch_swissdec_interruption_wt" model="hr.work.entry.type">
@@ -531,6 +628,7 @@
         <field name="sequence">40</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.ch"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- EG: Egypt -->
@@ -538,18 +636,21 @@
         <field name="name">Paid Sick Time off</field>
         <field name="code">EGSICKLEAVE100</field>
         <field name="country_id" ref="base.eg"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_eg_work_entry_type_sick_leave_75" model="hr.work.entry.type">
         <field name="name">Sick Time off (75% Paid)</field>
         <field name="code">EGSICKLEAVE75</field>
         <field name="country_id" ref="base.eg"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_eg_work_entry_type_sick_leave_unpaid" model="hr.work.entry.type">
         <field name="name">Sick Time off (Unpaid)</field>
         <field name="code">EGSICKLEAVE0</field>
         <field name="country_id" ref="base.eg"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- HK : Hong Kong -->
@@ -558,6 +659,7 @@
         <field name="code">HKLEAVE111</field>
         <field name="color">6</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_compassionate_leave" model="hr.work.entry.type">
@@ -565,6 +667,7 @@
         <field name="code">HKLEAVE130</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_marriage_leave" model="hr.work.entry.type">
@@ -572,6 +675,7 @@
         <field name="code">HKLEAVE140</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_examination_leave" model="hr.work.entry.type">
@@ -579,6 +683,7 @@
         <field name="code">HKLEAVE150</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_maternity_leave" model="hr.work.entry.type">
@@ -586,6 +691,7 @@
         <field name="code">HKLEAVE210</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_maternity_leave_80" model="hr.work.entry.type">
@@ -593,6 +699,7 @@
         <field name="code">HKLEAVE211</field>
         <field name="color">6</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_paternity_leave" model="hr.work.entry.type">
@@ -600,6 +707,7 @@
         <field name="code">HKLEAVE220</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_statutory_holiday" model="hr.work.entry.type">
@@ -607,6 +715,7 @@
         <field name="code">HKLEAVE500</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_public_holiday" model="hr.work.entry.type">
@@ -614,6 +723,7 @@
         <field name="code">HKLEAVE510</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_hk_work_entry_type_weekend" model="hr.work.entry.type">
@@ -621,6 +731,7 @@
         <field name="code">HKLEAVE600</field>
         <field name="color">10</field>
         <field name="country_id" ref="base.hk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- ID : Indonesia -->
@@ -629,6 +740,7 @@
         <field name="code">IDLEAVE100</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.id"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_id_work_entry_type_marriage_leave" model="hr.work.entry.type">
@@ -636,6 +748,7 @@
         <field name="code">IDLEAVE110</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.id"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_id_work_entry_type_maternity_leave" model="hr.work.entry.type">
@@ -643,6 +756,7 @@
         <field name="code">IDLEAVE120</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.id"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_id_work_entry_type_paternity_leave" model="hr.work.entry.type">
@@ -650,6 +764,7 @@
         <field name="code">IDLEAVE130</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.id"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_id_work_entry_type_public_holiday" model="hr.work.entry.type">
@@ -657,6 +772,7 @@
         <field name="code">IDLEAVE140</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.id"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- LU : Luxemburg -->
@@ -665,6 +781,7 @@
         <field name="color">5</field>
         <field name="code">LEAVE400</field>
         <field name="country_id" ref="base.lu"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- MX : Mexico -->
@@ -673,6 +790,7 @@
         <field name="color">5</field>
         <field name="code">LEAVE1000</field>
         <field name="country_id" ref="base.mx"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_mx_work_entry_type_maternity_imss" model="hr.work.entry.type">
@@ -680,6 +798,7 @@
         <field name="color">5</field>
         <field name="code">LEAVE1100</field>
         <field name="country_id" ref="base.mx"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_mx_work_entry_type_disability_due_to_illness_imss" model="hr.work.entry.type">
@@ -687,6 +806,7 @@
         <field name="color">5</field>
         <field name="code">LEAVE1200</field>
         <field name="country_id" ref="base.mx"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- SK : Slovakia -->
@@ -695,6 +815,7 @@
         <field name="code">SICK25</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_sk_work_entry_type_sick_55" model="hr.work.entry.type">
@@ -702,6 +823,7 @@
         <field name="code">SICK55</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_sk_work_entry_type_sick_0" model="hr.work.entry.type">
@@ -709,6 +831,7 @@
         <field name="code">SICK0</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_sk_work_entry_type_maternity" model="hr.work.entry.type">
@@ -716,6 +839,7 @@
         <field name="code">MATERNITY</field>
         <field name="color">5</field>
         <field name="country_id" ref="base.sk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
     <record id="l10n_sk_work_entry_type_parental_time_off" model="hr.work.entry.type">
@@ -723,6 +847,7 @@
         <field name="code">PARENTAL</field>
         <field name="color">8</field>
         <field name="country_id" ref="base.sk"/>
+        <field name="is_leave" eval="True"/>
     </record>
 
 <!-- US : United States -->

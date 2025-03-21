@@ -35,16 +35,25 @@ class TestHrAttendanceOvertime(TransactionCase):
             'user_id': cls.user.id,
             'company_id': cls.company.id,
             'tz': 'UTC',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
         })
         cls.other_employee = cls.env['hr.employee'].create({
             'name': 'Yolanda',
             'company_id': cls.company.id,
             'tz': 'UTC',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
         })
         cls.jpn_employee = cls.env['hr.employee'].create({
             'name': 'Sacha',
             'company_id': cls.company.id,
             'tz': 'Asia/Tokyo',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
         })
         set_calendar_and_tz(cls.jpn_employee, 'Asia/Tokyo')
 
@@ -52,6 +61,9 @@ class TestHrAttendanceOvertime(TransactionCase):
             'name': 'Susan',
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': cls.company.resource_calendar_id.id,
         })
         set_calendar_and_tz(cls.honolulu_employee, 'Pacific/Honolulu')
 
@@ -59,6 +71,9 @@ class TestHrAttendanceOvertime(TransactionCase):
             'name': 'Schmitt',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
+            'resource_calendar_id': cls.company_1.resource_calendar_id.id,
         })
         set_calendar_and_tz(cls.europe_employee, 'Europe/Brussels')
 
@@ -74,6 +89,8 @@ class TestHrAttendanceOvertime(TransactionCase):
             'company_id': cls.company.id,
             'tz': 'UTC',
             'resource_calendar_id': cls.calendar_flex_40h.id,
+            'date_version': date(2020, 1, 1),
+            'contract_date_start': date(2020, 1, 1),
         })
 
     def test_overtime_company_settings(self):

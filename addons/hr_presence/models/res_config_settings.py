@@ -8,5 +8,5 @@ class ResConfigSettings(models.TransientModel):
     def create(self, vals_list):
         configs = super().create(vals_list)
         if any(config.hr_presence_control_ip or config.hr_presence_control_email for config in configs):
-            self.env['hr.employee.base']._check_presence()
+            self.env['hr.employee']._check_presence()
         return configs

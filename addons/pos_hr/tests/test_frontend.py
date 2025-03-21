@@ -17,6 +17,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 
         # Admin employee
         cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
+            "date_version": '2000-01-01',
             "company_id": cls.env.company.id,
             "user_id": cls.pos_admin.id,
             "name": "Mitchell Admin",

@@ -21,9 +21,8 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
     def test_resource_leave_in_contract_calendar(self):
         other_calendar = self.env['resource.calendar'].create({'name': 'New calendar'})
-        contract = self.richard_emp.contract_ids[0]
+        contract = self.richard_emp.version_id
         contract.resource_calendar_id = other_calendar
-        contract.state = 'open'  # this set richard's calendar to New calendar
         leave = self.create_leave()
 
         resource_leave = leave._create_resource_leave()
@@ -31,8 +30,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(resource_leave.work_entry_type_id, self.leave_type.work_entry_type_id, "it should have the corresponding work_entry type")
 
     def test_validate_leave_with_overlap(self):
-        contract = self.richard_emp.contract_ids[:1]
-        contract.state = 'open'
+        contract = self.richard_emp.version_id
         contract.date_generated_from = datetime(2019, 10, 10, 9, 0)
         contract.date_generated_to = datetime(2019, 10, 10, 9, 0)
         leave = self.create_leave(datetime(2019, 10, 10, 9, 0), datetime(2019, 10, 12, 18, 0))
@@ -50,8 +48,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(leave_work_entry[:1].state, 'conflict', "The leave work entry should conflict")
 
     def test_validate_leave_without_overlap(self):
-        contract = self.richard_emp.contract_ids[:1]
-        contract.state = 'open'
+        contract = self.richard_emp.version_id
         contract.date_generated_from = datetime(2019, 10, 10, 9, 0)
         contract.date_generated_to = datetime(2019, 10, 10, 9, 0)
         leave = self.create_leave(datetime(2019, 10, 10, 9, 0), datetime(2019, 10, 12, 18, 0))
@@ -63,29 +60,18 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertTrue(leave_work_entry.work_entry_type_id.is_leave, "It should have created a leave work entry")
         self.assertNotEqual(leave_work_entry[:1].state, 'conflict', "The leave work entry should not conflict")
 
-    def test_refuse_leave(self):
-        leave = self.create_leave(date(2019, 10, 10), date(2019, 10, 10))
-        work_entries = self.richard_emp.contract_id._generate_work_entries(datetime(2019, 10, 10, 0, 0, 0), datetime(2019, 10, 10, 23, 59, 59))
-        adjacent_work_entry = self.create_work_entry(leave.date_from - relativedelta(days=3), leave.date_from)
-        self.assertTrue(all(work_entries.mapped(lambda w: w.state == 'conflict')), "Attendance work entries should all conflict with the leave")
-        self.assertNotEqual(adjacent_work_entry.state, 'conflict', "Non overlapping work entry should not conflict")
-        leave.action_refuse()
-        self.assertTrue(all(work_entries.mapped(lambda w: w.state != 'conflict')), "Attendance work entries should no longer conflict")
-        self.assertNotEqual(adjacent_work_entry.state, 'conflict', "Non overlapping work entry should not conflict")
-
     def test_refuse_approved_leave(self):
         start = datetime(2019, 10, 10, 6, 0)
         end = datetime(2019, 10, 10, 18, 0)
         # Setup contract generation state
-        contract = self.richard_emp.contract_ids[:1]
-        contract.state = 'open'
+        contract = self.richard_emp.version_id
         contract.date_generated_from = start - relativedelta(hours=1)
         contract.date_generated_to = start - relativedelta(hours=1)
 
         leave = self.create_leave(start, end)
         leave.action_approve()
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date_start', '<=', end), ('date_stop', '>=', start)])
-        leave_work_entry = self.richard_emp.contract_ids.generate_work_entries(start.date(), end.date())
+        leave_work_entry = self.richard_emp.version_id.generate_work_entries(start.date(), end.date())
         self.assertEqual(leave_work_entry[:1].leave_id, leave)
         leave.action_refuse()
         work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date_start', '>=', start), ('date_stop', '<=', end)])
@@ -106,7 +92,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             'password': 'julpassword',
         })
         self.richard_emp.user_id = user
-        self.richard_emp.contract_ids.state = 'open'
         with freeze_time(datetime(2022, 3, 21)):
             # Tests that cancelling a leave archives the work entries.
             leave = self.env['hr.leave'].with_user(user).create({
@@ -120,7 +105,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             # No work entries exist yet
             self.assertTrue(leave.can_cancel, "The leave should still be cancellable")
             # can not create in the future
-            self.richard_emp.contract_ids.generate_work_entries(date(2022, 3, 21), date(2022, 3, 25))
+            self.richard_emp.version_id.generate_work_entries(date(2022, 3, 21), date(2022, 3, 25))
             work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id)])
             leave.invalidate_recordset(['can_cancel'])
             # Work entries exist but are not locked yet
@@ -157,19 +142,6 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
             ('date_stop', '<=', end),
         ])
         self.assertEqual(len(work_entries.work_entry_type_id), 2)
-
-    def test_time_off_duration_contract_state_change(self):
-        # check that setting a contract without end state from
-        # expired to running won't erase the time off duration
-
-        leave = self.create_leave(datetime(2019, 10, 10, 9, 0), datetime(2019, 10, 10, 18, 0))
-        self.assertTrue(leave.number_of_days, 1)
-        contract = self.richard_emp.contract_ids
-        contract.state = "close"
-        contract.date_end = False
-        self.assertTrue(leave.number_of_days, 1)
-        contract.state = "open"
-        self.assertTrue(leave.number_of_days, 1)
 
     def test_split_leaves_by_entry_type(self):
         entry_type_paid, entry_type_unpaid = self.env['hr.work.entry.type'].create([
