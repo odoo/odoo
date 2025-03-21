@@ -18,9 +18,9 @@ def test_all_l10n(env):
 
     try_loading = type(env['account.chart.template']).try_loading
 
-    def try_loading_patch(self, template_code, company, install_demo=True, force_create=True):
+    def try_loading_patch(self, template_code, company, install_demo=True):
         self = self.with_context(l10n_check_fields_complete=True)
-        return try_loading(self, template_code, company, install_demo, force_create)
+        return try_loading(self, template_code, company, install_demo)
 
 
     # Ensure the presence of demo data, to see if they can be correctly installed

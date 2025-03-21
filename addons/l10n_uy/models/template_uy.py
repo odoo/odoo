@@ -54,10 +54,10 @@ class AccountChartTemplate(models.AbstractModel):
             },
         }
 
-    def _load(self, template_code, company, install_demo, force_create=True):
+    def _load(self, template_code, company, install_demo):
         """ Set companies rut as the company identification type  after install the chart of account,
         this one is the uruguayan vat """
-        res = super()._load(template_code, company, install_demo, force_create)
+        res = super()._load(template_code, company, install_demo)
         if template_code == 'uy':
             company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_uy.it_rut')
         return res
