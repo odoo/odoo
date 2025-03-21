@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("mail_attachment_removal_tour", {
     },
     {
         content: "confirm quotation",
-        trigger: ".o_menu_brand",
+        trigger: "button[name='action_confirm']",
         run: "click"
     }
 ]
