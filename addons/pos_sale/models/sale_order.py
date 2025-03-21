@@ -53,10 +53,8 @@ class SaleOrder(models.Model):
     def _compute_amount_to_invoice(self):
         super()._compute_amount_to_invoice()
         for order in self:
-            if order.invoice_status == 'invoiced':
-                continue
-            # We need to account for the downpayment paid in POS with and without invoice
-            order_amount = sum(order.sudo().pos_order_line_ids.filtered(lambda pol: pol.sale_order_line_id.is_downpayment).mapped('price_subtotal_incl'))
+            # We need to account for all amount paid in POS with and without invoice
+            order_amount = sum(order.sudo().pos_order_line_ids.mapped('price_subtotal_incl'))
             order.amount_to_invoice -= order_amount
 
     @api.depends('order_line.pos_order_line_ids')
