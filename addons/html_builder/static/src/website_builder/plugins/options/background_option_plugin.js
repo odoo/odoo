@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { WebsiteBackgroundOption } from "./background_option";
 import { withSequence } from "@html_editor/utils/resource";
 
 function getBgVideoOrParallax(editingElement) {
@@ -31,21 +30,6 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
     static id = "websiteBackgroundVideoPlugin";
     static dependencies = ["media"];
     resources = {
-        builder_options: [
-            // TODO: add the other options that need WebsiteBackgroundOption
-            {
-                selector: "section",
-                OptionComponent: WebsiteBackgroundOption,
-                props: {
-                    withColors: true,
-                    withImages: true,
-                    withVideos: true,
-                    withShapes: true,
-                    withGradient: true,
-                    withColorCombinations: true,
-                },
-            },
-        ],
         builder_actions: this.getActions(),
     };
     getActions() {

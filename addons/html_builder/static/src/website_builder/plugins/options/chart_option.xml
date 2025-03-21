@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 <t t-name="html_builder.ChartOption">
+    <BuilderRow label.translate="Background">
+        <t t-call="html_builder.BackgroundColorWidgetOption"/>
+    </BuilderRow>
     <BuilderRow label.translate="Type">
         <BuilderSelect action="'setChartType'">
             <BuilderSelectItem actionValue="'bar'" id="'bar_chart_opt'">Bar Vertical</BuilderSelectItem>

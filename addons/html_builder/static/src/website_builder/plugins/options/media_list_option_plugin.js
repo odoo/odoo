@@ -1,17 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
+import { MediaListItemOption } from "./media_list_item_option";
 
 class MediaListOptionPlugin extends Plugin {
     static id = "mediaListOption";
     resources = {
         builder_options: [
             withSequence(5, {
-                template: "html_builder.MediaListOption",
+                template: "website.MediaListOption",
                 selector: ".s_media_list",
             }),
-            withSequence(10, {
-                template: "html_builder.MediaListItemOption",
+            withSequence(20, {
+                OptionComponent: MediaListItemOption,
                 selector: ".s_media_list_item",
             }),
         ],

@@ -1,9 +1,7 @@
 import { classAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
-import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
-import { CardImageOption } from "./card_image_option";
 
 const ratiosOnlySupportedForTopImage = [
     "ratio ratio-4x3",
@@ -27,13 +25,6 @@ class CardImageOptionPlugin extends Plugin {
     static id = "cardImageOption";
     static dependencies = ["remove"];
     resources = {
-        builder_options: [
-            withSequence(30, {
-                OptionComponent: CardImageOption,
-                selector: ".s_card",
-                exclude: ".s_carousel_cards_card",
-            }),
-        ],
         builder_actions: {
             setCoverImagePosition: {
                 apply: ({ editingElement, param: { mainParam: className } }) => {
