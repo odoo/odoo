@@ -6,6 +6,7 @@ import { session } from "@web/session";
 
 
 export const turnStile = {
+<<<<<<< 3ff9a288f5e601aec33b4eca2e4162ff92a1ad21
     addTurnstile(action) {
         const cf = new URLSearchParams(window.location.search).get("cf");
         const mode = cf == "show" ? "always" : "interaction-only";
@@ -18,7 +19,40 @@ export const turnStile = {
             sitekey: session.turnstile_site_key,
             style: "display: none;",
         });
+||||||| 45aeb98946102a33f2a5ab2f148e9849bca607db
+    addTurnstile: function (action) {
+        if (!this.isEditable) {
+            const mode = new URLSearchParams(window.location.search).get('cf') == 'show' ? 'always' : 'interaction-only';
+            const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
+                action: action,
+                appearance: mode,
+                additionalClasses: "float-end",
+                beforeInteractiveGlobalCallback: "turnstileBecomeVisible",
+                errorGlobalCallback: "throwTurnstileErrorCode",
+                executeGlobalCallback: "turnstileSuccess",
+                sitekey: session.turnstile_site_key,
+                style: "display: none;",
+            });
+            let toInsert = $(turnstileContainer);
+=======
+    addTurnstile: function (action) {
+        if (!this.isEditable) {
+            const mode = new URLSearchParams(window.location.search).get('cf') == 'show' ? 'always' : 'interaction-only';
+            const turnstileContainer = renderToElement("website_cf_turnstile.turnstile_container", {
+                action: action,
+                appearance: mode,
+                additionalClasses: "float-end",
+                beforeInteractiveGlobalCallback: "turnstileBecomeVisible",
+                errorGlobalCallback: "throwTurnstileErrorCode",
+                executeGlobalCallback: "turnstileSuccess",
+                expiredCallback: "turnstileExpired",
+                sitekey: session.turnstile_site_key,
+                style: "display: none;",
+            });
+            let toInsert = $(turnstileContainer);
+>>>>>>> 172076c5a3fe0be0e00d486f23dee71a12893b32
 
+<<<<<<< 3ff9a288f5e601aec33b4eca2e4162ff92a1ad21
         // Rethrow the error, or we only will catch a "Script error" without any info
         // because of the script api.js originating from a different domain.
         globalThis.throwTurnstileErrorCode = function (code) {
@@ -32,6 +66,72 @@ export const turnStile = {
             const buttons = form.querySelectorAll(".cf_form_disabled");
             for (const button of buttons) {
                 button.classList.remove("disabled", "cf_form_disabled");
+||||||| 45aeb98946102a33f2a5ab2f148e9849bca607db
+            // Rethrow the error, or we only will catch a "Script error" without any info
+            // because of the script api.js originating from a different domain.
+            globalThis.throwTurnstileErrorCode = function (code) {
+                const error = new Error("Turnstile Error");
+                error.code = code;
+                throw error;
+            };
+            // `this` is bound to the turnstile widget calling the callback
+            globalThis.turnstileSuccess = function () {
+                const turnstileContainer = this.wrapper.parentElement;
+                const form = turnstileContainer.parentElement;
+                const spinner = form.querySelector("i.turnstile-spinner");
+                const button = spinner.parentElement;
+                button.disabled = false;
+                button.classList.remove("disabled");
+                spinner.remove();
+            };
+            globalThis.turnstileBecomeVisible = function () {
+                const turnstileContainer = this.wrapper.parentElement;
+                turnstileContainer.style.display = "";
+            };
+
+            // on first load of the remote script, all turnstile containers are rendered
+            // if render=explicit is not set in the script url.
+            // For subsequent insertion of turnstile containers, we need to call turnstile.render on the container
+            // see `renderTurnstile`.
+            if (!window.turnstile?.render) {
+                const turnstileScript = renderToElement("website_cf_turnstile.turnstile_remote_script");
+                toInsert = toInsert.add($(turnstileScript));
+=======
+            // Rethrow the error, or we only will catch a "Script error" without any info
+            // because of the script api.js originating from a different domain.
+            globalThis.throwTurnstileErrorCode = function (code) {
+                const error = new Error("Turnstile Error");
+                error.code = code;
+                throw error;
+            };
+            const toggleSpinner = (turnstileContainer, show) => {
+                const form = turnstileContainer.parentElement;
+                const spinner = form.querySelector("i.turnstile-spinner");
+                const button = spinner.parentElement;
+                button.disabled = show;
+                button.classList.toggle("disabled", show);
+                spinner.classList.toggle("d-none", !show);
+            };
+            // `this` is bound to the turnstile widget calling the callback
+            globalThis.turnstileSuccess = function () {
+                toggleSpinner(this.wrapper.parentElement, false);
+            };
+            globalThis.turnstileExpired = function () {
+                toggleSpinner(this.wrapper.parentElement, true);
+            };
+            globalThis.turnstileBecomeVisible = function () {
+                const turnstileContainer = this.wrapper.parentElement;
+                turnstileContainer.style.display = "";
+            };
+
+            // on first load of the remote script, all turnstile containers are rendered
+            // if render=explicit is not set in the script url.
+            // For subsequent insertion of turnstile containers, we need to call turnstile.render on the container
+            // see `renderTurnstile`.
+            if (!window.turnstile?.render) {
+                const turnstileScript = renderToElement("website_cf_turnstile.turnstile_remote_script");
+                toInsert = toInsert.add($(turnstileScript));
+>>>>>>> 172076c5a3fe0be0e00d486f23dee71a12893b32
             }
             form.querySelector("input.turnstile_captcha_valid").value = "done";
         };
