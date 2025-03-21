@@ -93,6 +93,6 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.make_jsonrpc_request(
             "/mail/action",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
-            headers={"Cookie": f"{guest._cookie_name}={guest._format_auth_cookie()};"},
+            cookies={guest._cookie_name: guest._format_auth_cookie()},
         )
         self.assertEqual(chat_request.channel_member_ids.guest_id, guest)

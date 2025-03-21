@@ -2240,7 +2240,7 @@ class HttpCase(TransactionCase):
             return _route_profiler
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
-    def make_jsonrpc_request(self, route, params=None, headers=None):
+    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None):
         """Make a JSON-RPC request to the server.
 
         :raises requests.HTTPError: if one occurred
@@ -2251,7 +2251,7 @@ class HttpCase(TransactionCase):
             'jsonrpc': '2.0',
             'method': 'call',
             'params': params or {},
-        }, headers=headers)
+        }, headers=headers, cookies=cookies)
         response.raise_for_status()
         decoded_response = response.json()
         if 'error' in decoded_response:

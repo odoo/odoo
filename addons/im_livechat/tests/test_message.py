@@ -58,7 +58,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         self.assertEqual(user.livechat_username, 'New username')
 
     def test_chatbot_message_format(self):
-        session = self.authenticate(self.users[0].login, self.password)
+        self.authenticate(self.users[0].login, self.password)
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
@@ -66,9 +66,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "channel_id": self.livechat_channel.id,
                 "chatbot_script_id": self.chatbot_script.id,
                 "persisted": True,
-            },
-            headers={
-                "Cookie": f"session_id={session.sid};",
             },
         )
         discuss_channel = self.env['discuss.channel'].browse(data["store_data"]["discuss.channel"][0]["id"])
