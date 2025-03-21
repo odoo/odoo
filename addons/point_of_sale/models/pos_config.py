@@ -741,6 +741,85 @@ class PosConfig(models.Model):
             'company_id': company_id,
         }).id
 
+<<<<<<< caecc6d8532f6bfe1cc3253932bad7ceefa80747
+||||||| c68ec0aaed70973f65d46d75875c59f5bc10f23b
+    def get_limited_products_loading(self, fields):
+        query = self.env['product.product']._where_calc(
+            self._get_available_product_domain()
+        )
+        sql = SQL(
+            """
+            WITH pm AS (
+                  SELECT product_id,
+                         MAX(write_date) date
+                    FROM stock_move_line
+                GROUP BY product_id
+            )
+               SELECT product_product.id
+                 FROM %s
+            LEFT JOIN pm ON product_product.id=pm.product_id
+                WHERE %s
+             ORDER BY product_product__product_tmpl_id.is_favorite DESC,
+                      CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
+                      pm.date DESC NULLS LAST,
+                      product_product.write_date DESC
+                LIMIT %s
+            """,
+            query.from_clause,
+            query.where_clause or SQL("TRUE"),
+            self.get_limited_product_count(),
+        )
+        product_ids = [r[0] for r in self.env.execute_query(sql)]
+        special_products = self._get_special_products().filtered(
+            lambda product: not product.sudo().company_id
+                            or product.sudo().company_id == self.company_id
+        )
+        product_ids.extend(special_products.ids)
+        products = self.env['product.product'].browse(product_ids)
+        product_combo = products.filtered(lambda p: p['type'] == 'combo')
+        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
+        products_available = products | product_in_combo
+        return products_available.read(fields, load=False)
+
+=======
+    def get_limited_products_loading(self, fields):
+        query = self.env['product.product']._where_calc(
+            self._get_available_product_domain()
+        )
+        sql = SQL(
+            """
+            WITH pm AS (
+                  SELECT product_id,
+                         MAX(write_date) date
+                    FROM stock_move_line
+                GROUP BY product_id
+            )
+               SELECT product_product.id
+                 FROM %s
+            LEFT JOIN pm ON product_product.id=pm.product_id
+                WHERE %s
+             ORDER BY product_product__product_tmpl_id.is_favorite DESC,
+                      CASE WHEN product_product__product_tmpl_id.type = 'service' THEN 1 ELSE 0 END DESC,
+                      pm.date DESC NULLS LAST,
+                      product_product.write_date DESC
+                LIMIT %s
+            """,
+            query.from_clause,
+            query.where_clause or SQL("TRUE"),
+            self.get_limited_product_count(),
+        )
+        product_ids = [r[0] for r in self.env.execute_query(sql)]
+        product_ids.extend(self._get_special_products().ids)
+        products = self.env['product.product'].search([('id', 'in', product_ids)])
+        # sort products by product_ids order
+        id_to_index = {pid: index for index, pid in enumerate(product_ids)}
+        products = products.sorted(key=lambda p: id_to_index[p.id])
+        product_combo = products.filtered(lambda p: p['type'] == 'combo')
+        product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
+        products_available = products | product_in_combo
+        return products_available.read(fields, load=False)
+
+>>>>>>> 5c50d1f9d651119cf13878d105690fe975eb228a
     def get_limited_product_count(self):
         default_limit = 5000
         config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', default_limit)
