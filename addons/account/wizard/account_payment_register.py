@@ -976,11 +976,15 @@ class AccountPaymentRegister(models.TransientModel):
             'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
-            'partner_bank_id': self.partner_bank_id.id,
             'payment_method_line_id': self.payment_method_line_id.id,
             'destination_account_id': self.line_ids[0].account_id.id,
             'write_off_line_vals': [],
         }
+
+        # In case it is false, we don't add it to the create vals so that
+        # _compute_partner_bank_id is executed at payment creation
+        if self.partner_bank_id.id:
+            payment_vals['partner_bank_id'] = self.partner_bank_id.id
 
         if self.payment_difference_handling == 'reconcile':
             if self.early_payment_discount_mode:
