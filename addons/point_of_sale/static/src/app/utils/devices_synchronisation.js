@@ -185,7 +185,7 @@ export default class DevicesSynchronisation {
                 domains.push(
                     new Domain([
                         ["id", "=", record.id],
-                        ["write_date", ">", recordDateTimeString],
+                        ["write_date", ">=", recordDateTimeString],
                     ])
                 );
             }
