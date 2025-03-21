@@ -6,8 +6,6 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { isCSSColor } from "@web/core/utils/colors";
 
-const toList = (e) => (Array.isArray(e) ? e : [e]);
-
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = ["builderActions", "history", "savePlugin"];
@@ -189,10 +187,9 @@ export class CustomizeWebsitePlugin extends Plugin {
                 apply: () => this.stuffHappened(),
             },
             websiteConfig: {
-                prepare: async ({ actionParam }) =>
-                    this.loadConfigKey(actionParam.mainParam || actionParam.xmlId),
+                prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
                 isApplied: ({ param }) => {
-                    const views = toList(param.mainParam || param.xmlId);
+                    const views = param.views || [];
                     return views.every((v) => this.getConfigKey(v));
                 },
                 apply: (action) => this.toggleConfig(action, true),
@@ -302,16 +299,17 @@ export class CustomizeWebsitePlugin extends Plugin {
     // -------------------------------------------------------------------------
     // customize website action
     // -------------------------------------------------------------------------
-    loadConfigKey(keys) {
-        if (!Array.isArray(keys)) {
-            keys = [keys];
+    loadConfigKey(actionParam) {
+        if (actionParam.views) {
+            return Promise.all(
+                actionParam.views.map((view) => {
+                    if (!(view in this.cache)) {
+                        this.cache[view] = this._loadBatchKey(view);
+                    }
+                    return this.cache[view];
+                })
+            );
         }
-        for (const key of keys) {
-            if (!(key in this.cache)) {
-                this.cache[key] = this._loadBatchKey(key);
-            }
-        }
-        return Promise.all(keys.map((key) => this.cache[key]));
     }
 
     _loadBatchKey(key) {
@@ -343,10 +341,11 @@ export class CustomizeWebsitePlugin extends Plugin {
             // ignore previews!
             return;
         }
+        // step 1: enable and disable views
         const toEnable = new Set();
         const toDisable = new Set();
         const shouldReset = !!action.param.resetViewArch;
-        const views = toList(action.param.mainParam || action.param.xmlId);
+        const views = action.param.views;
         if (action.selectableContext) {
             if (!apply) {
                 // do nothing, we will do it anyway in the apply call
@@ -355,7 +354,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             for (const item of action.selectableContext.items) {
                 for (const a of item.getActions()) {
                     if (a.actionId === "websiteConfig") {
-                        for (const view of toList(a.actionParam.mainParam)) {
+                        for (const view of a.actionParam.views || []) {
                             toDisable.add(view);
                         }
                     }
@@ -380,8 +379,13 @@ export class CustomizeWebsitePlugin extends Plugin {
             disable: [...toDisable],
             reset_view_arch: shouldReset,
         });
+        // step 2: customize vars
+        const updateVars = action.param.vars
+            ? this.customizeWebsiteVariables(action.param.vars)
+            : Promise.resolve();
+
         const saveProm = this.dependencies.savePlugin.save();
-        await Promise.all([updateTheme, saveProm]);
+        await Promise.all([updateTheme, saveProm, updateVars]);
         if (this.isDestroyed) {
             return true;
         }

@@ -1,6 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+
+<t t-name="website.headerTemplateOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem
+                title.translate="Default"
+                actionParam="{
+                    views: ['website.template_header_default'],
+                    vars: {'header-link-style': 'default', 'header-template': 'default'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_default.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Hamburger menu"
+                actionParam="{
+                    views: ['website.template_header_hamburger', 'website.no_autohide_menu'],
+                    vars: {'header-link-style': 'default', 'header-template': 'hamburger'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Rounded box menu"
+                actionParam="{
+                    views: ['website.header_navbar_pills_style','website.template_header_boxed'],
+                    vars: {'header-link-style': 'pills', 'header-template': 'boxed'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Stretch menu"
+                actionParam="{
+                    views: ['website.template_header_stretch'],
+                    vars: {'header-link-style': 'default', 'header-template': 'stretch'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_stretch.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Vertical"
+                actionParam="{
+                    views: ['website.template_header_vertical'],
+                    vars: {'header-link-style': 'default', 'header-template': 'vertical'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_vertical.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Menu with Search bar"
+                actionParam="{
+                    views: ['website.template_header_search'],
+                    vars: {'header-link-style': 'default', 'header-template': 'search'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_search.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Menu - Sales 1"
+                actionParam="{
+                    views: ['website.template_header_sales_one'],
+                    vars: {'header-link-style': 'default', 'header-template': 'sales_one'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_sales_one.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Menu - Sales 2"
+                actionParam="{
+                    views: ['website.template_header_sales_two'],
+                    vars: {'header-link-style': 'default', 'header-template': 'sales_two'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_sales_two.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Menu - Sales 3"
+                actionParam="{
+                    views: ['website.template_header_sales_three'],
+                    vars: {'header-link-style': 'default', 'header-template': 'sales_three'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_sales_three.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                title.translate="Menu - Sales "
+                actionParam="{
+                    views: ['website.template_header_sales_four'],
+                    vars: {'header-link-style': 'default', 'header-template': 'sales_four'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_sales_four.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem
+                id="'header_sidebar_opt'"
+                title.translate="Sidebar"
+                actionParam="{
+                    views: ['website.template_header_sidebar', 'website.no_autohide_menu'],
+                    vars: {'header-link-style': 'default', 'header-template': 'sidebar'},
+                }"
+            >
+                <img style="width:150px;" src="/website/static/src/img/snippets_options/header_template_sidebar.svg"/>
+            </BuilderSelectItem>
+
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Elements" t-if="this.isActiveItem('header_sidebar_opt')" level="1">
+        <div>coucou</div>
+                <!-- <we-input string="Width"
+                  class="o_we_sublevel_1"
+                  data-dependencies="header_sidebar_opt"
+                  data-customize-website-variable="null"
+                  data-variable="sidebar-width"
+                  data-unit="px"
+                  data-save-unit="rem"/> -->
+    </BuilderRow>
+</t>
+
 <t t-name="website.headerElementOption">
     <BuilderRow label.translate="Elements" action="'websiteConfig'">
         <div class="flex-grow-1">
@@ -9,7 +128,7 @@
                     title.translate="Show/hide text element"
                     className="'flex-grow-1 me-1'"
                     actionParam="{
-                        xmlId: 'website.header_text_element',
+                        views: ['website.header_text_element'],
                         resetViewArch: true,
                     }"
                 >
@@ -21,7 +140,7 @@
                     title.translate="Show/hide language selector"
                     className="'flex-grow-1 me-1 fa fa-flag'"
                     actionParam="{
-                        xmlId: 'website.header_language_selector',
+                        views: ['website.header_language_selector'],
                         resetViewArch: true,
                     }"
                 >
@@ -30,14 +149,14 @@
                     title.translate="Show/hide search bar"
                     className="'fa fa-search flex-grow-1 me-1'"
                     actionParam="{
-                        xmlId: 'website.header_search_box',
+                        views: ['website.header_search_box'],
                         resetViewArch: true,
                     }"/>
                 <BuilderButton
                     title.translate="Show/hide sign in button"
                     className="'fa fa-sign-in flex-grow-1'"
                     actionParam="{
-                        xmlId: 'portal.user_sign_in',
+                        views: ['portal.user_sign_in'],
                         resetViewArch: true,
                     }"/>
             </div>
@@ -46,7 +165,7 @@
                     title.translate="Show/hide social links"
                     className="'flex-grow-1 me-1'"
                     actionParam="{
-                        xmlId: 'website.header_social_links',
+                        views: ['website.header_social_links'],
                         resetViewArch: true,
                     }"                    
                 >
@@ -56,7 +175,7 @@
                     title.translate="Show/hide button"
                     className="'flex-grow-1 me-1'"
                     actionParam="{
-                        xmlId: 'website.header_call_to_action',
+                        views: ['website.header_call_to_action'],
                         resetViewArch: true,
                     }" 
                 >
@@ -66,7 +185,7 @@
                     title.translate="Show/hide logo"
                     className="'flex-grow-1'"
                     actionParam="{
-                        xmlId: ['website.option_header_brand_name', 'website.option_header_brand_logo'],
+                        views: ['website.option_header_brand_name', 'website.option_header_brand_logo'],
                         resetViewArch: true,
                     }" 
                 >
