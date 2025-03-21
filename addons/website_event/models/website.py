@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
+from lxml import etree, html
+
 from odoo import api, models, _
 
 
@@ -24,13 +27,17 @@ class Website(models.Model):
          to make it unique in the context of our event, which makes it possible to find the view in
          the event pages controller.
 
+         Finally, we also manually adapt the content of the generated page so that it's suited for
+         the website editor generation.
+         This includes removing false attributes and making sure the content is contained within a
+         single oe_structure element (which cannot be 'wrap' as wrap contains the event menu).
+
          See: website.menu#save override """
 
         website_event_menu = False
         if template == 'website.default_page' and name and name.startswith('event/'):
-            website_menu = self.env["website.menu"].sudo().search([('url', '=', '/' + name)], limit=1)
             website_event_menu = self.env["website.event.menu"].sudo().search([
-                ('menu_id', '=', website_menu.id)
+                ('menu_id.url', '=', '/' + name)
             ], limit=1)
             if website_event_menu:
                 template = "website_event.layout"
@@ -40,6 +47,26 @@ class Website(models.Model):
         if website_event_menu and new_page.get('view_id'):
             website_event_menu.view_id = new_page['view_id']
             website_event_menu.view_id.key = f'website_event.{website_event_menu.event_id.name}-{name.split("/")[-1]}'
+
+            arch = website_event_menu.view_id.arch
+            if arch:
+                tree = html.fromstring(arch)
+                content_container = tree.xpath('//div[@id="oe_structure_website_event_layout_1"]')
+                if content_container:
+                    # remove ID and editor sub-message for custom pages as it doesn't apply
+                    wrap = tree.xpath('//div[@id="wrap"]')[0]
+                    content_container = content_container[0]
+                    content_container.attrib.pop('t-att-data-editor-sub-message', None)
+                    content_container.attrib.pop('id', None)
+
+                    if sections_arch:
+                        for section in wrap.xpath('//section'):
+                            # to be properly editable, the content needs to be contained within a
+                            # single empty oe_structure, unlike 'wrap' that has the event menu inside
+                            wrap.remove(section)
+                            content_container.append(section)
+
+                    website_event_menu.view_id.arch = etree.tostring(tree, encoding="unicode")
 
         return new_page
 
