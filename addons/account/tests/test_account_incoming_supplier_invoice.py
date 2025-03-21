@@ -11,7 +11,7 @@ from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
 from odoo.tests import tagged
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_gateway')
 class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
 
     @classmethod
@@ -201,6 +201,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
     def test_supplier_invoice_mailed_from_supplier(self):
         message_parsed = {
             'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
             'subject': 'Incoming bill',
             'from': '%s <%s>' % (self.supplier_partner.name, self.supplier_partner.email),
             'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
@@ -214,8 +215,6 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
-        following_partners = invoice.message_follower_ids.mapped('partner_id')
-        self.assertEqual(following_partners, self.env.user.partner_id)
         self.assertRegex(invoice.name_placeholder, r'BILL/\d{4}/\d{2}/0001')
 
     def test_supplier_invoice_forwarded_by_internal_user_without_supplier(self):
@@ -223,6 +222,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
             but no partner email address is found in the body."""
         message_parsed = {
             'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
             'subject': 'Incoming bill',
             'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
             'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
@@ -231,19 +231,20 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         }
 
         invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertFalse(invoice.partner_id)
 
         message_ids = invoice.message_ids
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
-        following_partners = invoice.message_follower_ids.mapped('partner_id')
-        self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
+        self.assertEqual(invoice.message_partner_ids, self.env.user.partner_id)
 
     def test_supplier_invoice_forwarded_by_internal_with_supplier_in_body(self):
         """ In this test, the bill was forwarded by an employee,
             and the partner email address is found in the body."""
         message_parsed = {
             'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
             'subject': 'Incoming bill',
             'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
             'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
@@ -252,19 +253,21 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         }
 
         invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertEqual(invoice.partner_id, self.supplier_partner)
 
         message_ids = invoice.message_ids
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
         following_partners = invoice.message_follower_ids.mapped('partner_id')
-        self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
+        self.assertEqual(following_partners, self.env.user.partner_id)
 
     def test_supplier_invoice_forwarded_by_internal_with_internal_in_body(self):
         """ In this test, the bill was forwarded by an employee,
             and the internal user email address is found in the body."""
         message_parsed = {
             'message_id': 'message-id-dead-beef',
+            'message_type': 'email',
             'subject': 'Incoming bill',
             'from': '%s <%s>' % (self.internal_user.name, self.internal_user.email),
             'to': '%s@%s' % (self.journal.alias_id.alias_name, self.journal.alias_id.alias_domain),
@@ -273,13 +276,14 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         }
 
         invoice = self.env['account.move'].message_new(message_parsed, {'move_type': 'in_invoice', 'journal_id': self.journal.id})
+        self.assertEqual(invoice.partner_id, self.internal_user.partner_id)
 
         message_ids = invoice.message_ids
         self.assertEqual(len(message_ids), 1, 'Only one message should be posted in the chatter')
         self.assertEqual(message_ids.body, '<p>Vendor Bill Created</p>', 'Only the invoice creation should be posted')
 
         following_partners = invoice.message_follower_ids.mapped('partner_id')
-        self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
+        self.assertEqual(following_partners, self.env.user.partner_id)
 
     def test_extend_with_attachments_multi_pdf(self):
         self._disable_ocr(self.company_data['company'])
