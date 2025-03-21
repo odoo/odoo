@@ -205,6 +205,8 @@ actual arch.
 
     invalid_locators = fields.Json(compute='_compute_invalid_locators')
 
+    inheriting_views = fields.One2many('ir.ui.view', 'inherit_id')
+
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
     @api.depends_context('read_arch_from_file', 'lang', 'edit_translations', 'check_translations')
     def _compute_arch(self):
@@ -636,7 +638,7 @@ actual arch.
         return """SELECT res_id FROM ir_model_data
                   WHERE res_id IN %(res_ids)s AND model = 'ir.ui.view' AND module IN %(modules)s
                """
-
+    
     def _get_inheriting_views(self):
         """
         Determine the views that inherit from the current recordset, and return
@@ -644,6 +646,8 @@ actual arch.
         """
         if not self.ids:
             return self.browse()
+        if not self.inheriting_views:
+            return self
         domain = self._get_inheriting_views_domain()
         query = self._search(domain)
         where_clause = query.where_clause
@@ -678,6 +682,8 @@ actual arch.
         #    database. e.g. base views are placed before stock ones.
 
         rows = self.env.execute_query(query)
+        
+
         views = self.browse(row[0] for row in rows)
 
         # optimization: fill in cache of inherit_id and mode
@@ -690,6 +696,7 @@ actual arch.
             views = views._filter_loaded_views()
 
         return views
+        
 
     def _filter_loaded_views(self):
         """

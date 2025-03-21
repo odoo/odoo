@@ -409,6 +409,7 @@ class IrUiView(models.Model):
         domain = ['|', ('key', 'like', '%snippet%'), ('key', 'like', '.%s\\_%')]
         #views = self.search_fetch(domain, ['key', 'name', 'website_id', 'inherit_id'])
         views = self.search(domain)
+        views.inheriting_views  # precompute in batch
         return {(view.key, view.website_id.id): view.id for view in views}
 
     def _get_snippet(self, view_ref):

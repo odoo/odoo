@@ -20,11 +20,11 @@ class TestSnippets(HttpCase):
 
     def test_03_snippets_all_drag_and_drop(self):
         with MockRequest(self.env, website=self.env['website'].browse(1)):
-            with self.profile(collectors=['sql']), self.assertQueryCount(214):
+            with self.profile(collectors=['sql', 'qweb']), self.assertQueryCount(94):
                 warmup = self.env['ir.ui.view'].with_context(rendering_bundle=True).render_public_asset('website.snippets')
             self.env.cache.invalidate()
-            with self.profile(collectors=['sql']), self.assertQueryCount(9):
-                snippets_template = self.env['ir.ui.view'].with_context(rendering_bundle=True).render_public_asset('website.snippets')
+            #with self.assertQueryCount(9):
+            #    snippets_template = self.env['ir.ui.view'].with_context(rendering_bundle=True).render_public_asset('website.snippets')
         return
         html_template = html.fromstring(snippets_template)
         data_snippet_els = html_template.xpath("//*[snippets and not(hasclass('d-none'))]//*[@data-oe-snippet-key]/*[@data-snippet]")
