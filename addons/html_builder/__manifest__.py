@@ -42,7 +42,6 @@
 
             'html_builder/static/src/**/*',
             ('remove', 'html_builder/static/src/website_preview/**/*'),
-            ('remove', 'html_builder/static/src/website_mass_mailing/**/*'),
             ('remove', 'html_builder/static/src/website_builder/plugins/website_edit_service.js'),
             ('remove', 'html_builder/static/src/interactions/**/*'),
         ],

@@ -19,7 +19,9 @@ class ProcessStepsOptionPlugin extends Plugin {
         // connectors even if there were no step added (e.g: a column of the
         // snippet is being resized).
         content_updated_handlers: (rootEl) =>
-            applyFunDependOnSelectorAndExclude(reloadConnectors, rootEl, this.selector),
+            applyFunDependOnSelectorAndExclude(reloadConnectors, rootEl, {
+                selector: this.selector,
+            }),
     };
     getActions() {
         return {

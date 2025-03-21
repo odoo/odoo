@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- TODO: form_opt dependency -->
+
+<t t-name="html_builder.MailingListSubscribeOption">
+
+    <BuilderRow label.translate="Newsletter">
+        <BuilderSelect dataAttributeAction="'listId'">
+            <t t-foreach="mailingLists" t-as="item" t-key="item.id">
+                <BuilderSelectItem dataAttributeActionValue="item.id.toString()">
+                    <t t-out = "item.name"/>
+                </BuilderSelectItem>
+            </t>
+            <t t-if="!mailingLists.length">
+                <BuilderSelectItem>None</BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Display Thanks Message">
+        <BuilderCheckbox action="'toggleThanksMessage'"/>
+    </BuilderRow>
+
+</t>
+
+<t t-name="html_builder.MailingListSubscribeFormOption">
+
+    <BuilderRow label.translate="Placeholder">
+        <BuilderTextInput attributeAction="'placeholder'" applyTo="'.s_newsletter_subscribe_form_input'"/>
+    </BuilderRow>
+
+</t>
+
+</templates>

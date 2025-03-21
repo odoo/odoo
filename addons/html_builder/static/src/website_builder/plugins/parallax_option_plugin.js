@@ -82,8 +82,7 @@ class WebsiteParallaxPlugin extends Plugin {
             applyFunDependOnSelectorAndExclude(
                 this.removeParallax.bind(this),
                 rootEl,
-                backgroundOptionSelector.selector,
-                backgroundOptionSelector.exclude
+                backgroundOptionSelector
             );
         }
     }
