@@ -389,17 +389,40 @@ class IrUiView(models.Model):
         Archived views are ignored (unless the active_test context is set, but
         then the ormcache will not work as expected).
         """
-        website_id = self._context.get('website_id')
-        if website_id and not isinstance(xml_id, int):
-            current_website = self.env['website'].browse(int(website_id))
-            domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
+        if not isinstance(xml_id, int):
+            if '.s_' in xml_id or 'snippet' in xml_id:
+                return self._get_snippet(xml_id).id
+            website_id = self._context.get('website_id')
+            if website_id and not isinstance(xml_id, int):
+                current_website = self.env['website'].browse(int(website_id))
+                domain = ['&', ('key', '=', xml_id)] + current_website.website_domain()
 
-            view = self.sudo().search(domain, order='website_id', limit=1)
-            if not view:
-                _logger.warning("Could not find view object with xml_id '%s'", xml_id)
-                raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
-            return view.id
+                view = self.sudo().search(domain, order='website_id', limit=1)
+                if not view:
+                    _logger.warning("Could not find view object with xml_id '%s'", xml_id)
+                    raise ValueError('View %r in website %r not found' % (xml_id, self._context['website_id']))
+                return view.id
         return super(IrUiView, self.sudo())._get_view_id(xml_id)
+    
+    @tools.ormcache()
+    def _all_snippets_cache(self):
+        domain = ['|', ('key', 'like', '%snippet%'), ('key', 'like', '.%s\\_%')]
+        #views = self.search_fetch(domain, ['key', 'name', 'website_id', 'inherit_id'])
+        views = self.search(domain)
+        return {(view.key, view.website_id.id): view.id for view in views}
+
+    def _get_snippet(self, view_ref):
+        """ Return the snippet corresponding to ``view_ref``, which may be a
+        view ID or an XML ID.
+        """
+        cache = self._all_snippets_cache()
+        webiste_id = self._context.get('website_id')
+        for key in (view_ref, webiste_id), (view_ref, False):
+            if key in cache:
+                view = self.browse(cache[key])
+                view._prefetch_ids = cache.values()
+                return view
+        raise Exception('view not found', view_ref)
 
     @tools.ormcache('self.id', cache='templates')
     def _get_cached_visibility(self):

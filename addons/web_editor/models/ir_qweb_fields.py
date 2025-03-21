@@ -81,7 +81,7 @@ class IrQweb(models.AbstractModel):
             el.set('t-lang', f"'{snippet_lang}'")
 
         el.set('t-options', f"{{'snippet-key': {key!r}}}")
-        view = self.env['ir.ui.view']._get(key).sudo()
+        view = self.env['ir.ui.view']._get_snippet(key).sudo()
         name = el.attrib.pop('string', view.name)
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
         image_preview = el.attrib.pop('t-image-preview', None)
