@@ -158,30 +158,6 @@ class ResConfigSettings(models.TransientModel):
     def copy(self, default=None):
         raise UserError(_("Cannot duplicate configuration!"))
 
-    def onchange_module(self, field_value, module_name):
-        module_sudo = self.env['ir.module.module']._get(module_name[7:])
-        if not int(field_value) and module_sudo.state in ('to install', 'installed', 'to upgrade'):
-            deps = module_sudo.downstream_dependencies()
-            dep_names = (deps | module_sudo).mapped('shortdesc')
-            message = '\n'.join(dep_names)
-            return {
-                'warning': {
-                    'title': _('Warning!'),
-                    'message': _('Disabling this option will also uninstall the following modules \n%s', message),
-                }
-            }
-        return {}
-
-    def _register_hook(self):
-        """ Add an onchange method for each module field. """
-        def make_method(name):
-            return lambda self: self.onchange_module(self[name], name)
-
-        for name in self._fields:
-            if name.startswith('module_'):
-                method = make_method(name)
-                self._onchange_methods[name].append(method)
-
     @api.model
     def _install_modules(self, modules):
         """ Install the requested modules.
@@ -402,7 +378,16 @@ class ResConfigSettings(models.TransientModel):
             self.env.flush_all()
 
         if to_uninstall:
-            to_uninstall.button_immediate_uninstall()
+            return {
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'name': _('Uninstall modules'),
+                'view_mode': 'form',
+                'res_model': 'base.module.uninstall',
+                'context': {
+                    'default_module_ids': to_uninstall.ids,
+                },
+            }
 
         installation_status = self._install_modules(to_install)
 
