@@ -144,7 +144,8 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                 )
                 self.assertEqual(
                     move.message_partner_ids,
-                    self.user_accountman.partner_id + move.partner_id,
+                    self.user_accountman.partner_id,
+                    'Customer should not be automatically added as follower'
                 )
 
     @users('user_account')
@@ -475,12 +476,6 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print()
 
-        self.assertMailMail(
-            test_move.partner_id,
-            'sent',
-            author=self.user_account_other.partner_id,
-            content='access_token=',
-        )
         self.assertMailMail(
             additional_partner,
             'sent',
