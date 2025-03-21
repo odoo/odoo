@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { random5Chars, uuidv4, gte, lt } from "@point_of_sale/utils";
 import { floatIsZero, roundPrecision } from "@web/core/utils/numbers";
+import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 
@@ -228,6 +229,7 @@ export class PosOrder extends Base {
     }
 
     getRoundedRemaining(roundingMethod, remaining) {
+        remaining = roundCurrency(remaining, this.currency);
         let { rounding_method: method, rounding } = roundingMethod;
         if (
             lt(remaining, 0, {
