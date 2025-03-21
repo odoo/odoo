@@ -21,7 +21,7 @@ class TestMailing(EventCase, MockEmail):
         cls.reference_now = datetime(2024, 7, 20, 14, 30, 15, 123456)
         cls.event_date_begin = datetime(2024, 7, 22, 8, 0, 0)
         cls.event_date_end = datetime(2024, 7, 24, 18, 0, 0)
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls.test_event = cls.env['event.event'].create({
                 'date_begin': cls.event_date_begin,
                 'date_end': cls.event_date_end,

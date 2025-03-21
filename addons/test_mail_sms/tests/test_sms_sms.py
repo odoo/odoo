@@ -24,7 +24,7 @@ class TestSMSPost(SMSCommon, MockLinkTracker):
         cls.env['ir.config_parameter'].sudo().set_int("mass_mailing.cancelled_mails_months_limit", 6)
 
         cls.sms_all = cls.env['sms.sms']
-        with cls.mock_datetime_and_now(cls, cls.now):
+        with cls.mock_datetime_and_now(cls.now):
             for x in range(10):
                 cls.sms_all |= cls.env['sms.sms'].create({
                     'number': '+324560000%s%s' % (x, x),

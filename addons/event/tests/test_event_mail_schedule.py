@@ -49,7 +49,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         cls.event_date_end = datetime(2021, 3, 24, 18, 0, 0)
 
         cls._setup_test_reports()
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             # create with admin to force create_date
             cls.test_event = cls.env['event.event'].with_user(cls.user_eventmanager).create({
                 'name': 'TestEventMail',

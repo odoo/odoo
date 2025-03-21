@@ -22,7 +22,7 @@ class TestScheduledMessage(MailCommon, TestRecipients):
         # force 'now' to ease test about schedulers
         cls.reference_now = FieldDatetime.to_datetime('2022-12-24 12:00:00')
 
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls.test_record = cls.env['mail.test.ticket'].create([{
                 'name': 'Test Record',
                 'customer_id': cls.partner_1.id,

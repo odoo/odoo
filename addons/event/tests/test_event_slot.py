@@ -16,7 +16,7 @@ class TestEventSlotsCommon(EventCase):
         cls.reference_beg = datetime(2025, 4, 21, 6, 30, 0)
         cls.reference_end = datetime(2025, 8, 21, 17, 45, 0)
 
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls.test_event = cls.env['event.event'].create({
                 'date_begin': cls.reference_beg,
                 'date_end': cls.reference_end,
@@ -132,7 +132,7 @@ class TestEventSlotSeats(TestEventSlotsCommon):
         second_slot = cls.test_event_slot_noticket.event_slot_ids.filtered(lambda s: s.start_hour == 13)
 
         # already existing registrations: 3 on first slot (1 archived), 1 on second slot (2 archived)
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls._create_registrations_for_slot_and_ticket(cls.test_event_slot_noticket, first_slot, False, 1, state='open')
             cls._create_registrations_for_slot_and_ticket(cls.test_event_slot_noticket, first_slot, False, 2, state='done')
             cls._create_registrations_for_slot_and_ticket(cls.test_event_slot_noticket, first_slot, False, 1, active=False)

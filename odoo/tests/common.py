@@ -55,7 +55,7 @@ from werkzeug.exceptions import BadRequest
 import odoo.cli
 import odoo.models
 import odoo.orm.registry
-from odoo import api
+from odoo import api, fields
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http import request, request_var
@@ -1457,6 +1457,16 @@ class TransactionCase(BaseCase):
         transaction = self.env.transaction
         for name, layer in transaction.ormcaches__.items():
             transaction.ormcaches__[name] = CacheLayer(layer)
+
+    @classmethod
+    @contextmanager
+    def mock_datetime_and_now(cls, mock_dt):
+        """ Used when synchronization date (using env.cr.now()) is important
+        in addition to standard datetime mocks. Used mainly to detect sync
+        issues. """
+        mock_dt = fields.Datetime.to_datetime(mock_dt)
+        with freeze_time(mock_dt), patch.object(cls.env.cr, 'now', lambda: mock_dt):
+            yield
 
     @classmethod
     @contextmanager

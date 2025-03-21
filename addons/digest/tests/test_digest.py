@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
-from contextlib import contextmanager
-from freezegun import freeze_time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from lxml import html
-from unittest.mock import patch
 from werkzeug.urls import url_encode
 
 from odoo import SUPERUSER_ID
@@ -21,15 +17,6 @@ from odoo.tools import mute_logger, urls
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestDigest(TestDigestCommon):
-
-    @contextmanager
-    def mock_datetime_and_now(self, mock_dt):
-        """ Used when synchronization date (using env.cr.now()) is important
-        in addition to standard datetime mocks. Used mainly to detect sync
-        issues. """
-        with freeze_time(mock_dt), \
-             patch.object(self.env.cr, 'now', lambda: mock_dt):
-            yield
 
     @classmethod
     def setUpClass(cls):
@@ -50,7 +37,7 @@ class TestDigest(TestDigestCommon):
         # create logs for user_admin
         cls._setup_logs_for_users(cls.user_admin, cls.reference_datetime - relativedelta(days=5))
 
-        with cls.mock_datetime_and_now(cls, cls.reference_datetime):
+        with cls.mock_datetime_and_now(cls.reference_datetime):
             cls.test_digest, cls.test_digest_2 = cls.env['digest.digest'].create([
                 {
                     "kpi_mail_message_total": True,
@@ -68,7 +55,7 @@ class TestDigest(TestDigestCommon):
 
     @classmethod
     def _setup_logs_for_users(cls, res_users, log_dt):
-        with cls.mock_datetime_and_now(cls, log_dt):
+        with cls.mock_datetime_and_now(log_dt):
             for user in res_users:
                 cls.env['res.users.log'].with_user(SUPERUSER_ID).create({
                     'create_uid': user.id,

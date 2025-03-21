@@ -1,4 +1,3 @@
-import contextlib
 import email
 import email.policy
 from itertools import chain, repeat
@@ -11,7 +10,6 @@ import werkzeug
 from ast import literal_eval
 from contextlib import contextmanager
 from datetime import timedelta
-from freezegun import freeze_time
 from functools import partial
 from lxml import html
 from markupsafe import Markup
@@ -19,7 +17,7 @@ from random import randint
 from unittest.mock import patch
 from urllib.parse import urlparse, urlencode, parse_qsl
 
-from odoo import tools, fields
+from odoo import tools
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.base.tests.common import MockSmtplibCase
@@ -63,19 +61,6 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     def setUp(self):
         super().setUp()
         self.is_mail_track_installed = 'mail_tracking' in self.env['ir.module.module']._installed()
-
-    # ------------------------------------------------------------
-    # UTILITY MOCKS
-    # ------------------------------------------------------------
-
-    @contextmanager
-    def mock_datetime_and_now(self, mock_dt):
-        """ Used when synchronization date (using env.cr.now()) is important
-        in addition to standard datetime mocks. Used mainly to detect sync
-        issues. """
-        with freeze_time(mock_dt), \
-             patch.object(self.env.cr, 'now', lambda: mock_dt):
-            yield
 
     # ------------------------------------------------------------
     # GATEWAY MOCK
@@ -2257,18 +2242,3 @@ class MailCommon(MailCase):
                 'partner_id': partner.id,
             } for partner in partners
         ])
-
-
-@contextlib.contextmanager
-def freeze_all_time(dt=None):
-    """Freeze both `cr.now` and `Datetime.now`. ORM `create_date` and `write_date`
-    are based on `cursor.now()`. Domains often use `Datetime.now()` which can
-    lead to inconsistencies when using `freeze_time`.
-
-    :param dt: Datetime to freeze the time to. Defaults to `Datetime.now()`.
-    :type dt: datetime.datetime
-    """
-    if not dt:
-        dt = fields.Datetime.now()
-    with patch('odoo.sql_db.BaseCursor.now', return_value=dt), freeze_time(dt):
-        yield
