@@ -30,22 +30,6 @@
             </p>
         </field>
     </record>
-    <record id="product_product_action" model="ir.actions.act_window">
-        <field name="name">Product Variants</field>
-        <field name="res_model">product.product</field>
-        <field name="view_mode">kanban,list,form,activity</field>
-        <field name="context">{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True}</field>
-        <field name="search_view_id" eval="False"/> <!-- Force empty -->
-        <field name="view_id" ref="product.product_product_tree_view"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a new product variant
-            </p><p>
-                You must define a product for everything you sell through
-                the point of sale interface.
-            </p>
-        </field>
-    </record>
     <record id="product_category_action" model="ir.actions.act_window">
         <field name="name">Internal Categories</field>
         <field name="res_model">product.category</field>
@@ -120,12 +104,6 @@
         action="product_template_action_pos_product"
         parent="point_of_sale.pos_config_menu_catalog"
         sequence="5"/>
-    <menuitem id="pos_config_menu_action_product_product"
-        name="Product Variants"
-        parent="point_of_sale.pos_config_menu_catalog"
-        action="product_product_action"
-        groups="product.group_product_variant"
-        sequence="10"/>
     <menuitem id="point_of_sale.menu_product_combo"
         name="Combo Choices"
         parent="point_of_sale.pos_config_menu_catalog"
