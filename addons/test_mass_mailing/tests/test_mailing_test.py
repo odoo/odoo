@@ -3,6 +3,8 @@
 import lxml.html
 
 from odoo.addons.test_mass_mailing.tests.common import TestMassMailCommon
+from odoo.addons.test_mass_mailing.tests.common import TestMassSMSCommon
+from odoo.addons.sms_twilio.tests.common import MockSmsTwilioApi
 from odoo.fields import Command
 from odoo.tests.common import users, tagged
 from odoo.tools import mute_logger
@@ -157,4 +159,39 @@ class TestMailingTest(TestMassMailCommon):
             }).email_to,
             'test@test.com',
             "Should use the value of the previous record's email_to as default",
+        )
+
+
+@tagged('mailing_manage', 'twilio')
+class TestMailingSMSTest(TestMassSMSCommon, MockSmsTwilioApi):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._setup_sms_twilio(cls.user_marketing.company_id)
+
+    def test_mass_sms_test_button_twilio(self):
+        """ Test the testing tool when twilio is activated on company """
+        self._setup_sms_twilio(self.user_marketing.company_id)
+
+        mailing = self.env['mailing.mailing'].create({
+            'name': 'TestButton',
+            'subject': 'Subject {{ object.name }}',
+            'preview': 'Preview {{ object.name }}',
+            'state': 'draft',
+            'mailing_type': 'sms',
+            'body_plaintext': 'Hello {{ object.name }}',
+            'mailing_model_id': self.env['ir.model']._get('res.partner').id,
+        })
+        mailing_test = self.env['mailing.sms.test'].with_user(self.user_marketing).create({
+            'numbers': '+32456001122',
+            'mailing_id': mailing.id,
+        })
+
+        with self.with_user('user_marketing'):
+            with self.mock_sms_twilio_gateway():
+                mailing_test.action_send_sms()
+
+        self.assertSMS(
+            self.env["res.partner"], '+32456001122', 'outgoing',
         )
