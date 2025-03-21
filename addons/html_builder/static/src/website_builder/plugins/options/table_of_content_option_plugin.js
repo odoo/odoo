@@ -121,11 +121,9 @@ class TableOfContentOptionPlugin extends Plugin {
         for (const navbar of root.querySelectorAll(".s_table_of_content_navbar")) {
             navbar.setAttribute("contenteditable", "false");
         }
-        applyFunDependOnSelectorAndExclude(
-            this.updateTableOfContentNavbar.bind(this),
-            root,
-            ".s_table_of_content_main"
-        );
+        applyFunDependOnSelectorAndExclude(this.updateTableOfContentNavbar.bind(this), root, {
+            selector: ".s_table_of_content_main",
+        });
     }
 
     updateTableOfContentNavbar(tableOfContentMain) {

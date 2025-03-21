@@ -68,16 +68,16 @@ export class BlockTab extends Component {
             onDrag: ({ element, x, y }) => {
                 this.dropzonePlugin.dragElement(element, x, y);
             },
-            onDrop: ({ element, x, y }) => {
+            onDrop: async ({ element, x, y }) => {
                 const { height, width } = element.getClientRects()[0];
 
                 const position = { x, y, height, width };
                 const { category, snippet } = this.dragState;
                 if (category === "snippet_groups") {
-                    this.openSnippetDialog(snippet, position);
+                    await this.openSnippetDialog(snippet, position);
                     return;
                 }
-                const addElement = this.dropzonePlugin.getAddElement(position);
+                const addElement = await this.dropzonePlugin.getAddElement(position);
                 if (!addElement) {
                     return;
                 }
@@ -98,7 +98,7 @@ export class BlockTab extends Component {
         return this.env.editor.shared.disableSnippets;
     }
 
-    openSnippetDialog(snippet, position) {
+    async openSnippetDialog(snippet, position) {
         if (snippet.moduleId) {
             return;
         }
@@ -107,7 +107,7 @@ export class BlockTab extends Component {
                 this.dropzonePlugin.getSelectors(snippet);
             this.dropzonePlugin.displayDropZone(selectorSiblings, selectorChildren);
         }
-        const addElement = this.dropzonePlugin.getAddElement(position);
+        const addElement = await this.dropzonePlugin.getAddElement(position);
         if (!addElement) {
             return;
         }
