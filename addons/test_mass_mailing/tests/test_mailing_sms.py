@@ -4,6 +4,7 @@
 from ast import literal_eval
 
 from odoo.addons.phone_validation.tools import phone_validation
+from odoo.addons.sms_twilio.tests.test_sms_twilio import MockSmsTwilioApi
 from odoo.addons.test_mass_mailing.tests.common import TestMassSMSCommon
 from odoo import exceptions
 from odoo.tests import tagged
@@ -285,7 +286,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
 
 
 @tagged('mass_mailing', 'mass_mailing_sms')
-class TestMassSMS(TestMassSMSCommon):
+class TestMassSMS(TestMassSMSCommon, MockSmsTwilioApi):
 
     @users('user_marketing')
     def test_mass_sms_links(self):
@@ -424,3 +425,27 @@ class TestMassSMS(TestMassSMSCommon):
             mailing, recipients
         )
         self.assertEqual(mailing.canceled, 3)
+
+    @users('user_marketing')
+    def test_mass_sms_twilio(self):
+        mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
+        mailing.write({
+            'body_plaintext': 'This is a mass SMS',
+            'sms_template_id': False,
+            'sms_force_send': True,
+            'sms_allow_unsubscribe': False,
+        })
+
+        with self.setup_and_mock_sms_twilio_gateway():
+            mailing.action_send_sms()
+
+        self.assertSMSTraces(
+            [{
+                'partner': record.customer_id,
+                'number': self.records_numbers[i],
+                'trace_status': 'pending',
+                'content': 'This is a mass SMS',
+            } for i, record in enumerate(self.records)],
+            mailing,
+            self.records,
+        )
