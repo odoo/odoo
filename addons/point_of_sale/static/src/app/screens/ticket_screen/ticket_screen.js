@@ -435,7 +435,7 @@ export class TicketScreen extends Component {
         }
     }
     getTime(order) {
-        return parseUTCString(order.date_order).toFormat("hh:mm");
+        return parseUTCString(order.date_order).setZone("local").toFormat("hh:mm");
     }
     getTotal(order) {
         return this.env.utils.formatCurrency(order.getTotalWithTax());
