@@ -160,14 +160,14 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(localized_date_planned, po.get_localized_date_planned(po.date_planned.strftime('%Y-%m-%d %H:%M:%S')))
 
         # check vendor is a message recipient
-        self.assertTrue(po.partner_id in po.message_partner_ids)
+        self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
 
         # check reminder send
         old_messages = po.message_ids
         po._send_reminder_mail()
         messages_send = po.message_ids - old_messages
         self.assertTrue(messages_send)
-        self.assertTrue(po.partner_id in messages_send.mapped('partner_ids'))
+        self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
 
         po.action_acknowledge()
         self.assertTrue(po.acknowledged)
@@ -193,7 +193,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_confirm()
 
         # check vendor is a message recipient
-        self.assertTrue(po.partner_id in po.message_partner_ids)
+        self.assertFalse(po.partner_id in po.message_partner_ids, 'Customer should not automatically be added in followers')
 
         old_messages = po.message_ids
         po._send_reminder_mail()
