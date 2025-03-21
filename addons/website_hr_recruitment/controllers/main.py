@@ -306,6 +306,14 @@ class WebsiteHrRecruitment(WebsiteForm):
             )
         }
 
+    def extract_data(self, model_sudo, values):
+        short_introduction = values.get("short_introduction", None)
+        data = super().extract_data(model_sudo, values)
+        if short_introduction:
+            introduction_label = self.env._("Short introduction from applicant")
+            data["custom"] = data["custom"].replace("short_introduction", introduction_label)
+        return data
+
     def _should_log_authenticate_message(self, record):
         if record._name == "hr.applicant" and not request.session.uid:
             return False
