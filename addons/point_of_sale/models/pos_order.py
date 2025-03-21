@@ -999,13 +999,16 @@ class PosOrder(models.Model):
             'res_id': move.id,
         }
 
+    def _get_invoice_post_context(self):
+        return {"skip_invoice_sync": True}
+
     def _generate_pos_order_invoice(self):
         self.state = 'done'
 
         company = self.company_id
         invoice_vals = self._prepare_invoice_vals()
         invoice = self._create_invoice(invoice_vals)
-        invoice.sudo().with_company(company).with_context(skip_invoice_sync=True)._post()
+        invoice.sudo().with_company(company).with_context(**self._get_invoice_post_context())._post()
 
         # invoice payments
         payment_moves_from_closed_sessions = {}
