@@ -559,6 +559,9 @@ class ProductTemplate(models.Model):
                 ),
             })
 
+        if combination_info['prevent_zero_price_sale']:
+            combination_info['compare_list_price'] = 0
+
         return combination_info
 
     @api.model
