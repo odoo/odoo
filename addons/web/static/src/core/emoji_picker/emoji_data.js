@@ -1483,7 +1483,8 @@ const _getEmojisData1 = () => `{
     ],
     "name": "` + _t("face with steam from nose") + `",
     "shortcodes": [
-        ":face_with_steam_from_nose:"
+        ":face_with_steam_from_nose:",
+        ":triumph:"
     ]
 },
 {
