@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.20"),
@@ -155,7 +155,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
             Chrome.clickMenuOption("Orders"),
             Chrome.createFloatingOrder(),
 
-            ProductScreen.addOrderline("Product Test 1.2", "1"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
             ProductScreen.clickPayButton(),
 
             PaymentScreen.totalIs("1.20"),
