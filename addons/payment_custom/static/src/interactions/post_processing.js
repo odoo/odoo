@@ -1,4 +1,4 @@
-import paymentPostProcessing from '@payment/js/post_processing';
+import paymentPostProcessing from '@payment/interactions/post_processing';
 
 paymentPostProcessing.include({
     /**
