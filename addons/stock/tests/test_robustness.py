@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
@@ -368,3 +369,40 @@ class TestRobustness(TransactionCase):
         self.env['stock.quant']._clean_reservations()
         # the reserved quantity should be cleaned to the quantity reserved by the move
         self.assertEqual(quant.reserved_quantity, 0.1)
+
+    def test_clean_quants_synch_in_non_company_specific_locations(self):
+        """
+        Accessing the inventory view will add an inventory_mode in the context
+        and launch a call of the `_clean_reservation`.
+
+        This checks that the _clean_reservation method does not raise user errors if it
+        plans to create a quants in a non-company specific location.
+        """
+        product_without_quant = self.env['product.product'].create({
+            'name': 'Product reserved without quant',
+            'is_storable': True,
+            'company_id': self.stock_location.company_id.id,
+        })
+        reservation_move = self.env['stock.move'].create({
+            'name': 'Lovely move',
+            'company_id': self.stock_location.company_id.id,
+            'location_id': self.ref('stock.stock_location_inter_company'),
+            'location_dest_id': self.stock_location.id,
+            'product_id': product_without_quant.id,
+            'product_uom': product_without_quant.uom_id.id,
+            'product_uom_qty': 5.0,
+        })
+
+        reservation_move._action_confirm()
+        reservation_move.quantity = 5
+        self.assertRecordValues(product_without_quant.stock_quant_ids, [
+            {'location_id': self.ref('stock.stock_location_inter_company'), 'reserved_quantity': 5.0}
+        ])
+        # create a syncj issue
+        product_without_quant.stock_quant_ids.unlink()
+        self.assertFalse(product_without_quant.stock_quant_ids)
+        # acces the quant view to provoke a quant synch
+        self.env['stock.quant'].action_view_quants()
+        self.assertRecordValues(product_without_quant.stock_quant_ids, [
+            {'location_id': self.ref('stock.stock_location_inter_company'), 'reserved_quantity': 5.0}
+        ])
