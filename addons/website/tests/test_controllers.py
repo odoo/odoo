@@ -38,11 +38,11 @@ class TestControllers(tests.HttpCase):
             else:
                 last_5_url_edited.append(new_page.url)
 
-        self.opener.post(url=suggested_links_url, json={'params': {'needle': '/'}})
+        self.url_open(url=suggested_links_url, json={'params': {'needle': '/'}})
         # mark as old
         old_pages._write({'write_date': '2020-01-01'})
 
-        res = self.opener.post(url=suggested_links_url, json={'params': {'needle': '/'}})
+        res = self.url_open(url=suggested_links_url, json={'params': {'needle': '/'}})
         resp = json.loads(res.content)
         assert 'result' in resp
         suggested_links = resp['result']

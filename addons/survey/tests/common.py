@@ -169,13 +169,13 @@ class SurveyCase(common.TransactionCase):
             return self.url_open('/survey/%s/%s' % (survey.access_token, token))
 
     def _access_begin(self, survey, token):
-        url = survey.get_base_url() + f'/survey/begin/%s/%s' % (survey.access_token, token)
-        return self.opener.post(url=url, json={'params': {'lang_code': 'en_US'}})
+        url = survey.get_base_url() + f'/survey/begin/{survey.access_token}/{token}'
+        return self.url_open(url, json={'params': {'lang_code': 'en_US'}})
 
     def _access_submit(self, survey, token, post_data, query_count=None):
         url = survey.get_base_url() + '/survey/submit/%s/%s' % (survey.access_token, token)
         with self.assertQueryCount(query_count) if query_count else nullcontext():
-            return self.opener.post(url=url, json={'params': post_data})
+            return self.url_open(url, json={'params': post_data})
 
     def _find_csrf_token(self, text):
         csrf_token_re = re.compile("(input.+csrf_token.+value=\")([a-f0-9]{40}o[0-9]*)", re.MULTILINE)

@@ -63,7 +63,7 @@ class TestPortalAddresses(BaseCommon, HttpCase):
         :rtype: :class:`requests.models.Response`
         """
         formatted_data = self._format_http_request_payload(payload=data)
-        return self.opener.post(url, data=formatted_data)
+        return self.url_open(url, data=formatted_data)
 
     def _format_http_request_payload(self, payload=None):
         """ Format a request payload to replace float values by their string representation.

@@ -1271,7 +1271,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_event.index'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         res = response.json()['result']
 
         self.assertEqual(
@@ -1309,7 +1309,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_event.index'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
@@ -1344,7 +1344,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_event.index'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
@@ -1482,7 +1482,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_sale.products'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['result']), 1, "Only '_theme_kea_sale.products' should be returned as it is the only customize_show related view in website 2 context")
         self.assertEqual(response.json()['result'][0]['key'], '_theme_kea_sale.products', "Only '_theme_kea_sale.products' should be returned")
@@ -1493,7 +1493,7 @@ class Crawler(HttpCase):
         # Test controller
         url = base_url + '/website/get_switchable_related_views'
         json = {'params': {'key': '_website_sale.products'}}
-        response = self.opener.post(url=url, json=json)
+        response = self.url_open(url=url, json=json)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()['result']), 1, "Only '_website_sale.child_view_w1' should be returned as it is the only customize_show related view in website 1 context")
         self.assertEqual(response.json()['result'][0]['key'], '_website_sale.child_view_w1', "Only '_website_sale.child_view_w1' should be returned")

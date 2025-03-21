@@ -80,7 +80,7 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
         channel_messages_count = len(channel.message_ids)
 
         rating_to_emoji = {1: "😞", 3: "😐", 5: "😊"}
-        self.opener.post(url=self.send_feedback_url, json={'params': {
+        self.url_open(url=self.send_feedback_url, json={'params': {
             'channel_id': channel.id,
             'rate': rating_value,
             'reason': reason,

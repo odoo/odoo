@@ -32,7 +32,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         :rtype: :class:`requests.models.Response`
         """
         formatted_params = self._format_http_request_payload(payload=params)
-        return self.opener.get(url, params=formatted_params)
+        return self.url_open(url, params=formatted_params)
 
     def _make_http_post_request(self, url, data=None):
         """ Make an HTTP POST request to the provided URL.
@@ -43,7 +43,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         :rtype: :class:`requests.models.Response`
         """
         formatted_data = self._format_http_request_payload(payload=data)
-        return self.opener.post(url, data=formatted_data)
+        return self.url_open(url, data=formatted_data, method='POST')
 
     def _format_http_request_payload(self, payload=None):
         """ Format a request payload to replace float values by their string representation.
@@ -66,7 +66,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         :return: The response of the request
         :rtype: :class:`requests.models.Response`
         """
-        return self.opener.post(url, json=data)
+        return self.url_open(url, json=data)
 
     @contextmanager
     def _assertNotFound(self):

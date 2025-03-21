@@ -112,7 +112,7 @@ class TestPortalControllers(TestPortal):
         post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
         pid = self.partner_2.id
         _hash = self.record_portal._sign_token(pid)
-        res = self.opener.post(
+        res = self.url_open(
             url=post_url,
             json={
                 'params': {
@@ -153,7 +153,7 @@ class TestPortalControllers(TestPortal):
         post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
 
         # test as not logged
-        self.opener.post(
+        self.url_open(
             url=post_url,
             json={
                 'params': {

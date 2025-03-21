@@ -42,7 +42,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
 
         # Click on livechatbutton at client side
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id),
                                                    ('livechat_active', '=', True)])

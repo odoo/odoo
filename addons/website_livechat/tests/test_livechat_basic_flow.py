@@ -47,7 +47,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
     def test_livechat_username(self):
         # Open a new live chat
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
         channel_1 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
@@ -65,7 +65,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.operator.name
 
         # Open a new live chat
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
         channel_2 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
@@ -115,7 +115,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
     def _common_basic_flow(self):
         # Open a new live chat
-        res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
+        res = self.url_open(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
 
         channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)

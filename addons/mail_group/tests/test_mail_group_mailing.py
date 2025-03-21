@@ -29,7 +29,7 @@ class TestMailGroupMailing(TestMailListCommon, HttpCase):
         for member in expected_recipients:
             mail = self._find_mail_mail_wemail(member.email, "outgoing")
             unsubscribe_url = literal_eval(mail.headers).get("List-Unsubscribe").strip('<>')
-            _response = self.opener.post(unsubscribe_url)
+            _response = self.url_open(unsubscribe_url, method='POST')
 
         self.assertEqual(test_group.member_ids, self.test_group_member_4_emp,
                          "Mail Group: people should have been unsubscribed")

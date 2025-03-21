@@ -832,7 +832,7 @@ class TestMailingHeaders(MassMailCommon, HttpCase):
 
             # unsubscribe in one-click
             unsubscribe_oneclick_url = headers["List-Unsubscribe"].strip("<>")
-            self.opener.post(unsubscribe_oneclick_url)
+            self.url_open(unsubscribe_oneclick_url, method='POST')
 
             # should be unsubscribed
             self.assertTrue(contact.subscription_ids.opt_out)

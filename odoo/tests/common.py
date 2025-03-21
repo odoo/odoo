@@ -2004,14 +2004,13 @@ class HttpCase(TransactionCase):
             "params": params or {},
         }
 
-    def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
+    def url_open(self, url, data=None, files=None, timeout=12, headers=None, json=None, params=None, allow_redirects=True, cookies=None, method: str | None = None):
+        if not method and (data or files or json):
+            method = 'POST'
+        method = method or 'GET'
         if url.startswith('/'):
             url = self.base_url() + url
-        if head:
-            return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
-        if data or files:
-            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
-        return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
+        return self.opener.request(method, url, params=params, data=data, json=json, files=files, timeout=timeout, headers=headers, cookies=cookies, allow_redirects=allow_redirects)
 
     def _wait_remaining_requests(self, timeout=10):
 
