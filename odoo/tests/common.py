@@ -138,6 +138,8 @@ def get_db_name():
 
 standalone_tests = defaultdict(list)
 
+_registry_test_lock = threading.RLock()
+
 
 def standalone(*tags):
     """ Decorator for standalone test functions.  This is somewhat dedicated to
@@ -777,10 +779,9 @@ class BaseCase(case.TestCase):
         Returns the patches required for entering registry test mode.
         The patches are not started.
         """
-        test_lock = threading.RLock()
         def _patched_cursor(readonly: bool = False):
             return test_cursor.TestCursor(
-                cr, test_lock, readonly and cls._registry_readonly_enabled
+                cr, _registry_test_lock, readonly and cls._registry_readonly_enabled
             )
         return [
             # New cursor should point to the test's cursor

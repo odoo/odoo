@@ -218,7 +218,10 @@ class TestTestCursor(common.TransactionCase):
             RELEASE SAVEPOINT B -- "savepoint b does not exist"
         """
         a = self.registry.cursor()
-        _b = self.registry.cursor()
+        b = self.registry.cursor()
+        # This forces the savepoint to be created
+        a._check_savepoint()
+        b._check_savepoint()
         # `a` should warn that it found un-closed cursor `b` when trying to close itself
         with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
             a.close()
@@ -226,7 +229,9 @@ class TestTestCursor(common.TransactionCase):
         self.assertIn('WARNING:odoo.sql_db:Found different un-closed cursor', msg)
         # avoid a warning on teardown (when self.cr finds a still on the stack)
         # as well as ensure the stack matches our expectations
-        self.assertEqual(a._cursors_stack.pop(), a)
+        with self.assertRaises(psycopg2.errors.InvalidSavepointSpecification):
+            with self.assertLogs('odoo.sql_db', level=logging.WARNING) as cm:
+                b.close()
 
     def test_borrow_connection(self):
         """Tests the behavior of the postgresql connection pool recycling/borrowing"""
