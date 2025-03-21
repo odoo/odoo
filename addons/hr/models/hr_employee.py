@@ -44,8 +44,7 @@ class HrEmployee(models.Model):
         compute='_compute_version_id',
         search='_search_version_id',
         ondelete='cascade',
-        store=False,
-        required=True)
+        store=False)
 
     # Global Fields
     resource_id = fields.Many2one('resource.resource')
@@ -197,6 +196,10 @@ class HrEmployee(models.Model):
         for (employee, version_id) in zip(result, versions):
             self.env['hr.employee.version'].browse(version_id).employee_id = employee.id
         return result
+
+    def create(self, vals_list):
+        print(vals_list)
+        return super(HrEmployee, self).create(vals_list)
 
 
     @api.model
