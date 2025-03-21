@@ -7,23 +7,25 @@
                 'o-green': props.message.parent_id.bubbleColor === 'green',
                 'o-orange': props.message.parent_id.bubbleColor === 'orange',
             }">
-                <span t-if="!props.message.parent_id.isEmpty" class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
-                    <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.author?.name ?? props.message.parent_id.email_from" alt="Avatar"/>
-                    <span class="o-mail-MessageInReply-content overflow-hidden smaller">
-                        <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.author?.name ?? props.message.parent_id.email_from"/></b>:
-                        <span class="o-mail-MessageInReply-message ms-1 text-break">
-                            <t t-if="!props.message.parent_id.isBodyEmpty">
-                                <t t-out="props.message.parent_id.richBody"/>
-                                <em t-if="props.message.parent_id.edited" class="smaller fw-bold text-500"> (edited)</em>
-                            </t>
-                            <t t-elif="props.message.parent_id.attachment_ids.length > 0">
-                                <span class="me-2 fst-italic">Click to see the attachments</span>
-                                <i class="fa fa-image"/>
-                            </t>
+                <span class="d-inline-flex align-items-center text-muted opacity-75" t-att-class="{ 'cursor-pointer opacity-100-hover': props.onClick }" t-on-click="() => this.props.onClick?.()">
+                    <t t-if="!props.message.parent_id.isEmpty">
+                        <img class="o-mail-MessageInReply-avatar me-2 rounded o_object_fit_cover" t-att-src="authorAvatarUrl" t-att-title="props.message.parent_id.author?.name ?? props.message.parent_id.email_from" alt="Avatar"/>
+                        <span class="o-mail-MessageInReply-content overflow-hidden smaller">
+                            <b class="o-mail-MessageInReply-author"><t t-out="props.message.parent_id.author?.name ?? props.message.parent_id.email_from"/></b>:
+                            <span class="o-mail-MessageInReply-message ms-1 text-break">
+                                <t t-if="!props.message.parent_id.isBodyEmpty">
+                                    <t t-out="props.message.parent_id.richBody"/>
+                                    <em t-if="props.message.parent_id.edited" class="smaller fw-bold text-500"> (edited)</em>
+                                </t>
+                                <t t-elif="props.message.parent_id.attachment_ids.length > 0">
+                                    <span class="me-2 fst-italic">Click to see the attachments</span>
+                                    <i class="fa fa-image"/>
+                                </t>
+                            </span>
                         </span>
-                    </span>
+                    </t>
+                    <i t-else="">Original message was deleted</i>
                 </span>
-                <i t-else="" class="text-muted ms-2">Original message was deleted</i>
             </small>
         </div>
     </t>
