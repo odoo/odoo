@@ -1,5 +1,5 @@
 import { KeepLast } from "@web/core/utils/concurrency";
-import { BaseOptionComponent, useDomState } from "../core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class AnimateOption extends BaseOptionComponent {
     static template = "html_builder.AnimateOption";
