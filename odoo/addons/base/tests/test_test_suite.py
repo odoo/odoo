@@ -11,7 +11,7 @@ from unittest import SkipTest, skip
 from unittest.mock import patch
 
 from odoo.tests.case import TestCase
-from odoo.tests.common import BaseCase, TransactionCase, users, warmup
+from odoo.tests.common import BaseCase, TransactionCase, users, warmup, RegistryRLock
 from odoo.tests.result import OdooTestResult
 
 _logger = logging.getLogger(__name__)
@@ -530,3 +530,15 @@ class TestSkipMethof(BaseCase):
     @skip
     def test_skip_method(self):
         raise Exception('This should be skipped')
+
+
+class TestRegistryRLock(BaseCase):
+
+    def test_registry_rlock_count(self):
+        lock = RegistryRLock()
+        for i in range(5):
+            self.assertEqual(lock.count, i)
+            lock.acquire()
+        for i in range(5):
+            self.assertEqual(lock.count, 5 - i)
+            lock.release()
