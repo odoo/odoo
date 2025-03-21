@@ -84,6 +84,8 @@ class AccountMove(models.Model):
         compute=lambda self: self._compute_linked_attachment_id('l10n_it_edi_attachment_id', 'l10n_it_edi_attachment_file'),
         depends=['l10n_it_edi_attachment_file'],
     )
+    l10n_it_edi_proxy_mode = fields.Selection(related="company_id.l10n_it_edi_proxy_user_id.edi_mode", depends=['company_id'])
+    l10n_it_edi_button_label = fields.Char(compute="_compute_l10n_it_edi_button_label")
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
     l10n_it_stamp_duty = fields.Float(string="Dati Bollo")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
@@ -178,6 +180,16 @@ class AccountMove(models.Model):
         for move in self:
             partner = move.commercial_partner_id
             move.l10n_it_partner_pa = partner and (partner._l10n_it_edi_is_public_administration() or len(partner.l10n_it_pa_index or '') == 7)
+
+    @api.depends('country_code', 'l10n_it_edi_proxy_mode')
+    def _compute_l10n_it_edi_button_label(self):
+        for move in self:
+            if move.country_code == 'IT' and move.l10n_it_edi_proxy_mode in (False, 'demo'):
+                move.l10n_it_edi_button_label = _("Send (Demo)")
+            elif move.country_code == 'IT' and move.l10n_it_edi_proxy_mode == 'test':
+                move.l10n_it_edi_button_label = _("Send (Test)")
+            else:
+                move.l10n_it_edi_button_label = _("Send")
 
     @api.depends('move_type', 'line_ids.tax_tag_ids')
     def _compute_l10n_it_edi_is_self_invoice(self):

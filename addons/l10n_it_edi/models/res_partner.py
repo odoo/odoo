@@ -14,7 +14,7 @@ class ResPartner(models.Model):
     l10n_it_pec_email = fields.Char(string="PEC e-mail")
     l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
     l10n_it_pa_index = fields.Char(
-        string="Destination Code",
+        string="Destination Code (SDI)",
         size=7,
         help="Must contain the 6-character (or 7) code, present in the PA Index "
              "in the information relative to the electronic invoicing service, "
@@ -28,7 +28,7 @@ class ResPartner(models.Model):
     )
     _l10n_it_pa_index = models.Constraint(
         "CHECK(l10n_it_pa_index IS NULL OR l10n_it_pa_index = '' OR LENGTH(l10n_it_pa_index) >= 6)",
-        'Destination Code must have between 6 and 7 characters.',
+        'Destination Code (SDI) must have between 6 and 7 characters.',
     )
 
     def _l10n_it_edi_is_public_administration(self):

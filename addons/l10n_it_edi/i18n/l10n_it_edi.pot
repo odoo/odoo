@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.2a1+e\n"
+"Project-Id-Version: Odoo Server 18.3a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-31 13:57+0000\n"
-"PO-Revision-Date: 2025-01-31 13:57+0000\n"
+"POT-Creation-Date: 2025-03-25 09:17+0000\n"
+"PO-Revision-Date: 2025-03-25 09:17+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -177,6 +177,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_codice_fiscale
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_codice_fiscale
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.address_form_fields
 msgid "Codice Fiscale"
 msgstr ""
 
@@ -307,12 +308,15 @@ msgstr ""
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_pa_index
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_pa_index
-msgid "Destination Code"
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.address_form_fields
+msgid "Destination Code (SDI)"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/controllers/portal.py:0
 #: model:ir.model.constraint,message:l10n_it_edi.constraint_res_partner_l10n_it_pa_index
-msgid "Destination Code must have between 6 and 7 characters."
+msgid "Destination Code (SDI) must have between 6 and 7 characters."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -339,6 +343,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
 msgid "Document date invalid in XML file: %s"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_proxy_mode
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_proxy_mode
+msgid "EDI operating mode"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -506,6 +516,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_attachment_file
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_attachment_file
 msgid "L10N It Edi Attachment File"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_button_label
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__l10n_it_edi_button_label
+msgid "L10N It Edi Button Label"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1003,6 +1019,24 @@ msgid ""
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Send"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Send (Demo)"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Send (Test)"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
 msgid "Send Tax Integration"
 msgstr ""
@@ -1035,7 +1069,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/account_move_send.py:0
 msgid "Settings"
 msgstr ""
 
@@ -1369,7 +1403,7 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/account_move_send.py:0
 msgid "View Settings"
 msgstr ""
 
@@ -1395,15 +1429,22 @@ msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
-#: code:addons/l10n_it_edi/models/res_company.py:0
+#: code:addons/l10n_it_edi/models/account_move_send.py:0
 msgid ""
-"You must accept the terms and conditions in the Settings to use the IT EDI."
+"You must authorize Odoo in the Settings to use the IT EDI in production "
+"mode."
 msgstr ""
 
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 msgid "You must select a tax representative."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+msgid "You need to set the Codice Fiscale on your company."
 msgstr ""
 
 #. module: l10n_it_edi
