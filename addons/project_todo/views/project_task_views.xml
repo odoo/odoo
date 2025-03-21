@@ -239,7 +239,6 @@
                 <separator/>
                 <filter name="date_deadline" string="Deadline" domain="[('date_deadline', '!=', False)]" date="date_deadline"/>
                 <separator/>
-                <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
