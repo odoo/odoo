@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="act_product_location_open" model="ir.actions.act_window">
-        <field name="name">Products</field>
-        <field name="res_model">product.product</field>
-        <field name="context">{'location': active_id, 'search_default_real_stock_available': 1, 'search_default_virtual_stock_available': 1,
-                    'search_default_virtual_stock_negative': 1, 'search_default_real_stock_negative': 1, 'create': False}</field>
-        <field name="search_view_id" ref="stock.stock_product_search_form_view"/>
-    </record>
-
     <record id="view_location_form" model="ir.ui.view">
         <field name="name">stock.location.form</field>
         <field name="model">stock.location</field>
@@ -20,9 +12,6 @@
                                 class="oe_stat_button"
                                 icon="fa-random" name="%(location_open_putaway)d" type="action"
                                 groups="stock.group_stock_multi_locations" context="{'default_company_id': company_id}"/>
-                        <button string="Products"
-                                class="oe_stat_button" icon="fa-th-list"
-                                type="action" name="stock.act_product_location_open"/>
                         <button string="Current Stock"
                                 class="oe_stat_button"
                                 icon="fa-cubes" name="%(stock_quant_action)d" type="action"/>

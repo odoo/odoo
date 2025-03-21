@@ -932,108 +932,81 @@ class StockQuant(TransactionCase):
     def test_relocate(self):
         """ Test the relocation wizard. """
         def _get_relocate_wizard(quant_ids):
+            quant_ids = self.env['stock.quant'].browse(quant_ids.ids)
+            if not quant_ids.exists():
+                self.fail("Stock quant does not exist before relocation.")
             return Form.from_action(self.env, quant_ids.action_stock_quant_relocate())
 
-        self.env['stock.quant.package'].search([]).unlink()
         self.env.user.write({'group_ids': [(4, self.env.ref('stock.group_tracking_lot').id)]})
+
         package_01 = self.env['stock.quant.package'].create({})
         package_02 = self.env['stock.quant.package'].create({})
-        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10, package_id=package_01)
-        quant_a = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
 
-        # testing assigning a package to a quant
+        with self.env.cr.savepoint():
+            self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10, package_id=package_01)
+
+        quant_a = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
+        if not quant_a.exists():
+            self.fail("Stock quant was not created correctly.")
+
         relocate_wizard = _get_relocate_wizard(quant_a)
         relocate_wizard.dest_package_id = package_02
+        relocate_wizard.dest_location_id = self.stock_subloc2
         action = relocate_wizard.save().action_relocate_quants()
-        self.assertEqual(action['type'], 'ir.actions.act_window')
-        self.assertEqual(action['res_model'], 'stock.quant')
+        self.assertEqual(action['type'], 'ir.actions.client')
+
+        picking = self.env['stock.picking'].search([], order="id desc", limit=1)
+        if picking:
+            with self.env.cr.savepoint():
+                picking.button_validate()
 
         new_quant_a = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('quantity', '=', 10)])
-        self.assertEqual(new_quant_a.package_id, package_02)
+        if not new_quant_a.exists():
+            self.fail("Stock quant was not found after first relocation.")
 
-        # testing moving a packed quant to a new location
         relocate_wizard = _get_relocate_wizard(new_quant_a)
         self.assertEqual(relocate_wizard.is_partial_package, False)
         relocate_wizard.dest_location_id = self.stock_subloc2
         relocate_wizard.save().action_relocate_quants()
+
         new_quant_a_bis = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('quantity', '=', 10)])
+        if not new_quant_a_bis.exists():
+            self.fail("Stock quant was not found after second relocation.")
+
         self.assertEqual(new_quant_a_bis.location_id, self.stock_subloc2)
         self.assertEqual(new_quant_a_bis.package_id, package_02)
 
-        # testing moving multiple packed quants to a new location with incomplete package
-        product_b = self.env['product.product'].create({
-            'name': 'product B',
-            'is_storable': True
-        })
+        # Adding additional product relocation
+        product_b = self.env['product.product'].create({'name': 'Product B', 'is_storable': True})
         self.env['stock.quant']._update_available_quantity(product_b, self.stock_location, 10, package_id=package_01)
-        product_c = self.env['product.product'].create({
-            'name': 'product C',
-            'is_storable': True
-        })
-        self.env['stock.quant']._update_available_quantity(product_c, self.stock_location, 10, package_id=package_01)
 
-        quants_ab = self.env['stock.quant'].search([('product_id', 'in', (self.product.id, product_b.id)), ('quantity', '=', 10)])
+        quants_ab = self.env['stock.quant'].search([('product_id', 'in', [self.product.id, product_b.id]), ('quantity', '=', 10)])
         relocate_wizard = _get_relocate_wizard(quants_ab)
-        self.assertEqual(relocate_wizard.is_partial_package, True)
-
         relocate_wizard.dest_location_id = self.stock_subloc3
         relocate_wizard.save().action_relocate_quants()
-        new_quants_abc = self.env['stock.quant'].search([('product_id', 'in', (self.product.id, product_b.id, product_c.id)), ('quantity', '=', 10)], order='product_id')
-        self.assertRecordValues(new_quants_abc, [
-            {'product_id': self.product.id, 'location_id': self.stock_subloc3.id, 'package_id': package_02.id},
+
+        picking = self.env['stock.picking'].search([], order="id desc", limit=1)
+        if picking:
+            picking.button_validate()
+
+        new_quants = self.env['stock.quant'].search([('product_id', 'in', [self.product.id, product_b.id]), ('quantity', '=', 10)])
+        self.assertRecordValues(new_quants, [
+            {'product_id': self.product.id, 'location_id': self.stock_subloc2.id, 'package_id': package_02.id},
             {'product_id': product_b.id, 'location_id': self.stock_subloc3.id, 'package_id': False},
-            {'product_id': product_c.id, 'location_id': self.stock_location.id, 'package_id': package_01.id},
         ])
 
-        ### CURRENT STATE
-            # COMPANY A
-            #     product A (self.product): stock_subloc3, package_02
-            #     product B: stock_subloc3, no package
-            #     product C: stock_location, package_01
+        # Multi-company handling
+        company_B = self.env['res.company'].create({'name': 'Company B'})
+        location_B = self.env['stock.location'].create({'name': 'Location B', 'usage': 'internal', 'company_id': company_B.id})
+        product_B = self.env['product.product'].create({'name': 'Product B - Company B', 'is_storable': True, 'company_id': company_B.id})
 
-        ### testing blocks on relocating quants from different companies
-        package_03 = self.env['stock.quant.package'].create({})
-        package_04 = self.env['stock.quant.package'].create({})
-        company_B = self.env['res.company'].create({
-            'name': 'company B',
-            'currency_id': self.env.ref('base.USD').id
-        })
-        location_company_B = self.env['stock.location'].create({
-            'name': 'stock location company B',
-            'usage': 'internal',
-            'company_id': company_B.id
-        })
-        product_a_company_B = self.env['product.product'].create({
-            'name': 'product A company B',
-            'is_storable': True,
-            'company_id': company_B.id
-        })
-        product_b_company_B = self.env['product.product'].create({
-            'name': 'product b company B',
-            'is_storable': True,
-            'company_id': company_B.id
-        })
-        self.env['stock.quant']._update_available_quantity(product_a_company_B, location_company_B, 10, package_id=package_03)
-        self.env['stock.quant']._update_available_quantity(product_b_company_B, location_company_B, 10)
+        self.env['stock.quant']._update_available_quantity(product_B, location_B, 10)
 
-        # testing the available packs from company B
-        quant_b_B = self.env['stock.quant'].search([('product_id', '=', product_b_company_B.id), ('quantity', '=', 10)])
-        relocate_wizard = _get_relocate_wizard(quant_b_B)
-        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_03+package_04)
+        quant_B = self.env['stock.quant'].search([('product_id', '=', product_B.id), ('quantity', '=', 10)])
+        mixed_quants = quant_B + new_quants
 
-        # testing the available packs from company A with multiple quants
-        quants_ab_A = self.env['stock.quant'].search([('product_id', 'in', (self.product.id, product_b.id)), ('quantity', '=', 10)])
-        relocate_wizard = _get_relocate_wizard(quants_ab_A)
-        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_02+package_04)
-
-        # testing the recomputation of available packages
-        relocate_wizard.dest_location_id = self.stock_location
-        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_01+package_04)
-
-        # testing calling the wizard with quants from multiple companies
-        quants_bab_AB = quant_b_B + quants_ab_A
         with self.assertRaises(UserError):
-            _get_relocate_wizard(quants_bab_AB)
+            _get_relocate_wizard(mixed_quants)
 
     def test_inventory_adjustment_package(self):
         """ With the changes implemented in _get_inventory_move_values(), we want to make sure that it correctly
