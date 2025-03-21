@@ -112,6 +112,7 @@
         'views/snippets/s_media_list.xml',
         'views/snippets/s_showcase.xml',
         'views/snippets/s_faq_horizontal.xml',
+        'views/snippets/s_floating_blocks.xml',
         'views/snippets/s_opening_hours.xml',
         'views/snippets/s_timeline.xml',
         'views/snippets/s_timeline_images.xml',
@@ -258,6 +259,7 @@
         ],
         'website.assets_edit_frontend': [
             'website/static/src/**/*.edit.js',
+            'website/static/src/**/*.edit.scss',
             'website/static/src/core/website_edit_service.js',
         ],
         'web._assets_primary_variables': [
@@ -390,6 +392,8 @@
             'website/static/src/snippets/s_dynamic_snippet_carousel/options.js',
             'website/static/src/snippets/s_website_controller_page_listing_layout/options.js',
             'website/static/src/snippets/s_website_form/options.js',
+            'website/static/src/snippets/s_floating_blocks/options.js',
+            'website/static/src/snippets/s_floating_blocks/options.xml',
             'website/static/src/js/form_editor_registry.js',
             'website/static/src/js/send_mail_form.js',
             'website/static/src/xml/website_form.xml',
