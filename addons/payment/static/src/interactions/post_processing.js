@@ -1,62 +1,65 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
 import { ConnectionLostError, rpc, RPCError } from '@web/core/network/rpc';
+import { registry } from '@web/core/registry';
+import { Interaction } from '@web/public/interaction';
 
-publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
-    selector: 'div[name="o_payment_status"]',
+export class PaymentPostProcessing extends Interaction {
+    static selector = 'div[name="o_payment_status"]';
 
-    timeout: 0,
-    pollCount: 0,
+    setup() {
+        this.timeout = 0;
+        this.pollCount = 0;
+    }
 
-    async start() {
-        this._poll();
-        return this._super.apply(this, arguments);
-    },
+    start() {
+        this.poll();
+    }
 
-    _poll() {
-        this._updateTimeout();
-        setTimeout(() => {
-            // Fetch the post-processing values from the server.
-            const self = this;
-            rpc('/payment/status/poll', {
-                'csrf_token': odoo.csrf_token,
-            }).then(postProcessingValues => {
-                let {provider_code, state, landing_route} = postProcessingValues;
+    poll() {
+        this.updateTimeout();
+        this.waitForTimeout(async () => {
+            try {
+                // Fetch the post-processing values from the server.
+                const postProcessingValues = await this.waitFor(
+                    rpc('/payment/status/poll', { csrf_token: odoo.csrf_token })
+                );
 
                 // Redirect the user to the landing route if the transaction reached a final state.
-                if (self._getFinalStates(provider_code).has(state)) {
+                const { provider_code, state, landing_route } = postProcessingValues;
+                if (PaymentPostProcessing.getFinalStates(provider_code).has(state)) {
                     window.location = landing_route;
                 } else {
-                    self._poll();
+                    this.poll();
                 }
-            }).catch(error => {
+            } catch (error) {
                 const isRetryError = error instanceof RPCError && error.data.message === 'retry';
                 const isConnectionLostError = error instanceof ConnectionLostError;
                 if (isRetryError || isConnectionLostError) {
-                    self._poll();
+                    this.poll();
                 }
                 if (!isRetryError) {
                     throw error;
                 }
-            });
+            }
         }, this.timeout);
-    },
+    }
 
-    _getFinalStates(providerCode) {
+    static getFinalStates(providerCode) {
         return new Set(['authorized', 'done', 'cancel', 'error']);
-    },
+    }
 
-    _updateTimeout() {
+    updateTimeout() {
         if (this.pollCount >= 1 && this.pollCount < 10) {
             this.timeout = 3000;
         }
         if (this.pollCount >= 10 && this.pollCount < 20) {
             this.timeout = 10000;
-        }
-        else if (this.pollCount >= 20) {
+        } else if (this.pollCount >= 20) {
             this.timeout = 30000;
         }
         this.pollCount++;
-    },
-});
+    }
+}
 
-export default publicWidget.registry.PaymentPostProcessing;
+registry
+    .category('public.interactions')
+    .add('payment.payment_post_processing', PaymentPostProcessing);
