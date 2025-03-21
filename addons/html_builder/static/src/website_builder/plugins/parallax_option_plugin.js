@@ -2,7 +2,7 @@ import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils"
 import { getSelectorParams } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { WebsiteBackgroundOption } from "./background_option";
+import { WebsiteBackgroundOption } from "./options/background_option";
 class WebsiteParallaxPlugin extends Plugin {
     static id = "websiteParallaxPlugin";
     static dependencies = ["builderActions", "backgroundImageOption"];

@@ -3,7 +3,7 @@ import { BackgroundImageOption } from "@html_builder/plugins/background_option/b
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { BackgroundPositionOption } from "@html_builder/plugins/background_option/background_position_option";
 import { BackgroundShapeOption } from "@html_builder/plugins/background_option/background_shape_option";
-import { ParallaxOption } from "./parallax_option";
+import { ParallaxOption } from "../parallax_option";
 
 export class WebsiteBackgroundOption extends BackgroundOption {
     static template = "website.WebsiteBackgroundOption";
