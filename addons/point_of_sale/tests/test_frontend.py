@@ -771,7 +771,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         self.env['product.product'].create({
-            'name': 'Product Test 1.2',
+            'name': 'Product Test 1.20',
             'available_in_pos': True,
             'list_price': 1.2,
             'taxes_id': False,
