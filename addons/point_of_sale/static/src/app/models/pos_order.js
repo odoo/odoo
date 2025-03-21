@@ -24,6 +24,7 @@ export class PosOrder extends Base {
         }
 
         // Data present in python model
+        this.name = vals.name || "/";
         this.nb_print = vals.nb_print || 0;
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
