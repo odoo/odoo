@@ -21,6 +21,17 @@ export class ClonePlugin extends Plugin {
         get_overlay_buttons: withSequence(2, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
+        // Resource definitions:
+        on_will_clone_handlers: [
+            // ({ originalEl: el }) => {
+            //     called on the original element before clone
+            // }
+        ],
+        on_cloned_handlers: [
+            // ({ cloneEl: cloneEl, originalEl: el }) => {
+            //     called after an element was cloned and inserted in the DOM
+            // }
+        ],
     };
 
     setup() {
@@ -65,13 +76,13 @@ export class ClonePlugin extends Plugin {
     }
 
     cloneElement(el, { position = "afterend", scrollToClone = false } = {}) {
-        // TODO snippet_will_be_cloned ?
+        this.dispatchTo("on_will_clone_handlers", { originalEl: el });
         // TODO cleanUI resource for each option
         const cloneEl = el.cloneNode(true);
         this.cleanElement(cloneEl);
         el.insertAdjacentElement(position, cloneEl);
         this.dependencies["builder-options"].updateContainers(cloneEl);
-        this.dispatchTo("on_clone_handlers", { cloneEl: cloneEl, originalEl: el });
+        this.dispatchTo("on_cloned_handlers", { cloneEl: cloneEl, originalEl: el });
         if (scrollToClone && !isElementInViewport(cloneEl)) {
             cloneEl.scrollIntoView({ behavior: "smooth", block: "center" });
         }

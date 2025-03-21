@@ -12,6 +12,23 @@ export class SavePlugin extends Plugin {
 
     resources = {
         handleNewRecords: this.handleMutations,
+        // Resource definitions:
+        before_save_handlers: [
+            // () => {
+            //     called at the very beginning of the save process
+            // }
+        ],
+        clean_for_save_handlers: [
+            // ({root, preserveSelection = false}) => {
+            //     clean DOM before save (leaving edit mode)
+            //     root is the clone of a node that was o_dirty
+            // }
+        ],
+        save_handlers: [
+            // () => {
+            //     called at the very end of the save process
+            // }
+        ],
     };
 
     async save(isTranslation) {
