@@ -1237,9 +1237,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
             )
             with request.env.protecting([order_sudo._fields['pricelist_id']], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
-
-            # Add the new partner as follower of the cart
-            order_sudo._message_subscribe(order_sudo.partner_id.ids)
         elif not self._are_same_addresses(billing_address, order_sudo.partner_invoice_id):
             # Check if a child partner doesn't already exist with the same informations. The
             # phone isn't always checked because it isn't sent in shipping information with
