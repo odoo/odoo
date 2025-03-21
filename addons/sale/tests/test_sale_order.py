@@ -225,7 +225,9 @@ class TestSaleOrder(SaleCommon):
         self.sale_order.action_quotation_sent()
 
         self.assertEqual(self.sale_order.state, 'sent')
-        self.assertIn(self.sale_order.partner_id, self.sale_order.message_follower_ids.partner_id)
+        self.assertNotIn(
+            self.sale_order.partner_id, self.sale_order.message_partner_ids,
+            'Customer should not be added automatically in followers')
 
         self.env.user.group_ids += self.env.ref('sale.group_auto_done_setting')
         self.sale_order.action_confirm()
@@ -336,25 +338,6 @@ class TestSaleOrder(SaleCommon):
 
         self.assertFalse(public_user.has_group('sale.group_auto_done_setting'))
         self.assertTrue(self.sale_order.locked)
-
-    def test_draft_quotation_followers(self):
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner1.id,
-        })
-
-        sale_order.partner_id = self.partner2
-
-        self.assertNotIn(self.partner2, sale_order.message_partner_ids)
-
-    def test_sent_quotation_followers(self):
-        sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner1.id,
-        })
-        sale_order.action_quotation_sent()
-
-        sale_order.partner_id = self.partner2
-
-        self.assertIn(self.partner2, sale_order.message_partner_ids)
 
     def test_so_discount_is_not_reset(self):
         """ Discounts should not be recomputed on order confirmation """

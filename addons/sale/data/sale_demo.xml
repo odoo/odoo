@@ -512,7 +512,6 @@
         <field name="state">sent</field>
         <field name="team_id" ref="sales_team.team_sales_department"/>
         <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
-        <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
         <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor4'))]"/>
     </record>
 
@@ -544,7 +543,6 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="team_id" ref="sales_team.team_sales_department"/>
         <field name="date_order" eval="(DateTime.today() - relativedelta(months=1)).strftime('%Y-%m-%d %H:%M')"/>
-        <field name="message_partner_ids" eval="[(4, ref('base.partner_demo_portal'))]"/>
     </record>
 
     <record id="portal_sale_order_line_4" model="sale.order.line">
