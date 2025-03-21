@@ -1,6 +1,6 @@
 // @ts-check
 
-import { registries, helpers, constants } from "@odoo/o-spreadsheet";
+import { registries, helpers, constants, EvaluationError } from "@odoo/o-spreadsheet";
 import { deserializeDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -67,11 +67,22 @@ const odooDayAdapter = {
     },
 };
 
+const weekInputRegex = /\d{1,2}\/\d{4}/;
+
 /**
  * Normalized value: "2/2023" for week 2 of 2023
  */
 const odooWeekAdapter = {
     normalizeFunctionValue(value) {
+        if (!weekInputRegex.test(value)) {
+            const example = `"52/${DateTime.now().year}"`;
+            throw new EvaluationError(
+                _t(
+                    "Week value must be a string in the format %(example)s, but received %(received_value)s instead.",
+                    { example, received_value: value }
+                )
+            );
+        }
         const [week, year] = toString(value).split("/");
         return `${Number(week)}/${Number(year)}`;
     },
