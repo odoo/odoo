@@ -30,13 +30,13 @@ class CustomerPortal(payment_portal.PaymentPortal):
 
     def _prepare_quotations_domain(self, partner):
         return [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
             ('state', '=', 'sent')
         ]
 
     def _prepare_orders_domain(self, partner):
         return [
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
+            ('partner_id', 'child_of', [partner.commercial_partner_id.id]),
             ('state', '=', 'sale'),
         ]
 
