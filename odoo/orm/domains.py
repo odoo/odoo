@@ -1053,7 +1053,8 @@ class DomainCondition(Domain):
         assert operator in STANDARD_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
 
-        field = model._fields[parse_field_expr(field_expr)[0]]
+        field = self._field(model)
+        model._check_field_access(field, 'read')
         return field.condition_to_sql(field_expr, operator, value, model, alias, query)
 
 
