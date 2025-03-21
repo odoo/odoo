@@ -535,7 +535,7 @@ class TestReview(common.SlidesCase, HttpCase):
     def test_channel_multiple_reviews(self):
         self.authenticate("admin", "admin")
 
-        res1 = self.opener.post(
+        res1 = self.url_open(
             url="%s/mail/message/post" % self.base_url(),
             json={
                 "params": {
@@ -552,8 +552,7 @@ class TestReview(common.SlidesCase, HttpCase):
         )
         self.assertIn("My first review :)", res1.text)
 
-
-        res2 = self.opener.post(
+        res2 = self.url_open(
             url="%s/mail/message/post" % self.base_url(),
             json={
                 "params": {

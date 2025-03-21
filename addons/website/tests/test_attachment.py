@@ -29,11 +29,11 @@ class TestWebsiteAttachment(odoo.tests.HttpCase):
         self.assertEqual(req.status_code, 200)
 
         base = self.base_url()
-        req = self.opener.get(base + '/web/image/test.an_image_redirect_301', allow_redirects=False)
+        req = self.url_open(base + '/web/image/test.an_image_redirect_301', allow_redirects=False)
         self.assertEqual(req.status_code, 301)
         self.assertURLEqual(req.headers['Location'], '/web/image/test.an_image_url')
 
-        req = self.opener.get(base + '/web/image/test.an_image_redirect_301', allow_redirects=True)
+        req = self.url_open(base + '/web/image/test.an_image_redirect_301', allow_redirects=True)
         self.assertEqual(req.status_code, 200)
 
     def test_02_image_quality(self):
