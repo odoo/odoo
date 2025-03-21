@@ -27,6 +27,6 @@ class L10nITPortalAccount(PortalAccount):
         pa_index = address_values.get('l10n_it_pa_index')
         if pa_index and (len(pa_index) < 6 or len(pa_index) > 7):
             invalid_fields.add('l10n_it_pa_index')
-            error_messages.append(_("Destination Code (SDI) must have between 6 and 7 characters"))
+            error_messages.append(_("Destination Code (SDI) must have between 6 and 7 characters."))
 
         return invalid_fields, missing_fields, error_messages
