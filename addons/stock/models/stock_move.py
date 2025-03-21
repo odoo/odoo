@@ -139,6 +139,7 @@ class StockMove(models.Model):
              "this second option should be chosen.")
     scrapped = fields.Boolean(
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
+    # TODO: Remove it
     scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True)
     group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
     rule_id = fields.Many2one(

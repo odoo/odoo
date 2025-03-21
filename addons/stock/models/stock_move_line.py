@@ -90,6 +90,67 @@ class StockMoveLine(models.Model):
     picking_location_id = fields.Many2one(related='picking_id.location_id')
     picking_location_dest_id = fields.Many2one(related='picking_id.location_dest_id')
 
+    #---------------------------------------
+    # SCRAP MOVES
+    #---------------------------------------
+    scrap_reference = fields.Char(
+        'Scrap Reference',  default=lambda self: _('New'),
+        copy=False, readonly=True, required=True
+    )
+    scrap_reason_tag_ids = fields.Many2many(
+        comodel_name='stock.scrap.reason.tag',
+        string='Scrap Reason',
+    )
+    scrap_state = fields.Selection([
+        ('draft', 'Draft'),
+        ('done', 'Done')],
+        string='Status', default="draft", readonly=True, tracking=True
+    )
+    scrap_final_location_id = fields.Many2one(
+        'stock.location', 'Scrap Location',
+        compute='_compute_scrap_final_location_id', store=True, required=True, precompute=True,
+        domain="[('scrap_location', '=', True)]", check_company=True, readonly=False
+    )
+    scrap_should_replenish = fields.Boolean(string='Replenish Quantities', help="Trigger replenishment for scrapped products")
+    # TODO: Check move_line location_id
+    scrap_source_location_id = fields.Many2one(
+        'stock.location', 'Source Location',
+        compute='_compute_scrap_source_location_id', store=True, required=True, precompute=True,
+        domain="[('usage', '=', 'internal')]", check_company=True, readonly=False
+    )
+
+    @api.depends('company_id')
+    def _compute_scrap_final_location_id(self):
+        groups = self.env['stock.location']._read_group(
+            [('company_id', 'in', self.company_id.ids), ('scrap_location', '=', True)], ['company_id'], ['id:min'])
+        locations_per_company = {
+            company.id: stock_warehouse_id
+            for company, stock_warehouse_id in groups
+        }
+        for scrap in self:
+            scrap.scrap_final_location_id = locations_per_company[scrap.company_id.id]
+
+    @api.depends('company_id', 'picking_id')
+    def _compute_scrap_source_location_id(self):
+        company_warehouses = self.env['stock.warehouse'].search([('company_id', 'in', self.company_id.ids)])
+        if len(company_warehouses) == 0 and self.company_id:
+            self.env['stock.warehouse']._warehouse_redirect_warning()
+        groups = company_warehouses._read_group(
+            [('company_id', 'in', self.company_id.ids)], ['company_id'], ['lot_stock_id:array_agg'])
+        locations_per_company = {
+            company.id: lot_stock_ids[0] if lot_stock_ids else False
+            for company, lot_stock_ids in groups
+        }
+        for scrap in self:
+            if scrap.picking_id:
+                scrap.scrap_source_location_id = scrap.picking_id.location_dest_id if scrap.picking_id.state == 'done' else scrap.picking_id.location_id
+            else:
+                scrap.scrap_source_location_id = locations_per_company[scrap.company_id.id]
+
+    #---------------------------------------
+    # Scrap moves
+    # --------------------------------------
+
     _free_reservation_index = models.Index("""(id, company_id, product_id, lot_id, location_id, owner_id, package_id)
         WHERE (state IS NULL OR state NOT IN ('cancel', 'done')) AND quantity_product_uom > 0 AND picked IS NOT TRUE""")
 
