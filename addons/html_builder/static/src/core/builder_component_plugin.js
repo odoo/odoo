@@ -1,3 +1,4 @@
+import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { BuilderButtonGroup } from "./building_blocks/builder_button_group";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -45,6 +46,7 @@ export class BuilderComponentPlugin extends Plugin {
             ModelMany2Many,
             BuilderDateTimePicker,
             BuilderUrlPicker,
+            BuilderList,
             Img,
         },
     };

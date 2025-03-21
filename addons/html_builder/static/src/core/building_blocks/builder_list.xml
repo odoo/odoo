@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+
+<t t-name="html_builder.BuilderList">
+    <BuilderComponent>
+        <t t-if="state.value?.length > 2">
+            <div class="o_we_table_wrapper">
+                <table t-ref="table">
+                    <t t-foreach="formatRawValue(state.value)" t-as="item" t-key="item._id">
+                        <tr class="o_row_draggable" t-att-data-id="item._id">
+                            <td t-if="props.sortable" class="o_handle_cell">
+                                <button type="button" class="btn fa fa-fw fa-arrows"/>
+                            </td>
+                            <t t-foreach="Object.entries(props.itemShape).filter(([key,_]) => !props.hiddenProperties.includes(key))" t-as="entry" t-key="entry[0]">
+                                <td>
+                                    <input
+                                            t-att-type="entry[1]"
+                                            t-att-name="entry[0]"
+                                            t-att-value="item[entry[0]]"
+                                            t-att-data-id="item._id"
+                                            t-on-input="onInput"
+                                            t-on-change="onChange"
+                                    />
+                                </td>
+                            </t>
+                            <td>
+                                <button type="button" class="btn o_we_text_danger builder_list_remove_item fa fa-fw fa-minus"
+                                        t-on-click="deleteItem"
+                                        t-att-data-id="item._id"/>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+            </div>
+        </t>
+        <button type="button" class="btn builder_list_add_item"
+                t-on-click="addItem"><t t-out="props.addItemTitle"/></button>
+    </BuilderComponent>
+</t>
+
+</template>

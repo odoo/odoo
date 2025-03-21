@@ -15,6 +15,10 @@
         &>img {
           padding-bottom: 2px;
         }
+
+        &.o_we_text_danger {
+            color: $o-we-color-danger;
+        }
     }
 
     .btn-primary {
@@ -48,6 +52,7 @@
         width: 2em;
     }
 
+    @include o-input-number-no-arrows();
     input {
         border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
         border-radius: $o-we-sidebar-content-field-border-radius;
@@ -58,6 +63,12 @@
         &:focus {
             border-color: $o-we-sidebar-content-field-input-border-color;
         }
+    }
+
+    .o_we_table_wrapper {
+        width: 100%;
+        max-height: 200px;
+        overflow-y: auto;
     }
 }
 
