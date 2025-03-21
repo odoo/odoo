@@ -459,11 +459,23 @@ class Test_New_ApiRelated(models.Model):
 
     foo_id_bar_name = fields.Char('foo_id_bar_name', related='foo_id.bar_name', related_sudo=False)
 
-    foo_bar_id = fields.Many2one(string='foo_bar_id', related='foo_id.bar_id', related_sudo=False)
-    foo_bar_id_name = fields.Char('foo_bar_id_name', related='foo_bar_id.name', related_sudo=False)
+    foo_bar_id = fields.Many2one(related='foo_id.bar_id', related_sudo=False, string='Bar')
+    foo_bar_id_name = fields.Char(related='foo_bar_id.name', related_sudo=False, string='Bar Name')
 
-    foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
-    foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
+    foo_bar_sudo_id = fields.Many2one(related='foo_id.bar_id', related_sudo=True, string='Bar Sudo')
+    foo_bar_sudo_id_name = fields.Char(related='foo_bar_sudo_id.name', related_sudo=False, string='Bar Sudo Name')
+
+    foo_bar_ids = fields.Many2many(related='foo_id.bar_ids', related_sudo=False)
+    foo_bar_sudo_ids = fields.Many2many(related='foo_id.bar_ids', related_sudo=True, string='Bars Sudo')
+
+    foo_foo_ids = fields.One2many(related='foo_id.foo_ids', related_sudo=False)
+    foo_foo_sudo_ids = fields.One2many(related='foo_id.foo_ids', related_sudo=True, string='Foos Sudo')
+
+    foo_binary_att = fields.Binary(related='foo_id.binary_att', related_sudo=False)
+    foo_binary_att_sudo = fields.Binary(related='foo_id.binary_att', related_sudo=True, string='Binary Att Sudo')
+
+    foo_binary_bin = fields.Binary(related='foo_id.binary_bin', related_sudo=False)
+    foo_binary_bin_sudo = fields.Binary(related='foo_id.binary_bin', related_sudo=True, string='Binary Bin Sudo')
 
 
 class Test_New_ApiRelated_Foo(models.Model):
@@ -472,6 +484,10 @@ class Test_New_ApiRelated_Foo(models.Model):
 
     name = fields.Char()
     bar_id = fields.Many2one('test_new_api.related_bar')
+    bar_ids = fields.Many2many('test_new_api.related_bar', string='Bars')
+    foo_ids = fields.One2many('test_new_api.related', 'foo_id', string='Foos')
+    binary_att = fields.Binary()
+    binary_bin = fields.Binary(attachment=False)
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
 
 
