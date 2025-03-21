@@ -1,6 +1,5 @@
 import base64
 from contextlib import contextmanager
-from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.tests import BaseCase, TransactionCase
@@ -140,9 +139,3 @@ class MarketingCardCommon(TransactionCase, MockImageRender):
 
         (cls.campaign + cls.static_campaign).with_context(lang='fr_FR').content_header = "Mon Titre Francais"
         (cls.campaign + cls.static_campaign).with_context(lang='nl_NL').content_header = "Mijn Nederlands Titel"
-
-    @contextmanager
-    def mock_datetime_and_now(self, mock_dt):
-        with freeze_time(mock_dt), \
-                patch.object(self.env.cr, 'now', lambda: mock_dt):
-            yield

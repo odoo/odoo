@@ -20,7 +20,7 @@ class TestBurndownChartCommon(TestProjectCommon, MailCase):
         cls.current_year = datetime.now().year
         create_date = datetime(cls.current_year - 1, 1, 5)
         Stage = cls.env['project.task.type']
-        with cls.mock_datetime_and_now(cls, create_date):
+        with cls.mock_datetime_and_now(create_date):
             cls.todo_stage, cls.in_progress_stage, cls.testing_stage, cls.done_stage = Stage.create([{
                 'sequence': 1,
                 'name': 'TODO',
@@ -116,7 +116,7 @@ class TestBurndownChartCommon(TestProjectCommon, MailCase):
             })
             (cls.task_bis + cls.task_a + cls.task_b + cls.task_c + cls.task_d + cls.task_g + cls.task_h).invalidate_recordset(['duration_tracking'])
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 12, 20)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 12, 20)):
             # Create a new task to check if a task without changing its stage is taken into account
             cls.task_f = cls.env['project.task'].create({
                 'name': 'Task F',
@@ -132,69 +132,69 @@ class TestBurndownChartCommon(TestProjectCommon, MailCase):
         # Precommit to have the records in db and allow to rollback at the end of test
         cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 2, 10)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 2, 10)):
             (cls.task_a + cls.task_b).write({'stage_id': cls.in_progress_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 2, 20)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 2, 20)):
             cls.task_c.write({'stage_id': cls.in_progress_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 3, 15)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 3, 15)):
             (cls.task_d + cls.task_e).write({'stage_id': cls.in_progress_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 4, 10)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 4, 10)):
             (cls.task_a + cls.task_b).write({'stage_id': cls.testing_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 5, 12)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 5, 12)):
             cls.task_c.write({'stage_id': cls.testing_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 6, 25)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 6, 25)):
             cls.task_d.write({'stage_id': cls.testing_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 7, 25)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 7, 25)):
             cls.task_e.write({'stage_id': cls.testing_stage.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 8, 5)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 8, 5)):
             cls.task_a.write({'stage_id': cls.done_stage.id, 'state': '1_done'})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 9, 10)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 9, 10)):
             cls.task_b.write({'stage_id': cls.done_stage.id, 'state': '1_done'})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 10, 5)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 10, 5)):
             cls.task_c.write({'stage_id': cls.done_stage.id, 'state': '1_done'})
             cls.task_a.write({'state': '1_canceled'})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 11, 25)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 11, 25)):
             cls.task_d.write({'stage_id': cls.done_stage.id, 'state': '1_done'})
             cls.task_b.write({'state': '1_canceled'})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 12, 12)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 12, 12)):
             cls.task_e.write({'stage_id': cls.done_stage.id, 'state': '1_done'})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 12, 24)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 12, 24)):
             cls.task_f.write({'state': '1_canceled'})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 2, 10)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 2, 10)):
             cls.task_bis.write({'stage_id': cls.stage_2.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 3, 10)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 3, 10)):
             (cls.task_bis).write({'stage_id': cls.stage_3.id})
             cls.env.cr.flush()
 
-        with cls.mock_datetime_and_now(cls, datetime(cls.current_year - 1, 4, 10)):
+        with cls.mock_datetime_and_now(datetime(cls.current_year - 1, 4, 10)):
             (cls.task_bis).write({'stage_id': cls.stage_4.id})
             cls.env.cr.flush()
 

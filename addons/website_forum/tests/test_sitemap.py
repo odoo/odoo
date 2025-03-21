@@ -1,8 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from freezegun import freeze_time
-from unittest.mock import patch
-
 from odoo.addons.website_forum.tests.common import TestForumCommon
 from odoo.tests import tagged
 
@@ -15,7 +12,7 @@ class TestWebsiteControllers(TestForumCommon):
 
         # Simulate post from 2023-05-31
         datetime = '2023-05-31'
-        with freeze_time(datetime), patch.object(self.env.cr, 'now', lambda: datetime):
+        with self.mock_datetime_and_now(datetime):
             self.post.name = "RenameIt"  # update write_date
             self.post._update_last_activity()  # update last_activity_date
 
@@ -24,7 +21,7 @@ class TestWebsiteControllers(TestForumCommon):
 
         # Edit post content the 2024-01-01
         datetime = '2024-01-01'
-        with freeze_time(datetime), patch.object(self.env.cr, 'now', lambda: datetime):
+        with self.mock_datetime_and_now(datetime):
             self.post.content = "I am a bird"  # update write_date
 
         locs = website._enumerate_pages(query_string='/forum/%s' % self.env['ir.http']._slug(self.forum))

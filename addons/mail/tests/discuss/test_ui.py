@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.addons.mail.tests.common import freeze_all_time
 from odoo.tests import HttpCase, new_test_user
 
 
@@ -28,7 +27,7 @@ class TestUi(HttpCase):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         guest = self.env["mail.guest"].create({"name": "Guest"})
-        with freeze_all_time("2026-01-01"):
+        with self.mock_datetime_and_now("2026-01-01"):
             group_chat = (
                 self.env["discuss.channel"]
                 .with_user(bob)

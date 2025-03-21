@@ -3,7 +3,6 @@
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime
-from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
@@ -12,7 +11,6 @@ from odoo.addons.google_calendar.models.res_users import ResUsers
 from odoo.addons.google_calendar.models.google_sync import google_calendar_token, GoogleCalendarSync
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import HttpCase
-
 from odoo.tools import mute_logger
 
 
@@ -36,17 +34,6 @@ class TestSyncGoogle(HttpCase):
         m = mute_logger('odoo.addons.auth_signup.models.res_users')
         mute_logger.__enter__(m)  # noqa: PLC2801
         cls.addClassCleanup(mute_logger.__exit__, m, None, None, None)
-
-    @contextmanager
-    def mock_datetime_and_now(self, mock_dt):
-        """
-        Used when synchronization date (using env.cr.now()) is important
-        in addition to standard datetime mocks. Used mainly to detect sync
-        issues.
-        """
-        with freeze_time(mock_dt), \
-                patch.object(self.env.cr, 'now', lambda: mock_dt):
-            yield
 
     @contextmanager
     def mock_google_sync(self, user_id=None):

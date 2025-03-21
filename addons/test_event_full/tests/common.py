@@ -229,7 +229,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
             'is_published': True,
         }
 
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls.test_event = cls.env['event.event'].create({
                 'name': 'Test Event',
                 'date_begin': datetime.now() + timedelta(days=1),
@@ -343,7 +343,7 @@ class TestEventMailCommon(EventCase, SMSCase, MailCase, CronMixinCase):
         cls.event_date_end = datetime(2021, 3, 28, 18, 0, 0)
 
         cls._setup_test_reports()
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls.test_event = cls.env['event.event'].create({
                 'name': 'TestEventMail',
                 'user_id': cls.user_eventmanager.id,

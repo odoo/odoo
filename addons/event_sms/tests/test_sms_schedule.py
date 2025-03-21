@@ -35,7 +35,7 @@ class TestSMSSchedule(EventCase, SMSCase):
         cls.reference_now = datetime(2021, 3, 20, 14, 30, 15, 123456)
         cls.event_date_begin = datetime(2021, 3, 25, 8, 0, 0)
         cls.event_date_end = datetime(2021, 3, 27, 18, 0, 0)
-        with cls.mock_datetime_and_now(cls, cls.reference_now):
+        with cls.mock_datetime_and_now(cls.reference_now):
             cls.test_event = cls.env['event.event'].create({
                 'date_begin': cls.event_date_begin,
                 'date_end': cls.event_date_end,

@@ -22,7 +22,7 @@ class MailTrackingDurationMixinCase(MailCommon):
             test_model_name, count=5,
         )
         cls.mock_start_time = datetime(2023, 2, 15, 12, 0, 0)
-        with patch.object(cls.env.cr, 'now', return_value=cls.mock_start_time):
+        with cls.mock_datetime_and_now(cls.mock_start_time):
             cls.rec_1, cls.rec_2, cls.rec_3, cls.rec_4, cls.rec_5 = cls._create_records(
                 test_model_name, count=5,
                 record_vals={
