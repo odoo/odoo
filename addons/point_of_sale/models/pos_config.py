@@ -788,12 +788,11 @@ class PosConfig(models.Model):
             self.get_limited_product_count(),
         )
         product_ids = [r[0] for r in self.env.execute_query(sql)]
-        special_products = self._get_special_products().filtered(
-            lambda product: not product.sudo().company_id
-                            or product.sudo().company_id == self.company_id
-        )
-        product_ids.extend(special_products.ids)
-        products = self.env['product.product'].browse(product_ids)
+        product_ids.extend(self._get_special_products().ids)
+        products = self.env['product.product'].search([('id', 'in', product_ids)])
+        # sort products by product_ids order
+        id_to_index = {pid: index for index, pid in enumerate(product_ids)}
+        products = products.sorted(key=lambda p: id_to_index[p.id])
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
         products_available = products | product_in_combo
