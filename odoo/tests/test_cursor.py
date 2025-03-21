@@ -4,6 +4,7 @@ from datetime import datetime
 import threading
 
 from odoo.sql_db import BaseCursor, Cursor, Savepoint, _logger
+import odoo
 
 
 class TestCursor(BaseCursor):
@@ -38,14 +39,28 @@ class TestCursor(BaseCursor):
         self.readonly = readonly
         # we use a lock to serialize concurrent requests
         self._lock = lock
-        self._lock.acquire()
-        last_cursor = self._cursors_stack and self._cursors_stack[-1]
-        if last_cursor and last_cursor.readonly and not readonly and last_cursor._savepoint:
-            raise Exception('Opening a read/write test cursor from a readonly one')
+        current_test = odoo.modules.module.current_test
+        assert current_test, 'Test Cursor without active test ?'
+        current_test.assertCanOpenTestCursor()
+        if not self._lock.acquire(timeout=20):
+            raise Exception('Unable to acquire lock for test cursor after 20s')
+        try:
+            # Check after acquiring in case current_test has changed.
+            # This can happen if the request was hanging between two tests.
+            current_test.assertCanOpenTestCursor()
+            self._check_cursor_readonly()
+        except Exception:
+            self._lock.release()
+            raise
         self._cursors_stack.append(self)
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit, the savepoint is created lazily
         self._savepoint: Savepoint | None = None
+
+    def _check_cursor_readonly(self):
+        last_cursor = self._cursors_stack and self._cursors_stack[-1]
+        if last_cursor and last_cursor.readonly and not self.readonly and last_cursor._savepoint:
+            raise Exception('Opening a read/write test cursor from a readonly one')
 
     def _check_savepoint(self) -> None:
         if not self._savepoint:
@@ -64,15 +79,17 @@ class TestCursor(BaseCursor):
 
     def close(self) -> None:
         if not self._closed:
-            self.rollback()
-            self._closed = True
-            if self._savepoint:
-                self._savepoint.close(rollback=False)
+            try:
+                self.rollback()
+                if self._savepoint:
+                    self._savepoint.close(rollback=False)
+            finally:
+                self._closed = True
 
-            tos = self._cursors_stack.pop()
-            if tos is not self:
-                _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
-            self._lock.release()
+                tos = self._cursors_stack.pop()
+                if tos is not self:
+                    _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
+                self._lock.release()
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """

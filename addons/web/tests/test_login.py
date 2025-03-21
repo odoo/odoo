@@ -16,7 +16,7 @@ class TestWebLoginCommon(HttpCase):
         super().setUp()
         self.session = http.root.session_store.new()
         self.session.update(http.get_default_session(), db=get_db_name())
-        self.opener = Opener(self.env.cr)
+        self.opener = Opener(self)
         self.opener.cookies.set('session_id', self.session.sid, domain=HOST, path='/')
 
     def login(self, username, password, csrf_token=None):

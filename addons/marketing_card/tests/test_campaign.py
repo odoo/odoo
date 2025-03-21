@@ -245,7 +245,7 @@ class TestMarketingCardRouting(HttpCase, MarketingCardCommon):
         redirect_response = self.url_open(card._get_redirect_url(), allow_redirects=False)
         self.assertEqual(redirect_response.status_code, 303)
         self.assertEqual(redirect_response._next.url, self.campaign.link_tracker_id.short_url)
-        self.opener.send(redirect_response._next, allow_redirects=False)
+        self.url_open(redirect_response._next.url, allow_redirects=False)
         self.assertEqual(self.campaign.target_url_click_count, 1)
 
         cards[1:10].share_status = 'visited'

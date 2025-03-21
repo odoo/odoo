@@ -77,7 +77,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         Ensure that an invoice with an early discount payment term
         and no invoice date can be previewed or printed.
         """
-        self.registry_enter_test_mode()
         out_invoice = self.env['account.move'].create([{
             'move_type': 'out_invoice',
             'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
@@ -89,12 +88,14 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         # Assert that the invoice date is not set
         self.assertEqual(out_invoice.invoice_date, False)
 
-        report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
+        with self.allow_pdf_render():
+            report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
         self.assertTrue(report)
 
         #Test for invoices with multiple due dates and no early discount
         out_invoice.invoice_payment_term_id = self.pay_30_percents_now_balance_60_days
-        new_report = self.env['ir.actions.report']._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
+        with self.allow_pdf_render():
+            new_report = self.env['ir.actions.report']._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
         self.assertTrue(new_report)
 
     # ========================== Tests Taxes Amounts =============================

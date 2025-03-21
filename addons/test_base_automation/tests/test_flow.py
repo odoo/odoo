@@ -1683,7 +1683,8 @@ class TestHttp(common.HttpCase):
             "webhook_url": automation_receiver.url,
         })
 
-        obj.name = "new_name"
+        with self.allow_requests(all_requests=True):  # Changing the name will make an http request.
+            obj.name = "new_name"
         self.cr.flush()
         self.cr.clear()
         self.assertEqual(json.loads(obj.another_field), {

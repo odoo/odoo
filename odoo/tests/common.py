@@ -43,6 +43,7 @@ from unittest.mock import patch, _patch, Mock
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 from xmlrpc import client as xmlrpclib
 from uuid import uuid4
+from werkzeug.exceptions import BadRequest
 
 import freezegun
 import requests
@@ -64,6 +65,7 @@ from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDic
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
+from odoo.addons.base.models import ir_actions_report
 
 from . import case, test_cursor
 from .result import OdooTestResult
@@ -122,6 +124,7 @@ CHECK_BROWSER_SLEEP = 0.1 # seconds
 CHECK_BROWSER_ITERATIONS = 100
 BROWSER_WAIT = CHECK_BROWSER_SLEEP * CHECK_BROWSER_ITERATIONS # seconds
 DEFAULT_SUCCESS_SIGNAL = 'test successful'
+TEST_CURSOR_COOKIE_NAME = 'test_request_key'
 
 def get_db_name():
     dbnames = odoo.tools.config['db_name']
@@ -138,7 +141,29 @@ def get_db_name():
 
 standalone_tests = defaultdict(list)
 
-_registry_test_lock = threading.RLock()
+
+class RegistryRLock(threading._RLock):
+    @property
+    def count(self):
+        return self._count  # Expose private attribute
+
+
+# The lock should only be released when new test cursors are meant to be opened.
+# Further filtering on cursors can be done by extending `assertCanOpenTestCursor`.
+_registry_test_lock = RegistryRLock()
+_registry_test_lock.acquire()
+
+
+@contextmanager
+def release_test_lock():
+    """ Releases the test lock in a context manager, the lock is acquired once the context is over."""
+    try:
+        _registry_test_lock.release()
+        yield
+    finally:
+        if not _registry_test_lock.acquire(timeout=60):
+            tag = odoo.modules.module.current_test.canonical_tag
+            exit(f'Could not re-acquire the registry lock during {tag}, exiting...')
 
 
 def standalone(*tags):
@@ -240,6 +265,7 @@ class RecordCapturer:
             return self._model.search(self._domain, order='id') - self._before
         return self._after
 
+
 def _enter_context(cm, addcleanup):
     # We look up the special methods on the type to match the with
     # statement.
@@ -253,6 +279,7 @@ def _enter_context(cm, addcleanup):
     result = enter(cm)
     addcleanup(exit, cm, None, None, None)
     return result
+
 
 def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     """Takes some xml and normalize it to make it comparable to other xml
@@ -367,6 +394,11 @@ class BaseCase(case.TestCase):
             )
             patcher.start()
             cls.addClassCleanup(patcher.stop)
+
+    def setUp(self):
+        super().setUp()
+        self.http_request_key: str = ''
+        self.http_request_allow_all: bool = False
 
     def cursor(self):
         return self.registry.cursor()
@@ -850,6 +882,30 @@ class BaseCase(case.TestCase):
 
         cls._registry_readonly_enabled = enabled
 
+    def assertCanOpenTestCursor(self):
+        """ Asserts that we can currently open a test cursor. """
+        if odoo.modules.module.current_test != self:
+            message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
+            _logger.error(message)
+            raise BadRequest(message)
+        request = odoo.http.request
+        if not request or self.http_request_allow_all:
+            return
+        http_request_required_key = self.http_request_key
+        http_request_key = request.cookies.get(TEST_CURSOR_COOKIE_NAME)
+        if http_request_key != http_request_required_key:
+            expected = http_request_required_key
+            if not expected:
+                expected = 'None (request are not enabled)'
+            _logger.error(
+                'Request with path %s has been ignored during test as it '
+                'it does not contain the test_cursor cookie or it is expired.'
+                ' (required "%s", got "%s")',
+                request.httprequest.path, expected, http_request_key
+            )
+            raise BadRequest(
+                'Request ignored during test as it does not contain the required cookie.'
+            )
 
 class Like:
     """
@@ -1017,6 +1073,17 @@ class TransactionCase(BaseCase):
 
     def setUp(self):
         super().setUp()
+
+        def _check_registry_lock():
+            if _registry_test_lock.count == 0:
+                _logger.warning('The registry test lock is still released at the end of %s', self.canonical_tag)
+            elif _registry_test_lock.count > 1:
+                _logger.warning(
+                    'The registry test lock was acquired more than once (%s) at the end of %s',
+                    _registry_test_lock.count, self.canonical_tag,
+                )
+
+        self.addCleanup(_check_registry_lock)
         # restore environments after the test to avoid invoking flush() with an
         # invalid environment (inexistent user id) from another test
         envs = self.env.transaction.envs
@@ -1061,6 +1128,27 @@ class TransactionCase(BaseCase):
         finally:
             self.registry_leave_test_mode()
             env.invalidate_all()
+
+    @contextmanager
+    def allow_pdf_render(self):
+        """
+        Allows wkhtmltopdf to send requests to the backend.
+        Enters registry mode if necessary.
+        """
+        with ExitStack() as stack:
+            if not type(self)._registry_patched:
+                stack.enter_context(self.enter_registry_test_mode())
+            old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
+
+            def _patched_run_wkhtmltopdf(args):
+                with patch.object(self, 'http_request_key', 'wkhtmltopdf'), release_test_lock():
+                    args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
+                    return old_run_wkhtmltopdf(args)
+
+            stack.enter_context(
+                patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf)
+            )
+            yield
 
 
 class SingleTransactionCase(BaseCase):
@@ -1894,26 +1982,31 @@ class Opener(requests.Session):
     request is made with a test cursor, which uses a different cache than this
     transaction.
     """
-    def __init__(self, cr: BaseCursor):
+    def __init__(self, http_case: HttpCase):
         super().__init__()
-        self.cr = cr
+        self.test_case = http_case
+        self.cr = http_case.cr
 
     def request(self, *args, **kwargs):
+        assert self.test_case.opener == self
         self.cr.flush()
         self.cr.clear()
-        return super().request(*args, **kwargs)
+        with self.test_case.allow_requests():
+            return super().request(*args, **kwargs)
 
 
 class Transport(xmlrpclib.Transport):
     """ see :class:`Opener` """
-    def __init__(self, cr: BaseCursor):
-        self.cr = cr
+    def __init__(self, http_case: HttpCase):
+        self.test_case = http_case
+        self.cr = http_case.cr
         super().__init__()
 
     def request(self, *args, **kwargs):
         self.cr.flush()
         self.cr.clear()
-        return super().request(*args, **kwargs)
+        with self.test_case.allow_requests(all_requests=True):
+            return super().request(*args, **kwargs)
 
 
 class JsonRpcException(Exception):
@@ -1960,16 +2053,60 @@ class HttpCase(TransactionCase):
 
         self._logger = self._logger.getChild(self._testMethodName)
 
-        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self.cr))
-        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self.cr))
-        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self.cr), use_datetime=True)
+        self.xmlrpc_common = xmlrpclib.ServerProxy(self.xmlrpc_url + 'common', transport=Transport(self))
+        self.xmlrpc_db = xmlrpclib.ServerProxy(self.xmlrpc_url + 'db', transport=Transport(self))
+        self.xmlrpc_object = xmlrpclib.ServerProxy(self.xmlrpc_url + 'object', transport=Transport(self), use_datetime=True)
         # setup an url opener helper
-        self.opener = Opener(self.cr)
+        self.opener = Opener(self)
+        self.http_key_sequence = itertools.count()
+        # we need to allow requests during pdf rendering.
+        old_run_wkhtmltopdf = ir_actions_report._run_wkhtmltopdf
+
+        def _patched_run_wkhtmltopdf(args):
+            with patch.object(self, 'http_request_key', 'wkhtmltopdf'), release_test_lock():
+                args = ['--cookie', TEST_CURSOR_COOKIE_NAME, 'wkhtmltopdf', *args]
+                return old_run_wkhtmltopdf(args)
+
+        self.startPatcher(
+            patch.object(ir_actions_report, '_run_wkhtmltopdf', _patched_run_wkhtmltopdf),
+        )
 
     @contextmanager
     def enter_registry_test_mode(self):
         _logger.warning("HTTPCase is already in test mode")
         yield
+
+    @contextmanager
+    def allow_pdf_render(self):
+        _logger.warning("HTTPCase does not require calling allow_pdf_render")
+        yield
+
+    @contextmanager
+    def allow_requests(self, browser: ChromeBrowser | None = None, all_requests=False):
+        """
+        Allows HTTP requests for the scope of the context.
+
+        Params:
+            browser (ChromeBrowser | None): if given, add the cookie to the browser.
+            all_requests (bool): if True, allows all requests regardless of cookie.
+        """
+        with ExitStack() as defer:
+            defer.enter_context(release_test_lock())
+            if all_requests:
+                self.http_request_allow_all = True
+            new_key = f'{self.canonical_tag}__{next(self.http_key_sequence)}'
+            defer.enter_context(patch.object(self, 'http_request_key', new_key))
+            old_cookie = self.opener.cookies.get(TEST_CURSOR_COOKIE_NAME)
+            if old_cookie:
+                defer.callback(self.opener.cookies.set, TEST_CURSOR_COOKIE_NAME, old_cookie)
+            else:
+                defer.callback(self.opener.cookies.pop, TEST_CURSOR_COOKIE_NAME, None)
+            self.opener.cookies[TEST_CURSOR_COOKIE_NAME] = new_key
+            if browser:
+                browser.set_cookie(
+                    TEST_CURSOR_COOKIE_NAME, self.http_request_key, '/', HOST,
+                )
+            yield
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
@@ -2080,7 +2217,7 @@ class HttpCase(TransactionCase):
         #
         # An alternative would be to set the cookie to None (unsetting it
         # completely) or clear-ing session.cookies.
-        self.opener = Opener(self.cr)
+        self.opener = Opener(self)
         self.opener.cookies['session_id'] = session.sid
         if browser:
             self._logger.info('Setting session cookie in browser')
@@ -2127,86 +2264,87 @@ class HttpCase(TransactionCase):
         sendone_patch = None
         websocket_allowed_patch = None
         kick_all_websockets = None
-        try:
-            if "bus.bus" in self.env.registry:
-                from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
-                from odoo.addons.bus.models.bus import BusBus
-
-                kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
-                original_send_one = BusBus._sendone
-
-                def sendone_wrapper(self, target, notification_type, message):
-                    original_send_one(self, target, notification_type, message)
-                    self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
-                    self.env.cr.postcommit.run()  # Trigger notification dispatching
-
-                sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
-                websocket_allowed_patch = patch.object(
-                    WebsocketConnectionHandler, "websocket_allowed", return_value=True
-                )
-                sendone_patch.start()
-                websocket_allowed_patch.start()
-
-            self.authenticate(login, login, browser=browser)
-            # Flush and clear the current transaction.  This is useful in case
-            # we make requests to the server, as these requests are made with
-            # test cursors, which uses different caches than this transaction.
-            self.cr.flush()
-            self.cr.clear()
-            url = urljoin(self.base_url(), url_path)
-            if watch:
-                parsed = urlsplit(url)
-                qs = dict(parse_qsl(parsed.query))
-                qs['watch'] = '1'
-                if debug is not False:
-                    qs['debug'] = "assets"
-                url = urlunsplit(parsed._replace(query=urlencode(qs)))
-            self._logger.info('Open "%s" in browser', url)
-
-            browser.screencaster.start()
-            if cookies:
-                for name, value in cookies.items():
-                    browser.set_cookie(name, value, '/', HOST)
-
-            cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
-            cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
-
-            if cpu_throttling:
-                assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
-                timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
-                _logger.log(
-                    logging.INFO if cpu_throttling_os else logging.WARNING,
-                    'CPU throttling mode is only suitable for local testing - '
-                    'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
-                browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
-
-            browser.navigate_to(url, wait_stop=not bool(ready))
-
-            # Needed because tests like test01.js (qunit tests) are passing a ready
-            # code = ""
-            self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
-
-            error = False
+        with self.allow_requests(browser=browser):
             try:
-                browser._wait_code_ok(code, timeout, error_checker=error_checker)
-            except ChromeBrowserException as chrome_browser_exception:
-                error = chrome_browser_exception
-            if error:  # dont keep initial traceback, keep that outside of except
-                if code:
-                    message = 'The test code "%s" failed' % code
-                else:
-                    message = "Some js test failed"
-                self.fail('%s\n\n%s' % (message, error))
+                if "bus.bus" in self.env.registry:
+                    from odoo.addons.bus.websocket import CloseCode, _kick_all, WebsocketConnectionHandler
+                    from odoo.addons.bus.models.bus import BusBus
 
-        finally:
-            browser.stop()
-            if sendone_patch:
-                sendone_patch.stop()
-            if websocket_allowed_patch:
-                websocket_allowed_patch.stop()
-            if kick_all_websockets:
-                kick_all_websockets()
-            self._wait_remaining_requests()
+                    kick_all_websockets = partial(_kick_all, CloseCode.KILL_NOW)
+                    original_send_one = BusBus._sendone
+
+                    def sendone_wrapper(self, target, notification_type, message):
+                        original_send_one(self, target, notification_type, message)
+                        self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+                        self.env.cr.postcommit.run()  # Trigger notification dispatching
+
+                    sendone_patch = patch.object(BusBus, "_sendone", sendone_wrapper)
+                    websocket_allowed_patch = patch.object(
+                        WebsocketConnectionHandler, "websocket_allowed", return_value=True
+                    )
+                    sendone_patch.start()
+                    websocket_allowed_patch.start()
+
+                self.authenticate(login, login, browser=browser)
+                # Flush and clear the current transaction.  This is useful in case
+                # we make requests to the server, as these requests are made with
+                # test cursors, which uses different caches than this transaction.
+                self.cr.flush()
+                self.cr.clear()
+                url = urljoin(self.base_url(), url_path)
+                if watch:
+                    parsed = urlsplit(url)
+                    qs = dict(parse_qsl(parsed.query))
+                    qs['watch'] = '1'
+                    if debug is not False:
+                        qs['debug'] = "assets"
+                    url = urlunsplit(parsed._replace(query=urlencode(qs)))
+                self._logger.info('Open "%s" in browser', url)
+
+                browser.screencaster.start()
+                if cookies:
+                    for name, value in cookies.items():
+                        browser.set_cookie(name, value, '/', HOST)
+
+                cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING')  # used by dedicated runbot builds
+                cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
+
+                if cpu_throttling:
+                    assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
+                    timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
+                    _logger.log(
+                        logging.INFO if cpu_throttling_os else logging.WARNING,
+                        'CPU throttling mode is only suitable for local testing - '
+                        'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
+                    browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
+
+                browser.navigate_to(url, wait_stop=not bool(ready))
+
+                # Needed because tests like test01.js (qunit tests) are passing a ready
+                # code = ""
+                self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+
+                error = False
+                try:
+                    browser._wait_code_ok(code, timeout, error_checker=error_checker)
+                except ChromeBrowserException as chrome_browser_exception:
+                    error = chrome_browser_exception
+                if error:  # dont keep initial traceback, keep that outside of except
+                    if code:
+                        message = 'The test code "%s" failed' % code
+                    else:
+                        message = "Some js test failed"
+                    self.fail('%s\n\n%s' % (message, error))
+
+            finally:
+                browser.stop()
+                if sendone_patch:
+                    sendone_patch.stop()
+                if websocket_allowed_patch:
+                    websocket_allowed_patch.stop()
+                if kick_all_websockets:
+                    kick_all_websockets()
+                self._wait_remaining_requests()
 
     def start_tour(self, url_path, tour_name, step_delay=None, **kwargs):
         """Wrapper for `browser_js` to start the given `tour_name` with the
@@ -2240,7 +2378,7 @@ class HttpCase(TransactionCase):
             return _route_profiler
         return profiler.Nested(_profiler, patch('odoo.http.Request._get_profiler_context_manager', route_profiler))
 
-    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None):
+    def make_jsonrpc_request(self, route, params=None, headers=None, cookies=None, timeout=12):
         """Make a JSON-RPC request to the server.
 
         :raises requests.HTTPError: if one occurred
@@ -2251,7 +2389,7 @@ class HttpCase(TransactionCase):
             'jsonrpc': '2.0',
             'method': 'call',
             'params': params or {},
-        }, headers=headers, cookies=cookies)
+        }, headers=headers, cookies=cookies, timeout=timeout)
         response.raise_for_status()
         decoded_response = response.json()
         if 'error' in decoded_response:

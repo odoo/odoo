@@ -5,13 +5,17 @@ import struct
 from threading import Event
 import unittest
 from unittest.mock import patch
+import inspect
+from werkzeug.exceptions import BadRequest
+import contextlib
 
 try:
     import websocket
 except ImportError:
     websocket = None
 
-from odoo.tests.common import HOST
+from odoo.http import request
+from odoo.tests.common import HOST, release_test_lock, TEST_CURSOR_COOKIE_NAME, Like, _registry_test_lock
 from odoo.tests import HttpCase
 from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
 from ..models.bus import dispatch, hashable, channel_with_db
@@ -49,6 +53,8 @@ class WebsocketCase(HttpCase):
             wraps=_mocked_serve_forever
         )
         self.startPatcher(self._serve_forever_patch)
+        self.enterContext(release_test_lock())  # Release the lock during websocket tests
+        self.http_request_key = 'websocket'
 
     def tearDown(self):
         self._close_websockets()
@@ -64,6 +70,27 @@ class WebsocketCase(HttpCase):
                 ws.close(CloseCode.CLEAN)
         self.wait_remaining_websocket_connections()
 
+    @contextlib.contextmanager
+    def allow_requests(self, *args, **kwargs):
+        # As the lock is always unlocked, we reacquire it before allowing request
+        # to avoid exceptions.
+        with _registry_test_lock, super().allow_requests(*args, **kwargs):
+            yield
+
+    def assertCanOpenTestCursor(self):
+        # As the lock is always unlocked during WebsocketCases we have a whitelist of
+        # methods which must match. We also default to super if we are coming from a cursor.
+        allowed_methods = [  # function + filename
+            ('acquire_cursor', Like('.../bus/websocket.py')),
+        ]
+        if any(
+            frame.function == function and frame.filename == filename
+            for frame in inspect.stack()
+            for function, filename in allowed_methods
+        ) or request:
+            return super().assertCanOpenTestCursor()
+        raise BadRequest('Opening a cursor from an unknown method in websocket test.')
+
     def websocket_connect(self, *args, ping_after_connect=True, **kwargs):
         """
         Connect a websocket. If no cookie is given, the connection is
@@ -75,6 +102,8 @@ class WebsocketCase(HttpCase):
             kwargs['cookie'] = f'session_id={self.session.sid}'
         if 'timeout' not in kwargs:
             kwargs['timeout'] = 5
+        # The cursor lock is already released, we just need to pass the right cookie.
+        kwargs['cookie'] += f';{TEST_CURSOR_COOKIE_NAME}={self.http_request_key}'
         ws = websocket.create_connection(
             self._WEBSOCKET_URL, *args, **kwargs
         )
