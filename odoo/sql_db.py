@@ -531,8 +531,11 @@ class TestCursor(BaseCursor):
         +------------------------+---------------------------------------------------+
     """
     _cursors_stack = []
-    def __init__(self, cursor, lock, readonly):
+
+    def __init__(self, cursor, lock, readonly, current_test=None):
         assert isinstance(cursor, BaseCursor)
+        self.current_test = current_test
+        self._check('__init__')
         super().__init__()
         self._now = None
         self._closed = False
@@ -559,6 +562,10 @@ class TestCursor(BaseCursor):
                 # this will simulate a readonly connection
                 self._cursor._obj.execute('SET TRANSACTION READ ONLY')  # use _obj to avoid impacting query count and profiler.
 
+    def _check(self, operation):
+        if self.current_test:
+            self.current_test.check_test_cursor(operation)
+
     def execute(self, *args, **kwargs):
         assert not self._closed, "Cannot use a closed cursor"
         self._check_savepoint()
@@ -578,6 +585,7 @@ class TestCursor(BaseCursor):
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
+        self._check('commit')
         self.flush()
         if self._savepoint:
             self._savepoint.close(rollback=self.readonly)
@@ -589,6 +597,7 @@ class TestCursor(BaseCursor):
 
     def rollback(self):
         """ Perform an SQL `ROLLBACK` """
+        self._check('rollback')
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
@@ -598,6 +607,7 @@ class TestCursor(BaseCursor):
         self.postrollback.run()
 
     def __getattr__(self, name):
+        self._check(name)
         return getattr(self._cursor, name)
 
     def now(self):
