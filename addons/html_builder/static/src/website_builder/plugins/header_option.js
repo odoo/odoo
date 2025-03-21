@@ -7,6 +7,11 @@ class HeaderOptionPlugin extends Plugin {
 
     resources = {
         builder_options: [
+            withSequence(1, {
+                editableOnly: false,
+                template: "website.headerTemplateOption",
+                selector: "header",
+            }),
             withSequence(100, {
                 editableOnly: false,
                 template: "website.headerElementOption",
