@@ -95,7 +95,7 @@
                 <t t-else="" t-call="mail.DiscussSidebarChannel.main"/>
                 <ul t-if="subChannels?.length > 0" class="list-unstyled position-relative flex-grow-1" t-att-class="{ 'my-1 d-flex flex-column gap-1': store.discuss.isSidebarCompact, 'my-0 d-flex flex-column gap-1': !store.discuss.isSidebarCompact }">
                     <t t-foreach="subChannels" t-as="sub" t-key="sub.localId">
-                        <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !isCategoryOpen"/>
+                        <DiscussSidebarSubchannel t-if="showThread(sub)" thread="sub" isFirst="sub_first or !thread.discussAppCategory.open"/>
                     </t>
                 </ul>
             </t>
