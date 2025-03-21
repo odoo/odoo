@@ -94,7 +94,6 @@ class RepairOrder(models.Model):
         compute='compute_product_uom', store=True, precompute=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        default=False,
         compute="compute_lot_id", store=True,
         domain="[('id', 'in', allowed_lot_ids)]", check_company=True,
         help="Products repaired are all belonging to this lot")
@@ -365,6 +364,8 @@ class RepairOrder(models.Model):
         res = super().default_get(fields_list)
         if 'picking_id' not in res and 'picking_id' in fields_list and 'default_repair_picking_id' in self.env.context:
             res['picking_id'] = self.env.context.get('default_repair_picking_id')
+        if 'lot_id' not in res and 'lot_id' in fields_list and 'default_repair_lot_id' in self.env.context:
+            res['lot_id'] = self.env.context.get('default_repair_lot_id')
         return res
 
     @api.model_create_multi
