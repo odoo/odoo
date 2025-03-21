@@ -16,7 +16,7 @@
                     <field name="job_title"/>
                     <separator/>
                     <filter name="my_team" string="My Team" domain="[('parent_id.user_id', '=', uid)]"/>
-                    <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/>
+<!--                     <filter name="my_department" string="My Department" domain="[('member_of_department', '=', True)]"/> -->
                     <separator/>
                     <filter name="newly_hired" string="Newly Hired" domain="[('newly_hired', '=', True)]"/>
                     <separator/>
@@ -61,8 +61,8 @@
                             </div>
                             <div class="o_employee_avatar m-0 p-0">
                                 <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
-                                <field name="show_hr_icon_display" invisible="1" />
-                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+<!--                                 <field name="show_hr_icon_display" invisible="1" />
+                                <field name="hr_icon_display" class="d-flex align-items-end fs-6 o_employee_availability" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/> -->
                             </div>
                         </div>
                         <group>
@@ -80,7 +80,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page name="public" string="Work Information">
+                            <page name="work_information" string="Work Information">
                                 <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
                                     <div id="o_work_employee_main" class="flex-grow-1">
                                         <group string="Location" name="location">
@@ -124,7 +124,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <kanban class="o_hr_employee_kanban" sample="1">
-                    <field name="show_hr_icon_display"/>
+                    <!-- <field name="show_hr_icon_display"/> -->
                     <field name="image_128" />
                     <templates>
                         <t t-name="card" class="flex-row">
@@ -141,9 +141,9 @@
                             <main class="ms-2">
                                 <div>
                                     <field class="fw-bolder" name="name" placeholder="Employee's Name"/>
-                                    <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
+<!--                                     <div t-if="record.show_hr_icon_display.raw_value" class="float-end">
                                         <field name="hr_icon_display" class="o_employee_availability align-items-center" widget="hr_presence_status" />
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <field t-if="record.job_title.raw_value" name="job_title"/>
                                 <div t-if="record.work_email.raw_value" class="text-truncate">

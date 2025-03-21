@@ -29,12 +29,17 @@ class HrEmployeeSkillReport(models.BaseModel):
                 row_number() OVER () AS id,
                 e.id AS employee_id,
                 e.company_id AS company_id,
-                e.department_id AS department_id,
+                c.department_id AS department_id,
                 s.skill_id AS skill_id,
                 s.skill_type_id AS skill_type_id,
                 sl.level_progress / 100.0 AS level_progress,
                 sl.name AS skill_level
             FROM hr_employee e
+            JOIN (
+                SELECT DISTINCT ON (employee_id) *
+                FROM hr_contract
+                ORDER BY employee_id, date_version DESC
+            ) c ON c.employee_id = e.id
             LEFT OUTER JOIN hr_employee_skill s ON e.id = s.employee_id
             LEFT OUTER JOIN hr_skill_level sl ON sl.id = s.skill_level_id
             LEFT OUTER JOIN hr_skill_type st ON st.id = sl.skill_type_id

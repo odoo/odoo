@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record id="ir_cron_generate_missing_work_entries" model="ir.cron">
             <field name="name">Generate Missing Work Entries</field>
-            <field name="model_id" ref="hr_contract.model_hr_contract"/>
+            <field name="model_id" ref="hr.model_hr_contract"/>
             <field name="state">code</field>
             <field name="code">model._cron_generate_missing_work_entries()</field>
             <field name="active" eval="True"/>

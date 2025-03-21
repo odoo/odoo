@@ -14,7 +14,7 @@ class ResourceCalendarLeaves(models.Model):
             dt = datetime.fromordinal(date.toordinal())
             return tz.localize(dt).astimezone(utc).replace(tzinfo=None)
 
-        leaves_by_contract = self.grouped(lambda leave: leave.resource_id.employee_id.contract_id)
+        leaves_by_contract = self.grouped(lambda leave: leave.resource_id.employee_id.version_id)
         # set aside leaves without contract_id for super
         remaining = leaves_by_contract.pop(
             self.env['hr.contract'],

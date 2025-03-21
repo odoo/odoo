@@ -1,35 +1,47 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import api, fields, models, tools
+from odoo.addons.base.models.res_partner import _tz_get
 
 
 class HrEmployeePublic(models.Model):
     _name = 'hr.employee.public'
-    _inherit = ["hr.employee.base"]
     _description = 'Public Employee'
     _order = 'name'
     _auto = False
-    _log_access = True # Include magic fields
+    _log_access = True  # Include magic fields
 
-    # Fields coming from hr.employee.base
+    # Fields coming from hr.employee
     create_date = fields.Datetime(readonly=True)
     name = fields.Char(readonly=True)
     active = fields.Boolean(readonly=True)
-    department_id = fields.Many2one(readonly=True)
-    job_id = fields.Many2one(readonly=True)
+    department_id = fields.Many2one('hr.department', readonly=True)
+    job_id = fields.Many2one('hr.job', readonly=True)
     job_title = fields.Char(readonly=True)
-    company_id = fields.Many2one(readonly=True)
-    address_id = fields.Many2one(readonly=True)
+    company_id = fields.Many2one('res.company', readonly=True)
+    address_id = fields.Many2one('res.partner', readonly=True)
     mobile_phone = fields.Char(readonly=True)
     work_phone = fields.Char(readonly=True)
     work_email = fields.Char(readonly=True)
-    work_contact_id = fields.Many2one(readonly=True)
-    work_location_id = fields.Many2one(readonly=True)
-    user_id = fields.Many2one(readonly=True)
-    resource_id = fields.Many2one(readonly=True)
-    tz = fields.Selection(readonly=True)
+    work_contact_id = fields.Many2one('res.partner', readonly=True)
+    work_location_id = fields.Many2one('hr.work.location', readonly=True)
+    user_id = fields.Many2one('res.users', readonly=True)
+    resource_id = fields.Many2one('resource.resource', readonly=True)
+    tz = fields.Selection(_tz_get, readonly=True)
     color = fields.Integer(readonly=True)
+    hr_presence_state = fields.Selection([
+        ('present', 'Present'),
+        ('absent', 'Absent'),
+        ('archive', 'Archived'),
+        ('out_of_working_hour', 'Out of Working hours')], compute='_compute_presence_state', default='out_of_working_hour')
+    hr_icon_display = fields.Selection([
+        ('presence_present', 'Present'),
+        ('presence_out_of_working_hour', 'Out of Working hours'),
+        ('presence_absent', 'Absent'),
+        ('presence_archive', 'Archived'),
+        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
 
     # Manager-only fields
     is_manager = fields.Boolean(compute='_compute_is_manager')
@@ -52,12 +64,28 @@ class HrEmployeePublic(models.Model):
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     birthday_public_display_string = fields.Char("Public Date of Birth", related='employee_id.birthday_public_display_string')
 
+    # Crap
+    newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
+
+    def _compute_from_employee(self, field_name):
+        employees = self.env['hr.employee'].browse(self.ids)
+        employee_per_id = {emp.id: emp for emp in employees}
+        print(employee_per_id)
+        for public_employee in self:
+            public_employee[field_name] = employee_per_id[public_employee.id][field_name]
+
     @api.depends_context('uid')
     @api.depends('parent_id')
     def _compute_is_manager(self):
         all_reports = self.env['hr.employee.public'].search([('id', 'child_of', self.env.user.employee_id.id)]).ids
         for employee in self:
             employee.is_manager = employee.id in all_reports
+
+    def _compute_presence_state(self):
+        self._compute_from_employee('hr_presence_state')
+
+    def _compute_presence_icon(self):
+        self._compute_from_employee('hr_icon_display')
 
     def _get_manager_only_fields(self):
         return []
@@ -81,9 +109,24 @@ class HrEmployeePublic(models.Model):
         for employee in self:
             employee.employee_id = self.env['hr.employee'].browse(employee.id)
 
+    def _compute_newly_hired(self):
+        self._compute_from_employee('newly_hired')
+
+    def _search_newly_hired(self, operator, value):
+        if operator not in ('in', 'not in'):
+            return NotImplemented
+        new_hire_field = self.env['hr.employee']._get_new_hire_field()
+        new_hires = self.env['hr.employee'].sudo().search([
+            (new_hire_field, '>', fields.Datetime.now() - timedelta(days=90))
+        ])
+        return [('id', operator, new_hires.ids)]
+
     @api.model
     def _get_fields(self):
-        return ','.join('emp.%s' % name for name, field in self._fields.items() if field.store and field.type not in ['many2many', 'one2many'])
+        return 'emp.id AS id,job.name AS job_title,' + ','.join(
+            ('con.%s' if name in self.env['hr.contract']._fields and self.env['hr.contract']._fields[name].store else 'emp.%s') % name
+            for name, field in self._fields.items()
+            if field.store and field.type not in ['many2many', 'one2many'] and name not in ['job_title', 'id'])
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)
@@ -91,4 +134,10 @@ class HrEmployeePublic(models.Model):
             SELECT
                 %s
             FROM hr_employee emp
+            JOIN (
+                SELECT DISTINCT ON (employee_id) *
+                FROM hr_contract
+                ORDER BY employee_id, date_version DESC
+            ) con ON con.employee_id = emp.id
+            JOIN hr_job job ON job.id = con.job_id
         )""" % (self._table, self._get_fields()))

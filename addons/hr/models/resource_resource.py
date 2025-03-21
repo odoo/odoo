@@ -20,12 +20,7 @@ class ResourceResource(models.Model):
         employee_ids_with_active_contracts = {
             employee.id for [employee] in
             self.env['hr.contract']._read_group(
-                domain=[
-                    ('employee_id', 'in', self.employee_id.ids),
-                    '|', ('state', '=', 'open'),
-                    '|', ('state', '=', 'close'),
-                         '&', ('state', '=', 'draft'), ('kanban_state', '=', 'done')
-                ],
+                domain=[('employee_id', 'in', self.employee_id.ids)],
                 groupby=['employee_id'],
             )
         }
@@ -44,9 +39,7 @@ class ResourceResource(models.Model):
         timezones = {resource.tz for resource in resource_with_contract}
         date_start = min(start.astimezone(timezone(tz)).date() for tz in timezones)
         date_end = max(end.astimezone(timezone(tz)).date() for tz in timezones)
-        contracts = resource_with_contract.employee_id._get_contracts(
-            date_start, date_end, states=['open', 'draft', 'close']
-        ).filtered(lambda c: c.state in ['open', 'close'] or c.kanban_state == 'done')
+        contracts = resource_with_contract.employee_id._get_contracts(date_start, date_end)
         for contract in contracts:
             tz = timezone(contract.employee_id.tz)
             calendars_within_period_per_resource[contract.employee_id.resource_id.id][contract.resource_calendar_id] |= Intervals([(
