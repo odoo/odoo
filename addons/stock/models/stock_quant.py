@@ -307,7 +307,7 @@ class StockQuant(models.Model):
                 quant = super().create(vals)
                 _add_to_cache(quant)
                 quants |= quant
-                if self._is_inventory_mode():
+                if self._is_inventory_mode() and quant.company_id:
                     quant._check_company()
         return quants
 
