@@ -97,27 +97,11 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(len(mo), 1)
-        self.assertEqual(len(mo.picking_ids), 0)
+        self.assertEqual(len(mo.picking_ids), 1)
         wh = picking_receipt.picking_type_id.warehouse_id
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
 
-        # Create a RR
-        pg1 = self.env['procurement.group'].create({})
-        self.env['stock.warehouse.orderpoint'].create({
-            'name': 'xxx',
-            'product_id': self.comp1.id,
-            'product_min_qty': 0,
-            'product_max_qty': 0,
-            'location_id': self.env.user.company_id.subcontracting_location_id.id,
-            'group_id': pg1.id,
-        })
-
-        # Run the scheduler and check the created picking
-        self.env['procurement.group'].run_scheduler()
-        picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
-        self.assertEqual(len(picking), 1)
-        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
         picking_receipt.move_ids.quantity = 1
         picking_receipt.move_ids.picked = True
         picking_receipt.button_validate()
@@ -147,6 +131,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
         # Create a different subcontract location & check rules replication
         reference_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', self.env.company.subcontracting_location_id.id), ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
@@ -226,6 +211,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
 
         # Tick "manufacture" and MTO on self.comp2
@@ -323,20 +309,20 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(mo.state, 'confirmed')
 
         picking_delivery = mo.picking_ids
-        self.assertFalse(picking_delivery)
+        self.assertTrue(picking_delivery)
 
         picking_delivery = self.env['stock.picking'].search([('origin', 'ilike', '%' + picking_receipt.name + '%')])
-        self.assertFalse(picking_delivery)
+        self.assertTrue(picking_delivery)
 
-        move = self.env['stock.move'].search([
+        moves = self.env['stock.move'].search([
             ('product_id', '=', self.comp2.id),
             ('location_id', '=', warehouse.lot_stock_id.id),
             ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)
         ])
-        self.assertTrue(move)
-        picking_delivery = move.picking_id
+        self.assertTrue(moves)
+        picking_delivery = moves.picking_id
         self.assertTrue(picking_delivery)
-        self.assertEqual(move.product_uom_qty, 11.0)
+        self.assertEqual(sum(moves.mapped('product_uom_qty')), 11.0)
 
         # As well as a manufacturing order for `self.comp2`
         comp2mo = self.env['mrp.production'].search([('bom_id', '=', self.comp2_bom.id)])
@@ -501,6 +487,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         resupply_sub_on_order_route = self.env['stock.route'].search([
             ('name', '=', 'Resupply Subcontractor on Order')
         ])
+        resupply_sub_on_order_route.product_selectable = True
+        self.comp2.bom_ids.unlink()
         (self.comp1 + self.comp2).write({
             'route_ids': [(4, resupply_sub_on_order_route.id)]
         })
@@ -1206,27 +1194,10 @@ class TestSubcontractingTracking(TransactionCase):
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
         self.assertEqual(len(mo), 1)
-        self.assertEqual(len(mo.picking_ids), 0)
+        self.assertEqual(len(mo.picking_ids), 1)
         wh = picking_receipt.picking_type_id.warehouse_id
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)
-
-        # Create a RR
-        pg1 = self.env['procurement.group'].create({})
-        self.env['stock.warehouse.orderpoint'].create({
-            'name': 'xxx',
-            'product_id': self.comp1_sn.id,
-            'product_min_qty': 0,
-            'product_max_qty': 0,
-            'location_id': self.env.user.company_id.subcontracting_location_id.id,
-            'group_id': pg1.id,
-        })
-
-        # Run the scheduler and check the created picking
-        self.env['procurement.group'].run_scheduler()
-        picking = self.env['stock.picking'].search([('group_id', '=', pg1.id)])
-        self.assertEqual(len(picking), 1)
-        self.assertEqual(picking.picking_type_id, wh.subcontracting_resupply_type_id)
 
         lot_id = self.env['stock.lot'].create({
             'name': 'lot1',
@@ -1331,7 +1302,7 @@ class TestSubcontractingTracking(TransactionCase):
         # Check the created manufacturing order
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom_tracked.id)])
         self.assertEqual(len(mo), 1)
-        self.assertEqual(len(mo.picking_ids), 0)
+        self.assertEqual(len(mo.picking_ids), 1)
         wh = picking_receipt.picking_type_id.warehouse_id
         self.assertEqual(mo.picking_type_id, wh.subcontracting_type_id)
         self.assertFalse(mo.picking_type_id.active)

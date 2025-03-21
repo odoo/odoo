@@ -74,11 +74,6 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     tooltipPosition: 'right',
     run: "click",
 }, {
-    trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Buy")',
-    content: _t('Uncheck Buy'),
-    tooltipPosition: 'right',
-    run: "click",
-}, {
     trigger: '.o_field_widget[name=route_ids] .form-check > label:contains("Replenish on Order (MTO)")',
     content: _t('Uncheck  Replenish on Order (MTO)'),
     tooltipPosition: 'right',

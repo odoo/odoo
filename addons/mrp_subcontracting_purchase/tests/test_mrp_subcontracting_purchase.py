@@ -48,6 +48,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
     @freeze_time('2024-01-01')
     def test_bom_overview_availability(self):
         # Create routes for components and the main product
+        self.comp2.bom_ids.unlink()
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
             'partner_id': self.subcontractor_partner1.id,
@@ -252,61 +253,6 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.assertEqual(self.finished2.qty_available, 7.0)
         self.assertEqual(po.order_line.qty_received, 10.0)
-
-    def test_orderpoint_warehouse_not_required(self):
-        """
-        The user creates a subcontracted bom for the product,
-        then we create a po for the subcontracted bom we are gonna get
-        orderpoints for the components without warehouse.Notice this is
-        when our subcontracting location is also a replenish location.
-        The test ensure that we can get those orderpoints without warehouse.
-        """
-        # Create a second warehouse to check which one will be used
-        self.env['stock.warehouse'].create({'name': 'Second WH', 'code': 'WH02'})
-
-        product = self.env['product.product'].create({
-            'name': 'Product',
-            'is_storable': True,
-        })
-        component = self.env['product.product'].create({
-            'name': 'Component',
-            'is_storable': True,
-        })
-        subcontractor = self.env['res.partner'].create({
-            'name': 'Subcontractor',
-            'property_stock_subcontractor': self.env.company.subcontracting_location_id.id,
-        })
-        self.env.company.subcontracting_location_id.replenish_location = True
-
-        self.env['mrp.bom'].create({
-            'product_tmpl_id': product.product_tmpl_id.id,
-            'product_qty': 1,
-            'product_uom_id': product.uom_id.id,
-            'type': 'subcontract',
-            'subcontractor_ids': [(subcontractor.id)],
-            'bom_line_ids': [(0, 0, {
-                    'product_id': component.id,
-                    'product_qty': 1,
-                    'product_uom_id': component.uom_id.id,
-            })],
-        })
-
-        po = self.env['purchase.order'].create({
-            'partner_id': subcontractor.id,
-            'order_line': [(0, 0, {
-                'product_id': product.id,
-                'product_qty': 1,
-                'product_uom_id': product.uom_id.id,
-                'name': product.name,
-                'price_unit': 1,
-            })],
-        })
-        po.button_confirm()
-
-        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
-        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', component.id)])
-        self.assertTrue(orderpoint)
-        self.assertEqual(orderpoint.warehouse_id, self.warehouse)
 
     def test_purchase_and_return03(self):
         """
@@ -670,6 +616,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
     def test_resupply_order_buy_mto(self):
         """ Test a subcontract component can has resupply on order + buy + mto route"""
+        self.comp2.bom_ids.unlink()
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
@@ -828,6 +775,7 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
     @freeze_time('2024-01-01')
     def test_bom_overview_availability_po_lead(self):
         # Create routes for components and the main product
+        self.comp2.bom_ids.unlink()
         self.env['product.supplierinfo'].create({
             'product_tmpl_id': self.finished.product_tmpl_id.id,
             'partner_id': self.subcontractor_partner1.id,
