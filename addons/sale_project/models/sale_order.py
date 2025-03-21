@@ -115,6 +115,7 @@ class SaleOrder(models.Model):
             projects_per_so[project.sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
+            projects |= order.tasks_ids.mapped('project_id') if self.env.user.has_group('project.group_project_user') else projects
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:

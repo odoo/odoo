@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_task_template_view_form" model="ir.ui.view">
+        <field name="name">project.task.template.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="" open_form_view="True">
+                <sheet>
+                    <group>
+                        <div class="oe_title">
+                            <label for="name" string="Task Template" />
+                            <h1>
+                                <field name="name" placeholder="e.g. Standard Task Template" />
+                            </h1>
+                        </div>
+                    </group>
+                    <group>
+                        <field groups="base.group_multi_company" class="oe_inline" name="company_id" options="{'no_open': True, 'no_create': True}" placeholder="Visible to all Company"/>
+                    </group>
+                    <notebook name="Task Template">
+                        <page string="Tasks">
+                            <field name="child_ids" context="{'form_view_ref': 'sale_project.view_task_template_form2_inherit',
+                                            'list_view_ref': 'sale_project.project_task_template_view_list'}" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_task_template_form2_inherit">
+        <field name="name">project.task.template.task.form</field>
+        <field name="model">project.task</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="attributes">
+                <attribute name="invisible">"1"</attribute>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="replace">
+                <field name="task_template_project_id" />
+                <field name="is_task_template" invisible="1" context="{'default_is_task_template': False}" />
+            </xpath>
+            <xpath expr="//label[@for='date_deadline']" position="attributes">
+                <attribute name="invisible">"1"</attribute>
+            </xpath>
+            <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="attributes">
+                <attribute name="invisible">"1"</attribute>
+            </xpath>
+            <xpath expr="//page[@name='sub_tasks_page']" position="attributes">
+                <attribute name="invisible">"1"</attribute>
+            </xpath>
+            <xpath expr="//page[@name='extra_info']//field[@name='parent_id']" position="attributes">
+                <attribute name="invisible">"1"</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_template_view_list" model="ir.ui.view">
+        <field name="name">project.task.template.list</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+    
+    <record id="project_task_template_action" model="ir.actions.act_window">
+        <field name="name">Task Template</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_task_template', '=', True)]</field>
+        <field name="context">{'default_is_task_template': True}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_template_action_list">
+        <field name="sequence" eval="1" />
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="project_task_template_view_list" />
+        <field name="act_window_id" ref="project_task_template_action" />
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_template_action_form">
+        <field name="sequence" eval="2" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_task_template_view_form" />
+        <field name="act_window_id" ref="project_task_template_action" />
+    </record>
+
+    <record id="project.action_view_all_task" model="ir.actions.act_window">
+    <field name="domain">[
+        '!',
+        '|',
+            ('is_task_template', '=', True),
+            ('parent_id.is_task_template', '=', True)
+    ]</field>
+    </record>
+
+    <menuitem id="menu_task_template" name="Task Template" action="project_task_template_action" parent="project.menu_main_pm" sequence="99" />    
+
+</odoo>

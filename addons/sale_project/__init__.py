@@ -24,3 +24,10 @@ def uninstall_hook(env):
         ('python_method', 'in', ['action_open_project_invoices', 'action_view_sos'])
     ])
     actions.domain = [(0, '=', 1)]
+
+    env.ref("project.ir_rule_private_task").write({'domain_force': "[\
+        ('project_id.privacy_visibility', '!=', 'followers'),\
+            '|', '|', ('project_id', '!=', False),\
+            ('parent_id', '!=', False),\
+            ('user_ids', 'in', user.id),\
+        ]"})
