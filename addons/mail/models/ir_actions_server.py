@@ -28,7 +28,7 @@ class IrActionsServer(models.Model):
             ('mail_post', 'Send Email'),
             ('followers', 'Add Followers'),
             ('remove_followers', 'Remove Followers'),
-            ('object_create',),
+            ('code',),
         ],
         ondelete={'mail_post': 'cascade',
                   'followers': 'cascade',
