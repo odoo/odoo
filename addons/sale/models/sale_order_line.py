@@ -1051,8 +1051,7 @@ class SaleOrderLine(models.Model):
                 uom_qty_to_consider = line.qty_delivered if line.product_id.invoice_policy == 'delivery' else line.product_uom_qty
                 qty_to_invoice = uom_qty_to_consider - line.qty_invoiced_posted
                 unit_price_total = line.price_total / line.product_uom_qty
-                price_reduce = unit_price_total * (1 - (line.discount or 0.0) / 100.0)
-                line.amount_to_invoice = price_reduce * qty_to_invoice
+                line.amount_to_invoice = unit_price_total * qty_to_invoice
             else:
                 line.amount_to_invoice = 0.0
 
