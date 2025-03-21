@@ -297,9 +297,16 @@ export class DropZonePlugin extends Plugin {
             insertMethod = "appendChild";
         }
         this.clearDropZone();
-        return (elementToAdd) => {
+        return async (elementToAdd) => {
+            // TODO: refactor if a new mutex system is implemented
             target[insertMethod](elementToAdd);
-            this.dispatchTo("on_add_element_handlers", { elementToAdd: elementToAdd });
+            const proms = [];
+            for (const handler of this.getResource("on_add_element_handlers")) {
+                proms.push(handler({ elementToAdd: elementToAdd }));
+            }
+            this.services.ui.block();
+            await Promise.all(proms);
+            this.services.ui.unblock();
             scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
             this.dependencies.history.addStep();
         };

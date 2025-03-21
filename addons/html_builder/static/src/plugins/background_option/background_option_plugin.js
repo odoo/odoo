@@ -35,8 +35,7 @@ class BackgroundOptionPlugin extends Plugin {
             applyFunDependOnSelectorAndExclude(
                 this.markColorLevel,
                 root,
-                coloredLevelBackgroundParam.selector,
-                coloredLevelBackgroundParam.exclude
+                coloredLevelBackgroundParam
             );
         }
     }
