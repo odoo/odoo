@@ -283,7 +283,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertFalse(format_res['is_message_subtype_note'])
             self.assertEqual(format_res['subtype_id'], (comment_subtype.id, comment_subtype.name))
             # should not be in, not asked
-            self.assertNotIn('rating', format_res)
+            self.assertNotIn('rating_id', format_res)
             self.assertNotIn('rating_stats', format_res)
             self.assertNotIn('rating_value', format_res)
 
@@ -298,11 +298,11 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
 
         self.assertEqual(len(res), len(messages_all))
         for format_res, _message, _record in zip(res, messages_all, self.messages_records):
-            self.assertEqual(format_res['rating']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
-            self.assertEqual(format_res['rating']['publisher_comment'], 'Comment')
-            self.assertEqual(format_res['rating']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(" ".join(format_res['rating']['publisher_datetime'].split()), 'May 13, 2023, 10:30:05 AM')
-            self.assertEqual(format_res['rating']['publisher_name'], self.partner_admin.display_name)
+            self.assertEqual(format_res['rating_id']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
+            self.assertEqual(format_res['rating_id']['publisher_comment'], 'Comment')
+            self.assertEqual(format_res['rating_id']['publisher_id'], self.partner_admin.id)
+            self.assertEqual(" ".join(format_res['rating_id']['publisher_datetime'].split()), 'May 13, 2023, 10:30:05 AM')
+            self.assertEqual(format_res['rating_id']['publisher_name'], self.partner_admin.display_name)
             self.assertDictEqual(
                 format_res['rating_stats'],
                 {'avg': 4.0, 'total': 4, 'percent': {1: 0.0, 2: 0.0, 3: 0.0, 4: 100.0, 5: 0.0}}
