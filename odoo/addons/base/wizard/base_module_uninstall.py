@@ -9,25 +9,25 @@ class BaseModuleUninstall(models.TransientModel):
     _description = "Module Uninstall"
 
     show_all = fields.Boolean()
-    module_id = fields.Many2one(
-        'ir.module.module', string="Module", required=True,
+    module_ids = fields.Many2many(
+        'ir.module.module', string="Module(s)", required=True,
         domain=[('state', 'in', ['installed', 'to upgrade', 'to install'])],
         ondelete='cascade', readonly=True,
     )
-    module_ids = fields.Many2many('ir.module.module', string="Impacted modules",
-                                  compute='_compute_module_ids')
+    impacted_module_ids = fields.Many2many('ir.module.module', string="Impacted modules",
+                                  compute='_compute_impacted_module_ids')
     model_ids = fields.Many2many('ir.model', string="Impacted data models",
                                  compute='_compute_model_ids')
 
     def _get_modules(self):
         """ Return all the modules impacted by self. """
-        return self.module_id.downstream_dependencies(self.module_id)
+        return self.module_ids.downstream_dependencies(self.module_ids)
 
-    @api.depends('module_id', 'show_all')
-    def _compute_module_ids(self):
+    @api.depends('module_ids', 'show_all')
+    def _compute_impacted_module_ids(self):
         for wizard in self:
             modules = wizard._get_modules().sorted(lambda m: (not m.application, m.sequence))
-            wizard.module_ids = modules if wizard.show_all else wizard._modules_to_display(modules)
+            wizard.impacted_module_ids = modules if wizard.show_all else wizard._modules_to_display(modules)
 
     @api.model
     def _modules_to_display(self, modules):
@@ -37,12 +37,12 @@ class BaseModuleUninstall(models.TransientModel):
         """ Return the models (ir.model) to consider for the impact. """
         return self.env['ir.model'].search([('transient', '=', False)])
 
-    @api.depends('module_ids')
+    @api.depends('impacted_module_ids')
     def _compute_model_ids(self):
         ir_models = self._get_models()
         ir_models_xids = ir_models._get_external_ids()
         for wizard in self:
-            if wizard.module_id:
+            if wizard.module_ids:
                 module_names = set(wizard._get_modules().mapped('name'))
 
                 def lost(model):
@@ -52,12 +52,12 @@ class BaseModuleUninstall(models.TransientModel):
                 # find the models that have all their XIDs in the given modules
                 self.model_ids = ir_models.filtered(lost).sorted('name')
 
-    @api.onchange('module_id')
-    def _onchange_module_id(self):
-        # if we select a technical module, show technical modules by default
-        if not self.module_id.application:
+    @api.onchange('module_ids')
+    def _onchange_module_ids(self):
+        # if the user selects only technical modules, show technical modules.
+        if self.module_ids and not any(m.application for m in self.module_ids):
             self.show_all = True
 
     def action_uninstall(self):
-        modules = self.module_id
+        modules = self.module_ids
         return modules.button_immediate_uninstall()
