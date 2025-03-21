@@ -216,8 +216,9 @@ class SmsComposer(models.TransientModel):
                 self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
             )
         ]
-        self.env['sms.sms'].sudo().create(sms_values).send()
-        return True
+        sms_su = self.env['sms.sms'].sudo().create(sms_values)
+        sms_su.send()
+        return sms_su
 
     def _action_send_sms_comment_single(self, records=None):
         # If we have a recipient_single_original number, it's possible this number has been corrected in the popup

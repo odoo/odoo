@@ -43,6 +43,7 @@ class SmsTracker(models.Model):
         }[trace_status]
         traces = self.mailing_trace_id.filtered(lambda t: t.trace_status not in statuses_to_ignore)
         if traces:
+            # TDE note: check to use set_sent / ... tools updating marketing automation bits
             traces_values = {
                 'trace_status': trace_status,
                 'failure_type': failure_type,

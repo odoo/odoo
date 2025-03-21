@@ -7,8 +7,6 @@ from uuid import uuid4
 from odoo import fields, models, _
 from odoo.tools.urls import urljoin as url_join
 
-from odoo.addons.sms.tools.sms_api import SmsApi
-
 
 class MailingSmsTest(models.TransientModel):
     _name = 'mailing.sms.test'
@@ -45,6 +43,7 @@ class MailingSmsTest(models.TransientModel):
 
         numbers = [number.strip() for number in self.numbers.splitlines()]
         sanitized_numbers = [self.env.user._phone_format(number=number) for number in numbers]
+        valid_numbers = [number for sanitized, number in zip(sanitized_numbers, numbers) if sanitized]
         invalid_numbers = [number for sanitized, number in zip(sanitized_numbers, numbers) if not sanitized]
 
         record = self.env[self.mailing_id.mailing_model_real].search([], limit=1)
@@ -54,7 +53,7 @@ class MailingSmsTest(models.TransientModel):
             body = self.env['mail.render.mixin']._render_template(body, self.mailing_id.mailing_model_real, record.ids)[record.id]
         # create and send SMS for valid numbers (skip other, likely to crash)
         sms_values_list, trace_values_list = [], []
-        for sanitized_number in sanitized_numbers:
+        for sanitized_number in valid_numbers:
             if not sanitized_number:
                 continue
             sms_values = {
@@ -74,7 +73,7 @@ class MailingSmsTest(models.TransientModel):
         if trace_values_list:
             self.env['mailing.trace'].create(trace_values_list)
 
-        sms_api = SmsApi(self.env)
+        sms_api = self.env.company._get_sms_api_class()(self.env)
         sent_sms_list = sms_api._send_sms_batch(
             [{
                 'content': body,
@@ -83,21 +82,21 @@ class MailingSmsTest(models.TransientModel):
             delivery_reports_url=url_join(self[0].get_base_url(), '/sms/status')
         )
 
-        error_messages = {}
-        if any(sent_sms.get('state') != 'success' for sent_sms in sent_sms_list):
-            error_messages = sms_api._get_sms_api_error_messages()
-
         notification_messages = []
         sms_uuid_to_number_map = {sms.uuid: sms.number for sms in sms_sudo}
         for sent_sms in sent_sms_list:
-            number = sms_uuid_to_number_map.get(sent_sms.get('uuid'))
+            recipient = sms_uuid_to_number_map.get(sent_sms.get('uuid'))
             if sent_sms.get('state') == 'success':
-                notification_messages.append(_('Test SMS successfully sent to %s', number))
+                notification_messages.append(
+                    _('Test SMS successfully sent to %s', recipient)
+                )
             else:
                 notification_messages.append(_(
                     "Test SMS could not be sent to %(destination)s: %(state)s",
-                    destination=number,
-                    state=error_messages.get(sent_sms["state"], _("An error occurred.")),
+                    destination=recipient,
+                    state=sms_api._get_sms_api_error_messages().get(
+                        sent_sms['state'], _("An error occurred.")
+                    ),
                 ))
         if invalid_numbers:
             notification_messages.append(
