@@ -89,7 +89,8 @@ test("Add image in gallery", async () => {
     );
 });
 
-test("Remove all images in gallery", async () => {
+// TODO Re-enable once interactions run within iframe in hoot tests.
+test.skip("Remove all images in gallery", async () => {
     await setupWebsiteBuilder(
         `
         <section class="s_image_gallery o_masonry" data-columns="2">

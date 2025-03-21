@@ -4,11 +4,11 @@ import { registry } from "@web/core/registry";
 class ButtonOptionPlugin extends Plugin {
     static id = "buttonOption";
     resources = {
-        on_clone_handlers: this.onClone.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
         on_add_element_handlers: this.onAddElement.bind(this),
     };
 
-    onClone({ cloneEl }) {
+    onCloned({ cloneEl }) {
         if (cloneEl.matches("a.btn[data-snippet='s_button']")) {
             this.adaptButtons(cloneEl, false);
         }

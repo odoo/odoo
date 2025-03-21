@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { applyModifications, loadImageInfo } from "@html_editor/utils/image_processing";
-import { _t } from "@web/core/l10n/translation";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -15,8 +14,6 @@ class ImageGalleryOption extends Plugin {
         ],
         builder_actions: this.getActions(),
         system_classes: ["o_empty_gallery_alert"],
-        clean_for_save_handlers: this.cleanForSave.bind(this),
-        normalize_handlers: this.updateAlertBanner.bind(this),
         on_reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
         after_remove_handlers: this.afterRemove.bind(this),
@@ -26,8 +23,15 @@ class ImageGalleryOption extends Plugin {
         return {
             addImage: this.addImageAction,
             removeAllImages: {
-                apply: ({ editingElement }) => {
-                    this.insertEmptyGalleryAlert(this.getContainer(editingElement));
+                apply: ({ editingElement: el }) => {
+                    const containerEl = el.querySelector(
+                        ".container, .container-fluid, .o_container_small"
+                    );
+                    for (const subEl of containerEl.querySelectorAll(
+                        ":scope > *:not(.o_empty_gallery_alert)"
+                    )) {
+                        subEl.remove();
+                    }
                 },
             },
             setImageGalleryLayout: {
@@ -69,21 +73,6 @@ class ImageGalleryOption extends Plugin {
         }
     }
 
-    cleanForSave({ root }) {
-        for (const emptyGalleryAlert of root.querySelectorAll(".o_empty_gallery_alert")) {
-            emptyGalleryAlert.remove();
-        }
-    }
-
-    updateAlertBanner() {
-        const imageGalleries = this.document.querySelectorAll(".s_image_gallery");
-        for (const imageGallery of imageGalleries) {
-            const container = this.getContainer(imageGallery);
-            if (!container.querySelector("img") && !container.querySelector(".alert")) {
-                this.insertEmptyGalleryAlert(container);
-            }
-        }
-    }
     reorderGalleryItems({ elementToReorder, position, optionName }) {
         if (optionName === "GalleryImageList") {
             const editingGalleryElement = elementToReorder.closest(".s_image_gallery");
@@ -143,46 +132,6 @@ class ImageGalleryOption extends Plugin {
                 }
             },
         };
-    }
-
-    insertEmptyGalleryAlert(container) {
-        const addImg = document.createElement("div");
-        addImg.classList.add(
-            "alert",
-            "alert-info",
-            "o_empty_gallery_alert",
-            "text-center",
-            "o_not_editable"
-        );
-        addImg.contentEditable = false;
-        const text = document.createElement("span");
-        text.classList.add("o_add_images");
-        text.textContent = _t(" Add Images");
-        text.style.cursor = "pointer";
-
-        const icon = document.createElement("i");
-        icon.classList.add("fa", "fa-plus-circle");
-
-        addImg.appendChild(icon);
-        addImg.appendChild(text);
-        container.replaceChildren(addImg);
-
-        this.addDomListener(addImg, "click", ({ target }) => {
-            const editingElement = target.closest(".s_image_gallery");
-            const applySpec = { editingElement };
-            this.dependencies.operation.next(
-                () => {
-                    this.addImageAction.apply(applySpec);
-                    this.dependencies.history.addStep();
-                },
-                {
-                    load: async () => {
-                        const loadResult = await this.addImageAction.load({ editingElement });
-                        applySpec.loadResult = loadResult;
-                    },
-                }
-            );
-        });
     }
 
     /**

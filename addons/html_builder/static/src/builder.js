@@ -119,6 +119,7 @@ export class Builder extends Component {
                 replaceSnippet: async (snippet) => await this.snippetModel.replaceSnippet(snippet),
                 saveSnippet: (snippetEl, cleanForSaveHandlers) =>
                     this.snippetModel.saveSnippet(snippetEl, cleanForSaveHandlers),
+                getShared: () => this.editor.shared,
             },
             this.env.services
         );

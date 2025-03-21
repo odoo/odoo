@@ -3,12 +3,20 @@ import { registry } from "@web/core/registry";
 
 export class EditInteractionPlugin extends Plugin {
     static id = "edit_interaction";
-    static dependencies = ["history"];
 
     resources = {
         normalize_handlers: this.restartInteractions.bind(this),
         option_visibility_updated: this.restartInteractions.bind(this),
         content_manually_updated_handlers: this.restartInteractions.bind(this),
+        before_save_handlers: () => this.stopInteractions(),
+        on_will_clone_handlers: ({ originalEl }) => {
+            this.stopInteractions(originalEl);
+        },
+        on_cloned_handlers: ({ originalEl }) => {
+            this.restartInteractions(originalEl);
+            // The clonedEl is implicitly started because it is a newly
+            // inserted content.
+        },
     };
 
     setup() {
@@ -20,17 +28,12 @@ export class EditInteractionPlugin extends Plugin {
             { once: true }
         );
         const event = new CustomEvent("edit_interaction_plugin_loaded");
-        event.historyCallbacks = {
-            ignoreDOMMutations: this.dependencies.history.ignoreDOMMutations,
-        };
+        event.shared = this.config.getShared();
         window.parent.document.dispatchEvent(event);
     }
     destroy() {
         this.websiteEditService?.uninstallPatches?.();
-    }
-
-    destroy() {
-        this.stopInteractions(this.editable);
+        this.stopInteractions();
     }
 
     updateEditInteraction({ detail: { websiteEditService } }) {

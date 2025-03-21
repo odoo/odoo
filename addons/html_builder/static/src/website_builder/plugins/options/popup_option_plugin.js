@@ -25,7 +25,7 @@ class PopupOptionPlugin extends Plugin {
             dropIn: ":not(p).oe_structure:not(.oe_structure_solo):not([data-snippet] *), :not(.o_mega_menu):not(p)[data-oe-type=html]:not([data-snippet] *)",
         },
         builder_actions: this.getActions(),
-        on_clone_handlers: this.onClone.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
         on_add_element_handlers: this.onAddElement.bind(this),
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
@@ -102,7 +102,7 @@ class PopupOptionPlugin extends Plugin {
         };
     }
 
-    onClone({ cloneEl }) {
+    onCloned({ cloneEl }) {
         if (cloneEl.matches(".s_popup")) {
             this.assignUniqueID(cloneEl);
         }

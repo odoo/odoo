@@ -96,7 +96,7 @@ describe("exit builder", () => {
         await waitFor(":iframe [data-snippet='s_text_block']");
         await contains("[data-action='save']").click();
         await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
-        expect.verifySteps(["stop"]);
+        expect.verifySteps(["stop", "stop"]); // save stops & destroy also stops
     });
     test("discarding stops the interactions", async () => {
         await waitFor(":iframe [data-snippet='s_text_block']");

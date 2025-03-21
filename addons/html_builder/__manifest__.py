@@ -44,6 +44,7 @@
             ('remove', 'html_builder/static/src/website_preview/**/*'),
             ('remove', 'html_builder/static/src/website_mass_mailing/**/*'),
             ('remove', 'html_builder/static/src/website_builder/plugins/website_edit_service.js'),
+            ('remove', 'html_builder/static/src/interactions/**/*'),
         ],
         'html_builder.inside_builder_style': [
             ('include', 'web._assets_helpers'),
@@ -65,6 +66,13 @@
         'web.assets_unit_tests': [
             'html_builder/static/tests/**/*',
             ('include', 'html_builder.assets'),
+        ],
+        'web.assets_frontend': [
+            'html_builder/static/src/interactions/**/*',
+            ('remove', 'html_builder/static/src/interactions/**/*.edit.*'),
+        ],
+        'website.assets_edit_frontend': [
+            'html_builder/static/src/interactions/**/*.edit.*',
         ],
     },
     'license': 'LGPL-3',
