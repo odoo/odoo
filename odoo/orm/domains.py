@@ -1284,8 +1284,8 @@ def _value_to_datetime(value):
             warnings.warn("Use naive datetimes in domains")
             value = value.astimezone(timezone.utc).replace(tzinfo=None)
         return value, False
-    if isinstance(value, SQL) or value is False:
-        return value, False
+    if value is False:
+        return False, True
     if isinstance(value, str):
         dt, _ = _value_to_datetime(datetime.fromisoformat(value))
         return dt, len(value) == 10
@@ -1293,7 +1293,9 @@ def _value_to_datetime(value):
         return datetime.combine(value, time.min), True
     if isinstance(value, COLLECTION_TYPES):
         value, is_day = zip(*(_value_to_datetime(v) for v in value))
-        return OrderedSet(value), any(is_day)
+        return OrderedSet(value), all(is_day)
+    if isinstance(value, SQL):
+        return value, False
     raise ValueError(f'Failed to cast {value!r} into a datetime')
 
 
@@ -1302,32 +1304,53 @@ def _optimize_type_datetime(condition, _):
     """Make sure we have a datetime type in the value"""
     if condition.operator.endswith('like') or "." in condition.field_expr:
         return condition
+    field_expr = condition.field_expr
     operator = condition.operator
     value, is_day = _value_to_datetime(condition.value)
-    if value is False and operator[0] in ('<', '>'):
-        # comparison to False results in an empty domain
-        return _FALSE_DOMAIN
-    if value == condition.value:
-        assert not is_day
-        return condition
 
-    # if we get a day we may need to add 1 depending on the operator
-    if is_day and operator == '>':
-        try:
-            value += timedelta(1)
-        except OverflowError:
-            # higher than max, not possible
+    # Handle inequalitiy
+    if operator[0] in ('<', '>'):
+        if value is False:
             return _FALSE_DOMAIN
-        operator = '>='
-    elif is_day and operator == '<=':
-        try:
-            value += timedelta(1)
-        except OverflowError:
-            # lower than max, just check if field is set
-            return DomainCondition(condition.field_expr, '!=', False)
-        operator = '<'
+        if not isinstance(value, datetime):
+            return condition
+        if value.microsecond:
+            assert not is_day, "days don't have microseconds"
+            value = value.replace(microsecond=0)
+        delta = timedelta(days=1) if is_day else timedelta(seconds=1)
+        if operator == '>':
+            try:
+                value += delta
+            except OverflowError:
+                # higher than max, not possible
+                return _FALSE_DOMAIN
+            operator = '>='
+        elif operator == '<=':
+            try:
+                value += delta
+            except OverflowError:
+                # lower than max, just check if field is set
+                return DomainCondition(field_expr, '!=', False)
+            operator = '<'
 
-    return DomainCondition(condition.field_expr, operator, value)
+    # Handle equality: compare to the whole second
+    if (
+        operator in ('in', 'not in')
+        and not is_day  # leave full days as-is for now
+        and isinstance(value, COLLECTION_TYPES)
+        and any(isinstance(v, datetime) for v in value)
+    ):
+        domain = DomainOr.apply(
+            DomainCondition(field_expr, '>=', v.replace(microsecond=0))
+            & DomainCondition(field_expr, '<', v.replace(microsecond=0) + timedelta(seconds=1))
+            if isinstance(v, datetime) else DomainCondition(field_expr, '=', v)
+            for v in value
+        )
+        if operator == 'not in':
+            domain = ~domain
+        return domain
+
+    return DomainCondition(field_expr, operator, value)
 
 
 @field_type_optimization(['binary'])
