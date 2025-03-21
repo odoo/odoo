@@ -6,7 +6,7 @@
         <div class="d-flex flex-column align-items-center">
             <div class="pos-receipt-contact">
                 <!-- contact address -->
-                <div t-if="order.company.partner_id?.[1]" t-esc="order.company.partner_id[1]" />
+                <div t-if="order.company?.name" t-esc="order.company.name" />
                 <t t-if="order.company.phone">
                     <div>Tel:<t t-esc="order.company.phone" /></div>
                 </t>
