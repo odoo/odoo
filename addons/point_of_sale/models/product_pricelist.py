@@ -26,13 +26,13 @@ class ProductPricelistItem(models.Model):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
         product_ids = [p['id'] for p in data['product.product']]
         pricelist_ids = [p['id'] for p in data['product.pricelist']]
-        today = fields.Date.today()
+        now = fields.Datetime.now()
         return [
             ('pricelist_id', 'in', pricelist_ids),
             '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
             '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
-            '|', ('date_start', '=', False), ('date_start', '<=', today),
-            '|', ('date_end', '=', False), ('date_end', '>=', today)
+            '|', ('date_start', '=', False), ('date_start', '<=', now),
+            '|', ('date_end', '=', False), ('date_end', '>=', now)
         ]
 
     @api.model

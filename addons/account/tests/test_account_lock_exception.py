@@ -236,7 +236,7 @@ class TestAccountLockException(AccountTestInvoicingCommon):
                     'user_id': self.env.user.id,
                     lock_date_field: fields.Date.to_date('2010-01-01'),
                     'create_date': self.fakenow - timedelta(hours=24),
-                    'end_datetime': self.fakenow - timedelta(milliseconds=1),
+                    'end_datetime': self.fakenow - timedelta(seconds=1),
                     'reason': 'test_expired_exception',
                 })
                 with self.assertRaises(UserError):
