@@ -1616,6 +1616,7 @@ export class PosStore extends WithLazyGetterTrap {
                 printer.config.product_categories_ids,
                 reprint
             );
+<<<<<<< saas-18.1:addons/point_of_sale/static/src/app/services/pos_store.js
 
             if (changes.new.length) {
                 orderData.changes = {
@@ -1625,6 +1626,35 @@ export class PosStore extends WithLazyGetterTrap {
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
                     unsuccedPrints.push(printer.config.name);
+||||||| 4e1e57cb96e8b26c4cfe66cc8868ee89651acf31:addons/point_of_sale/static/src/app/store/pos_store.js
+            const anyChangesToPrint = Object.values(changes).some((change) => change.length);
+            const diningModeUpdate = orderChange.modeUpdate;
+            if (diningModeUpdate || anyChangesToPrint) {
+                const printed = await this.printReceipts(
+                    order,
+                    printer,
+                    "New",
+                    changes.new,
+                    true,
+                    diningModeUpdate
+                );
+                if (!printed) {
+                    unsuccedPrints.push("Detailed Receipt");
+=======
+            const anyChangesToPrint = changes.new.length;
+            const diningModeUpdate = orderChange.modeUpdate;
+            if (diningModeUpdate || anyChangesToPrint) {
+                const printed = await this.printReceipts(
+                    order,
+                    printer,
+                    "New",
+                    changes.new,
+                    true,
+                    diningModeUpdate
+                );
+                if (!printed) {
+                    unsuccedPrints.push("Detailed Receipt");
+>>>>>>> c534b2f131e61e7965c359f2f0f2468fa14d9383:addons/point_of_sale/static/src/app/store/pos_store.js
                 }
             }
 
