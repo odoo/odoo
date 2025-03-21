@@ -17,7 +17,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_custom/static/src/js/post_processing.js',
+            'payment_custom/static/src/interactions/post_processing.js',
         ],
     },
     'post_init_hook': 'post_init_hook',
