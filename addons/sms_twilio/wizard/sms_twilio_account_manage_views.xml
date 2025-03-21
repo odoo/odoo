@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sms_twilio_account_manage_view_form" model="ir.ui.view">
+        <field name="name">sms.twilio.account.manage.view.form</field>
+        <field name="model">sms.twilio.account.manage</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Twilio SMS Manage Connection">
+                <group string="Credentials">
+                    <field name="company_id" invisible="1"/>
+                    <label for="sms_twilio_account_sid"/>
+                    <div class="d-flex align-items-center">
+                        <field name="sms_twilio_account_sid" placeholder="ACabcde12345abcde12345abcde12345ab"
+                            required="1"/>
+                        <a target="_blank" class="btn btn-link ms-1 w-25"
+                            role="button"
+                            href="https://www.odoo.com/documentation/17.0/applications/marketing/sms_marketing/twilio.html">
+                            Need help ?
+                            <i class="fa fa-external-link" aria-hidden="true"/>
+                        </a>
+                    </div>
+                    <field name="sms_twilio_auth_token" password="True" placeholder="abcde12345abcde12345abcde12345ab"
+                        required="1"/>
+                    <label for="test_number"/>
+                    <div class="d-flex align-items-center">
+                        <field name="test_number" placeholder="+1 555-123-4567"/>
+                        <button name="action_send_test" string="Send test SMS"
+                            icon="fa-send" type="object"
+                            class="btn btn-link w-25 ms-1"/>
+                    </div>
+                </group>
+                <group string="Phone Numbers">
+                    <button
+                        class="btn btn-secondary" colspan="2"
+                        type="object" name="action_reload_numbers"
+                        string="Reload Numbers from Twilio" icon="fa-refresh"/>
+                    <field name="sms_twilio_number_ids" colspan="2" nolabel="1">
+                        <tree editable="bottom" delete="0">
+                            <field name="sequence" widget="handle"/>
+                            <field name="country_id"/>
+                            <field name="number" placeholder="+1 555-123-4567"/>
+                            <button name="action_unlink" title="Delete" icon="fa-trash" type="object"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button string="Update Account" type="object" name="action_save" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
