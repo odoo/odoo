@@ -730,7 +730,7 @@ async function mail_message_update_content(request) {
         "mail.record/insert",
         new mailDataHelpers.Store(MailMessage.browse(message.id), {
             attachment_ids: mailDataHelpers.Store.many(IrAttachment.browse(message.attachment_ids)),
-            body: message.body,
+            body: ["markup", message.body],
             pinned_at: message.pinned_at,
             recipients: mailDataHelpers.Store.many(
                 this.env["res.partner"].browse(message.partner_ids),

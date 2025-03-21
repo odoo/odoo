@@ -1,12 +1,14 @@
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { reactive, toRaw } from "@odoo/owl";
+import { markup, reactive, toRaw } from "@odoo/owl";
 import { asyncStep, mockService, waitForSteps } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/core/common/record";
-import { AND, Markup } from "@mail/model/misc";
+import { AND } from "@mail/model/misc";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
+
+const Markup = markup().constructor;
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -386,33 +388,31 @@ test("Computed fields: lazy (default) vs. eager", async () => {
     expect.verifySteps(["LAZY"]);
 });
 
-test("Trusted insert on html field with { html: true }", async () => {
+test("insert on html field", async () => {
     (class Message extends Record {
         static id = "body";
         body = Record.attr("", { html: true });
     }).register(localRegistry);
     const store = await start();
-    const hello = store.Message.insert("<p>hello</p>", { html: true });
-    const world = store.Message.insert("<p>world</p>");
-    expect(hello.body).toBeInstanceOf(Markup);
-    expect(hello.body.toString()).toBe("<p>hello</p>");
-    expect(world.body).toBe("<p>world</p>");
-});
-
-test("(Un)trusted insertion is applied even with same field value", async () => {
-    (class Message extends Record {
-        static id = "id";
-        id;
-        body = Record.attr("", { html: true });
-    }).register(localRegistry);
-    const store = await start();
-    const rawMessage = { id: 1, body: "<p>hello</p>" };
-    let message = store.Message.insert(rawMessage);
-    expect(message.body).not.toBeInstanceOf(Markup);
-    message = store.Message.insert(rawMessage, { html: true });
-    expect(message.body).toBeInstanceOf(Markup);
-    message = store.Message.insert(rawMessage);
-    expect(message.body).not.toBeInstanceOf(Markup);
+    const message1 = store.Message.insert({ body: ["markup", "<p>hello 1</p>"] });
+    expect(message1.body?.toString()).toBe("<p>hello 1</p>");
+    expect(message1.body).toBeInstanceOf(Markup);
+    message1.body = "<p>hello 1b</p>";
+    expect(message1.body?.toString()).toBe("&lt;p&gt;hello 1b&lt;/p&gt;");
+    const message2 = store.Message.insert("<p>hello 2</p>");
+    expect(message2.body?.toString()).toBe("&lt;p&gt;hello 2&lt;/p&gt;");
+    expect(message2.body).toBeInstanceOf(Markup);
+    message2.body = ["markup", "<p>hello 2b</p>"];
+    expect(message2.body?.toString()).toBe("<p>hello 2b</p>");
+    message2.body = ["markup", false];
+    expect(message2.body).toBe("");
+    expect(message2.body).not.toBeInstanceOf(Markup);
+    const message3 = store.Message.insert({ body: markup("<p>hello 3</p>") });
+    expect(message3.body?.toString()).toBe("<p>hello 3</p>");
+    expect(message3.body).toBeInstanceOf(Markup);
+    message3.body = false;
+    expect(message3.body).toBe("");
+    expect(message3.body).not.toBeInstanceOf(Markup);
 });
 
 test("Unshift preserves order", async () => {

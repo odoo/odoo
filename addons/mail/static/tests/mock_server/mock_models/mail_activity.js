@@ -96,6 +96,7 @@ export class MailActivity extends models.ServerModel {
                 "state",
                 "summary",
             ]);
+            data.note = ["markup", data.note];
             // simulate computes
             const activityType = data.activity_type_id
                 ? MailActivityType.find((r) => r.id === data.activity_type_id[0])

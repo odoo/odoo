@@ -4,6 +4,7 @@ import os
 from collections import defaultdict
 from datetime import date, datetime
 from functools import wraps
+from markupsafe import Markup
 
 import odoo
 from odoo import models
@@ -208,6 +209,8 @@ class Store:
                 target[key] = odoo.fields.Datetime.to_string(val)
             elif isinstance(val, date):
                 target[key] = odoo.fields.Date.to_string(val)
+            elif isinstance(val, Markup):
+                target[key] = ["markup", val]
             else:
                 target[key] = val
 
