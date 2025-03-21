@@ -21,7 +21,7 @@
                 <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="One year in elementary school."/>
                 <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" value="One year in high school."/>
             </span>
-            <div class="s_donation_prefilled_buttons my-4">
+            <div t-if="display_options" class="s_donation_prefilled_buttons my-4">
                 <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
                     <button class="s_donation_btn btn btn-outline-primary btn-lg me-3" type="button" data-donation-value="10">
                         <span class="s_donation_currency pe-1">$</span>10
