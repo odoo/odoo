@@ -2,6 +2,7 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 import { _t } from "@web/core/l10n/translation";
 import { random5Chars } from "@point_of_sale/utils";
+import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
@@ -251,6 +252,7 @@ export class PosOrder extends Base {
     }
 
     getRoundedRemaining(roundingMethod, remaining) {
+        remaining = roundCurrency(remaining, this.currency);
         if (this.currency.isZero(remaining)) {
             return 0;
         } else if (this.currency.isNegative(remaining)) {
