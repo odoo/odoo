@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { markup, reactive } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 
@@ -37,23 +37,20 @@ export class DiscussCoreCommon {
             // Insert should always be done before any async operation. Indeed,
             // awaiting before the insertion could lead to overwritting newer
             // state coming from more recent `mail.record/insert` notifications.
-            this.store.insert(payload.data, { html: true });
+            this.store.insert(payload.data);
             this._handleNotificationNewMessage(payload, metadata);
         });
         this.busService.subscribe("discuss.channel/transient_message", (payload) => {
             const { body, channel_id } = payload;
             const lastMessageId = this.store.getLastMessageId();
-            const message = this.store["mail.message"].insert(
-                {
-                    author: this.store.odoobot,
-                    body,
-                    id: lastMessageId + 0.01,
-                    is_note: true,
-                    is_transient: true,
-                    thread: { id: channel_id, model: "discuss.channel" },
-                },
-                { html: true }
-            );
+            const message = this.store["mail.message"].insert({
+                author: this.store.odoobot,
+                body: markup(body),
+                id: lastMessageId + 0.01,
+                is_note: true,
+                is_transient: true,
+                thread: { id: channel_id, model: "discuss.channel" },
+            });
             message.thread.messages.push(message);
             message.thread.transientMessages.push(message);
         });

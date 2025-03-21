@@ -41,6 +41,7 @@ export class Message extends Record {
             }
             return wrapEmojisWithTitles(this.body) ?? "";
         },
+        html: true,
     });
     richTranslationValue = Record.attr("", {
         compute() {
@@ -49,6 +50,7 @@ export class Message extends Record {
             }
             return wrapEmojisWithTitles(this.translationValue) ?? "";
         },
+        html: true,
     });
     composer = Record.one("Composer", { inverse: "message", onDelete: (r) => r.delete() });
     /** @type {DateTime} */
@@ -490,7 +492,7 @@ export class Message extends Record {
             partner_ids: validMentions?.partners?.map((partner) => partner.id),
             ...this.thread.rpcParams,
         });
-        this.store.insert(data, { html: true });
+        this.store.insert(data);
         if ((hadLink || this.hasLink) && this.store.hasLinkPreviewFeature) {
             rpc("/mail/link_preview", { message_id: this.id }, { silent: true });
         }

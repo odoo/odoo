@@ -390,7 +390,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "isInternalUser": True,
                     "name": "Ernest Employee",
                     "notification_preference": "inbox",
-                    "signature": self.users[0].signature,
+                    "signature": ["markup", self.users[0].signature],
                     "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
@@ -1245,7 +1245,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": "<p>test</p>",
+                "body": ["markup", "<p>test</p>"],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "general",
@@ -1283,7 +1283,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_2.partner_id.id, "type": "partner"},
-                "body": "<p>test</p>",
+                "body": ["markup", "<p>test</p>"],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "public channel 1",
@@ -1321,7 +1321,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">@test9</a> to the channel</div>',
+                "body": [
+                    "markup",
+                    f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">@test9</a> to the channel</div>',
+                ],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "public channel 2",
@@ -1355,7 +1358,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">@test12</a> to the channel</div>',
+                "body": [
+                    "markup",
+                    f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">@test12</a> to the channel</div>',
+                ],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 1",
@@ -1389,7 +1395,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">@test13</a> to the channel</div>',
+                "body": [
+                    "markup",
+                    f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">@test13</a> to the channel</div>',
+                ],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 2",
@@ -1423,7 +1432,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_1.partner_id.id, "type": "partner"},
-                "body": "<p>test</p>",
+                "body": ["markup", "<p>test</p>"],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "test1 Ernest Employee",
@@ -1456,7 +1465,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": guest.id, "type": "guest"},
-                "body": "<p>test</p>",
+                "body": ["markup", "<p>test</p>"],
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "anon 2 Ernest Employee",

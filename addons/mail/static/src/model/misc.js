@@ -1,16 +1,9 @@
-import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
 export const modelRegistry = registry.category("discuss.model");
-
-/**
- * Class of markup, useful to detect content that is markup and to
- * automatically markup field during trusted insert
- */
-export const Markup = markup("").constructor;
 
 export const FIELD_DEFINITION_SYM = Symbol("field_definition");
 /** @typedef {ATTR_SYM|MANY_SYM|ONE_SYM} FIELD_SYM */

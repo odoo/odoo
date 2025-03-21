@@ -1482,7 +1482,10 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                         "id": self.env.user.partner_id.id,
                                         "type": "partner",
                                     },
-                                    "body": "<p>Test Post Performances with multiple inbox ping!</p>",
+                                    "body": [
+                                        "markup",
+                                        "<p>Test Post Performances with multiple inbox ping!</p>",
+                                    ],
                                     "create_date": fields.Datetime.to_string(message.create_date),
                                     "date": fields.Datetime.to_string(message.date),
                                     "default_subject": "Test",
@@ -1592,7 +1595,10 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                         "id": self.env.user.partner_id.id,
                                         "type": "partner",
                                     },
-                                    "body": "<p>Test Post Performances with multiple inbox ping!</p>",
+                                    "body": [
+                                        "markup",
+                                        "<p>Test Post Performances with multiple inbox ping!</p>",
+                                    ],
                                     "create_date": fields.Datetime.to_string(message.create_date),
                                     "date": fields.Datetime.to_string(message.date),
                                     "default_subject": "Test",

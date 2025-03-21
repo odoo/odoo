@@ -87,7 +87,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "id": self.chatbot_script.operator_partner_id.id,
                         "type": "partner",
                     },
-                    "body": Markup("<p>Can you give us your email please?</p>"),
+                    "body": ["markup", "<p>Can you give us your email please?</p>"],
                     "chatbotStep": {
                         "message": chatbot_message.id,
                         "scriptStep": self.step_email.id,
@@ -164,7 +164,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     {
                         "attachment_ids": [],
                         "author": {"id": self.users[1].partner_id.id, "type": "partner"},
-                        "body": message.body,
+                        "body": ["markup", message.body],
                         "date": fields.Datetime.to_string(message.date),
                         "write_date": fields.Datetime.to_string(message.write_date),
                         "create_date": fields.Datetime.to_string(message.create_date),
@@ -274,7 +274,10 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
                                         },
-                                        "body": '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>Good service</div>',
+                                        "body": [
+                                            "markup",
+                                            '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>Good service</div>',
+                                        ],
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
                                         ),

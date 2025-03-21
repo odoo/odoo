@@ -264,8 +264,6 @@ export class Record {
      *   they are computed when dependencies change AND when this field is being used. In eager mode,
      *   the field is immediately (re-)computed when dependencies changes, which matches the built-in
      *   behaviour of OWL reactive.
-     * @param {boolean} [param1.html] if set, the field value contains html value.
-     *   Useful to automatically markup when the insert is trusted.
      * @param {(this: Record) => void} [param1.onUpdate] function that is called when the field value is updated.
      *   This is called at least once at record creation.
      * @param {(this: Record, Object, Object) => number} [param1.sort] if defined, this field is automatically sorted
@@ -287,12 +285,9 @@ export class Record {
             if (!isMulti) {
                 data = [data];
             }
-            const oldTrusted = store._.trusted;
-            store._.trusted = options.html ?? store._.trusted;
             const res = data.map(function RecordInsertMap(d) {
                 return Model._insert.call(ModelFullProxy, d, options);
             });
-            store._.trusted = oldTrusted;
             if (!isMulti) {
                 return res[0];
             }

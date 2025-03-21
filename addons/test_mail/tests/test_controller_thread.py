@@ -151,7 +151,7 @@ class TestMessageController(MailControllerThreadCommon):
                 "body": "A great message",
             }
         })
-        self.assertIn("A great message", data["mail.message"][0]["body"])
+        self.assertEqual(["markup", "<p>A great message</p>"], data["mail.message"][0]["body"])
 
         # 2. attach a file
         response = self.url_open(

@@ -179,7 +179,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             transfer_message_data["mail.message"][0].update(
                 {
                     "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
-                    "body": "<p>I will transfer you to a human.</p>",
+                    "body": ["markup", "<p>I will transfer you to a human.</p>"],
                     # thread not renamed yet at this step
                     "default_subject": "Testing Bot",
                     "record_name": "Testing Bot",
@@ -190,7 +190,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             joined_message_data["mail.message"][0].update(
                 {
                     "author": {"id": self.partner_employee.id, "type": "partner"},
-                    "body": "<div class=\"o_mail_notification\">joined the channel</div>",
+                    "body": ["markup", "<div class=\"o_mail_notification\">joined the channel</div>"],
                     # thread not renamed yet at this step
                     "default_subject": "Testing Bot",
                     "record_name": "Testing Bot",
