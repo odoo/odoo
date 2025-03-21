@@ -18,7 +18,7 @@ patch(Message.prototype, {
         this.state.editRating = !this.state.editRating;
         if (this.state.editRating) {
             const messageContent = convertBrToLineBreak(
-                this.props.message.rating.publisher_comment
+                this.props.message.rating_id.publisher_comment
             );
             this.props.message.composer = {
                 message: this.props.message,
@@ -40,9 +40,9 @@ patch(Message.prototype, {
 
     async deleteComment() {
         const data = await rpc("/website/rating/comment", {
-            rating_id: this.message.rating.id,
+            rating_id: this.message.rating_id.id,
             publisher_comment: "",
         });
-        this.message.rating = data;
+        this.message.rating_id = data;
     },
 });
