@@ -167,7 +167,7 @@
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="quantity" string="On Hand"/>
-                <field name="available_quantity" string="Available"/>
+                <field name="available_quantity" string="Available" column_invisible="context.get('hide_available', False)"/>
                 <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hidden"/>
             </list>
