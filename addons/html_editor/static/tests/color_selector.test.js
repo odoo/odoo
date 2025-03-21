@@ -519,6 +519,19 @@ test("gradient picker correctly shows the current selected gradient", async () =
     expect("input[name='custom gradient percentage color 2']").toHaveValue(90);
 });
 
+test("custom colorpicker should show default color when selected text has gradient", async () => {
+    await setupEditor(
+        `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
+    );
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await expectElementCount(".o_font_color_selector", 1);
+    await click(".btn:contains('Custom')");
+    await expectElementCount(".o_hex_input", 1);
+    expect(".o_hex_input").toHaveValue("#FF0000");
+});
+
 test("gradient picker does change the selector gradient color", async () => {
     await setupEditor(
         `<p><font style="background-image: linear-gradient(2deg, rgb(255, 204, 51) 10%, rgb(226, 51, 255) 90%);" class="text-gradient">[test]</font></p>`
