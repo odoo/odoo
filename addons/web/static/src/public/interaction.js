@@ -197,6 +197,8 @@ export class Interaction {
     /**
      * Mechanism to handle context-specific protection of a specific
      * chunk of synchronous code after returning from an asynchronous one.
+     * This method returns a function that will run the wrapped function in a
+     * protected context when it is called.
      * This should typically be used around code that follows an
      * await this.waitFor(...).
      *
@@ -214,8 +216,11 @@ export class Interaction {
      *     this.protectSyncAfterAsync(() => {
      *         // Code here is protected again, DOM can be updated
      *         doStuff(this.el);
-     *     });
+     *     })();
      * }
+     *
+     * @param {Function} fn function that needs to run in a protected context
+     * @return {Function} protected function
      */
     protectSyncAfterAsync(fn) {
         return this.__colibri__.protectSyncAfterAsync(this, "protectSyncAfterAsync", fn);
