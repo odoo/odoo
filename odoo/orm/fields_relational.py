@@ -679,7 +679,6 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
 
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         assert field_expr == self.name, "Supporting condition only to field"
-        model._check_field_access(self, 'read')
         comodel = model.env[self.comodel_name]
 
         # update the operator to 'any'

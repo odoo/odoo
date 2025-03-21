@@ -2722,10 +2722,12 @@ class BaseModel(metaclass=MetaModel):
         given by the triple ``(field_expr, operator, value)`` with the given
         table alias, and in the context of the given query.
 
-        The method is also responsible for checking that the field is accessible
-        for reading, and should include metadata in the result object to make
-        sure that the necessary fields are flushed before executing the final
-        SQL query.
+        The method should include metadata in the result object to make sure
+        that the necessary fields are flushed before executing the final SQL
+        query.
+
+        The caller of this method is responsible for checking that the field is
+        accessible for reading.
         """
         assert operator in domains.STANDARD_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
