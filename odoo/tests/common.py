@@ -238,6 +238,19 @@ class RecordCapturer:
             return self._model.search(self._domain, order='id') - self._before
         return self._after
 
+def _enter_context(cm, addcleanup):
+    # We look up the special methods on the type to match the with
+    # statement.
+    cls = type(cm)
+    try:
+        enter = cls.__enter__
+        exit = cls.__exit__
+    except AttributeError:
+        raise TypeError(f"'{cls.__module__}.{cls.__qualname__}' object does "
+                        f"not support the context manager protocol") from None
+    result = enter(cm)
+    addcleanup(exit, cm, None, None, None)
+    return result
 
 def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     """Takes some xml and normalize it to make it comparable to other xml
@@ -414,6 +427,19 @@ class BaseCase(case.TestCase):
         mock = patcher.start()
         cls.addClassCleanup(patcher.stop)
         return mock
+
+    def enterContext(self, cm):
+        """Enters the supplied context manager.
+
+        If successful, also adds its __exit__ method as a cleanup
+        function and returns the result of the __enter__ method.
+        """
+        return _enter_context(cm, self.addCleanup)
+
+    @classmethod
+    def enterClassContext(cls, cm):
+        """Same as enterContext, but class-wide."""
+        return _enter_context(cm, cls.addClassCleanup)
 
     @contextmanager
     def with_user(self, login):
