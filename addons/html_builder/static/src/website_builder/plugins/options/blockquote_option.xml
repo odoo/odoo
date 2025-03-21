@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.BlockquoteOption">
-    <!-- TODO -->
-     <!-- Color and images -->
-    <!-- <t t-call="website.snippet_options_background_options">
-        <t t-set="selector" t-value="'.s_blockquote'"/>
-        <t t-set="with_colors" t-value="True"/>
-        <t t-set="with_images" t-value="True"/>
-        <t t-set="with_shapes" t-value="True"/>
-        <t t-set="with_gradients" t-value="True"/>
-        <t t-set="with_color_combinations" t-value="True"/>
-    </t> -->
-
+<t t-name="website.BlockquoteOption">
     <!-- Layout -->
     <BuilderRow label.translate="Edge Spacing">
         <BuilderRange action="'setClassRange'" actionParam="['p-1','p-2','p-3','p-4','p-5']" max="4"/>
