@@ -178,14 +178,9 @@ class ResCompany(models.Model):
                     }
         if self.filtered(lambda x: not x.l10n_it_edi_proxy_user_id):
             errors['l10n_it_edi_settings_l10n_it_edi_proxy_user_id'] = {
-                'message': _("You must accept the terms and conditions in the Settings to use the IT EDI."),
-                'action_text': _("View Settings"),
-                'action': {
-                    'name': _("Settings"),
-                    'type': 'ir.actions.act_url',
-                    'target': 'self',
-                    'url': '/odoo/settings#italian_edi',
-                },
+                'message': _("You need to set the Codice Fiscale on your company."),
+                'action_text': _("View Company/ies"),
+                'action': self._get_records_action(name=_("Check Company Data")),
             }
         return errors
 

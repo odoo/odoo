@@ -137,6 +137,10 @@
                         invisible="l10n_it_edi_state not in ('being_sent', 'processing', 'forward_attempt')"
                     />
                 </xpath>
+                <xpath expr="//button[@name='action_invoice_sent']" position="inside">
+                    <!-- Make it clear in the button text when we are not in production (e.g., 'Send (Demo)') -->
+                    <field name="l10n_it_edi_button_label" widget="char"/>
+                </xpath>
                 <xpath expr="//page[@name='other_info']" position="after">
                     <page string="Electronic Invoicing"
                         name="electronic_invoicing"
