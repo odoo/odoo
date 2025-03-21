@@ -6,12 +6,11 @@ from odoo.addons.bus.models.bus import channel_with_db, json_dump
 
 class TestWebsocketController(HttpCaseWithUserDemo):
     def test_im_status_offline_on_websocket_closed(self):
-        session = self.authenticate("demo", "demo")
-        headers = {"Cookie": f"session_id={session.sid};"}
+        self.authenticate("demo", "demo")
         self.env["mail.presence"]._update_presence(self.user_demo)
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         self.env["bus.bus"].search([]).unlink()
-        self.make_jsonrpc_request("/websocket/on_closed", {}, headers=headers)
+        self.make_jsonrpc_request("/websocket/on_closed", {})
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         message = self.make_jsonrpc_request(
             "/websocket/peek_notifications",
@@ -20,15 +19,13 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 "last": 0,
                 "is_first_poll": True,
             },
-            headers=headers,
         )["notifications"][0]["message"]
         self.assertEqual(message["type"], "bus.bus/im_status_updated")
         self.assertEqual(message["payload"]["partner_id"], self.partner_demo.id)
         self.assertEqual(message["payload"]["im_status"], "offline")
 
     def test_receive_missed_presences_on_peek_notifications(self):
-        session = self.authenticate("demo", "demo")
-        headers = {"Cookie": f"session_id={session.sid};"}
+        self.authenticate("demo", "demo")
         self.env["mail.presence"]._update_presence(self.user_demo)
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         # First request will get notifications and trigger the creation
@@ -41,7 +38,6 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 "last": last_id,
                 "is_first_poll": True,
             },
-            headers=headers,
         )
         self.env.cr.precommit.run()  # trigger the creation of bus.bus records
         notification = self.make_jsonrpc_request(
@@ -51,7 +47,6 @@ class TestWebsocketController(HttpCaseWithUserDemo):
                 "last": last_id,
                 "is_first_poll": True,
             },
-            headers=headers,
         )["notifications"][0]
         bus_record = self.env["bus.bus"].search([("id", "=", int(notification["id"]))])
         self.assertEqual(

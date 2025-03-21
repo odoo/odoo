@@ -43,7 +43,7 @@ class TestCorsLivechat(HttpCase):
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
-            headers={"Cookie": f"{guest._cookie_name}={guest.id}{guest._cookie_separator}{guest.access_token};"},
+            cookies={guest._cookie_name: f'{guest.id}{guest._cookie_separator}{guest.access_token}'}
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         channel_guest = channel.channel_member_ids.filtered(lambda member: member.guest_id).guest_id
