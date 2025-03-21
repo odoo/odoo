@@ -1,4 +1,5 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { mockDate } from "@odoo/hoot-mock";
 
 import { getFirstListFunction, getNumberOfListFormulas } from "@spreadsheet/list/list_helpers";
 import { constants, tokenize, helpers } from "@odoo/o-spreadsheet";
@@ -15,6 +16,10 @@ const { DEFAULT_LOCALE } = constants;
 function stringArg(value) {
     return { type: "STRING", value: `${value}` };
 }
+
+beforeEach(() => {
+    patchTranslations();
+});
 
 describe.current.tags("headless");
 
@@ -113,6 +118,14 @@ describe("toNormalizedPivotValue", () => {
             expect(toNormalizedPivotValue(dimension, "01/2020")).toBe("1/2020");
             expect(toNormalizedPivotValue(dimension, "false")).toBe(false);
             expect(toNormalizedPivotValue(dimension, false)).toBe(false);
+
+            mockDate("2017-10-08");
+            expect(() => toNormalizedPivotValue(dimension, 456)).toThrow(
+                'Week value must be a string in the format "52/2017", but received 456 instead.'
+            );
+            expect(() => toNormalizedPivotValue(dimension, "hello/there")).toThrow(
+                'Week value must be a string in the format "52/2017", but received hello/there instead.'
+            );
 
             dimension.granularity = "month";
             expect(toNormalizedPivotValue(dimension, "11/2020")).toBe("11/2020");
@@ -227,7 +240,6 @@ describe("pivot time adapters formatted value", () => {
     });
 
     test("Week adapter", () => {
-        patchTranslations();
         const adapter = pivotTimeAdapter("week");
         expect(adapter.toValueAndFormat("5/2024", DEFAULT_LOCALE)).toEqual({ value: "W5 2024" });
         expect(adapter.toValueAndFormat("51/2020", DEFAULT_LOCALE)).toEqual({
@@ -236,7 +248,6 @@ describe("pivot time adapters formatted value", () => {
     });
 
     test("Month adapter", () => {
-        patchTranslations();
         const adapter = pivotTimeAdapter("month");
         expect(adapter.toValueAndFormat("12/2020", DEFAULT_LOCALE)).toEqual({
             value: 44166,
@@ -249,7 +260,6 @@ describe("pivot time adapters formatted value", () => {
     });
 
     test("Quarter adapter", () => {
-        patchTranslations();
         const adapter = pivotTimeAdapter("quarter");
         expect(adapter.toValueAndFormat("1/2022", DEFAULT_LOCALE)).toEqual({ value: "Q1 2022" });
         expect(adapter.toValueAndFormat("3/1998", DEFAULT_LOCALE)).toEqual({ value: "Q3 1998" });
