@@ -23,10 +23,21 @@ class WebsiteMenu(models.Model):
                 if event_menu.menu_type == menu_type:
                     to_update.append(fname)
 
-        # manually remove website_event_menus to call their ``unlink`` method. Otherwise
-        # super unlinks at db level and skip model-specific behavior.
-        website_event_menus.unlink()
-        res = super(WebsiteMenu, self).unlink()
+        unlinked_menus = self
+
+        if website_event_menus:
+            # Manually remove website_event_menus to call their ``unlink`` method. Otherwise
+            # super unlinks at db level and skip model-specific behavior.
+            # Since website.event.menu unlink removes:
+            # - the related ir.ui.view records
+            # - which cascade deletes the website.page records
+            # - which cascade deletes the website.menu records
+            # -> we only call super unlink on the remaining website.menu records
+            cascaded_menus = website_event_menus.view_id.page_ids.menu_ids
+            unlinked_menus = self - cascaded_menus
+            website_event_menus.unlink()
+
+        res = super(WebsiteMenu, unlinked_menus).unlink()
 
         # update events
         for event, to_update in event_updates.items():

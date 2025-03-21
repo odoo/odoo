@@ -72,6 +72,49 @@ class TestEventMenus(OnlineEventCase, HttpCase):
         self.assertIn("This is an intro", event_copy.introduction_menu_ids.view_id.inherit_children_ids[0].arch_db)
         self.assertIn("This is a location", event_copy.location_menu_ids.view_id.inherit_children_ids[0].arch_db)
 
+    @users('admin')
+    def test_menu_deletion(self):
+        """ Testing the complex case of this module's override of 'website.menu#unlink'.
+
+        When deleting a website.menu, we want to delete its matching website.event.menu.
+        When deleting a website.event.menu, we want to delete its associated views.
+
+        *However*, when deleting views, it can cascade delete website.menu.
+        (website.page has a cascade on 'view_id', website.menu has a cascade on 'page_id')
+
+        Meaning we need to identify which website.menus are going to be cascade-deleted when calling
+        'unlink' on the matching website.event.menu and avoid calling the super unlink of
+        website.menu on them (it causes a 'Missing Record' cache error). """
+
+        event = self.env['event.event'].create({
+            'name': 'TestEvent',
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'website_menu': True,
+        })
+
+        new_page_url = f'{event.website_url}/newpage'
+
+        # create a custom menu entry and its associated website.page / website.event.menu
+        website_menu = self.env['website.menu'].create({
+            'name': 'New Menu',
+            'url': new_page_url,
+            'parent_id': event.introduction_menu_ids[0].menu_id.parent_id.id,
+        })
+
+        self.env['website.event.menu'].create({
+            'event_id': event.id,
+            'menu_id': website_menu.id,
+            'menu_type': 'community',
+        })
+
+        new_page = self.env['website'].new_page(new_page_url.lstrip('/'))
+        website_menu.page_id = new_page['page_id']
+
+        website_menu_id = website_menu.id
+        website_menu.unlink()
+        self.assertFalse(bool(self.env['website.menu'].search([('id', '=', website_menu_id)])))
+
     @users('user_eventmanager')
     def test_menu_management(self):
         event = self.env['event.event'].create({
