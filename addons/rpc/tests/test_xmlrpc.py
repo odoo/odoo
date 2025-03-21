@@ -141,7 +141,7 @@ class TestXMLRPC(common.HttpCase):
         )
 
     def _json_call(self, *args):
-        self.opener.post(f"{self.base_url()}/jsonrpc", json={
+        self.url_open(f"{self.base_url()}/jsonrpc", json={
             'jsonrpc': '2.0',
             'id': None,
             'method': 'call',

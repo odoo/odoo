@@ -666,7 +666,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
             file_content = file.read()
             file_size = len(file_content)
             file.seek(0)
-            res = self.opener.post(
+            res = self.url_open(
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={
@@ -712,7 +712,7 @@ class TestHttpStaticUpload(TestHttpStaticCommon):
             self.env['ir.config_parameter'].sudo().set_param(
                 'web.max_file_upload_size', file_size - 1,
             )
-            res = self.opener.post(
+            res = self.url_open(
                 f'{self.base_url()}/web/binary/upload_attachment',
                 files={'ufile': file},
                 data={

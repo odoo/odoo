@@ -132,7 +132,7 @@ class TestControllerRedirect(TestLangUrl):
             if not msg:
                 msg = 'Url <%s> differ from <%s>.' % (url, expected_url)
 
-            r = self.url_open(url, head=True)
+            r = self.url_open(url, method='HEAD', allow_redirects=False)
             self.assertEqual(r.status_code, code)
             parsed_location = urlparse(r.headers.get('Location', ''))
             parsed_expected_url = urlparse(expected_url)

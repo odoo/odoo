@@ -100,7 +100,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertEqual(res_image.content, b'<svg></svg>')
 
         # Test attachment can't be removed without valid token
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
@@ -114,7 +114,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertIn("The requested URL was not found on the server.", res.text)
 
         # Test attachment can be removed with token if "pending" state
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
@@ -131,7 +131,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'name': 'an attachment',
             'access_token': self.env['ir.attachment']._generate_access_token(),
         })
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
@@ -153,7 +153,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         message = self.env['mail.message'].create({
             'attachment_ids': [(6, 0, attachment.ids)],
         })
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/attachment/delete',
             json={
                 'params': {
@@ -173,7 +173,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
             'res_model': 'mail.compose.message',
             'res_id': 0,
         })
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
@@ -191,7 +191,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertIn("The attachment %s does not exist or you do not have the rights to access it." % attachment.id, res.text)
 
         # Test attachment can't be associated if no main document token
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
@@ -210,7 +210,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         self.assertFalse(
             self.out_invoice.message_ids.filtered(lambda m: m.author_id == self.partner_a))
         attachment.write({'res_model': 'model'})
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
@@ -232,7 +232,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
@@ -270,7 +270,7 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         create_res = json.loads(res.content.decode('utf-8'))['data']['ir.attachment'][0]
         self.assertEqual(create_res['name'], "final attachment")
 
-        res = self.opener.post(
+        res = self.url_open(
             url=f'{self.invoice_base_url}/mail/message/post',
             json={
                 'params': {
