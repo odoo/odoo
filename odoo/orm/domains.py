@@ -991,6 +991,8 @@ class DomainCondition(Domain):
         return func if positive_operator == operator else lambda rec: not func(rec)
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
+        field = self._field(model)
+        model._check_field_access(field, 'read')
         return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
 
 
