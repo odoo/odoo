@@ -28,7 +28,8 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                     'company_id': None,
                     'pricelist_id': None,
                     'ptav_ids': ptav_ids,
-                    'only_main_product': False,
+                    'show_main_product': True,
+                    'show_optional_product': True,
                 },
             }
         )

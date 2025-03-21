@@ -161,54 +161,78 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data[this.props.name];
     }
 
-    async _onProductTemplateUpdate() {
-        const result = await this.orm.call(
-            'product.template',
-            'get_single_product_variant',
-            [this.props.record.data.product_template_id[0]],
+    async _onProductTemplateUpdate(edit=false){
+        const saleOrderLine = this.props.record.data;
+        const saleOrderRecord = this.props.record.model.root;
+        const result = await rpc('/sale/product/get_values',
             {
-                context: this.context,
+                product_template_id: saleOrderLine.product_template_id[0],
+                company_id: saleOrderRecord.data.company_id[0],
+                only_main_product: edit,
+                ...this._getAdditionalRpcParams(),
             }
-        );
-        if (result && result.product_id) {
-            if (this.props.record.data.product_id != result.product_id.id) {
-                if (result.is_combo) {
-                    await this.props.record.update({
-                        product_id: [result.product_id, result.product_name],
-                    });
-                    this._openComboConfigurator();
-                } else if (result.has_optional_products) {
-                    this._openProductConfigurator();
-                } else {
-                    await this.props.record.update({
-                        product_id: [result.product_id, result.product_name],
-                    });
-                    this._onProductUpdate();
-                }
-            }
-        } else {
-            if (result && result.sale_warning) {
-                const { type, title, message } = result.sale_warning;
-                if (type === 'block') {
-                    // display warning block, and remove blocking product
-                    this.dialog.add(WarningDialog, { title, message });
-                    this.props.record.update({ product_template_id: false });
-                    return;
-                } else if (type == 'warning') {
-                    // show the warning but proceed with the configurator opening
-                    this.notification.add(message, {
-                        title,
-                        type: "warning",
-                    });
-                }
-            }
-            if (!result.mode || result.mode === 'configurator') {
-                this._openProductConfigurator();
-            } else {
-                // only triggered when sale_product_matrix is installed.
-                this._openGridConfigurator();
+        )
+
+        if(result.sale_warning){
+            const {type, title, message} = result.sale_warning
+            if (type === 'block') {
+                // display warning block, and remove blocking product
+                this.dialog.add(WarningDialog, { title, message });
+                this.props.record.update({ product_template_id: false });
+                return;
+            } else if (type == 'warning') {
+                // show the warning but proceed with the configurator opening
+                this.notification.add(message, {
+                    title,
+                    type: "warning",
+                });
             }
         }
+        if(result.dialog == 'combo'){
+            await this.props.record.update({
+                product_id: [result.product_id, result.product_name],
+            });
+            await this._openComboConfigurator();
+        }else if(result.dialog == 'product'){
+            let ptavIds = this._getVariantPtavIds(saleOrderLine);
+            if (edit) {
+                /**
+                 * no_variant and custom attribute don't need to be given to the configurator for new
+                 * products.
+                 */
+                ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
+            }
+            const product_configurator_values = await rpc('/sale/product_configurator/get_values',
+                {
+                    product_template_id: saleOrderLine.product_template_id[0],
+                    quantity: saleOrderLine.product_uom_qty,
+                    currency_id: saleOrderLine.currency_id[0],
+                    so_date: serializeDateTime(saleOrderRecord.data.date_order),
+                    product_uom_id: saleOrderLine.product_uom_id[0],
+                    company_id: saleOrderRecord.data.company_id[0],
+                    pricelist_id: saleOrderRecord.data.pricelist_id[0],
+                    ptav_ids: ptavIds,
+                    only_main_product: edit,
+                    show_main_product: result['show_main_product'],
+                    show_optional_product: result['show_optional_product'],
+                    ...this._getAdditionalRpcParams(),
+                }
+            )
+
+            await this._openProductConfigurator(
+                product_configurator_values['products'],
+                product_configurator_values['optional_products'],
+                product_configurator_values['currency_id'],
+                edit
+            )
+        }else if(result.dialog == 'matrix'){
+            this._openGridConfigurator(edit);
+        }else{
+            await this.props.record.update({
+                product_id: [result.product_id, result.product_name],
+            });
+        }
+        return this._onProductUpdate();
     }
 
     _openGridConfigurator(edit = false) {} // sale_product_matrix
@@ -219,11 +243,11 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         if (this.isCombo) {
             this._openComboConfigurator(true);
         } else if (this.isConfigurableTemplate) {
-            this._openProductConfigurator(true);
+            this._onProductTemplateUpdate(true);
         }
     }
 
-    async _openProductConfigurator(edit = false) {
+    async _openProductConfigurator(products, optional_products, currency_id, edit = false) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
@@ -239,6 +263,9 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         }
 
         this.dialog.add(ProductConfiguratorDialog, {
+            products: products,
+            optionalProducts: optional_products,
+            currencyId: currency_id,
             productTemplateId: saleOrderLine.product_template_id[0],
             ptavIds: ptavIds,
             customPtavs: customPtavs,
@@ -246,7 +273,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             productUOMId: saleOrderLine.product_uom_id[0],
             companyId: saleOrderRecord.data.company_id[0],
             pricelistId: saleOrderRecord.data.pricelist_id[0],
-            currencyId: saleOrderLine.currency_id[0],
             soDate: serializeDateTime(saleOrderRecord.data.date_order),
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
@@ -340,7 +366,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      * @return {Number[]} The sale order line's PTAV ids.
      */
     _getVariantPtavIds(saleOrderLine) {
-        return saleOrderLine.product_template_attribute_value_ids.records.map(
+        return saleOrderLine.product_template_attribute_value_ids?.records.map(
             record => record.resId
         );
     }
