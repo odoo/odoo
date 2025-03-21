@@ -79,7 +79,7 @@ export class Colorpicker extends Component {
             const defaultCssColor = this.props.selectedColor
                 ? this.props.selectedColor
                 : this.props.defaultColor;
-            const rgba = convertCSSColorToRgba(defaultCssColor);
+            const rgba = convertCSSColorToRgba(defaultCssColor) || convertCSSColorToRgba("#FF0000");
             if (rgba) {
                 this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
             }
