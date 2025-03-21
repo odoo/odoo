@@ -644,15 +644,16 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', product.id)])
-        self.assertEqual(orderpoint_product.route_id, buy_route, "The route buy should be set on the orderpoint")
-        # Delete the orderpoint to generate a new one with the manufacture route
+        self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
+        # Delete the orderpoint to generate a new one with the buy route
         orderpoint_product.unlink()
-        # switch the product route to manufacture
-        product.write({'route_ids': [(3, buy_route.id), (4, manu_route.id)]})
+        # switch the product route to buy
+        product.bom_ids.unlink()
+
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
             [('product_id', '=', product.id)])
-        self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
+        self.assertEqual(orderpoint_product.route_id, buy_route, "The route buy should be set on the orderpoint")
 
     def test_compute_bom_days_00(self):
         """Check Days to prepare Manufacturing Order are correctly computed when
