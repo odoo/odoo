@@ -1214,8 +1214,13 @@ class Field(typing.Generic[T]):
     def _condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         sql_field = model._field_to_sql(alias, field_expr, query)
 
-        def _value_to_column(v):
-            return self.convert_to_column(v, model, validate=False)
+        if field_expr == self.name:
+            def _value_to_column(v):
+                return self.convert_to_column(v, model, validate=False)
+        else:
+            # reading a property, keep value as-is
+            def _value_to_column(v):
+                return v
 
         # support for SQL value
         # TODO deprecate this usage
