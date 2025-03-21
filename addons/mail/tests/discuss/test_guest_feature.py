@@ -28,9 +28,7 @@ class TestGuestFeature(WebsocketCase, MailCommon):
                 "channel_id": channel.id,
                 "last_message_id": channel.message_ids[0].id,
             },
-            headers={
-                "Cookie": f"{guest._cookie_name}={guest._format_auth_cookie()};"
-            },
+            cookies={guest._cookie_name: guest._format_auth_cookie()}
         )
         self.assertEqual(guest_member.seen_message_id, channel.message_ids[0])
 

@@ -253,7 +253,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             },
             "thread_id": self.channel_livechat_2.id,
             "thread_model": "discuss.channel",
-        }, headers={"Cookie": f"{self.guest._cookie_name}={self.guest._format_auth_cookie()};"})
+        }, cookies={
+            self.guest._cookie_name: self.guest._format_auth_cookie(),
+        })
         # add needaction
         self.users[0].notification_type = 'inbox'
         message_0 = self.channel_channel_public_1.message_post(
