@@ -147,6 +147,16 @@ export class Persona extends Record {
         }
         this.im_status = newStatus;
     }
+
+    /**
+     * Return the name to be displayed when the user name appears in the
+     * given channel.
+     *
+     * @param {import("models").Thread} channel
+     */
+    getContextualName(channel) {
+        return this.name;
+    }
 }
 
 Persona.register();

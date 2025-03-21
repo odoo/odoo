@@ -24,10 +24,7 @@ const messagePatch = {
         );
     },
     get authorName() {
-        if (this.author?.user_livechat_username && this.thread?.channel_type === "livechat") {
-            return this.author.user_livechat_username;
-        }
-        return super.authorName;
+        return this.author.getContextualName(this.thread);
     },
 };
 patch(Message.prototype, messagePatch);

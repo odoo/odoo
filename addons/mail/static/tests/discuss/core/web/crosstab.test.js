@@ -25,7 +25,9 @@ test("Channel subscription is renewed when channel is manually added", async () 
     await openDiscuss();
     await click("input[placeholder='Find or start a conversation']");
     await insertText("input[placeholder='Search a conversation']", "General");
-    await click("a", { text: "General" });
+    await click(".o-mail-DiscussCommand .o_command_name", { text: "General" });
     await contains(".o-mail-DiscussSidebar-item", { text: "General" });
+    await insertText(".o-mail-Composer-input", "Hello!"); // User is added during `notify_typing`.
+    await contains(".o-mail-NotificationMessage", { text: "Mitchell Admin joined the channel" });
     await waitForSteps(["update-channels"]);
 });

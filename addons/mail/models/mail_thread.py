@@ -2896,6 +2896,18 @@ class MailThread(models.AbstractModel):
                        for record in self]
         return self.sudo()._message_create(values_list)
 
+    def _post_notification(self, notification_type, data=None):
+        """Post a message notification on this thread.
+
+        :notification_type str: Type of the notification.
+        :data dict: Optional data used to compute the message body.
+        """
+        body = Markup(
+            "<div class='o_mail_notification' data-oe-type='%(notification_type)s'"
+            "data-o-mail-notification='%(data)s'></div>"
+        ) % {"notification_type": notification_type, "data": json.dumps(data) if data else "{}"}
+        self.message_post(body=body, message_type="notification", subtype_xmlid="mail.mt_comment")
+
     # ------------------------------------------------------------
     # MAIL.MESSAGE HELPERS
     # ------------------------------------------------------------

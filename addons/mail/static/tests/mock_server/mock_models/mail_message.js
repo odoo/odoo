@@ -1,4 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+import { markup } from "@odoo/owl";
 
 import {
     Command,
@@ -18,6 +20,22 @@ export class MailMessage extends models.ServerModel {
     is_discussion = fields.Boolean({ string: "Discussion" });
     is_note = fields.Boolean({ string: "Note" });
     pinned_at = fields.Generic({ default: false });
+    notification_data = fields.Json({ compute: "_compute_notification_data" });
+
+    _compute_notification_data() {
+        for (const message of this) {
+            const html = createDocumentFragmentFromContent(markup(message.body));
+            const div = html.querySelector(".o_mail_notification");
+            if (!div) {
+                message.notification_data = {};
+                continue;
+            }
+            message.notification_data = {
+                type: div.dataset.oeType,
+                payload: JSON.parse(div.dataset.oMailNotification ?? "{}"),
+            };
+        }
+    }
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
@@ -66,6 +84,32 @@ export class MailMessage extends models.ServerModel {
         return messageIds;
     }
 
+    _gather_notification_dependencies(ids) {
+        const messages = this.browse(ids);
+        const deps = {};
+        for (const message of messages) {
+            switch (message.notification_data.type) {
+                case "channel-joined":
+                    deps["res.partner"] ??= {
+                        ids: [],
+                        fields: this._get_notification_partner_fields(message),
+                    };
+                    deps["res.partner"].ids.push(
+                        message.notification_data.payload.inviter_persona.id
+                    );
+                    deps["res.partner"].ids.push(
+                        message.notification_data.payload.invitee_persona.id
+                    );
+                    break;
+            }
+        }
+        return deps;
+    }
+
+    _get_notification_partner_fields() {
+        return ["name"];
+    }
+
     /** @param {number[]} ids */
     _to_store(ids, store, fields, for_current_user, add_followers) {
         const kwargs = getKwArgs(arguments, "ids", "store", "for_current_user", "add_followers");
@@ -107,6 +151,7 @@ export class MailMessage extends models.ServerModel {
                 "is_note",
                 "message_type",
                 "model",
+                "notification_data",
                 "pinned_at",
                 "res_id",
                 "subject",
@@ -114,7 +159,10 @@ export class MailMessage extends models.ServerModel {
                 "write_date",
             ];
         }
-
+        const dependencies = this._gather_notification_dependencies(ids);
+        for (const [model, data] of Object.entries(dependencies)) {
+            store.add(this.env[model].browse(data.ids), makeKwArgs({ fields: data.fields }));
+        }
         const notifications = MailNotification._filtered_for_web_client(
             MailNotification._filter([["mail_message_id", "in", ids]]).map((n) => n.id)
         );

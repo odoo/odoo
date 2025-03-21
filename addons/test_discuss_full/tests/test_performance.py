@@ -119,9 +119,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch im_livechat_channel
     #       - fetch country (anonymous_country)
     #   - _get_last_messages
-    #   14: message _to_store:
+    #   15: message _to_store:
     #       - search mail_message_schedule
     #       - fetch mail_message
+    #       - search_fetch res_partner (notification dependency)
+    #       - search mail_message_res_partner_starred_rel
     #       - search message_attachment_rel
     #       - search mail_link_preview
     #       - search mail_message_reaction
@@ -131,10 +133,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch mail_notification
     #       - fetch mail_message_reaction
     #       - search mail_tracking_value
-    #       - search mail_message_res_partner_starred_rel
     #       - search rating_rating
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 52
+    _query_count_discuss_channels = 53
 
     def setUp(self):
         super().setUp()
@@ -558,6 +559,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.users[15]),
                 self._expected_result_for_persona(self.users[3]),
                 self._expected_result_for_persona(self.users[1], also_livechat=True),
+                self._expected_result_for_persona(self.users[13]),
+                self._expected_result_for_persona(self.users[9]),
             ),
         }
 
@@ -1259,6 +1262,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
+                "notification_data": False,
                 "notification_ids": [],
                 "parentMessage": False,
                 "pinned_at": False,
@@ -1297,6 +1301,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": True,
+                "notification_data": False,
                 "notification_ids": [last_message.notification_ids.id],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
@@ -1321,7 +1326,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_9.partner_id.id}">@test9</a> to the channel</div>',
+                "body": (
+                    '<div class="o_mail_notification" data-oe-type="channel-joined" data-o-mail-notification=\'{'
+                    f'"inviter_persona": {{"id": {self.env.user.partner_id.id}, "type": "partner"}}, '
+                    f'"invitee_persona": {{"id": {user_9.partner_id.id}, "type": "partner"}}}}\'></div>'
+                ),
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "public channel 2",
@@ -1335,6 +1344,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "notification_data": {
+                    "type": "channel-joined",
+                    "payload": {
+                        "inviter_persona": {"id": self.env.user.partner_id.id, "type": "partner"},
+                        "invitee_persona": {"id": user_9.partner_id.id, "type": "partner"},
+                    },
+                },
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
@@ -1355,7 +1371,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_12.partner_id.id}">@test12</a> to the channel</div>',
+                "body": (
+                    '<div class="o_mail_notification" data-oe-type="channel-joined" data-o-mail-notification=\'{'
+                    f'"inviter_persona": {{"id": {self.env.user.partner_id.id}, "type": "partner"}}, '
+                    f'"invitee_persona": {{"id": {user_12.partner_id.id}, "type": "partner"}}}}\'></div>'
+                ),
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 1",
@@ -1369,6 +1389,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "notification_data": {
+                    "type": "channel-joined",
+                    "payload": {
+                        "inviter_persona": {"id": self.env.user.partner_id.id, "type": "partner"},
+                        "invitee_persona": {"id": user_12.partner_id.id, "type": "partner"},
+                    },
+                },
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
@@ -1389,7 +1416,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "attachment_ids": [],
                 "author": {"id": user_0.partner_id.id, "type": "partner"},
-                "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{user_13.partner_id.id}">@test13</a> to the channel</div>',
+                "body": (
+                    '<div class="o_mail_notification" data-oe-type="channel-joined" data-o-mail-notification=\'{'
+                    f'"inviter_persona": {{"id": {self.env.user.partner_id.id}, "type": "partner"}}, '
+                    f'"invitee_persona": {{"id": {user_13.partner_id.id}, "type": "partner"}}}}\'></div>'
+                ),
                 "create_date": create_date,
                 "date": date,
                 "default_subject": "group restricted channel 2",
@@ -1403,6 +1434,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "notification_data": {
+                    "type": "channel-joined",
+                    "payload": {
+                        "inviter_persona": {"id": self.env.user.partner_id.id, "type": "partner"},
+                        "invitee_persona": {"id": user_13.partner_id.id, "type": "partner"},
+                    },
+                },
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
@@ -1436,6 +1474,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "notification",
                 "model": "discuss.channel",
                 "needaction": False,
+                "notification_data": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
@@ -1470,6 +1509,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "message_type": "comment",
                 "model": "discuss.channel",
                 "needaction": False,
+                "notification_data": False,
                 "notification_ids": [],
                 "thread": {"id": channel.id, "model": "discuss.channel"},
                 "parentMessage": False,
@@ -1669,6 +1709,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
+        if user == self.users[9]:
+            return {"id": user.partner_id.id, "name": user.partner_id.name}
         if user == self.users[12]:
             return {
                 "active": True,
@@ -1685,6 +1727,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
+        if user == self.users[13]:
+            return {"id": user.partner_id.id, "name": user.partner_id.name}
         if user == self.users[14]:
             return {
                 "active": True,

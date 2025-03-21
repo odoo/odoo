@@ -36,4 +36,13 @@ export class MailMessage extends mailModels.MailMessage {
             });
         }
     }
+
+    _get_notification_partner_fields() {
+        const extraFields = [];
+        const [thread] = this.env["discuss.channel"].browse(this.res_id);
+        if (thread?.channel_type === "livechat") {
+            extraFields.push("user_livechat_username");
+        }
+        return super._get_notification_partner_fields().concat(extraFields);
+    }
 }

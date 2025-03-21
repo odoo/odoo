@@ -76,7 +76,15 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
             ("How can I help you?", operator, self.step_dispatch_operator),
             ("I want to speak with an operator", False, False),
             ("I will transfer you to a human", operator, False),
-            ("joined the channel", self.operator.partner_id, False), # human_operator has joined the channel
+            (
+                (
+                    '<div class="o_mail_notification" data-oe-type="channel-joined" data-o-mail-notification=\'{'
+                    f'"inviter_persona": {{"id": {self.operator.partner_id.id}, "type": "partner"}}, '
+                    f'"invitee_persona": {{"id": {self.operator.partner_id.id}, "type": "partner"}}}}\'></div>'
+                ),
+                self.operator.partner_id,
+                False,
+            ),  # human_operator has joined the channel
         ]
 
         self.assertEqual(len(conversation_messages), len(expected_messages))
@@ -211,12 +219,12 @@ class TestLivechatChatbotUI(TestGetOperatorCommon, TestWebsiteLivechatCommon, Ch
         )
         self.livechat_channel.user_ids = fr_op + en_op
         self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
-        self.start_tour("/fr", "chatbot_fw_operator_matching_lang_fr")
+        self.start_tour("/fr", "chatbot_fw_operator_matching_lang")
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
-        self.start_tour("/en", "chatbot_fw_operator_matching_lang_en")
+        self.start_tour("/en", "chatbot_fw_operator_matching_lang")
         channel = self.livechat_channel.channel_ids[0]
         self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
         self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)

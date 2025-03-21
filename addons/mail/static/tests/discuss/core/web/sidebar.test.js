@@ -36,12 +36,14 @@ test("unknown channel can be displayed and interacted with", async () => {
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await press("Enter");
     await contains(".o-mail-Message", { text: "Hello" });
-    await waitForSteps(["discuss.channel/new_message"]);
+    // hello + channel join messages.
+    await waitForSteps(["discuss.channel/new_message", "discuss.channel/new_message"]);
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Not So Secret" });
     await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Not So Secret" }],
     });
     await click("button", { text: "Leave Conversation" });
+    await waitForSteps(["discuss.channel/new_message"]); // channel left message.
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });

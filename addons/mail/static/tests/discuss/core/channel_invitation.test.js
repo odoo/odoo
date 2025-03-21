@@ -57,7 +57,7 @@ test("can invite users in channel from chat window", async () => {
     await click("[title='Invite to Channel']:enabled");
     await contains(".o-discuss-ChannelInvitation", { count: 0 });
     await contains(".o-mail-Thread .o-mail-NotificationMessage", {
-        text: "Mitchell Admin invited TestPartner to the channel",
+        text: "Mitchell Admin invited @TestPartner to the channel",
     });
 });
 

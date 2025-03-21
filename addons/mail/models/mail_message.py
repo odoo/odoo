@@ -6,12 +6,14 @@ import re
 import textwrap
 from binascii import Error as binascii_error
 from collections import defaultdict
+from lxml import html
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.tools import clean_context, groupby, SQL
 from odoo.tools.misc import OrderedSet
+from odoo.tools.safe_eval import safe_eval
 from odoo.addons.mail.tools.discuss import Store
 
 _logger = logging.getLogger(__name__)
@@ -192,6 +194,7 @@ class MailMessage(models.Model):
     # as the cache value for this inverse one2many is up-to-date.
     # Besides for new messages, and messages never sending emails, there was no mail, and it was searching for nothing.
     mail_ids = fields.One2many('mail.mail', 'mail_message_id', string='Mails', groups="base.group_system")
+    notification_data = fields.Json("Notification data", compute="_compute_notification_data")
 
     _model_res_id_idx = models.Index("(model, res_id)")
     _model_res_id_id_idx = models.Index("(model, res_id, id)")
@@ -226,6 +229,19 @@ class MailMessage(models.Model):
             ('is_read', '=', False)]).mapped('mail_message_id')
         for message in self:
             message.needaction = message in my_messages
+
+    @api.depends("body")
+    def _compute_notification_data(self):
+        for m in self:
+            if m.message_type == "notification" and m.model == "discuss.channel" and m.body:
+                tree = html.fromstring(m.body)
+                if div := tree.xpath("//div[@data-oe-type][hasclass('o_mail_notification')]"):
+                    m.notification_data = {
+                        "type": div[0].get("data-oe-type"),
+                        "payload": safe_eval(div[0].get("data-o-mail-notification", "{}")),
+                    }
+                    continue
+            m.notification_data = None
 
     @api.model
     def _search_needaction(self, operator, operand):
@@ -956,6 +972,7 @@ class MailMessage(models.Model):
             "message_link_preview_ids",
             "message_type",
             "model",  # keep for iOS app
+            "notification_data",
             "pinned_at",
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Many("reaction_ids", rename="reactions", sudo=True),
@@ -975,6 +992,17 @@ class MailMessage(models.Model):
                 )
             )
         return field_names
+
+    def _gather_notification_dependencies(self):
+        """Collect the necessary record dependencies required by the client to
+        craft the notification body based on the notification data.
+
+        :return dict: A dictionary where the keys are model names, and the
+            values are dicts with the following keys:
+                - ids: set of ids to fetch.
+                - fields: set of field to pass to the `_to_store` method.
+        """
+        return defaultdict(lambda: {"ids": set(), "fields": set()})
 
     def _to_store(self, store: Store, fields, *, format_reply=True, msg_vals=False,
                   for_current_user=False, add_followers=False, followers=None):
@@ -1056,6 +1084,19 @@ class MailMessage(models.Model):
             store.add(record, record_fields, as_thread=True)
         if for_current_user:
             fields.append("starred")
+
+        deps = self._gather_notification_dependencies()
+        for model, data in deps.items():
+            # sudo: It is acceptable to retrieve the necessary data to compute
+            # the notification body for a message record to which the user has
+            # access.
+            store.add(
+                self.env[model]
+                .with_context(active_test=False)
+                .sudo()
+                .search_fetch([("id", "in", list(data["ids"]))], list(data["fields"])),
+                fields=list(data["fields"]),
+            )
         store.add(self, fields)
         for message in self:
             # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated

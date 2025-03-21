@@ -426,6 +426,8 @@ export class MailThread extends models.ServerModel {
         const BusBus = this.env["bus.bus"];
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
+        /** @type {import("mock_models").DiscussChannelMember} */
+        const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").MailMessage} */
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").ResPartner} */
@@ -457,7 +459,11 @@ export class MailThread extends models.ServerModel {
                         temporary_id,
                     },
                 ]);
-                const memberOfCurrentUser = this._find_or_create_member_for_self(ids[0]);
+                const [partner, guest] = ResPartner._get_current_persona();
+                const [memberOfCurrentUser] = DiscussChannelMember._filter([
+                    ["channel_id", "=", channel.id],
+                    guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
+                ]);
                 if (memberOfCurrentUser) {
                     this.env["discuss.channel.member"]._set_last_seen_message(
                         [memberOfCurrentUser.id],

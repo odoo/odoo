@@ -417,13 +417,14 @@ test("unknown livechat can be displayed and interacted with", async () => {
     await insertText(".o-mail-Composer-input", "Hello", { replace: true });
     await press("Enter");
     await contains(".o-mail-Message", { text: "Hello" });
-    await waitForSteps(["discuss.channel/new_message"]);
+    await waitForSteps(["discuss.channel/new_message", "discuss.channel/new_message"]); // hello + join message
     await click("button", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebarChannel:not(.o-active)", { text: "Jane" });
     await click("[title='Leave Channel']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Jane" }],
     });
     await click("button:contains('Leave Conversation')");
+    await waitForSteps(["discuss.channel/new_message"]); // left message
     await contains(".o-mail-DiscussSidebarCategory-livechat", { count: 0 });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0 });
 });

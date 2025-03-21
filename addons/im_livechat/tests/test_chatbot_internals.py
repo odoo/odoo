@@ -190,7 +190,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             joined_message_data["mail.message"][0].update(
                 {
                     "author": {"id": self.partner_employee.id, "type": "partner"},
-                    "body": "<div class=\"o_mail_notification\">joined the channel</div>",
+                    "body": (
+                        '<div class="o_mail_notification" data-oe-type="channel-joined" data-o-mail-notification=\'{'
+                        f'"inviter_persona": {{"id": {self.partner_employee.id}, "type": "partner"}}, '
+                        f'"invitee_persona": {{"id": {self.partner_employee.id}, "type": "partner"}}}}\'></div>'
+                    ),
                     # thread not renamed yet at this step
                     "default_subject": "Testing Bot",
                     "record_name": "Testing Bot",

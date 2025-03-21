@@ -9,5 +9,11 @@ const personaPatch = {
         this.livechat_languages = [];
         this.livechat_expertise = [];
     },
+    getContextualName(channel) {
+        if (channel.channel_type === "livechat" && this.user_livechat_username) {
+            return this.user_livechat_username;
+        }
+        return super.getContextualName(channel);
+    },
 };
 patch(Persona.prototype, personaPatch);

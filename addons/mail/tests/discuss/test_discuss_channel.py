@@ -91,7 +91,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
                                         },
-                                        "body": f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
+                                        "body": (
+                                            '<div class="o_mail_notification" data-oe-type="channel-joined" data-o-mail-notification=\'{'
+                                            f'"inviter_persona": {{"id": {self.partner_employee.id}, "type": "partner"}}, '
+                                            f'"invitee_persona": {{"id": {self.test_partner.id}, "type": "partner"}}}}\'></div>'
+                                        ),
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
                                         ),
@@ -107,6 +111,19 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "message_type": "notification",
                                         "model": "discuss.channel",
                                         "notification_ids": [],
+                                        "notification_data": {
+                                            "type": "channel-joined",
+                                            "payload": {
+                                                "inviter_persona": {
+                                                    "id": self.partner_employee.id,
+                                                    "type": "partner",
+                                                },
+                                                "invitee_persona": {
+                                                    "id": self.test_partner.id,
+                                                    "type": "partner",
+                                                },
+                                            },
+                                        },
                                         "parentMessage": False,
                                         "pinned_at": False,
                                         "rating_id": False,
@@ -142,6 +159,10 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "name": "Ernest Employee",
                                         "userId": self.env.user.id,
                                         "write_date": emp_partner_write_date,
+                                    },
+                                    {
+                                        "id": self.test_partner.id,
+                                        "name": "Test Partner",
                                     },
                                 ),
                             },

@@ -119,17 +119,16 @@ export class DiscussChannel extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResPartner} */
         const ResPartner = this.env["res.partner"];
-
         const [channel] = this.browse(ids);
         const partners = ResPartner.browse(partner_ids);
         for (const partner of partners) {
             if (partner.id === this.env.user.partner_id) {
                 continue; // adding 'yourself' to the conversation is handled below
             }
-            const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
-            const message_type = "notification";
-            const subtype_xmlid = "mail.mt_comment";
-            this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
+            this._post_notification(channel.id, "channel-joined", {
+                inviter_persona: { id: serverState.partnerId, type: "partner" },
+                invitee_persona: { id: partner.id, type: "partner" },
+            });
         }
         const insertedChannelMembers = [];
         for (const partner of partners) {
@@ -153,10 +152,10 @@ export class DiscussChannel extends models.ServerModel {
         const selfPartner = partners.find((partner) => partner.id === this.env.user.partner_id);
         if (selfPartner) {
             // needs to be done after adding 'self' as a member
-            const body = `<div class="o_mail_notification">${selfPartner.name} joined the channel</div>`;
-            const message_type = "notification";
-            const subtype_xmlid = "mail.mt_comment";
-            this.message_post(channel.id, makeKwArgs({ body, message_type, subtype_xmlid }));
+            this._post_notification(channel.id, "channel-joined", {
+                inviter_persona: { id: selfPartner.id, type: "partner" },
+                invitee_persona: { id: selfPartner.id, type: "partner" },
+            });
         }
         const isSelfMember =
             DiscussChannelMember.search_count([
@@ -235,6 +234,8 @@ export class DiscussChannel extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").ResGroups} */
         const ResGroups = this.env["res.groups"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
 
         const [data] = this._read_format(
             ids,
@@ -252,7 +253,6 @@ export class DiscussChannel extends models.ServerModel {
         );
         const [channel] = this.browse(ids);
         const [group_public_id] = ResGroups.browse(channel.group_public_id);
-        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(data, {
             authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             group_based_subscription: channel.group_ids.length > 0,
@@ -264,7 +264,13 @@ export class DiscussChannel extends models.ServerModel {
                         this.env.user.group_ids.includes(channel.group_public_id)
                     );
                 }
-                return Boolean(memberOfCurrentUser);
+                const [partner, guest] = ResPartner._get_current_persona();
+                return (
+                    DiscussChannelMember.search_count([
+                        ["channel_id", "=", channel.id],
+                        guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
+                    ]) > 0
+                );
             })(),
             member_count: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });
@@ -381,6 +387,8 @@ export class DiscussChannel extends models.ServerModel {
         const MailMessage = this.env["mail.message"];
         /** @type {import("mock_models").MailNotification} */
         const MailNotification = this.env["mail.notification"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
 
         const channels = this.browse(ids);
         for (const channel of channels) {
@@ -409,7 +417,11 @@ export class DiscussChannel extends models.ServerModel {
                     message_needaction_counter_bus_id: bus_last_id,
                 });
             }
-            const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
+            const [partner, guest] = ResPartner._get_current_persona();
+            const [memberOfCurrentUser] = DiscussChannelMember._filter([
+                ["channel_id", "=", channel.id],
+                guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
+            ]);
             if (memberOfCurrentUser) {
                 const message_unread_counter = this.env[
                     "discuss.channel.member"
@@ -823,6 +835,8 @@ export class DiscussChannel extends models.ServerModel {
         const DiscussChannelMember = this.env["discuss.channel.member"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
+        /** @type {import("mock_models").ResPartner} */
+        const ResPartner = this.env["res.partner"];
 
         kwargs.message_type ||= "notification";
         const [channel] = this.browse(id);
@@ -837,7 +851,11 @@ export class DiscussChannel extends models.ServerModel {
         delete kwargs.special_mentions;
         const messageIds = MailThread.message_post.call(this, [id], kwargs);
         // simulate compute of message_unread_counter
-        const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
+        const [partner, guest] = ResPartner._get_current_persona();
+        const [memberOfCurrentUser] = DiscussChannelMember._filter([
+            ["channel_id", "=", channel.id],
+            guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
+        ]);
         const otherMembers = DiscussChannelMember._filter([
             ["channel_id", "=", channel.id],
             ["id", "!=", memberOfCurrentUser?.id || false],
@@ -848,6 +866,15 @@ export class DiscussChannel extends models.ServerModel {
             });
         }
         return messageIds;
+    }
+
+    _post_notification(id, type, data) {
+        const body = `<div class="o_mail_notification" data-oe-type='${type}' data-o-mail-notification='${JSON.stringify(
+            data
+        )}'></div>`;
+        const message_type = "notification";
+        const subtype_xmlid = "mail.mt_comment";
+        this.message_post(id, makeKwArgs({ body, message_type, subtype_xmlid }));
     }
 
     /**
@@ -1035,10 +1062,18 @@ export class DiscussChannel extends models.ServerModel {
         if (!partner && !guest) {
             return;
         }
-        return DiscussChannelMember._filter([
+        let member = DiscussChannelMember._filter([
             ["channel_id", "=", id],
             guest ? ["guest_id", "=", guest.id] : ["partner_id", "=", partner.id],
         ])[0];
+        if (!member && partner) {
+            this.add_members([id], [partner.id]);
+            member = DiscussChannelMember._filter([
+                ["channel_id", "=", id],
+                ["partner_id", "=", partner.id],
+            ])[0];
+        }
+        return member;
     }
 
     _find_or_create_persona_for_channel(id, guest_name) {

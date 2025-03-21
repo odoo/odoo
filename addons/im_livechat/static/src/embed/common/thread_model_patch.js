@@ -91,12 +91,7 @@ patch(Thread.prototype, {
         return super.avatarUrl;
     },
     get displayName() {
-        if (this.channel_type === "livechat" && this.livechat_operator_id) {
-            return (
-                this.livechat_operator_id.user_livechat_username || this.livechat_operator_id.name
-            );
-        }
-        return super.displayName;
+        return this.livechat_operator_id?.getContextualName(this) ?? super.displayName;
     },
     get hasWelcomeMessage() {
         return this.channel_type === "livechat" && !this.chatbot && !this.requested_by_operator;

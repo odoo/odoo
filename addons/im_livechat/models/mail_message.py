@@ -80,3 +80,10 @@ class MailMessage(models.Model):
                 rename="author",
             ),
         )
+
+    def _get_notification_partner_fields(self):
+        channel = self.env["discuss.channel"].browse(self.res_id)
+        extra_fields = []
+        if channel.channel_type == "livechat":
+            extra_fields.append("user_livechat_username")
+        return super()._get_notification_partner_fields() + extra_fields

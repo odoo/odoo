@@ -7,6 +7,7 @@ import {
     wrapEmojisWithTitles,
 } from "@mail/utils/common/format";
 import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+import { markup } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { stateToUrl } from "@web/core/browser/router";
@@ -14,22 +15,13 @@ import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
-import { createElementWithContent } from "@web/core/utils/html";
+import { createElementWithContent, htmlEscape } from "@web/core/utils/html";
 import { url } from "@web/core/utils/urls";
 
 const { DateTime } = luxon;
 export class Message extends Record {
     static _name = "mail.message";
     static id = "id";
-
-    /** @param {Object} data */
-    update(data) {
-        super.update(data);
-        if (this.isNotification && !this.notificationType) {
-            const htmlBody = createDocumentFragmentFromContent(this.body);
-            this.notificationType = htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
-        }
-    }
 
     attachment_ids = Record.many("ir.attachment", { inverse: "message" });
     author = Record.one("Persona");
@@ -39,7 +31,7 @@ export class Message extends Record {
             if (!this.store.emojiLoader.loaded) {
                 loadEmoji();
             }
-            return wrapEmojisWithTitles(this.body) ?? "";
+            return wrapEmojisWithTitles(this.notificationBody ?? this.body) ?? "";
         },
     });
     richTranslationValue = Record.attr("", {
@@ -89,6 +81,23 @@ export class Message extends Record {
     message_link_preview_ids = Record.many("mail.message.link.preview", { inverse: "message_id" });
     /** @type {number[]} */
     parentMessage = Record.one("mail.message");
+    notificationBody = Record.attr("", {
+        compute() {
+            if (!this.isNotification) {
+                return;
+            }
+            switch (this.notification_data.type) {
+                case "channel-joined":
+                    return this._computeAddMembersNotificationBody();
+            }
+            const safeAuthorName = htmlEscape(this.author.getContextualName(this.thread));
+            if (safeAuthorName && !this.body.includes(safeAuthorName)) {
+                return markup(`${safeAuthorName} ${this.body}`);
+            }
+            return this.body;
+        },
+    });
+
     /**
      * When set, this temporary/pending message failed message post, and the
      * value is a callback to re-attempt to post the message.
@@ -104,6 +113,7 @@ export class Message extends Record {
          */
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
+    notification_data = {};
     notification_ids = Record.many("mail.notification", { inverse: "mail_message_id" });
     recipients = Record.many("Persona");
     thread = Record.one("Thread");
@@ -149,8 +159,6 @@ export class Message extends Record {
     translationErrors;
     /** @type {string} */
     message_type;
-    /** @type {string|undefined} */
-    notificationType;
     /** @type {luxon.DateTime} */
     create_date = Record.attr(undefined, { type: "datetime" });
     /** @type {luxon.DateTime} */
@@ -351,20 +359,20 @@ export class Message extends Record {
     }
 
     get inlineBody() {
-        if (this.notificationType === "call") {
+        if (this.notification_data.type === "call") {
             return _t("%(caller)s started a call", { caller: this.author.name });
         }
         if (this.isEmpty) {
             return _t("This message has been removed");
         }
-        if (!this.body) {
-            return "";
+        if (this.notificationBody?.length) {
+            return htmlToTextContentInline(this.notificationBody);
         }
         return htmlToTextContentInline(this.body);
     }
 
     get notificationIcon() {
-        switch (this.notificationType) {
+        switch (this.notification_data.type) {
             case "pin":
                 return "fa fa-thumb-tack";
             case "call":
@@ -437,6 +445,35 @@ export class Message extends Record {
             default:
                 return "fa-file";
         }
+    }
+
+    _computeAddMembersNotificationBody() {
+        const inviterData = this.notification_data.payload.inviter_persona;
+        const inviteeData = this.notification_data.payload.invitee_persona;
+        const inviter = this.store.Persona.get(inviterData);
+        const invitee = this.store.Persona.get(inviteeData);
+        const inviterName = htmlEscape(
+            inviter ? inviter.getContextualName(this.thread) : _t("Deleted user")
+        );
+        const inviteeName = htmlEscape(
+            invitee ? invitee.getContextualName(this.thread) : _t("Deleted user")
+        );
+        const isSelfInvite =
+            inviterData.id === inviteeData.id && inviterData.type === inviteeData.type;
+        if (isSelfInvite) {
+            return _t("%s joined the channel", inviterName);
+        }
+        let inviteeLink = `@${inviteeName}`;
+        if (invitee) {
+            const inviteeModel = invitee.type === "partner" ? "res.partner" : "mail.guest";
+            inviteeLink = markup(
+                `<a href="#" data-oe-id=${invitee.id} data-oe-model=${inviteeModel}>@${inviteeName}</a>`
+            );
+        }
+        return _t("%(inviterName)s invited %(inviteeLink)s to the channel", {
+            inviterName,
+            inviteeLink,
+        });
     }
 
     /** @param {import("models").Thread} thread the thread where the message is shown */

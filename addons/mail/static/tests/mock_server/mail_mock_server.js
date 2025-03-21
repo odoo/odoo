@@ -931,7 +931,7 @@ async function search(request) {
             channels.add(channelId);
         }
     }
-    store.add(channels);
+    store.add(this.env["discuss.channel"].browse(channels));
     ResPartner._search_for_channel_invite(store, term, undefined, limit);
     return store.get_result();
 }
