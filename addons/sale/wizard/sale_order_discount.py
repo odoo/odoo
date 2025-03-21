@@ -172,3 +172,22 @@ class SaleOrderDiscount(models.TransientModel):
             self.sale_order_id.order_line.write({'discount': self.discount_percentage*100})
         else:
             self._create_discount_lines()
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    def unlink(self):
+        """Delete Discount line if no product exist in product line"""
+        orders = self.mapped('order_id')
+        res = super().unlink()
+
+        for order in orders:
+            discount_product = order.company_id.sale_discount_product_id
+            remaining_lines = order.order_line.filtered(lambda l: l.product_id != discount_product)
+
+            if not remaining_lines:
+                discount_lines = order.order_line.filtered(lambda l: l.product_id == discount_product)
+                discount_lines.unlink()
+
+        return res
