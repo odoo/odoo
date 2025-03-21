@@ -189,6 +189,59 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.assertEqual(len(category), 1, 'ir_actions_server: TODO')
         self.assertIn(category, self.test_partner.category_id)
 
+    def test_25_crud_copy(self):
+        self.action.write({
+            'state': 'object_copy',
+            'crud_model_id': self.res_partner_model.id,
+            'resource_ref': self.test_partner,
+        })
+        partner = self.env['res.partner'].search([('name', 'ilike', self.test_partner.name)])
+        self.assertEqual(len(partner), 1)
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: duplicate record action correctly finished should return False')
+        partner = self.env['res.partner'].search([('name', 'ilike', self.test_partner.name)])
+        self.assertEqual(len(partner), 2)
+
+    def test_25_crud_copy_link_many2one(self):
+        self.action.write({
+            'state': 'object_copy',
+            'crud_model_id': self.res_partner_model.id,
+            'resource_ref': self.test_partner,
+            'link_field_id': self.res_partner_parent_field.id,
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: duplicate record action correctly finished should return False')
+        dupe = self.test_partner.search([('name', 'ilike', self.test_partner.name), ('id', '!=', self.test_partner.id)])
+        self.assertEqual(len(dupe), 1)
+        self.assertEqual(self.test_partner.parent_id, dupe)
+
+    def test_25_crud_copy_link_one2many(self):
+        self.action.write({
+            'state': 'object_copy',
+            'crud_model_id': self.res_partner_model.id,
+            'resource_ref': self.test_partner,
+            'link_field_id': self.res_partner_children_field.id,
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: duplicate record action correctly finished should return False')
+        dupe = self.test_partner.search([('name', 'ilike', self.test_partner.name), ('id', '!=', self.test_partner.id)])
+        self.assertEqual(len(dupe), 1)
+        self.assertIn(dupe, self.test_partner.child_ids)
+
+    def test_25_crud_copy_link_many2many(self):
+        category_id = self.env['res.partner.category'].name_create("CategoryToDuplicate")[0]
+        self.action.write({
+            'state': 'object_copy',
+            'crud_model_id': self.res_partner_category_model.id,
+            'link_field_id': self.res_partner_category_field.id,
+            'resource_ref': f'res.partner.category,{category_id}',
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: duplicate record action correctly finished should return False')
+        dupe = self.env['res.partner.category'].search([('name', 'ilike', 'CategoryToDuplicate'), ('id', '!=', category_id)])
+        self.assertEqual(len(dupe), 1)
+        self.assertIn(dupe, self.test_partner.category_id)
+
     def test_30_crud_write(self):
         # Do: update partner name
         self.action.write({
