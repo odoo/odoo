@@ -462,11 +462,23 @@ class TestOrmRelated(models.Model):
 
     foo_id_bar_name = fields.Char('foo_id_bar_name', related='foo_id.bar_name', related_sudo=False)
 
-    foo_bar_id = fields.Many2one(string='foo_bar_id', related='foo_id.bar_id', related_sudo=False)
-    foo_bar_id_name = fields.Char('foo_bar_id_name', related='foo_bar_id.name', related_sudo=False)
+    foo_bar_id = fields.Many2one(related='foo_id.bar_id', related_sudo=False, string='Bar')
+    foo_bar_id_name = fields.Char(related='foo_bar_id.name', related_sudo=False, string='Bar Name')
 
-    foo_bar_sudo_id = fields.Many2one(string='foo_bar_sudo_id', related='foo_id.bar_id', related_sudo=True)
-    foo_bar_sudo_id_name = fields.Char('foo_bar_sudo_id_name', related='foo_bar_sudo_id.name', related_sudo=False)
+    foo_bar_sudo_id = fields.Many2one(related='foo_id.bar_id', related_sudo=True, string='Bar Sudo')
+    foo_bar_sudo_id_name = fields.Char(related='foo_bar_sudo_id.name', related_sudo=False, string='Bar Sudo Name')
+
+    foo_bar_ids = fields.Many2many(related='foo_id.bar_ids', related_sudo=False)
+    foo_bar_sudo_ids = fields.Many2many(related='foo_id.bar_ids', related_sudo=True, string='Bars Sudo')
+
+    foo_foo_ids = fields.One2many(related='foo_id.foo_ids', related_sudo=False, string='Foo Foos')
+    foo_foo_sudo_ids = fields.One2many(related='foo_id.foo_ids', related_sudo=True, string='Foo Foos Sudo')
+
+    foo_binary_att = fields.Binary(related='foo_id.binary_att', related_sudo=False)
+    foo_binary_att_sudo = fields.Binary(related='foo_id.binary_att', related_sudo=True, string='Binary Att Sudo')
+
+    foo_binary_bin = fields.Binary(related='foo_id.binary_bin', related_sudo=False)
+    foo_binary_bin_sudo = fields.Binary(related='foo_id.binary_bin', related_sudo=True, string='Binary Bin Sudo')
 
 
 class TestOrmRelated_Foo(models.Model):
@@ -476,8 +488,17 @@ class TestOrmRelated_Foo(models.Model):
     name = fields.Char()
     bar_id = fields.Many2one('test_orm.related_bar')
     foo_ids = fields.One2many('test_orm.related', 'foo_id', string='Foos')
+    bar_ids = fields.Many2many('test_orm.related_bar', string='Bars')
+    binary_att = fields.Binary()
+    binary_bin = fields.Binary(attachment=False)
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
     bar_alias = fields.Many2one(related='bar_id', string='bar_alias')
+
+    foo_names = fields.Char(related='foo_ids.name', related_sudo=False, string="Foo Names")
+    foo_names_sudo = fields.Char(related='foo_ids.name', related_sudo=True, string="Foo Names Sudo")
+
+    bar_names = fields.Char(related='bar_ids.name', related_sudo=False, string="Bar Names")
+    bar_names_sudo = fields.Char(related='bar_ids.name', related_sudo=True, string="Bar Names Sudo")
 
 
 class TestOrmRelated_Bar(models.Model):
