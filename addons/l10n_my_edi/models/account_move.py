@@ -9,6 +9,7 @@ import dateutil
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools import split_every
 
 _logger = logging.getLogger(__name__)
@@ -16,6 +17,7 @@ _logger = logging.getLogger(__name__)
 # Holds the maximum amount of invoices that can be sent in a single submission. Should most likely not change.
 # Using a constant makes it easy to patch during testing to avoid needing to create 100+ invoices.
 SUBMISSION_MAX_SIZE = 100
+MAX_SUBMISSION_UPDATE = 25
 # An invalid invoice is considered as cancelled by the platform.
 CANCELLED_STATES = {'invalid', 'cancelled'}
 
@@ -440,57 +442,75 @@ class AccountMove(models.Model):
     def _cron_l10n_my_edi_synchronize_myinvois(self):
         """
         This cron is based on the recommended method to fetch the status of the documents according to their doc.
-        record_count can be used to define how many submission to process per cron.
+        MAX_SUBMISSION_UPDATE defines how many submissions to process in a single cron run.
         """
-        # We will leave a 3s interval between each api call to make sure we don't get throttled.
-        # One api call will be done for each submission (a submission may contain multiple invoices if sent in batch).
-
         # First step is to get the invoices for which the status is not yet final.
         # A invoice whose status will not change anymore is: (cancelled or invalid) or has been validated more than 74h ago.
         # /!\ when an invoice validation is pending, l10n_my_edi_validation_time is still None. These also need to be updated.
         datetime_threshold = datetime.datetime.now() - datetime.timedelta(hours=74)
-        invoices = self.env['account.move'].search([
-            ('l10n_my_edi_state', 'not in', (False, 'invalid', 'cancelled')),  # In practice we could ignore rejected invoices as we don't fully support vendor bills.
-            '|', ('l10n_my_edi_validation_time', '>', datetime_threshold),
-            ('l10n_my_edi_validation_time', '=', None),
-        ])
-        # Check if we have any invoices to process, otherwise we can skip everything else.
-        if not invoices:
-            return
+        # We always want to fetch in_progress invoices, it's very likely that their status is already there.
+        invoice_domain = [("l10n_my_edi_state", "=", "in_progress")]
+        # For valid invoices, we want them if their l10n_my_edi_validation_time is less than 74h ago, and if their l10n_my_edi_retry_at in the past.
+        invoice_domain = expression.OR([invoice_domain, [
+            ('l10n_my_edi_state', '=', 'valid'),
+            ('l10n_my_edi_validation_time', '>', datetime_threshold),
+            '|',
+            ('l10n_my_edi_retry_at', '<=', datetime.datetime.now()),
+            ('l10n_my_edi_retry_at', '=', False),
+        ]])
+        grouped_invoices = self.env["account.move"]._read_group(
+            invoice_domain,
+            groupby=["company_id", "l10n_my_edi_submission_uid"],
+            aggregates=["id:recordset"],
+            limit=MAX_SUBMISSION_UPDATE,
+        )
+        invoice_count = self.search_count(invoice_domain)  # Count the total amount of invoices to process.
 
-        invoices_per_company = invoices.grouped('company_id')
-        # Use _notify_progress to ensure that we continue if all batches have not been done in time..
-        total_submissions_to_process = len(invoices.mapped('l10n_my_edi_submission_uid'))
-        submission_processed = 0
-        self.env['ir.cron']._notify_progress(done=submission_processed, remaining=total_submissions_to_process - submission_processed)
-        for company, company_invoices in invoices_per_company.items():
-            if not company.l10n_my_edi_proxy_user_id or not company_invoices:
+        processed_invoices = 0
+        for company, submission_uid, invoices in grouped_invoices:
+            if not company.l10n_my_edi_proxy_user_id:
                 continue
 
-            # We will group the current company invoices per submission_uid as we will query the api this way.
-            company_invoice_per_submission_uid = company_invoices.grouped('l10n_my_edi_submission_uid')
-            # That done, we're ready to process the submissions.
-            for submission_uid, invoices in company_invoice_per_submission_uid.items():
-                error, status_fetch_result = self._l10n_my_get_submission_status(submission_uid, company.l10n_my_edi_proxy_user_id)
-                if error:
-                    raise UserError(error)  # We do not expect errors here so raising is a correct solution.
-                for invoice in invoices:
-                    invoice_result = status_fetch_result.get(invoice.l10n_my_edi_external_uuid)
-                    if not invoice_result or invoice_result['status'] == invoice.l10n_my_edi_state:
-                        continue
+            error, status_fetch_result = self._l10n_my_get_submission_status(
+                submission_uid, company.l10n_my_edi_proxy_user_id
+            )
+            if error:
+                raise UserError(error)  # We do not expect errors here so raising is a correct solution.
 
-                    # If the state changed, we update the invoice with the new state and an eventual reason.
-                    invoice._l10n_my_edi_set_status(
-                        state=invoice_result['status'],
-                        message=_('This invoice has been %(status)s for reason: %(reason)s', status=invoice_result['status'], reason=invoice_result['reason']) if invoice_result.get('reason') else None,
+            for invoice in invoices:
+                invoice_result = status_fetch_result.get(invoice.l10n_my_edi_external_uuid)
+                if not invoice_result:
+                    continue
+
+                # For valid invoices, we always want to update the try time; it's pointless to fetch too often.
+                if invoice.l10n_my_edi_state == "valid" or invoice_result["status"] == "valid":
+                    invoice.l10n_my_edi_retry_at = fields.Datetime.now() + datetime.timedelta(hours=1)
+
+                if invoice_result["status"] == invoice.l10n_my_edi_state:
+                    continue
+
+                # If the state changed, we update the invoice with the new state and an eventual reason.
+                invoice._l10n_my_edi_set_status(
+                    state=invoice_result["status"],
+                    message=_(
+                        "This invoice has been %(status)s for reason: %(reason)s",
+                        status=invoice_result["status"],
+                        reason=invoice_result["reason"],
                     )
-                    if invoice.l10n_my_edi_state == 'valid':
-                        invoice._update_validation_fields(invoice_result)
-                submission_processed += 1
-                self.env['ir.cron']._notify_progress(done=submission_processed, remaining=total_submissions_to_process - submission_processed)
-                # Commit if we can, in case an issue arises later.
-                if self._can_commit():
-                    self._cr.commit()
+                    if invoice_result.get("reason")
+                    else None,
+                )
+                if invoice.l10n_my_edi_state == "valid":
+                    invoice._update_validation_fields(invoice_result)
+
+            processed_invoices += len(invoices)
+            # Commit if we can, in case an issue arises later.
+            if self._can_commit():
+                self.env['ir.cron']._notify_progress(done=processed_invoices, remaining=invoice_count - processed_invoices)
+                self._cr.commit()
+
+            time.sleep(0.3)  # There is a limit of how many calls we can do, so we pace ourselves
+        self.env['ir.cron']._notify_progress(done=processed_invoices, remaining=invoice_count - processed_invoices)
 
     @api.model
     def _l10n_my_get_submission_status(self, submission_uid, proxy_user):
