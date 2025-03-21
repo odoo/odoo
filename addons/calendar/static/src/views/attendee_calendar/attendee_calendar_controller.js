@@ -7,7 +7,7 @@ import { CalendarQuickCreate } from "@calendar/views/calendar_form/calendar_quic
 export class AttendeeCalendarController extends CalendarController {
     static template = "calendar.AttendeeCalendarController";
     static components = {
-        ...AttendeeCalendarController.components,
+        ...CalendarController.components,
         QuickCreateFormView: CalendarQuickCreate,
     };
 
