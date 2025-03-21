@@ -18,6 +18,7 @@ export class WebsiteBackgroundOption extends BackgroundOption {
         withVideos: { type: Boolean, optional: true },
     };
     static defaultProps = {
+        ...super.defaultProps,
         withVideos: false,
     };
     setup() {

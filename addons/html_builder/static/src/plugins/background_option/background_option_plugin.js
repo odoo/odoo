@@ -7,20 +7,6 @@ import { BackgroundOption } from "./background_option";
 class BackgroundOptionPlugin extends Plugin {
     static id = "backgroundOption";
     resources = {
-        builder_options: [
-            // TODO: add the other options that need BackgroundComponent
-            // Background-color only
-            {
-                selector: ".s_chart",
-                OptionComponent: BackgroundOption,
-                props: {
-                    withColors: true,
-                    withImages: false,
-                    withGradient: true,
-                    withColorCombinations: false,
-                },
-            },
-        ],
         normalize_handlers: this.normalize.bind(this),
         system_classes: ["o_colored_level"],
     };
