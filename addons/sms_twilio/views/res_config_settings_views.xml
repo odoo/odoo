@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.sms.twilio</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="0"/>
+            <field name="inherit_id" ref="sms.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//widget[@service_name='sms']" position="before">
+                    <field name="sms_provider"/>
+                    <div class="content-group" invisible="sms_provider != 'twilio'">
+                        <button name="action_sms_twilio_open_manage_connection_wizard" type="object" class="btn btn-secondary" string="Manage Twilio Connection"/>
+                    </div>
+                </xpath>
+                <xpath expr="//widget[@service_name='sms']" position="attributes">
+                    <attribute name="invisible">sms_provider == 'twilio'</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
