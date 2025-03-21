@@ -556,6 +556,11 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         purchase_order.invoice_ids.action_post()
         post_bill_remaining_value = purchase_order.picking_ids.move_ids.stock_valuation_layer_ids.remaining_value
         self.assertEqual(post_bill_remaining_value, pre_bill_remaining_value)
+        amls = self.env['account.move.line'].search([('product_id', '=', self.test_product_order.id)])
+        self.assertRecordValues(
+            amls,
+            [{'debit': 0.0, 'credit': 6435.0}, {'debit': 6435.0, 'credit': 0.0}, {'debit': 6435.0, 'credit': 0.0}]
+        )
 
     def test_manual_cost_adjustment_journal_items_quantity(self):
         """ The quantity field of `account.move.line` should be permitted to be zero, e.g., in the
