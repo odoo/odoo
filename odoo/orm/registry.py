@@ -1026,7 +1026,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             if readonly and not self.test_readonly_enabled:
                 _logger.info('Explicitly ignoring readonly flag when generating a cursor')
             assert self.test_lock is not None
-            return sql_db.TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled)
+            from odoo.modules import module  # noqa: PLC0415
+            return sql_db.TestCursor(self.test_cr, self.test_lock, readonly and self.test_readonly_enabled, current_test=module.current_test)
 
         if readonly and self._db_readonly is not None:
             try:
