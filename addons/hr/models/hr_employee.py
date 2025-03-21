@@ -44,6 +44,7 @@ class HrEmployee(models.Model):
         compute='_compute_version_id',
         search='_search_version_id',
         ondelete='cascade',
+        required=True,
         store=False)
 
     # Global Fields
