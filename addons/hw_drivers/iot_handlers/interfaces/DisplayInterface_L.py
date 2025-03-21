@@ -49,7 +49,12 @@ class DisplayInterface(Interface):
             randr_result = subprocess.run(['wlr-randr'], capture_output=True, text=True)
             if randr_result.returncode != 0:
                 return {}
+<<<<<<< saas-18.1
             displays = re.findall(r"\((HDMI-A-\d)\)", randr_result.stdout)
+||||||| 4e1e57cb96e8b26c4cfe66cc8868ee89651acf31
+=======
+            displays = re.findall(r"(?<=\()HDMI-A-\d(?=\))", randr_result.stdout)
+>>>>>>> 492b0d76cb5c66d84805c5fa1cab084510166a96
             return {
                 monitor: self._add_device(monitor, x_screen)
                 for x_screen, monitor in enumerate(displays)

@@ -641,8 +641,16 @@ def save_browser_state(url=None, orientation=None):
     :param orientation: The orientation of the screen (if None, the orientation is not saved)
     """
     update_conf({
+<<<<<<< saas-18.1
         'browser_url': url,
         'screen_orientation': orientation.name.lower() if orientation else None,
+||||||| 4e1e57cb96e8b26c4cfe66cc8868ee89651acf31
+        'browser-url': url,
+        'screen-orientation': orientation.value if orientation else None,
+=======
+        'browser-url': url,
+        'screen-orientation': orientation.name.lower() if orientation else None,
+>>>>>>> 492b0d76cb5c66d84805c5fa1cab084510166a96
     })
 
 
@@ -651,8 +659,17 @@ def load_browser_state():
 
     :return: The URL the browser is on and the orientation of the screen (default to NORMAL)
     """
+<<<<<<< saas-18.1
     url = get_conf('browser_url')
     orientation = get_conf('screen_orientation') or Orientation.NORMAL.name
+||||||| 4e1e57cb96e8b26c4cfe66cc8868ee89651acf31
+    url = get_conf('browser-url')
+    orientation = get_conf('screen-orientation') or Orientation.NORMAL
+    return url, Orientation(orientation)
+=======
+    url = get_conf('browser-url')
+    orientation = get_conf('screen-orientation') or Orientation.NORMAL.name
+>>>>>>> 492b0d76cb5c66d84805c5fa1cab084510166a96
     return url, Orientation[orientation.upper()]
 
 
