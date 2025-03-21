@@ -8,7 +8,7 @@ from odoo.http import request
 class PosSelfKiosk(http.Controller):
     @http.route(["/pos-self/<config_id>", "/pos-self/<config_id>/<path:subpath>"], auth="public", website=True, sitemap=True)
     def start_self_ordering(self, config_id=None, access_token=None, table_identifier=None, subpath=None):
-        pos_config, _, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
+        pos_config, table, config_access_token = self._verify_entry_access(config_id, access_token, table_identifier)
         return request.render(
                 'pos_self_order.index',
                 {
@@ -18,6 +18,7 @@ class PosSelfKiosk(http.Controller):
                         'currencies': request.env["res.currency"].get_all_currencies(),
                         'data': {
                             'config_id': pos_config.id,
+                            'table_id': table.id if table else False,
                             'self_ordering_mode': pos_config.self_ordering_mode,
                         },
                         "base_url": request.env['pos.session'].get_base_url(),
