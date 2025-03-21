@@ -1151,6 +1151,31 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(sol_prod_deliver.amount_to_invoice, 0.0)
         self.assertEqual(sol_prod_deliver.amount_invoiced, sol_prod_deliver.price_total / 2)
 
+    def test_amount_to_invoice_with_discount(self):
+        """ Test the amount_to_invoice field when a discount is applied on the SO line. """
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.company_data['product_order_no'].id,
+                    'product_uom_qty': 5,
+                    'price_unit': 100,
+                    'discount': 10,
+                }),
+            ],
+        })
+
+        so.action_confirm()
+
+        self.assertEqual(so.amount_to_invoice, 450.0, "The amount to invoice should be 450.0")
+
+        invoice = so._create_invoices()
+        invoice.invoice_line_ids.quantity = 3
+        invoice.action_post()
+
+        self.assertEqual(so.amount_to_invoice, 180.0, "The amount to invoice should be 180.0")
+
     def test_invoice_line_name_has_product_name(self):
         """ Testing that when invoicing a sales order, the invoice line name ALWAYS contains the product name. """
         so = self.sale_order
