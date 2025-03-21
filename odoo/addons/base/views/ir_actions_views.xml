@@ -383,16 +383,17 @@
                                 <group name="action_content">
                                     <field name="crud_model_id"
                                         options="{'no_create': True, 'no_open': True}"
-                                        invisible="state != 'object_create'"
-                                        required="state == 'object_create'"/>
+                                        invisible="state not in ['object_create', 'object_copy']"
+                                        required="state in ['object_create', 'object_copy']"/>
                                     <field name="value" widget="char" string="Name" invisible="state != 'object_create'"
                                         help="The name of the record to create" placeholder="e.g. Follow-up"/>
+                                    <field name="resource_ref" placeholder="Choose a record..." string="Duplicate from" options="{'model_field': 'crud_model_id', 'no_create': True, 'no_open': True}" invisible="crud_model_id == False or state != 'object_copy'"/>
                                     <field name="link_field_id"
                                         domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name),
                                         ('ttype', 'in', ['many2one', 'one2many', 'many2many'])]"
                                         placeholder="Select a field to link the record to"
                                         options="{'no_create': True, 'no_open': True}"
-                                        invisible="state != 'object_create'"
+                                        invisible="state not in ['object_create', 'object_copy']"
                                         context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                                     <field name="webhook_url" string="URL" invisible="state != 'webhook'" placeholder="e.g. https://maker.ifttt.com/use/..."/>
                                     <field name="webhook_field_ids" string="Fields" invisible="state != 'webhook'" widget="many2many_tags" context="{'hide_model': 1}" domain="[('model_id', '=', model_id)]" placeholder="Select fields to include in the request..."/>

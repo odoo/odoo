@@ -544,6 +544,7 @@ class IrActionsServer(models.Model):
     state = fields.Selection([
         ('object_write', 'Update Record'),
         ('object_create', 'Create Record'),
+        ('object_copy', 'Duplicate Record'),
         ('code', 'Execute Code'),
         ('webhook', 'Send Webhook Notification'),
         ('multi', 'Multi Actions')], string='Type',
@@ -579,12 +580,12 @@ class IrActionsServer(models.Model):
     # Create
     crud_model_id = fields.Many2one(
         'ir.model', string='Record to Create',
-        compute='_compute_crud_relations', readonly=False, store=True,
+        compute='_compute_crud_relations', inverse='_set_crud_model_id',
+        readonly=False, store=True,
         help="Specify which kind of record should be created. Set this field only to specify a different model than the base model.")
     crud_model_name = fields.Char(related='crud_model_id.model', string='Target Model Name', readonly=True)
     link_field_id = fields.Many2one(
         'ir.model.fields', string='Link Field',
-        compute='_compute_link_field_id', readonly=False, store=True,
         help="Specify a field used to link the newly created record on the record used by the server action.")
     group_ids = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
@@ -717,6 +718,12 @@ class IrActionsServer(models.Model):
                     return _("Update %(field_chain_str)s", field_chain_str=field_chain_str)
                 else:
                     return _("Compute %(field_chain_str)s", field_chain_str=field_chain_str)
+            case "object_copy":
+                if self.crud_model_id and self.resource_ref:
+                    return _("Duplicate %(model)s: %(record)s",
+                             model=self.crud_model_id.name,
+                             record=self.env[self.crud_model_id.model].browse(self.resource_ref.id).display_name)
+                return _("Duplicate ...")
             case 'object_create':
                 return _(
                     "Create %(model_name)s with name %(value)s",
@@ -734,6 +741,7 @@ class IrActionsServer(models.Model):
             "update_field_id",
             "crud_model_id",
             "value",
+            "resource_ref",
             "evaluation_type",
         ]
 
@@ -771,8 +779,8 @@ class IrActionsServer(models.Model):
         be updated by the action - only used for object_write actions.
         """
         for action in self:
-            if action.model_id and action.state in ('object_write', 'object_create'):
-                if action.state == 'object_create':
+            if action.model_id and action.state in ('object_write', 'object_create', 'object_copy'):
+                if action.state in ('object_create', 'object_copy'):
                     action.crud_model_id = action.model_id
                     action.update_field_id = False
                     action.update_path = False
@@ -847,12 +855,6 @@ class IrActionsServer(models.Model):
                     else:
                         payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
             action.webhook_sample_payload = json.dumps(payload, indent=4, sort_keys=True, default=str)
-
-    @api.depends('model_id')
-    def _compute_link_field_id(self):
-        invalid = self.filtered(lambda act: act.link_field_id.model_id != act.model_id)
-        if invalid:
-            invalid.link_field_id = False
 
     @api.constrains('code')
     def _check_python_code(self):
@@ -956,6 +958,19 @@ class IrActionsServer(models.Model):
             _logger.warning("Webhook call failed: %s", e)
         except Exception as e:  # noqa: BLE001
             raise UserError(_("Wow, your webhook call failed with a really unusual error: %s", e)) from e
+
+    def _run_action_object_copy(self, eval_context=None):
+        """ Duplicate specified model object.
+            If applicable, link active_id.<self.link_field_id> to the new record.
+        """
+        dupe = self.env[self.crud_model_id.model].browse(self.resource_ref.id).copy()
+
+        if self.link_field_id:
+            record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+            if self.link_field_id.ttype in ['one2many', 'many2many']:
+                record.write({self.link_field_id.name: [Command.link(dupe.id)]})
+            else:
+                record.write({self.link_field_id.name: dupe.id})
 
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified name contained in value.
@@ -1106,6 +1121,15 @@ class IrActionsServer(models.Model):
     @api.model
     def _selection_target_model(self):
         return [(model.model, model.name) for model in self.env['ir.model'].sudo().search([])]
+
+    @api.onchange('crud_model_id')
+    def _set_crud_model_id(self):
+        invalid = self.filtered(lambda a: a.state == 'object_copy' and a.resource_ref and a.resource_ref._name != a.crud_model_id.model)
+        invalid.resource_ref = False
+        invalid = self.filtered(lambda a: a.link_field_id and not (
+            a.link_field_id.model == a.model_id.model and a.link_field_id.relation == a.crud_model_id.model
+        ))
+        invalid.link_field_id = False
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
