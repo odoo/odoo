@@ -1,5 +1,5 @@
+import { EmbedCodeOptionDialog } from "./embed_code_option_dialog";
 import { Plugin } from "@html_editor/plugin";
-import { EmbedCodeOptionDialog } from "@html_builder/plugins/embed_code_option_dialog";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";

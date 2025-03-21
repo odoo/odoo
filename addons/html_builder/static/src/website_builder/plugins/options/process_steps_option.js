@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "../core/utils";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
 export const connectorOptionParams = [
     { key: "", param: "None" },
