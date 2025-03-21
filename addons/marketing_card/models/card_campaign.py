@@ -373,7 +373,7 @@ class CardCampaign(models.Model):
         """Helper to get the right value for dynamic fields."""
         self.ensure_one()
         result = {
-            'image1': images[0] if (images := self.content_image1_path and record.mapped(self.content_image1_path)) else False,
+            'image1': images[0] if (images := self.content_image1_path and record.mapped(self.content_image1_path)) else False,  # pylint:disable=E0601
             'image2': images[0] if (images := self.content_image2_path and record.mapped(self.content_image2_path)) else False,
         }
         campaign_text_element_fields = (
