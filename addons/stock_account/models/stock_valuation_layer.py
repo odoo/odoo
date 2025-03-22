@@ -43,10 +43,9 @@ class StockValuationLayer(models.Model):
             self._cr, 'stock_valuation_layer_index',
             self._table, ['product_id', 'remaining_qty', 'stock_move_id', 'company_id', 'create_date']
         )
-
         tools.create_index(
             self._cr, 'stock_valuation_company_product_index',
-            self._table, ['company_id', 'product_id', 'id', 'value', 'quantity']
+            self._table, ['product_id', 'company_id', 'id', 'value', 'quantity']
         )
 
     def _validate_accounting_entries(self):
