@@ -8,13 +8,13 @@ from odoo.tools.lru import LRU
 
 
 class DriverMetaClass(type):
+    priority = -1
+
     def __new__(cls, clsname, bases, attrs):
         newclass = super(DriverMetaClass, cls).__new__(cls, clsname, bases, attrs)
-        if hasattr(newclass, 'priority'):
-            newclass.priority += 1
-        else:
-            newclass.priority = 0
-        drivers.append(newclass)
+        newclass.priority += 1
+        if clsname != 'Driver':
+            drivers.append(newclass)
         return newclass
 
 

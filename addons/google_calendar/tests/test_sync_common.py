@@ -58,6 +58,15 @@ class TestSyncGoogle(HttpCase):
         self.assertEqual(args[1:], expected_args) # skip Google service arg
         self.assertEqual(kwargs, expected_kwargs)
 
+    def assertGoogleEventInsertedMultiTime(self, values, timeout=None):
+        expected_args = (values,)
+        expected_kwargs = {'timeout': timeout} if timeout else {}
+        GoogleSync._google_insert.assert_called()
+        args, kwargs = GoogleSync._google_insert.call_args
+        args[1:][0].pop('conferenceData', None)
+        self.assertEqual(args[1:], expected_args) # skip Google service arg
+        self.assertEqual(kwargs, expected_kwargs)
+
     def assertGoogleEventNotInserted(self):
         GoogleSync._google_insert.assert_not_called()
 

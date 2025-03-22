@@ -447,7 +447,6 @@
         display: flex;
 
         @include media-breakpoint-down(sm) {
-            flex-wrap: wrap;
             .o_field_boolean {
                 order: -1;
             }
@@ -599,6 +598,15 @@
                     }
                 }
             }
+        }
+
+        &.o_field_many2one_avatar {
+            --fieldWidget-display: inline;
+        }
+
+        &.o_field_many2many_tags_avatar {
+            --fieldWidget-display: inline-flex;
+            min-height: calc(var(--Avatar-size, #{$o-avatar-size}) + #{$o-input-padding-y} * 2 + #{$input-border-width});
         }
     }
     .o_field_widget, .btn {

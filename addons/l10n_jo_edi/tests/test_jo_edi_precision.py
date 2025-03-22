@@ -1,6 +1,6 @@
 from odoo import Command
 from odoo.tests import tagged
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.addons.l10n_jo_edi.tests.jo_edi_common import JoEdiCommon
 from odoo.addons.l10n_jo_edi.models.account_edi_xml_ubl_21_jo import JO_MAX_DP
 
@@ -12,7 +12,7 @@ class TestJoEdiPrecision(JoEdiCommon):
             return val1 == val2
 
         def equal_jo_max_dp(val1, val2):
-            return float_is_zero(val1 - val2, JO_MAX_DP)
+            return float_compare(val1, val2, JO_MAX_DP) == 0
 
         equals = equal_jo_max_dp if up_to_jo_max_dp else equal_strict
         first_tuple = None
@@ -43,6 +43,9 @@ class TestJoEdiPrecision(JoEdiCommon):
                 defaults['total_tax_amount'] += defaults['tax_amount_general_subtotal']
 
         return defaults
+
+    def _round_max_dp(self, value):
+        return float_round(value, JO_MAX_DP)
 
     def _validate_jo_edi_numbers(self, xml_string):
         """
@@ -132,8 +135,8 @@ class TestJoEdiPrecision(JoEdiCommon):
                 error_message += line_errors
                 error_message += "-------------------------------------------------------------------------\n"
 
-        aggregated_tax_exclusive_amount = sum(line['price_unit'] * line['quantity'] for line in lines)
-        aggregated_tax_inclusive_amount = sum(line['price_unit'] * line['quantity'] - line['discount'] + line['total_tax_amount'] for line in lines)
+        aggregated_tax_exclusive_amount = sum(self._round_max_dp(line['price_unit'] * line['quantity']) for line in lines)
+        aggregated_tax_inclusive_amount = sum(self._round_max_dp(line['price_unit'] * line['quantity'] - line['discount'] + line['total_tax_amount']) for line in lines)
         aggregated_tax_amount = sum(line['tax_amount_general'] for line in lines)
         aggregated_discount_amount = sum(line['discount'] for line in lines)
 
@@ -154,13 +157,20 @@ class TestJoEdiPrecision(JoEdiCommon):
 
         return error_message
 
+    def _validate_invoice_vals_jo_edi_numbers(self, invoice_vals):
+        with self.subTest(sub_test_name=invoice_vals['name']):
+            invoice = self._l10n_jo_create_invoice(invoice_vals)
+            generated_file = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
+            errors = self._validate_jo_edi_numbers(generated_file)
+            self.assertFalse(errors, errors)
+
     def test_jo_sales_invoice_precision(self):
         eur = self.env.ref('base.EUR')
         self.setup_currency_rate(eur, 1.41)
         self.company.l10n_jo_edi_taxpayer_type = 'sales'
         self.company.l10n_jo_edi_sequence_income_source = '16683693'
 
-        invoice_vals = {
+        self._validate_invoice_vals_jo_edi_numbers({
             'name': 'TestEIN022',
             'currency_id': eur.id,
             'date': '2023-11-12',
@@ -180,9 +190,157 @@ class TestJoEdiPrecision(JoEdiCommon):
                     'tax_ids': [Command.set(self.jo_general_tax_16_included.ids)],
                 }),
             ],
-        }
-        invoice = self._l10n_jo_create_invoice(invoice_vals)
+        })
 
-        generated_file = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
-        errors = self._validate_jo_edi_numbers(generated_file)
-        self.assertFalse(errors, errors)
+        self._validate_invoice_vals_jo_edi_numbers({
+            'name': 'TestEIN023',
+            'date': '2023-11-12',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'price_unit': 206.25,
+                    'discount': 12.73,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'price_unit': 195,
+                    'discount': 15.39,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 5,
+                    'price_unit': 206.25,
+                    'discount': 14.55,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+            ],
+        })
+
+        self._validate_invoice_vals_jo_edi_numbers({
+            'name': 'TestEIN024',
+            'date': '2023-11-12',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 10,
+                    'price_unit': 206.25,
+                    'discount': 12.72,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 7,
+                    'price_unit': 187.5,
+                    'discount': 16,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 10,
+                    'price_unit': 66.25,
+                    'discount': 8.3,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 6,
+                    'price_unit': 33,
+                    'discount': 0,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 206.25,
+                    'discount': 14.45,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+            ],
+        })
+
+        self._validate_invoice_vals_jo_edi_numbers({
+            'name': 'TestEIN025',
+            'date': '2023-11-12',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 3.75,
+                    'discount': 25,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 0.2,
+                    'price_unit': 13.75,
+                    'discount': 25,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 0.5,
+                    'price_unit': 5.85,
+                    'discount': 25,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+            ],
+        })
+
+        self._validate_invoice_vals_jo_edi_numbers({
+            'name': 'TestEIN026',
+            'date': '2023-11-12',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 30,
+                    'price_unit': 22.2,
+                    'discount': 0,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 22.2,
+                    'discount': 100,
+                    'tax_ids': [Command.set(self.jo_general_tax_16.ids)],
+                }),
+            ],
+        })
+
+    def test_jo_special_invoice_precision(self):
+        self.company.l10n_jo_edi_taxpayer_type = 'special'
+        self.company.l10n_jo_edi_sequence_income_source = '16683693'
+        self._validate_invoice_vals_jo_edi_numbers({
+            'name': 'TestEIN014',
+            'invoice_date': '2023-11-10',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_10 | self.jo_special_tax_10).ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_10 | self.jo_special_tax_5).ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_16 | self.jo_special_tax_5).ids)],
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'price_unit': 100,
+                    'quantity': 1,
+                    'tax_ids': [Command.set((self.jo_general_tax_16 | self.jo_special_tax_10).ids)],
+                }),
+            ],
+        })

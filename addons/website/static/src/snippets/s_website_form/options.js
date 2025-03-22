@@ -8,6 +8,7 @@ import "@website/js/editor/snippets.options";
 import { unique } from "@web/core/utils/arrays";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { escape } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import wUtils from '@website/js/utils';
 
@@ -181,7 +182,7 @@ const FormEditor = options.Class.extend({
         if (!field.id) {
             field.id = weUtils.generateHTMLId();
         }
-        const params = { field: { ...field } };
+        const params = { field: { ...field }, defaultName: escape(_t("Field")) };
         if (["url", "email", "tel"].includes(field.type)) {
             params.field.inputType = field.type;
         }
@@ -507,7 +508,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (name === 'field_mark') {
             this._setLabelsMark();
         } else if (name === 'add_field') {
-            const field = this._getCustomField('char', 'Custom Text');
+            const field = this._getCustomField('char', _t("Custom Text"));
             field.formatInfo = data.formatInfo;
             field.formatInfo.requiredMark = this._isRequiredMark();
             field.formatInfo.optionalMark = this._isOptionalMark();
@@ -1443,7 +1444,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll('.s_website_form_input');
                     for (const el of inputsInDependencyContainer) {
                         const button = document.createElement('we-button');
-                        button.textContent = el.labels[0].textContent;
+                        button.textContent = inputsInDependencyContainer.length === 1
+                            ? el.value
+                            : dependencyContainerEl
+                                .querySelector(`label[for="${el.id}"]`)
+                                .textContent;
                         button.dataset.selectDataAttribute = el.value;
                         selectOptEl.append(button);
                     }
@@ -1475,7 +1480,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const availableFields = this.existingFields.filter(el => !fieldsInForm.includes(el.dataset.existingField));
         if (availableFields.length) {
             const title = document.createElement('we-title');
-            title.textContent = 'Existing fields';
+            title.textContent = _t("Existing Fields");
             availableFields.unshift(title);
             availableFields.forEach(option => selectEl.append(option.cloneNode(true)));
         }
@@ -1490,9 +1495,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const type = this._getFieldType();
 
         const list = document.createElement('we-list');
-        const optionText = select ? 'Option' : type === 'selection' ? 'Radio' : 'Checkbox';
-        list.setAttribute('string', `${optionText} List`);
-        list.dataset.addItemTitle = _t("Add new %s", optionText);
+        const listTitle = select
+            ? _t("Option List")
+            : type === "selection"
+            ? _t("Radio Button List")
+            : _t("Checkbox List");
+        list.setAttribute("string", listTitle);
+        list.dataset.addItemTitle = _t("Add option");
         list.dataset.renderListItems = '';
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
@@ -1626,7 +1635,7 @@ options.registry.AddFieldForm = FormEditor.extend({
      * New field is set as active
      */
     addField: async function (previewMode, value, params) {
-        const field = this._getCustomField('char', 'Custom Text');
+        const field = this._getCustomField('char', _t('Custom Text'));
         field.formatInfo = this._getDefaultFormat();
         const fieldEl = this._renderField(field);
         this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(fieldEl);

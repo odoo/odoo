@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2023
-# Tony Ng, 2024
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,7 +145,7 @@ msgstr "這個度量單位的數量大於此類別中的參考度量單位：1 *
 msgid ""
 "How much bigger or smaller this unit is compared to the reference Unit of "
 "Measure for this category: 1 * (reference unit) = ratio * (this unit)"
-msgstr "本類別計量單位和參考計量單位相比，大或者小的倍數。1 * (參考單位)=比率 * (本單位)"
+msgstr "此單位較此類別的參考計量單位，大或小幾多。算式：1 × 參考單位 = 比例 × 此單位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
@@ -178,7 +178,7 @@ msgstr "管理多個計量單位"
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "產品測量單位"
+msgstr "產品計量單位"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_category
@@ -209,7 +209,7 @@ msgstr "捨入精度"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Search UOM"
-msgstr "搜尋 UOM"
+msgstr "搜尋計量單位"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_categ_view_search
@@ -356,16 +356,17 @@ msgid ""
 "            <i>'Time'</i>, you will have the following units of measure:\n"
 "            Hours, Days."
 msgstr ""
-"屬於相同類別的測量單位可以在彼此之間轉換。\n"
-"例如，在類別<i>'Time'</i>中，\n"
-"您將有以下計量單位：小時，天。"
+"屬於相同類別的計量單位，\n"
+"            可以互相轉換。例如，在「時間」類別中，\n"
+"            你可使用以下計量單位<i></i>：\n"
+"            小時、天。"
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
-msgstr "UoM 類別 %s 必須至少有一個參考計量單位."
+msgstr "計量單位類別「%s」必須至少有一個參考計量單位。"
 
 #. module: uom
 #. odoo-python

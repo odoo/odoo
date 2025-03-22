@@ -11,16 +11,16 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2023
 # Anzelika Adejanova, 2023
 # Lancelot Semal, 2024
-# Will Sensors, 2024
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024\n"
+"Last-Translator: Will Sensors, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1173,15 +1173,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Ļauj kopīgot dokumentu ar klientiem pārdošanas laikā.\n"
-"Atstājiet to tukšu, ja nevēlaties kopīgot šo dokumentu ar pārdošanas klientu.\n"
-"Piedāvājums: dokuments tiks nosūtīts klientiem un būs pieejams tiem jebkurā laikā.\n"
-"piemēram, šī opcija var būt noderīga, lai kopīgotu produkta apraksta failus.\n"
-"Apstiprināts pasūtījums: dokuments tiks nosūtīts klientiem un būs tiem pieejams.\n"
-"piemēram, šī opcija var būt noderīga, lai kopīgotu lietotāja rokasgrāmatu vai digitālo saturu, kas iegādāts e-komercijā.\n"
-"Citāti iekšpusē: Dokuments tiks iekļauts piedāvājuma pdf formātā starp galvenajām lapām un piedāvājuma tabulu. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4271,7 +4265,6 @@ msgstr "Pārdošanas pasūtījums(i)"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4920,12 +4913,12 @@ msgstr "Turpmāk norādītie rīkojumi nav apstiprināšanas stadijā: %s"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Šādus produktus nevar ierobežot attiecībā uz uzņēmumu %s, jo tie jau ir izmantoti citos citos piedāvājumos vai pārdošanas pasūtījumos citā uzņēmumā:\n"
-"%s\n"
+"Šādus produktus nevar ierobežot attiecībā uz uzņēmumu %(company)s, jo tie jau ir izmantoti citos citos piedāvājumos vai pārdošanas pasūtījumos citā uzņēmumā:\n"
+"%(used_products)s\n"
 "Varat arhivēt šos produktus un no jauna izveidot tos ar sava uzņēmuma ierobežojumu vai atstāt tos kā koplietošanas produktus."
 
 #. module: sale
@@ -5067,6 +5060,16 @@ msgstr "Pašlaik jūsu kontā nav pārdošanas pasūtījumu."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Ir esošās"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5640,6 +5643,7 @@ msgstr ""
 "                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece vai pakalpojums."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Jūsu pasūtījumi"

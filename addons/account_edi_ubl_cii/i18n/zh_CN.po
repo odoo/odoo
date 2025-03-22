@@ -6,16 +6,17 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2023
 # 湘子 南 <1360857908@qq.com>, 2024
 # Jeffery CHEN <jeffery9@gmail.com>, 2024
-# Wil Odoo, 2024
 # Chloe Wang, 2024
+# Raymond Yu <cl_yu@hotmail.com>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Chloe Wang, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -560,7 +561,7 @@ msgstr "公司"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__show_ubl_company_warning
 msgid "Company warning"
-msgstr ""
+msgstr "公司警告"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -712,6 +713,12 @@ msgid "Generate Peppol format by default"
 msgstr "默认生成 Peppol 格式"
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__hide_peppol_fields
+#: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__hide_peppol_fields
+msgid "Hide Peppol Fields"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
@@ -749,7 +756,7 @@ msgstr "Odoo"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__ubl_partner_warning
 msgid "Partner warning"
-msgstr ""
+msgstr "业务伙伴警告"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -774,7 +781,7 @@ msgstr "Peppol EAS 代码 9955 已弃用。请改用 0007。"
 msgid ""
 "Peppol EAS codes 0037, 0212, 0213, 0215 are deprecated. Please use 0216 "
 "instead."
-msgstr ""
+msgstr "Peppol EAS 代码 0037、0212、0213、0215 已废弃。请使用 0216 代替。"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -799,6 +806,11 @@ msgid ""
 "Please fill in Peppol EAS and Peppol Endpoint in your company form to "
 "generate a complete file."
 msgstr "请在您的公司表格中填写 Peppol EAS 和 Peppol 终端点，以生成完整的文件。"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
+msgid "Report Action"
+msgstr "报表操作"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg

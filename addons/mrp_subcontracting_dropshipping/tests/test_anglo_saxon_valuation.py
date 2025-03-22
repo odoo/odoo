@@ -187,12 +187,14 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         purchase_order.button_confirm()
         dropship_transfer = purchase_order.picking_ids[0]
         dropship_transfer.move_ids[0].quantity = 50
-        dropship_transfer.with_context(cancel_backorder=False)._action_done()
+        res = dropship_transfer.button_validate()
+        wizard = Form(self.env[res['res_model']].with_context(res['context'])).save()
+        wizard.process()
         account_move_1 = sale_order._create_invoices()
         account_move_1.action_post()
         dropship_backorder = dropship_transfer.backorder_ids[0]
         dropship_backorder.move_ids[0].quantity = 50
-        dropship_backorder._action_done()
+        dropship_backorder.button_validate()
         account_move_2 = sale_order._create_invoices()
         account_move_2.action_post()
 
@@ -283,11 +285,11 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         self.assertRecordValues(
             account_move.line_ids,
             [
-                {'name': 'product_a',                       'debit': 0.0,       'credit': 1800.0},
-                {'name': '15% (Copy)',                      'debit': 0.0,       'credit': 270.0},
-                {'name': 'INV/2024/00001 installment #1',   'debit': 621.0,     'credit': 0.0},
-                {'name': 'INV/2024/00001 installment #2',   'debit': 1449.0,    'credit': 0.0},
-                {'name': 'product_a',                       'debit': 0.0,       'credit': 840 * 2},
-                {'name': 'product_a',                       'debit': 840 * 2,   'credit': 0.0},
+                {'name': 'product_a',                           'debit': 0.0,       'credit': 1800.0},
+                {'name': '15% (Copy)',                          'debit': 0.0,       'credit': 270.0},
+                {'name': f'{account_move.name} installment #1', 'debit': 621.0,     'credit': 0.0},
+                {'name': f'{account_move.name} installment #2', 'debit': 1449.0,    'credit': 0.0},
+                {'name': 'product_a',                           'debit': 0.0,       'credit': 840 * 2},
+                {'name': 'product_a',                           'debit': 840 * 2,   'credit': 0.0},
             ]
         )

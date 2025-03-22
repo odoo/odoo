@@ -1813,7 +1813,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'x');
                         },
-                        contentAfterEdit: '<div><p>cd</p><br><span class="a" data-oe-zws-empty-inline="">x[]\u200B</span></div>',
+                        contentAfterEdit: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                         contentAfter: '<div><p>cd</p><br><span class="a">x[]</span></div>',
                     });
                 });
@@ -1835,7 +1835,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'i');
                         },
-                        contentAfterEdit: '<p>uv<i style="color:red" data-oe-zws-empty-inline="">i[]\u200B</i>xy</p>',
+                        contentAfterEdit: '<p>uv<i style="color:red">i[]</i>xy</p>',
                         contentAfter: '<p>uv<i style="color:red">i[]</i>xy</p>',
                     });
                     await testEditor(BasicEditor, {
@@ -1854,7 +1854,7 @@ X[]
                             await deleteBackward(editor);
                             await insertText(editor, 'x');
                         },
-                        contentAfterEdit: '<p>ab<span class="style" data-oe-zws-empty-inline="">x[]\u200B</span>ef</p>',
+                        contentAfterEdit: '<p>ab<span class="style">x[]</span>ef</p>',
                         contentAfter: '<p>ab<span class="style">x[]</span>ef</p>',
                     });
                 });
@@ -2111,6 +2111,13 @@ X[]
                         contentBefore: `<p contenteditable="false">ab[]cdef</p>`,
                         stepFunction: deleteBackward,
                         contentAfter: `<p contenteditable="false">ab[]cdef</p>`,
+                    });
+                });
+                it('should delete only the button', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<p>a<a class="btn">[]</a></p>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<p>a[]</p>`,
                     });
                 });
             });
@@ -2964,7 +2971,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">x[]\u200B</span> d</p></div>',
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> d</p></div>',
                     contentAfter: '<div><p>ab <span class="style">x[]</span> d</p></div>',
                 });
                 await testEditor(BasicEditor, {
@@ -2973,7 +2980,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab<span class="style" data-oe-zws-empty-inline="">x[]\u200B</span>d</p></div>',
+                    contentAfterEdit: '<div><p>ab<span class="style">x[]</span>d</p></div>',
                     contentAfter: '<div><p>ab<span class="style">x[]</span>d</p></div>',
                 });
                 await testEditor(BasicEditor, {
@@ -2982,7 +2989,7 @@ X[]
                         await deleteBackward(editor);
                         await insertText(editor, 'x');
                     },
-                    contentAfterEdit: '<div><p>ab <span class="style" data-oe-zws-empty-inline="">x[]\u200B</span> f</p></div>',
+                    contentAfterEdit: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                     contentAfter: '<div><p>ab <span class="style">x[]</span> f</p></div>',
                 });
             });
@@ -3171,6 +3178,14 @@ X[]
                     contentBefore: '<p>abc[</p><p>d]ef</p>',
                     stepFunction: deleteBackward,
                     contentAfter: '<p>abc[]ef</p>',
+                });
+            });
+            it('should delete selected formatted text at line break', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>abc<br><b>[def]</b></p>',
+                    stepFunction: deleteBackward,
+                    contentAfterEdit: '<p>abc<br><b data-oe-zws-empty-inline="">[]\u200B</b></p>',
+                    contentAfter: '<p>abc<br>[]</p>'
                 });
             });
             it('should delete last character of paragraph, ignoring the selected paragraph break leading to an unbreakable', async () => {
@@ -3479,6 +3494,57 @@ X[]
                                         <p>cd</p>
                                         <p>e]f</p>
                                     </div>`,
+                });
+            });
+            it('should delete columns when all selected', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div class="container o_text_columns">[<div class="row"><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div>]</div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `[]<br>`,
+                });
+            });
+            it('should delete columns when all selected along with text from an outer node', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a[b</p><div class="container o_text_columns"><div class="row"><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div>]</div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>a[]</p>`,
+                });
+            });
+            it('should delete all columns when all selected within a text', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<p>a[b</p><div class="container o_text_columns"><div class="row"><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p></div></div></div><p>a]b</p>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `<p>a[]b</p>`,
+                });
+            });
+            it('should adjust selection and delete columns', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: `<div class="container o_text_columns"><div class="row"><div class="col-4">[<p><br></p></div><div class="col-4"><p><br></p></div><div class="col-4"><p><br></p>]</div></div></div>`,
+                    stepFunction: deleteBackward,
+                    contentAfter: `[]<br>`,
+                });
+            });
+            describe('Across multiple list types', () => {
+                it ('should merge a list item from the first list into the second list', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<ul><li>ab</li><li>[cd</li></ul><ol><li>ef]</li><li>gh</li></ol>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<ul><li>ab</li></ul><ol><li>[]<br></li><li>gh</li></ol>`,
+                    });
+                });
+                it ('should not merge a list item from the first list into the second list', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<ul><li>ab</li><li>c[d</li></ul><ol><li>e]f</li><li>gh</li></ol>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<ul><li>ab</li><li>c[]f</li></ul><ol><li>gh</li></ol>`,
+                    });
+                });
+                it ('should not merge second list item into the first list item', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: `<ul><li>ab</li><li>[cd</li></ul><ol><li>e]f</li><li>gh</li></ol>`,
+                        stepFunction: deleteBackward,
+                        contentAfter: `<ul><li>ab</li></ul><ol><li>[]f</li><li>gh</li></ol>`,
+                    });
                 });
             });
         });
@@ -3927,6 +3993,11 @@ X[]
                         contentAfter: '<div><a>ab</a><br><br>[]</div>',
                     });
                     await testEditor(BasicEditor, {
+                        contentBefore: '<div><a style="display: block;">ab[]</a></div>',
+                        stepFunction: pressEnter,
+                        contentAfter: '<div><a style="display: block;">ab</a>[]<br></div>'
+                    })
+                    await testEditor(BasicEditor, {
                         contentBefore: '<div><a>ab[]</a>cd</div>',
                         stepFunction: pressEnter,
                         contentAfter: '<div><a>ab</a><br>[]cd</div>',
@@ -4009,6 +4080,35 @@ X[]
                         contentBefore: '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
                         stepFunction: insertParagraphBreak,
                         contentAfter: '<h1><br></h1><p>[]<br></p>',
+                    });
+                });
+            });
+            describe("Linebreak Insertion for Links with Specific Roles", () => {
+                it("should insert a linebreak on a link with role tab", async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a class="nav-link" href="#" role="tab">Ho[]me</a></p>',
+                        stepFunction: async editor => {
+                            await triggerEvent(editor.editable, 'input', { data: 'Enter', inputType: 'insertParagraph' });
+                        },
+                        contentAfter: '<p><a class="nav-link" href="#" role="tab">Ho<br>[]me</a></p>',
+                    });
+                });
+                it("should insert a linebreak on a link with role button", async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<p><a class="btn btn-primary" href="#" role="button">Ho[]me</a></p>',
+                        stepFunction: async editor => {
+                            await triggerEvent(editor.editable, 'input', { data: 'Enter', inputType: 'insertParagraph' });
+                        },
+                        contentAfter: '<p><a class="btn btn-primary" href="#" role="button">Ho<br>[]me</a></p>',
+                    });
+                });
+                it("should insert a linebreak on the list with nav-item class", async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<ul><li class="nav-item"><a class="nav-link" href="#" role="tab">Home[]</a></li></ul>',
+                        stepFunction: async editor => {
+                            await triggerEvent(editor.editable, 'input', { data: 'Enter', inputType: 'insertParagraph' });
+                        },
+                        contentAfter: '<ul><li class="nav-item"><a class="nav-link" href="#" role="tab">Home</a><br>[]<br></li></ul>',
                     });
                 });
             });
@@ -4213,6 +4313,15 @@ X[]
                     await insertText(editor, 'x');
                 },
                 contentAfter: '<p>abx[]cd</p>',
+            });
+        });
+        it('should insert a char when formatted text is selected at line-break preserving the line-break and format', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abc<br><b>[def]</b></p>',
+                stepFunction: async editor => {
+                    await insertText(editor, 'x');
+                },
+                contentAfter: '<p>abc<br><b>x[]</b></p>',
             });
         });
     });
@@ -5895,7 +6004,12 @@ X[]
                                             '<td>ef</td>' +
                                         '</tr></tbody></table>' +
                                         '<p>a]bc</p>',
-                            stepFunction: async editor => editor.execCommand('applyColor', 'aquamarine', 'color'),
+                            stepFunction: async editor => {
+                                // Table selection happens on selectionchange
+                                // event which is fired in the next tick.
+                                await nextTick();
+                                editor.execCommand('applyColor', 'aquamarine', 'color');
+                            },
                             contentAfterEdit: unformat(`
                                 <p>
                                     a<font style="color: aquamarine;">[bc</font>
@@ -7940,6 +8054,19 @@ X[]
                         await simulateMouseClick(editor, firstTable, true);
                     },
                     contentAfter: '<table></table><p>[]<br></p><table></table>'
+                });
+            });
+            it('should reset selection on mousedown on empty editable', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[<br>]</p>',
+                    stepFunction: async editor => {
+                        const paragraph = editor.editable.querySelector('p');
+                        await triggerEvent(paragraph, 'mousedown');
+                        await nextTick();
+                        await triggerEvent(paragraph, 'mouseup');
+                        triggerEvent(paragraph, 'click');
+                    },
+                    contentAfter: '<p>[]<br></p>'
                 });
             });
         });

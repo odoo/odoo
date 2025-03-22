@@ -44,6 +44,7 @@ class PurchaseOrderLine(models.Model):
         return moves
 
     def _get_po_line_invoice_lines_su(self):
+        #TODO remove in master: un-used
         return self.sudo().invoice_lines
 
     @api.depends('move_ids.state', 'move_ids.product_uom', 'move_ids.quantity')
@@ -356,7 +357,7 @@ class PurchaseOrderLine(models.Model):
             name = product_lang.display_name
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
-            lines = lines.filtered(lambda l: l.name == name + '\n' + description_picking)
+            lines = lines.filtered(lambda l: (l.name == name + '\n' + description_picking) or (product_lang.name == values.get('product_description_variants') and l.name == name))
             if lines:
                 return lines[0]
 

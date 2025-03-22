@@ -4,19 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Wil Odoo, 2024
 # Kseina Tyshchenko, 2024
 # Yaroslav Husyar, 2024
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1171,15 +1171,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Дозволяє поділитися документом із замовниками в процесі продажу. \n"
-"Залиште це поле пустим якщо не плануєте ділитися цим документом із замовниками.\n"
-"Комерційна пропозиція: документ буде надісланий та доступний для клієнта у будь-який час.\n"
-"наприклад, ця опція буде корисною у випадках коли потрібно поділитися файлами з описом товару.\n"
-"Підтверджене замовлення: документ буде надісланий та доступний для клієнта у будь-який час.\n"
-"наприклад, ця опція буде корисною у випадках коли потрібно поділитися Документацією Користувача або цифровим контентом в електронній комерції.\n"
-"Всередині пропозиції: документ буде включений в комерційну пропозицію у форматі PDF між титульною сторінкою та табличною частиною зі змістом пропозиції. "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4240,7 +4234,6 @@ msgstr "Замовлення на продаж"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4894,12 +4887,12 @@ msgstr "Наступні замовлення не перебувають у с�
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Наступні товари не можуть бути обмежені для компанії %s тому що вони вже використовуються у комерційних пропозиціях, замовленнях на продаж іншої компанії:\n"
-"%s\n"
+"Наступні товари не можуть бути обмежені для компанії %(company)s тому що вони вже використовуються у комерційних пропозиціях, замовленнях на продаж іншої компанії:\n"
+"%(used_products)s\n"
 "Ви можете архівувати ці товари та відтворити їх із обмеженням вашої компанії або залишити їх як спільні товари."
 
 #. module: sale
@@ -5043,6 +5036,16 @@ msgstr "Наразі для вас немає замовлень на прода
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Є існуючі"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5611,6 +5614,7 @@ msgstr ""
 "будь то товар, що зберігається, витратний матеріал або послуга."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Ваші замовлення"

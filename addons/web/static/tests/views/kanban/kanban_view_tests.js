@@ -11824,7 +11824,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("ungrouped kanban with handle field", async (assert) => {
-        assert.expect(3);
+        assert.expect(5);
 
         await makeView({
             type: "kanban",
@@ -11839,6 +11839,9 @@ QUnit.module("Views", (hooks) => {
                 "</div>" +
                 "</t></templates></kanban>",
             async mockRPC(route, args) {
+                if (args.method === "web_search_read") {
+                    assert.step(`web_search_read: order: ${args.kwargs.order}`);
+                }
                 if (route === "/web/dataset/resequence") {
                     assert.deepEqual(
                         args.ids,
@@ -11854,6 +11857,7 @@ QUnit.module("Views", (hooks) => {
         await dragAndDrop(".o_kanban_record", ".o_kanban_record:nth-child(4)");
 
         assert.deepEqual(getCardTexts(target), ["blip", "yop", "gnap", "blip"]);
+        assert.verifySteps(["web_search_read: order: int_field ASC, id ASC"]);
     });
 
     QUnit.test("ungrouped kanban without handle field", async (assert) => {

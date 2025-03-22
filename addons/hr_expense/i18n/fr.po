@@ -5,15 +5,15 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Wil Odoo, 2024
-# Manon Rondou, 2024
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -313,7 +313,7 @@ msgstr "Date de validation"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_state
 msgid "Approval State"
-msgstr "État d'approbation"
+msgstr "État de validation"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -788,7 +788,7 @@ msgstr "Note de frais"
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
 msgid "Expense Approval"
-msgstr "Approbation de notes de frais"
+msgstr "Validation de notes de frais"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
@@ -1009,7 +1009,7 @@ msgid ""
 "waiting for approval."
 msgstr ""
 "Notes de frais dont le rapport a été soumis à l'approbateur et est en "
-"attente d'approbation."
+"attente de validation."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1128,6 +1128,11 @@ msgstr "A un message"
 #: model_terms:product.template,description:hr_expense.expense_product_travel_accommodation_product_template
 msgid "Hotel, plane ticket, taxi, etc."
 msgstr "Hôtel, billet d'avion, taxi, etc."
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__hr_expense_alias_domain_id
+msgid "Hr Expense Alias Domain"
+msgstr "Domaine d'alias des charges RH"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__id
@@ -1669,6 +1674,16 @@ msgid "Phone bills, postage, etc."
 msgstr "Factures de téléphone, frais de port, etc."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+"Veuillez indiquer un journal des notes de frais afin de générer des "
+"écritures comptables."
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1886,8 +1901,8 @@ msgid ""
 "Select the user responsible for approving \"Expenses\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Sélectionnez l'utilisateur responsable de l'approbation des \"Notes de frais\" de cet employé.\n"
-"Si vide, l'approbation est faite par un administrateur ou un approbateur (déterminé dans les paramètres/utilisateurs)."
+"Sélectionnez l'utilisateur responsable de la validation des \"Notes de frais\" de cet employé.\n"
+"Si vide, la validation est faite par un administrateur ou un approbateur (déterminé dans les paramètres/utilisateurs)."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
@@ -1961,13 +1976,6 @@ msgid ""
 msgstr ""
 "Prenez une photo de vos tickets de caisse et laissez <br>Odoo "
 "automatiquement créer des notes de frais pour vous."
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense_sheet.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Veuillez préciser un journal pour générer les écritures comptables."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -2560,6 +2568,27 @@ msgstr "Vous ne pouvez pas déclarer les notes de frais sans montant !"
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr "Vous ne pouvez pas ajouter deux fois la même ligne !"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense_sheet.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+"Vous n'avez pas le droit de contourner le processus de validation de cette "
+"note de frais."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
+"Vous n'avez pas le droit de contourner le processus de validation de ces "
+"dépenses."
 
 #. module: hr_expense
 #. odoo-python

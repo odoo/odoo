@@ -210,6 +210,23 @@ class AccountMove(models.Model):
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
+    def _get_tax_lines_to_aggregate(self):
+        """
+        If the final invoice has downpayment lines, we skip the tax correction, as we need to recalculate tax amounts
+        without taking into account those lines
+        """
+        if self.country_code == 'SA' and not self._is_downpayment() and self.line_ids._get_downpayment_lines():
+            return self.env['account.move.line']
+        return super()._get_tax_lines_to_aggregate()
+
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        invoice_vals = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_vals(self)
+        return {
+            'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
+            'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
+        }
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

@@ -403,9 +403,6 @@ export class StaticList extends DataPoint {
                 return;
             }
             await this._onUpdate();
-            if (this.orderBy.length) {
-                await this._sort();
-            }
             record._restoreActiveFields();
             record._savePoint = undefined;
         });

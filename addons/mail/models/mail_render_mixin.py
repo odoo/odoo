@@ -447,7 +447,7 @@ class MailRenderMixin(models.AbstractModel):
             except Exception as e:
                 _logger.info("Failed to render inline_template: \n%s", str(template_txt), exc_info=True)
                 raise UserError(
-                    _("Failed to render inline_template template: %(template_txt)s)",
+                    _("Failed to render inline_template template: %(template_txt)s",
                       template_txt=template_txt)
                 ) from e
 

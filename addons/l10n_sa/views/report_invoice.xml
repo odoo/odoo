@@ -20,17 +20,21 @@
         </xpath>
         <xpath expr="//t[@t-set='address']" position="after">
             <t t-set="information_block">
-                <p>
-                    <img t-if="o.l10n_sa_qr_code_str"
-                         style="display:block;"
-                         t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200)"/>
-                </p>
+                <div class="row">
+                    <p class="col-6 me-3">
+                        <img t-if="o.l10n_sa_qr_code_str"
+                            style="display:block;"
+                            t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', quote_plus(o.l10n_sa_qr_code_str), 200, 200)"/>
+                    </p>
+                    <div class="col-6" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)" groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                        <strong>Shipping Address:</strong>
+                        <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                    </div>
+                </div>
             </t>
         </xpath>
         <xpath expr="//th[@name='th_total']//span[2]" position="attributes">
-            <span>
-                 <attribute name="class">d-none</attribute>
-            </span>
+            <attribute name="class">d-none</attribute>
         </xpath>
         <xpath expr="//th[@name='th_total']//span[2]" position="after">
             <span>
@@ -46,9 +50,7 @@
             </span>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span[2]" position="attributes">
-            <span>
-                <attribute name="class">d-none</attribute>
-            </span>
+            <attribute name="class">d-none</attribute>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span[2]" position="after">
             <span>
@@ -56,9 +58,7 @@
             </span>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span" position="attributes">
-            <span>
-                <attribute name="class">d-none</attribute>
-            </span>
+            <attribute name="class">d-none</attribute>
         </xpath>
         <xpath expr="//th[@name='th_subtotal']//span" position="after">
             <span>
@@ -107,6 +107,9 @@
         </xpath>
         <xpath expr="//div[@name='invoice_date']//span[@t-field='o.invoice_date']" position="attributes">
             <attribute name="t-if">not o.l10n_sa_confirmation_datetime</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]" position="attributes">
+            <attribute name="class">clearfix pt-2 pb-2</attribute>
         </xpath>
     </template>
 </odoo>

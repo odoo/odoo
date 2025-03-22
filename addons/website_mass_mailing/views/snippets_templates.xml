@@ -178,7 +178,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 </template>
 
 <template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
-    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside">, .o_newsletter_popup</xpath>
+    <xpath expr="//*[@t-set='so_snippet_addition_selector']" position="inside" t-translation="off">, .o_newsletter_popup</xpath>
     <xpath expr="//div[1]" position="before">
         <div data-js="NewsletterLayout" data-selector=".s_newsletter_block">
             <we-select string="Template"

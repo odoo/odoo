@@ -5,18 +5,19 @@
 # Translators:
 # Jolien De Paepe, 2024
 # Martin Trigaux, 2024
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2024
 # Larissa Manderfeld, 2024
-# Wil Odoo, 2024
-# Manon Rondou, 2024
+# Dylan Kiss, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Manon Rondou, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -740,14 +741,14 @@ msgstr "<strong>Onbelast bedrag</strong>"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 #, python-format
 msgid "=ilike"
-msgstr "= vind ik leuk"
+msgstr "=ilike"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 #, python-format
 msgid "=like"
-msgstr "=vind ik leuk"
+msgstr "=like"
 
 #. module: web
 #. odoo-javascript
@@ -1418,6 +1419,13 @@ msgid "BACK arrow"
 msgstr "TERUG pijl"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#, python-format
+msgid "Back to “%s”"
+msgstr "Terug naar “%s”"
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
 msgid "Background Image"
 msgstr "Achtergrondafbeelding"
@@ -1957,7 +1965,6 @@ msgstr "Bedrijfsnaam"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 msgid "Company tagline"
@@ -2138,7 +2145,6 @@ msgstr "Auteursrecht © 2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -2153,10 +2159,10 @@ msgstr "Kon de geselecteerde pdf niet weergeven"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 #, python-format
-msgid "Could not display the specified image url."
-msgstr "Kon de opgegeven afbeeldings-url niet weergeven."
+msgid "Could not display the selected spreadsheet"
+msgstr "Kon het geselecteerde spreadsheet niet weergeven"
 
 #. module: web
 #. odoo-javascript
@@ -3426,6 +3432,14 @@ msgstr "Ga naar de URL"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+#, python-format
+msgid "Google Slide Viewer"
+msgstr "Google Slide Viewer"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_view.js:0
 #, python-format
 msgid "Graph"
@@ -4314,6 +4328,13 @@ msgstr "Laad demo data"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr "Verdergaan met laden."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
@@ -4467,6 +4488,13 @@ msgstr "Many2one"
 #, python-format
 msgid "Match"
 msgstr "Match"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+#, python-format
+msgid "Max value"
+msgstr "Max waarde"
 
 #. module: web
 #. odoo-javascript
@@ -4664,6 +4692,14 @@ msgstr "Maand"
 #, python-format
 msgid "More"
 msgstr "Meer"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "More..."
+msgstr "Meer..."
 
 #. module: web
 #. odoo-javascript
@@ -6588,6 +6624,13 @@ msgstr "Selecteer alle"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr "Selecteer alle records die aan de zoekopdracht voldoen"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Select century"
@@ -6911,6 +6954,13 @@ msgstr "Status"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr "Statusbalk"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
@@ -7200,6 +7250,17 @@ msgstr ""
 "ontwikkelaar die voor de hele database moet worden hersteld voordat je "
 "verder kan werken. Raadpleeg de browserconsole of serverlogboeken voor meer "
 "informatie."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"Er zijn te veel gegevens. De grafiek geeft alleen een deel weer. Gebruik de "
+"filters om de weergave te verfijnen."
 
 #. module: web
 #. odoo-python
@@ -11863,7 +11924,7 @@ msgstr "kind"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 #, python-format
 msgid "child of"
-msgstr "kind van"
+msgstr "onderliggende van"
 
 #. module: web
 #. odoo-javascript
@@ -19300,7 +19361,7 @@ msgstr "is"
 #: code:addons/web/static/src/core/tree_editor/tree_editor_operator_editor.js:0
 #, python-format
 msgid "is between"
-msgstr "is tussen"
+msgstr "ligt tussen"
 
 #. module: web
 #. odoo-javascript

@@ -599,6 +599,8 @@ class StockMove(models.Model):
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         vals = super()._prepare_move_line_vals(quantity, reserved_quant)
+        if self.raw_material_production_id:
+            vals['production_id'] = self.raw_material_production_id.id
         if self.production_id.product_tracking == 'lot' and self.product_id == self.production_id.product_id:
             vals['lot_id'] = self.production_id.lot_producing_id.id
         return vals

@@ -112,16 +112,29 @@ class PrinterDriver(Driver):
         printer = self.device_name
 
         args = [
-            "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT"
+            "-dPrinted", "-dBATCH", "-dNOPAUSE", "-dNOPROMPT", "-dNORANGEPAGESIZE",
             "-q",
             "-sDEVICE#mswinpr2",
             f'-sOutputFile#%printer%{printer}',
             f'{file_name}'
-            ]
+        ]
 
-        ghostscript.Ghostscript(*args)
+        _logger.debug("Printing report with ghostscript using %s", args)
+        stderr_buf = io.BytesIO()
+        stdout_buf = io.BytesIO()
+        stdout_log_level = logging.DEBUG
+        try:
+            ghostscript.Ghostscript(*args, stdout=stdout_buf, stderr=stderr_buf)
+        except Exception:
+            _logger.exception("Error while printing report, ghostscript args: %s, error buffer: %s", args, stderr_buf.getvalue())
+            stdout_log_level = logging.ERROR # some stdout value might contains relevant error information
+            raise
+        finally:
+            _logger.log(stdout_log_level, "Ghostscript stdout: %s", stdout_buf.getvalue())
 
     def print_receipt(self, data):
+        _logger.debug("print_receipt called for printer %s", self.device_name)
+
         receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
@@ -151,16 +164,22 @@ class PrinterDriver(Driver):
 
     def open_cashbox(self, data):
         """Sends a signal to the current printer to open the connected cashbox."""
+        _logger.debug("open_cashbox called for printer %s", self.device_name)
+        
         commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
         for drawer in commands['drawers']:
             self.print_raw(drawer)
 
     def _action_default(self, data):
+        _logger.debug("_action_default called for printer %s", self.device_name)
+
         document = b64decode(data['document'])
         mimetype = guess_mimetype(document)
         if mimetype == 'application/pdf':
             self.print_report(document)
         else:
             self.print_raw(document)
+        _logger.debug("_action_default finished with mimetype %s for printer %s", mimetype, self.device_name)
+
 
 proxy_drivers['printer'] = PrinterDriver

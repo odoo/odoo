@@ -3,16 +3,17 @@
 # 	* account_peppol
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Wil Odoo, 2024
+# Yana Bystrytska, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "<br/>\n"
 "                            If you need a Peppol compliant software, we recommend"
 msgstr ""
+"<br/>\n"
+"                            Якщо вам потрібне сумісне з Peppol програмне забезпечення, ми рекомендуємо"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -167,13 +170,6 @@ msgstr "Неможливо скасувати реєстрацію з цим с�
 #, python-format
 msgid "Can't deregister with this status: %s"
 msgstr "Неможливо дереєструвати з цим статусом: %s"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-#, python-format
-msgid "Can't migrate registration with this status: %s"
-msgstr "Неможливо перенести реєстрацію з таким статусом: %s"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -325,7 +321,7 @@ msgstr "Отримати з Peppol"
 msgid ""
 "In Belgium, electronic invoicing will be <u>mandatory as of January "
 "2026</u>."
-msgstr ""
+msgstr "У Бельгії електронні рахунки будуть <u>обовʼязкові з січня 2026</u>."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -368,13 +364,6 @@ msgstr "Остання верифікація Peppol endpoint"
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_config_settings__account_peppol_mode_constraint__prod
 msgid "Live"
 msgstr "Онлайн"
-
-#. module: account_peppol
-#. odoo-javascript
-#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
-#, python-format
-msgid "Migrate registration to another service"
-msgstr "Мігрувати реєстрацію на інший сервіс"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__account_peppol_migration_key
@@ -483,6 +472,8 @@ msgid ""
 "PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
 "invoice on Peppol.</b>"
 msgstr ""
+"PS: <b style=\"color: $o-enterprise-action-color;\">Ми не відправили ваш "
+"рахунок в Peppol.</b>"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -490,6 +481,8 @@ msgid ""
 "PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
 "color\">sent on Peppol</b>."
 msgstr ""
+"PS: Цей рахунок також було <b style=\"color: $o-enterprise-action-"
+"color\">надіслано на Peppol</b>."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -545,13 +538,6 @@ msgstr "Валідність Peppol"
 #, python-format
 msgid "Peppol document has been received successfully"
 msgstr "Документ Peppol отримано успішно"
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-#, python-format
-msgid "Peppol document has been received successfully. Sender endpoint: %s"
-msgstr "Документ Peppol успішно отримано. Кінцева точка відправника: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_eas
@@ -851,6 +837,17 @@ msgstr "Код верифікації невірний"
 #, python-format
 msgid "The verification code should contain six digits."
 msgstr "Код верифікації повинен містити 6 цифр."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+#, python-format
+msgid ""
+"This feature is deprecated. Contact odoo support if you need a migration "
+"key."
+msgstr ""
+"Ця функція застаріла. Зверніться до служби підтримки Odoo, якщо вам потрібен"
+" ключ міграції."
 
 #. module: account_peppol
 #. odoo-python

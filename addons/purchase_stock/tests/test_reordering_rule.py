@@ -683,6 +683,71 @@ class TestReorderingRule(TransactionCase):
         self.assertTrue(po_line)
         self.assertEqual("[A] product TEST", po_line.name)
 
+    def test_multi_lingual_orderpoints(self):
+        """
+        Define a product with description in English and French.
+        Use the same reordering rule twice with a partner (customer)
+        set up with French as language. Verify that the generated PO
+        contains a single POL with the cumulative quantity.
+        """
+        warehouse = self.env.ref("stock.warehouse0")
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'Warehouse 2',
+            'code': 'WH2',
+            'resupply_wh_ids': warehouse.ids,
+        })
+        route_buy_id = self.ref('purchase_stock.route_warehouse0_buy')
+        product = self.env["product.product"].create({
+            "name": "product TEST",
+            "standard_price": 100.0,
+            "type": "product",
+            "uom_id": self.ref("uom.product_uom_unit"),
+            "default_code": "A",
+            "route_ids": [Command.set([route_buy_id])],
+        })
+        # Enable french and add a french description
+        self.env['res.lang']._activate_lang('fr_FR')
+        product.with_context(lang='fr_FR').name = 'produit en français'
+        default_vendor = self.env["res.partner"].create({
+            "name": "Super Supplier",
+            "lang": "fr_FR",
+        })
+        self.env["product.supplierinfo"].create({
+            "partner_id": default_vendor.id,
+            "product_tmpl_id": product.product_tmpl_id.id,
+            "delay": 7,
+        })
+        warehouse_2.resupply_route_ids.rule_ids.procure_method = 'make_to_order'
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'RR for %s' % product.name,
+            'warehouse_id': warehouse_2.id,
+            'location_id': warehouse_2.lot_stock_id.id,
+            'trigger': 'auto',
+            'product_id': product.id,
+            'route_id': warehouse_2.resupply_route_ids.id,
+            'qty_to_order': 5.0,
+        }).with_context(lang="fr_FR") # read the order point with french context as when you impersonnate a french user.
+        orderpoint.action_replenish()
+
+        po_line = self.env['purchase.order.line'].search([('partner_id', '=', default_vendor.id), ('product_id', '=', product.id)], limit=1)
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 5.0}])
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 5.0}])
+        orderpoint.qty_to_order = 3.0
+        orderpoint.action_replenish()
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 8.0}])
+        self.assertEqual(len(po_line.order_id.order_line), 1)
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 8.0}])
+        orderpoint.product_min_qty = 10.0
+        # run the scheduler to test the use case where the user is always the SUPERUSER
+        self.env['procurement.group'].run_scheduler()
+        self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 10.0}])
+        self.assertEqual(len(po_line.order_id.order_line), 1)
+        # the moves_dest_ids are not expected to be merged since the scheduler is excuted by robodoo in en_US rather fr_FR
+        self.assertRecordValues(po_line.move_dest_ids.sorted('product_uom_qty'), [
+            {"description_picking": "product TEST", "product_uom_qty": 2.0},
+            {"description_picking": "produit en français", "product_uom_qty": 8.0},
+        ])
+
     def test_multi_locations_and_reordering_rule(self):
         """
         Suppose two orderpoints for the same product, each one to a different location
@@ -1215,3 +1280,58 @@ class TestReorderingRule(TransactionCase):
         replenishment_info = self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id})
         supplier_info = replenishment_info.supplierinfo_ids
         self.assertEqual(supplier_info.last_purchase_date, dt.today().date(), "The last_purhchase_date should be set to the most recent date_order from the purchase orders")
+
+    def test_reordering_rule_multicurrency(self):
+        """
+            trigger a reordering rule in foreign currency
+        """
+        foreign_currency = self.env['res.currency'].create({
+            'name': 'Coin',
+            'symbol': '☺',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2019-01-01',
+            'rate': 0.50,
+            'currency_id': foreign_currency.id,
+            'company_id': self.env.company.id,
+        })
+
+        self.product_01.write({
+            'variant_seller_ids': [
+                Command.clear(),
+                Command.create({
+                    'partner_id': self.partner.id,
+                    'price': 100,
+                    'currency_id': self.env.company.currency_id.id,
+                    'product_tmpl_id': self.product_01.product_tmpl_id.id,
+                }),
+                Command.create({
+                    'partner_id': self.partner.id,
+                    'price': 10,
+                    'currency_id': foreign_currency.id,
+                    'product_tmpl_id': self.product_01.product_tmpl_id.id,
+                }),
+            ],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
+
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", self.product_01.id)])
+        self.assertFalse(po_line)
+        self.env["procurement.group"].run(
+            [self.env["procurement.group"].Procurement(
+                self.product_01, 100, self.product_01.uom_id,
+                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.env.company,
+                {
+                    "warehouse_id": warehouse,
+                    "date_planned": dt.today() + td(days=1),
+                    "rule_id": warehouse.buy_pull_id,
+                    "group_id": False,
+                    "route_ids": [],
+                }
+            )])
+        po_line = self.env["purchase.order.line"].search(
+            [("product_id", "=", self.product_01.id)])
+        self.assertTrue(po_line)
+        self.assertEqual(po_line.order_id.currency_id, foreign_currency)

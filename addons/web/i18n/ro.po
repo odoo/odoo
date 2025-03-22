@@ -17,15 +17,16 @@
 # Corina Calin, 2024
 # Lyall Kindmurr, 2024
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1428,6 +1429,13 @@ msgid "BACK arrow"
 msgstr "Săgeată înapoi"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#, python-format
+msgid "Back to “%s”"
+msgstr ""
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
 msgid "Background Image"
 msgstr "Imagine fundal"
@@ -1968,7 +1976,6 @@ msgstr "Numele firmei"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 msgid "Company tagline"
@@ -2149,7 +2156,6 @@ msgstr "Drepturi de autor © 2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -2164,10 +2170,10 @@ msgstr "Imposibil de afișat PDF-ul selectat"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 #, python-format
-msgid "Could not display the specified image url."
-msgstr "Nu s-a putut afișa adresa URL a imaginii specificată."
+msgid "Could not display the selected spreadsheet"
+msgstr "Nu s-a putut afișa foaia de calcul selectată"
 
 #. module: web
 #. odoo-javascript
@@ -3433,6 +3439,14 @@ msgstr "Mergi la URL"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+#, python-format
+msgid "Google Slide Viewer"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_view.js:0
 #, python-format
 msgid "Graph"
@@ -4324,6 +4338,13 @@ msgstr "Încărcare date Demonstrative"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
@@ -4477,6 +4498,13 @@ msgstr "Many2one"
 #, python-format
 msgid "Match"
 msgstr "Potrivire"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+#, python-format
+msgid "Max value"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4675,6 +4703,14 @@ msgstr "Luna"
 #, python-format
 msgid "More"
 msgstr "Mai mult"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "More..."
+msgstr "Mai mult..."
 
 #. module: web
 #. odoo-javascript
@@ -5690,8 +5726,14 @@ msgstr "Vă rugăm selectați câmpurile pentru a salva lista de export..."
 msgid ""
 "Please use the copy button to report the error to your support service."
 msgstr ""
-"Vă rog să utilizați butonul de copiere pentru a raporta eroarea către serviciul de suport. \n"
-"Apăsați pe butonul de alături pentru a copia eroare în clipboard și apoi folosiți Ctrl+V în fereastra de conversație cu echipa de suport. Nu transmiteți o pază cu aceasta fereastră."
+"⚠️ Atenție! \n"
+"\n"
+"📋 Pentru a rezolva această problemă cât mai rapid:\n"
+"\n"
+"🔹 Apasă pe butonul „Copiază eroare” de mai jos. ✅\n"
+"🔹 Lipește textul copiat în conversația cu echipa de suport folosind combinația de taste Ctrl+V. 💬\n"
+"\n"
+"🚫 Important: Nu trimite captura acestui ecran, deoarece acestea nu includ toate informațiile necesare pentru diagnosticare. 🔍"
 
 #. module: web
 #. odoo-javascript
@@ -6385,7 +6427,7 @@ msgstr "Salvează & Închide"
 #: code:addons/web/static/src/views/view_dialogs/form_view_dialog.xml:0
 #, python-format
 msgid "Save & New"
-msgstr "Salvează & creează nou(ă)"
+msgstr "Salvează & creează "
 
 #. module: web
 #. odoo-javascript
@@ -6597,6 +6639,13 @@ msgstr "Selectează o vizualizare"
 #, python-format
 msgid "Select all"
 msgstr "Selectează tot"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6923,6 +6972,13 @@ msgstr "Stare"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
@@ -7209,6 +7265,15 @@ msgstr ""
 "dezvoltator care trebuie reparată pentru întreaga bază de date înainte de a "
 "continua lucrul. Consultați consola browserului sau jurnalele serverului "
 "pentru detalii."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
 
 #. module: web
 #. odoo-python
@@ -7502,7 +7567,7 @@ msgid ""
 "                    active filter in the search bar."
 msgstr ""
 "Încercați să adăugați câteva înregistrări sau asigurați-vă că nu există "
-"niciun\n"
+"niciun filtru activ în bara de căutare."
 
 #. module: web
 #. odoo-javascript
@@ -33695,14 +33760,14 @@ msgstr ""
 #: code:addons/web/static/src/views/view_components/column_progress.xml:0
 #, python-format
 msgid "{{ bar.count }} {{ bar.string }}"
-msgstr ""
+msgstr "{{ bar.count }} {{ bar.string }}"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
 #, python-format
 msgid "{{ relatedFieldName }}..."
-msgstr ""
+msgstr "{{ relatedFieldName }}..."
 
 #. module: web
 #. odoo-javascript

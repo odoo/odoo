@@ -75,7 +75,7 @@ export class Failure extends Record {
     }
 
     get iconSrc() {
-        return "/mail/static/src/img/smiley/mailfailure.jpg";
+        return "/mail/static/src/img/smiley/mailfailure.svg";
     }
 
     get body() {

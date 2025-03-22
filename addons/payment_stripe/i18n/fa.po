@@ -46,7 +46,7 @@ msgstr "اتصال Stripe"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Could not establish the connection to the API."
-msgstr "نتوانستیم اتصال به API را برقرار کنیم"
+msgstr "اتصال با API برقرار نشد."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -58,7 +58,7 @@ msgstr "تحویل"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
-msgstr "فعال‌سازی Apple Pay"
+msgstr "فعال کردن Apple Pay"
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -70,12 +70,12 @@ msgstr "ارسال رایگان"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Generate your webhook"
-msgstr "تولیدwebhook خود"
+msgstr "وب‌هوک خود را تولید کنید"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Get your Secret and Publishable keys"
-msgstr "دریافت کلیدهای مخفی و قابل انتشار خود"
+msgstr "کلیدهای محرمانه و قابل انتشار خود را دریافت کنید"
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_webhook_secret
@@ -83,30 +83,29 @@ msgid ""
 "If a webhook is enabled on your Stripe account, this signing secret must be "
 "set to authenticate the messages sent from Stripe to Odoo."
 msgstr ""
-"اگر یک وب‌هوک در حساب Stripe شما فعال شده باشد، این کلید امضای مخفی باید "
-"تنظیم شود تا پیام‌هایی که از Stripe به Odoo ارسال می‌شوند، تأیید اعتبار "
-"شوند."
+"اگر یک وب‌هوک در حساب استرایپ شما فعال شده باشد، این رمز امضای باید برای "
+"تأیید پیام‌های ارسالی از استرایپ به اودوو تنظیم شود."
 
 #. module: payment_stripe
 #. odoo-javascript
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Incorrect payment details"
-msgstr "جزئیات پرداخت نادرست است"
+msgstr "جزئیات پرداخت نادرست"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr "هیچ تراکنشی مرجع منطبق پیدا نشد%s"
+msgstr "هیچ تراکنشی با مرجع %s یافت نشد."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Other Payment Providers"
-msgstr "سایر ارائه‌دهندگان پرداخت"
+msgstr "ارائه دهندگان دیگر پرداخت"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_provider
@@ -133,45 +132,45 @@ msgstr "تراکنش پرداخت"
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Payment processing failed"
-msgstr "پردازش پرداخت انجام نشد"
+msgstr "پردازش پرداخت ناموفق بود"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Please use live credentials to enable Apple Pay."
-msgstr "لطفاً از اعتبارنامه‌های واقعی برای فعال‌سازی Apple Pay استفاده کنید"
+msgstr "لطفاً از اعتبارنامه‌های واقعی برای فعال‌سازی Apple Pay استفاده کنید."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "Publishable Key"
-msgstr "کلید قابل انتشار"
+msgstr "کلید عمومی"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid intent status: %s"
-msgstr "داده‌های دریافتی با وضعیت قصد نامعتبر%s"
+msgstr "داده های دریافت شده با وضعیت نیت نامعتبر: %s"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing intent status."
-msgstr "داده‌های دریافتی با وضعیت قصد گمشده"
+msgstr "داده‌های دریافتی با وضعیت تشخیص‌داده نشده."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with missing merchant reference"
-msgstr "داده‌های دریافتی با مرجع فروشنده گمشده"
+msgstr "دریافت داده‌ها با مرجع بازرگان گمشده"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_secret_key
 msgid "Secret Key"
-msgstr "کلید مخفی"
+msgstr "کلید محرمانه"
 
 #. module: payment_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_provider__code__stripe
@@ -186,39 +185,39 @@ msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
-"Stripe Connect در کشور شما در دسترس نیست، لطفاً از ارائه دهنده پرداخت دیگری "
+"استرایپ کانکت در کشور شما در دسترس نیست، لطفاً از تأمین‌کننده پرداخت دیگری "
 "استفاده کنید."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_mandate
 msgid "Stripe Mandate"
-msgstr "دستور Stripe"
+msgstr "استرایپ وکالت نامه"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Stripe Payment Method ID"
-msgstr "شناسه روش پرداخت Stripe"
+msgstr "شناسه روش پرداخت استرایپ"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy error: %(error)s"
-msgstr "خطای پراکسی Stripe:%(error)s"
+msgstr "خطای پروکسی استرایپ: %(error)s"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: An error occurred when communicating with the proxy."
-msgstr "پراکسی Stripe: خطایی هنگام ارتباط با پراکسی رخ داده است."
+msgstr "پروکسی استرایپ: یک خطا در هنگام ارتباط با پروکسی رخ داد."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Stripe Proxy: Could not establish the connection."
-msgstr "پراکسی Stripe: نتوانستیم اتصال را برقرار کنیم"
+msgstr "پراکسی استرایپ: امکان برقراری اتصال وجود ندارد."
 
 #. module: payment_stripe
 #. odoo-python
@@ -230,20 +229,21 @@ msgid ""
 "Stripe gave us the following info about the problem:\n"
 "'%s'"
 msgstr ""
-"ارتباط با API موفق نبود.\n"
-" Stripe اطلاعات زیر را درباره مشکل به ما داد:'%s'"
+"ارتباط با API شکست خورد.\n"
+"استرایپ اطلاعات زیر را درباره مشکل به ما داد:\n"
+"'%s'"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr "مشتری صفحه پرداخت را ترک کرد"
+msgstr "مشتری صفحه پرداخت را ترک کرد."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
 msgid "The key solely used to identify the account with Stripe"
-msgstr "کلیدی که به طور انحصاری برای شناسایی حساب با Stripe استفاده می‌شود"
+msgstr "کلید به طور انحصاری برای شناسایی حساب با Stripe استفاده می‌شود."
 
 #. module: payment_stripe
 #. odoo-python
@@ -253,8 +253,8 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
-"بازپرداخت انجام نشد. لطفاً وارد داشبورد استریپ خود شوید تا اطلاعات بیشتری در"
-" مورد این موضوع دریافت کنید و هرگونه اختلاف حساب را بررسی کنید."
+"بازپرداخت انجام نشد. لطفاً وارد داشبورد Stripe خود شوید تا اطلاعات بیشتری در"
+" این باره به دست آورید و هرگونه ناهماهنگی حسابداری را رسیدگی کنید."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
@@ -266,26 +266,26 @@ msgstr "کد فنی این ارائه دهنده پرداخت."
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The transaction is not linked to a token."
-msgstr "تراکنش به توکن متصل نیست"
+msgstr "تراکنش به یک توکن متصل نیست."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_token.py:0
 #, python-format
 msgid "Unable to convert payment token to new API."
-msgstr "نتوانستیم توکن پرداخت را به API جدید تبدیل کنیم"
+msgstr "قادر به تبدیل توکن پرداخت به API جدید نیست."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_webhook_secret
 msgid "Webhook Signing Secret"
-msgstr "کلید امضای وب‌هوک"
+msgstr "راز امضای وب‌هوک"
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "You Stripe Webhook was successfully set up!"
-msgstr "وب‌هوک Stripe شما با موفقیت تنظیم شد!"
+msgstr "وب‌هوک استریپ شما با موفقیت تنظیم شد!"
 
 #. module: payment_stripe
 #. odoo-python
@@ -294,8 +294,8 @@ msgstr "وب‌هوک Stripe شما با موفقیت تنظیم شد!"
 msgid ""
 "You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
 msgstr ""
-"شما نمی‌توانید وب‌هوک Stripe را ایجاد کنید اگر کلید مخفی Stripe شما تنظیم "
-"نشده باشد"
+"شما نمی‌توانید یک وب‌هوک Stripe ایجاد کنید اگر کلید مخفی Stripe شما تنظیم "
+"نشده باشد."
 
 #. module: payment_stripe
 #. odoo-python
@@ -305,8 +305,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe"
 " is completed."
 msgstr ""
-"شما نمی‌توانید وضعیت ارائه‌دهنده را به حالت فعال تغییر دهید تا زمانی که "
-"فرآیند پیوستن به Stripe تکمیل شده باشد"
+"نمی‌توانید وضعیت ارائه‌دهنده را به فعال تغییر دهید تا فرآیند پذیرش شما در "
+"Stripe کامل شود."
 
 #. module: payment_stripe
 #. odoo-python
@@ -316,15 +316,15 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
-"شما نمی‌توانید وضعیت ارائه‌دهنده را به حالت تست تغییر دهید در حالی که با "
-"حساب Stripe شما مرتبط است"
+"شما نمی‌توانید ارائه‌دهنده را به حالت آزمایشی تنظیم کنید در حالی که به حساب "
+"Stripe شما متصل است."
 
 #. module: payment_stripe
 #. odoo-python
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your Stripe Webhook is already set up."
-msgstr "وب‌هوک Stripe شما قبلاً تنظیم شده است"
+msgstr "وبهوک Stripe شما قبلاً تنظیم شده است."
 
 #. module: payment_stripe
 #. odoo-javascript
@@ -338,4 +338,4 @@ msgstr "سفارش شما"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your web domain was successfully verified."
-msgstr "دامنه وب شما با موفقیت تأیید شد"
+msgstr "دامنه وب شما با موفقیت تایید شد."

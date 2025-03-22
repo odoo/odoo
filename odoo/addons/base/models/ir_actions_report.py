@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs, urlencode
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
@@ -354,6 +354,13 @@ class IrActionsReport(models.Model):
         if not layout:
             return {}
         base_url = self._get_report_url(layout=layout)
+        url = urlparse(base_url)
+        query = parse_qs(url.query or "")
+        debug = self.env.context.get("debug")
+        if not isinstance(debug, str):
+            debug = "1" if debug else "0"
+        query["debug"] = debug
+        base_url = url._replace(query=urlencode(query)).geturl()
 
         root = lxml.html.fromstring(html, parser=lxml.html.HTMLParser(encoding='utf-8'))
         match_klass = "//div[contains(concat(' ', normalize-space(@class), ' '), ' {} ')]"
@@ -386,7 +393,8 @@ class IrActionsReport(models.Model):
                     'subst': False,
                     'body': Markup(lxml.html.tostring(node, encoding='unicode')),
                     'base_url': base_url,
-                    'report_xml_id' : self.xml_id
+                    'report_xml_id': self.xml_id,
+                    'debug': self.env.context.get("debug"),
                 }, raise_if_not_found=False)
             bodies.append(body)
             if node.get('data-oe-model') == report_model:
@@ -408,12 +416,14 @@ class IrActionsReport(models.Model):
         header = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(header_node, encoding='unicode')),
-            'base_url': base_url
+            'base_url': base_url,
+            'debug': self.env.context.get("debug"),
         })
         footer = self.env['ir.qweb']._render(layout.id, {
             'subst': True,
             'body': Markup(lxml.html.tostring(footer_node, encoding='unicode')),
-            'base_url': base_url
+            'base_url': base_url,
+            'debug': self.env.context.get("debug"),
         })
 
         return bodies, res_ids, header, footer, specific_paperformat_args
@@ -757,6 +767,7 @@ class IrActionsReport(models.Model):
             # because the resources files are not loaded in time.
             # https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2083
             additional_context = {'debug': False}
+            data.setdefault("debug", False)
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, all_res_ids_wo_stream, data=data)[0]
 

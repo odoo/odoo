@@ -32,6 +32,7 @@ export class Homepage extends Component {
         this.state = useState({ loading: true, waitRestart: false });
         this.data = useState({});
         this.store.advanced = localStorage.getItem("showAdvanced") === "true";
+        this.store.dev = new URLSearchParams(window.location.search).has("debug");
 
         onWillStart(async () => {
             await this.loadInitialData();
@@ -105,7 +106,7 @@ export class Homepage extends Component {
 			</SingleData>
             <SingleData t-if="this.store.advanced" name="'Version'" value="this.data.version" icon="'fa-microchip'">
                 <t t-set-slot="button">
-                    <UpdateDialog t-if="this.store.isLinux" />
+                    <UpdateDialog />
                 </t>
             </SingleData>
             <SingleData t-if="this.store.advanced" name="'IP address'" value="this.data.ip" icon="'fa-globe'" />

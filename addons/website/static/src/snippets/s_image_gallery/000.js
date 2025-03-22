@@ -160,6 +160,9 @@ const GallerySliderWidget = publicWidget.Widget.extend({
         this.$carousel.on('slide.bs.carousel.gallery_slider', function () {
             setTimeout(function () {
                 var $item = self.$carousel.find('.carousel-inner .carousel-item-prev, .carousel-inner .carousel-item-next');
+                if (!$item.length) {
+                    return;
+                }
                 var index = $item.index();
                 $lis.removeClass('active')
                     .filter('[data-bs-slide-to="' + index + '"]')

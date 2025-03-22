@@ -213,7 +213,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (HighlightOptionEl) {
             HighlightOptionEl.dataset.textSelector = HighlightOptionEl.dataset.selector;
         }
-        
+
         // TODO remove in master: see snippets.xml
         $html.find('we-checkbox[data-dependencies="!footer_copyright_opt"]')[0]?.remove();
         $html.find('[data-name="header_language_selector_none_opt"]')[0]?.remove();
@@ -223,6 +223,24 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         // grid spacing option so it is not applied on inner rows.
         const $gridSpacingOptions = $html.find('[data-css-property="row-gap"], [data-css-property="column-gap"]');
         $gridSpacingOptions.attr("data-apply-to", ".row.o_grid_mode");
+
+        // TODO remove in master and adapt XML.
+        const contentAdditionEl = $html.find("#so_content_addition")[0];
+        if (contentAdditionEl) {
+            // Necessary to be able to drop "inner blocks" next to an image link.
+            contentAdditionEl.dataset.dropNear += ", div:not(.o_grid_item_image) > a";
+            // TODO remove in master
+            // The class is added again here even though it has already been
+            // added by the "searchbar_input_snippet_options" template. We are
+            // doing it again because it was mistakenly translated into Dutch.
+            contentAdditionEl.dataset.selector += ", .s_searchbar_input";
+            contentAdditionEl.dataset.dropNear += ", .s_searchbar_input";
+        }
+        // TODO remove in master
+        const snippetSaveOptionEl = $html.find("[data-js='SnippetSave']")[0];
+        if (snippetSaveOptionEl) {
+            snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -36,8 +36,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
+msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgstr "17291716060 (ИНН) или 1729171602 (КПП)"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "1792060346001 or 1792060346"
 msgstr "1792060346001 или 1792060346"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "3101012009"
+msgstr "3101012009"
 
 #. module: base_vat
 #. odoo-python
@@ -122,6 +136,14 @@ msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr "Европейские номера НДС автоматически проверяются по базе данных VIES."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
+msgstr "Пример: «219999830019» (12 цифр, только числа, с проверочной цифрой)"
+
+#. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
 msgstr "Финансовое положение"
@@ -169,16 +191,9 @@ msgid "Perform Vies Validation"
 msgstr "Выполните проверку подлинности Vies"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid "TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)"
-msgstr "TR1234567890 (VERGINO) или TR17291716060 (TCKIMLIKNO)"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
 msgid "Tax ID"
-msgstr "Tax ID"
+msgstr "ИНН"
 
 #. module: base_vat
 #. odoo-python

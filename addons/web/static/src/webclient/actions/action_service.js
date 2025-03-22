@@ -26,6 +26,7 @@ import {
     reactive,
 } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
+import { FetchRecordError } from "@web/model/relational_model/utils";
 
 class BlankComponent extends Component {
     static props = ["onMounted", "withControlPanel", "*"];
@@ -98,6 +99,12 @@ const DIALOG_SIZES = {
     medium: "md",
     small: "sm",
 };
+
+const parser = new DOMParser();
+function isHelpEmpty(help) {
+    const doc = parser.parseFromString(help, "text/html");
+    return doc.body.innerText.trim() === "";
+}
 
 // -----------------------------------------------------------------------------
 // Errors
@@ -247,9 +254,7 @@ function makeActionManager(env) {
                 ? evaluateExpr(domain, Object.assign({}, env.services.user.context, action.context))
                 : domain;
         if (action.help) {
-            const htmlHelp = document.createElement("div");
-            htmlHelp.innerHTML = action.help;
-            if (!htmlHelp.innerText.trim()) {
+            if (isHelpEmpty(action.help)) {
                 delete action.help;
             }
         }
@@ -688,6 +693,14 @@ function makeActionManager(env) {
                     if (action.target === "new") {
                         removeDialogFn?.();
                     } else {
+                        if (controller?.jsId) {
+                            if (error?.cause instanceof FetchRecordError) {
+                                // remove error controller from breadcrumb
+                                controllerStack = controllerStack.filter(
+                                    (c) => c.jsId !== controller.jsId
+                                );
+                            }
+                        }
                         const lastCt = controllerStack[controllerStack.length - 1];
                         if (lastCt) {
                             if (lastCt.jsId !== controller.jsId) {
@@ -831,7 +844,7 @@ function makeActionManager(env) {
             controller.props.globalState = controller.action.globalState;
         }
 
-        const closingProm = _executeCloseAction();
+        const closingProm = _executeCloseAction({ onCloseInfo: { noReload: true } });
 
         if (options.clearBreadcrumbs && !options.noEmptyTransition) {
             const def = new Deferred();

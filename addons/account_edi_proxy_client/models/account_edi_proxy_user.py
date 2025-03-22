@@ -147,6 +147,13 @@ class AccountEdiProxyClientUser(models.Model):
             if error_code == 'no_such_user':
                 # This error is also raised if the user didn't exchange data and someone else claimed the edi_identificaiton.
                 self.sudo().active = False
+            if error_code == 'invalid_signature':
+                raise AccountEdiProxyError(
+                    error_code,
+                    _("Invalid signature for request. This might be due to another connection to odoo Access Point "
+                      "server. It can occur if you have duplicated your database. \n\n"
+                      "If you are not sure how to fix this, please contact our support."),
+                )
             raise AccountEdiProxyError(error_code, proxy_error['message'] or False)
 
         return response['result']

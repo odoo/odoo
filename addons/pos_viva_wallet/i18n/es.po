@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
 # Fernanda Alvarez, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2024-02-07 08:49+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,16 +77,8 @@ msgstr "Mensaje de Viva Wallet: %s"
 #. odoo-python
 #: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
 #, python-format
-msgid "Not receive Bearer Token"
-msgstr "No se recibió el token del portador"
-
-#. module: pos_viva_wallet
-#. odoo-python
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
-#, python-format
-msgid "Only 'group_pos_user' are allowed to fetch token from Viva Wallet"
-msgstr "Solo 'group_pos_user' puede conseguir un token de Viva Wallet"
+msgid "Only 'group_pos_user' are allowed to cancel a Viva Wallet payment"
+msgstr "Solo ‘group_pos_user’ puede cancelar un pago de Viva Wallet"
 
 #. module: pos_viva_wallet
 #. odoo-python
@@ -95,6 +87,23 @@ msgstr "Solo 'group_pos_user' puede conseguir un token de Viva Wallet"
 msgid "Only 'group_pos_user' are allowed to get latest transaction status"
 msgstr ""
 "Solo 'group_pos_user' puede conseguir el último estado de la transacción"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to get the payment status from Viva Wallet"
+msgstr "Solo ‘group_pos_user’ puede obtener el estado de pago de Viva Wallet"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Only 'group_pos_user' are allowed to send a Viva Wallet payment request"
+msgstr ""
+"Solo ‘group_pos_user’ puede enviar una solicitud de pago de Viva Wallet"
 
 #. module: pos_viva_wallet
 #: model:ir.model,name:pos_viva_wallet.model_pos_payment_method
@@ -137,6 +146,17 @@ msgstr ""
 msgid "There are some issues between us and Viva Wallet, try again later.%s)"
 msgstr ""
 "Hay algunos problemas con Viva Wallet, inténtelo de nuevo más tarde. %s"
+
+#. module: pos_viva_wallet
+#. odoo-python
+#: code:addons/pos_viva_wallet/models/pos_payment_method.py:0
+#, python-format
+msgid ""
+"Unable to retrieve Viva Wallet Bearer Token: Please verify that the Client "
+"ID and Client Secret are correct"
+msgstr ""
+"No se ha podido recuperar el token de portador de Viva Wallet: verifique que"
+" el ID de cliente y el secreto de cliente son correctos."
 
 #. module: pos_viva_wallet
 #: model:ir.model.fields,help:pos_viva_wallet.field_pos_payment_method__viva_wallet_api_key

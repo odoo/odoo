@@ -10,7 +10,7 @@ import { start } from "@mail/../tests/helpers/test_utils";
 
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { Domain } from "@web/core/domain";
-import { serializeDate } from "@web/core/l10n/dates";
+import { serializeDate, formatDate } from "@web/core/l10n/dates";
 import { deepEqual, omit } from "@web/core/utils/objects";
 import { session } from "@web/session";
 import testUtils from "@web/../tests/legacy/helpers/test_utils";
@@ -237,7 +237,7 @@ QUnit.module("test_mail", {}, function () {
             'should contain "Meeting Room Furnitures" in first colum of second row'
         );
 
-        const today = DateTime.now().toLocaleString(luxon.DateTime.DATE_SHORT);
+        const today = formatDate(DateTime.now());
 
         assert.ok(
             $activity.find(
@@ -374,15 +374,11 @@ QUnit.module("test_mail", {}, function () {
         });
         // Cells dates
         await contains(".o-mail-ActivityCell-deadline", {
-            text: luxon.DateTime.fromISO(uploadPlannedActs[0].date_deadline).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadPlannedActs[0].date_deadline)),
             target: domRowMeetingCellUpload,
         });
         await contains(".o-mail-ActivityCell-deadline", {
-            text: luxon.DateTime.fromISO(uploadDoneActs[1].date_done).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[1].date_done)),
             target: domRowOfficeCellUpload,
         });
         // Activity list popovers content
@@ -399,18 +395,15 @@ QUnit.module("test_mail", {}, function () {
         await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "1" }); // 1 done
         await contains(".o-mail-ActivityListPopoverItem", { text: uploadDoneActs[0].user_id[1] });
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: luxon.DateTime.fromISO(uploadDoneActs[0].date_done).toLocaleString(
-                luxon.DateTime.DATE_SHORT
-            ),
+            text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[0].date_done), {format: "M/d/yyyy"})
         });
 
         await click(domActivity, `${selRowOfficeCellUpload} > div`);
         await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "3" }); // 3 done
         for (const actIdx of [1, 2, 3]) {
+            console.log();
             await contains(".o-mail-ActivityListPopoverItem", {
-                text: luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done).toLocaleString(
-                    luxon.DateTime.DATE_SHORT
-                ),
+                text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done), {format: "M/d/yyyy"}),
             });
             await contains(".o-mail-ActivityListPopoverItem", {
                 text: uploadDoneActs[actIdx].user_id[1],
@@ -1502,4 +1495,30 @@ QUnit.module("test_mail", {}, function () {
         await click(target, ".modal-footer button.o_form_button_cancel");
         assert.containsOnce(target, ".o_activity_summary_cell:not(.o_activity_empty_cell)");
     });
+
+    QUnit.test(
+        "Activity View: Hide 'New' button in SelectCreateDialog based on action context",
+        async function (assert) {
+            assert.expect(1);
+
+            Object.assign(serverData.views, {
+                "mail.test.activity,false,list":
+                    '<tree string="MailTestActivity"><field name="name"/></tree>',
+            });
+
+            const { openView } = await start({
+                serverData,
+            });
+            await openView({
+                res_model: "mail.test.activity",
+                views: [[false, "activity"]],
+                context: { create: false },
+            });
+
+            const activity = $(document);
+            await testUtils.dom.click(activity.find("table tfoot tr .o_record_selector"));
+
+            assert.containsNone(activity, ".o_create_button", "'New' button should be hidden.");
+        }
+    );
 });

@@ -32,6 +32,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'dk_coa_2720',
                 'account_sale_tax_id': 'tax_s1',
                 'account_purchase_tax_id': 'tax_k1',
+                'check_account_audit_trail': True,
             },
         }
 

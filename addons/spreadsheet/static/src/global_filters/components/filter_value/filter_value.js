@@ -67,4 +67,5 @@ FilterValue.components = { DateFilterValue, DateFromToValue, MultiRecordSelector
 FilterValue.props = {
     filter: Object,
     model: Object,
+    showTitle: { type: Boolean, optional: true },
 };

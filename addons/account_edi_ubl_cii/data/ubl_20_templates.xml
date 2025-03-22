@@ -240,6 +240,7 @@
     <template id="ubl_20_DeliveryType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('delivery_id')"/>
             <cbc:ActualDeliveryDate t-out="vals.get('actual_delivery_date')"/>
             <cac:DeliveryLocation>
                 <cac:Address>
@@ -248,6 +249,13 @@
                     </t>
                 </cac:Address>
             </cac:DeliveryLocation>
+            <cac:DeliveryParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('delivery_party_vals', {}).get('party_vals', {})"/>
+                    </t>
+                </cac:Party>
+            </cac:DeliveryParty>
         </t>
     </template>
 
@@ -332,13 +340,21 @@
         </t>
     </template>
 
-    <template id="ubl_20_InvoiceLineType" inherit_id="account_edi_ubl_cii.ubl_20_CommonLineType" primary="True">
+    <template id="ubl_20_InvoiceLineType" inherit_id="account_edi_ubl_cii.ubl_20_CommonLineType" primary="True"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
         <xpath expr="//*[local-name()='Note']" position="after">
             <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
                 <cbc:InvoicedQuantity
                     t-att="vals.get('line_quantity_attrs', {})"
                     t-out="vals.get('line_quantity')"/>
             </t>
+        </xpath>
+        <xpath expr="//*[local-name()='LineExtensionAmount']" position="after">
+            <cac:InvoicePeriod t-foreach="vals.get('invoice_period_vals_list', [])" t-as="invoice_period">
+                <t t-call="account_edi_ubl_cii.ubl_20_InvoicePeriod">
+                    <t t-set="vals" t-value="invoice_period"/>
+                </t>
+            </cac:InvoicePeriod>
         </xpath>
         <xpath expr="//*[local-name()='TaxTotal']" position="before">
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
@@ -371,6 +387,18 @@
         </xpath>
     </template>
 
+    <template id="ubl_20_InvoicePeriod"
+              xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+              xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+        <cbc:StartDate t-out="vals.get('start_date')"/>
+        <cbc:StartTime t-out="vals.get('start_time')"/>
+        <cbc:EndDate t-out="vals.get('end_date')"/>
+        <cbc:EndTime t-out="vals.get('end_time')"/>
+        <cbc:DurationMeasure t-out="vals.get('duration_measure')"/>
+        <cbc:DescriptionCode t-out="vals.get('description_code')"/>
+        <cbc:Description t-out="vals.get('description')"/>
+    </template>
+
     <template id="ubl_20_CommonType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
@@ -380,6 +408,7 @@
                 t-att="vals.get('profile_id_attrs', {})"
                 t-out="vals.get('profile_id')"/>
             <cbc:ID t-out="vals.get('id')"/>
+            <cbc:CopyIndicator t-out="vals.get('copy_indicator')"/>
             <cbc:UUID t-out="vals.get('uuid')"/>
             <cbc:IssueDate t-out="vals.get('issue_date')"/>
             <cbc:Note t-foreach="vals.get('note_vals', [])" t-as="note_vals"
@@ -391,13 +420,16 @@
             <cbc:TaxCurrencyCode
                 t-att="vals.get('tax_currency_code_attrs', {})"
                 t-out="vals.get('tax_currency_code')"/>
-            <cac:InvoicePeriod t-foreach="vals.get('invoice_period_vals_list', [])" t-as="foreach_vals">
-                <cbc:StartDate t-out="foreach_vals.get('start_date')"/>
-                <cbc:EndDate t-out="foreach_vals.get('end_date')"/>
+            <cbc:LineCountNumeric t-out="vals.get('line_count_numeric')"/>
+            <cac:InvoicePeriod t-foreach="vals.get('invoice_period_vals_list', [])" t-as="invoice_period">
+                <t t-call="account_edi_ubl_cii.ubl_20_InvoicePeriod">
+                    <t t-set="vals" t-value="invoice_period"/>
+                </t>
             </cac:InvoicePeriod>
             <cac:OrderReference>
                 <cbc:ID t-out="vals.get('order_reference')"/>
                 <cbc:SalesOrderID t-out="vals.get('sales_order_id')"/>
+                <cbc:IssueDate t-out="vals.get('order_issue_date')"/>
             </cac:OrderReference>
             <cac:BillingReference>
                 <t t-set="billing_reference_vals" t-value="vals.get('billing_reference_vals', {})"/>
@@ -410,7 +442,9 @@
             <t t-foreach="vals.get('additional_document_reference_list', [])" t-as="foreach_vals">
                 <cac:AdditionalDocumentReference>
                     <cbc:ID t-out="foreach_vals.get('id')"/>
+                    <cbc:IssueDate t-out="foreach_vals.get('issue_date')"/>
                     <cbc:DocumentTypeCode t-out="foreach_vals.get('document_type_code')"/>
+                    <cbc:DocumentType t-out="foreach_vals.get('document_type')"/>
                     <cbc:DocumentDescription t-out="foreach_vals.get('document_description')"/>
                 </cac:AdditionalDocumentReference>
             </t>

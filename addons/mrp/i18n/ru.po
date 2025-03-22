@@ -18,15 +18,16 @@
 # Alena Vlasova, 2023
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
 # Nadia Martynova, 2024
-# Wil Odoo, 2024
+# Ilya Rozhkov, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -282,8 +283,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">Производить</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">Произвести</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -678,12 +679,12 @@ msgstr "Все"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
 msgid "All Move"
-msgstr ""
+msgstr "Все перемещения"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
 msgid "All Move Raw"
-msgstr ""
+msgstr "Все перемещения (сырье)"
 
 #. module: mrp
 #. odoo-python
@@ -1328,6 +1329,8 @@ msgid ""
 "Cannot compute days to prepare due to missing route info for at least 1 "
 "component or for the final product."
 msgstr ""
+"Невозможно рассчитать количество дней для подготовки из-за отсутствия "
+"информации о маршруте хотя бы для одного компонента или конечного продукта."
 
 #. module: mrp
 #. odoo-python
@@ -1695,13 +1698,6 @@ msgstr "Стоимость"
 #, python-format
 msgid "Costs"
 msgstr "Расходы"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-#, python-format
-msgid "Could not display the selected spreadsheet"
-msgstr "Не удалось отобразить выбранную электронную таблицу"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
@@ -2552,13 +2548,6 @@ msgstr "Google Slide"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
 msgstr "Ссылка на слайд Google"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-#, python-format
-msgid "Google Slides Viewer"
-msgstr "Программа просмотра слайдов Google"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -3980,13 +3969,6 @@ msgid "Operations that need to be completed before this operation can start."
 msgstr "Операции, которые должны быть завершены до начала этой операции."
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "Operator not supported without a value."
-msgstr "Оператор не поддерживается без значения."
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
 msgstr "Точка заказа"
@@ -4670,7 +4652,6 @@ msgstr "Квант"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Quantity"
@@ -4678,6 +4659,7 @@ msgstr "Количество"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 msgid "Quantity Produced"
 msgstr "Количество произведенной продукции"
@@ -4686,6 +4668,11 @@ msgstr "Количество произведенной продукции"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
 msgid "Quantity Producing"
 msgstr "Количество Производящие"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Quantity Remaining"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -4929,7 +4916,7 @@ msgstr "Время выполнения заказа."
 #: code:addons/mrp/models/stock_quant.py:0
 #, python-format
 msgid "Return to Inventory"
-msgstr ""
+msgstr "Возврат на склад"
 
 #. module: mrp
 #. odoo-javascript
@@ -5223,13 +5210,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
 msgstr "Показать линии обратного заказа"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-#, python-format
-msgid "Slides viewer"
-msgstr "Программа просмотра слайдов"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
@@ -7031,6 +7011,8 @@ msgstr "Один и тот же серийный номер не может бы
 #, python-format
 msgid "You cannot start a work order that is already done or cancelled"
 msgstr ""
+"Невозможно запустить производственный заказ, который уже выполнен или "
+"отменён"
 
 #. module: mrp
 #. odoo-python
@@ -7167,6 +7149,7 @@ msgid ""
 "You should update the components quantity instead of directly updating the "
 "quantity of the kit product."
 msgstr ""
+"Следует изменять количество компонентов, а не напрямую количество комплекта."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__stock_picking_type__done_mrp_lot_label_to_print__zpl
@@ -7301,7 +7284,7 @@ msgstr "порядок труда"
 #: code:addons/mrp/static/src/components/mo_overview_line/mrp_mo_overview_line.xml:0
 #, python-format
 msgid "{{ foldButtonTitle }}"
-msgstr ""
+msgstr "{{ foldButtonTitle }}"
 
 #. module: mrp
 #. odoo-javascript
@@ -7311,7 +7294,7 @@ msgstr ""
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #, python-format
 msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr ""
+msgstr "{{ props.isFolded ? 'Развернуть' : 'Свернуть' }}"
 
 #. module: mrp
 #. odoo-javascript
@@ -7321,4 +7304,4 @@ msgstr ""
 #: code:addons/mrp/static/src/components/mo_overview_operations_block/mrp_mo_overview_operations_block.xml:0
 #, python-format
 msgid "{{ state.isFolded ? 'Unfold' : 'Fold' }}"
-msgstr ""
+msgstr "{{ state.isFolded ? 'Развернуть' : 'Свернуть' }}"

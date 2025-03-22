@@ -137,6 +137,7 @@ class StockPicking(models.Model):
                         'journal_id': rec.pos_order_id.sale_journal.id,
                         'date': rec.pos_order_id.date_order,
                         'ref': 'pos_order_'+str(rec.pos_order_id.id),
+                        'partner_id': rec.pos_order_id.partner_id.id,
                         'line_ids': [
                             (0, 0, {
                                 'name': rec.pos_order_id.name,
@@ -299,6 +300,7 @@ class StockMove(models.Model):
                                 else:
                                     ml_vals.update({
                                         'lot_name': existing_lot.name,
+                                        'lot_id': existing_lot.id,
                                     })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})

@@ -610,7 +610,7 @@ class MrpProduction(models.Model):
             if production.state in ('draft', 'done', 'cancel'):
                 production.reservation_state = False
                 continue
-            relevant_move_state = production.move_raw_ids.filtered(lambda m: not m.picked)._get_relevant_state_among_moves()
+            relevant_move_state = production.move_raw_ids.filtered(lambda m: not (m.picked or float_is_zero(m.product_uom_qty, precision_rounding=m.product_uom.rounding)))._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
             if relevant_move_state == 'partially_available':
                 if production.workorder_ids.operation_id and production.bom_id.ready_to_produce == 'asap':
@@ -796,7 +796,8 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
-        self._set_qty_producing()
+        productions_bypass_qty_producting = self.filtered(lambda p: p.lot_producing_id and p.product_tracking == 'lot' and p._origin and p._origin.qty_producing == p.qty_producing)
+        (self - productions_bypass_qty_producting)._set_qty_producing()
 
     @api.onchange('lot_producing_id')
     def _onchange_lot_producing(self):
@@ -867,7 +868,7 @@ class MrpProduction(models.Model):
                 if production.state == 'draft' and picking_type != production.picking_type_id:
                     production.name = picking_type.sequence_id.next_by_id()
 
-        res = super(MrpProduction, self).write(vals)
+        res = super().write(vals)
 
         for production in self:
             if 'date_start' in vals and not self.env.context.get('force_date', False):
@@ -892,7 +893,7 @@ class MrpProduction(models.Model):
                 if 'qty_producing' in vals:
                     finished_move.quantity = vals.get('qty_producing')
             if self._has_workorders() and not production.workorder_ids.operation_id and vals.get('date_start') and not vals.get('date_finished'):
-                new_date_start = fields.Datetime.to_datetime(vals.get('date_start'))
+                new_date_start = production.date_start
                 if not production.date_finished or new_date_start >= production.date_finished:
                     production.date_finished = new_date_start + datetime.timedelta(hours=1)
         return res
@@ -1304,7 +1305,9 @@ class MrpProduction(models.Model):
         self.ensure_one()
         procurement_moves = self.procurement_group_id.stock_move_ids
         child_moves = procurement_moves.move_orig_ids
-        return (procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
+        return ((procurement_moves | child_moves).created_production_id.procurement_group_id.mrp_production_ids\
+                | child_moves.production_id)\
+                .filtered(lambda p: p.origin != self.origin) - self
 
     def _get_sources(self):
         self.ensure_one()
@@ -1819,6 +1822,8 @@ class MrpProduction(models.Model):
         new_moves_vals = []
         moves = []
         move_to_backorder_moves = {}
+        # unlink all unregistered move lines linked a move containing an effictive registration
+        (self.move_raw_ids | self.move_finished_ids).filtered(lambda m: m.picked and not m.additional).move_line_ids.filtered(lambda ml: not ml.picked).unlink()
         for production in self:
             for move in production.move_raw_ids | production.move_finished_ids:
                 if move.additional:
@@ -2403,14 +2408,19 @@ class MrpProduction(models.Model):
         def operation_key_values(record):
             return tuple(record[key] for key in ('company_id', 'name', 'workcenter_id'))
 
-        def filter_by_attributes(record):
-            product_attribute_ids = self.product_id.product_template_attribute_value_ids.ids
+        def filter_by_attributes(record, product=self.product_id):
+            product_attribute_ids = product.product_template_attribute_value_ids.ids
             return not record.bom_product_template_attribute_value_ids or\
                    any(att_val.id in product_attribute_ids for att_val in record.bom_product_template_attribute_value_ids)
 
         ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
         _dummy, bom_lines = bom.explode(self.product_id, bom.product_qty)
-        bom_lines_by_id = {(line.id, line.product_id.id): line for line, _dummy in bom_lines if filter_by_attributes(line)}
+        bom_lines_by_id = defaultdict(lambda: [None, 0])
+        for line, exploded_values in bom_lines:
+            if filter_by_attributes(line, exploded_values['product']):
+                key = (line.id, line.product_id.id)
+                bom_lines_by_id[key][0] = line
+                bom_lines_by_id[key][1] += exploded_values['qty'] / exploded_values['original_qty']
         bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
         operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
 
@@ -2448,12 +2458,12 @@ class MrpProduction(models.Model):
 
         # Compares the BoM's lines to the MO's components.
         for move_raw in self.move_raw_ids:
-            bom_line = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), False)
+            bom_line, bom_qty = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), (False, None))
             # If the move isn't already linked to a BoM lines, search for a compatible line.
             if not bom_line:
-                for _bom_line in bom_lines_by_id.values():
+                for _bom_line, _bom_qty in bom_lines_by_id.values():
                     if move_raw.product_id == _bom_line.product_id:
-                        bom_line = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
+                        bom_line, bom_qty = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
                         if bom_line:
                             break
             move_raw_qty = bom_line and move_raw.product_uom._compute_quantity(
@@ -2467,7 +2477,7 @@ class MrpProduction(models.Model):
                 ):
                 move_raw.bom_line_id = bom_line
                 move_raw.product_id = bom_line.product_id
-                move_raw.product_uom_qty = bom_line.product_qty / ratio
+                move_raw.product_uom_qty = bom_qty / ratio
                 move_raw.product_uom = bom_line.product_uom_id
                 if move_raw.operation_id != bom_line.operation_id:
                     move_raw.operation_id = bom_line.operation_id
@@ -2476,10 +2486,10 @@ class MrpProduction(models.Model):
                 moves_to_unlink |= move_raw
         # Creates a raw moves for each remaining BoM's lines.
         raw_moves_values = []
-        for bom_line in bom_lines_by_id.values():
+        for bom_line, bom_qty in bom_lines_by_id.values():
             raw_move_vals = self._get_move_raw_values(
                 bom_line.product_id,
-                bom_line.product_qty / ratio,
+                bom_qty / ratio,
                 bom_line.product_uom_id,
                 bom_line=bom_line
             )

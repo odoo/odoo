@@ -60,15 +60,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
 
-            # Some extra european countries use Bis 3 but do not prepend their VAT with the country code (i.e.
-            # Australia). Allow them to use Bis 3 without raising BR-CO-09.
-            if (
-                partner.country_id
-                and partner.country_id not in self.env.ref('base.europe').country_ids
-                and not partner.vat[:2].isalpha()
-            ):
-                vals['company_id'] = partner.country_id.code + partner.vat
-
         # sources:
         #  https://anskaffelser.dev/postaward/g3/spec/current/billing-3.0/norway/#_applying_foretaksregisteret
         #  https://docs.peppol.eu/poacc/billing/3.0/bis/#national_rules (NO-R-002 (warning))

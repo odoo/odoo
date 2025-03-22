@@ -39,7 +39,8 @@ class PurchaseOrder(models.Model):
                 amount_untaxed = sum(order_lines.mapped('price_subtotal'))
                 amount_tax = sum(order_lines.mapped('price_tax'))
 
-            order.amount_untaxed = amount_untaxed
+            if order.currency_id.compare_amounts(order.amount_untaxed, amount_untaxed):
+                order.amount_untaxed = amount_untaxed
             order.amount_tax = amount_tax
             order.amount_total = order.amount_untaxed + order.amount_tax
 

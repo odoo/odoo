@@ -4153,9 +4153,8 @@ QUnit.module("Views", (hooks) => {
         const tbodySelectors = target.querySelectorAll("tbody .o_list_record_selector input");
         const theadSelector = target.querySelector("thead .o_list_record_selector input");
 
-        const getFooterTextArray = () => {
-            return [...target.querySelectorAll("tfoot td")].map((td) => td.innerText);
-        };
+        const getFooterTextArray = () =>
+            [...target.querySelectorAll("tfoot td")].map((td) => td.innerText);
 
         assert.deepEqual(getFooterTextArray(), ["", "", "32", "1.50"]);
 
@@ -6801,6 +6800,17 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "web_search_read") {
                     assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
                 }
+                if (args.method === "search_count") {
+                    assert.deepEqual(args.kwargs.context, {
+                        lang: "en",
+                        tz: "taht",
+                        uid: 7,
+                        xyz: "abc",
+                    });
+                }
+            },
+            context: {
+                xyz: "abc",
             },
         });
 
@@ -17588,6 +17598,35 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("list: resize column, then resize window", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // 1. Resize column foo to middle of column int_field.
+        const th2 = target.querySelector("th:nth-child(2)");
+        const th3 = target.querySelector("th:nth-child(3)");
+        const resizeHandle = th2.querySelector(".o_resize");
+
+        await dragAndDrop(resizeHandle, th3);
+
+        // 2. Simulate a window resize
+        const currentWidth = target.getBoundingClientRect().width;
+        target.style.width = currentWidth / 2 + "px";
+        window.dispatchEvent(new Event("resize"));
+        await nextTick();
+
+        const tableWidth = target.querySelector(".o_list_table").getBoundingClientRect().width;
+        assert.strictEqual(tableWidth, currentWidth / 2);
+    });
+
     QUnit.test("list: resize column and toggle check all", async function (assert) {
         await makeView({
             type: "list",
@@ -20944,7 +20983,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_data_row", 3);
         assert.containsNone(target, ".o_group_header .o_pager");
     });
-    
+
     QUnit.test("open record, with invalid record in list", async function (assert) {
         // in this scenario, the record is already invalid in db, so we should be allowed to
         // leave it

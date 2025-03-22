@@ -5,16 +5,16 @@
 # Translators:
 # Alvin Wu <Alvin.Wu.work@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
-# Tony Ng, 2024
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1411,6 +1411,13 @@ msgid "BACK arrow"
 msgstr "後退箭嘴"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#, python-format
+msgid "Back to “%s”"
+msgstr "返回「%s」"
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
 msgid "Background Image"
 msgstr "背景圖像"
@@ -1750,7 +1757,7 @@ msgstr "選擇檔案"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Choose a debug command..."
-msgstr "選擇Debug命令..."
+msgstr "選擇除錯指令⋯"
 
 #. module: web
 #. odoo-javascript
@@ -1938,7 +1945,6 @@ msgstr "公司名稱"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 msgid "Company tagline"
@@ -2115,7 +2121,6 @@ msgstr "版權所有©2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -2130,10 +2135,10 @@ msgstr "無法顯示選取的 PDF"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 #, python-format
-msgid "Could not display the specified image url."
-msgstr "無法顯示指定的圖片網址。"
+msgid "Could not display the selected spreadsheet"
+msgstr "無法顯示選定的試算表"
 
 #. module: web
 #. odoo-javascript
@@ -2343,7 +2348,7 @@ msgstr "日"
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Deactivate debug mode"
-msgstr "停用debug模式"
+msgstr "停用除錯模式"
 
 #. module: web
 #. odoo-javascript
@@ -2357,7 +2362,7 @@ msgstr "取消啟動開發者模式"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Debug tools..."
-msgstr "Debug工具..."
+msgstr "除錯工具⋯"
 
 #. module: web
 #. odoo-javascript
@@ -3197,7 +3202,7 @@ msgstr "浮點數"
 #: code:addons/web/static/src/views/kanban/kanban_header.js:0
 #, python-format
 msgid "Fold"
-msgstr "收攏"
+msgstr "收起"
 
 #. module: web
 #. odoo-javascript
@@ -3385,6 +3390,14 @@ msgstr "通過Odoo企業版獲得該功能及其他更多！"
 #, python-format
 msgid "Go to URL"
 msgstr "前往網址"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+#, python-format
+msgid "Google Slide Viewer"
+msgstr "Google 簡報檢視器"
 
 #. module: web
 #. odoo-javascript
@@ -4248,7 +4261,7 @@ msgstr "線狀圖"
 #: code:addons/web/static/src/core/signature/name_and_signature.xml:0
 #, python-format
 msgid "Load"
-msgstr "加載"
+msgstr "載入"
 
 #. module: web
 #. odoo-javascript
@@ -4259,11 +4272,18 @@ msgstr "載入範例資料"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr "仍然繼續載入所有項目。"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
 msgid "Load more... ("
-msgstr "加載更多...("
+msgstr "載入更多⋯（"
 
 #. module: web
 #. odoo-javascript
@@ -4416,6 +4436,13 @@ msgstr "尋找"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+#, python-format
+msgid "Max value"
+msgstr "最大值"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 #, python-format
 msgid "Max value field"
@@ -4433,7 +4460,7 @@ msgstr "最大值:"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Maybe you should consider reloading the application by pressing F5..."
-msgstr "也許您應該考慮按下 F5 鍵重新載入網頁...ORZ"
+msgstr "請考慮按 F5 鍵，重新載入應用程式⋯"
 
 #. module: web
 #. odoo-javascript
@@ -4449,7 +4476,7 @@ msgstr "量度"
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Medium"
-msgstr "中"
+msgstr "媒介"
 
 #. module: web
 #. odoo-javascript
@@ -4608,6 +4635,14 @@ msgstr "月"
 #, python-format
 msgid "More"
 msgstr "更多"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "More..."
+msgstr "更多⋯"
 
 #. module: web
 #. odoo-javascript
@@ -6403,7 +6438,7 @@ msgstr "搜尋表情符號"
 #: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.js:0
 #, python-format
 msgid "Search user..."
-msgstr "搜索用戶..."
+msgstr "搜尋使用者⋯"
 
 #. module: web
 #. odoo-javascript
@@ -6515,6 +6550,13 @@ msgstr "選擇視圖"
 #, python-format
 msgid "Select all"
 msgstr "全選"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr "選取所有符合搜尋條件的記錄"
 
 #. module: web
 #. odoo-javascript
@@ -6839,6 +6881,13 @@ msgstr "狀態"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr "狀態列"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
@@ -7114,6 +7163,15 @@ msgid ""
 "that must be fixed for the entire database before continuing working. See "
 "browser console or server logs for details."
 msgstr "樣式編譯失敗。這是管理員或開發人員的錯誤，必須先修理整個資料庫，然後才可繼續。有關詳細資訊，請參閱瀏覽器控制台或伺服器日誌。"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr "數據量太多。此圖表只顯示部份樣本。請使用篩選器縮小範圍。"
 
 #. module: web
 #. odoo-python
@@ -7652,7 +7710,7 @@ msgstr "上傳錯誤"
 #: code:addons/web/static/src/views/fields/file_handler.xml:0
 #, python-format
 msgid "Uploading..."
-msgstr "正在上傳..."
+msgstr "上載中⋯"
 
 #. module: web
 #. odoo-javascript
@@ -11788,14 +11846,14 @@ msgstr "炸薯條"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chocolate"
-msgstr "巧克力"
+msgstr "朱古力"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "chocolate bar"
-msgstr "巧克力棒"
+msgstr "朱古力棒"
 
 #. module: web
 #. odoo-javascript
@@ -14198,7 +14256,7 @@ msgstr "垂下的臉有汗滴"
 #: code:addons/web/static/src/core/network/download.js:0
 #, python-format
 msgid "downloading..."
-msgstr "下載中...."
+msgstr "下載中⋯"
 
 #. module: web
 #. odoo-javascript
@@ -33696,7 +33754,7 @@ msgstr "已預留"
 #: code:addons/web/static/src/core/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "“secret”"
-msgstr "“secret”"
+msgstr "秘密"
 
 #. module: web
 #. odoo-javascript

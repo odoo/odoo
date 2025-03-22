@@ -6,15 +6,15 @@
 # Michael Hofer, 2023
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -670,6 +670,14 @@ msgstr "Aktion notwendig"
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
 msgstr "Ansicht des Aktionsfensters"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Actions"
+msgstr "Aktionen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -1523,6 +1531,11 @@ msgstr ""
 "erledigt markiert ist."
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
+msgid "Available for all Companies"
+msgstr "Für alle Unternehmen verfügbar"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/discuss.xml:0
 #: code:addons/mail/static/src/core/common/message_in_reply.xml:0
@@ -1749,6 +1762,17 @@ msgstr ""
 #, python-format
 msgid "Bounced"
 msgstr "Unzustellbar"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid ""
+"Brave: enable 'Google Services for Push Messaging' to enable push "
+"notifications"
+msgstr ""
+"Brave: Aktivieren Sie „Google-Services für Push-Benachrichtigungen“, um "
+"Push-Benachrichtigungen zu aktivieren"
 
 #. module: mail
 #. odoo-javascript
@@ -3170,7 +3194,7 @@ msgstr "Erledigt und nächste Aktivität planen"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -3739,6 +3763,13 @@ msgstr "Fehlgeschlagen"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/webclient/web/webclient.js:0
+#, python-format
+msgid "Failed to enable push notifications"
+msgstr "Push-Benachrichtigungen konnten nicht aktiviert werden"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/gif_picker.xml:0
 #, python-format
 msgid "Failed to load gifs..."
@@ -3769,9 +3800,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render inline_template template: %(template_txt)s)"
+msgid "Failed to render inline_template template: %(template_txt)s"
 msgstr ""
-"Die Vorlage inline_template konnte nicht gerendert werden: %(template_txt)s)"
+"Die Vorlage inline_template konnte nicht gerendert werden: %(template_txt)s"
 
 #. module: mail
 #. odoo-python
@@ -4224,8 +4255,10 @@ msgid "Groups"
 msgstr "Gruppen"
 
 #. module: mail
+#. odoo-javascript
 #. odoo-python
 #: code:addons/mail/controllers/discuss/public_page.py:0
+#: code:addons/mail/static/src/discuss/core/public/welcome_page.js:0
 #: model:ir.model,name:mail.model_mail_guest
 #: model:ir.model.fields,field_description:mail.field_bus_presence__guest_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__guest_id
@@ -4680,7 +4713,7 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
-"Wenn wahr, werden die Antworten nicht in den ursprünglichen "
+"Wenn Wahr, werden die Antworten nicht in den ursprünglichen "
 "Diskussionsthread des Dokuments gestellt. Stattdessen wird nach der reply_to"
 " in der Verfolgungsnachricht-ID gesucht und entsprechend weitergeleitet. "
 "Dies hat Auswirkungen auf die generierte Nachrichten-ID."
@@ -6975,6 +7008,14 @@ msgid "Open Form View"
 msgstr "Formularansicht öffnen"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Link öffnen"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_view_tree
 msgid "Open Owner"
 msgstr "Besitzer öffnen"
@@ -7953,8 +7994,7 @@ msgstr "Beziehungsfeld"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
+#: code:addons/mail/static/src/core/common/attachment_list.js:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/attachment_list.xml:0
 #: code:addons/mail/static/src/core/common/link_preview.xml:0
@@ -9461,7 +9501,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "The message below could not be accepted by the address"
 msgstr ""
-"Die untenstehende Nachricht konnte nicht akzeptiert werden von der Adresse"
+"Die unten stehende Nachricht konnte nicht akzeptiert werden von der Adresse"
 
 #. module: mail
 #. odoo-python
@@ -9472,7 +9512,7 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
-"Die untenstehende Nachricht konnte von der Adresse %(alias_display_name)s nicht akzeptiert werden.\n"
+"Die unten stehende Nachricht konnte von der Adresse %(alias_display_name)s nicht akzeptiert werden.\n"
 "                 Nur %(contact_description)s ist es gestattet, diese zu kontaktieren.<br /><br />\n"
 "                 Bitte stellen Sie sicher, dass Sie die korrekte Adresse verwenden, oder kontaktieren Sie uns stattdessen unter %(default_email)s."
 
@@ -9484,7 +9524,7 @@ msgid ""
 "The message below could not be accepted by the address %(alias_display_name)s.\n"
 "Please try again later or contact %(company_name)s instead."
 msgstr ""
-"Die untenstehende Nachricht konnte von der Adresse %(alias_display_name)s nicht aktzeptiert werden.\n"
+"Die unten stehende Nachricht konnte von der Adresse %(alias_display_name)s nicht aktzeptiert werden.\n"
 "Bitte versuchen Sie es später erneut oder kontaktieren Sie stattdessen %(company_name)s."
 
 #. module: mail
@@ -10562,13 +10602,6 @@ msgstr "Reaktionen ansehen"
 #: model:ir.model.fields,field_description:mail.field_ir_ui_view__type
 msgid "View Type"
 msgstr "Ansichtstyp"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/common/attachment_list.xml:0
-#, python-format
-msgid "View image"
-msgstr "Bild ansehen"
 
 #. module: mail
 #. odoo-javascript

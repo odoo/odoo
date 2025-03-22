@@ -17,7 +17,6 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
 # 0ba0ac30481a756f36528ba6f9a4317e_6443a87 <52eefe24349934c364624ef40611b7a3_1010754>, 2024
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
-# Matija Gudlin, 2024
 # Tina Milas, 2024
 # Kristina Palaš, 2024
 # Milan Tribuson <one.mile.code@gmail.com>, 2024
@@ -25,22 +24,23 @@
 # Martin Trigaux, 2024
 # Gordana Bilas, 2024
 # Matej Mijoč, 2024
-# Vladimir Vrgoč, 2024
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
 # Ivan Marijanović <ivanm101@yahoo.com>, 2024
-# hrvoje sić <hrvoje.sic@gmail.com>, 2024
 # Sven ServisiRAM <sven@servisiram.hr>, 2024
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
 # Luka Carević <luka@uvid.hr>, 2024
 # Bole <bole@dajmi5.com>, 2024
+# hrvoje sić <hrvoje.sic@gmail.com>, 2025
+# Vladimir Vrgoč, 2025
+# Matija Gudlin, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
+"Last-Translator: Matija Gudlin, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -645,7 +645,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>With payment terms:</span>"
-msgstr "<span>Sa uvijetima plaćanja:</span>"
+msgstr "<span>Sa uvjetima plaćanja:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -908,7 +908,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
 
 #. module: sale
@@ -1797,7 +1798,7 @@ msgstr "Popust:"
 #: code:addons/sale/wizard/sale_order_discount.py:0
 #, python-format
 msgid "Discount: %(percent)s%%"
-msgstr ""
+msgstr "Popust: %(percent)s%%"
 
 #. module: sale
 #. odoo-python
@@ -3915,7 +3916,6 @@ msgstr "Prodajni nalozi"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4491,6 +4491,9 @@ msgid ""
 "currently locked. You cannot register an expense on a locked Sales Order. "
 "Please create a new SO linked to this Analytic Account."
 msgstr ""
+"Prodajni nalog %(order)s povezan s analitičkim računom %(account)s je "
+"trenutno zaključan. Ne možete registrirati trošak na zaključanom prodajnom "
+"nalogu. Izradite novi SO povezan s ovim analitičkim računom."
 
 #. module: sale
 #. odoo-python
@@ -4500,6 +4503,8 @@ msgid ""
 "The Sales Order %(order)s linked to the Analytic Account %(account)s must be"
 " validated before registering expenses."
 msgstr ""
+"Prodajni nalog %(order)spovezan s analitičkim računom  %(account)s mora se "
+"potvrditi prije registracije troškova."
 
 #. module: sale
 #. odoo-python
@@ -4539,8 +4544,8 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
 
@@ -4672,6 +4677,16 @@ msgstr "Trenutno nemate narudžbi."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
 msgstr ""
 
 #. module: sale
@@ -5225,6 +5240,7 @@ msgstr ""
 "                bez obzira na to radi li se o artiklu koji je moguće pohraniti, potrošnom materijalu ili usluzi."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Vaše narudžbe"

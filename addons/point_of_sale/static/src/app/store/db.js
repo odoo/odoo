@@ -592,7 +592,7 @@ export class PosDB {
             return [];
         }
         var results = [];
-        for (var i = 0; i < this.limit; i++) {
+        while (results.length < this.limit) {
             var r = re.exec(this.category_search_string[category_id]);
             if (r) {
                 var id = Number(r[1]);

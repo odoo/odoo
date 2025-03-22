@@ -93,14 +93,6 @@ class PeppolSettingsButtons extends Component {
         });
     }
 
-    migrate() {
-        this.showConfirmation(
-            "This will migrate your Peppol registration away from Odoo. A migration key will be generated. \
-            If the other service does not support migration, consider deregistering instead.",
-            "button_migrate_peppol_registration"
-        )
-    }
-
     deregister() {
         if (this.ediMode === 'demo') {
             this._callConfigMethod("button_deregister_peppol_participant");

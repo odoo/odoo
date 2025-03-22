@@ -2778,6 +2778,35 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["web_read"]);
     });
 
+    QUnit.test("one2many kanban order with handle widget", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <kanban>
+                            <field name="int_field" widget="handle"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <field name="foo"/>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+            resId: 1,
+            mockRPC(route, args) {
+                if (args.method === "web_read") {
+                    assert.step(`web_read`);
+                    assert.strictEqual(args.kwargs.specification.p.order, "int_field ASC, id ASC");
+                }
+            },
+        });
+        assert.verifySteps(["web_read"]);
+    });
+
     QUnit.test("one2many field when using the pager", async function (assert) {
         const ids = [];
         for (let i = 0; i < 45; i++) {
@@ -15222,4 +15251,76 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(["get_views", "onchange"]);
         }
     );
+
+    QUnit.test("edit o2m with default_order on a field not in view", async function (assert) {
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree default_order="turtle_int">
+                            <field name="turtle_foo"/>
+                            <field name="turtle_bar"/>
+                        </tree>
+                        <form>
+                            <field name="turtle_foo"/>
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "yop",
+            "blip",
+            "kawa",
+        ]);
+
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await editInput(target, ".modal .o_field_widget[name=turtle_foo] input", "blip2");
+        await click(target.querySelector(".modal-footer .o_form_button_save"));
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "yop",
+            "blip2",
+            "kawa",
+        ]);
+    });
+
+    QUnit.test("edit o2m with default_order on a field not in view (2)", async function (assert) {
+        serverData.models.partner.records[0].turtles = [1, 2, 3];
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree default_order="turtle_foo,turtle_int">
+                            <field name="turtle_foo"/>
+                            <field name="turtle_bar"/>
+                        </tree>
+                        <form>
+                            <field name="turtle_foo"/>
+                        </form>
+                    </field>
+                </form>`,
+            resId: 1,
+        });
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "blip",
+            "kawa",
+            "yop",
+        ]);
+
+        await click(target.querySelectorAll(".o_data_row")[1].querySelector(".o_data_cell"));
+        await editInput(target, ".modal .o_field_widget[name=turtle_foo] input", "kawa2");
+        await click(target.querySelector(".modal-footer .o_form_button_save"));
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_char")), [
+            "blip",
+            "kawa2",
+            "yop",
+        ]);
+    });
 });

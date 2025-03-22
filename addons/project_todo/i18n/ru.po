@@ -9,6 +9,7 @@
 # Alena Vlasova, 2023
 # Wil Odoo, 2024
 # Nadia Martynova, 2024
+# Ilya Rozhkov, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Nadia Martynova, 2024\n"
+"Last-Translator: Ilya Rozhkov, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,8 +127,8 @@ msgid ""
 "    </span>"
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
-"        Во время преобразования дел в задачи вы сможете добавлять или удалять назначенных лиц, чтобы контролировать, кто имеет доступ к созданной задаче. Обратите внимание, что ее видимость также будет зависеть от настроек видимости проекта, в который вы ее назначаете.\n"
-"    </span>"
+"         При преобразовании задачи в задание вы сможете добавлять или удалять исполнителей, чтобы контролировать, кто имеет доступ к созданному заданию. Обратите внимание, что его видимость также будет зависеть от настроек видимости проекта, к которому вы его назначаете.\n"
+"     </span>"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -149,7 +150,7 @@ msgstr ""
 "        <span style=\"font-weight: bolder;\">\n"
 "            <font class=\"text-o-color-2\">личные задачи</font>\n"
 "        </span>\n"
-"        и будут отображаться в приложении \"Проект\" в разделе \n"
+"        и будут отображаться в приложении «Проекты» в разделе \n"
 "       <span>\n"
 "           <font style=\"font-weight: bolder;\" class=\"text-o-color-2\">Мои задачи</font>.\n"
 "       </span>\n"
@@ -168,11 +169,11 @@ msgid ""
 "    </span>"
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
-"        Задачи, как и личные задания, доступны только пользователям, указанным в качестве получателей. Вы можете использовать\n"
+"         Задачи, как и приватные задания, доступны только пользователям, указанным в качестве исполнителей. Вы можете использовать поле\n"
 "        <span style=\"font-weight: bolder;\">\n"
-"            <font class=\"text-o-color-2\">assignees</font>\n"
+"            <font class=\"text-o-color-2\">исполнители</font>\n"
 "        </span>\n"
-"        выше, чтобы поделиться этим заданием с другими пользователями.\n"
+"         выше, чтобы поделиться этой задачей с другими пользователями.\n"
 "    </span>"
 
 #. module: project_todo
@@ -198,11 +199,11 @@ msgid ""
 "    </span>"
 msgstr ""
 "<span style=\"font-size: 14px;\">\n"
-"        Вы можете преобразовать свои дела в задачи и назначить их на проект. Для этого вам необходимо получить доступ к\n"
+"        Вы можете преобразовать свои задачи в задачи и назначить их проекту. Для этого вам нужно получить доступ к\n"
 "        <span style=\"font-weight: bolder;\">\n"
 "            <font class=\"text-o-color-2\">Преобразовать в задачу</font>\n"
 "        </span>\n"
-"        во всплывающем меню действий дела.\n"
+"         в всплывающем окне из меню действий задачи.\n"
 "    </span>"
 
 #. module: project_todo
@@ -263,7 +264,7 @@ msgstr ""
 #. module: project_todo
 #: model:ir.model,name:project_todo.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Тип активности"
+msgstr "Тип действия"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.mail_activity_todo_create_popup
@@ -298,7 +299,7 @@ msgstr "Назначено"
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
 msgid "Assignees"
-msgstr "Ответственные"
+msgstr "Исполнители"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -332,7 +333,7 @@ msgstr "Закрыто"
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_conversion_form
 #, python-format
 msgid "Convert to Task"
-msgstr "Перевести в Задачу"
+msgstr "Преобразовать в задачу"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.todo_user_onboarding
@@ -373,7 +374,7 @@ msgstr "Отображаемое имя"
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__date_deadline
 msgid "Due Date"
-msgstr "Срок платежа"
+msgstr "Срок выполнения"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_search
@@ -401,8 +402,8 @@ msgid ""
 "Keep your work organized by using memos and to-do lists.\n"
 "                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees."
 msgstr ""
-"Организуйте свою работу с помощью заметок и списков дел.\n"
-"                По умолчанию ваши дела являются частными, но вы можете поделиться ими с другими людьми, добавив их в качестве получателей."
+"Организуйте свою работу с помощью заметок и списка дел. \n"
+"                     Элементы списка дел по умолчанию являются приватными, но вы можете поделиться ими, добавив других пользователей в качестве исполнителей."
 
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__write_uid
@@ -479,7 +480,7 @@ msgstr "Этап"
 #. module: project_todo
 #: model:ir.model.fields,field_description:project_todo.field_mail_activity_todo_create__summary
 msgid "Summary"
-msgstr "Резюме"
+msgstr "Краткое описание"
 
 #. module: project_todo
 #: model_terms:ir.ui.view,arch_db:project_todo.project_task_view_todo_form

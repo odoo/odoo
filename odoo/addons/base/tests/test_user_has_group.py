@@ -164,7 +164,7 @@ class TestHasGroup(TransactionCase):
         """Contrarily to test_two_user_types, we simply add an implied_id to a group.
            This will trigger the addition of the relevant users to the relevant groups;
            if, say, this was done in SQL and thus bypassing the ORM, it would bypass the constraints
-           and thus give us a case uncovered by the aforementioned test.
+           and field recomputations, and thus give us a case uncovered by the aforementioned test.
         """
         grp_test = self.env["res.groups"].create(
             {"name": "test", "implied_ids": [Command.set([self.grp_internal.id])]})
@@ -175,8 +175,39 @@ class TestHasGroup(TransactionCase):
             'groups_id': [Command.set([grp_test.id])]
         })
 
-        with self.assertRaises(ValidationError):
+        with self.assertRaisesRegex(ValidationError, "The user cannot have more than one user types"), self.env.cr.savepoint():
             grp_test.write({'implied_ids': [Command.link(self.grp_portal.id)]})
+
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_group_names",
+                "model_id": self.env.ref("base.model_res_users").id,
+                "state": "manual",
+                "field_description": "A computed field that depends on groups_id",
+                "compute": "for r in self: r['x_group_names'] = ', '.join(r.groups_id.mapped('name'))",
+                "depends": "groups_id",
+                "store": True,
+                "ttype": "char",
+            }
+        )
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_user_names",
+                "model_id": self.env.ref("base.model_res_groups").id,
+                "state": "manual",
+                "field_description": "A computed field that depends on users",
+                "compute": "for r in self: r['x_user_names'] = ', '.join(r.users.mapped('name'))",
+                "depends": "users",
+                "store": True,
+                "ttype": "char",
+            }
+        )
+
+        grp_additional = self.env["res.groups"].create({"name": "additional"})
+        grp_test.write({'implied_ids': [Command.link(grp_additional.id)]})
+
+        self.assertIn(grp_additional.name, test_user.x_group_names)
+        self.assertIn(test_user.name, grp_additional.x_user_names)
 
     def test_demote_user(self):
         """When a user is demoted to the status of portal/public,

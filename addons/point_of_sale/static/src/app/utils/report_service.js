@@ -3,6 +3,8 @@
 import { registry } from "@web/core/registry";
 import { downloadFile } from "@web/core/network/download";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
+import { isIOS, isIosApp } from "@web/core/browser/feature_detection";
+import { browser } from "@web/core/browser/browser";
 
 export const reportService = {
     dependencies: ["rpc", "user", "ui", "orm", "pos"],
@@ -25,7 +27,10 @@ export const reportService = {
                             byteArray[i] = pdf.charCodeAt(i);
                         }
                         const blob = new Blob([byteArray], { type: "application/pdf" });
-                        // Show the popup to save the pdf
+                        if (isIOS() || isIosApp()) {
+                            const url = window.URL.createObjectURL(blob);
+                            return browser.open(url, "_blank");
+                        }
                         await downloadFile(blob, filename, "application/pdf");
                     } else {
                         reportActionsCache[reportXmlId] ||= rpc("/web/action/load", {

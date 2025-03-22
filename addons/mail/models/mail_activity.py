@@ -201,7 +201,7 @@ class MailActivity(models.Model):
             # Date.context_today is correct because date_deadline is a Date and is meant to be
             # expressed in user TZ
             base = force_base_date
-        elif activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
+        elif activity_type.delay_from == 'previous_activity' and self.env.context.get('activity_previous_deadline'):
             base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
         else:
             base = fields.Date.context_today(self)

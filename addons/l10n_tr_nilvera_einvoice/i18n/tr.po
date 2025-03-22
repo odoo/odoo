@@ -1,0 +1,193 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_tr_nilvera_einvoice
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-29 13:53+0000\n"
+"PO-Revision-Date: 2024-10-29 13:53+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#, python-format
+msgid "Check data on Partner(s)"
+msgstr "Ortak(lar) hakkındaki verileri kontrol edin"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__error
+msgid "Error (check chatter)"
+msgstr "Hata (konuşmayı kontrol edin)"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_journal_dashboard_kanban_view
+msgid "Fetch Nilvera invoice status"
+msgstr "Nilvera fatura durumunu getir"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_journal_dashboard_kanban_view
+msgid "Fetch from Nilvera"
+msgstr "Nilvera'dan Getir"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model,name:l10n_tr_nilvera_einvoice.model_account_journal
+msgid "Journal"
+msgstr "Dergi"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model,name:l10n_tr_nilvera_einvoice.model_account_move
+msgid "Journal Entry"
+msgstr "Günlük Girişi"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_uuid
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_uuid
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_payment__l10n_tr_nilvera_uuid
+msgid "Nilvera Document UUID"
+msgstr "Nilvera Belge UUID'si"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_send_status
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_send_status
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_payment__l10n_tr_nilvera_send_status
+msgid "Nilvera Status"
+msgstr "Nilvera Durumu"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "Nilvera document has been received successfully"
+msgstr "Nilvera belgesi başarıyla alındı"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_invoice_status_ir_actions_server
+msgid "Nilvera: retrieve invoice status"
+msgstr "Nilvera: fatura durumunu al"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.actions.server,name:l10n_tr_nilvera_einvoice.ir_cron_nilvera_get_new_documents_ir_actions_server
+msgid "Nilvera: retrieve new documents"
+msgstr "Nilvera: yeni belgeler alın"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__not_sent
+msgid "Not sent"
+msgstr "Gönderilmedi"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid ""
+"Oops, seems like you're unauthorised to do this. Try another API key with "
+"more rights or contact Nilvera."
+msgstr ""
+"Oops, bunu yapmak için yetkiniz yok gibi görünüyor. Daha fazla hakka sahip başka bir API anahtarı "
+"deneyin veya Nilvera ile iletişime geçin."
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move_send__l10n_tr_nilvera_einvoice_checkbox_xml
+msgid "Send E-Invoice to Nilvera"
+msgstr "Nilvera'ya E-Fatura Gönderin"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__sent
+msgid "Sent and waiting response"
+msgstr "Gönderildi ve yanıt bekleniyor"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "Server error from Nilvera, please try again later."
+msgstr "Nilvera'dan sunucu hatası, lütfen daha sonra tekrar deneyin."
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__succeed
+msgid "Successful"
+msgstr "Başarılı"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#, python-format
+msgid ""
+"The following partner(s) are either not Turkish or are missing one of "
+"those fields: city, state and street."
+msgstr ""
+"Aşağıdaki ortak(lar) ya Türkçe değildir ya da bu alanlardan "
+"biri eksiktir: şehir, eyalet ve cadde."
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "The invoice couldn't be sent due to the following errors:\n"
+msgstr "Fatura aşağıdaki hatalar nedeniyle gönderilemedi:\n"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "The invoice couldn't be sent to the recipient."
+msgstr "Fatura alıcıya gönderilemedi."
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "The invoice has been successfully sent to Nilvera."
+msgstr "Fatura Nilvera'ya başarıyla gönderildi."
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "The invoice status couldn't be retrieved from Nilvera."
+msgstr "Fatura durumu Nilvera'dan alınamadı."
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model,name:l10n_tr_nilvera_einvoice.model_account_edi_xml_ubl_tr
+msgid "UBL-TR 1.2"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_nilvera_uuid
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_nilvera_uuid
+#: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_account_payment__l10n_tr_nilvera_uuid
+msgid "Universally unique identifier of the Invoice"
+msgstr "Faturanın evrensel olarak benzersiz tanımlayıcısı"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__unknown
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/wizard/account_move_send.py:0
+#, python-format
+msgid "View Partner(s)"
+msgstr "Ortak(lar)ı Görüntüle"
+
+#. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_nilvera_send_status__waiting
+msgid "Waiting"
+msgstr "Bekliyorum"
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+#, python-format
+msgid "You cannot reset to draft an entry that has been sent to Nilvera."
+msgstr "Nilvera'ya gönderilmiş bir girişi taslak haline getirmek için sıfırlayamazsınız."
+

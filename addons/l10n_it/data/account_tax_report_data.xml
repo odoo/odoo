@@ -5,6 +5,7 @@
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.it"/>
         <field name="filter_fiscal_position" eval="True"/>
+        <field name="active" eval="False"/>
         <field name="availability_condition">country</field>
         <field name="column_ids">
             <record id="tax_report_vat_balance" model="account.report.column">
@@ -296,11 +297,11 @@
                 <field name="code">VE</field>
                 <field name="children_ids">
                     <record id="tax_report_line_turnover_section_1" model="account.report.line">
-                        <field name="name">Conferimenti di prodotti agricoli e cessioni da agricoltori esonerati (in caso di superamento di 1/3</field>
+                        <field name="name">Contributions of agricultural products and transfers from exempt farmers (in case of exceeding 1/3</field>
                         <field name="code">VE_section1</field>
                         <field name="children_ids">
                             <record id="tax_report_line_ve1" model="account.report.line">
-                                <field name="name">VE1 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 2%</field>
+                                <field name="name">VE1 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 2%</field>
                                 <field name="code">VE1</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve1_tag" model="account.report.expression">
@@ -311,7 +312,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve2" model="account.report.line">
-                                <field name="name">VE2 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 4%</field>
+                                <field name="name">VE2 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 4%</field>
                                 <field name="code">VE2</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve2_tag" model="account.report.expression">
@@ -322,7 +323,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve3" model="account.report.line">
-                                <field name="name">VE3 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 6,4%</field>
+                                <field name="name">VE3 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 6,4%</field>
                                 <field name="code">VE3</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve3_tag" model="account.report.expression">
@@ -333,7 +334,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve4" model="account.report.line">
-                                <field name="name">VE4 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 7,3%</field>
+                                <field name="name">VE4 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 7,3%</field>
                                 <field name="code">VE4</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve4_tag" model="account.report.expression">
@@ -344,7 +345,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve5" model="account.report.line">
-                                <field name="name">VE5 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 7,5%</field>
+                                <field name="name">VE5 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 7,5%</field>
                                 <field name="code">VE5</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve5_tag" model="account.report.expression">
@@ -355,7 +356,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve6" model="account.report.line">
-                                <field name="name">VE6 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 8,3%</field>
+                                <field name="name">VE6 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 8,3%</field>
                                 <field name="code">VE6</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve6_tag" model="account.report.expression">
@@ -366,7 +367,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve7" model="account.report.line">
-                                <field name="name">VE7 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 8,5%</field>
+                                <field name="name">VE7 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 8,5%</field>
                                 <field name="code">VE7</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve7_tag" model="account.report.expression">
@@ -377,7 +378,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve8" model="account.report.line">
-                                <field name="name">VE8 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 8,8%</field>
+                                <field name="name">VE8 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 8,8%</field>
                                 <field name="code">VE8</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve8_tag" model="account.report.expression">
@@ -388,7 +389,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve9" model="account.report.line">
-                                <field name="name">VE9 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 9,5%</field>
+                                <field name="name">VE9 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 9,5%</field>
                                 <field name="code">VE9</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve9_tag" model="account.report.expression">
@@ -399,7 +400,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve10" model="account.report.line">
-                                <field name="name">VE10 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 10%</field>
+                                <field name="name">VE10 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 10%</field>
                                 <field name="code">VE10</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve10_tag" model="account.report.expression">
@@ -410,7 +411,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve11" model="account.report.line">
-                                <field name="name">VE11 - Passaggi a cooperative art.34 comma 2 con percentuale di compensazione 12,3%</field>
+                                <field name="name">VE11 - Transfers to cooperatives art.34 paragraph 2 with compensation percentage 12,3%</field>
                                 <field name="code">VE11</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve11_tag" model="account.report.expression">
@@ -423,11 +424,11 @@
                         </field>
                     </record>
                     <record id="tax_report_line_turnover_section_2" model="account.report.line">
-                        <field name="name">Operazioni imponibili agricole (art.34 comma 1) e operazioni imponibili commerciali e professional</field>
+                        <field name="name">Agricultural taxable transactions (Article 34 paragraph 1) and commercial and professional taxable transactions</field>
                         <field name="code">VE_section2</field>
                         <field name="children_ids">
                             <record id="tax_report_line_ve20" model="account.report.line">
-                                <field name="name">VE20 - Operazioni imponibili aliquota 4%</field>
+                                <field name="name">VE20 - Taxable transactions rate 4%</field>
                                 <field name="code">VE20</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve20_tag" model="account.report.expression">
@@ -438,7 +439,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve21" model="account.report.line">
-                                <field name="name">VE21 - Operazioni imponibili aliquota 5%</field>
+                                <field name="name">VE21 - Taxable transactions rate 5%</field>
                                 <field name="code">VE21</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve21_tag" model="account.report.expression">
@@ -449,7 +450,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve22" model="account.report.line">
-                                <field name="name">VE22 - Operazioni imponibili aliquota 10%</field>
+                                <field name="name">VE22 - Taxable transactions rate 10%</field>
                                 <field name="code">VE22</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve22_tag" model="account.report.expression">
@@ -460,7 +461,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve23" model="account.report.line">
-                                <field name="name">VE23 - Operazioni imponibili aliquota 22%</field>
+                                <field name="name">VE23 - Taxable transactions rate 22%</field>
                                 <field name="code">VE23</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve23_tag" model="account.report.expression">
@@ -473,11 +474,11 @@
                         </field>
                     </record>
                     <record id="tax_report_line_turnover_section_3" model="account.report.line">
-                        <field name="name">Totale imponibile e imposta</field>
+                        <field name="name">Total taxable income and tax</field>
                         <field name="code">VE_section3</field>
                         <field name="children_ids">
                             <record id="tax_report_line_ve24" model="account.report.line">
-                                <field name="name">VE24 - Totale righe da VE1 a VE11 e linee da VE20 a VE23</field>
+                                <field name="name">VE24 - Total lines VE1 to VE11 and lines VE20 to VE23</field>
                                 <field name="code">VE24</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve24_tag" model="account.report.expression">
@@ -492,7 +493,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve25" model="account.report.line">
-                                <field name="name">VE25 - Variazioni e arrotondamenti (usare segno &#43;/&#8722;)</field>
+                                <field name="name">VE25 - Variations and rounding (use &#43;/&#8722; sign)</field>
                                 <field name="code">VE25</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve25_tag" model="account.report.expression">
@@ -503,7 +504,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve26" model="account.report.line">
-                                <field name="name">VE26 - Totale VE24 e VE25</field>
+                                <field name="name">VE26 - Total VE24 and VE25</field>
                                 <field name="code">VE26</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve26_tag" model="account.report.expression">
@@ -518,15 +519,15 @@
                         </field>
                     </record>
                     <record id="tax_report_line_turnover_section_4" model="account.report.line">
-                        <field name="name">Altre operazioni</field>
+                        <field name="name">Other operations</field>
                         <field name="code">VE_section4</field>
                         <field name="children_ids">
                             <record id="tax_report_line_ve30" model="account.report.line">
-                                <field name="name">VE30 - Operazioni che concorrono alla formazione del plafond</field>
+                                <field name="name">VE30 - Transactions that contribute to the formation of the ceiling</field>
                                 <field name="code">VE30</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_ve30_I" model="account.report.line">
-                                        <field name="name">VE30_I - Totale</field>
+                                        <field name="name">VE30_I - Total</field>
                                         <field name="code">VE30_I</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve30_i_tag" model="account.report.expression">
@@ -539,7 +540,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve30_ii" model="account.report.line">
-                                        <field name="name">VE30_II - Esportazioni</field>
+                                        <field name="name">VE30_II - Exports</field>
                                         <field name="code">VE30_II</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve30_ii_tag" model="account.report.expression">
@@ -550,7 +551,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve30_iii" model="account.report.line">
-                                        <field name="name">VE30_III - Cessioni intracomunitarie</field>
+                                        <field name="name">VE30_III - Intra-Community supplies</field>
                                         <field name="code">VE30_III</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve30_iii_tag" model="account.report.expression">
@@ -561,7 +562,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve30_iv" model="account.report.line">
-                                        <field name="name">VE30_IV - Cessioni verso San Marino</field>
+                                        <field name="name">VE30_IV - Transfers to San Marino</field>
                                         <field name="code">VE30_IV</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve30_iv_tag" model="account.report.expression">
@@ -572,7 +573,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve30_v" model="account.report.line">
-                                        <field name="name">VE30_V - Operazioni assimilate</field>
+                                        <field name="name">VE30_V - Assimilated operations</field>
                                         <field name="code">VE30_V</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve30_v_tag" model="account.report.expression">
@@ -585,7 +586,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve31" model="account.report.line">
-                                <field name="name">VE31 - Operazioni non imponibili a seguito di dichiarazioni di intento</field>
+                                <field name="name">VE31 - Non-taxable transactions as a result of declarations of intent</field>
                                 <field name="code">VE31</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve31_tag" model="account.report.expression">
@@ -596,7 +597,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve32" model="account.report.line">
-                                <field name="name">VE32 - Altre operazioni non imponibili</field>
+                                <field name="name">VE32 - Other non-taxable transactions</field>
                                 <field name="code">VE32</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve32_tag" model="account.report.expression">
@@ -607,7 +608,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve33" model="account.report.line">
-                                <field name="name">VE33 - Operazioni esenti (art.10</field>
+                                <field name="name">VE33 - Exempt transactions (art.10</field>
                                 <field name="code">VE33</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve33_tag" model="account.report.expression">
@@ -618,7 +619,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve34" model="account.report.line">
-                                <field name="name">VE34 - Operazioni non soggette all’imposta ai sensi degli articoli da 7 a 7-septies</field>
+                                <field name="name">VE34 - Transactions not subject to the tax under Articles 7 to 7-septies</field>
                                 <field name="code">VE34</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve34_tag" model="account.report.expression">
@@ -630,7 +631,7 @@
                             </record>
 
                             <record id="tax_report_line_ve35" model="account.report.line">
-                                <field name="name">VE35 - Operazioni con applicazione del reverse charge interno</field>
+                                <field name="name">VE35 - Transactions with application of internal reverse charge</field>
                                 <field name="code">VE35</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_ve35_I" model="account.report.line">
@@ -649,7 +650,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_ii" model="account.report.line">
-                                        <field name="name">VE35_II - Cessioni di rottami e altri materiali di recupero</field>
+                                        <field name="name">VE35_II - Disposal of scrap and other recovered materials</field>
                                         <field name="code">VE35_II</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_ii_tag" model="account.report.expression">
@@ -660,7 +661,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_iii" model="account.report.line">
-                                        <field name="name">VE35_III - Cessioni di oro e argento puro</field>
+                                        <field name="name">VE35_III - Disposals of pure gold and silver</field>
                                         <field name="code">VE35_III</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_iii_tag" model="account.report.expression">
@@ -671,7 +672,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_iv" model="account.report.line">
-                                        <field name="name">VE35_IV - Subappalto nel settore edile</field>
+                                        <field name="name">VE35_IV - Subcontracting in the construction industry</field>
                                         <field name="code">VE35_IV</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_iv_tag" model="account.report.expression">
@@ -682,7 +683,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_v" model="account.report.line">
-                                        <field name="name">VE35_V - Cessioni di fabbricati strumentali</field>
+                                        <field name="name">VE35_V - Disposal of capital buildings</field>
                                         <field name="code">VE35_V</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_v_tag" model="account.report.expression">
@@ -693,7 +694,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_vi" model="account.report.line">
-                                        <field name="name">VE35_VI - Cessioni di telefoni cellulari</field>
+                                        <field name="name">VE35_VI - Disposal of cell phones</field>
                                         <field name="code">VE35_VI</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_vi_tag" model="account.report.expression">
@@ -704,7 +705,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_vii" model="account.report.line">
-                                        <field name="name">VE35_VII - Cessioni di prodotti elettronici</field>
+                                        <field name="name">VE35_VII - Disposal of electronic products</field>
                                         <field name="code">VE35_VII</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_vii_tag" model="account.report.expression">
@@ -715,7 +716,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_viii" model="account.report.line">
-                                        <field name="name">VE35_VIII - Prestazioni comparto edile e settori connessi</field>
+                                        <field name="name">VE35_VIII - Benefits construction and related industries</field>
                                         <field name="code">VE35_VIII</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_viii_tag" model="account.report.expression">
@@ -726,7 +727,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve35_ix" model="account.report.line">
-                                        <field name="name">VE35_IX - Operazioni settore energetico</field>
+                                        <field name="name">VE35_IX - Energy sector operations</field>
                                         <field name="code">VE35_IX</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve35_ix_tag" model="account.report.expression">
@@ -739,7 +740,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve36" model="account.report.line">
-                                <field name="name">VE36 - Operazioni non soggette all&quot;imposta effettuate nei confronti dei terremotati</field>
+                                <field name="name">VE36 - Non-taxable transactions made to earthquake victims</field>
                                 <field name="code">VE36</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve36_tag" model="account.report.expression">
@@ -750,7 +751,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve37" model="account.report.line">
-                                <field name="name">VE37 - Operazioni effettuate nell&quot;anno ma con imposta esigibile negli anni successivi</field>
+                                <field name="name">VE37 - Transactions made during the year but with tax due in subsequent years</field>
                                 <field name="code">VE37</field>
                                 <field name="children_ids">
                                     <record id="tax_report_line_ve37_I" model="account.report.line">
@@ -765,7 +766,7 @@
                                         </field>
                                     </record>
                                     <record id="tax_report_line_ve37_ii" model="account.report.line">
-                                        <field name="name">VE37_II - ex art. 32-bis, DL n. 83/2012</field>
+                                        <field name="name">VE37_II - ex art. 32-bis, DL no. 83/2012</field>
                                         <field name="code">VE37_II</field>
                                         <field name="expression_ids">
                                             <record id="tax_report_line_ve37_ii_tag" model="account.report.expression">
@@ -778,7 +779,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve38" model="account.report.line">
-                                <field name="name">VE38 - Operazioni nei confronti di soggetti di cui all&quot;art.17-ter</field>
+                                <field name="name">VE38 - Transactions with parties referred to in Article 17-ter.</field>
                                 <field name="code">VE38</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve38_tag" model="account.report.expression">
@@ -789,7 +790,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve39" model="account.report.line">
-                                <field name="name">VE39 - (meno) Operazioni effettuate in anni precedenti ma con imposta esigibile nel 2022</field>
+                                <field name="name">VE39 - (minus) Transactions made in previous years but with tax due in 2022</field>
                                 <field name="code">VE39</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve39_tag" model="account.report.expression">
@@ -800,7 +801,7 @@
                                 </field>
                             </record>
                             <record id="tax_report_line_ve40" model="account.report.line">
-                                <field name="name">VE40 - (meno) Cessioni di beni ammortizzabili e passaggi interni</field>
+                                <field name="name">VE40 - (minus) Disposals of depreciable assets and internal transfers.</field>
                                 <field name="code">VE40</field>
                                 <field name="expression_ids">
                                     <record id="tax_report_line_ve40_tag" model="account.report.expression">

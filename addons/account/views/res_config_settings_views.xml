@@ -69,10 +69,10 @@
                             <setting id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located." documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" help="Apply VAT of the EU country to which goods and services are delivered.">
                                 <field name="module_l10n_eu_oss"/>
                             </setting>
-                            <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation." groups="account.group_account_user"
+                            <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation."
                                 documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
                                 <field name="tax_exigibility"/>
-                                <div class="content-group" invisible="not tax_exigibility">
+                                <div class="content-group" invisible="not tax_exigibility" groups="account.group_account_user">
                                     <div class="row mt16">
                                         <label for="tax_cash_basis_journal_id" class="col-lg-3 o_light_label"/>
                                         <field name="tax_cash_basis_journal_id"/>
@@ -176,7 +176,9 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting company_dependent="1" help="Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.">
+                            <setting company_dependent="1"
+                                     help="Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.
+                                     Set a value greater than 0.0 to activate a credit limit check">
                                 <field name="account_use_credit_limit"/>
                                 <div class="content-group mt-2" invisible="not account_use_credit_limit">
                                     <div class="row">

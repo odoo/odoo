@@ -26,7 +26,8 @@
                     invisible="advance_payment_method not in ('fixed', 'percentage')">
                     <field name="company_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <label for="amount"/>
+                    <label for="fixed_amount" invisible="advance_payment_method != 'fixed'"/>
+                    <label for="amount" invisible="advance_payment_method != 'percentage'"/>
                     <div id="payment_method_details">
                         <field name="currency_id" invisible="1"/>
                         <field name="display_invoice_amount_warning" invisible="1"/>
@@ -50,9 +51,6 @@
                         options="{'no_create': True}"
                         invisible="product_id"
                         groups="account.group_account_manager"/>
-                    <field name="deposit_taxes_id"
-                        widget="many2many_tags"
-                        invisible="product_id"/>
                 </group>
                 <group invisible="not has_down_payments">
                     <field name="amount_invoiced"/>

@@ -535,7 +535,7 @@ class IrActionsServer(models.Model):
 
     update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', ondelete='cascade', compute='_compute_crud_relations', store=True, readonly=False)
     update_path = fields.Char(string='Field to Update Path', help="Path to the field to update, e.g. 'partner_id.name'", default=_default_update_path)
-    update_related_model_id = fields.Many2one('ir.model', compute='_compute_crud_relations', store=True)
+    update_related_model_id = fields.Many2one('ir.model', compute='_compute_crud_relations', readonly=False, store=True)
     update_field_type = fields.Selection(related='update_field_id.ttype', readonly=True)
     update_m2m_operation = fields.Selection([
         ('add', 'Adding'),
@@ -678,7 +678,11 @@ class IrActionsServer(models.Model):
             return ''
         model = self.env[self.model_id.model]
         pretty_path = []
+        field = None
         for field_name in path.split('.'):
+            if field and field.type == 'properties':
+                pretty_path.append(field_name)
+                continue
             field = model._fields[field_name]
             field_id = self.env['ir.model.fields']._get(model._name, field_name)
             if field.relational:
@@ -976,8 +980,7 @@ class IrActionsServer(models.Model):
 
     @api.constrains('update_field_id', 'evaluation_type')
     def _raise_many2many_error(self):
-        if self.filtered(lambda line: line.update_field_id.ttype == 'many2many' and line.evaluation_type == 'reference'):
-            raise ValidationError(_('many2many fields cannot be evaluated by reference'))
+        pass  # TODO: remove in master
 
     @api.onchange('resource_ref')
     def _set_resource_ref(self):
@@ -1019,6 +1022,12 @@ class IrActionsServer(models.Model):
                     expr = float(action.value)
             result[action.id] = expr
         return result
+
+    def copy_data(self, default=None):
+        default = default or {}
+        if not default.get('name'):
+            default['name'] = _('%s (copy)', self.name)
+        return super().copy_data(default=default)
 
 class IrActionsTodo(models.Model):
     """

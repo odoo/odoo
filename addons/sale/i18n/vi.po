@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2024
-# Thi Huong Nguyen, 2024
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2024\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1164,15 +1164,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Cho phép bạn chia sẻ tài liệu với khách hàng của mình trong quá trình bán hàng.\n"
-"Để trống nếu bạn không muốn chia sẻ tài liệu này với khách hàng.\n"
-"Báo giá: tài liệu sẽ được gửi và khách hàng có thể truy cập bất cứ lúc nào.\n"
-"VD: tùy chọn này có thể hữu ích khi chia sẻ tệp mô tả Sản phẩm.\n"
-"Xác nhận đơn hàng: tài liệu sẽ được gửi và khách hàng có thể truy cập.\n"
-"VD: tùy chọn này có thể hữu ích khi chia sẻ Hướng dẫn sử dụng hoặc nội dung kỹ thuật số được mua trên sàn thương mại điện tử.\n"
-"Bên trong báo giá: Tài liệu sẽ có trong tệp pdf của báo giá, nằm giữa trang mở đầu và bảng báo giá."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -2004,9 +1998,9 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Ngày giao hàng mà bạn có thể hẹn với khách hàng, được tính toán từ thời gian"
-" giao hàng tối thiểu của chi tiết đơn hàng trong trường hợp sản phẩm Dịch "
+" hoàn thành tối thiểu của chi tiết đơn hàng trong trường hợp sản phẩm Dịch "
 "vụ. Trong trường hợp vận chuyển, chính sách vận chuyển của đơn hàng sẽ được "
-"tính đến để sử dụng thời gian giao hàng tối thiểu hoặc tối đa của chi tiết "
+"tính đến để sử dụng thời gian hoàn thành tối thiểu hoặc tối đa của chi tiết "
 "đơn hàng. "
 
 #. module: sale
@@ -2591,7 +2585,7 @@ msgstr "Hoá đơn %s đã được thanh toán"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
 msgid "Invoice Address"
-msgstr "Địa chỉ xuất hoá đơn"
+msgstr "Địa chỉ lập hoá đơn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
@@ -2755,7 +2749,7 @@ msgstr "Là khoản trả trước"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
 msgid "Is Editor"
-msgstr "Là người chỉnh sửa"
+msgstr "Là trình chỉnh sửa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
@@ -2844,7 +2838,7 @@ msgstr "Hoạt động chậm trễ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "Thời gian giao hàng"
+msgstr "Thời gian hoàn thành"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3973,7 +3967,7 @@ msgstr "Yêu cầu thanh toán online từ khách hàng để xác nhận đơn 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_signature
 msgid "Request a online signature from the customer to confirm the order."
-msgstr "Yêu cầu chữ ký online từ khách hàng để xác nhận đơn hàng."
+msgstr "Yêu cầu ký tên online từ khách hàng để xác nhận đơn hàng."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3988,7 +3982,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr "Yêu cầu chữ ký online để xác nhận đơn hàng"
+msgstr "Yêu cầu ký tên online để xác nhận đơn hàng"
 
 #. module: sale
 #. odoo-python
@@ -4223,7 +4217,6 @@ msgstr "(Các) đơn bán hàng"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4871,12 +4864,12 @@ msgstr "Các đơn hàng sau hiện không ở trạng thái cần xác nhận: 
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Các sản phẩm sau không thể chỉ giới hạn cho công ty %s vì đã được sử dụng trong báo giá hoặc đơn bán hàng của công ty khác:\n"
-"%s\n"
+"Các sản phẩm sau không thể chỉ giới hạn cho công ty %(company)s vì chúng đã được sử dụng trong báo giá hoặc đơn bán hàng của công ty khác:\n"
+"%(used_products)s\n"
 "Bạn có thể lưu trữ những sản phẩm này và tạo lại chúng với hạn chế cho công ty, hoặc đặt là sản phẩm chia sẻ. "
 
 #. module: sale
@@ -5016,6 +5009,19 @@ msgid "There are existing"
 msgstr "Có"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Có vẻ như chưa có sản phẩm chiết khấu nào được cấu hình cho công ty này. Bạn"
+" có thể sử dụng chiết khấu theo dòng hoặc yêu cầu quản trị viên cấp chiết "
+"khấu lần đầu."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "This default value is applied to any new product created. This can be "
@@ -5043,7 +5049,7 @@ msgid ""
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
 "Đây là ngày giao hàng đã hẹn với khách hàng. Nếu được đặt, lệnh giao hàng sẽ"
-" được lên lịch dựa trên ngày này thay vì thời gian giao hàng của sản phẩm."
+" được lên lịch dựa trên ngày này thay vì thời gian hoàn thành của sản phẩm."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -5581,6 +5587,7 @@ msgstr ""
 "                 dù đó là sản phẩm lưu kho, sản phẩm tiêu thụ hay dịch vụ."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Đơn hàng của bạn"

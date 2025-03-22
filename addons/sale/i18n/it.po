@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2023
 # GUEST.it <guestisp@users.noreply.github.com>, 2023
-# Wil Odoo, 2024
-# Marianna Ciofani, 2024
+# Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Marianna Ciofani, 2024\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1167,7 +1167,8 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
 "Consente di condividere il documento con i tuoi clienti al momento di una vendita.\n"
 "Lascia il campo vuoto se non vuoi condividere il documento con i clienti.\n"
@@ -1175,7 +1176,8 @@ msgstr ""
 "ad es. quest'opzione può essere utile per condividere file relativi alla descrizione del prodotto.\n"
 "Ordine confermato: il documento verrà inviato e sarà accessibile ai clienti.\n"
 "ad es. quest'opzione può essere utile per condividere manuali utente o contenuti digitali acquistati sull'e-commerce. \n"
-"All'interno del preventivo: il documento verrà incluso nel pdf del preventivo tra l'intestazione e la tabella."
+"All'interno del preventivo: il documento verrà incluso nel pdf del preventivo\n"
+"e dell'ordine di vendita tra la pagina d'intestazione e la tabella del preventivo."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4237,7 +4239,6 @@ msgstr "Ordine/i di vendita"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4890,12 +4891,12 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Impossibile limitare i seguenti prodotti all'azienda %s, sono già stati utilizzati in preventivi od ordini di vendita di un'altra.:\n"
-"%s\n"
+"Impossibile limitare i seguenti prodotti all'azienda %(company)s, perché sono già stati utilizzati in preventivi od ordini di vendita di un'altra:\n"
+"%(used_products)s\n"
 "È possibile invece archiviarli e ricrearli riservati all'azienda, oppure lasciarli come prodotti condivisi."
 
 #. module: sale
@@ -5038,6 +5039,19 @@ msgstr "Al momento non ci sono ordini di vendita per il tuo conto."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Sono presenti "
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Non sembra esserci ancora un prodotto di sconto configurato per questa "
+"azienda. È possibile utilizzare uno sconto per riga o chiedere a un "
+"amministratore di concedere lo sconto la prima volta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5611,6 +5625,7 @@ msgstr ""
 "                che sia un prodotto stoccabile, un consumabile o un servizio."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "I tuoi ordini"
@@ -5722,9 +5737,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma'"
-" or 'Preventivo') or 'Ordine' }} {{ object.company_id.name }} (Ref {{ "
-"object.name or 'n/d' }})"
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

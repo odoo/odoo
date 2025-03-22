@@ -17,27 +17,27 @@
 # etoimene, 2024
 # Mario Jureša <mario.juresa@uvid.hr>, 2024
 # Ivan Marijanović <ivanm101@yahoo.com>, 2024
-# Gordana Bilas, 2024
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2024
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2024
 # Tina Milas, 2024
-# Luka Carević <luka@uvid.hr>, 2024
 # Matija Gudlin, 2024
 # Milan Tribuson <one.mile.code@gmail.com>, 2024
 # Martin Trigaux, 2024
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
 # Servisi RAM d.o.o. <support@servisiram.hr>, 2024
-# Bole <bole@dajmi5.com>, 2024
 # Vladimir Vrgoč, 2024
+# Gordana Bilas, 2025
+# Bole <bole@dajmi5.com>, 2025
+# Luka Carević <luka@uvid.hr>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Vladimir Vrgoč, 2024\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,7 +122,7 @@ msgstr "%i radnih naloga"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "%s (new) %s"
-msgstr ""
+msgstr "%s (novi) %s"
 
 #. module: mrp
 #. odoo-python
@@ -282,8 +282,8 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
-msgstr "<span class=\"fw-bold\">Za proizvesti</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
+msgstr "<span class=\"fw-bold text-nowrap\">Za proizvesti</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -956,6 +956,11 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
+"Prosječno vrijeme proizvodnje ovog proizvoda u danima. U slučaju "
+"višerazinske strukture materijala (BOM), vremena proizvodnje za komponente "
+"bit će zbrojena. Ako se proizvod izrađuje u kooperaciji, ovo se vrijeme može"
+" koristiti za određivanje datuma kada bi komponente trebale biti poslane "
+"kooperantu."
 
 #. module: mrp
 #. odoo-javascript
@@ -1322,7 +1327,7 @@ msgstr "Kapacitet mora biti pozitivan broj"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
 msgid "Carried Quantity"
-msgstr ""
+msgstr "Prenesena količina"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
@@ -1658,13 +1663,6 @@ msgid "Costs"
 msgstr "Troškovi"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-#, python-format
-msgid "Could not display the selected spreadsheet"
-msgstr "Odabranu tablicu nije moguće prikazati"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_backorder_count
 msgid "Count of linked backorder"
 msgstr "Broj povezanih zaostalih naloga"
@@ -1718,6 +1716,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"Kreirajte i potvrdite naloge za proizvodnju ovoliko dana unaprijed kako biste imali dovoljno vremena za nadopunu komponenti ili proizvodnju poluproizvoda.\n"
+"Imajte na umu da će se, kada je to potrebno, uzeti u obzir i sigurnosni rokovi isporuke."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2400,7 +2400,7 @@ msgstr "Slobodno za korištenje"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Free to Use / On Hand"
-msgstr ""
+msgstr "Slobodno za korištenje / Na stanju"
 
 #. module: mrp
 #. odoo-javascript
@@ -2481,13 +2481,6 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Google Slide Link"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.js:0
-#, python-format
-msgid "Google Slides Viewer"
 msgstr ""
 
 #. module: mrp
@@ -3857,13 +3850,6 @@ msgid "Operations that need to be completed before this operation can start."
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid "Operator not supported without a value."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
 msgstr ""
@@ -4539,7 +4525,6 @@ msgstr "Kvant"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Quantity"
@@ -4547,6 +4532,7 @@ msgstr "Količina"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_produced
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 msgid "Quantity Produced"
 msgstr "Proizvedena količina"
@@ -4555,6 +4541,11 @@ msgstr "Proizvedena količina"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__qty_producing
 msgid "Quantity Producing"
 msgstr "Količina u proizvodnji"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Quantity Remaining"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_remaining
@@ -4619,7 +4610,7 @@ msgstr "Spremno"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Ready to Produce"
-msgstr ""
+msgstr "Spremno za proizvodnju"
 
 #. module: mrp
 #. odoo-javascript
@@ -5084,13 +5075,6 @@ msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__show_backorder_lines
 msgid "Show backorder lines"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/fields/google_slides_viewer.xml:0
-#, python-format
-msgid "Slides viewer"
 msgstr ""
 
 #. module: mrp
@@ -5714,6 +5698,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
+"Ovo bi trebala biti najmanja količina u kojoj se ovaj proizvod može "
+"proizvesti. Ako BOM sadrži operacije, provjerite da li je kapacitet radnog "
+"centra točan."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__time_ids
@@ -6012,7 +5999,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
-msgstr ""
+msgstr "Rastavljeni"
 
 #. module: mrp
 #. odoo-javascript
@@ -6537,7 +6524,7 @@ msgstr "Radni list"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
 msgid "Work center"
-msgstr ""
+msgstr "Radni centar"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_work_orders

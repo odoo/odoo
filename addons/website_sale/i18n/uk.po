@@ -5,18 +5,18 @@
 # Translators:
 # Martin Trigaux, 2023
 # Kseina Tyshchenko, 2024
-# Wil Odoo, 2024
 # Iryna Hrytsyshyna, 2024
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # Larissa Manderfeld, 2024
+# Wil Odoo, 2025
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,6 +52,11 @@ msgstr "перегляди %s "
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "&amp; Shipping"
 msgstr "&amp; Доставка"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -794,7 +799,7 @@ msgstr "Анонімний партнер оформлення замовлен�
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Apartment, suite, etc."
-msgstr "Квартира, костюм тощо."
+msgstr "Квартира, офіс тощо."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -2860,6 +2865,13 @@ msgstr "Платіжні операції"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
@@ -3406,7 +3418,7 @@ msgstr "Обмеження публікації на цьому веб-сайт�
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
-msgstr "Пдсумувати замовлення"
+msgstr "Підсумувати замовлення"
 
 #. module: website_sale
 #. odoo-python
@@ -3966,6 +3978,13 @@ msgid ""
 "The amount will be displayed strikethroughed on the eCommerce product page"
 msgstr ""
 "Сума відображатиметься закресленою на сторінці товару електронної комерції"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4599,18 +4618,6 @@ msgstr "Ваша електронна пошта"
 #, python-format
 msgid "Your Name"
 msgstr "Ваше ім’я"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#, python-format
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
-msgstr ""
-"Вашому обліковому запису не дозволяється платити в компанії %s. Будь ласка, "
-"вийдіть із системи та створіть новий обліковий запис для цього веб-сайту або"
-" зверніться до адміністратора веб-сайту."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

@@ -28,14 +28,15 @@
 # Larissa Manderfeld, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Claes-Johan Dahlin, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Claes-Johan Dahlin, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,6 +72,11 @@ msgstr "%s recensioner"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "&amp; Shipping"
 msgstr "&amp; Frakt"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2867,6 +2873,13 @@ msgstr "Betalningstransaktioner"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
@@ -3977,6 +3990,13 @@ msgstr "Beloppet kommer att visas streckat på produktsidan för e-handel"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "The cart has been updated. Please refresh the page."
 msgstr "Varukorgen har uppdaterats. Vänligen uppdatera sidan."
 
@@ -4606,17 +4626,6 @@ msgstr "Din e-post"
 #, python-format
 msgid "Your Name"
 msgstr "Ditt namn"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#, python-format
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
-msgstr ""
-"Ditt konto är inte tillåtet att betala i företaget %s. Logga ut och skapa "
-"ett nytt konto för denna webbplats, eller kontakta webbplatsadministratören."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

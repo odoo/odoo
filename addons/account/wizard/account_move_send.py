@@ -441,9 +441,10 @@ class AccountMoveSend(models.TransientModel):
         """
         # create an attachment that will become 'invoice_pdf_report_file'
         # note: Binary is used for security reason
-        invoice.message_main_attachment_id = self.env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
-        invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-        invoice.is_move_sent = True
+        invoice_sudo = invoice.sudo()
+        invoice_sudo.message_main_attachment_id = self.sudo().env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
+        invoice_sudo.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+        invoice_sudo.is_move_sent = True
 
     @api.model
     def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
@@ -792,7 +793,7 @@ class AccountMoveSend(models.TransientModel):
             }
 
         return self._process_send_and_print(
-            self.move_ids,
+            self.move_ids.sudo(),
             wizard=self,
             allow_fallback_pdf=allow_fallback_pdf,
             **kwargs,

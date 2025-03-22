@@ -3,11 +3,12 @@
 
 from odoo import Command, tests
 from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
-from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.addons.website_livechat.tests.common import TestLivechatCommon as TestWebsiteLivechatCommon
+from odoo.addons.im_livechat.tests.common import TestImLivechatCommon
 
 
 @tests.tagged('post_install', '-at_install')
-class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
+class TestLivechatChatbotUI(TestImLivechatCommon, TestWebsiteLivechatCommon, ChatbotCase):
     def setUp(self):
         super().setUp()
         self.env['im_livechat.channel'].search([
@@ -139,3 +140,21 @@ class TestLivechatChatbotUI(TestLivechatCommon, ChatbotCase):
         default_website.channel_id = livechat_channel.id
         self.env.ref("website.default_website").channel_id = livechat_channel.id
         self.start_tour("/contactus", "website_livechat.chatbot_redirect")
+
+    def test_chatbot_fw_operator_matching_lang(self):
+        fr_op = self._create_operator(lang_code="fr_FR")
+        en_op = self._create_operator(lang_code="en_US")
+        self.env.ref("website.default_website").language_ids = self.env["res.lang"].search(
+            [["code", "in", ["fr_FR", "en_US"]]]
+        )
+        self.livechat_channel.user_ids = fr_op + en_op
+        self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
+        self.start_tour("/fr", "chatbot_fw_operator_matching_lang")
+        channel = self.livechat_channel.channel_ids[0]
+        self.assertIn(channel.channel_member_ids.partner_id.user_ids, fr_op)
+        self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, en_op)
+        self.env["discuss.channel"].search([("livechat_channel_id", "=", self.livechat_channel.id)]).unlink()
+        self.start_tour("/en", "chatbot_fw_operator_matching_lang")
+        channel = self.livechat_channel.channel_ids[0]
+        self.assertIn(channel.channel_member_ids.partner_id.user_ids, en_op)
+        self.assertNotIn(channel.channel_member_ids.partner_id.user_ids, fr_op)

@@ -29,7 +29,8 @@
                            options="{'whitelisted_values': ['on_demand', 'other']}"/>
                 </xpath>
                 <xpath expr="//group[@name='group_plan_fields']" position="inside">
-                    <field name="department_id" invisible="res_model != 'hr.employee'"/>
+                    <field name="department_id" invisible="res_model != 'hr.employee'"
+                            placeholder="Available for all Departments"/>
                 </xpath>
             </field>
         </record>

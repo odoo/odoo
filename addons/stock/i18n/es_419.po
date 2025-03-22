@@ -5,9 +5,9 @@
 # Translators:
 # Lucia Pacheco, 2024
 # Martin Trigaux, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
 # Wil Odoo, 2024
-# Fernanda Alvarez, 2024
+# Fernanda Alvarez, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Fernanda Alvarez, 2024\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -391,11 +391,6 @@ msgstr "4 x 7 con precio"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1654,6 +1649,17 @@ msgstr "Cambiar cantidad de producto"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"No está permitido cambiar el número de serie o lote para las líneas de "
+"movimiento con distintos productos."
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_lot.py:0
@@ -2286,14 +2292,14 @@ msgstr "Cliente"
 #: model:ir.model.fields,field_description:stock.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:stock.field_product_template__sale_delay
 msgid "Customer Lead Time"
-msgstr "Plazo de entrega del cliente"
+msgstr "Plazo de entrega al cliente"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__property_stock_customer
 #: model:ir.model.fields,field_description:stock.field_res_users__property_stock_customer
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__customer
 msgid "Customer Location"
-msgstr "Ubicación de cliente"
+msgstr "Ubicación del cliente"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -2668,7 +2674,7 @@ msgstr "Dirección de entrega"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr "Métodos de envío"
+msgstr "Métodos de entrega"
 
 #. module: stock
 #. odoo-python
@@ -4061,13 +4067,6 @@ msgid "Immediate Transfer"
 msgstr "Traslado inmediato"
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "Importar"
-
-#. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 #, python-format
@@ -5120,12 +5119,12 @@ msgstr "Reabastecimiento manual"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__manual
 msgid "Manually"
-msgstr "Manualmente"
+msgstr "Manual"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Manufacturing"
-msgstr "Fabricación"
+msgstr "Manufactura"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__3
@@ -6486,11 +6485,12 @@ msgstr "La presencia depende del tipo de operación."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Haga clic en el botón CREAR para definir una cantidad para cada producto en "
-"sus existencias o impórtelos de una hoja de cálculo a través de Favoritos"
+"Haga clic en el botón \"Nuevo\" para definir la cantidad de un producto en "
+"sus existencias o importe la cantidad desde una hoja de cálculo a través del"
+" menú Acciones."
 
 #. module: stock
 #. odoo-javascript
@@ -7303,12 +7303,12 @@ msgstr "Ruta de recepción"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #, python-format
 msgid "Receipts"
-msgstr "Recibidos"
+msgstr "Recepciones"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_incoming
 msgid "Receipts allow you to get products from a partner."
-msgstr "Los recibos le permiten obtener productos de un contacto."
+msgstr "Las recepciones le permiten obtener productos de un contacto."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -7428,12 +7428,12 @@ msgstr "Movimientos de existencias relacionados"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr "Trasladar"
+msgstr "Reubicar"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
 msgid "Relocate your stock"
-msgstr "Trasladar sus existencias"
+msgstr "Reubique sus existencias"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8025,8 +8025,8 @@ msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
 msgstr ""
-"Desechar un producto lo quitará de sus existencias y este\n"
-"                pasará a una ubicación de desecho útil para elaborar reportes."
+"Desechar un producto lo eliminará de su inventario y\n"
+"                pasará a una ubicación de desecho que podrá utilizar para elaborar reportes."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -8269,12 +8269,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
 msgid "Set to 0"
-msgstr "Configurado a 0"
+msgstr "Configurar a 0"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 msgid "Set to quantity on hand"
-msgstr "Configurado a la cantidad disponible"
+msgstr "Establecer con la cantidad a la mano"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__location_id
@@ -8946,6 +8946,24 @@ msgstr ""
 "El valor 'Operación manual' creará un movimiento de existencias después del "
 "actual. Con 'Automático sin paso agregado', la ubicación se reemplaza en el "
 "movimiento original."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "El número de serie o lote (%s) está vinculado a otro producto."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
+"El reporte Operaciones de recolección se borró, por lo que no lo puede "
+"imprimir en estos momentos a no ser que se restablezca el reporte."
 
 #. module: stock
 #. odoo-python
@@ -10920,6 +10938,13 @@ msgstr ""
 "No puede empaquetar cantidades de diferentes traslados en el mismo paquete "
 "desde esta vista. Trate de agregarlos a una recolección por lote y hágalo "
 "desde allí."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr "No puede duplicar cantidades de existencias. "
 
 #. module: stock
 #. odoo-python

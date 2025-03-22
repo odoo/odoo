@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2023
 # Karya Gemilang, 2024
-# Abe Manyo, 2024
-# Wil Odoo, 2024
+# Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +50,11 @@ msgstr "%s review"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "&amp; Shipping"
 msgstr "&amp; Pengiriman"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2865,6 +2870,13 @@ msgstr "Transaksi Tagihan"
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr "Pembayaran sudah sedang diproses."
+
+#. module: website_sale
+#. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
@@ -3976,6 +3988,13 @@ msgstr "Jumlah akan dicoret saat ditunjukkan pada halaman produk eCommerce"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr "Keranjang sudah dibayar. Silakan refresh halaman."
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
 msgid "The cart has been updated. Please refresh the page."
 msgstr "Keranjang telah diperbarui. Silakan refresh halaman."
 
@@ -4612,17 +4631,6 @@ msgstr "Email Anda"
 #, python-format
 msgid "Your Name"
 msgstr "Nama Anda"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#, python-format
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
-msgstr ""
-"Akun Anda tidak diizinkan untuk membayar di perusahaan %s. Silakan log out "
-"dan buat akun baru untuk website ini, atau hubungi administrator website."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

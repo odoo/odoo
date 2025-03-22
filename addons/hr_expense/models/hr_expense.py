@@ -563,7 +563,7 @@ class HrExpense(models.Model):
     def write(self, vals):
         if (
                 'state' in vals
-                and vals['state'] != 'submitted'
+                and vals['state'] not in ('draft', 'submitted')
                 and not self.user_has_groups('hr_expense.group_hr_expense_manager')
                 and any(state == 'draft' for state in self.mapped('state'))
         ):
@@ -818,6 +818,7 @@ class HrExpense(models.Model):
             'tax_tag_ids': to_update['tax_tag_ids'],
             'amount_currency': amount_currency,
             'currency_id': self.currency_id.id,
+            'quantity': self.quantity,
         }
         move_lines.append(base_move_line)
         total_tax_line_balance = 0.0

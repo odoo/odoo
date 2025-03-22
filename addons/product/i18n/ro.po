@@ -6,13 +6,13 @@
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2024
 # Claudia Baisan, 2024
 # Emanuel Bruda, 2024
-# Foldi Robert <foldirobert@nexterp.ro>, 2024
 # Cozmin Candea <office@terrabit.ro>, 2024
 # Martin Trigaux, 2024
-# Hongu Cosmin <cosmin513@gmail.com>, 2024
-# Dorin Hongu <dhongu@gmail.com>, 2024
 # Betty Keresztesi, 2024
 # Lyall Kindmurr, 2024
+# Dorin Hongu <dhongu@gmail.com>, 2025
+# Hongu Cosmin <cosmin513@gmail.com>, 2025
+# Foldi Robert <foldirobert@nexterp.ro>, 2025
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Lyall Kindmurr, 2024\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,6 +88,7 @@ msgstr "%s %% discount"
 #. odoo-python
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
+#: code:addons/product/models/product_pricelist.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -514,6 +515,8 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"Cel mult %s cantități pot fi afișate simultan. Eliminați o cantitate "
+"selectată pentru a adăuga altele."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -1016,7 +1019,7 @@ msgstr "Precizie zecimală"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %s pricelist"
-msgstr ""
+msgstr "Listă prețuri%simplicită"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
@@ -2057,6 +2060,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"Pe produs %(product)s nu puteți asocia valoarea %(value)s cu atributul "
+"%(attribute)s, deoarece acestea nu se potrivesc."
 
 #. module: product
 #. odoo-python
@@ -2066,6 +2071,8 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"Pe produs %(product)s nu puteți transforma atributul %(attribute_src)s în "
+"atribut %(attribute_dest)s."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2701,7 +2708,7 @@ msgstr "Cantitate"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "Cantitatea deja prezentă (%s)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -3027,6 +3034,8 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"Atributul %(attribute)s trebuie să aibă cel puțin o valoare pentru produsul "
+"%(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -3152,6 +3161,8 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"Valoarea %(value)snu este definită pentru atributul %(attribute)s produsului"
+" %(product)s"
 
 #. module: product
 #. odoo-python
@@ -3288,7 +3299,7 @@ msgstr "Nu se poate găsi șablonul de raport pentru formatul %s"
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
@@ -3319,7 +3330,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Units"
-msgstr "Buc"
+msgstr "Unități"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
@@ -3698,6 +3709,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Nu puteți modifica modul de creare a variantelor atributului %(attribute)s, deoarece este utilizat pe următoarele produse:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3716,6 +3729,7 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"Nu puteți schimba produsul cu valoarea%(value)s setată pe produs%(product)s"
 
 #. module: product
 #. odoo-python
@@ -3724,7 +3738,7 @@ msgstr ""
 msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
-msgstr ""
+msgstr "Nu puteți modifica valoarea %(value)s setată pe produs %(product)s."
 
 #. module: product
 #. odoo-python
@@ -3765,6 +3779,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"Nu puteți șterge atributul%(attribute)s deoarece este utilizat pe următoarele produse:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -3816,6 +3832,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"Nu puteți muta atributul%(attribute)s de la produsul%(product_src)s la "
+"produsul %(product_dest)s."
 
 #. module: product
 #. odoo-python

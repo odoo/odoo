@@ -178,9 +178,14 @@ class SaleOrder(models.Model):
                 product=line.product_id,
                 partner=line.order_partner_id,
             )
-            # To compute the discountable amount we get the subtotal and add
-            # non-fixed tax totals. This way fixed taxes will not be discounted
-            taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
+            if reward.program_id.is_payment_program:
+                # In case of payment programs (Gift Card, e-Wallet) the order can be totally
+                # paid with the card balance
+                taxes = line.tax_id
+            else:
+                # To compute the discountable amount we get the subtotal and add
+                # non-fixed tax totals. This way fixed taxes will not be discounted
+                taxes = line.tax_id.filtered(lambda t: t.amount_type != 'fixed')
             discountable += tax_data['total_excluded'] + sum(
                 tax['amount'] for tax in tax_data['taxes']
                 if (
@@ -689,13 +694,18 @@ class SaleOrder(models.Model):
         # |       STEP 1: Retrieve all applicable programs    |
         # +===================================================+
 
-        # Automatically load in eWallet coupons
+        # Automatically load in eWallet and loyalty cards coupons with previously received points
         if self._allow_nominative_programs():
-            ewallet_coupons = self.env['loyalty.card'].search(
-                [('id', 'not in', self.applied_coupon_ids.ids), ('partner_id', '=', self.partner_id.id),
-                ('points', '>', 0), ('program_id.program_type', '=', 'ewallet')])
-            if ewallet_coupons:
-                self.applied_coupon_ids += ewallet_coupons
+            loyalty_card = self.env['loyalty.card'].search([
+                ('id', 'not in', self.applied_coupon_ids.ids),
+                ('partner_id', '=', self.partner_id.id),
+                ('points', '>', 0),
+                '|', ('program_id.program_type', '=', 'ewallet'),
+                     '&', ('program_id.program_type', '=', 'loyalty'),
+                          ('program_id.applies_on', '!=', 'current'),
+            ])
+            if loyalty_card:
+                self.applied_coupon_ids += loyalty_card
         # Programs that are applied to the order and count points
         points_programs = self._get_points_programs()
         # Coupon programs that require the program's rules to match but do not count for points
@@ -970,7 +980,7 @@ class SaleOrder(models.Model):
                     )
                 elif not product_qty_matched:
                     program_result['error'] = _("You don't have the required product quantities on your sales order.")
-            elif not self._allow_nominative_programs():
+            elif self.partner_id.is_public and not self._allow_nominative_programs():
                 program_result['error'] = _("This program is not available for public users.")
             if 'error' not in program_result:
                 points_result = [points] + rule_points

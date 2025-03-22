@@ -166,7 +166,7 @@ class MassMailing(models.Model):
         compute='_compute_mailing_on_mailing_list')
     mailing_domain = fields.Char(
         string='Domain',
-        compute='_compute_mailing_domain', readonly=False, store=True)
+        compute='_compute_mailing_domain', readonly=False, store=True, compute_sudo=False)
     mail_server_available = fields.Boolean(
         compute='_compute_mail_server_available',
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings")
@@ -1037,7 +1037,7 @@ class MassMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'document_id': res_id,

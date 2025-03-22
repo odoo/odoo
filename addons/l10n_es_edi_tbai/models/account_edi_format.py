@@ -71,6 +71,9 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai' or invoice.country_code != 'ES':
             return errors
 
+        if invoice.is_purchase_document() and not invoice.ref:
+            errors.append(_("You need to fill in the Reference field as the invoice number from your vendor."))
+
         # Ensure a certificate is available.
         if not invoice.company_id.l10n_es_edi_certificate_id:
             errors.append(_("Please configure the certificate for TicketBAI/SII."))
@@ -96,6 +99,9 @@ class AccountEdiFormat(models.Model):
 
         return errors
 
+    def _l10n_es_tbai_refunded_invoices(self, invoice):
+        return invoice.reversed_entry_id
+
     def _l10n_es_tbai_post_invoice_edi(self, invoice):
         # EXTENDS account_edi
         if self.code != 'es_tbai':
@@ -112,13 +118,20 @@ class AccountEdiFormat(models.Model):
             error_msg = ''
             if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
                 error_msg = _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head.name)
-            if (
-                invoice.move_type == 'out_refund'
-                and not invoice.reversed_entry_id or (
-                    not invoice.reversed_entry_id._l10n_es_tbai_is_in_chain()
-                    and invoice.reversed_entry_id.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai'))  # avoid imported ones
-            ):
-                error_msg = _("TicketBAI: Cannot post a reversal move while the source document (%s) has not been posted", invoice.reversed_entry_id.name)
+            if invoice.move_type == 'out_refund':
+                refunded_invoices = self._l10n_es_tbai_refunded_invoices(invoice)
+                if not refunded_invoices:
+                    error_msg = _("TicketBAI: Cannot post a refund without source documents")
+                else:
+                    invalid_refunds = refunded_invoices.filtered(lambda inv:
+                                                                 not inv._l10n_es_tbai_is_in_chain()
+                                                                 and inv.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')  # avoid imported ones
+                                                                 )
+                    if invalid_refunds:
+                        error_msg = _(
+                            "TicketBAI: Cannot post a reversal move if its source documents (%s) have not been posted",
+                            ', '.join(invalid_refunds.mapped('name'))
+                        )
 
             # Tax configuration check: In case of foreign customer we need the tax scope to be set
             com_partner = invoice.commercial_partner_id
@@ -393,13 +406,13 @@ class AccountEdiFormat(models.Model):
 
         if is_oss:
             values['regime_key'] = ['17']
+        elif invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
+            values['regime_key'] = ['52']  # code for simplified invoices
         elif export_exempts:
             values['regime_key'] = ['02']
         else:
             values['regime_key'] = ['01']
 
-        if invoice.l10n_es_is_simplified and invoice.company_id.l10n_es_tbai_tax_agency != 'bizkaia':
-            values['regime_key'] += ['52']  # code for simplified invoices
         values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
@@ -423,7 +436,8 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_tbai_get_importe_desglose(self, invoice):
         com_partner = invoice.commercial_partner_id
         sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
-        if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
+        if (com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN")) \
+                or invoice.l10n_es_is_simplified:
             tax_details_info_vals = self._l10n_es_edi_get_invoices_tax_details_info(invoice)
             tax_amount_retention = tax_details_info_vals['tax_amount_retention']
             desglose = {'DesgloseFactura': tax_details_info_vals['tax_details_info']}
@@ -482,7 +496,9 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
         company = invoice.company_id
-        cert_private, cert_public = company.l10n_es_edi_certificate_id._get_key_pair()
+        cert_private, cert_public = (
+            company.l10n_es_edi_certificate_id.sudo()._get_key_pair()
+        )
         public_key = cert_public.public_key()
 
         # Identifiers
@@ -659,7 +675,10 @@ class AccountEdiFormat(models.Model):
         lroe_values = self._l10n_es_tbai_prepare_values_bi(invoice, invoice_xml, cancel=cancel)
         if invoice.is_purchase_document():
             lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values)
-            invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
+            if cancel:
+                invoice.l10n_es_tbai_cancel_xml = b64encode(lroe_str.encode())
+            else:
+                invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
         else:
             lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
 

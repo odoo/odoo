@@ -165,14 +165,18 @@ def check_git_branch():
             )
 
             if db_branch != local_branch:
-                with writable():
-                    subprocess.run(git + ['branch', '-m', db_branch], check=True)
-                    subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
-                    _logger.info("Updating odoo folder to the branch %s", db_branch)
-                    subprocess.run(
-                        ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
-                    )
-                odoo_restart()
+                try:
+                    with writable():
+                        subprocess.run(git + ['branch', '-m', db_branch], check=True)
+                        subprocess.run(git + ['remote', 'set-branches', 'origin', db_branch], check=True)
+                        _logger.info("Updating odoo folder to the branch %s", db_branch)
+                        subprocess.run(
+                            ['/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh'], check=True
+                        )
+                except subprocess.CalledProcessError:
+                    _logger.exception("Failed to update the code with git.")
+                finally:
+                    odoo_restart()
     except Exception:
         _logger.exception('An error occurred while trying to update the code with git')
 
@@ -393,17 +397,17 @@ def load_certificate():
 
 
 def delete_iot_handlers():
-    """
-    Delete all the drivers and interfaces
-    This is needed to avoid conflicts
-    with the newly downloaded drivers
+    """Delete all drivers, interfaces and libs if any.
+    This is needed to avoid conflicts with the newly downloaded drivers.
     """
     try:
-        for directory in ['drivers', 'interfaces']:
-            path = file_path(f'hw_drivers/iot_handlers/{directory}')
-            iot_handlers = list_file_by_os(path)
-            for file in iot_handlers:
-                unlink_file(f"odoo/addons/hw_drivers/iot_handlers/{directory}/{file}")
+        iot_handlers = Path(file_path(f'hw_drivers/iot_handlers'))
+        filenames = [
+            f"odoo/addons/hw_drivers/iot_handlers/{file.relative_to(iot_handlers)}"
+            for file in iot_handlers.glob('**/*')
+            if file.is_file()
+        ]
+        unlink_file(*filenames)
         _logger.info("Deleted old IoT handlers")
     except OSError:
         _logger.exception('Failed to delete old IoT handlers')
@@ -422,8 +426,7 @@ def download_iot_handlers(auto=True):
             if resp.data:
                 delete_iot_handlers()
                 with writable():
-                    drivers_path = ['odoo', 'addons', 'hw_drivers', 'iot_handlers']
-                    path = path_file(str(Path().joinpath(*drivers_path)))
+                    path = path_file('odoo', 'addons', 'hw_drivers', 'iot_handlers')
                     zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
                     zip_file.extractall(path)
         except Exception:
@@ -469,12 +472,16 @@ def odoo_restart(delay=0):
     IR.start()
 
 
-def path_file(filename):
+def path_file(*args):
+    """Return the path to the file from IoT Box root or Windows Odoo
+    server folder
+    :return: The path to the file
+    """
     platform_os = platform.system()
     if platform_os == 'Linux':
-        return Path.home() / filename
+        return Path("~pi", *args).expanduser() # Path.home() returns odoo user's home instead of pi's
     elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath('server/' + filename)
+        return Path().absolute().parent.joinpath('server', *args)
 
 
 def read_file_first_line(filename):
@@ -484,11 +491,12 @@ def read_file_first_line(filename):
             return f.readline().strip('\n')
 
 
-def unlink_file(filename):
+def unlink_file(*filenames):
     with writable():
-        path = path_file(filename)
-        if path.exists():
-            path.unlink()
+        for filename in filenames:
+            path = path_file(filename)
+            if path.exists():
+                path.unlink()
 
 
 def write_file(filename, text, mode='w'):

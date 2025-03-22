@@ -145,13 +145,16 @@ class HrAttendance(http.Controller):
                 return self._get_employee_info_response(employee)
         return {}
 
-    @http.route('/hr_attendance/manual_selection', type="json", auth="public")
     def manual_selection(self, token, employee_id, pin_code):
+        return self.manual_selection_with_geolocation(token, employee_id, pin_code)
+
+    @http.route('/hr_attendance/manual_selection', type="json", auth="public")
+    def manual_selection_with_geolocation(self, token, employee_id, pin_code, latitude=False, longitude=False):
         company = self._get_company(token)
         if company:
             employee = request.env['hr.employee'].sudo().browse(employee_id)
             if employee.company_id == company and ((not company.attendance_kiosk_use_pin) or (employee.pin == pin_code)):
-                employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk'))
+                employee.sudo()._attendance_action_change(self._get_geoip_response('kiosk', latitude=latitude, longitude=longitude))
                 return self._get_employee_info_response(employee)
         return {}
 

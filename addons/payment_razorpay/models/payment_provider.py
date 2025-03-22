@@ -135,6 +135,9 @@ class PaymentProvider(models.Model):
             ).hexdigest()
         else:  # Notification data.
             secret = self.razorpay_webhook_secret
+            if not secret:
+                _logger.warning("Missing webhook secret; aborting signature calculation.")
+                return None
             return hmac.new(secret.encode(), msg=data, digestmod=hashlib.sha256).hexdigest()
 
     def _get_default_payment_method_codes(self):

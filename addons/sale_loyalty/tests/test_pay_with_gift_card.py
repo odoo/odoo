@@ -231,3 +231,32 @@ class TestPayWithGiftCard(TestSaleCouponCommon):
         self.assertAlmostEqual(order.amount_total, before_gift_card_payment - 100.0)
         self.assertTrue(all(line.tax_id for line in order.order_line))
         self.assertEqual(gift_card_line.tax_id, self.tax_10pc_incl + self.tax_15pc_excl)
+
+    def test_paying_with_gift_card_fixed_tax(self):
+        """ Test payment of sale order with fixed tax using gift card """
+        self.env['loyalty.generate.wizard'].with_context(active_id=self.program_gift_card.id).create({
+            'coupon_qty': 1,
+            'points_granted': 100,
+        }).generate_coupons()
+        gift_card = self.program_gift_card.coupon_ids[0]
+
+        tax_10_fixed = self.env['account.tax'].create({
+            'name': "10$ Fixed tax",
+            'amount_type': 'fixed',
+            'amount': 10,
+        })
+        self.product_A.write({'list_price': 90})
+        self.product_A.taxes_id = tax_10_fixed
+
+        order = self.empty_order
+        order.write({'order_line': [
+            Command.create({
+                'product_id': self.product_A.id,
+                'name': "Ordinary Product A",
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self._apply_promo_code(order, gift_card.code)
+        order.action_confirm()
+        self.assertEqual(order.amount_total, 0, "The order should be totally paid")

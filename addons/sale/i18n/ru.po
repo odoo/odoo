@@ -24,15 +24,16 @@
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Wil Odoo, 2024
 # Collex100, 2024
-# Nadia Martynova, 2024
+# Ilya Rozhkov, 2024
+# Nadia Martynova, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Nadia Martynova, 2024\n"
+"Last-Translator: Nadia Martynova, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1187,15 +1188,16 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Позволяет поделиться документом с клиентами в рамках продажи.\n"
-"Оставьте это поле пустым, если вы не хотите предоставлять этот документ покупателям.\n"
-"Предложение: документ будет отправлен клиентам и доступен им в любое время.\n"
-"например, этот параметр может быть полезен для обмена файлами с описанием товара.\n"
-"Подтвержденный заказ: документ будет отправлен клиентам и доступен для просмотра.\n"
-"например, эта опция может быть полезна для обмена руководствами пользователя или цифровым контентом, купленным в электронной коммерции.\n"
-"Внутренняя цитата: Документ будет включен в pdf-файл коммерческого предложения между заголовочными страницами и таблицей коммерческого предложения. "
+"Позволяет делиться документом с клиентами в рамках продажи. \n"
+"Оставьте это поле пустым, если не хотите предоставлять документ покупателям.\n"
+"Коммерческое предложение: документ будет отправлен клиентам и доступен им в любое время. \n"
+"Например, эта настройка полезна для передачи файлов с описанием товара.\n"
+"Подтверждённый заказ: документ будет отправлен клиентам и доступен для просмотра. \n"
+"Например, это удобно для передачи руководств пользователя или цифрового контента, приобретённого через интернет-магазин.\n"
+"В составе предложения: документ будет включён в PDF коммерческого предложения между заголовком и таблицей."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -4173,7 +4175,7 @@ msgstr "Анализ продаж с помощью продавцов"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_customers
 msgid "Sales Analysis Per Customers"
-msgstr ""
+msgstr "Анализ продаж по клиентам"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_products
@@ -4259,7 +4261,6 @@ msgstr "Заказ(ы) на продажу"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4735,7 +4736,7 @@ msgstr "Страна налогооблажения"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Tax ID"
-msgstr "Tax ID"
+msgstr "ИНН"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
@@ -4915,12 +4916,12 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Эти продукты не могут быть привязаны к компании %s, поскольку они уже были использованы в коммерческих предложениях или продажах в другой компании:\n"
-"%s\n"
+"Эти продукты не могут быть привязаны к компании %(company)s, поскольку они уже были использованы в коммерческих предложениях или продажах в другой компании:\n"
+"%(used_products)s\n"
 "Мы можете архивировать эти продукты и создать их заново для нужной компании или пометьте их как общие."
 
 #. module: sale
@@ -5064,6 +5065,19 @@ msgstr "В настоящее время для вашей учетной зап
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Существуют"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
+"Для этой компании ещё не настроен продукт для скидок. Вы можете "
+"воспользоваться скидкой по строкам или обратиться к администратору для "
+"настройки скидки."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5593,7 +5607,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot change the pricelist of a confirmed order !"
-msgstr ""
+msgstr "Вы не можете изменить прайс-лист в подтверждённом заказе!"
 
 #. module: sale
 #. odoo-python
@@ -5638,6 +5652,7 @@ msgstr ""
 "                будь то хранимый продукт, расходный материал или услуга."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Ваши заказы"

@@ -113,7 +113,7 @@
                                     <th name="th_discount" t-if="display_discount" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
                                         <span>Disc.%</span>
                                     </th>
-                                    <th name="th_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
+                                    <th name="th_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}"><span>Taxes</span></th>
                                     <th name="th_subtotal" class="text-end">
                                         <span>Amount</span>
                                     </th>
@@ -142,7 +142,7 @@
                                                 <span class="text-nowrap" t-field="line.discount">0</span>
                                             </td>
                                             <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_ids])"/>
-                                            <td name="td_taxes" t-attf-class="text-start {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                            <td name="td_taxes" t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }} {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                                 <span t-out="taxes" id="line_tax_ids">Tax 15%</span>
                                             </td>
                                             <td name="td_subtotal" class="text-end o_price_total">
@@ -151,14 +151,14 @@
                                         </t>
                                         <t t-elif="line.display_type == 'line_section'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A section title</span>
                                             </td>
                                             <t t-set="current_section" t-value="line"/>
                                             <t t-set="current_subtotal" t-value="0"/>
                                         </t>
                                         <t t-elif="line.display_type == 'line_note'">
                                             <td colspan="99">
-                                                <span t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
+                                                <span t-if="line.name" t-field="line.name" t-options="{'widget': 'text'}">A note, whose content usually applies to the section or product above.</span>
                                             </td>
                                         </t>
                                     </tr>

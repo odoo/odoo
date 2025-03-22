@@ -120,6 +120,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             self.partner_1,
             self.partner_2,
             move_type='out_invoice',
+            delivery_date='2017-01-15',
             invoice_line_ids=[
                 {
                     'product_id': self.product_a.id,

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -1834,6 +1835,80 @@ class TestPacking(TestPackingCommon):
             {'package_id': pack3.id, 'state': 'assigned', 'is_done': True},
         ])
 
+    def test_picking_validation_with_already_reserved_pack(self):
+        """
+        Check that you can validate a picking moving a pack that has
+        already being reserved by an other picking.
+        """
+        pack = self.env['stock.quant.package'].create({'name': 'The pack to pick'})
+        locations = self.env['stock.location'].create([
+            {
+                'name': 'Depot 1',
+                'usage': 'internal',
+                'location_id': self.warehouse.view_location_id.id,
+            },
+            {
+                'name': 'Depot 2',
+                'usage': 'internal',
+                'location_id': self.warehouse.view_location_id.id,
+            },
+            {
+                'name': 'Starting Depot',
+                'usage': 'internal',
+                'location_id': self.warehouse.view_location_id.id,
+            },
+        ])
+        self.env['stock.quant']._update_available_quantity(self.productA, locations[-1], 10.0, package_id=pack)
+        pickings = self.env['stock.picking'].create([
+            {
+                'picking_type_id': self.warehouse.int_type_id.id,
+                'location_id': locations[-1].id,
+                'location_dest_id': locations[i].id,
+                'move_ids': [Command.create({
+                    'name': self.productA.name,
+                    'location_id':  self.stock_location.id,
+                    'location_dest_id': locations[i].id,
+                    'product_id': self.productA.id,
+                    'product_uom': self.productA.uom_id.id,
+                    'product_uom_qty': 10,
+                })],
+            } for i in range(2)
+        ])
+        pickings.action_confirm()
+        for i in range(2):
+            pickings[i].move_ids.move_line_ids = [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_id': self.productA.uom_id.id,
+                'location_id': locations[-1].id,
+                'location_dest_id': locations[i].id,
+                'quantity': 10.0,
+                'package_id': pack.id,
+                'result_package_id': pack.id,
+                'picked': True, # to simulate barcode flows
+            })]
+        pickings[1].button_validate()
+        self.assertEqual(pickings[1].state, 'done')
+        # check that the package is in Depot 2 and can be moved from there
+        self.assertEqual(pack.location_id, pickings[1].location_dest_id)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': locations[1].id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': self.productA.name,
+                'location_id': locations[1].id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': 10,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        # check that the package is now in the Customer location
+        self.assertEqual(pack.location_id, delivery.location_dest_id)
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPackagePropagation(TestPackingCommon):
@@ -1889,3 +1964,51 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertEqual(len(pack_lines), 2, 'Should have only 2 stock move line')
         self.assertFalse(pack_lines[0].result_package_id, 'Should not have the reusable package')
         self.assertEqual(pack_lines[1].result_package_id, disposable_package, 'Should have only the disposable package')
+
+    def test_conditional_package_propagation(self):
+        """If a picking completely moves the products of a package, you want to pass it as result_package_id.
+        On the other hand, if the quantity of the same pack is split between several pickings, you want to leave the result_package_id empty.
+        """
+        # Storable product : 30 qty in a package.
+        package = self.env['stock.quant.package'].create({'name': 'packtest'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 30.0, package_id=package)
+
+        # 1 delivery picking, 30 product, action_assign => On move line, package_id == result_package_id
+        full_delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'move full',
+                'product_id': self.productA.id,
+                'product_uom_qty': 30.0,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })]
+        })
+        full_delivery.action_confirm()
+        full_delivery.action_assign()
+        self.assertEqual(full_delivery.move_line_ids.package_id, package, "The package should be used as source.")
+        self.assertEqual(full_delivery.move_line_ids.result_package_id, package, "If all the products in a package are to be moved, we must move the entire package.")
+        full_delivery.action_cancel()  # Cancel delivery to unreserve the package/quantity.
+
+        # Create 2 delivery picking : 10 & 20 of product each.
+        partial_deliveries = self.env['stock.picking'].create([{
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [Command.create({
+                'name': 'move partial',
+                'product_id': self.productA.id,
+                'product_uom_qty': qty,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            })]
+        } for qty in [10, 20]])
+        partial_deliveries.action_confirm()
+        partial_deliveries.action_assign()
+        # action_assign => On move lines, result_package_id is not set.
+        self.assertEqual(partial_deliveries.move_line_ids.package_id, package, "The package should be used as source.")
+        self.assertFalse(partial_deliveries.move_line_ids.result_package_id, "If the contents of a single pack are reserved by multiple picks, the entire pack can't reproduce on each pick.")

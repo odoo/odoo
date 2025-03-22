@@ -91,6 +91,10 @@
     @include print-variable('h6-font-size', $h6-font-size);
     @include print-variable('font-size-base', $font-size-base);
     @include print-variable('small-font-size', $small-font-size);
+    @include print-variable('small-twelve-font-size', $small-twelve-font-size);
+    @include print-variable('small-ten-font-size', $small-ten-font-size);
+    @include print-variable('small-eight-font-size', $small-eight-font-size);
+    @include print-variable('lead-font-size', $lead-font-size);
 }
 
 html, body {
@@ -301,6 +305,15 @@ img.ms-auto, img.mx-auto {
 // consistent with the other classes which act that way (as display-x).
 .o_small-fs {
     @include font-size($small-font-size);
+}
+.o_small_twelve-fs {
+    @include font-size($o-small-twelve-font-size);
+}
+.o_small_ten-fs {
+    @include font-size($o-small-ten-font-size);
+}
+.o_small_eight-fs {
+    @include font-size($o-small-eight-font-size);
 }
 
 div.media_iframe_video {

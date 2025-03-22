@@ -383,6 +383,29 @@ class TestHttpStatic(TestHttpStaticCommon):
             self.assertEqual(res.headers['Content-Type'], 'application/octet-stream')  # Shouldn't be text/html
             self.assertEqual(res.headers['Content-Security-Policy'], "default-src 'none'")
 
+    def test_static23_remove_cache_control_wkhmtltopdf(self):
+        session = self.authenticate(None, None)
+        for debug in ('', 'assets'):
+            session.debug = debug
+            odoo.http.root.session_store.save(self.session)
+            with self.subTest(debug=debug):
+                res = self.db_url_open('/test_http/static/src/img/gizeh.png', headers={
+                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) '
+                                  'AppleWebKit/534.34 (KHTML, like Gecko) '
+                                  'wkhtmltopdf Safari/534.34',
+                })
+                res.raise_for_status()
+                self.assertEqual(res.status_code, 200)
+                try:
+                    self.assertIn('Cache-Control', res.headers)
+                    cc = self.parse_http_cache_control(res.headers['Cache-Control'])
+                    self.assertTrue(cc.max_age, "max-age must be set and positive")
+                    self.assertFalse(cc.no_cache, "no-cache must not be set")
+                    self.assertFalse(cc.no_store, "no-store must not be set")
+                except AssertionError as exc:
+                    e = "wkhtmltopdf only works if it is allowed to cache everything"
+                    raise AssertionError(e) from exc
+                self.assertEqual(res.content, self.gizeh_data)
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):

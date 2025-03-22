@@ -3,6 +3,7 @@
 from odoo.tests import tagged
 from odoo.tests.common import Form, TransactionCase
 from odoo import Command
+from odoo.exceptions import RedirectWarning
 
 
 @tagged('post_install', '-at_install')
@@ -230,3 +231,47 @@ class TestAnalyticAccount(TransactionCase):
             'amount': 100,
             'company_id': self.company_b_branch.id,
         })
+
+    def test_change_plan(self):
+        """Changing the plan of an account updates columns of the analytic lines."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])
+
+    def test_change_plan_conflict(self):
+        """Don't allow changing the plan if some lines already have values set for that plan."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_2.id,
+        })
+        with self.assertRaisesRegex(RedirectWarning, "wipe out your current data"):
+            self.analytic_account_1.plan_id = self.analytic_plan_2
+
+    def test_change_plan_no_conflict(self):
+        """Exception for the previous test if it was already the correct value that is set."""
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.assertNotEqual(plan_1_col, plan_2_col)
+        line = self.env['account.analytic.line'].create({
+            'name': 'test',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_1.id,
+        })
+        self.analytic_account_1.plan_id = self.analytic_plan_2
+        self.assertRecordValues(line, [{
+            plan_1_col: False,
+            plan_2_col: self.analytic_account_1.id,
+        }])

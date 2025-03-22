@@ -2102,6 +2102,43 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
         self.assertEqual(scrap.location_id, mo.location_dest_id, 'Location was not auto-corrected')
 
+    def test_mo_assign_producing_lot(self):
+        """ Checks that in an MO tracked by Lot the reservations of the raws are not
+        modified if a LOT is assigned manually in the Form.
+        """
+        warehouse = self.warehouse_1
+        mo, _, p_final, comp1, comp2 = self.generate_mo(tracking_final='lot', tracking_base_1='serial', qty_base_1=1, qty_final=1, picking_type_id=warehouse.manu_type_id)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+        lot1, sn1 = self.env['stock.lot'].create([
+            {
+                'name': 'lot1',
+                'product_id': p_final.id,
+                'company_id': self.env.company.id,
+            },
+            {
+                'name': 'sn1',
+                'product_id': comp1.id,
+                'company_id': self.env.company.id,
+            },
+        ])
+        # make a reservation on the raw moves
+        self.env['stock.quant']._update_available_quantity(comp1, warehouse.lot_stock_id, 1, lot_id=sn1)
+        self.env['stock.quant']._update_available_quantity(comp2, warehouse.lot_stock_id, 1)
+        mo.action_assign()
+        self.assertEqual(mo.qty_producing, 0.0)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': comp2.id, 'quantity': 1, 'picked': False, 'lot_ids': []},
+            {'product_id': comp1.id, 'quantity': 1, 'picked': False, 'lot_ids': sn1.ids},
+        ])
+        with Form(mo) as mo_form:
+            mo_form.lot_producing_id = lot1
+        self.assertEqual(mo.qty_producing, 0.0)
+        self.assertEqual(mo.lot_producing_id, lot1)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': comp2.id, 'quantity': 1, 'picked': False, 'lot_ids': []},
+            {'product_id': comp1.id, 'quantity': 1, 'picked': False, 'lot_ids': sn1.ids},
+        ])
+
     def test_a_multi_button_plan(self):
         """ Test batch methods (confirm/validate) of the MO with the same bom """
         self.bom_2.type = "normal"  # avoid to get the operation of the kit bom
@@ -3282,6 +3319,38 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo_backorder.workorder_ids[1].date_start, datetime(2023, 3, 1, 12, 0))
         self.assertEqual(mo_backorder.workorder_ids[2].date_start, datetime(2023, 3, 1, 12, 45))
 
+    @freeze_time('2023-03-01 12:00')
+    def test_all_workorders_planned(self):
+        """
+            Test, when writing to a confirmed MO, that all workorders that are expected to be planned are planned.
+        """
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_8
+        with mo_form.workorder_ids.new() as workorder:
+            workorder.name = "OP1"
+            workorder.workcenter_id = self.workcenter_2
+        with mo_form.workorder_ids.new() as workorder:
+            workorder.name = "OP2"
+            workorder.workcenter_id = self.workcenter_2
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo.workorder_ids[1].button_start()
+        mo.workorder_ids[1].button_finish()
+
+        self.assertTrue(mo.workorder_ids[1].date_start)
+
+        with Form(mo) as mo_form:
+            with mo_form.workorder_ids.new() as workorder:
+                workorder.name = "OP3"
+                workorder.workcenter_id = self.workcenter_2
+            mo = mo_form.save()
+
+        self.assertTrue(mo.workorder_ids[0].date_start)
+        self.assertTrue(mo.workorder_ids[2].date_start)
+
     def test_compute_product_id(self):
         """
             Tests the creation of a production order automatically sets the product when the bom is provided,
@@ -4270,7 +4339,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_update_mo_from_bom_with_kit(self):
         """
-        Test that an MO can be updated from BoM when the finished product has a kit as a component.
+        Test updating an MO from BoM when the finished product has a kit as a component.
         """
         # Test that the finished product has a kit as a component
         kit_bom_line = self.bom_3.bom_line_ids.filtered(lambda line: line.product_id.is_kits)
@@ -4291,8 +4360,99 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 2, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 3, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 4, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 6, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+        # Check propagation upon update of the kit quantity
+        kit_bom_line.product_qty = 3
+        kit_bom.bom_line_ids[0].product_qty = 4
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+        # Check with multiple kits with different UOMs
+        with Form(self.bom_3) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = self.product_5
+                bom_line.product_qty = 1
+                bom_line.product_uom_id = self.uom_dozen
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 60, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 45, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+
+    def test_update_mo_from_bom_with_kit_variants(self):
+        """
+        Test updating an MO from BoM when the finished product has a kit with variants as a component.
+        """
+        # Create an attribute for variants
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Variant Color',
+            'value_ids': [
+                Command.create({'name': 'White'}),
+                Command.create({'name': 'Black'}),
+            ],
+        })
+        colors = color_attribute.value_ids
+        paint_products = [
+            self.env['product.product'].create({'name': f"{color.name} paint"})
+            for color in colors
+        ]
+        # Create kit product
+        kit_product = self.env['product.template'].create([
+            {'name': 'Painted Stick'},
+        ])
+        with Form(kit_product) as prod:
+            with prod.attribute_line_ids.new() as attr_line:
+                attr_line.attribute_id = color_attribute
+                attr_line.value_ids = colors
+        self.assertEqual(kit_product.product_variant_count, 2)
+        kit_product_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_4.product_variant_id.id, 'product_qty': 1}),
+                Command.create({'product_id': paint_products[0].product_variant_id.id, 'product_qty': 2, 'bom_product_template_attribute_value_ids': kit_product.product_variant_ids[0].product_template_variant_value_ids.ids}),
+                Command.create({'product_id': paint_products[1].product_variant_id.id, 'product_qty': 1, 'bom_product_template_attribute_value_ids': kit_product.product_variant_ids[1].product_template_variant_value_ids.ids}),
+            ],
+        })
+        self.assertEqual(len(kit_product_bom.bom_line_ids), 3)
+        # Create a MO
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids), 1)
+        # Add a variant of the kit to the main BoM
+        with Form(self.bom_4) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = kit_product.product_variant_ids[0]
+                bom_line.product_qty = 1
+        # Update the MO
+        mo.action_update_bom()
+        self.assertEqual(len(mo.move_raw_ids), 3)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': self.product_1.id, 'product_qty': 1},
+            {'product_id': self.product_4.id, 'product_qty': 1},
+            {'product_id': paint_products[0].id, 'product_qty': 2},
+        ])
+        # Add a different variant of the kit to the main BoM
+        with Form(self.bom_4) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = kit_product.product_variant_ids[1]
+                bom_line.product_qty = 1
+        # Update the MO
+        mo.action_update_bom()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': self.product_1.id, 'product_qty': 1},
+            {'product_id': self.product_4.id, 'product_qty': 2},
+            {'product_id': paint_products[0].id, 'product_qty': 2},
+            {'product_id': paint_products[1].id, 'product_qty': 1},
         ])
 
     @freeze_time('2024-11-26 9:00')
@@ -4373,6 +4533,122 @@ class TestMrpOrder(TestMrpCommon):
         production = production_form.save()
         self.assertEqual(production.workorder_ids[0].duration_expected, 15)
 
+    def test_mo_without_resource_calendar(self):
+        self.workcenter_1.resource_calendar_id = False
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product_1.id,
+            'workorder_ids': [Command.create({
+                'name': 'Test Workorder',
+                'product_uom_id': self.product_1.uom_id.id,
+                'workcenter_id': self.workcenter_1.id,
+            })],
+        })
+
+        dt_start = datetime(2024, 12, 12, 8, 30)
+        dt_finished = datetime(2024, 12, 13, 8, 30)
+
+        mo.workorder_ids[0].date_start = dt_start
+        mo.workorder_ids[0].date_finished = dt_finished
+        mo.action_confirm()
+        mo.button_mark_done()
+
+        self.assertEqual(mo.state, 'done')
+        self.assertEqual(mo.workorder_ids[0].duration_expected, 1440.0)
+
+    def test_wo_date_finished_on_done_unplanned_mo(self):
+        """
+        Checks that the work order's date_finished and leave_id.date_to fields are equal to
+        the date_finished field on a done manufacturing order that was not planned.
+        """
+        production_form = Form(self.env['mrp.production'])
+        production_form.bom_id = self.bom_4
+        production = production_form.save()
+
+        production.action_confirm()
+
+        self.assertFalse(production.workorder_ids[0].date_finished)
+        self.assertFalse(production.workorder_ids[0].leave_id)
+
+        production.button_mark_done()
+
+        self.assertAlmostEqual(production.workorder_ids[0].date_finished, production.date_finished, delta=timedelta(seconds=2))
+        self.assertAlmostEqual(production.workorder_ids[0].leave_id.date_to, production.date_finished, delta=timedelta(seconds=2))
+
+    def test_child_mo_after_qty_parent_mo_update(self):
+        """
+        Test that all child MOs will be found after the parent MO has been updated.
+        Suppose three manufactured products A, B and C:
+        - Product A (grandparent)-> Bom:
+            - Product B (parent)-> Bom:
+                - Product C (child) -> Bom:
+                    - component
+        (B + C) have the routes MTO + Manufacture
+        so producing one unit of A -> should generate a MO for B and C
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        manufacture_route = warehouse.manufacture_pull_id.route_id
+        mto_route.active = True
+
+        grandparent, parent, child = self.env['product.product'].create([{
+            'name': n,
+            'type': 'product',
+            'route_ids': [(6, 0, mto_route.ids + manufacture_route.ids)],
+        } for n in ['grandparent', 'parent', 'child']])
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create([{
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': compo.id, 'product_qty': 1}),
+            ],
+        } for finished_product, compo in [(grandparent, parent), (parent, child), (child, component)]])
+        grandparent_production = self.env['mrp.production'].create({
+            'bom_id': grandparent.bom_ids.id,
+        })
+        grandparent_production.action_confirm()
+        child_production, parent_production = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids)], order='id desc', limit=2)
+        self.assertTrue(grandparent_production._get_children(), parent_production)
+        self.assertTrue(parent_production._get_children(), child_production)
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': grandparent_production.id,
+            'product_qty': 2,
+        })
+        # Update the quantity to produce of the grandparent to 2, this should create a new MO for both the parent and the child.
+        update_quantity_wizard.change_prod_qty()
+        self.assertEqual(grandparent_production.move_raw_ids.product_uom_qty, 2)
+        child_production_2, parent_production_2 = self.env['mrp.production'].search([('product_id', 'in', (parent + child).ids), ('id', 'not in', [parent_production.id, child_production.id])], order='id desc', limit=2)
+        self.assertEqual(grandparent_production._get_children(), (parent_production | parent_production_2))
+        self.assertEqual(parent_production_2._get_children(), child_production_2)
+
+    def test_mo_modify_date_with_manuf_lead_time(self):
+        """ A direct write on MrpProduction.date_start should result in that exact date value being
+        written to the MO.
+        """
+        finished_product = self.env['product.product'].create({'name': 'finished product'})
+        finished_bom_id = self.env['mrp.bom'].create({
+            'produce_delay': 17,
+            'product_id': finished_product.id,
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [(0, 0, {'product_id': self.product.id, 'product_qty': 1})],
+        })
+        mo = self.env['mrp.production'].create({'bom_id': finished_bom_id.id})
+        mo.action_confirm()
+        original_start_date = mo.date_start
+        with Form(mo) as production_form:
+            production_form.date_start = fields.Date.today() - timedelta(days=10)
+        self.assertEqual(mo.date_start.date(), original_start_date.date() - timedelta(days=10))
+        with Form(mo) as production_form:
+            production_form.date_start = original_start_date
+        self.assertEqual(mo.date_start, original_start_date)
 
 @tagged('post_install', '-at_install')
 class TestMrpSynchronization(HttpCase):

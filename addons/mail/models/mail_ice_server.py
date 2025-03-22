@@ -3,8 +3,10 @@
 
 from odoo import fields, models
 from odoo.addons.mail.tools.discuss import get_twilio_credentials
+import logging
 import requests
 
+_logger = logging.getLogger(__name__)
 
 class MailIceServer(models.Model):
     _name = 'mail.ice.server'
@@ -47,4 +49,6 @@ class MailIceServer(models.Model):
                     response_content = response.json()
                     if response_content:
                         return response_content['ice_servers']
+                else:
+                    _logger.warning(f"Failed to obtain TURN servers, status code: {response.status_code}, content: {response.content}.")
         return self._get_local_ice_servers()

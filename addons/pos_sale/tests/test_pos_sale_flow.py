@@ -721,47 +721,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosShipLaterNoDefault', login="accountman")
 
-    def test_downpayment_with_fixed_taxed_product(self):
-        tax_1 = self.env['account.tax'].create({
-            'name': '10',
-            'amount_type': 'fixed',
-            'amount': 10,
-        })
-
-        product_a = self.env['product.product'].create({
-            'name': 'Product A',
-            'available_in_pos': True,
-            'type': 'product',
-            'lst_price': 100.0,
-            'taxes_id': [tax_1.id],
-        })
-
-        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
-
-        sale_order = self.env['sale.order'].create({
-            'partner_id': partner_test.id,
-            'order_line': [Command.create({
-                'product_id': product_a.id,
-                'name': product_a.name,
-                'product_uom_qty': 1,
-                'product_uom': product_a.uom_id.id,
-                'price_unit': product_a.lst_price,
-            })],
-        })
-        sale_order.action_confirm()
-
-        self.downpayment_product = self.env['product.product'].create({
-            'name': 'Down Payment',
-            'available_in_pos': True,
-            'type': 'service',
-            'taxes_id': [],
-        })
-        self.main_pos_config.write({
-            'down_payment_product_id': self.downpayment_product.id,
-        })
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentLinesPerFixedTax', login="accountman")
-
     def test_downpayment_amount_to_invoice(self):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
@@ -930,3 +889,195 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         pickings.move_ids.quantity = 1
         pickings.button_validate()
         self.assertEqual(sale_order.order_line[0].qty_delivered, 1)
+
+    def test_downpayment_invoice(self):
+        """This test check that users that don't have the pos user group can invoice downpayments"""
+        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'tax_id': False,
+            })],
+        })
+        sale_order.action_confirm()
+
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [sale_order.id],
+            'active_id': sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+
+        payment = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 100,
+            'deposit_account_id': self.company_data['default_account_revenue'].id,
+        })
+        payment.create_invoices()
+        all_groups = self.user.groups_id
+        self.user.groups_id = self.env.ref('account.group_account_manager') + self.env.ref('sales_team.group_sale_salesman_all_leads')
+
+        downpayment_line = sale_order.order_line.filtered(lambda l: l.is_downpayment and not l.display_type)
+        downpayment_invoice = downpayment_line.order_id.order_line.invoice_lines.move_id
+        downpayment_invoice.action_post()
+        self.user.groups_id = all_groups
+        self.assertEqual(downpayment_line.price_unit, 100)
+
+    def test_downpayment_with_fixed_taxed_product(self):
+        """This test will make sure that a unique downpayment line will be created for the fixed tax"""
+        tax_1 = self.env['account.tax'].create({
+            'name': '10',
+            'amount': 10,
+            'amount_type': 'fixed',
+        })
+
+        tax_2 = self.env['account.tax'].create({
+            'name': '5 incl',
+            'amount': 5,
+            'price_include': True,
+        })
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 100.0,
+            'taxes_id': [tax_1.id],
+        })
+
+        product_b = self.env['product.product'].create({
+            'name': 'Product B',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 5.0,
+            'taxes_id': [tax_2.id],
+        })
+
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            }), (0, 0, {
+                'product_id': product_b.id,
+                'name': product_b.name,
+                'product_uom_qty': 1,
+                'product_uom': product_b.uom_id.id,
+                'price_unit': product_b.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'available_in_pos': True,
+            'type': 'service',
+            'taxes_id': [],
+        })
+        self.main_pos_config.write({
+            'down_payment_product_id': self.downpayment_product.id,
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentFixedTax', login="accountman")
+
+    def test_downpayment_line_name(self):
+        product_a = self.env['product.product'].create({
+            'name': 'Product A',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 100.0,
+            'taxes_id': [],
+        })
+        partner_test = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': product_a.id,
+                'name': product_a.name,
+                'product_uom_qty': 1,
+                'product_uom': product_a.uom_id.id,
+                'price_unit': product_a.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'available_in_pos': True,
+            'type': 'service',
+            'taxes_id': [],
+        })
+        self.main_pos_config.write({
+            'down_payment_product_id': downpayment_product.id,
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSDownPaymentAmount', login="accountman")
+
+        downpayment_line_pos = sale_order.order_line.filtered('is_downpayment')
+        self.assertTrue(downpayment_line_pos)
+        self.assertNotIn('(draft)', downpayment_line_pos.name.lower())
+        self.assertNotIn('(canceled)', downpayment_line_pos.name.lower())
+
+    def test_pos_order_and_invoice_amounts(self):
+        payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'discount_percentage': 10,
+            'discount_days': 10,
+            'early_discount': True,
+            'early_pay_discount_computation': 'mixed',
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+        partner_test = self.env['res.partner'].create({
+            'name': 'Test Partner',
+            'property_payment_term_id': payment_term.id,
+        })
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 10%',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        test_product = self.env['product.product'].create({
+            'name': 'Product Test',
+            'available_in_pos': True,
+            'list_price': 1000,
+            'taxes_id': [(6, 0, [tax.id])],
+        })
+
+        self.env['sale.order'].create({
+            'partner_id': partner_test.id,
+            'order_line': [(0, 0, {
+                'product_id': test_product.id,
+                'name': test_product.name,
+                'price_unit': test_product.lst_price,
+            })],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleAndInvoiceOrder', login="accountman")
+
+        order = self.env['pos.order'].search([('partner_id', '=', partner_test.id)], limit=1)
+        self.assertTrue(order)
+        self.assertEqual(order.partner_id, partner_test)
+
+        invoice = self.env['account.move'].search([('invoice_origin', '=', order.name)], limit=1)
+        self.assertTrue(invoice)
+        self.assertFalse(invoice.invoice_payment_term_id) 
+
+        self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")

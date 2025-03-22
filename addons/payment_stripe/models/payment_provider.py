@@ -342,7 +342,7 @@ class PaymentProvider(models.Model):
             'type': 'standard',
             'country': self._stripe_get_country(self.company_id.country_id.code),
             'email': self.company_id.email,
-            'business_type': 'individual',
+            'business_type': 'company',
             'company[address][city]': self.company_id.city or '',
             'company[address][country]': self._stripe_get_country(self.company_id.country_id.code),
             'company[address][line1]': self.company_id.street or '',
@@ -350,15 +350,6 @@ class PaymentProvider(models.Model):
             'company[address][postal_code]': self.company_id.zip or '',
             'company[address][state]': self.company_id.state_id.name or '',
             'company[name]': self.company_id.name,
-            'individual[address][city]': self.company_id.city or '',
-            'individual[address][country]': self._stripe_get_country(
-                self.company_id.country_id.code
-            ),
-            'individual[address][line1]': self.company_id.street or '',
-            'individual[address][line2]': self.company_id.street2 or '',
-            'individual[address][postal_code]': self.company_id.zip or '',
-            'individual[address][state]': self.company_id.state_id.name or '',
-            'individual[email]': self.company_id.email or '',
             'business_profile[name]': self.company_id.name,
         }
 

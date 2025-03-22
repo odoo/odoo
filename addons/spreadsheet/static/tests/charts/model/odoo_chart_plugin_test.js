@@ -16,6 +16,16 @@ import { getBasicServerData } from "../../utils/data";
 
 const { toZone } = spreadsheet.helpers;
 
+const fr_FR = {
+    name: "French",
+    code: "fr_FR",
+    thousandsSeparator: " ",
+    decimalSeparator: ",",
+    dateFormat: "dd/mm/yyyy",
+    timeFormat: "hh:mm:ss",
+    formulaArgSeparator: ";",
+};
+
 QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
     QUnit.test("Can add an Odoo Bar chart", async (assert) => {
         const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
@@ -506,6 +516,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 4]
@@ -518,6 +529,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             id: chartId,
             sheetId,
         });
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [1, 3]
@@ -564,6 +576,66 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         const chartId = model.getters.getChartIds(sheetId)[0];
         await waitForDataSourcesLoaded(model);
 
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [15, 19, 24]
+        );
+    });
+
+    QUnit.test("update existing chart to cumulate past data", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            { date: "2020-01-01", probability: 10 },
+            { date: "2021-01-01", probability: 2 },
+            { date: "2022-01-01", probability: 3 },
+            { date: "2022-03-01", probability: 4 },
+            { date: "2022-06-01", probability: 5 },
+        ];
+        const definition = {
+            type: "odoo_line",
+            metaData: {
+                groupBy: ["date"],
+                measure: "probability",
+                order: null,
+                resModel: "partner",
+            },
+            searchParams: {
+                comparison: null,
+                context: {},
+                domain: [
+                    ["date", ">=", "2022-01-01"],
+                    ["date", "<=", "2022-12-31"],
+                ],
+                groupBy: [],
+                orderBy: [],
+            },
+            cumulative: false,
+            title: "Partners",
+            dataSourceId: "42",
+            id: "42",
+        };
+        const { model } = await createSpreadsheetWithChart({
+            type: "odoo_line",
+            serverData,
+            definition,
+        });
+        const sheetId = model.getters.getActiveSheetId();
+        const chartId = model.getters.getChartIds(sheetId)[0];
+        await waitForDataSourcesLoaded(model);
+        assert.deepEqual(
+            model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
+            [3, 4, 5]
+        );
+
+        model.dispatch("UPDATE_CHART", {
+            definition: {
+                ...definition,
+                cumulative: true,
+            },
+            id: chartId,
+            sheetId,
+        });
+        await waitForDataSourcesLoaded(model);
         assert.deepEqual(
             model.getters.getChartRuntime(chartId).chartJsConfig.data.datasets[0].data,
             [15, 19, 24]
@@ -632,4 +704,41 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             "The data source should have been recreated"
         );
     });
+
+    QUnit.test(
+        "Displays correct thousand separator for positive value in Odoo Bar chart Y-axis",
+        async (assert) => {
+            const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartId = model.getters.getChartIds(sheetId)[0];
+            const runtime = model.getters.getChartRuntime(chartId);
+            assert.strictEqual(
+                runtime.chartJsConfig.options.scales.y?.ticks.callback(60000000),
+                "60,000,000"
+            );
+            assert.strictEqual(
+                runtime.chartJsConfig.options.scales.y?.ticks.callback(-60000000),
+                "-60,000,000"
+            );
+        }
+    );
+
+    QUnit.test(
+        "Thousand separator in Odoo Bar chart Y-axis is locale-dependent",
+        async (assert) => {
+            const { model } = await createSpreadsheetWithChart({ type: "odoo_bar" });
+            model.dispatch("UPDATE_LOCALE", { locale: fr_FR });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartId = model.getters.getChartIds(sheetId)[0];
+            const runtime = model.getters.getChartRuntime(chartId);
+            assert.strictEqual(
+                runtime.chartJsConfig.options.scales.y?.ticks.callback(60000000),
+                "60 000 000"
+            );
+            assert.strictEqual(
+                runtime.chartJsConfig.options.scales.y?.ticks.callback(-60000000),
+                "-60 000 000"
+            );
+        }
+    );
 });

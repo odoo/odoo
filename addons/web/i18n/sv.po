@@ -24,18 +24,18 @@
 # Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
 # Lasse L, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # Simon S, 2024
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # Claes-Johan Dahlin, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2025
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:35+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Claes-Johan Dahlin, 2024\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1436,6 +1436,13 @@ msgid "BACK arrow"
 msgstr "TILLBAKA-pil"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/control_panel/control_panel.js:0
+#, python-format
+msgid "Back to “%s”"
+msgstr "Tillbaka till “%s”"
+
+#. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background_image
 msgid "Background Image"
 msgstr "Bakgrundsbild"
@@ -1975,7 +1982,6 @@ msgstr "Företagsnamn"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_bold
-#: model_terms:ir.ui.view,arch_db:web.external_layout_boxed
 #: model_terms:ir.ui.view,arch_db:web.external_layout_standard
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
 msgid "Company tagline"
@@ -2156,7 +2162,6 @@ msgstr "Upphovsrätt © 2004"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -2171,10 +2176,10 @@ msgstr "Kunde inte visa den valda pdf:en"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
 #, python-format
-msgid "Could not display the specified image url."
-msgstr "Det gick inte att visa den angivna bildadressen."
+msgid "Could not display the selected spreadsheet"
+msgstr "Det gick inte att visa det valda kalkylbladet"
 
 #. module: web
 #. odoo-javascript
@@ -3440,6 +3445,14 @@ msgstr "Gå till URL"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.js:0
+#: code:addons/web/static/src/views/fields/google_slide_viewer/google_slide_viewer.xml:0
+#, python-format
+msgid "Google Slide Viewer"
+msgstr "Google Slide Viewer"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_view.js:0
 #, python-format
 msgid "Graph"
@@ -4327,6 +4340,13 @@ msgstr "Ladda demodata"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr "Ladda allt i alla fall."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
 #, python-format
@@ -4480,6 +4500,13 @@ msgstr "Many2one"
 #, python-format
 msgid "Match"
 msgstr "Match"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/gauge/gauge_field.js:0
+#, python-format
+msgid "Max value"
+msgstr "Max värde"
 
 #. module: web
 #. odoo-javascript
@@ -4677,6 +4704,14 @@ msgstr "Månad"
 #, python-format
 msgid "More"
 msgstr "Mer"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "More..."
+msgstr "Mer..."
 
 #. module: web
 #. odoo-javascript
@@ -6600,6 +6635,13 @@ msgstr "Välj alla"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr "Välj alla poster som matchar sökningen"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/datetime/datetime_picker.js:0
 #, python-format
 msgid "Select century"
@@ -6923,6 +6965,13 @@ msgstr "Status"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr "Statusfält"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
@@ -7209,6 +7258,17 @@ msgstr ""
 "Stilkompileringen misslyckades. Detta är ett administratörs- eller "
 "utvecklarfel som måste åtgärdas för hela databasen innan du kan fortsätta "
 "arbeta. Se webbläsarkonsolen eller serverloggar för mer information."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"Det finns för mycket data. Grafen visar bara ett prov. Använd filtren för "
+"att förfina omfattningen."
 
 #. module: web
 #. odoo-python

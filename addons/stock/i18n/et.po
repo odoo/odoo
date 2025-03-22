@@ -26,8 +26,9 @@
 # JanaAvalah, 2024
 # Patrick-Jordan Kiudorv, 2024
 # Anna, 2024
-# Stevin Lilla, 2024
 # Katrin Kampura, 2024
+# Siim Raasuke, 2025
+# Stevin Lilla, 2025
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Katrin Kampura, 2024\n"
+"Last-Translator: Stevin Lilla, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -404,11 +405,6 @@ msgstr "4 x 7, koos hinnaga"
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "54326786758"
 msgstr "54326786758"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_inventory
-msgid "98"
-msgstr "98"
 
 #. module: stock
 #. odoo-python
@@ -1648,6 +1644,17 @@ msgstr "Aheldatud siirded on olemas"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
 msgstr "Muuda toote kogust"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"Changing the Lot/Serial number for move lines with different products is not"
+" allowed."
+msgstr ""
+"Partii/seerianumbri muutmine erinevate toodetega siirde ridadel is ole "
+"lubatud. "
 
 #. module: stock
 #. odoo-python
@@ -3452,7 +3459,7 @@ msgstr "Vaba kogus laos"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Free Stock in Transit"
-msgstr ""
+msgstr "Vaba ladu transiidis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -4008,13 +4015,6 @@ msgstr "Kui see pole märgitud, saad peita reegli ilma seda kustutamata."
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__backorder_confirmation_id
 msgid "Immediate Transfer"
 msgstr "Kohene siire"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
-msgid "Import"
-msgstr "Impordi"
 
 #. module: stock
 #. odoo-javascript
@@ -6410,11 +6410,9 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"Press the CREATE button to define quantity for each product in your stock or"
-" import them from a spreadsheet throughout Favorites"
+"Press the \"New\" button to define the quantity for a product in your stock "
+"or import quantities from a spreadsheet via the Actions menu"
 msgstr ""
-"Vajutage LOO nuppu, et määrata iga laos oleva toote kogus või importida need"
-" arvutustabelist Lemmikute alla"
 
 #. module: stock
 #. odoo-javascript
@@ -7767,7 +7765,7 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Rule %s belongs to %s while the route belongs to %s."
-msgstr ""
+msgstr "Reegel %s kuulub ettevõttele %s, marsruut kuulub ettevõttele %s."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8838,6 +8836,22 @@ msgid ""
 msgstr ""
 "'Käsitsi tegevus' väärtus loob laosiirde peale seda. 'Automaatselt järgmist "
 "sammu ei lisata' asendab asukoha esialgses siirdes."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "The Lot/Serial number (%s) is linked to another product."
+msgstr "See partii/seerianumber (%s) on seotud teise tootega."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10681,6 +10695,7 @@ msgstr ""
 #, python-format
 msgid "You cannot change a cancelled stock move, create a new line instead."
 msgstr ""
+"Te ei saa tühistatud laokannet muuta, looge selle asemel uus rida hoopis. "
 
 #. module: stock
 #. odoo-python
@@ -10748,6 +10763,16 @@ msgid ""
 "package through this view. Try adding them to a batch picking and pack it "
 "there."
 msgstr ""
+"Te ei saa erinevatest ülekannetest pärinevaid koguseid otse samasse "
+"pakendisse panna läbi selle vaate. Proovige lisada need partiide valikusse "
+"ja pakkige need seal."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "You cannot duplicate stock quants."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10775,6 +10800,8 @@ msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types."
 msgstr ""
+"Te ei saa tooteid samasse pakendisse panna, kui need pärinevad erinevatest "
+"siiretest ja neil on erinevad operatsioonitüübid."
 
 #. module: stock
 #. odoo-python
@@ -10893,6 +10920,8 @@ msgid ""
 "You have product(s) in stock that have lot/serial number tracking enabled. \n"
 "Switch off tracking on all the products before switching off this setting."
 msgstr ""
+"Teie laos on toode/tooted, millel on loti/seriaalnumbrite jälgimine lubatud. \n"
+"Lülitage jälgimine välja kõigilt toodetelt enne, kui lülitate selle seadistuse välja."
 
 #. module: stock
 #. odoo-python
@@ -10953,7 +10982,7 @@ msgstr ""
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "You need to select a route to replenish your products"
-msgstr ""
+msgstr "Peate valima marsruudi, et oma tooteid juurde tellida."
 
 #. module: stock
 #. odoo-python

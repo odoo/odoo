@@ -219,7 +219,10 @@ class PhoneMixin(models.AbstractModel):
     def _phone_get_sanitize_triggers(self):
         """ Tool method to get all triggers for sanitize """
         res = [self._phone_get_country_field()] if self._phone_get_country_field() else []
-        return res + self._phone_get_number_fields()
+        # if partner changes, fallback country may change
+        res += [fname for fname in self._mail_get_partner_fields() if self._fields[fname].store]
+        res += self._phone_get_number_fields()
+        return res
 
     def _phone_set_blacklisted(self):
         return self.env['phone.blacklist'].sudo()._add([r.phone_sanitized for r in self])

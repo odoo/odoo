@@ -546,7 +546,8 @@ class ResPartner(models.Model):
         company_dependent=True, copy=False, readonly=False)
     use_partner_credit_limit = fields.Boolean(
         string='Partner Limit', groups='account.group_account_invoice,account.group_account_readonly',
-        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit')
+        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
+        help='Set a value greater than 0.0 to activate a credit limit check')
     show_credit_limit = fields.Boolean(
         default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
@@ -585,6 +586,7 @@ class ResPartner(models.Model):
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
+    supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
         help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     last_time_entries_checked = fields.Datetime(
@@ -614,6 +616,26 @@ class ResPartner(models.Model):
         mapped_data = {partner.id: count for partner, count in bank_data}
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
+
+    def _compute_supplier_invoice_count(self):
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
+        supplier_invoice_groups = self.env['account.move']._read_group(
+            domain=[('partner_id', 'in', all_partners.ids),
+                    ('move_type', 'in', ('in_invoice', 'in_refund'))],
+            groupby=['partner_id'], aggregates=['__count']
+        )
+        self_ids = set(self._ids)
+
+        self.supplier_invoice_count = 0
+        for partner, count in supplier_invoice_groups:
+            while partner:
+                if partner.id in self_ids:
+                    partner.supplier_invoice_count += count
+                partner = partner.parent_id
 
     def _get_duplicated_bank_accounts(self):
         self.ensure_one()
@@ -758,6 +780,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     self.invalidate_recordset([field])
+                    self.modified([field])
             except DatabaseError as e:
                 # 55P03 LockNotAvailable
                 # 40001 SerializationFailure

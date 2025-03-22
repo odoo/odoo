@@ -176,9 +176,12 @@ def fill_form_fields_pdf(writer, form_fields):
         for raw_annot in page.get('/Annots', []):
             annot = raw_annot.getObject()
             for field in form_fields:
-                # Mark filled fields as readonly to avoid the blue overlay:
+                # Modifying the form flags to force  all text fields read-only
                 if annot.get('/T') == field:
-                    annot.update({NameObject("/Ff"): NumberObject(1)})
+                    form_flags = annot.get('/Ff', 0)
+                    readonly_flag = 1  # 1st bit sets readonly
+                    new_flags = form_flags | readonly_flag
+                    annot.update({NameObject("/Ff"): NumberObject(new_flags)})
 
 
 def rotate_pdf(pdf):
@@ -419,7 +422,7 @@ class OdooPdfFileWriter(PdfFileWriter):
         # bytes, each of whose encoded byte values shall have a decimal value greater than 127 "
         self._header = b"%PDF-1.7\n"
         if submod == '._pypdf2_1':
-            self._header += b"\xDE\xAD\xBE\xEF"
+            self._header += b"%\xDE\xAD\xBE\xEF"
 
         # Add a document ID to the trailer. This is only needed when using encryption with regular PDF, but is required
         # when using PDF/A

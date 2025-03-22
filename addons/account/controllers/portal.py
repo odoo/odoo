@@ -32,7 +32,7 @@ class PortalAccount(CustomerPortal):
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = {
             'page_name': 'invoice',
-            'invoice': invoice,
+            **invoice._get_invoice_portal_extra_values(),
         }
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 

@@ -212,7 +212,11 @@ class SaleOrder(models.Model):
     amount_tax = fields.Monetary(string="Taxes", store=True, compute='_compute_amounts')
     amount_total = fields.Monetary(string="Total", store=True, compute='_compute_amounts', tracking=4)
     amount_to_invoice = fields.Monetary(string="Amount to invoice", store=True, compute='_compute_amount_to_invoice')
-    amount_invoiced = fields.Monetary(string="Already invoiced", compute='_compute_amount_invoiced')
+    amount_invoiced = fields.Monetary(
+        string="Already invoiced",
+        compute='_compute_amount_invoiced',
+        compute_sudo=True,  # compute `amount_invoiced` in sudo like the stored `amount_*` fields
+    )
 
     invoice_count = fields.Integer(string="Invoice Count", compute='_get_invoiced')
     invoice_ids = fields.Many2many(
@@ -716,6 +720,12 @@ class SaleOrder(models.Model):
 
     #=== ONCHANGE METHODS ===#
 
+    def onchange(self, values, field_names, fields_spec):
+        self_with_context = self
+        if not field_names: # Some warnings should not be displayed for the first onchange
+            self_with_context = self.with_context(sale_onchange_first_call=True)
+        return super(SaleOrder, self_with_context).onchange(values, field_names, fields_spec)
+
     @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
@@ -731,6 +741,8 @@ class SaleOrder(models.Model):
     @api.onchange('company_id')
     def _onchange_company_id_warning(self):
         self.show_update_pricelist = True
+        if self.env.context.get('sale_onchange_first_call'):
+            return
         if self.order_line and self.state == 'draft':
             return {
                 'warning': {

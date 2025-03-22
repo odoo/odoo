@@ -43,3 +43,9 @@ class TestHrHolidaysTour(HttpCase):
         })
 
         self.start_tour('/web', 'hr_holidays_tour', login="admin")
+
+    def test_hr_holidays_launch(self):
+        admin_user = self.env.ref("base.user_admin")
+        self.env.ref("base.lang_sr@latin").active = True
+        admin_user.lang = "sr@latin"
+        self.start_tour("/web", "hr_holidays_launch", login="admin")

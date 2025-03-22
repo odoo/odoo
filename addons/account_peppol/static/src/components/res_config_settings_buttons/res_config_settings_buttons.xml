@@ -15,14 +15,6 @@
                 <div class="mt-3">
                     <button type="button"
                             class="btn btn-secondary me-1"
-                            t-on-click="migrate"
-                            t-if="proxyState === 'active' and migrationPrepared === false and ediMode!='demo'">
-                            Migrate registration to another service
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <button type="button"
-                            class="btn btn-secondary me-1"
                             t-on-click="deregister"
                             t-if="proxyState === 'active' and migrationPrepared === false">
                             <t t-out="deregisterUserButtonLabel"/>

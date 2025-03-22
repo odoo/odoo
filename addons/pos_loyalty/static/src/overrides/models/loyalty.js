@@ -1010,6 +1010,10 @@ patch(Order.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if ((reward.program_id.program_type === 'coupons' && this.orderlines.find(((rewardline) => rewardline.reward_id === reward.id)))) {
+                    continue;
+                }
                 if (auto && this.disabledRewards.has(reward.id)) {
                     continue;
                 }
@@ -1116,7 +1120,9 @@ patch(Order.prototype, {
             if (!line.get_quantity()) {
                 continue;
             }
-            const taxKey = line.get_taxes().map((t) => t.id);
+            const taxKey = ['ewallet', 'gift_card'].includes(reward.program_id.program_type)
+                ? line.get_taxes().map((t) => t.id)
+                : line.get_taxes().filter((t) => t.amount_type !== 'fixed').map((t) => t.id);
             discountable += line.get_price_with_tax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;

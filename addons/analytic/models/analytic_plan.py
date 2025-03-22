@@ -174,6 +174,12 @@ class AccountAnalyticPlan(models.Model):
         for plan in self:
             plan.children_count = len(plan.children_ids)
 
+    @api.onchange('parent_id')
+    def _onchange_parent_id(self):
+        project_plan, __ = self._get_all_plans()
+        if self._origin.id == project_plan.id:
+            raise UserError(_("You cannot add a parent to the base plan '%s'", project_plan.name))
+
     def action_view_analytical_accounts(self):
         result = {
             "type": "ir.actions.act_window",
@@ -266,7 +272,7 @@ class AccountAnalyticPlan(models.Model):
                 prev.field_description = plan.name
             elif not plan.parent_id:
                 column = plan._strict_column_name()
-                self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
+                field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
                     'name': column,
                     'field_description': plan.name,
                     'state': 'manual',
@@ -275,10 +281,14 @@ class AccountAnalyticPlan(models.Model):
                     'ttype': 'many2one',
                     'relation': 'account.analytic.account',
                     'store': True,
+                    'on_delete': 'restrict',
                 })
                 tablename = self.env['account.analytic.line']._table
                 indexname = make_index_name(tablename, column)
                 create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                field.write({
+                    'index': True,
+                })
 
 
 class AccountAnalyticApplicability(models.Model):

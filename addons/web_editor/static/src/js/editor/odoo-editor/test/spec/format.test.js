@@ -17,6 +17,8 @@ const strikeThrough = async editor => {
 };
 const setFontSize = size => editor => editor.execCommand('setFontSize', size);
 
+const setFontSizeClassName = className => editor => editor.execCommand('setFontSizeClassName', className);
+
 const switchDirection = editor => editor.execCommand('switchDirection');
 
 describe('Format', () => {
@@ -847,7 +849,7 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insert', 'C');
                 },
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`, 'first')}C[]\u200B`, 'first')}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u("B")}C[]`)}${u(s(`ef`))}</p>`,
             });
         });
         it('should remove only underline decoration on a span', async () => {
@@ -1092,6 +1094,30 @@ describe('Format', () => {
                 contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
             });
         });
+        it('should apply font size on top of `u` and `s` tags', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<u>[b]</u>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><u>[b]</u></span>c</p>`,
+            });
+        });
+        it('should apply font size on topmost `u` or `s` tags if multiple applied', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<s><u>[b]</u></s>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
+            });
+        });
+    });
+
+    describe('setFontSizeClassName', () => {
+        it('should be able to change font-size class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<span class="h1-fs">[bcd]</span>e</p>`,
+                stepFunction: setFontSizeClassName("h2-fs"),
+                contentAfter: `<p>a<span class="h2-fs">[bcd]</span>e</p>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
@@ -1193,6 +1219,23 @@ describe('Format', () => {
                 stepFunction: editor => editor.execCommand('removeFormat'),
                 contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
 
+            });
+        });
+        it('should remove font-size classes when clearing the format' , async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>123<span class="h1-fs">[abc]</span>456</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>123[abc]456</p>`
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[a<span class="h1-fs">bc</span>d<span class="h2-fs">ef</span>g]</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>[abcdefg]</p>`
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[a<span class="h1-fs">bc</span>d</p><p>e<span class="o_small-fs">fg</span>h]</p>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<p>[abcd</p><p>efgh]</p>`
             });
         });
     });

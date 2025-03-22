@@ -428,7 +428,6 @@ export class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_type = json.price_type || "original";
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
         this.attribute_value_ids = json.attribute_value_ids || [];
@@ -463,6 +462,7 @@ export class Orderline extends PosModel {
         this.combo_line_ids = json.combo_line_ids;
         this.combo_parent_id = json.combo_parent_id;
         this.comboLine = this.pos.db.combo_line_by_id[json.combo_line_id];
+        this.price_type = json.price_type || this.init_price_type();
     }
     clone() {
         var orderline = new Orderline(
@@ -487,6 +487,19 @@ export class Orderline extends PosModel {
     }
     getDisplayClasses() {
         return {};
+    }
+    init_price_type() {
+        const displayPrice = this.get_display_price();
+        const unitPriceDiscount =
+            this.product.get_price(this.order.pricelist, this.get_quantity()) *
+            (1.0 - this.get_discount() / 100.0);
+        const productDisplayedPrice =
+            this.product.get_display_price({
+                pricelist: this.order.pricelist,
+                quantity: this.get_quantity(),
+                price: unitPriceDiscount,
+            }) * this.get_quantity();
+        return displayPrice !== productDisplayedPrice ? "manual" : "original";
     }
     getPackLotLinesToEdit(isAllowOnlyOneLot) {
         const currentPackLotLines = this.pack_lot_lines;
@@ -1132,7 +1145,7 @@ export class Orderline extends PosModel {
     }
     getComboTotalPriceWithoutTax() {
         const allLines = this.getAllLinesInCombo();
-        return allLines.reduce((total, line) => total + line.get_all_prices(1).priceWithoutTax, 0);
+        return allLines.reduce((total, line) => total + line.get_base_price() / line.quantity, 0);
     }
     findAttribute(values, customAttributes) {
         const listOfAttributes = [];
@@ -1450,7 +1463,7 @@ export class Order extends PosModel {
         }
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
-        this.trackingNumber = (
+        this.trackingNumber = this.trackingNumber || (
             (this.pos_session_id % 10) * 100 +
             (this.sequence_number % 100)
         ).toString();
@@ -1572,6 +1585,7 @@ export class Order extends PosModel {
         this.ticketCode = json.ticket_code || "";
         this.lastOrderPrepaChange =
             json.last_order_preparation_change && JSON.parse(json.last_order_preparation_change);
+        this.trackingNumber = json.tracking_number;
     }
     updateSequenceNumber(json) {
         this.pos.pos_session.sequence_number = Math.max(
@@ -2506,7 +2520,10 @@ export class Order extends PosModel {
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.get_discount() / 100) *
                         orderLine.get_quantity();
-                    if (orderLine.display_discount_policy() === "without_discount") {
+                    if (
+                        orderLine.display_discount_policy() === "without_discount" &&
+                        !(orderLine.price_type === "manual")
+                    ) {
                         sum +=
                             (orderLine.get_taxed_lst_unit_price() -
                                 orderLine.getUnitDisplayPriceBeforeDiscount()) *

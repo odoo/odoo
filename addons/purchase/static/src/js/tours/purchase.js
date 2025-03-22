@@ -34,22 +34,21 @@ registry.category("web_tour.tours").add("purchase_tour", {
             position: "bottom",
         },
         {
-            trigger: ".o_form_editable .o_field_many2one[name='partner_id']",
+            trigger: ".o_form_editable .o_field_res_partner_many2one[name='partner_id']",
             extra_trigger: ".o_purchase_order",
             content: _t("Search a vendor name, or create one on the fly."),
             position: "bottom",
             run: function (actions) {
-                actions.text("Agrolait", this.$anchor.find("input"));
+                actions.text("Azure Interior", this.$anchor.find("input"));
             },
         },
         {
-            trigger: ".ui-menu-item > a",
+            trigger: ".ui-menu-item > a:contains('Azure Interior')",
             auto: true,
             in_modal: false,
         },
         {
             trigger: ".o_field_x2many_list_row_add > a",
-            extra_trigger: ".o_field_many2one[name='partner_id'] .o_external_button",
             content: _t("Add some products or services to your quotation."),
             position: "bottom",
         },
@@ -61,24 +60,19 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: function (actions) {
                 var $input = this.$anchor.find("input");
                 actions.text("DESK0001", $input.length === 0 ? this.$anchor : $input);
-                var $descriptionElement = $('.o_form_editable textarea[name="name"]');
-                // when description changes, we know the product has been created
-                $descriptionElement.change(function () {
-                    $descriptionElement.addClass("product_creation_success");
-                });
             },
         },
         {
-            trigger: '.ui-menu.ui-widget .ui-menu-item a:contains("DESK0001")',
+            trigger: "a:contains('DESK0001')",
             auto: true,
         },
         {
-            trigger: '.o_form_editable textarea[name="name"].product_creation_success',
+            trigger: "td[name='name'][data-tooltip*='DESK0001']",
             auto: true,
             run: function () {}, // wait for product creation
         },
         {
-            trigger: ".o_form_editable input[name='product_qty'] ",
+            trigger: "div.o_field_widget[name='product_qty'] input ",
             extra_trigger: ".o_purchase_order",
             content: _t("Indicate the product quantity you want to order."),
             position: "right",
@@ -109,7 +103,11 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            trigger: ".o_field_widget [name=price_unit]",
+            content: "Select price",
+            trigger: 'tbody tr.o_data_row .o_list_number[name="price_unit"]',
+        },
+        {
+            trigger: 'tbody tr.o_data_row .o_list_number[name="price_unit"] input',
             extra_trigger: ".o_purchase_order",
             content: _t(
                 "Once you get the price from the vendor, you can complete the purchase order with the right price."

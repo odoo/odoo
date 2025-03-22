@@ -13,19 +13,19 @@
 # Jorunn D. Newth, 2024
 # Lars Aam <lars.aam@vikenfiber.no>, 2024
 # Henning Fyllingsnes, 2024
-# Marius Stedjan <marius@stedjan.com>, 2024
 # Martin Trigaux, 2024
 # Ørjan Wean <orjan@wean.no>, 2024
 # cecilieflyt, 2024
 # Rune Restad, 2024
+# Marius Stedjan <marius@stedjan.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rune Restad, 2024\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,12 +122,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "27.00"
-msgstr ""
+msgstr "27.00"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "31.05"
-msgstr ""
+msgstr "31.05"
 
 #. module: sale
 #. odoo-javascript
@@ -892,15 +892,9 @@ msgid ""
 "e.g. this option can be useful to share Product description files.\n"
 "Confirmed order: the document will be sent to and accessible by customers.\n"
 "e.g. this option can be useful to share User Manual or digital content bought on ecommerce. \n"
-"Inside quote: The document will be included in the pdf of the quotation between the header pages and the quote table. "
+"Inside quote: The document will be included in the pdf of the quotation \n"
+"and sale order between the header pages and the quote table. "
 msgstr ""
-"Lar deg dele dokumentet med kundene dine i en salgssituasjon. \n"
-"La det stå tomt hvis du ikke ønsker å dele dette dokumentet med salgskunden. \n"
-"Tilbud: Dokumentet vil bli sendt til og være tilgjengelig for kunder når som helst. \n"
-"F.eks. kan dette alternativet være nyttig for å dele produktbeskrivelsesfiler. \n"
-"Bekreftet ordre: Dokumentet vil bli sendt til og være tilgjengelig for kunder. \n"
-"F.eks. kan dette alternativet være nyttig for å dele brukermanual eller digitalt innhold kjøpt i nettbutikk. \n"
-"Inne i tilbud: Dokumentet vil bli inkludert i PDF-en av tilbudet mellom forside og tilbudstabell."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
@@ -1076,7 +1070,7 @@ msgstr "Automatisk faktura"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Bacon Burger"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__journal_name
@@ -1501,7 +1495,7 @@ msgid ""
 "Creation date of draft/sent orders,\n"
 "Confirmation date of confirmed orders."
 msgstr ""
-"Opprettelsesdato for kladdede/sendte ordrer,\n"
+"Opprettelsesdato for utkastede/sendte ordrer,\n"
 "Bekreftelsesdato for bekreftede ordrer."
 
 #. module: sale
@@ -1831,7 +1825,7 @@ msgstr "Rabatt, lojalitet og gavekort"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_draft_invoice_warning
 msgid "Display Draft Invoice Warning"
-msgstr "Vis advarsel for kladdfaktura"
+msgstr "Vis advarsel for utkastfaktura"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__display_invoice_amount_warning
@@ -1959,7 +1953,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 #, python-format
 msgid "Draft Invoices"
-msgstr "Fakturakladd"
+msgstr "Fakturautkast"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
@@ -2887,7 +2881,7 @@ msgstr "På alle ordrelinjer"
 #. module: sale
 #: model:ir.model,name:sale.model_onboarding_onboarding
 msgid "Onboarding"
-msgstr ""
+msgstr "Onboarding"
 
 #. module: sale
 #: model:onboarding.onboarding.step,step_image_alt:sale.onboarding_onboarding_step_sale_order_confirmation
@@ -3940,7 +3934,6 @@ msgstr "Salgsordre"
 #: model:ir.ui.menu,name:sale.menu_sales_config
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
-#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4587,12 +4580,12 @@ msgstr ""
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Følgende produkter kan ikke begrenses til firmaet %s, fordi de allerede er brukt i et tilbud eller en salgsordre i et annet firma:\n"
-"%s\n"
+"Følgende produkter kan ikke begrenses til firmaet %(company)s, fordi de allerede er brukt i et tilbud eller en salgsordre i et annet firma:\n"
+"%(used_products)s\n"
 "Du kan arkivere disse produktene, og opprette dem på nytt begrenset til ditt firma, eller la de være delte produkter."
 
 #. module: sale
@@ -4732,6 +4725,16 @@ msgstr "Det er for øyeblikket ingen salgsordrer for kontoen din."
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "There are existing"
 msgstr "Det er eksisterende"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/wizard/sale_order_discount.py:0
+#, python-format
+msgid ""
+"There does not seem to be any discount product configured for this company "
+"yet. You can either use a per-line discount, or ask an administrator to "
+"grant the discount the first time."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5299,6 +5302,7 @@ msgstr ""
 "                  enten det er et lagringsprodukt, et forbruksprodukt eller en tjeneste."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "Your Orders"
 msgstr "Dine ordre"

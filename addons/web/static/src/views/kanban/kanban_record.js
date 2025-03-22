@@ -177,8 +177,9 @@ function isBinSize(value) {
  * @returns {boolean} true if no content found or if containing only formatting tags
  */
 export function isHtmlEmpty(innerHTML = "") {
-    const div = Object.assign(document.createElement("div"), { innerHTML });
-    return div.innerText.trim() === "";
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(innerHTML, "text/html");
+    return doc.body.innerText.trim() === "";
 }
 
 export class KanbanRecord extends Component {

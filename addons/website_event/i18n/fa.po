@@ -12,9 +12,10 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # odooers ir, 2023
 # F Hariri <fhari1234@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Hanna Kheradroosta, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Dynamic Business Group, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Dynamic Business Group, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,10 +137,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-github text-github\" aria-label=\"گیت‌هاب\" title=\"گیت‌هاب\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Github\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
@@ -161,9 +159,8 @@ msgid ""
 "<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
 "title=\"LinkedIn\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"لینکدین\" title=\"لینکدین\"/>\n"
-"```"
+"<i class=\"fa fa-linkedin text-linkedin\" aria-label=\"LinkedIn\" "
+"title=\"LinkedIn\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -173,10 +170,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"تیک‌تاک\" title=\"تیک‌تاک\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -189,9 +183,8 @@ msgid ""
 "<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
 "title=\"Youtube\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"یوتیوب\" title=\"یوتیوب\"/>\n"
-"```"
+"<i class=\"fa fa-youtube-play text-youtube\" aria-label=\"Youtube\" "
+"title=\"Youtube\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -554,6 +547,13 @@ msgstr "پست الکترونیک"
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
 msgstr ""
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "خطا"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -1342,6 +1342,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
 msgid "Suggested answer"
 msgstr "پاسخ پیشنهاد شده"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "شناسایی فعالیت مشکوک توسط گوگل reCAPTCHA."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options

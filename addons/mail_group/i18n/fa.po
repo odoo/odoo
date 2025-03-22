@@ -10,7 +10,7 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Martin Trigaux, 2023
 # Hanna Kheradroosta, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,16 +50,13 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"```html\n"
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    سلام,<br><br>\n"
-"    درخواست داده‌اید که به لیست پستی <strong t-out=\"object.name or ''\"></strong> مشترک شوید.\n"
-"    <br><br>\n"
-"    برای تأیید، لطفاً به لینک زیر مراجعه کنید: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
-"    <br><br>\n"
-"    اگر این درخواست اشتباه بوده یا شما این اقدام را انجام نداده‌اید، لطفاً این پیام را نادیده بگیرید.\n"
-"</div>\n"
-"```"
+"<div style=\"margin: 0px; padding: 0px;\"> سلام، <br><br> شما درخواست "
+"کرده‌اید که به لیست پستی <strong t-out=\"object.name or ''\"></strong> اضافه"
+" شوید. <br><br> برای تأیید، لطفاً به لینک زیر مراجعه کنید: <strong "
+"t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t "
+"t-out=\"ctx['token_url'] or ''\"></t></a></strong> <br><br> اگر این کار به "
+"اشتباه صورت گرفته یا اگر شما این درخواست را نداده‌اید، لطفاً این پیام را "
+"نادیده بگیرید. </div>"
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
@@ -74,16 +71,13 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"```html\n"
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    سلام،<br><br>\n"
-"    شما درخواست کرده‌اید که از لیست پستی <strong t-out=\"object.name or ''\"></strong> لغو اشتراک شوید.\n"
-"    <br><br>\n"
-"    برای تأیید، لطفاً به لینک زیر مراجعه کنید: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
-"    <br><br>\n"
-"    اگر این اقدام اشتباهی بود یا شما این درخواست را نکردید، لطفاً این پیام را نادیده بگیرید.\n"
-"</div>\n"
-"```"
+"<div style=\"margin: 0px; padding: 0px;\"> سلام،<br><br> شما درخواست لغو "
+"اشتراک در لیست پستی <strong t-out=\"object.name or ''\"></strong> را "
+"داده‌اید. <br><br> برای تأیید، لطفاً به لینک زیر مراجعه کنید: <strong "
+"t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t "
+"t-out=\"ctx['token_url'] or ''\"></t></a></strong>. <br><br> اگر این کار "
+"اشتباهی بوده یا شما این اقدام را درخواست نکرده‌اید، لطفاً این پیام را نادیده"
+" بگیرید. </div>"
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -95,13 +89,10 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"```html\n"
-"<div>\n"
-"    <p>سلام <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
-"    <p>لطفاً راهنماهای لیست ایمیلی <t t-out=\"object.mail_group_id.name\"></t> را در زیر پیدا کنید.</p>\n"
-"    <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
-"</div>\n"
-"```"
+"<div> <p>سلام <t t-out=\"object.partner_id.name or ''\"></t>،</p> <p>لطفاً "
+"رهنمودهای لیست پستی <t t-out=\"object.mail_group_id.name\"></t> را در زیر "
+"بیابید.</p> <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or "
+"''\"></t></p> </div>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -119,9 +110,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
 msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"نام مستعار\" title=\"نام مستعار\"/>\n"
-"```"
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"نام مستعار\" "
+"title=\"نام مستعار\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -129,9 +119,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"گیرندگان\" title=\"گیرندگان\"/>\n"
-"```"
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"گیرندگان\" "
+"title=\"گیرندگان\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -139,9 +128,8 @@ msgid ""
 "<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"Previous message\" "
 "title=\"Previous message\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"پیام قبلی\" title=\"پیام قبلی\"/>\n"
-"```"
+"<i class=\"oi oi-arrow-left\" role=\"img\" aria-label=\"پیام قبلی\" "
+"title=\"پیام قبلی\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -149,9 +137,8 @@ msgid ""
 "<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"Next message\" "
 "title=\"Next message\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"پیام بعدی\" title=\"پیام بعدی\"/>\n"
-"```"
+"<i class=\"oi oi-arrow-right\" role=\"img\" aria-label=\"پیام بعدی\" "
+"title=\"پیام بعدی\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -159,9 +146,8 @@ msgid ""
 "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show attachments\""
 " title=\"Show attachments\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"نمایش پیوست‌ها\" title=\"نمایش پیوست‌ها\"/>\n"
-"```"
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"نمایش پیوست‌ها\" "
+"title=\"نمایش پیوست‌ها\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -169,9 +155,8 @@ msgid ""
 "<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"Show replies\" "
 "title=\"Show replies\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"نمایش پاسخ‌ها\" title=\"نمایش پاسخ‌ها\"/>\n"
-"```"
+"<i class=\"oi oi-chevron-down\" role=\"img\" aria-label=\"نمایش پاسخ‌ها\" "
+"title=\"نمایش پاسخ‌ها\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
@@ -179,9 +164,8 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide "
 "attachments\" title=\"Hide attachments\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"پنهان کردن پیوست‌ها\" title=\"پنهان کردن پیوست‌ها\"/>\n"
-"```"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"پنهان کردن "
+"پیوست‌ها\" title=\"پنهان کردن پیوست‌ها\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
@@ -189,17 +173,13 @@ msgid ""
 "<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"Hide replies\" "
 "title=\"Hide replies\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"پنهان کردن پاسخ‌ها\" title=\"پنهان کردن پاسخ‌ها\"/>\n"
-"```"
+"<i class=\"oi oi-chevron-right\" role=\"img\" aria-label=\"پنهان کردن "
+"پاسخ‌ها\" title=\"پنهان کردن پاسخ‌ها\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr ""
-"```html\n"
-"<span class=\"bg-warning\">در انتظار</span>\n"
-"```"
+msgstr "<span class=\"bg-warning\">در انتظار</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -207,10 +187,9 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">Banned</span>"
 msgstr ""
-"```html\n"
-"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != 'allow'\">در لیست سفید</span>\n"
-"                            <span class=\"ms-2 badge text-bg-danger\" invisible=\"author_moderation != 'ban'\">مسدود شده</span>\n"
-"```"
+"<span class=\"ms-2 badge text-bg-success\" invisible=\"author_moderation != "
+"'allow'\">لیست سفید</span> <span class=\"ms-2 badge text-bg-danger\" "
+"invisible=\"author_moderation != 'ban'\">مسدود</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -220,21 +199,14 @@ msgstr "<span class=\"mx-2\">-</span>"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
 msgid "<span>By thread</span>"
-msgstr ""
-"```html\n"
-"<span>بر اساس موضوع</span>\n"
-"```"
+msgstr "<span>بر اساس موضوع</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
-msgstr ""
-"```html\n"
-"<span>هنوز هیچ گروه ایمیلی وجود ندارد.</span>\n"
-"<br/>\n"
-"```"
+msgstr "<span>هنوز گروه ایمیلی وجود ندارد.</span> <br/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
@@ -1571,10 +1543,8 @@ msgid ""
 "members<br/>\n"
 "                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
-"```html\n"
-"اعضا<br/>\n"
-"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"ترافیک\" title=\"ترافیک\"/>\n"
-"```"
+"اعضا<br/> <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-"
+"label=\"ترافیک\" title=\"ترافیک\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups

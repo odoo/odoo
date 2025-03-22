@@ -39,5 +39,6 @@ KioskManualSelection.props = {
     employees : {type : Array},
     displayBackButton : {type : Boolean},
     departments: {type : Array},
-    onSelectEmployee : {type : Function}
+    onSelectEmployee : {type : Function},
+    onClickBack : {type : Function}
 };

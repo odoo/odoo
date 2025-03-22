@@ -77,6 +77,7 @@ class IrModule(models.Model):
         if 'account' in modules:
             def load_account_translations(env):
                 env['account.chart.template']._load_translations(langs=langs)
+                env['account.account.tag']._translate_tax_tags(langs=langs)
             if self.env.registry.loaded:
                 load_account_translations(self.env)
             else:

@@ -17,7 +17,7 @@
             <t t-slot="details"/>
         </t>
         <t t-else="">
-            <CenteredIcon icon="'fa-shopping-cart fa-4x'" text="emptyCartText()"/>
+            <CenteredIcon t-if="props.editable" icon="'fa-shopping-cart fa-4x'" text="emptyCartText()"/>
             <t t-slot="details"/>
         </t>
     </t>

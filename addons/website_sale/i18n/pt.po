@@ -7,19 +7,20 @@
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2023
 # Manuela Silva <mmsrs@sky.com>, 2023
 # Vasco Rodrigues, 2024
-# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2024
 # Samuel Afonso, 2024
-# Wil Odoo, 2024
 # Maitê Dietze, 2024
 # Rita Bastos, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
+# Arxi, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Rita Bastos, 2024\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,11 @@ msgstr "%s opiniões"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 msgid "&amp; Shipping"
 msgstr "&amp; Entrega"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -546,8 +552,8 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Uma descrição do 'Artigo' que quer comunicar aos seus clientes. Esta "
-"descrição será copiada para todas as 'Ordens de Vendas', 'Guias de Remessa' "
-"e 'Faturas de Cliente/Notas de Crédito'"
+"descrição será copiada para todas as 'Ordens de Venda', 'Guias de Remessa' e"
+" 'Faturas de Cliente/Notas de Crédito'"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -2826,7 +2832,7 @@ msgstr "Ascendentes e o Próprio"
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Pay now"
-msgstr "Pagar agora"
+msgstr "Finalizar Pedido"
 
 #. module: website_sale
 #. odoo-python
@@ -2864,6 +2870,13 @@ msgstr "Códigos de Pagamento"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "Transações de Pagamento"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -3503,12 +3516,12 @@ msgstr "Relatório de Análise de Vendas"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
 msgid "Sales Order"
-msgstr "Ordem de Vendas"
+msgstr "Ordem de Venda"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Linhas da Ordem de Vendas"
+msgstr "Linhas da Ordem de Venda"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -3972,6 +3985,13 @@ msgstr "O token de acesso é inválido."
 msgid ""
 "The amount will be displayed strikethroughed on the eCommerce product page"
 msgstr "O valor será exibido traçado na página do produto eCommerce"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -4612,15 +4632,6 @@ msgstr "O Seu Email"
 #, python-format
 msgid "Your Name"
 msgstr "O Seu Nome"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-#, python-format
-msgid ""
-"Your account is not allowed to pay in company %s. Please log out and create "
-"a new account for this website, or contact the website administrator."
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines

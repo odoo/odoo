@@ -11,7 +11,11 @@ export class OrderWidget extends Component {
         slots: { type: Object },
         total: { type: String, optional: true },
         tax: { type: String, optional: true },
+        editable: { type: Boolean, optional: true },
     };
+    static defaultProps = {
+        editable: true,
+    }
     static components = { CenteredIcon };
     setup() {
         this.scrollableRef = useRef("scrollable");

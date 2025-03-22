@@ -10,15 +10,16 @@
 # Tina Milas, 2024
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2024
 # Martin Trigaux, 2024
-# Bole <bole@dajmi5.com>, 2024
+# Bole <bole@dajmi5.com>, 2025
+# Zvonimir Galic, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:27+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2024\n"
+"Last-Translator: Zvonimir Galic, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr "%s u više redaka"
 #: code:addons/base_import/static/src/import_action/import_action.js:0
 #, python-format
 msgid "%s records successfully imported"
-msgstr "%d zapisa uspješno uveženo"
+msgstr "%s zapisa uspješno uveženo"
 
 #. module: base_import
 #. odoo-javascript
@@ -268,7 +269,7 @@ msgstr "Greška pri čitanju datuma [%s:L%d]: %s"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Error at row %s: \"%s\""
-msgstr ""
+msgstr "Greška u retku %s: \"%s\""
 
 #. module: base_import
 #. odoo-python
@@ -499,6 +500,15 @@ msgstr "Uvežena datoteka"
 #, python-format
 msgid "Importing"
 msgstr "Uvozim"
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
+msgstr ""
 
 #. module: base_import
 #. odoo-python

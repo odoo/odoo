@@ -31,6 +31,7 @@ import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
 import { Domain } from "@web/core/domain";
 import { SampleServer } from "@web/model/sample_server";
+import { GraphModel } from "@web/views/graph/graph_model";
 
 const serviceRegistry = registry.category("services");
 
@@ -4688,5 +4689,80 @@ QUnit.module("Views", (hooks) => {
                 },
             ]
         );
+    });
+
+    QUnit.test("limit dataset amount", async function (assert) {
+        serverData.models.project = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+            },
+            records: [],
+        };
+        serverData.models.stage = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+            },
+            records: [],
+        };
+        serverData.models.task = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+                project_id: {
+                    type: "many2one",
+                    relation: "project",
+                    sortable: true,
+                    string: "Project",
+                },
+                stage_id: { type: "many2one", relation: "stage", sortable: true, string: "Stage" },
+            },
+            records: [],
+        };
+        for (let i = 1; i <= 600; i++) {
+            serverData.models.project.records.push({
+                id: i,
+                name: `Project ${i}`,
+            });
+            serverData.models.stage.records.push({
+                id: i,
+                name: `Stage ${i}`,
+            });
+            serverData.models.task.records.push({
+                id: i,
+                project_id: i,
+                stage_id: i,
+                name: `Task ${i}`,
+            });
+        }
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "task",
+            arch: `
+                <graph>
+                    <field name="project_id"/>
+                    <field name="stage_id"/>
+                </graph>
+            `,
+        });
+
+        assert.strictEqual(graph.model.data.exceeds, true);
+        assert.strictEqual(graph.model.data.datasets.length, 80);
+        assert.strictEqual(graph.model.data.labels.length, 80);
+        assert.containsN(target, `.o_graph_alert`, 1);
+
+        patchWithCleanup(GraphModel.prototype, {
+            notify() {
+                assert.step("rerender");
+            },
+        });
+        await click(target, `.o_graph_load_all_btn`);
+        assert.verifySteps(["rerender"]);
+        assert.strictEqual(graph.model.data.exceeds, false);
+        assert.strictEqual(graph.model.data.datasets.length, 600);
+        assert.strictEqual(graph.model.data.labels.length, 600);
     });
 });

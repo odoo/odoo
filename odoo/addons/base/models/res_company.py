@@ -288,6 +288,15 @@ class Company(models.Model):
         if any(company.child_ids for company in self):
             raise UserError(_("Companies that have associated branches cannot be deleted. Consider archiving them instead."))
 
+    def unlink(self):
+        """
+        Unlink the companies and clear the cache to make sure that
+        _get_company_ids of res.users gets only existing company ids.
+        """
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
     def write(self, values):
         invalidation_fields = self.cache_invalidation_fields()
         asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}

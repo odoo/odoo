@@ -419,7 +419,7 @@ class HolidaysAllocation(models.Model):
                 [self.employee_id.id]['hours']
         else:
             planned_worked = worked
-        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt,
+        left = self.employee_id.sudo()._get_leave_days_data_batch(start_dt, end_dt, calendar=self.employee_id._get_calendar(start_dt),
             domain=[('time_type', '=', 'leave')])[self.employee_id.id]['hours']
         if level.frequency == 'hourly':
             if level.accrual_plan_id.is_based_on_worked_time:
@@ -457,7 +457,7 @@ class HolidaysAllocation(models.Model):
         If force_period is set, the accrual will run until date_to in a prorated way (used for end of year accrual actions).
         """
         date_to = date_to or fields.Date.today()
-        already_accrued = {allocation.id: allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start' for allocation in self}
+        already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
             level_ids = allocation.accrual_plan_id.level_ids.sorted('sequence')
@@ -468,7 +468,7 @@ class HolidaysAllocation(models.Model):
             # even if the value doesn't change. This is the best performance atm.
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
-            leaves_taken = allocation.leaves_taken if first_level.added_value_type == "day" else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -519,10 +519,12 @@ class HolidaysAllocation(models.Model):
                 # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
                 if allocation.nextcall == carryover_date:
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
-                        allocation_days = allocation.number_of_days + leaves_taken
-                        postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
-                        allocation_max_days = postpone_max_days + leaves_taken
-                        allocation.number_of_days = min(allocation_days, allocation_max_days)
+                        allocated_days_left = allocation.number_of_days - leaves_taken
+                        allocation_max_days = 0 # default if unused_accrual are lost
+                        if current_level.action_with_unused_accruals == 'maximum':
+                            postpone_max_days = current_level.postpone_max_days if current_level.added_value_type == 'day' else current_level.postpone_max_days / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                            allocation_max_days = min(postpone_max_days, allocated_days_left)
+                        allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
 
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
@@ -535,7 +537,8 @@ class HolidaysAllocation(models.Model):
             # once, preventing double allocation.
             if allocation.accrual_plan_id.accrued_gain_time == 'start':
                 # check that we are at the start of a period, not on a carry-over or level transition date
-                current_level = current_level or allocation.accrual_plan_id.level_ids[0]
+                level_start = {level._get_level_transition_date(allocation.date_from): level for level in allocation.accrual_plan_id.level_ids}
+                current_level = level_start.get(allocation.lastcall) or current_level or allocation.accrual_plan_id.level_ids[0]
                 period_start = current_level._get_previous_date(allocation.lastcall)
                 if current_level.cap_accrued_time:
                     current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "day" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
@@ -698,8 +701,8 @@ class HolidaysAllocation(models.Model):
                     .get(allocation.holiday_status_id, {}).get('excess_days', {})
                 previous_excess = dict(previous_consumed_leaves[1]).get(allocation.employee_id, {}) \
                     .get(allocation.holiday_status_id, {}).get('excess_days', {})
-                total_current_excess = sum(leave_date['amount'] for leave_date in current_excess.values())
-                total_previous_excess = sum(leave_date['amount'] for leave_date in previous_excess.values())
+                total_current_excess = sum(leave_date['amount'] and not leave_date['is_virtual'] for leave_date in current_excess.values())
+                total_previous_excess = sum(leave_date['amount'] and not leave_date['is_virtual'] for leave_date in previous_excess.values())
 
                 if total_current_excess <= total_previous_excess:
                     continue

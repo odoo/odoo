@@ -3127,6 +3127,69 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.hasClass(findFilterPanelFilter(target, "event_type_id", 3), "o_cw_filter_color_4");
     });
 
+    QUnit.test(`Colors: dynamic filters with no color source`, async (assert) => {
+        serverData.models.event.records = [
+            {
+                id: 8,
+                user_id: 4,
+                partner_id: 3,
+                name: "event 8",
+                start: "2016-12-11 09:00:00",
+                stop: "2016-12-11 10:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 3,
+                color_event: 4, // related is not managed by the mock server
+            },
+            {
+                id: 9,
+                user_id: 4,
+                partner_id: 3,
+                name: "event 9",
+                start: "2016-12-11 19:00:00",
+                stop: "2016-12-11 20:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 1,
+                color_event: 1, // related is not managed by the mock server
+            },
+            {
+                id: 10,
+                user_id: 4,
+                partner_id: 3,
+                name: "event 10",
+                start: "2016-12-11 12:00:00",
+                stop: "2016-12-11 13:00:00",
+                allday: false,
+                partner_ids: [1, 2, 3],
+                event_type_id: 2,
+                color_event: 2, // related is not managed by the mock server
+            },
+        ];
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" />
+                    <field name="event_type_id" filters="1" color="color_event_type" />
+                </calendar>
+            `,
+            mockRPC(route, { method, model }) {
+                if (method === "search_read" && model === "event_type") {
+                    assert.step("fetching event_type filter colors");
+                }
+            },
+        });
+        assert.verifySteps([]);
+        await toggleSectionFilter(target, "partner_ids");
+        assert.verifySteps(["fetching event_type filter colors"]);
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 1), "o_cw_filter_color_1");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 2), "o_cw_filter_color_2");
+        assert.hasClass(findFilterPanelFilter(target, "event_type_id", 3), "o_cw_filter_color_4");
+    });
+
     QUnit.test(`create event with filters`, async (assert) => {
         serverData.models.event.fields.user_id.default = 5;
         serverData.models.event.fields.partner_id.default = 3;
@@ -5706,5 +5769,39 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.strictEqual(input_start.value, "12/28/2016 08:00:00", "should display the datetime");
         const input_stop = target.querySelector(".o_field_widget[name='stop'] input");
         assert.strictEqual(input_stop.value, "12/30/2016 10:00:00", "should display the datetime");
+    });
+
+    QUnit.test("html field on calendar shouldn't have a tooltip", async (assert) => {
+        serverData.models.event.fields.description = { string: "Description", type: "html" };
+        serverData.models.event.records.push({
+            id: 8,
+            user_id: uid,
+            partner_id: 1,
+            name: "event with html",
+            start: "2016-12-12 12:00:00",
+            stop: "2016-12-12 12:00:00",
+            allday: false,
+            partner_ids: [1, 2, 3],
+            type: 1,
+            is_hatched: false,
+            description: "<h1>description</h1>",
+        });
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start">
+                    <field name="description"/>
+                </calendar>
+            `,
+        });
+
+        await clickEvent(target, 8);
+        const descriptionField = target.querySelector(
+            '.o_cw_popover_field .o_field_widget[name="description"]'
+        );
+        const parentLi = descriptionField.closest("li");
+        assert.strictEqual(parentLi.getAttribute("data-tooltip"), "");
     });
 });

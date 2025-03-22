@@ -88,7 +88,7 @@
                 </div>
                 <div t-if="extended and !props.composer.message" class="d-flex align-items-center mt-2 gap-2">
                     <t t-call="mail.Composer.sendButton"/>
-                    <span t-if="!isSendButtonDisabled and !props.composer.message" t-out="SEND_KEYBIND_TO_SEND"/>
+                    <span t-if="!isSendButtonDisabled and !props.composer.message and !isMobileOS()" t-out="SEND_KEYBIND_TO_SEND"/>
                 </div>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">
@@ -107,7 +107,7 @@
 
 <t t-name="mail.Composer.sendButton">
     <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn o-last"
-        t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
+        t-att-class="{'btn-primary': extended or (ui.isSmall and !isSendButtonDisabled), 'rounded-0 rounded-end-3': !extended and !compact, 'btn-link': !extended and !(ui.isSmall and !isSendButtonDisabled), 'align-self-stretch': !extended, 'border-start-0 ms-2 me-3': env.inDiscussApp}"
         t-on-click="sendMessage"
         t-att-disabled="isSendButtonDisabled"
         t-att-aria-label="SEND_TEXT"
@@ -124,7 +124,7 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="partner.name"/>
         </strong>
-        <em t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</em>
+        <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
     </t>
 
     <t t-name="mail.Composer.suggestionThread">
@@ -137,17 +137,17 @@
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.label"/>
         </strong>
-        <em class="text-600 text-truncate align-self-center">
+        <span class="text-600 text-truncate align-self-center">
             <t t-esc="option.help"/>
-        </em>
+        </span>
     </t>
 
     <t t-name="mail.Composer.suggestionCannedResponse">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <t t-esc="option.source"/>
         </strong>
-        <em class="text-600 text-truncate align-self-center">
+        <span class="text-600 text-truncate align-self-center">
             <t t-esc="option.label"/>
-        </em>
+        </span>
     </t>
 </templates>

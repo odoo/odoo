@@ -15,6 +15,7 @@
 # Hanna Kheradroosta, 2023
 # Abbas Ebadian, 2024
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Mohammadamir Heshmatkhah <maheshmatkhah.soft@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -233,19 +234,13 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "<i class=\"fa fa-cube fa-fw\" title=\"Product Domain\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-cube fa-fw\" title=\"دامنه محصول\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"دامنه محصول\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-cube fa-fw\" title=\"محصولات\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-cube fa-fw\" title=\"محصولات\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -256,19 +251,13 @@ msgstr "<i class=\"fa fa-cube fa-fw\" title=\"محصولات\"/><span>همه م�
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-cubes fa-fw\" title=\"Product Categories\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-cubes fa-fw\" title=\"دسته‌بندی‌های محصول\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-cubes fa-fw\" title=\"دسته بندی محصولات\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "<i class=\"fa fa-search fa-fw\" title=\"Product Domain\"/>"
-msgstr ""
-"```html\n"
-"<i class=\"fa fa-search fa-fw\" title=\"دامنه محصول\"/>\n"
-"```"
+msgstr "<i class=\"fa fa-search fa-fw\" title=\"دامنه محصول\"/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -388,10 +377,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "<span> x </span>"
-msgstr ""
-"```html\n"
-"<span> ایکس </span>\n"
-"```"
+msgstr "<span> x </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1108,6 +1094,13 @@ msgstr "مستثنی شده"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
 msgid "Expiration Date"
 msgstr "تاریخ انقضا"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+#, python-format
+msgid "Expiration date cannot be set on a loyalty card."
+msgstr ""
 
 #. module: loyalty
 #. odoo-python

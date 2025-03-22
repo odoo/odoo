@@ -40,7 +40,7 @@ class AlarmManager(models.AbstractModel):
                         END as last_alarm,
                         cal.start as first_event_date,
                         CASE
-                            WHEN cal.recurrency AND end_type = 'end_date' THEN rrule.until
+                            WHEN cal.recurrency AND rrule.end_type = 'end_date' THEN rrule.until
                             ELSE cal.stop
                         END as last_event_date,
                         calcul_delta.min_delta,
@@ -246,7 +246,10 @@ class AlarmManager(models.AbstractModel):
     def _notify_next_alarm(self, partner_ids):
         """ Sends through the bus the next alarm of given partners """
         notifications = []
-        users = self.env['res.users'].search([('partner_id', 'in', tuple(partner_ids))])
+        users = self.env['res.users'].search([
+            ('partner_id', 'in', tuple(partner_ids)),
+            ('groups_id', 'in', self.env.ref('base.group_user').ids),
+        ])
         for user in users:
             notif = self.with_user(user).with_context(allowed_company_ids=user.company_ids.ids).get_next_notif()
             notifications.append([user.partner_id, 'calendar.alarm', notif])

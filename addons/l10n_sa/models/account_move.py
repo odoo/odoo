@@ -39,8 +39,9 @@ class AccountMove(models.Model):
                 company_vat_enc = get_qr_encoding(2, record.company_id.vat)
                 time_sa = fields.Datetime.context_timestamp(self.with_context(tz='Asia/Riyadh'), record.l10n_sa_confirmation_datetime)
                 timestamp_enc = get_qr_encoding(3, time_sa.isoformat())
-                invoice_total_enc = get_qr_encoding(4, float_repr(abs(record.amount_total_signed), 2))
-                total_vat_enc = get_qr_encoding(5, float_repr(abs(record.amount_tax_signed), 2))
+                totals = record._get_l10n_sa_totals()
+                invoice_total_enc = get_qr_encoding(4, float_repr(abs(totals['total_amount']), 2))
+                total_vat_enc = get_qr_encoding(5, float_repr(abs(totals['total_tax']), 2))
 
                 str_to_encode = seller_name_enc + company_vat_enc + timestamp_enc + invoice_total_enc + total_vat_enc
                 qr_code_str = base64.b64encode(str_to_encode).decode()
@@ -55,3 +56,10 @@ class AccountMove(models.Model):
                     vals['delivery_date'] = move.invoice_date
                 move.write(vals)
         return res
+
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        return {
+            'total_amount': self.amount_total_signed,
+            'total_tax': self.amount_tax_signed,
+        }

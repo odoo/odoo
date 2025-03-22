@@ -219,7 +219,8 @@ class Website(models.Model):
         is_user_public = self.env.user._is_public()
         if not is_user_public:
             last_order_pricelist = partner_sudo.last_website_so_id.pricelist_id
-            partner_pricelist = partner_sudo.property_product_pricelist
+            ctx = {'country_code': country_code} if country_code else {}
+            partner_pricelist = partner_sudo.with_context(**ctx).property_product_pricelist
         else:  # public user: do not compute partner pl (not used)
             last_order_pricelist = self.env['product.pricelist']
             partner_pricelist = self.env['product.pricelist']

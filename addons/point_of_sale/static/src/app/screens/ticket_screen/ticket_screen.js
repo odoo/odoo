@@ -796,7 +796,7 @@ export class TicketScreen extends Component {
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
         const config_id = this.pos.config.id;
-        const { ordersInfo, totalCount } = await this.orm.call(
+        let { ordersInfo, totalCount } = await this.orm.call(
             "pos.order",
             "search_paid_order_ids",
             [],
@@ -813,6 +813,10 @@ export class TicketScreen extends Component {
         const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [idsToLoad]);
+            // Remove not loaded Order IDs
+            const fetchedOrderIds = new Set(fetchedOrders.map(order => order.id));
+            const notLoadedIds = idsNotInCache.filter((orderInfo) => !fetchedOrderIds.has(orderInfo[0]));
+            ordersInfo = ordersInfo.filter((orderInfo) => !notLoadedIds.includes(orderInfo[0]));
             // Check for missing products and partners and load them in the PoS
             await this.pos._loadMissingProducts(fetchedOrders);
             await this.pos._loadMissingPartners(fetchedOrders);

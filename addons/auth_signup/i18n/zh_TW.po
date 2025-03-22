@@ -3,8 +3,8 @@
 # 	* auth_signup
 # 
 # Translators:
-# Wil Odoo, 2023
-# Tony Ng, 2024
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-13 10:27+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tony Ng, 2024\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -745,7 +745,7 @@ msgstr "從未登入系統"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "New Connection to your Account"
-msgstr "你的帳戶有新連接"
+msgstr "你的帳戶有新連線"
 
 #. module: auth_signup
 #. odoo-python
@@ -866,7 +866,7 @@ msgstr "發送給自己註冊的門戶用戶"
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
 msgid "Settings: New Portal Signup"
-msgstr "設置：新建門戶註冊"
+msgstr "設定：門戶網站新用戶註冊"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
@@ -961,6 +961,14 @@ msgid "Status"
 msgstr "狀態"
 
 #. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha 檢測到的可疑活動."
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "用作透過註冊建立的新使用者的模板"
@@ -979,7 +987,7 @@ msgstr "未正確填寫表格。"
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
-msgstr "嘗試發送您的電子郵件時出現錯誤，請檢查設置"
+msgstr "嘗試發送你的電子郵件時出現錯誤，請檢查設置"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -1015,7 +1023,7 @@ msgstr "您不能對已存檔的用戶執行此操作。"
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr "您的電子信件"
+msgstr "你的電郵"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

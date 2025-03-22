@@ -229,8 +229,12 @@ class AccountMove(models.Model):
                     )
                     invoice_aml = product_account_moves.filtered(lambda aml: aml not in correction_amls and aml.move_id == move)
                     stock_aml = product_account_moves - correction_amls - invoice_aml
-                    # Reconcile.
-                    if correction_amls:
+
+                    # Reconcile:
+                    # In case there is a move with correcting lines that has not been posted
+                    # (e.g., it's dated for some time in the future) we should defer any
+                    # reconciliation with exchange difference.
+                    if correction_amls or 'draft' in move.line_ids.sudo().stock_valuation_layer_ids.account_move_id.mapped('state'):
                         if sum(correction_amls.mapped('balance')) > 0 or all(aml.is_same_currency for aml in correction_amls):
                             no_exchange_reconcile_plan += [product_account_moves]
                         else:
@@ -266,9 +270,8 @@ class AccountMoveLine(models.Model):
             and line.move_id.is_purchase_document()
         ))
         for line in input_lines:
-            line = line.with_company(line.move_id.journal_id.company_id)
             fiscal_position = line.move_id.fiscal_position_id
-            accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            accounts = line.with_company(line.company_id).product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
             if accounts['stock_input']:
                 line.account_id = accounts['stock_input']
 

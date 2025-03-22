@@ -52,7 +52,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     // wait for qty to be 1 => check the total to be sure all qties are set to 1
     extra_trigger: 'td.o_list_monetary > span[name="Untaxed Amount"]:contains("216.00")',
 }, {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
@@ -81,7 +81,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
     // wait for qty to be 3 => check the total to be sure all qties are set to 3
     extra_trigger: 'td.o_list_monetary > span[name="Untaxed Amount"]:contains("648.00")',
 }, {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     extra_trigger: '.o_form_editable',
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
 },
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
-    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\nPA4: PAV41")',
     extra_trigger: '.o_form_status_indicator_buttons.invisible', // wait for save to be finished
 }, {
     trigger: '[name=product_template_id] button.fa-pencil',  // edit the matrix

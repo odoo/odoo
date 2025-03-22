@@ -1200,3 +1200,105 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         with self.assertRaises(UserError):
             self.holidays_type_2.requires_allocation = 'yes'
+
+    def test_activity_update_with_time_off_officer(self):
+        """ Test activity creation flow when approval settings involve Time Off Officer and Employee's Approver. """
+        # Case 1: Approved by Time Off Officer but no Time Off Officer is set
+        self.holidays_type_1.responsible_ids = False    # No Time Off Officer set
+
+        test_holiday_1 = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'date_from': (datetime.today() - timedelta(days=1)),
+            'date_to': datetime.today(),
+            'number_of_days': 1,
+        })
+
+        activities = test_holiday_1.activity_ids
+        self.assertFalse(activities, "No activity should be created if no Time Off Officer is set for approval.")
+
+        self.holidays_type_2.responsible_ids = [Command.link(self.user_employee.id)]
+        test_holiday_2 = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_hruser_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': (datetime.today() - timedelta(days=1)),
+            'date_to': datetime.today(),
+            'number_of_days': 1,
+        })
+
+        activities = test_holiday_2.activity_ids
+        self.assertEqual(len(activities), 1, "One activity should be created for the Employee's Approver.")
+        self.assertEqual(activities.activity_type_id, self.env.ref('hr_holidays.mail_act_leave_approval'), "The activity type should be for leave approval by the Employee's Approver.")
+        self.assertEqual(activities.user_id.id, self.user_employee_id, "The activity should be assigned to the Employee's Approver.")
+
+        # Case 2: Approved by Time Off Officer and Employee's Approver, but no Time Off Officer is set
+        self.holidays_type_4.responsible_ids = False     # No Time Off Officer set
+
+        test_holiday_3 = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_hrmanager_id,
+            'holiday_status_id': self.holidays_type_4.id,
+            'date_from': datetime.today(),
+            'date_to': (datetime.today() + timedelta(days=1)),
+            'number_of_days': 1,
+            'state': 'confirm',
+        })
+
+        activities = test_holiday_3.activity_ids
+        self.assertEqual(len(activities), 1, "One activity should be created for the Employee's Approver.")
+        self.assertEqual(activities.activity_type_id, self.env.ref('hr_holidays.mail_act_leave_approval'), "The activity type should be for leave approval by the Employee's Approver.")
+        self.assertEqual(activities.user_id, self.employee_hrmanager.leave_manager_id, "The activity should be assigned to the Employee's Approver.")
+
+    @freeze_time('2019-11-01')
+    def test_holiday_custom_hour_multiple_employees(self):
+        """When we create a leave with custom hours for multiple employees, we want to make sure that the
+        linked requests have the same custom hours as the main request."""
+
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'request_unit': 'hour',
+            'leave_validation_type': 'both',
+        })
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_ids': [(4, self.employee_hruser.id), (4, self.employee_emp.id)],
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime.today(),
+            'request_unit_hours': True,
+            'request_hour_from': '8',
+            'request_hour_to': '12',
+            'multi_employee': True,  # needed otherwise we break SQL constraint type_value, as this stored field is computed afterwards
+        })
+        leave.action_validate()
+
+        self.assertEqual(len(leave.linked_request_ids), 2)
+
+        for linked_request in leave.linked_request_ids:
+            self.assertTrue(linked_request.request_unit_hours)
+            self.assertEqual(linked_request.date_from, datetime(2019, 11, 1, 7, 0))  # not 8 because test calendar is in Europe/Brussels
+            self.assertEqual(linked_request.date_to, datetime(2019, 11, 1, 11, 0))
+            self.assertEqual(linked_request.number_of_hours, 4)
+
+    def test_time_off_date_edit(self):
+        user_id = self.employee_emp.user_id
+        employee_id = self.employee_emp.id
+
+        leave = self.env['hr.leave'].with_user(user_id).create({
+            'name': 'Test leave',
+            'employee_id': employee_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': (datetime.today() - relativedelta(days=2)),
+            'date_to': datetime.today()
+        })
+
+        two_days_after = (datetime.today() + relativedelta(days=2)).date()
+        with Form(leave.with_user(user_id)) as leave_form:
+            leave_form.request_date_from = two_days_after
+            leave_form.request_date_to = two_days_after
+        modified_leave = leave_form.save()
+
+        self.assertEqual(modified_leave.request_date_from, two_days_after)
+        self.assertEqual(modified_leave.request_date_to, two_days_after)

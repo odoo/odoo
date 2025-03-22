@@ -8,7 +8,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@id='other_tab_group']//group[@name='accounting_info_group']" position="inside">
                     <field name="l10n_es_registration_date" readonly="state == 'posted'" invisible="country_code != 'ES'"/>
+                    <field name="l10n_es_edi_csv" invisible="1"/>
                 </xpath>
+                <field name="ref" position="attributes">
+                    <attribute name="readonly">l10n_es_edi_csv</attribute>
+                </field>
             </field>
         </record>
     </data>

@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2024
+# Tiffany Chang, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:28+0000\n"
+"POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Larissa Manderfeld, 2024\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -196,7 +197,7 @@ msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
 msgstr ""
-"Ein boolescher Wert; wenn WAHR, werden leere Zellen, die in den "
+"Ein boolescher Wert; wenn TRUE, werden leere Zellen, die in den "
 "Textargumenten ausgewählt wurden, nicht in das Ergebnis aufgenommen."
 
 #. module: spreadsheet
@@ -207,8 +208,8 @@ msgid ""
 "A column or row containing true or false values corresponding to the first "
 "column or row of range."
 msgstr ""
-"Eine Spalte oder Zeile, die wahre oder falsche Werte enthält, die der ersten"
-" Spalte oder Zeile des Bereichs entsprechen."
+"Eine Spalte oder Zeile, die Wahr- oder Falsch-Werte enthält, die der ersten "
+"Spalte oder Zeile des Bereichs entsprechen."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -555,7 +556,7 @@ msgstr "Bereich hinzufügen"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Additional column or row containing true or false values."
-msgstr "Zusätzliche Spalte oder Zeile, die wahre oder falsche Werte enthält."
+msgstr "Zusätzliche Spalte oder Zeile, die Wahr- oder Falsch-Werte enthält."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -563,7 +564,7 @@ msgstr "Zusätzliche Spalte oder Zeile, die wahre oder falsche Werte enthält."
 #, python-format
 msgid "Additional conditions to be evaluated if the previous ones are FALSE."
 msgstr ""
-"Zusätzliche Bedingungen, die ausgewertet werden, wenn die vorherigen FALSCH "
+"Zusätzliche Bedingungen, die ausgewertet werden, wenn die vorherigen FALSE "
 "sind."
 
 #. module: spreadsheet
@@ -756,7 +757,7 @@ msgid ""
 "Additional values to be returned if their corresponding conditions are TRUE."
 msgstr ""
 "Zusätzliche Werte, die zurückgegeben werden, wenn die entsprechenden "
-"Bedingungen WAHR sind."
+"Bedingungen TRUE sind."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -862,7 +863,7 @@ msgid ""
 " be coerced to a logical value."
 msgstr ""
 "Ein Ausdruck oder ein Verweis auf eine Zelle, die einen Ausdruck enthält, "
-"der einen logischen Wert darstellt, d. h. WAHR oder FALSCH, oder einen "
+"der einen logischen Wert darstellt, d. h. TRUE oder FALSE, oder einen "
 "Ausdruck, der in einen logischen Wert umgewandelt werden kann."
 
 #. module: spreadsheet
@@ -874,7 +875,7 @@ msgid ""
 "represents some logical value, i.e. TRUE or FALSE."
 msgstr ""
 "Ein Ausdruck oder ein Verweis auf eine Zelle, die einen Ausdruck enthält, "
-"der einen logischen Wert darstellt, d. h. WAHR oder FALSCH."
+"der einen logischen Wert darstellt, d. h. TRUE oder FALSE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2011,6 +2012,13 @@ msgstr "Konvertiert eine angegebene Zeichenkette in Kleinbuchstaben."
 #, python-format
 msgid "Converts a specified string to uppercase."
 msgstr "Konvertiert eine angegebene Zeichenkette in Großbuchstaben."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Converts a string to a numeric value."
+msgstr "Konvertiert eine Zeichenfolge in einen numerischen Wert."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3510,8 +3518,8 @@ msgid ""
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
 msgstr ""
 "Bei einer allgemeinen Exponentialform von y = b*m^x für eine Kurvenanpassung"
-" berechnet b, wenn WAHR ist, oder erzwingt b den Wert 1 und berechnet die "
-"m-Werte nur, wenn FALSCH ist."
+" berechnet b, wenn TRUE ist, oder erzwingt b den Wert 1 und berechnet die "
+"m-Werte nur, wenn FALSE ist."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3523,8 +3531,8 @@ msgid ""
 "forces the curve fit to pass through the origin."
 msgstr ""
 "Bei einer allgemeinen linearen Form von y = m*x+b für eine Kurvenanpassung "
-"berechnet b, wenn WAHR ist, oder erzwingt b den Wert 0 und berechnet die "
-"m-Werte nur, wenn FALSCH ist, z. B. erzwingt die Kurvenanpassung, durch den "
+"berechnet b, wenn TRUE ist, oder erzwingt b den Wert 0 und berechnet die "
+"m-Werte nur, wenn FALSE ist, z. B. erzwingt die Kurvenanpassung, durch den "
 "Ursprung zu gehen."
 
 #. module: spreadsheet
@@ -6570,8 +6578,8 @@ msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
 msgstr ""
-"WAHR oder FALSCH gibt an, ob sort_column in aufsteigender Reihenfolge "
-"sortiert werden soll. FALSCH sortiert in absteigender Reihenfolge."
+"TRUE oder FALSE gibt an, ob sort_column in aufsteigender Reihenfolge "
+"sortiert werden soll. FALSE sortiert in absteigender Reihenfolge."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8321,7 +8329,7 @@ msgid ""
 "TRUE."
 msgstr ""
 "Das Maximum (%s) und Minimum (%s) müssen Ganzzahlen sein, wenn whole_number "
-"ist WAHR."
+"ist TRUE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8946,7 +8954,7 @@ msgid ""
 "evaluates to TRUE will be included in the filtered set."
 msgstr ""
 "Das Muster oder der Test, das/die auf criteria_range angewandt wird, sodass "
-"jede Zelle, die als WAHR ausgewertet wird, in die gefilterte Menge "
+"jede Zelle, die als TRUE ausgewertet wird, in die gefilterte Menge "
 "aufgenommen wird."
 
 #. module: spreadsheet
@@ -9504,7 +9512,7 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The returned value if condition1 is TRUE."
-msgstr "Der zurückgegebene Wert, wenn Bedingung1 ist WAHR."
+msgstr "Der zurückgegebene Wert, wenn Bedingung1 ist TRUE."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10463,7 +10471,7 @@ msgstr ""
 #, python-format
 msgid "The value the function returns if logical_expression is FALSE."
 msgstr ""
-"Der Wert, den die Funktion zurückgibt, wenn logical_expression FALSCH ist."
+"Der Wert, den die Funktion zurückgibt, wenn logical_expression FALSE ist."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10471,7 +10479,7 @@ msgstr ""
 #, python-format
 msgid "The value the function returns if logical_expression is TRUE."
 msgstr ""
-"Der Wert, den die Funktion zurückgibt, wenn logical_expression WAHR ist."
+"Der Wert, den die Funktion zurückgibt, wenn logical_expression TRUE ist."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10513,7 +10521,7 @@ msgstr "Der zu kürzende Wert."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "The value to be verified as a logical TRUE or FALSE."
-msgstr "Der Wert, der logische WAHR oder FALSCH verifiziert werden muss."
+msgstr "Der Wert, der logische TRUE oder FALSE verifiziert werden muss."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11636,7 +11644,7 @@ msgid ""
 "        consecutive delimiters as one (if TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
 "Ob leere Textnachrichten aus den Ergebnissen der Teilung entfernt werden sollen oder nicht. Das Standardverhalten ist es, \n"
-"        aufeinanderfolgende Trennzeichen als eins zu behandeln (falls WAHR). Bei FALSCH werden die Werte leerer Zellen zwischen aufeinanderfolgenden Trennzeichen hinzugefügt."
+"        aufeinanderfolgende Trennzeichen als eins zu behandeln (falls TRUE). Bei FALSE werden die Werte leerer Zellen zwischen aufeinanderfolgenden Trennzeichen hinzugefügt."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12251,6 +12259,13 @@ msgstr "start_date (%s) sollte am oder vor end_date (%s) liegen."
 #, python-format
 msgid "text"
 msgstr "Text"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "the string to be converted"
+msgstr "die umzuwandelnde Zeichenfolge"
 
 #. module: spreadsheet
 #. odoo-javascript

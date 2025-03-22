@@ -42,13 +42,22 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_line_amount_before_discount_jod(self, line):
         amount_after_discount = abs(line.balance)
-        return amount_after_discount / (1 - line.discount / 100)
+        return (amount_after_discount / (1 - line.discount / 100)) \
+            if line.discount < 100 else line.currency_id._convert(
+            from_amount=line.price_unit * line.quantity,
+            to_currency=self.env.ref('base.JOD'),
+            company=line.company_id,
+            date=line.date,
+        )
 
     def _get_line_discount_jod(self, line):
         return self._get_line_amount_before_discount_jod(line) * line.discount / 100
 
     def _get_unit_price_jod(self, line):
         return self._get_line_amount_before_discount_jod(line) / line.quantity
+
+    def _get_line_taxable_amount(self, line):
+        return self._round_max_dp(self._get_unit_price_jod(line)) * self._round_max_dp(line.quantity) - self._round_max_dp(self._get_line_discount_jod(line))
 
     def _get_payment_method_code(self, invoice):
         return PAYMENT_CODES_MAP[invoice.company_id.l10n_jo_edi_taxpayer_type]['receivable']
@@ -72,18 +81,13 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             quantity = self._round_max_dp(line_val['line_quantity'])
             discount = self._round_max_dp(line_val['price_vals']['allowance_charge_vals'][0]['amount'])
 
-            line_val['line_extension_amount'] = (price_unit * quantity) - discount
-
             total_tax_amount = 0
             if line_val['tax_total_vals']:
-                for subtotal in line_val['tax_total_vals'][0]['tax_subtotal_vals']:
-                    subtotal['taxable_amount'] = line_val['line_extension_amount']
+                total_tax_amount = self._round_max_dp(sum(self._round_max_dp(subtotal['tax_amount']) for subtotal in line_val['tax_total_vals'][0]['tax_subtotal_vals']))
+                line_val['tax_total_vals'][0]['rounding_amount'] = self._round_max_dp(line_val['line_extension_amount']) + total_tax_amount
 
-                total_tax_amount = self._round_max_dp(sum(subtotal['tax_amount'] for subtotal in line_val['tax_total_vals'][0]['tax_subtotal_vals']))
-                line_val['tax_total_vals'][0]['rounding_amount'] = line_val['line_extension_amount'] + total_tax_amount
-
-            tax_exclusive_amount += (price_unit * quantity)
-            tax_inclusive_amount += ((price_unit * quantity) - discount + total_tax_amount)
+            tax_exclusive_amount += self._round_max_dp(price_unit * quantity)
+            tax_inclusive_amount += self._round_max_dp((price_unit * quantity) - discount + total_tax_amount)
 
         vals['monetary_total_vals']['tax_inclusive_amount'] = vals['monetary_total_vals']['payable_amount'] = tax_inclusive_amount
         vals['monetary_total_vals']['tax_exclusive_amount'] = tax_exclusive_amount
@@ -99,8 +103,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         return [{
-            'id_attrs': {'schemeID': 'TN'},
-            'id': partner.vat,
+            'id_attrs': {'schemeID': 'TN' if not partner.country_code or partner.country_code == 'JO' else 'PN'},
+            'id': partner.vat if partner.vat and partner.vat != '/' else '',
         }]
 
     def _get_partner_address_vals(self, partner):
@@ -145,7 +149,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [{
                 'payment_means_code': 10,
                 'payment_means_code_attrs': {'listID': "UN/ECE 4461"},
-                'instruction_note': invoice.ref.replace('/', '_'),
+                'instruction_note': invoice.ref.replace('/', '_') if invoice.ref else '',
             }]
         else:
             return []
@@ -153,7 +157,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     def _get_invoice_payment_terms_vals_list(self, invoice):
         return []
 
-    def _get_invoice_tax_totals_vals_helper(self, taxes_vals, special_tax_amount):
+    def _get_invoice_tax_totals_vals_helper(self, taxes_vals, special_tax_amount_per_line):
         tax_totals_vals = {
             'currency': JO_CURRENCY,
             'currency_dp': self._get_currency_decimal_places(),
@@ -162,7 +166,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         }
         for grouping_key, vals in taxes_vals['tax_details'].items():
             if grouping_key['tax_amount_type'] != 'fixed':
-                taxable_amount = sum(abs(line.balance) for line in vals['records']) + special_tax_amount
+                special_tax_amount = sum(special_tax_amount_per_line.get(line, 0) for line in vals['records'])
+                taxable_amount = sum(self._round_max_dp(self._get_line_taxable_amount(line)) for line in vals['records']) + special_tax_amount
                 subtotal = {
                     'currency': JO_CURRENCY,
                     'currency_dp': self._get_currency_decimal_places(),
@@ -180,13 +185,13 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         if invoice.company_id.l10n_jo_edi_taxpayer_type == 'income':
             return []
 
-        special_tax_amount = sum(
-            line_tax['tax_amount']
-            for line_vals in taxes_vals['tax_details_per_record'].values()
+        special_tax_amount_per_line = {
+            line: line_tax['tax_amount']
+            for line, line_vals in taxes_vals['tax_details_per_record'].items()
             for line_tax in line_vals['tax_details'].values()
             if 'tax_amount_type' in line_tax and line_tax['tax_amount_type'] == 'fixed'
-        )
-        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount)
+        }
+        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount_per_line)
         if not invoice._is_sales_refund():
             vals['tax_subtotal_vals'] = []
         return [vals]
@@ -203,7 +208,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         discount_amount = 0
         invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
         for line in invoice_lines:
-            discount_amount += self._get_line_discount_jod(line)
+            discount_amount += self._round_max_dp(self._get_line_discount_jod(line))
         return [{
             'charge_indicator': 'false',
             'allowance_charge_reason': 'discount',
@@ -242,7 +247,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         taxable_amount = 0
         for grouping_key, tax_details_vals in taxes_vals['tax_details'].items():
             if grouping_key['tax_amount_type'] == 'fixed':
-                taxable_amount = sum(abs(line.balance) for line in tax_details_vals['records'])
+                taxable_amount = sum(self._round_max_dp(self._get_line_taxable_amount(line)) for line in tax_details_vals['records'])
                 special_tax_amount = tax_details_vals['tax_amount']
                 special_tax_subtotal = {
                     'currency': JO_CURRENCY,
@@ -251,7 +256,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                     'tax_amount': special_tax_amount,
                     'tax_category_vals': tax_details_vals['_tax_category_vals_'],
                 }
-        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount)
+        vals = self._get_invoice_tax_totals_vals_helper(taxes_vals, special_tax_amount_per_line={line: special_tax_amount})
         if special_tax_subtotal:
             vals['tax_subtotal_vals'].insert(0, special_tax_subtotal)
             vals['tax_subtotal_vals'][1]['taxable_amount'] = taxable_amount
@@ -264,7 +269,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             'id': line_id + 1,
             'line_quantity': line.quantity,
             'line_quantity_attrs': {'unitCode': self._get_uom_unece_code()},
-            'line_extension_amount': abs(line.balance),
+            'line_extension_amount': self._get_line_taxable_amount(line),
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line, taxes_vals),

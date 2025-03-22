@@ -11,11 +11,13 @@ import { prettifyMessageContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
     Component,
     markup,
     onMounted,
+    onWillUnmount,
     useChildSubEnv,
     useEffect,
     useRef,
@@ -119,6 +121,7 @@ export class Composer extends Component {
         });
         this.suggestion = this.store.user ? useSuggestion() : undefined;
         this.markEventHandled = markEventHandled;
+        this.isMobileOS = isMobileOS;
         this.onDropFile = this.onDropFile.bind(this);
         if (this.props.dropzoneRef) {
             useDropzone(
@@ -171,6 +174,17 @@ export class Composer extends Component {
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
         });
+        onWillUnmount(() => {
+            this.props.composer.isFocused = false;
+        });
+        useEffect(
+            (composerThread, replyToThread) => {
+                if (replyToThread && replyToThread !== composerThread) {
+                    this.props.messageToReplyTo.cancel();
+                }
+            },
+            () => [this.props.composer.thread, this.props.messageToReplyTo?.thread]
+        );
     }
 
     get pickerSettings() {
@@ -408,6 +422,9 @@ export class Composer extends Component {
             case "Enter": {
                 if (isEventHandled(ev, "NavigableList.select") || !this.state.active) {
                     ev.preventDefault();
+                    return;
+                }
+                if (this.isMobileOS()) {
                     return;
                 }
                 const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;

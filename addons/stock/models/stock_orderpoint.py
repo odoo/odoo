@@ -12,6 +12,7 @@ from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
+from odoo.sql_db import BaseCursor
 from odoo.tools import float_compare, float_is_zero, frozendict, split_every
 
 _logger = logging.getLogger(__name__)
@@ -271,7 +272,7 @@ class StockWarehouseOrderpoint(models.Model):
         return self.action_replenish()
 
     @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state',
-                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty')
+                 'product_id.stock_move_ids.date', 'product_id.stock_move_ids.product_uom_qty', 'product_id.seller_ids.delay')
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for orderpoint in self:
@@ -291,7 +292,8 @@ class StockWarehouseOrderpoint(models.Model):
                 orderpoint.qty_on_hand = products_qty[orderpoint.product_id.id]['qty_available']
                 orderpoint.qty_forecast = products_qty[orderpoint.product_id.id]['virtual_available'] + products_qty_in_progress[orderpoint.id]
 
-    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id')
+    @api.depends('qty_multiple', 'product_min_qty', 'product_max_qty', 'visibility_days', 'product_id', 'location_id',
+                 'product_id.seller_ids.delay')
     def _compute_qty_to_order(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
@@ -559,6 +561,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         for orderpoints_batch_ids in split_every(1000, self.ids):
             if use_new_cursor:
+                assert isinstance(self._cr, BaseCursor)
                 cr = registry(self._cr.dbname).cursor()
                 self = self.with_env(self.env(cr=cr))
             try:

@@ -22,15 +22,15 @@
 # Hanna Kheradroosta, 2024
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2024
 # Yousef Shadmanesh <y.shadmanesh@gmail.com>, 2024
-# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,10 +60,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid " - closing"
-msgstr ""
-"```\n"
-"         - بستن\n"
-"```"
+msgstr "- بستن"
 
 #. module: point_of_sale
 #. odoo-python
@@ -101,6 +98,13 @@ msgstr "٪ تخفیف"
 #, python-format
 msgid "%(pos_name)s (not used)"
 msgstr "%(pos_name)s (استفاده نشده)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+#, python-format
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -290,9 +294,8 @@ msgid ""
 "<i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all "
 "PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"```html\n"
-"<i class=\"fa fa-info-circle me-1\" title=\"این تنظیم برای همه نقاط فروش مشترک است.\" pos-data-toggle=\"tooltip\"/>\n"
-"```"
+"<i class=\"fa fa-info-circle me-1\" title=\"این تنظیم برای همه نقطه‌فروش‌ها "
+"مشترک است.\" pos-data-toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -334,10 +337,9 @@ msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
 "                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
-"```html\n"
-"<span class=\"o_form_label\">بارکدها</span>\n"
-"                                <i class=\"fa fa-info-circle me-1\" title=\"این تنظیم برای همه‌ی فروشگاه‌ها مشترک است.\" pos-data-toggle=\"tooltip\"/>\n"
-"```"
+"<span class=\"o_form_label\">بارکدها</span> <i class=\"fa fa-info-circle "
+"me-1\" title=\"این تنظیمات برای تمام نقطه‌های فروش مشترک است.\" pos-data-"
+"toggle=\"tooltip\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -347,10 +349,7 @@ msgstr "<span class=\"o_stat_text\">صندوق پول نقد</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
-"```html\n"
-"<span class=\"o_stat_text\">آیتم‌های دفتر روزنامه</span>\n"
-"```"
+msgstr "<span class=\"o_stat_text\">آیتم‌های دفتر روزنامه</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -360,10 +359,7 @@ msgstr "<span class=\"oe_inline\"><b>رد شدن از صفحه پیش نمایش
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "<span invisible=\"is_total_cost_computed\">TBD</span>"
-msgstr ""
-"```html\n"
-"<span invisible=\"is_total_cost_computed\">در دست اقدام</span>\n"
-"```"
+msgstr "<span invisible=\"is_total_cost_computed\">مشخص خواهد شد</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -373,10 +369,7 @@ msgstr "<span>تراز</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Closing</span>"
-msgstr ""
-"```html\n"
-"<span>بستن</span>\n"
-"```"
+msgstr "<span>بستن</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -405,10 +398,7 @@ msgstr "<strong>مقدار تخفیف ها</strong>:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "<strong>Amounting to:</strong>"
-msgstr ""
-"```html\n"
-"<strong>مقدار کل:</strong>\n"
-"```"
+msgstr "<strong>مبلغ:</strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -1209,10 +1199,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.xml:0
 #, python-format
 msgid "Buffer:"
-msgstr ""
-"```\n"
-"بافر:\n"
-"```"
+msgstr "بافر:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -2189,10 +2176,7 @@ msgstr "نام_محصول_دمو"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "DEMO_REF"
-msgstr ""
-"```\n"
-"دمو_رف\n"
-"```"
+msgstr "نسخه_آزمایشی"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2239,10 +2223,7 @@ msgstr "تاریخ"
 #: code:addons/point_of_sale/static/src/app/utils/date_picker_popup/date_picker_popup.js:0
 #, python-format
 msgid "DatePicker"
-msgstr ""
-"```plaintext\n"
-"تاریخ انتخاب کُن\n"
-"```"
+msgstr "انتخاب‌کننده تاریخ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4224,13 +4205,6 @@ msgid "OK"
 msgstr "تایید"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "پایانه فروش اودوو"
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
 msgid "Office combo"
 msgstr "کامبو آفیس"
@@ -5106,13 +5080,6 @@ msgid "PoS Interface"
 msgstr "رابط کاربری PoS"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "سفارش فروش نقطه فروش"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "خط سفارش فروش نقطه‌ای"
@@ -5427,6 +5394,13 @@ msgstr "سند ثبت شد"
 #, python-format
 msgid "Powered by"
 msgstr "راه اندازی شده به وسیله"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -5780,10 +5754,7 @@ msgstr "محصولات در ترکیب"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Products:"
-msgstr ""
-"```html\n"
-"محصولات:\n"
-"```"
+msgstr "محصولات:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5853,7 +5824,7 @@ msgstr "برگشت از فروش:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
 msgid "Ratings"
-msgstr "رتبه‌بندی‌ها"
+msgstr "رتبه‌ها"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7036,6 +7007,13 @@ msgid "Tax ID"
 msgstr "شناسه مالیاتی"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+#, python-format
+msgid "Tax ID: %(vatId)s"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Tax Name"
 msgstr "نام مالیات"
@@ -7688,6 +7666,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "این روزنامه با یک روش پرداخت مرتبط است. نمی توانید نوع آن را تغییر دهید"
@@ -7862,11 +7848,8 @@ msgstr "برای وزن کردن با ترازو"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"برای حذف یک محصول، اطمینان حاصل کنید که همه جلسات نقطه فروش بسته شده باشند.\n"
-"\n"
-"حذف یک محصول موجود در جلسه مانند تلاش برای قاپیدن یک همبرگر از دست مشتری در وسط لقمه است؛ هرج و مرج ایجاد خواهد شد و کچاپ و مایونز به همه جا پاشیده می‌شود!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8754,10 +8737,7 @@ msgstr "یا"
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.xml:0
 #, python-format
 msgid "orders:"
-msgstr ""
-"```\n"
-"سفارشات:\n"
-"```"
+msgstr "سفارشات:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -8847,4 +8827,13 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
 msgstr ""

@@ -210,16 +210,17 @@ class ProductProduct(models.Model):
             rounding_error = currency.round(
                 (self.standard_price * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
             )
-            if rounding_error:
-                # If it is bigger than the (smallest number of the currency * quantity) / 2,
-                # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
-                if abs(rounding_error) <= max((abs(quantity) * currency.rounding) / 2, currency.rounding):
-                    vals['value'] += rounding_error
-                    vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
-                        '+' if rounding_error > 0 else '',
-                        float_repr(rounding_error, precision_digits=currency.decimal_places),
-                        currency.symbol
-                    )
+
+            # If it is bigger than the (smallest number of the currency * quantity) / 2,
+            # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+            threshold = currency.round(max((abs(quantity) * currency.rounding) / 2, currency.rounding))
+            if rounding_error and abs(rounding_error) <= threshold:
+                vals['value'] += rounding_error
+                vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                    '+' if rounding_error > 0 else '',
+                    float_repr(rounding_error, precision_digits=currency.decimal_places),
+                    currency.symbol
+                )
         if self.product_tmpl_id.cost_method == 'fifo':
             vals.update(fifo_vals)
         return vals

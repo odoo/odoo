@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command, fields
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.exceptions import UserError
@@ -1807,3 +1808,75 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
             {'debit': 0, 'credit': 60, 'account_id': account_stock_out.id, 'reconciled': True},
             {'debit': 60, 'credit': 0, 'account_id': account_expense.id, 'reconciled': False},
         ])
+
+    def test_anglo_saxon_cogs_validate_invoice(self):
+        """ Having some FIFO + real-time valued product with an established price i.e., from an in
+        move: generating a delivery via sale, processing that delivery in multiple parts, and
+        invoicing the sale in multiple parts should not cause the valuation mechanism to "run out"
+        of product quantity during consumption of the stock valuation layers which were generated
+        by the out moves.
+
+        In that scenario, if there have been any manual changes to a product's `standard_price`,
+        there will be inaccurate product expense account (COGs) lines on the affected invoice.
+        """
+        product = self.product
+        in_move = self.env['stock.move'].create({
+            'name': 'in 12 units @ $100',
+            'product_id': product.id,
+            'price_unit': 100,
+            'product_uom_qty': 12,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.user._get_default_warehouse_id().lot_stock_id.id,
+        })
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.move_line_ids.quantity = 12
+        in_move.picked = True
+        in_move._action_done()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 10,
+                'price_unit': 100,
+            }), Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 2,
+                'price_unit': 100,
+            })],
+        })
+        sale_order.action_confirm()
+        delivery = sale_order.picking_ids
+        delivery.move_ids.filtered(lambda m: m.product_uom_qty == 2).quantity = 0
+        r = delivery.button_validate()
+        Form(self.env[r['res_model']].with_context(r['context'])).save().process()
+        backorder_delivery = sale_order.picking_ids.filtered(lambda p: p.state != 'done')
+        backorder_delivery.move_ids.quantity = 2
+        backorder_delivery.button_validate()
+        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(
+            active_ids=sale_order.ids, open_invoices=True
+        ).create({})
+        invoice_wizard.create_invoices()
+
+        invoice = sale_order.invoice_ids
+        qty_ten_invoice_line = invoice.invoice_line_ids.filtered(lambda l: l.quantity == 10)
+        qty_ten_invoice_line.quantity = 5
+        invoice.invoice_date = fields.Date.today()
+        invoice.action_post()
+        product.standard_price = 50
+        invoice_wizard = self.env['sale.advance.payment.inv'].with_context(
+            active_ids=sale_order.ids, open_invoices=True
+        ).create({})
+        invoice_wizard.create_invoices()
+        invoice2 = sale_order.invoice_ids.filtered(lambda i: i.state != 'posted')
+        invoice2.invoice_date = fields.Date.today()
+        invoice2.action_post()
+        invoice2_cogs_lines = invoice2.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(
+            invoice2_cogs_lines,
+            [
+                {'credit': 500, 'debit': 0},
+                {'credit': 0, 'debit': 500},
+            ]
+        )

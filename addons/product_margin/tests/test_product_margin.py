@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
@@ -65,3 +66,62 @@ class TestProductMargin(AccountTestInvoicingCommon):
 
         # Check expected margin
         self.assertEqual(result[ipad.id]['expected_margin'], expected_margin, "Wrong Expected Margin.")
+
+    def test_product_margin_negative_price_in_move_lines(self):
+        """
+        Test that product margins are calculated correctly when move lines
+        include negative quantities or prices.
+        """
+        supplier = self.env['res.partner'].create({'name': 'Supplier'})
+        customer = self.env['res.partner'].create({'name': 'Customer'})
+        ipad = self.env['product.product'].create({
+            'name': 'Ipad',
+            'standard_price': 1000.0,
+            'list_price': 1000.0,
+        })
+
+        customer_invoice = self.env['account.move'].create([{
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'product_id': ipad.id,
+                        'price_unit': 1000,
+                        'quantity': 2,
+                    }),
+                    Command.create({
+                        'product_id': ipad.id,
+                        'price_unit': 1000,
+                        'quantity': -1,
+                    }),
+                ],
+            }])
+
+        customer_invoice.action_post()
+
+        results = ipad._compute_product_margin_fields_values()
+        self.assertEqual(results[ipad.id]['turnover'], 1000)
+        self.assertEqual(results[ipad.id]['total_margin'], 1000)
+
+        vendor_bill = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': supplier.id,
+            'invoice_date': '2025-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': ipad.id,
+                    'price_unit': 250,
+                    'quantity': 2,
+                }),
+                Command.create({
+                    'product_id': ipad.id,
+                    'price_unit': 250,
+                    'quantity': -1,
+                }),
+            ],
+        }])
+        vendor_bill.action_post()
+
+        results = ipad._compute_product_margin_fields_values()
+        self.assertEqual(results[ipad.id]['total_cost'], 250)
+        self.assertEqual(results[ipad.id]['total_margin'], 750)

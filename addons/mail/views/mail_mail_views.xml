@@ -46,9 +46,8 @@
                         </group>
                         <notebook>
                             <page string="Body" name="body">
-                            <field name="body_html" widget="html"
-                                   options="{'sandboxedPreview': true}"
-                                   readonly="state not in ['outgoing', 'exception']"/>
+                                <field name="body_content"/>
+                                <field name="body_html" invisible="1"/><!--to be removed-->
                             </page>
                             <page string="Advanced" name="advanced" groups="base.group_no_one">
                                 <group>

@@ -6,17 +6,17 @@
 # Iran Villalobos López, 2024
 # Lucia Pacheco, 2024
 # Martin Trigaux, 2024
-# Wil Odoo, 2024
-# Fernanda Alvarez, 2024
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Wil Odoo, 2025
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,6 +86,13 @@ msgstr "% de desc."
 #, python-format
 msgid "%(pos_name)s (not used)"
 msgstr "%(pos_name)s (sin utilizar)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+#, python-format
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s: %(vatId)s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1669,28 +1676,28 @@ msgstr "Combine %s pagos de PdV de %s"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__product_template__detailed_type__combo
 #: model:ir.model.fields.selection,name:point_of_sale.selection__product_template__type__combo
 msgid "Combo"
-msgstr "Set"
+msgstr "Combo"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_combo
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Combo Choices"
-msgstr "Opciones para el set"
+msgstr "Opciones de los combos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr "Líneas del set"
+msgstr "Líneas del combo"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "Combo Name"
-msgstr "Nombre del set"
+msgstr "Nombre del combo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr "Set principal"
+msgstr "Combo principal"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1702,7 +1709,7 @@ msgstr "Los combos no pueden incluir variantes ni atributos"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
 msgid "Combos"
-msgstr "Set"
+msgstr "Combos"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -1853,7 +1860,7 @@ msgstr "Siguiente"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Continue Selling"
-msgstr "Continuar venta"
+msgstr "Seguir vendiendo"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3737,7 +3744,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
 msgstr ""
-"Gestionar promoción que le otorgará a los clientes descuentos o regalos"
+"Gestione las promociones que le otorgarán descuentos o regalos a los "
+"clientes"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
@@ -4211,13 +4219,6 @@ msgstr "Número de transacciones:"
 #, python-format
 msgid "OK"
 msgstr "De acuerdo"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr "Punto de venta de Odoo"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
@@ -5097,13 +5098,6 @@ msgid "PoS Interface"
 msgstr "Interfaz de PdV"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr "Orden del PdV"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr "Línea de la orden del PdV"
@@ -5324,7 +5318,7 @@ msgstr "Es una impresora de pedidos del PdV"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_users__pos_order_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_stock_picking__pos_order_id
 msgid "Pos Order"
-msgstr "Orden de PdV"
+msgstr "Orden del PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_partner__pos_order_count
@@ -5418,6 +5412,13 @@ msgstr "Registrado"
 #, python-format
 msgid "Powered by"
 msgstr "Con la tecnología de"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr "Con la tecnología de Odoo"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -6328,7 +6329,7 @@ msgstr "Escanear vía proxy"
 #: code:addons/point_of_sale/static/src/app/navbar/proxy_status/proxy_status.js:0
 #, python-format
 msgid "Scanner"
-msgstr "Escáner"
+msgstr "Escáner"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7031,6 +7032,13 @@ msgid "Tax ID"
 msgstr "NIF"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+#, python-format
+msgid "Tax ID: %(vatId)s"
+msgstr "Número de identificación fiscal: %(vatId)s"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Tax Name"
 msgstr "Nombre del impuesto"
@@ -7712,6 +7720,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Este diario está asociado con un método de pago, no puede archivarlo. "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
 "Este diario está asociado con un método de pago. No puede modificar su tipo."
@@ -7888,11 +7905,11 @@ msgstr "Por pesar con báscula"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
-"Para eliminar un producto, asegúrese de que todas las sesiones de punto de venta estén cerradas.\n"
+"Asegúrese de que todas las sesiones de punto de venta estén cerradas para poder eliminar un producto.\n"
 "\n"
-"Ocurrirá un error en caso de que intente eliminar un producto disponible en una sesión."
+"Ocurrirá un error en caso de que intente eliminar un producto que sigue disponible en una sesión."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
@@ -8878,3 +8895,14 @@ msgstr ""
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
 msgstr "{{partnerDetailsFields[item]}}"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Este diario está asociado con el método de pago %s que usa la orden %s en la"
+" sesión %s activa del PdV."

@@ -3,6 +3,7 @@
 
 """ Implementation of "INVENTORY VALUATION TESTS (With valuation layers)" spreadsheet. """
 
+from odoo.fields import Command
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import TestStockValuationBase
 from odoo.tests import Form
@@ -387,6 +388,44 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         ])
         self.assertEqual(self.component.qty_available, 1)
         self.assertEqual(self.component.value_svl, 1424)
+
+    def test_average_cost_unbuild_with_byproducts(self):
+        """ Ensures that an unbuild for a manufacturing order using avg cost products won't copy
+            the value of the main product for every byproduct line, regardless of their real value.
+        """
+        byproduct = self.env['product.product'].create({
+            'name': 'byproduct',
+            'type': 'product',
+        })
+        (self.product1 | byproduct).categ_id.property_cost_method = 'average'
+        self.component.standard_price = 100
+
+        self.bom.write({'byproduct_ids': [
+            Command.create({'product_id': byproduct.id, 'product_qty': 1, 'cost_share': 20}),
+        ]})
+
+        self._make_in_move(self.component, 1)
+        production = self._make_mo(self.bom, 1)
+        self._produce(production)
+        production.button_mark_done()
+
+        self.assertRecordValues(production.move_finished_ids.stock_valuation_layer_ids, [
+            {'product_id': self.product1.id, 'value': 80},
+            {'product_id': byproduct.id, 'value': 20},
+        ])
+
+        action = production.button_unbuild()
+        wizard = Form(self.env[action['res_model']].with_context(action['context']))
+        wizard.product_qty = 1
+        unbuild = wizard.save()
+        unbuild.action_validate()
+
+        unbuild_svls = self.env['stock.valuation.layer'].search([('reference', '=', unbuild.name)])
+        self.assertRecordValues(unbuild_svls, [
+            {'product_id': self.product1.id, 'value': -80},
+            {'product_id': byproduct.id, 'value': -20},
+            {'product_id': self.component.id, 'value': 100}
+        ])
 
 
 @tagged("post_install", "-at_install")

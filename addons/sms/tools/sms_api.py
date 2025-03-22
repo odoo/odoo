@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
+from odoo import _, exceptions
 from odoo.addons.iap.tools import iap_tools
 
 
@@ -12,6 +12,9 @@ class SmsApi:
         self.env = env
 
     def _contact_iap(self, local_endpoint, params, timeout=15):
+        if not self.env.registry.ready:  # Don't reach IAP servers during module installation
+            raise exceptions.AccessError("Unavailable during module installation.")
+
         account = self.env['iap.account'].get('sms')
         params['account_token'] = account.account_token
         endpoint = self.env['ir.config_parameter'].sudo().get_param('sms.endpoint', self.DEFAULT_ENDPOINT)

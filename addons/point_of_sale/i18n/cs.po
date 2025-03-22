@@ -6,23 +6,25 @@
 # Chris, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # Martin Trigaux, 2023
-# Jiří Podhorecký <jirka.p@volny.cz>, 2023
 # Ivana Bartonkova, 2023
-# Tomáš Píšek, 2023
 # Marek Záda, 2024
 # Katerina Horylova, 2024
 # Jakub Smolka, 2024
-# Aleš Fiala <f.ales1@seznam.cz>, 2024
-# Wil Odoo, 2024
 # Tereza Mokrá, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Tomáš Píšek, 2024
+# Wil Odoo, 2025
+# Jiří Podhorecký <jirka.p@volny.cz>, 2025
+# Vojtěch Olšan, 2025
+# Radim Bílý, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-13 10:26+0000\n"
+"POT-Creation-Date: 2025-02-10 10:33+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tereza Mokrá, 2024\n"
+"Last-Translator: Radim Bílý, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +94,13 @@ msgid "%(pos_name)s (not used)"
 msgstr "%(pos_name)s (nepoužito)"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+#, python-format
+msgid "%(vatLabel)s: %(vatId)s"
+msgstr "%(vatLabel)s%(vatId)s"
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
@@ -133,7 +142,7 @@ msgstr "%s nalezené produkt(y) pro \"%s\"."
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s untaxed"
-msgstr ""
+msgstr "%s bez daně"
 
 #. module: point_of_sale
 #. odoo-python
@@ -295,6 +304,8 @@ msgid ""
 "<p>Dear %(client_name)s,<br/>Here is your electronic ticket for the "
 "%(pos_name)s. </p>"
 msgstr ""
+"<p>Vážený %(client_name)s, <br/>tady je váš elektronický lístek na "
+"%(pos_name)s. </p>"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -988,7 +999,7 @@ msgstr "Automaticky otevřete pokladnu."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validate order"
-msgstr ""
+msgstr "Automaticky potvrdit objednávku"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
@@ -996,7 +1007,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Automatically validates orders paid with a payment terminal."
-msgstr ""
+msgstr "Automaticky potvrdí objednávku zaplacenou platebním terminálem"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1648,18 +1659,18 @@ msgstr "kombinovat %s platby POS z %s"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__product_template__detailed_type__combo
 #: model:ir.model.fields.selection,name:point_of_sale.selection__product_template__type__combo
 msgid "Combo"
-msgstr ""
+msgstr "Kombinace"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_combo
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "Combo Choices"
-msgstr ""
+msgstr "Produktové sety"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_line_ids
 msgid "Combo Lines"
-msgstr ""
+msgstr "Řádky kombinace"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_combo_form
@@ -1669,7 +1680,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__combo_parent_id
 msgid "Combo Parent"
-msgstr ""
+msgstr "Nadřazená kombinace"
 
 #. module: point_of_sale
 #. odoo-python
@@ -4162,13 +4173,6 @@ msgid "OK"
 msgstr "OK"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
-#, python-format
-msgid "Odoo Point of Sale"
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.office_combo_product_template
 msgid "Office combo"
 msgstr ""
@@ -5041,13 +5045,6 @@ msgid "PoS Interface"
 msgstr "Rozhraní PoS"
 
 #. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "PoS Order"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_attribute_custom_value__pos_order_line_id
 msgid "PoS Order Line"
 msgstr ""
@@ -5362,6 +5359,13 @@ msgstr "Zaúčtované"
 #, python-format
 msgid "Powered by"
 msgstr "Běží na"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/order_receipt.xml:0
+#, python-format
+msgid "Powered by Odoo"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_preparation_display
@@ -6543,7 +6547,7 @@ msgstr "Nastavit více cen za produkt, automatizované slevy atd."
 #: code:addons/point_of_sale/static/src/app/screens/product_screen/product_screen.js:0
 #, python-format
 msgid "Set the new discount"
-msgstr ""
+msgstr "Nastavit novou slevu"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6580,7 +6584,7 @@ msgstr "Odeslat později"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__shipping_date
 msgid "Shipping Date"
-msgstr ""
+msgstr "Datum odeslání"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -6972,6 +6976,13 @@ msgid "Tax ID"
 msgstr "DIČ"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.js:0
+#, python-format
+msgid "Tax ID: %(vatId)s"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Tax Name"
 msgstr "Název daně"
@@ -7125,6 +7136,8 @@ msgid ""
 "The amount of your payment lines must be rounded to validate the transaction.\n"
 "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
+"Částka vašich platebních řádků musí být zaokrouhlena, aby se transakce potvrdila.\n"
+"Přesnost zaokrouhlení je %s taková, že byste měli nastavit %s nebo %s jako částku platby místo %s."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7219,6 +7232,8 @@ msgid ""
 "The maximum difference allowed is %s.\n"
 "Please contact your manager to accept the closing difference."
 msgstr ""
+"Maximální povolený rozdíl je %s.\n"
+"Obraťte se na svého manažera, aby přijal konečný rozdíl."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7620,6 +7635,14 @@ msgstr ""
 #: code:addons/point_of_sale/models/account_journal.py:0
 #, python-format
 msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr "Tento deník se svázán s platební metodou. Nelze jej archivovat..."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr "Tento deník je spojen se způsobem platby. Nemůžete změnit jeho typ"
 
@@ -7793,7 +7816,7 @@ msgstr "Pro vážení s měrkou"
 msgid ""
 "To delete a product, make sure all point of sale sessions are closed.\n"
 "\n"
-"Deleting a product available in a session would be like attempting to snatch ahamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
+"Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!"
 msgstr ""
 
 #. module: point_of_sale
@@ -8402,6 +8425,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Nemáte oprávnění otevřít relaci prod. místa. Zkuste prosím otevřít relaci s "
+"jiným uživatelem"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8455,7 +8480,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/product.py:0
 #, python-format
 msgid "You must first remove this product from the %s combo"
-msgstr ""
+msgstr "Nejprve musíte odstranit tento produkt z %s produktové kombinace."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8763,4 +8788,13 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_editor/partner_editor.xml:0
 #, python-format
 msgid "{{partnerDetailsFields[item]}}"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
 msgstr ""

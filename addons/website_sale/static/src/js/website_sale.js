@@ -5,6 +5,7 @@ import VariantMixin from "@website_sale/js/variant_mixin";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 import "@website/libs/zoomodoo/zoomodoo";
+import { browser } from "@web/core/browser/browser";
 import {extraMenuUpdateCallbacks} from "@website/js/content/menu";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import { jsonrpc } from "@web/core/network/rpc_service";
@@ -236,6 +237,8 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerM
                 return;
             }
             if (!data.cart_quantity) {
+                // Ensures last cart removal is recorded
+                browser.sessionStorage.setItem('website_sale_cart_quantity', 0);
                 return window.location = '/shop/cart';
             }
             $input.val(data.quantity);
@@ -814,6 +817,19 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         'click .js_change_shipping': '_onClickChangeShipping',
         'click .js_edit_address': '_onClickEditAddress',
         'click .js_delete_product': '_onClickDeleteProduct',
+    },
+
+    /**
+     * @override
+     */
+    async start() {
+        document.querySelector('.o_cta_navigation_placeholder')?.classList.remove('d-none')
+        const ctaContainer = document.querySelector('.o_cta_navigation_container');
+        if (ctaContainer) {
+            const placeholder = document.querySelector('.o_cta_navigation_placeholder');
+            placeholder.style.height = `${ctaContainer.offsetHeight}px`;
+            ctaContainer.style.top = `calc(100% - ${ctaContainer.offsetHeight}px)`;
+        }
     },
 
     //--------------------------------------------------------------------------

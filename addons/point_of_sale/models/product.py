@@ -58,16 +58,16 @@ class ProductTemplate(models.Model):
         for template in self:
             archived_product = self.env['product.product'].search([('product_tmpl_id', '=', template.id), ('active', '=', False)], limit=1)
             if archived_product:
-                combo_choices_to_delete = self.env['pos.combo.line'].search([
+                combo_choices_to_delete = self.env['pos.combo.line'].sudo().search([
                     ('product_id', '=', archived_product.id)
                 ])
                 if combo_choices_to_delete:
                     # Delete old combo line
                     combo_ids = combo_choices_to_delete.mapped('combo_id')
-                    combo_choices_to_delete.unlink()
+                    combo_choices_to_delete.sudo().unlink()
                     # Create new combo line (one for each new variant) in each combo
                     new_variants = template.product_variant_ids.filtered(lambda v: v.active)
-                    self.env['pos.combo.line'].create([
+                    self.env['pos.combo.line'].sudo().create([
                         {
                             'product_id': variant.id,
                             'combo_id': combo_id.id,
@@ -81,6 +81,13 @@ class ProductTemplate(models.Model):
         if self.type == "combo" and self.attribute_line_ids:
             raise UserError(_("Combo products cannot contains variants or attributes"))
         return super()._onchange_type()
+
+    def write(self, vals):
+        res = super(ProductTemplate, self).write(vals)
+        for product_template in self:
+            if "detailed_type" in vals and vals.get("detailed_type") != "combo":
+                product_template.combo_ids = False
+        return res
 
 
 class ProductProduct(models.Model):
@@ -148,6 +155,7 @@ class ProductProduct(models.Model):
             for s in list(group):
                 if not((s.date_start and s.date_start > date.today()) or (s.date_end and s.date_end < date.today()) or (s.min_qty > quantity)):
                     supplier_list.append({
+                        'id': s.id,
                         'name': s.partner_id.name,
                         'delay': s.delay,
                         'price': s.price

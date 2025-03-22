@@ -113,7 +113,7 @@ class Contract(models.Model):
             return default_structure
 
         for contract in self:
-            if not contract.structure_type_id or contract.structure_type_id.country_id != contract.company_id.country_id:
+            if not contract.structure_type_id or (contract.structure_type_id.country_id and contract.structure_type_id.country_id != contract.company_id.country_id):
                 contract.structure_type_id = _default_salary_structure(contract.company_id.country_id.id)
 
     @api.onchange('structure_type_id')

@@ -132,6 +132,7 @@ export class ReorderDialog extends Component {
                     await onConfirm();
                 },
                 cancel: onConfirm,
+                dismiss: () => {}, // Prevents fallback of 'cancel' from Confirmation Dialog
             });
         } else {
             await onConfirm();

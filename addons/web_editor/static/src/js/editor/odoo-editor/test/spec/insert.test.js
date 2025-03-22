@@ -1,7 +1,14 @@
 /** @odoo-module */
 
 import { parseHTML, setCursorEnd } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
+import {
+    BasicEditor,
+    testEditor,
+    unformat,
+    insertText,
+    deleteBackward,
+    nextTick,
+} from '../utils.js';
 
 const span = text => {
     const span = document.createElement('span');
@@ -74,7 +81,7 @@ describe('insert HTML', () => {
                 },
                 // Inserts zws to avoid a Chromium bug preventing selection of
                 // contenteditable false element as first child.
-                contentAfter: '\u200b<div><p>content</p></div><p>[]<br></p>',
+                contentAfter: '<p><br></p><div><p>content</p></div><p>[]<br></p>',
             });
         });
         it('should not split a pre to insert another pre but just insert the text', async () => {
@@ -168,6 +175,15 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]c<br></p>',
                 contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]c<br></p>',
+            });
+        });
+        it('should delete selection and insert html in its place (3)', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li><h1>[abc</h1></li><li><h1>def</h1></li><li>ghi]</li></ul>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML(editor.document, '<p>rst</p><p>uvw</p><p>xyz</p>'));
+                },
+                contentAfter: '<ul><li>rst</li><li>uvw</li><li>xyz[]</li></ul>',
             });
         });
         it('should remove a fully selected table then insert a span before it', async () => {
@@ -267,7 +283,12 @@ describe('insert HTML', () => {
                         <tr><td>gh</td><td>ij</td></tr>
                     </tbody></table>`,
                 ),
-                stepFunction: editor => editor.execCommand('insert', span('TEST')),
+                stepFunction: async editor => {
+                    // Table selection happens on selectionchange event which is
+                    // fired in the next tick.
+                    await nextTick();
+                    editor.execCommand('insert', span('TEST'));
+                },
                 contentAfter: `<p><span class="a">TEST</span>[]</p>`,
             });
         });

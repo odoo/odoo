@@ -3,9 +3,9 @@ import csv
 from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged, common
-from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row
+from odoo.addons.l10n_id_efaktur.models.account_move import FK_HEAD_LIST, LT_HEAD_LIST, OF_HEAD_LIST, _csv_row, AccountMove
 from odoo.exceptions import RedirectWarning
-
+from unittest.mock import patch
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
 class TestIndonesianEfaktur(common.TransactionCase):
@@ -23,6 +23,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
         self.env.company.account_fiscal_country_id = self.env.company.country_id
         self.env.company.street = "test"
         self.env.company.phone = "12345"
+        self.env.company.vat = "1234567890123456"
 
         self.partner_id = self.env['res.partner'].create({"name": "l10ntest", "l10n_id_pkp": True, "l10n_id_kode_transaksi": "01", "l10n_id_nik": "12345", "vat": "000000000000000"})
         self.env['account.tax.group'].create({
@@ -56,6 +57,16 @@ class TestIndonesianEfaktur(common.TransactionCase):
             'l10n_id_kode_transaksi': '01'
         })
         self.out_invoice_2.action_post()
+
+        # For the sake of unit test of this module, we want to retain the the compute method for field
+        # l10n_id_need_kode_transaksi of this module. In the coretax module, l10n_id_need_kode_transaksi
+        # is always set to False to prevent the flows of old module to be triggered
+        patch_kode_transaksi = patch('odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove._compute_need_kode_transaksi',
+                                AccountMove._compute_need_kode_transaksi)
+        self.startClassPatcher(patch_kode_transaksi)
+        patch_download_efaktur = patch("odoo.addons.l10n_id_efaktur_coretax.models.account_move.AccountMove.download_efaktur",
+                                AccountMove.download_efaktur)
+        self.startClassPatcher(patch_download_efaktur)
 
     def test_efaktur_csv_output_1(self):
         """

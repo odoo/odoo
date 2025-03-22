@@ -13,7 +13,7 @@
                 >
                     <CallParticipantCard t-foreach="visibleMainCards" t-as="cardData" t-key="cardData.key"
                         cardData="cardData"
-                        className="'o-discuss-Call-mainCardStyle'"
+                        className="'o-discuss-Call-mainCardStyle p-1'"
                         minimized="minimized"
                         thread="props.thread"
                     />
@@ -36,14 +36,14 @@
             <div t-if="state.sidebar and props.thread.activeRtcSession" class="o-discuss-Call-sidebar d-flex align-items-center h-100 flex-column">
                 <CallParticipantCard t-foreach="visibleCards" t-as="cardData" t-key="cardData.key"
                     cardData="cardData"
-                    className="'o-discuss-Call-sidebarCard w-100'"
+                    className="'o-discuss-Call-sidebarCard w-100 p-1'"
                     thread="props.thread"
                 />
             </div>
             <CallParticipantCard
                 t-if="props.thread.videoCount > 0 and state.insetCard"
                 cardData="state.insetCard"
-                className="'o-discuss-Call-mainCardStyle'"
+                className="'o-discuss-Call-mainCardStyle o-bg-black'"
                 thread="props.thread"
                 inset.bind="setInset"
             />
