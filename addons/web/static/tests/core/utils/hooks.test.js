@@ -245,7 +245,7 @@ describe("useAutofocus", () => {
 
         await mountWithCleanup(MyComponent);
 
-        expect("input").toBeFocused();
+        expect("input:first").toBeFocused();
 
         getService("dialog").add(CommandPalette, {
             config: { providers: [] },
@@ -253,12 +253,12 @@ describe("useAutofocus", () => {
         await animationFrame();
 
         expect(".o_command_palette").toHaveCount(1);
-        expect("input").not.toBeFocused();
+        expect("input:first").not.toBeFocused();
 
         state.text = "a";
         await animationFrame();
 
-        expect("input").not.toBeFocused();
+        expect("input:first").not.toBeFocused();
     });
 });
 

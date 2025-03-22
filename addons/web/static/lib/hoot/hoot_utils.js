@@ -29,6 +29,8 @@ import { getRunner } from "./main_runner";
  *
  * @typedef {[string, ArgumentType]} Label
  *
+ * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
+ *
  * @typedef {string | RegExp | { new(): any }} Matcher
  *
  * @typedef {{
@@ -89,6 +91,7 @@ const {
     Set,
     setTimeout,
     String,
+    Symbol,
     TypeError,
     WeakSet,
     window,
@@ -136,7 +139,7 @@ const getConstructor = (value) => {
             class {
                 static name = className;
                 constructor(...values) {
-                    Object.assign(this, ...values);
+                    $assign(this, ...values);
                 }
             }
         );
@@ -420,16 +423,15 @@ export function createReporting(parentReporting) {
  * @returns {T}
  */
 export function createMock(target, descriptors) {
-    const mock = $assign($create($getPrototypeOf(target)), target);
     let owner = target;
-    let keys;
-
-    while (!keys?.length) {
-        keys = $ownKeys(owner);
+    let keys = $ownKeys(owner);
+    while (!keys.length) {
         owner = $getPrototypeOf(owner);
+        keys = $ownKeys(owner);
     }
 
     // Copy original descriptors
+    const mock = $assign($create(owner), target);
     for (const property of keys) {
         $defineProperty(mock, property, {
             get() {
@@ -474,8 +476,8 @@ export function deepCopy(value) {
         if (isNode(value)) {
             // Nodes
             return value.cloneNode(true);
-        } else if (value instanceof Date) {
-            // Dates
+        } else if (value instanceof Date || value instanceof RegExp) {
+            // Dates & regular expressions
             return new (getConstructor(value))(value);
         } else if (isIterable(value)) {
             // Iterables
@@ -668,7 +670,9 @@ export function formatTechnical(
     { cache = new Set(), depth = 0, isObjectValue = false } = {}
 ) {
     const baseIndent = isObjectValue ? "" : " ".repeat(depth * 2);
-    if (typeof value === "string") {
+    if (value === S_ANY || value === S_NONE) {
+        return "";
+    } else if (typeof value === "string") {
         return `${baseIndent}${stringify(value)}`;
     } else if (typeof value === "number") {
         return `${baseIndent}${value << 0 === value ? String(value) : value.toFixed(3)}`;
@@ -702,7 +706,10 @@ export function formatTechnical(
                     content.length ? `\n${content.join("")}${endIndent}` : ""
                 }]`;
             } else {
-                const proto = constructor.name === "Object" ? "" : `${constructor.name} `;
+                const proto =
+                    !constructor.name || constructor.name === "Object"
+                        ? ""
+                        : `${constructor.name} `;
                 const content = $ownKeys(value)
                     .sort()
                     .map(
@@ -920,7 +927,6 @@ export function isOfType(value, type) {
  *
  * @param {string} a
  * @param {string} b
- * @param {{ normalize?: boolean }} [options]
  * @returns {number}
  * @example
  *  levenshtein("abc", "àbc"); // => 0
@@ -929,16 +935,12 @@ export function isOfType(value, type) {
  * @example
  *  levenshtein("abc", "adc"); // => 1
  */
-export function levenshtein(a, b, options) {
+export function levenshtein(a, b) {
     if (!a.length) {
         return b.length;
     }
     if (!b.length) {
         return a.length;
-    }
-    if (options?.normalize) {
-        a = normalize(a);
-        b = normalize(b);
     }
     const dp = $from({ length: b.length + 1 }, (_, i) => i);
     for (let i = 1; i <= a.length; i++) {
@@ -1372,29 +1374,52 @@ export class ElementMap extends Map {
 
         super(mapValues);
 
-        this.selector = target;
-    }
-
-    get first() {
-        return this.values().next().value;
-    }
-
-    getElements() {
-        return [...this.keys()];
+        if (typeof target === "string") {
+            this.selector = target;
+        }
     }
 
     /**
+     * @param {(value: T, element: Element, map: ElementMap) => boolean} predicate
+     * @returns {boolean}
+     */
+    every(predicate) {
+        if (!this.size) {
+            return false;
+        }
+        for (const [el, value] of this) {
+            const pass = predicate(value, el, this);
+            if (!pass) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns a flat list of values mapped by the given function.
+     * Additionnaly, group headers are inserted if the map has more than 1 element.
+     *
      * @template [N=T]
-     * @param {(value: T) => N[]} [flatMapFn]
+     * @param {(value: T, element: Element, map: ElementMap) => N[]} mapFn
+     * @param {(value: T, element: Element, map: ElementMap) => boolean} predicate
      * @returns {N[]}
      */
-    getValues(flatMapFn) {
-        if (!flatMapFn) {
-            return [...this.values()];
+    mapFailedDetails(mapFn, predicate) {
+        if (!this.size) {
+            return [Markup.received("Elements found:", 0)];
         }
         const result = [];
-        for (const value of this.values()) {
-            result.push(...flatMapFn(value));
+        let groupIndex = 1;
+        for (const [el, value] of this) {
+            result.push(
+                new Markup({
+                    content: el,
+                    groupIndex: groupIndex++,
+                    type: "group",
+                }),
+                ...Markup.resolveDetails(mapFn(value, el, this), predicate(value, el, this))
+            );
         }
         return result;
     }
@@ -1404,20 +1429,24 @@ export class HootError extends Error {
     name = "HootError";
 }
 
+/** @template [T=string] */
 export class Markup {
+    className = "";
+    /** @type {T} */
+    content = "";
+    tagName = "div";
+    /** @type {MarkupType} */
+    type;
+    /** @type {number} */
+    groupIndex;
+
     /**
-     * @param {{
-     *  className?: string;
-     *  content: any;
-     *  tagName?: string;
-     *  technical?: boolean;
-     * }} params
+     * @param {Partial<Markup<T>>} params
      */
     constructor(params) {
-        this.className = params.className || "";
-        this.tagName = params.tagName || "div";
-        this.content = deepCopy(params.content) || "";
-        this.technical = params.technical;
+        $assign(this, params);
+
+        this.content = deepCopy(this.content);
     }
 
     /**
@@ -1430,62 +1459,101 @@ export class Markup {
             // Cannot diff
             return null;
         }
-        return [
-            new this({ content: "Diff:" }),
-            new this({
-                technical: true,
-                content: dmp
-                    .diff_main(formatTechnical(expected), formatTechnical(actual))
-                    .map((diff) => {
-                        const classList = ["no-underline"];
-                        let tagName = "t";
-                        if (diff[0] === DIFF_INSERT) {
-                            classList.push("text-emerald", "bg-emerald-900");
-                            tagName = "ins";
-                        } else if (diff[0] === DIFF_DELETE) {
-                            classList.push("text-rose", "bg-rose-900");
-                            tagName = "del";
-                        }
-                        return new this({
-                            className: classList.join(" "),
-                            content: toExplicitString(diff[1]),
-                            tagName,
-                        });
-                    }),
-            }),
-        ];
+        let hasDiff;
+        const diff = dmp
+            .diff_main(formatTechnical(expected), formatTechnical(actual))
+            .map((diff) => {
+                let className = "no-underline";
+                let tagName = "t";
+                if (diff[0] === DIFF_INSERT) {
+                    className += " text-emerald bg-emerald-900";
+                    tagName = "ins";
+                    hasDiff = true;
+                } else if (diff[0] === DIFF_DELETE) {
+                    className += " text-rose bg-rose-900";
+                    tagName = "del";
+                    hasDiff = true;
+                }
+                return new Markup({
+                    className,
+                    content: toExplicitString(diff[1]),
+                    tagName,
+                });
+            });
+        return hasDiff
+            ? [
+                  new Markup({ content: "Diff:" }),
+                  new Markup({
+                      content: diff,
+                      type: "technical",
+                  }),
+              ]
+            : null;
     }
 
     /**
      * @param {string} content
      * @param {unknown} value
      */
-    static green(content, value) {
-        return [new this({ className: "text-emerald", content }), deepCopy(value)];
+    static expected(content, value) {
+        return [new Markup({ content, type: "expected" }), deepCopy(value)];
     }
 
     /**
      * @param {unknown} object
+     * @param {MarkupType} [type]
      */
-    static isMarkup(object) {
-        return object instanceof Markup;
+    static isMarkup(object, type) {
+        if (!(object instanceof Markup)) {
+            return false;
+        }
+        return !type || object.type === type;
     }
 
     /**
      * @param {string} content
      * @param {unknown} value
      */
-    static red(content, value) {
-        return [new this({ className: "text-rose", content }), deepCopy(value)];
+    static received(content, value) {
+        return [new Markup({ content, type: "received" }), deepCopy(value)];
+    }
+
+    /**
+     * @param {Markup[][]} details
+     * @param {boolean} [pass=false]
+     */
+    static resolveDetails(details, pass = false) {
+        const result = [];
+        for (let detail of details) {
+            if (!detail) {
+                continue;
+            }
+            if (isIterable(detail)) {
+                for (const detailPart of detail) {
+                    if (Markup.isMarkup(detailPart, "expected")) {
+                        if (pass) {
+                            detail = null;
+                            break;
+                        }
+                        detailPart.className ||= "text-emerald";
+                    } else if (Markup.isMarkup(detailPart, "received")) {
+                        detailPart.className ||= pass ? "text-emerald" : "text-rose";
+                    }
+                }
+            }
+            if (detail) {
+                result.push(detail);
+            }
+        }
+        return result;
     }
 
     /**
      * @param {string} content
      * @param {unknown} value
-     * @param {{ technical?: boolean }} [options]
      */
-    static text(content, options) {
-        return new this({ ...options, content });
+    static text(content, value) {
+        return [new Markup({ content }), deepCopy(value)];
     }
 }
 
@@ -1570,3 +1638,6 @@ export const STORAGE = {
     scheme: "hoot-color-scheme",
     searches: "hoot-latest-searches",
 };
+
+export const S_ANY = Symbol("any value");
+export const S_NONE = Symbol("no value");

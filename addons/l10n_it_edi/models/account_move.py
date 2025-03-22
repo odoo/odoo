@@ -326,6 +326,8 @@ class AccountMove(models.Model):
                 it_values['prezzo_unitario'] = base_line['gross_price_subtotal'] / quantity
             else:
                 it_values['prezzo_unitario'] = 0.0
+            if base_line['currency_id'] != self.company_currency_id:
+                it_values['prezzo_unitario'] = base_line['currency_id']._convert(it_values['prezzo_unitario'], self.company_currency_id, date=self.date)
 
             # Discount.
             it_values['sconto_maggiorazione_list'] = []

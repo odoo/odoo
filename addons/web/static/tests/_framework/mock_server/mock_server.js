@@ -1200,7 +1200,7 @@ export class MockServer {
                 allChildIds.add(childId);
                 childIds.add(childId);
             }
-            menuDict[menu.id].children = [...childIds].sort();
+            menuDict[menu.id].children = [...childIds].sort((a, b) => a - b);
         }
         const missingMenuIds = [...allChildIds].filter((id) => !(id in menuDict));
         if (missingMenuIds.length) {
@@ -1346,7 +1346,7 @@ export async function makeMockServer() {
     // Add other ambiant params
     mockServer.configure(getCurrentParams());
 
-    registerDebugInfo(mockServer);
+    registerDebugInfo("mock server", mockServer);
 
     return mockServer.start();
 }

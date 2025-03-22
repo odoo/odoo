@@ -132,14 +132,14 @@ export class PosOrder extends Base {
                 ? 1
                 : -1;
 
-        const baseLines = orderLines.map((line) => {
-            return accountTaxHelpers.prepare_base_line_for_taxes_computation(
+        const baseLines = orderLines.map((line) =>
+            accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
                 line.prepareBaseLineForTaxesComputationExtraValues({
                     quantity: documentSign * line.qty,
                 })
-            );
-        });
+            )
+        );
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
 
@@ -939,6 +939,9 @@ export class PosOrder extends Base {
         this.assert_editable();
         this.update({ partner_id: partner });
         this.updatePricelistAndFiscalPosition(partner);
+        if (partner.company_type == "company") {
+            this.set_to_invoice(true);
+        }
     }
 
     get_partner() {

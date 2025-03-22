@@ -10,7 +10,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_es_pymes_template_data(self):
         return {
             'name': _('SMEs (2008)'),
-            'parent': 'es_common',
+            'parent': 'es_common_mainland',
             'sequence': 0,
         }
 

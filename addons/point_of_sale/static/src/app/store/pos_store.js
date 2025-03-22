@@ -1675,7 +1675,7 @@ export class PosStore extends Reactive {
                 printer.config.product_categories_ids,
                 orderChange
             );
-            const anyChangesToPrint = Object.values(changes).some((change) => change.length);
+            const anyChangesToPrint = changes.new.length;
             const diningModeUpdate = orderChange.modeUpdate;
             if (diningModeUpdate || anyChangesToPrint) {
                 const printed = await this.printReceipts(

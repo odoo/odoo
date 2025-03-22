@@ -1681,13 +1681,13 @@ test("open file explorer if no cover image", async () => {
     await setInputFiles([]);
     await animationFrame();
 
-    expect(`.o_file_input input`).not.toBeEnabled({
+    expect(`.o_dialog .o_file_input input`).not.toBeEnabled({
         message: "the upload button should be disabled on upload",
     });
     uploadedPromise.resolve();
     await animationFrame();
 
-    expect(`.o_file_input input`).toBeEnabled({
+    expect(`.o_dialog .o_file_input input`).toBeEnabled({
         message: "the upload button should be enabled for upload",
     });
 });

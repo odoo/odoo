@@ -10,7 +10,7 @@ import { MockEventTarget } from "../hoot_utils";
 const {
     Array: { isArray: $isArray },
     Element,
-    Object: { entries: $entries },
+    Object: { assign: $assign, entries: $entries },
     scroll: windowScroll,
     scrollBy: windowScrollBy,
     scrollTo: windowScrollTo,
@@ -122,7 +122,7 @@ export function mockedAnimate(...args) {
             style[key] = $isArray(value) ? value.at(-1) : value;
         }
     }
-    Object.assign(this.style, style);
+    $assign(this.style, style);
 
     // Return mock animation
     return new MockAnimation();

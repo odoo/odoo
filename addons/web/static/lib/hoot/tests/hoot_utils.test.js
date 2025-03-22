@@ -154,7 +154,7 @@ describe(parseUrl(import.meta.url), () => {
     });
 
     test("levenshtein", () => {
-        expect(levenshtein("abc", "àbc ", { normalize: true })).toBe(0);
+        expect(levenshtein("abc", "abc")).toBe(0);
         expect(levenshtein("abc", "àbc ")).toBe(2);
         expect(levenshtein("abc", "def")).toBe(3);
         expect(levenshtein("abc", "adc")).toBe(1);

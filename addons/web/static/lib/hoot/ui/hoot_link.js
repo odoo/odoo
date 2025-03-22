@@ -1,8 +1,9 @@
 /** @odoo-module */
 
 import { Component, useState, xml } from "@odoo/owl";
-import { FILTER_KEYS } from "../core/config";
+import { FILTER_KEYS, FILTER_SCHEMA } from "../core/config";
 import { createUrlFromId } from "../core/url";
+import { INCLUDE_LEVEL } from "../hoot_utils";
 
 /**
  * @typedef {{
@@ -14,7 +15,7 @@ import { createUrlFromId } from "../core/url";
  *  style?: string;
  *  target?: string;
  *  title?: string;
- *  type?: keyof DEFAULT_FILTERS;
+ *  type?: import("../core/config").SearchFilter;
  * }} HootLinkProps
  */
 
@@ -73,7 +74,21 @@ export class HootLink extends Component {
      * @param {PointerEvent} ev
      */
     onClick(ev) {
-        this.props.onClick?.(ev);
+        if (ev.altKey) {
+            const { includeSpecs } = this.env.runner.state;
+            const { id, type, options } = this.props;
+            if (!(type in FILTER_SCHEMA)) {
+                return;
+            }
+
+            ev.preventDefault();
+
+            const targetValue = options?.ignore ? -INCLUDE_LEVEL.url : +INCLUDE_LEVEL.url;
+            const finalValue = includeSpecs[type][id] === targetValue ? 0 : targetValue;
+            this.env.runner.include(type, id, finalValue);
+        } else {
+            this.props.onClick?.(ev);
+        }
     }
 
     updateHref() {

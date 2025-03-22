@@ -97,7 +97,13 @@ class PaymentTransaction(models.Model):
                 done_tx._invoice_sale_orders()
             super(PaymentTransaction, done_tx)._post_process()  # Post the invoices.
             if auto_invoice:
-                self._send_invoice()
+                if (
+                    str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+                    and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
+                ):
+                    send_invoice_cron._trigger()
+                else:
+                    self._send_invoice()
 
     def _check_amount_and_confirm_order(self):
         """ Confirm the sales order based on the amount of a transaction.

@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    insertText,
     onRpcBefore,
     openDiscuss,
     patchUiSize,
@@ -10,9 +11,10 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 
-describe.current.tags("desktop");
+describe.current.tags("mobile");
 defineMailModels();
 
 test("auto-select 'Inbox' when discuss had channel as active thread", async () => {
@@ -51,4 +53,16 @@ test("show loading on initial opening", async () => {
     def.resolve();
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
     await contains(".o-mail-NotificationItem", { text: "General" });
+});
+
+test("enter key should create a newline in composer", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "Test\n");
+    await press("Enter");
+    await insertText(".o-mail-Composer-input", "Other");
+    await click(".o-mail-Composer-send");
+    await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });

@@ -11,6 +11,7 @@ import {
     formatTime,
     getTypeOf,
     isLabel,
+    Markup,
     ordinal,
 } from "../hoot_utils";
 import { HootLink } from "./hoot_link";
@@ -49,7 +50,7 @@ const stackTemplate = (label, owner) => {
         /* xml */ `</t>`;
     return /* xml */ `
         <t t-if="${owner}?.stack">
-            <div class="flex col-span-2 gap-x-2 px-2">
+            <div class="flex col-span-2 gap-x-2 px-2 mt-1">
                 <span class="text-rose">
                     ${label}:
                 </span>
@@ -138,8 +139,16 @@ const EVENT_TEMPLATE = /* xml */ `
         <t t-if="event.failedDetails">
             <div class="hoot-info grid col-span-2 gap-x-2 px-2">
                 <t t-foreach="event.failedDetails" t-as="details" t-key="details_index">
-                    <HootTechnicalValue value="details[0]" />
-                    <HootTechnicalValue value="details[1]" />
+                    <t t-if="isMarkup(details, 'group')">
+                        <div class="col-span-2 flex gap-2 ps-2 mt-1" t-att-class="details.className">
+                            <t t-esc="details.groupIndex" />.
+                            <HootTechnicalValue value="details.content" />
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <HootTechnicalValue value="details[0]" />
+                        <HootTechnicalValue value="details[1]" />
+                    </t>
                 </t>
             </div>
         </t>
@@ -185,7 +194,7 @@ export class HootTestResult extends Component {
     static template = xml`
         <div
             class="${HootTestResult.name}
-                flex flex-col w-full border-b overflow-auto
+                flex flex-col w-full border-b overflow-hidden
                 border-gray-300 dark:border-gray-600"
             t-att-class="getClassName()"
         >
@@ -230,7 +239,7 @@ export class HootTestResult extends Component {
                         </t>
                     </div>
                 </t>
-                <div class="flex flex-col overflow-y-auto">
+                <div class="flex flex-col overflow-y-hidden">
                     <nav class="flex items-center gap-2 p-2 text-gray">
                         <button
                             type="button"
@@ -262,6 +271,7 @@ export class HootTestResult extends Component {
     formatTime = formatTime;
     getTypeOf = getTypeOf;
     isLabel = isLabel;
+    isMarkup = Markup.isMarkup;
     ordinal = ordinal;
 
     setup() {
