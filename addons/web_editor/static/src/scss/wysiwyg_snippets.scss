@@ -384,6 +384,7 @@
                 &.o_snippet_install {
                     .btn.o_install_btn {
                         @include o-position-absolute($top: 10px);
+                        @include text-truncate();
                     }
 
                     &:not(:hover) .btn.o_install_btn {
@@ -532,11 +533,11 @@
                 }
                 .dropdown {
                     position: unset;
-                    width: -webkit-fill-available;
+                    width: 100%;
 
                     .dropdown-toggle {
                         padding: 0;
-                        width: inherit;
+                        width: 100%;
 
                         &::after {
                             display: none;
@@ -545,8 +546,17 @@
                     .dropdown-menu.show {
                         position: absolute !important;
                         padding: 0;
+                        width: 100%;
+                        border-color: $o-we-dropdown-border-color;
+
+                        &[data-popper-placement$="start"] {
+                            left: -$o-we-sidebar-content-padding-base !important;
+                        }
 
                         we-button:not(.fa) {
+                            display: flex;
+                            align-items: center;
+                            height: $o-we-sidebar-content-field-dropdown-item-height;
                             text-align: left;
                             font-family: $o-we-font-family;
                             font-size: 12px;
@@ -555,6 +565,10 @@
                             div {
                                 width: 100%;
                             }
+                        }
+
+                        .dropdown-item::before {
+                            display: none;
                         }
                     }
                 }
@@ -753,6 +767,13 @@
 
         we-title {
             display: block;
+        }
+
+        // TODO in master, remove the text-transform rule entirely and rely on
+        // developers writing their label with the intended "design". The
+        // "where" change here was added as a way to minimize the impact of this
+        // fix in stable. That CSS style was breaking translations.
+        we-title:where(:lang(en)) {
             text-transform: capitalize;
         }
 
@@ -2228,6 +2249,7 @@
 
                 &.readonly {
                     cursor: auto !important;
+                    pointer-events: none;
 
                     &:after {
                         display: none !important;
@@ -2357,6 +2379,7 @@
                 transform: none !important;
                 max-width: unset !important;
                 max-height: unset !important;
+                z-index: 0 !important;
             }
         }
     }

@@ -6,15 +6,16 @@
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
-# Abe Manyo, 2023
+# Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -869,17 +870,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 
@@ -1512,6 +1513,12 @@ msgstr "Rata-Rata Rating"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Average Review"
 msgstr "Rata-Rata Ulasan"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+"BLOK PENYUSUN YANG DILEPAS DI SINI AKAN DITUNJUKKAN DI SEMUA PELAJARAN"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2866,8 +2873,8 @@ msgid "File Name"
 msgstr "Nama File"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -3468,7 +3475,7 @@ msgstr "Fakta-Fakta Menari"
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_1
 msgid "Interesting Tree Facts"
-msgstr "Fakta-Fakta Pohon Menari"
+msgstr "Fakta-Fakta Pohon Menarik"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_0_1
@@ -4102,7 +4109,7 @@ msgstr "Terbaru"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
 msgid "Newest courses"
-msgstr "Kursus-kursus terbau"
+msgstr "Kursus-kursus terbaru"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4376,6 +4383,13 @@ msgstr ""
 "Setelah Anda selesai, jangan lupa untuk <b>Mempublikasikan</b> kursus Anda."
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "Hanya satu review yang dapat diposting per kursus."
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
 msgid "Open To All"
 msgstr ""
@@ -4550,14 +4564,6 @@ msgstr "Presentasi Dipost"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "Pratinjau"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "Pribadi"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -4930,7 +4936,7 @@ msgstr "Tinjauan"
 #: code:addons/website_slides/static/src/js/portal_chatter.js:0
 #, python-format
 msgid "Reviews (%d)"
-msgstr ""
+msgstr "Tinjauan (%d)"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__quiz_fourth_attempt_reward
@@ -5699,11 +5705,11 @@ msgstr "Slide dapat ditansai sebagai tidak selesai dan progres"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
 "Link video untuk diinput di sini bisa didapatkan dengan menggunakan tombol "
-"'Share' di antarmuka Vimeo."
+"'Share link' di antarmuka Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5712,17 +5718,6 @@ msgstr "Vote harus merupakan 1, 0 atau -1."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
-"The video link to input here can be obtained by using the 'Share link' "
-"button in the Vimeo interface."
-msgstr ""
-"Link video untuk diinput di sini bisa didapatkan dengan menggunakan tombol "
-"'Share link' di antarmuka Vimeo."
-
-#. module: website_slides
-#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
@@ -5984,14 +5979,14 @@ msgid "Unknown error, try again."
 msgstr "Error tidak diketahui, coba lagi."
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted"
 msgstr "Unlisted"
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted (paid account)"
@@ -6058,6 +6053,11 @@ msgstr "Gunakan Tag Konten untuk mengklasifikasi Konten Anda."
 msgid "Use Course Groups to classify and organize your Courses."
 msgstr ""
 "Gunakan Kelompok Kursus untuk menggolongkan dan mengatur Kursus-Kursus Anda."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Gunakan templat"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -6771,6 +6771,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "contoh \"Binatang mana yang tidak bisa terbang?\""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr "contoh. \"{{placeholder || \"another animal\"}}\""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "contoh Computer Science untuk anak-anak"
@@ -6874,17 +6881,6 @@ msgstr "login"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
-msgstr ""
-"artinya? Pengaturan privasi \"Privat\" Vimeo berarti video hanya dapat dilihat oleh user yang memiliki link ke video.\n"
-"                                    Video Anda tidak akan pernah muncul di hasil pencarian atau pada channel Anda."
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
 "mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
@@ -6892,7 +6888,7 @@ msgstr ""
 "                                    Video Anda tidak akan pernah muncul di hasil pencarian atau pada channel Anda."
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""

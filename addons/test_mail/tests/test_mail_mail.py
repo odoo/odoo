@@ -165,10 +165,10 @@ class TestMailMail(TestMailCommon):
         # note that formatting is lost for cc
         self.assertSentEmail(mail.env.user.partner_id,
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['test.cc.1@example.com', '"Herbert" <test.cc.2@example.com>'])
         # Mail: currently cc are put as copy of all sent emails (aka spam)
         self.assertSentEmail(mail.env.user.partner_id, [self.user_employee.email_formatted],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['test.cc.1@example.com', '"Herbert" <test.cc.2@example.com>'])
         self.assertEqual(len(self._mails), 2)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -187,7 +187,7 @@ class TestMailMail(TestMailCommon):
         # note that formatting is lost for cc
         self.assertSentEmail('"Ignasse" <test.from@example.com>',
                              ['test.rec.1@example.com', '"Raoul" <test.rec.2@example.com>'],
-                             email_cc=['test.cc.1@example.com', 'test.cc.2@example.com'])
+                             email_cc=['test.cc.1@example.com', '"Herbert" <test.cc.2@example.com>'])
         self.assertEqual(len(self._mails), 1)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -723,7 +723,7 @@ class TestMailMail(TestMailCommon):
         # Currently broken: CC are added to ALL emails (spammy)
         self.assertEqual(
             [_mail['email_cc'] for _mail in self._mails],
-            [['test.cc.1@test.example.com']] * 3,
+            [['"Ignasse, le Poilu" <test.cc.1@test.example.com>']] * 3,
             'Mail: currently always removing formatting in email_cc'
         )
 
@@ -791,7 +791,7 @@ class TestMailMail(TestMailCommon):
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
-    def test_mail_mail_values_unicode(self):
+    def test_mail_mail_values_email_unicode(self):
         """ Unicode should be fine. """
         mail = self.env['mail.mail'].create({
             'body_html': '<p>Test</p>',
@@ -803,6 +803,35 @@ class TestMailMail(TestMailCommon):
         self.assertEqual(len(self._mails), 1)
         self.assertEqual(self._mails[0]['email_cc'], ['test.😊.cc@example.com'])
         self.assertEqual(self._mails[0]['email_to'], ['test.😊@example.com'])
+
+    @users('admin')
+    def test_mail_mail_values_email_uppercase(self):
+        """ Test uppercase support when comparing emails, notably due to
+        'send_validated_to' introduction that checks emails before sending them. """
+        customer = self.env['res.partner'].create({
+            'name': 'Uppercase Partner',
+            'email': 'Uppercase.Partner.youpie@example.gov.uni',
+        })
+        for recipient_values, (exp_to, exp_cc) in zip(
+            [
+                {'email_to': 'Uppercase.Customer.to@example.gov.uni'},
+                {'email_to': '"Formatted Customer" <Uppercase.Customer.to@example.gov.uni>'},
+                {'recipient_ids': [(4, customer.id)], 'email_cc': 'Uppercase.Customer.cc@example.gov.uni'},
+            ], [
+                (['uppercase.customer.to@example.gov.uni'], []),
+                (['"Formatted Customer" <uppercase.customer.to@example.gov.uni>'], []),
+                (['"Uppercase Partner" <uppercase.partner.youpie@example.gov.uni>'], ['uppercase.customer.cc@example.gov.uni']),
+            ]
+        ):
+            with self.subTest(values=recipient_values):
+                mail = self.env['mail.mail'].create({
+                    'body_html': '<p>Test</p>',
+                    'email_from': '"Forced From" <Forced.From@test.example.com>',
+                    **recipient_values,
+                })
+                with self.mock_mail_gateway():
+                    mail.send()
+                self.assertSentEmail('"Forced From" <forced.from@test.example.com>', exp_to, email_cc=exp_cc)
 
 
 @tagged('mail_mail')

@@ -11,9 +11,12 @@ import {
     triggerEvent,
     getFixture,
     mockTimeout,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
+import { swipeRight } from "@web/../tests/mobile/helpers";
+import { Deferred } from "@web/core/utils/concurrency";
 
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, onPatched } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -863,4 +866,108 @@ QUnit.module("ActionSwiper", ({ beforeEach }) => {
             );
         }
     );
+
+    QUnit.test("swipeInvalid prop prevents swiping", async (assert) => {
+        assert.expect(3);
+        const { execRegisteredTimeouts } = mockTimeout();
+        class Parent extends Component {
+            onRightSwipe() {
+                assert.step("onRightSwipe");
+            }
+            swipeInvalid() {
+                assert.step("swipeInvalid");
+                return true;
+            }
+        }
+        Parent.components = { ActionSwiper };
+        Parent.template = xml`
+            <div class="d-flex">
+                <ActionSwiper onRightSwipe = "{
+                    action: onRightSwipe,
+                    icon: 'fa-circle',
+                    bgColor: 'bg-warning',
+                }" swipeInvalid = "swipeInvalid">
+                    <div class="target-component" style="width: 200px; height: 80px">Test</div>
+                </ActionSwiper>
+            </div>
+        `;
+        await mount(Parent, target, { env });
+        const swiper = target.querySelector(".o_actionswiper");
+        const targetContainer = target.querySelector(".o_actionswiper_target_container");
+        // Touch ends once the half of the distance has been crossed
+        await triggerEvent(target, ".o_actionswiper", "touchstart", {
+            touches: [
+                {
+                    identifier: 0,
+                    clientX: swiper.clientWidth / 2,
+                    clientY: 0,
+                    target: target,
+                },
+            ],
+        });
+        await triggerEvent(target, ".o_actionswiper", "touchmove", {
+            touches: [
+                {
+                    identifier: 0,
+                    clientX: swiper.clientWidth + 1,
+                    clientY: 0,
+                    target: target,
+                },
+            ],
+        });
+        await triggerEvent(target, ".o_actionswiper", "touchend", {});
+        execRegisteredTimeouts();
+        await nextTick();
+        assert.ok(
+            !targetContainer.style.transform.includes("translateX"),
+            "target doesn't have translateX after action is performed"
+        );
+        assert.verifySteps(["swipeInvalid"]);
+    });
+
+    QUnit.test("action should be done before a new render", async (assert) => {
+        let executingAction = false;
+        const prom = new Deferred();
+        const { execRegisteredTimeouts } = mockTimeout();
+        patchWithCleanup(ActionSwiper.prototype, {
+            setup() {
+                this._super(...arguments);
+                onPatched(() => {
+                    if (executingAction) {
+                        assert.step("ActionSwiper patched");
+                    }
+                });
+            },
+        });
+
+        class Parent extends Component {
+            async onRightSwipe() {
+                await nextTick();
+                assert.step("action done");
+                prom.resolve();
+            }
+        }
+
+        Parent.props = [];
+        Parent.components = { ActionSwiper };
+        Parent.template = xml`
+            <div class="d-flex">
+               <ActionSwiper animationType="'forwards'" onRightSwipe = "{
+                   action: onRightSwipe.bind(this),
+                   icon: 'fa-circle',
+                   bgColor: 'bg-warning',
+               }">
+                   <span>test</span>
+               </ActionSwiper>
+           </div>
+        `;
+
+        await mount(Parent, target, { env });
+        await swipeRight(target, ".o_actionswiper");
+        executingAction = true;
+        execRegisteredTimeouts();
+        await prom;
+        await nextTick();
+        assert.verifySteps(["action done", "ActionSwiper patched"]);
+    });
 });

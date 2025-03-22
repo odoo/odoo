@@ -71,6 +71,9 @@ class AccountEdiFormat(models.Model):
         if self.code != 'es_tbai' or invoice.country_code != 'ES':
             return errors
 
+        if invoice.is_purchase_document() and not invoice.ref:
+            errors.append(_("You need to fill in the Reference field as the invoice number from your vendor."))
+
         # Ensure a certificate is available.
         if not invoice.company_id.l10n_es_edi_certificate_id:
             errors.append(_("Please configure the certificate for TicketBAI/SII."))
@@ -96,6 +99,9 @@ class AccountEdiFormat(models.Model):
 
         return errors
 
+    def _l10n_es_tbai_refunded_invoices(self, invoice):
+        return invoice.reversed_entry_id
+
     def _l10n_es_tbai_post_invoice_edi(self, invoice):
         # EXTENDS account_edi
         if self.code != 'es_tbai':
@@ -109,8 +115,40 @@ class AccountEdiFormat(models.Model):
             # - If called from a cron, then the re-ordering of jobs should prevent this from triggering
             # - If called manually, then the user will see this error pop up when it triggers
             chain_head = invoice.company_id._get_l10n_es_tbai_last_posted_invoice()
+            error_msg = ''
             if chain_head and chain_head != invoice and not chain_head._l10n_es_tbai_is_in_chain():
-                raise UserError(f"TicketBAI: Cannot post invoice while chain head ({chain_head.name}) has not been posted")
+                error_msg = _("TicketBAI: Cannot post invoice while chain head (%s) has not been posted", chain_head.name)
+            if invoice.move_type == 'out_refund':
+                refunded_invoices = self._l10n_es_tbai_refunded_invoices(invoice)
+                if not refunded_invoices:
+                    error_msg = _("TicketBAI: Cannot post a refund without source documents")
+                else:
+                    invalid_refunds = refunded_invoices.filtered(lambda inv:
+                        not inv._l10n_es_tbai_is_in_chain()
+                        and inv.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'es_tbai')  # avoid imported ones
+                    )
+                    if invalid_refunds:
+                        error_msg = _(
+                            "TicketBAI: Cannot post a reversal move if its source documents (%s) have not been posted",
+                            ', '.join(invalid_refunds.mapped('name'))
+                        )
+
+            # Tax configuration check: In case of foreign customer we need the tax scope to be set
+            com_partner = invoice.commercial_partner_id
+            if (com_partner.country_id.code not in ('ES', False) or (com_partner.vat or '').startswith("ESN")) and\
+                    invoice.line_ids.tax_ids.filtered(lambda t: not t.tax_scope):
+                error_msg = _(
+                    "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                    "\n".join(invoice.line_ids.tax_ids.mapped('name'))
+                )
+
+            if error_msg:
+                return {
+                    invoice: {
+                        'error': error_msg,
+                        'blocking_level': 'error',
+                    }
+                }
 
             # Generate the XML values.
             inv_dict = self._get_l10n_es_tbai_invoice_xml(invoice)
@@ -330,54 +368,81 @@ class AccountEdiFormat(models.Model):
         invoice_lines = []
         for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
             if line.discount == 100.0:
-                gross_price_subtotal = line.price_unit * line.quantity
+                inverse_currency_rate = abs(line.move_id.amount_total_signed / line.move_id.amount_total) if line.move_id.amount_total else 1
+                balance_before_discount = - line.price_unit * line.quantity * inverse_currency_rate
             else:
-                gross_price_subtotal = line.price_subtotal / (1 - line.discount / 100.0)
-            discount = (gross_price_subtotal - line.price_subtotal) * refund_sign
+                balance_before_discount = line.balance / (1 - line.discount / 100)
+            discount = (balance_before_discount - line.balance)
+            line_price_total = self._l10n_es_tbai_get_invoice_line_price_total(line)
 
             if not any([t.l10n_es_type == 'sujeto_isp' for t in line.tax_ids]):
-                total = line.price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
+                total = line_price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
             else:
-                total = abs(line.balance) * -refund_sign * (-1 if line.price_total < 0 else 1)
+                total = abs(line.balance) * -refund_sign * (-1 if line_price_total < 0 else 1)
             invoice_lines.append({
                 'line': line,
                 'discount': discount * refund_sign,
-                'unit_price': (line.balance + discount) / line.quantity * refund_sign,
+                'unit_price': (line.balance + discount) / line.quantity * refund_sign if line.quantity else 0.0,
                 'total': total,
-                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250]
+                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name or '')[:250]
             })
         values['invoice_lines'] = invoice_lines
         # Tax details (desglose)
-        importe_total, desglose = self._l10n_es_tbai_get_importe_desglose(invoice)
+        importe_total, desglose, amount_retention = self._l10n_es_tbai_get_importe_desglose(invoice)
         values['amount_total'] = importe_total
         values['invoice_info'] = desglose
+        values['amount_retention'] = amount_retention * refund_sign if amount_retention != 0.0 else 0.0
 
         # Regime codes (ClaveRegimenEspecialOTrascendencia)
         # NOTE there's 11 more codes to implement, also there can be up to 3 in total
         # See https://www.gipuzkoa.eus/documents/2456431/13761128/Anexo+I.pdf/2ab0116c-25b4-f16a-440e-c299952d683d
         com_partner = invoice.commercial_partner_id
-        if not com_partner.country_id or com_partner.country_id.code in self.env.ref('base.europe').country_ids.mapped('code'):
+        # If an invoice line contains an OSS tax, the invoice is considered as an OSS operation
+        is_oss = self._has_oss_taxes(invoice)
+
+        if is_oss:
+            values['regime_key'] = ['17']
+        elif invoice._is_l10n_es_tbai_simplified():
+            values['regime_key'] = ['52']  # code for simplified invoices
+        elif not com_partner.country_id or com_partner.country_id.code in self.env.ref('base.europe').country_ids.mapped('code'):
             values['regime_key'] = ['01']
         else:
             values['regime_key'] = ['02']
 
-        if invoice._is_l10n_es_tbai_simplified():
-            values['regime_key'].append(52)  # code for simplified invoices
+        values['nosujeto_causa'] = 'IE' if is_oss else 'RL'
 
         return values
+
+    def _l10n_es_tbai_get_invoice_line_price_total(self, invoice_line):
+        price_total = invoice_line.price_total
+        retention_tax_lines = invoice_line.tax_ids.filtered(lambda t: t.l10n_es_type == "retencion")
+        if retention_tax_lines:
+            line_discount_price_unit = invoice_line.price_unit * (1 - (invoice_line.discount / 100.0))
+            tax_lines_no_retention = invoice_line.tax_ids - retention_tax_lines
+            if tax_lines_no_retention:
+                taxes_res = tax_lines_no_retention.compute_all(line_discount_price_unit,
+                                                               quantity=invoice_line.quantity,
+                                                               currency=invoice_line.currency_id,
+                                                               product=invoice_line.product_id,
+                                                               partner=invoice_line.move_id.partner_id,
+                                                               is_refund=invoice_line.is_refund)
+                price_total = taxes_res['total_included']
+        return price_total
 
     def _l10n_es_tbai_get_importe_desglose(self, invoice):
         com_partner = invoice.commercial_partner_id
         sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
-        if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
+        if (com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN")) \
+                or invoice._is_l10n_es_tbai_simplified():
             tax_details_info_vals = self._l10n_es_edi_get_invoices_tax_details_info(invoice)
+            tax_amount_retention = tax_details_info_vals['tax_amount_retention']
             desglose = {'DesgloseFactura': tax_details_info_vals['tax_details_info']}
             desglose['DesgloseFactura'].update({'S1': tax_details_info_vals['S1_list'],
                                                 'S2': tax_details_info_vals['S2_list']})
             importe_total = round(sign * (
                 tax_details_info_vals['tax_details']['base_amount']
                 + tax_details_info_vals['tax_details']['tax_amount']
-                - tax_details_info_vals['tax_amount_retention']
+                - tax_amount_retention
             ), 2)
         else:
             tax_details_info_service_vals = self._l10n_es_edi_get_invoices_tax_details_info(
@@ -388,11 +453,13 @@ class AccountEdiFormat(models.Model):
                 invoice,
                 filter_invl_to_apply=lambda x: any(t.tax_scope == 'consu' for t in x.tax_ids)
             )
+            service_retention = tax_details_info_service_vals['tax_amount_retention']
+            consu_retention = tax_details_info_consu_vals['tax_amount_retention']
             desglose = {}
             if tax_details_info_service_vals['tax_details_info']:
                 desglose.setdefault('DesgloseTipoOperacion', {})
                 desglose['DesgloseTipoOperacion']['PrestacionServicios'] = tax_details_info_service_vals['tax_details_info']
-                desglose['TipoDesglose']['DesgloseTipoOperacion']['PrestacionServicios'].update(
+                desglose['DesgloseTipoOperacion']['PrestacionServicios'].update(
                     {'S1': tax_details_info_service_vals['S1_list'],
                      'S2': tax_details_info_service_vals['S2_list']})
 
@@ -405,12 +472,13 @@ class AccountEdiFormat(models.Model):
             importe_total = round(sign * (
                 tax_details_info_service_vals['tax_details']['base_amount']
                 + tax_details_info_service_vals['tax_details']['tax_amount']
-                - tax_details_info_service_vals['tax_amount_retention']
+                - service_retention
                 + tax_details_info_consu_vals['tax_details']['base_amount']
                 + tax_details_info_consu_vals['tax_details']['tax_amount']
-                - tax_details_info_consu_vals['tax_amount_retention']
+                - consu_retention
             ), 2)
-        return importe_total, desglose
+            tax_amount_retention = service_retention + consu_retention
+        return importe_total, desglose, tax_amount_retention
 
     def _l10n_es_tbai_get_trail_values(self, invoice, cancel):
         prev_invoice = invoice.company_id._get_l10n_es_tbai_last_posted_invoice(invoice)
@@ -424,7 +492,9 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_tbai_sign_invoice(self, invoice, xml_root):
         company = invoice.company_id
-        cert_private, cert_public = company.l10n_es_edi_certificate_id._get_key_pair()
+        cert_private, cert_public = (
+            company.l10n_es_edi_certificate_id.sudo()._get_key_pair()
+        )
         public_key = cert_public.public_key()
 
         # Identifiers
@@ -601,7 +671,10 @@ class AccountEdiFormat(models.Model):
         lroe_values = self._l10n_es_tbai_prepare_values_bi(invoice, invoice_xml, cancel=cancel)
         if invoice.is_purchase_document():
             lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main_recibidas', lroe_values)
-            invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
+            if cancel:
+                invoice.l10n_es_tbai_cancel_xml = b64encode(lroe_str.encode())
+            else:
+                invoice.l10n_es_tbai_post_xml = b64encode(lroe_str.encode())
         else:
             lroe_str = env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
 

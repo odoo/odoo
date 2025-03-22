@@ -1,0 +1,1027 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_signup
+# 
+# Translators:
+# Ivan Shakh, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Ivan Shakh, 2024\n"
+"Language-Team: Belarusian (https://app.transifex.com/odoo/teams/41243/be/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: be\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid ""
+"<strong>A password reset has been requested for this user. An email "
+"containing the following link has been sent:</strong>"
+msgstr ""
+"<strong>Для гэтага карыстальніка быў запытаны скід пароля. Быў адпраўлены "
+"электронны ліст з наступнай спасылкай:</strong>"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid ""
+"<strong>An invitation email containing the following subscription link has "
+"been sent:</strong>"
+msgstr ""
+"<strong>Быў адпраўлены электронны ліст з запрашэннем, які змяшчае наступную "
+"спасылку для падпіскі:</strong>"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"></t>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Pending Invitations\n"
+"                    </span><br><br>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Mitchell Admin</t>,<br> <br>\n"
+"                        You added the following user(s) to your database but they haven't registered yet:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Follow up with them so they can access your database and start working with you.\n"
+"                        <br><br>\n"
+"                        Have a nice day!<br>\n"
+"                        --<br>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get('invited_users', [])\"></t>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Запрашэнні ў чаканні адказу\n"
+"                    </span><br><br>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Шаноўны <t t-out=\"object.name or ''\">Адміністратар</t>,<br> <br>\n"
+"                        Вы дадалі наступных карыстальнікаў у сваю базу дадзеных, але яны яшчэ не зарэгістраваныя:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Звяжыцеся з імі, каб яны маглі атрымаць доступ да вашай базы дадзеных і пачаць з вамі працаваць.\n"
+"                        <br><br>\n"
+"                        Прыемнага дня!<br>\n"
+"                        --<br>Каманда <t t-out=\"object.company_id.name or ''\">ВашаКампанія</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.set_password_email
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Welcome to Odoo</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                        You have been invited by <t t-out=\"object.create_uid.name or ''\">OdooBot</t> of <t t-out=\"object.company_id.name or ''\">YourCompany</t> to connect on Odoo.\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Accept invitation\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
+"                        Your Odoo domain is: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
+"                        Your sign in email is: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Never heard of Odoo? It’s an all-in-one business software loved by 7+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                        <br><br>\n"
+"                        Have a look at the <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
+"                        <br><br>\n"
+"                        Enjoy Odoo!<br>\n"
+"                        --<br>The <t t-out=\"object.company_id.name or ''\">YourCompany</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-att-href=\"'mailto:%s' % object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-att-href=\"'%s' % object.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Вітаем у Odoo</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Іван Луцэвіч</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Шаноўны <t t-out=\"object.name or ''\">Іван Луцэвіч</t>,<br><br>\n"
+"                        <t t-out=\"object.create_uid.name or ''\">OdooBot</t> з <t t-out=\"object.company_id.name or ''\">ВашаКампанія</t> запрасіў Вас далучыцца да Odoo.\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Прыняць запрашэнне\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"></t>\n"
+"                        Ваш дамен Odoo: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br>\n"
+"                        Ваш адрас электроннай пошты для ўваходу: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br><br>\n"
+"                        Ніколі не чулі пра Odoo? Гэта ўніверсальнае праграмнае забеспячэнне для бізнеса, якое ўпадабалі больш за 7 мільёнаў карыстальнікаў. Яно значна паглыбіць ваш працоўны досвед і павысіць вашу прадукцыйнасць.\n"
+"                        <br><br>\n"
+"                        Зазірніце ў <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a>, каб лепш азнаёміцца з магчамасцямі.\n"
+"                        <br><br>\n"
+"                        Жадаем цешыцца з Odoo!<br>\n"
+"                        --<br>Каманда <t t-out=\"object.company_id.name or ''\">ВашаКампанія</t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">ВашаКампанія</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-att-href=\"'mailto:%s' % object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-att-href=\"'%s' % object.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        На платформе <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.reset_password_email
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                        A password reset was requested for the Odoo account linked to this email.\n"
+"                        You may change your password by following this link which will remain valid during 24 hours:<br>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Change password\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        If you do not expect this, you can safely ignore this email.<br><br>\n"
+"                        Thanks,\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-att-href=\"'mailto:%s' % object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-att-href=\"'%s' % object.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Ваш уліковы запіс</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Іван Луцэвіч</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Шаноўны <t t-out=\"object.name or ''\">Іван Луцэвіч</t>,<br><br>\n"
+"                        Для ўліковага запісу Odoo, прывязанага да гэтага электроннага адраса, быў запытаны скід пароля.\n"
+"                        Вы можаце змяніць пароль, перайшоўшы па гэтай спасылцы, якая будзе дзейнічаць на працягу 24 гадзін:<br>\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-att-href=\"object.signup_url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Змяніць пароль\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Калі вы гэтага не рабілі, можаце смела праігнараваць гэты ліст.<br><br>\n"
+"                        Дзякуем,\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Адміністратар</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">ВашаКампанія</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-att-href=\"'mailto:%s' % object.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-att-href=\"'%s' % object.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        На платформе <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Your Account</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Marc Demo</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                        Your account has been successfully created!<br>\n"
+"                        Your login is <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br>\n"
+"                        To gain access to your account, you can use the following link:\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Go to My Account\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Thanks,<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                            <t t-out=\"object.company_id.website or ''\">http://www.example.com</t>\n"
+"                        </a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Ваш уліковы запіс</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        <t t-out=\"object.name or ''\">Іван Луцэвіч</t>\n"
+"                    </span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Шаноўны <t t-out=\"object.name or ''\">Іван Луцэвіч</t>,<br><br>\n"
+"                        Ваш уліковы запіс паспяхова створаны!<br>\n"
+"                        Ваш лагін <strong><t t-out=\"object.email or ''\">mark.brown23@example.com</t></strong><br>\n"
+"                        Каб атрымаць доступ да свайго ўліковага запісу, вы можаце скарыстацца наступнай спасылкай:\n"
+"                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"                            <a t-attf-href=\"/web/login?auth_login={{object.email}}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                Мой уліковы запіс\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Дзякуем,<br>\n"
+"                        <t t-if=\"user.signature\">\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Адміністратар</t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"object.company_id.name or ''\">ВашаКампанія</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.company_id.email\">\n"
+"                        | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #454748;\"><t t-out=\"object.company_id.email or ''\">info@yourcompany.com</t></a>\n"
+"                    </t>\n"
+"                    <t t-if=\"object.company_id.website\">\n"
+"                        | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #454748;\">\n"
+"                            <t t-out=\"object.company_id.website or ''\">http://www.example.com</t>\n"
+"                        </a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        На платформе <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.signup
+msgid "Already have an account?"
+msgstr "Ужо ёсць уліковы запіс?"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr ""
+"Іншы карыстальнік ужо зарэгістраваны з дапамогай гэтага адраса электроннай "
+"пошты."
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Authentication Failed."
+msgstr "Памылка аўтэнтыфікацыі."
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Back to Login"
+msgstr "Вярнуцца да ўваходу"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Cannot send email: user %s has no email address."
+msgstr ""
+"Немагчыма адправіць email: карыстальнік %s не мае адраса электроннай пошты."
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid "Close"
+msgstr "Зачыніць"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налады канфігурацыі"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.fields
+msgid "Confirm Password"
+msgstr "Пацвердзіце пароль"
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
+msgid "Confirmed"
+msgstr "Пацверджана"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Contact"
+msgstr "Кантакт"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Could not create a new account."
+msgstr "Не атрымалася стварыць новы ўліковы запіс."
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Could not reset your password"
+msgstr "Не атрымалася скінуць ваш пароль"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
+msgid "Customer Account"
+msgstr "Уліковы запіс кліента"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr "Правы доступу па змаўчанні"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.login
+msgid "Don't have an account?"
+msgstr "Няма ўліковага запісу?"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Enable password reset from Login page"
+msgstr "Уключыць скід пароля са старонкі ўваходу"
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
+msgid "Free sign up"
+msgstr "Бясплатная рэгістрацыя"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP-маршрутызацыя"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Invalid signup token"
+msgstr "Несапраўдны токен рэгістрацыі"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Let your customers log in to see their documents"
+msgstr "Дазвольце вашым кліентам увайсці ў сістэму, каб убачыць іх дакументы"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Multiple accounts found for this login"
+msgstr "Для гэтага лагіна знойдзена некалькі ўліковых запісаў"
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
+msgid "Never Connected"
+msgstr "Не падключаўся"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "No account found for this login"
+msgstr "Уліковы запіс для гэтага лагіна не знойдзены"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "No login provided."
+msgstr "Не ўведзены лагін."
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
+msgid "On invitation"
+msgstr "Па запрашэнні"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.fields
+msgid "Password"
+msgstr "Пароль"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Password Reset"
+msgstr "Скід пароля"
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
+msgstr "Скід пароля"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Password reset instructions sent to your email"
+msgstr "Інструкцыі па скідзе пароля адпраўлены на вашу электронную пошту"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr "Паролі не супадаюць; калі ласка, увядзіце іх яшчэ раз."
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
+msgid "Registration successful."
+msgstr "Рэгістрацыя прайшла паспяхова."
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
+msgid "Reminder for unregistered users"
+msgstr "Напамін для незарэгістраваных карыстальнікаў"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.login
+#: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Reset Password"
+msgstr "Скінуць пароль"
+
+#. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid "Send Password Reset Instructions"
+msgstr "Адправіць інструкцыі па скідзе пароля"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
+msgid "Send an Invitation Email"
+msgstr "Даслаць запрашэнне па электроннай пошце"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
+msgid ""
+"Sent automatically to admin if new user haven't responded to the invitation"
+msgstr ""
+"Аўтаматычна адпраўляецца адміністратару, калі новы карыстальнік не адказаў "
+"на запрашэнне"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.set_password_email
+msgid "Sent to new user after you invited them"
+msgstr "Адпраўляецца новаму карыстальніку пасля запрашэння"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
+msgid "Sent to portal user who registered themselves"
+msgstr "Адпраўляецца карыстальніку партала, які зарэгістраваўся самастойна"
+
+#. module: auth_signup
+#: model:mail.template,description:auth_signup.reset_password_email
+msgid "Sent to user who requested a password reset"
+msgstr "Адпраўляецца карыстальніку, які запытаў скід пароля"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.set_password_email
+msgid "Settings: New Portal Signup"
+msgstr "Налады: новая рэгістрацыя на партале"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+msgid "Settings: New User Invite"
+msgstr "Налады: запрашэнне новага карыстальніка"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
+msgid "Settings: Unregistered User Reminder"
+msgstr "Налады: Напамін пра незарэгістраванага карыстальніка"
+
+#. module: auth_signup
+#: model:mail.template,name:auth_signup.reset_password_email
+msgid "Settings: User Reset Password"
+msgstr "Налады: Скід пароля карыстальніка"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.signup
+msgid "Sign up"
+msgstr "Рэгістрацыя"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
+msgid "Signup Expiration"
+msgstr "Заканчэнне тэрміну рэгістрацыі"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
+msgid "Signup Token"
+msgstr "Токен рэгістрацыі"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_type
+msgid "Signup Token Type"
+msgstr "Тып токена рэгістрацыі"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_valid
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_valid
+msgid "Signup Token is Valid"
+msgstr "Токен рэгістрацыі сапраўдны"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
+msgid "Signup URL"
+msgstr "URL для рэгістрацыі"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Signup is not allowed for uninvited users"
+msgstr "Рэгістрацыя без запрашэння забаронена"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_partner.py:0
+#, python-format
+msgid "Signup token '%s' is no longer valid"
+msgstr "Тэрмін дзеяння токена рэгістрацыі '%s' скончыўся"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_partner.py:0
+#, python-format
+msgid "Signup token '%s' is not valid"
+msgstr "Токен рэгістрацыі '%s' несапраўдны"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Signup: invalid template user"
+msgstr "Рэгістрацыя: несапраўдны шаблон карыстальніка"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Signup: no login given for new user"
+msgstr "Рэгістрацыя: не зададзены лагін для новага карыстальніка"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "Signup: no name or partner given for new user"
+msgstr "Рэгістрацыя: для новага карыстальніка не зададзеныя імя або партнёр"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_users__state
+msgid "Status"
+msgstr "Статус"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
+msgid "Template user for new users created through signup"
+msgstr "Шаблон для новых карыстальнікаў, створаных праз рэгістрацыю"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "The form was not properly filled in."
+msgstr "Форма запоўнена не належным чынам."
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid ""
+"To send invitations in B2B mode, open a contact or select several ones in "
+"list view and click on 'Portal Access Management' option in the dropdown "
+"menu *Action*."
+msgstr ""
+"Каб адправіць запрашэнне ў рэжыме B2B, адкрыйце кантакт або выберыце "
+"некалькі кантактаў у спісе і націсніце на «Кіраванне доступам да партала» ў "
+"выпадальным меню *Дзеянне*."
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_users
+msgid "User"
+msgstr "Карыстальнік"
+
+#. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
+#: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
+msgid "Users: Notify About Unregistered Users"
+msgstr "Карыстальнікі: Апавяшчаць пра незарэгістраваных карыстальнікаў"
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
+msgid "Welcome to {{ object.company_id.name }}!"
+msgstr "Вітаем у {{ object.company_id.name }}!"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/models/res_users.py:0
+#, python-format
+msgid "You cannot perform this action on an archived user."
+msgstr "Вы не можаце выканаць гэтае дзеянне з заархіваваным карыстальнікам."
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.fields
+#: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
+msgid "Your Email"
+msgstr "Ваш email"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.fields
+msgid "Your Name"
+msgstr "Ваша імя"
+
+#. module: auth_signup
+#: model_terms:ir.ui.view,arch_db:auth_signup.fields
+msgid "e.g. John Doe"
+msgstr "напрыклад, Іван Луцэвіч"
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.set_password_email
+msgid ""
+"{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
+"to connect to Odoo"
+msgstr ""
+"{{ object.create_uid.name }} з {{ object.company_id.name }} запрашае вас "
+"далучыцца да Odoo"

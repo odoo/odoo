@@ -3,8 +3,8 @@
 # 	* base_automation
 # 
 # Translators:
-# Andre Roomet <andreroomet@gmail.com>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
@@ -21,9 +21,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -43,19 +43,6 @@ msgid ""
 msgstr ""
 "\"\n"
 "                (ID:"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Koodiserveri toimingut saab teostada internetilehel, kasutades spetsiaalset "
-"kontrollerit. Internetilehe aadress on <base>/website/action/<website_path>."
-" Aktiveerige see väli, et kasutaja saaks teha seda toimingut. Kui väli on "
-"mitteaktiivne, siis toimingut ei saa internetilehe kaudu käivitada."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -125,14 +112,8 @@ msgid "Automation"
 msgstr "Automatiseerimine"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Saadaval internetileheküljel"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Baastegevuste reegel: kontrolli ja teosta"
 
@@ -179,19 +160,6 @@ msgid ""
 msgstr ""
 "Käivitatav alamserveri tegevus. Pange tähele, et tagastatav viimase toimingu"
 " väärtust kasutatakse kui globaalset tagastatud väärtust."
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
-msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
-"Valige SMS-i saatmise viis:\n"
-"SMS: mass-SMS\n"
-"Postita sõnumina: logi sisse dokumenti\n"
-"Postita märkusena: mass-SMS arhiividega"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -243,14 +211,14 @@ msgid "Delay type"
 msgstr "Viivituse tüüp"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr "Keela tegevus"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -280,7 +248,7 @@ msgid "Due type"
 msgstr "Tähtaja liik"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -292,6 +260,7 @@ msgid "Email Template"
 msgstr "E-kirja näidis"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -312,6 +281,7 @@ msgid "Fields that trigger the onchange."
 msgstr "Väljad, mis käivitavad  onchange'i."
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -427,6 +397,7 @@ msgid "Note"
 msgstr "Märkus"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -489,19 +460,9 @@ msgid "Responsible"
 msgstr "Vastutaja"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
-msgstr "SMS mall"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
 msgstr "Saada kui"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
-msgstr "Saada kui (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -552,6 +513,7 @@ msgid "Target Model Name"
 msgstr "Target Modeli nimetus"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -571,7 +533,7 @@ msgstr ""
 "värskendatakse. Kui need on tühjad, jälgitakse kõiki välju."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -580,11 +542,6 @@ msgid ""
 msgstr ""
 "Viga ilmnes automatiseeritud tegevuse sooritamise ajal\n"
 "                 \""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "Täispikk URL serverile veebilehe kaudu ligipääsemiseks."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -674,21 +631,12 @@ msgid "Value Mapping"
 msgstr "Väärtuste kaardistamine"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "Hoiatus"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Veebilehe teekond"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Veebilehe Url"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -732,7 +680,7 @@ msgstr ""
 "kasutuseks, pythoni väljendi abi leiab abi vahekaardilt."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -741,7 +689,7 @@ msgstr ""
 "Võite paluda administraatoril see automaatne tegevus keelata või parandada."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
@@ -749,6 +697,7 @@ msgstr ""
 "Saate selle automaatse tegevuse keelata või probleemi lahendamiseks muuta."
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""

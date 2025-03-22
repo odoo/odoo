@@ -13,16 +13,16 @@
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
 # Martin Trigaux, 2023
 # Mathias Landgraf <mathias.landgraf@ironcad4d.de>, 2023
-# Wil Odoo, 2023
-# Larissa Manderfeld, 2023
+# Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +93,12 @@ msgid "# Reconciled Statement Lines"
 msgstr "# Abgestimmte Kontoauszugszeilen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
+#: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
+msgid "# Vendor Bills"
+msgstr "# Lieferantenrechnungen"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
 msgid "# of Digits"
 msgstr "# Nachkommastellen"
@@ -151,6 +157,7 @@ msgstr "%s (Kopie)"
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -192,6 +199,13 @@ msgstr "%s Inkl. Steuern"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "%s Statement %s"
+msgstr "%s Kontoauszug %s"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -221,13 +235,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "%s Statement %s"
-msgstr "%s Kontoauszug %s"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
@@ -235,7 +242,6 @@ msgstr "%s.kopie"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move_line.py:0
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "(Discount)"
@@ -391,9 +397,13 @@ msgstr ""
 "#704A66;'>%(date)s</b>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
-msgid "<b>Early Payment Discount applied.</b>"
-msgstr "<b>Frühzahlerrabatt angewendet.</b>"
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid ""
+"<br/>\n"
+"                            on this account:"
+msgstr ""
+"<br/>\n"
+"                            auf diesem Konto:"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -673,11 +683,13 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Draft</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Draft</span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', "
-"'!=', '/'), ('quick_edit_mode', '=', True)]}\">Entwurf</span>"
+"<span attrs=\"{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), "
+"('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', "
+"True)]}\">Entwurf</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -1229,11 +1241,6 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Fälliger Betrag</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
 msgstr "<strong>Gutschriftsdatum:</strong>"
 
@@ -1287,7 +1294,7 @@ msgstr "<strong>Lieferadresse:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>Referenz:</strong>"
+msgstr "<strong>Verweis:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1543,6 +1550,22 @@ msgid ""
 msgstr ""
 "Das Konto %s erlaubt keine Abstimmung. Ändern Sie zunächst die Konfiguration"
 " dieses Kontos, um dies zuzulassen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of payable type, but is used in a sale operation."
+msgstr ""
+"%s ist ein Kreditorenkonto, aber wird in einem Verkaufsvorgang verwendet."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "Account %s is of receivable type, but is used in a purchase operation."
+msgstr ""
+"%s ist ein Debitorenkonto, aber wird in einem Einkaufsvorgang verwendet."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -2103,6 +2126,7 @@ msgstr "Aktivieren, um Verkaufsbeleg zu erstellen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__active
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__active
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,field_description:account.field_account_incoterms__active
 #: model:ir.model.fields,field_description:account.field_account_journal__active
 #: model:ir.model.fields,field_description:account.field_account_payment_term__active
@@ -2709,6 +2733,7 @@ msgstr "Kostenrechnung"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_def_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Analytic Accounts"
 msgstr "Kostenstellen"
 
@@ -2888,17 +2913,6 @@ msgid "At Date"
 msgstr "Zum Datum"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/populate/res_company.py:0
-#, python-format
-msgid ""
-"At least one localization is needed to be installed in order to populate the"
-" database with accounting"
-msgstr ""
-"Es muss mindestens eine Lokalisierung installiert sein, um die Datenbank mit"
-" Buchhaltungsdaten zu füllen."
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__to_beginning_of_fiscalyear
 msgid "At the beginning of the fiscal year"
 msgstr "Zu Beginn des Geschäftsjahres"
@@ -3013,6 +3027,7 @@ msgstr "Automatisch validieren"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/company.py:0
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Automatic Balancing Line"
@@ -3611,7 +3626,7 @@ msgstr "Storniert"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Invoice"
-msgstr "Stornierte Rechnung"
+msgstr "Stornorechnung"
 
 #. module: account
 #. odoo-python
@@ -3626,6 +3641,15 @@ msgstr "Kann kein Einkaufsdokument in einem Nicht-Einkaufsjournal erstellen"
 #, python-format
 msgid "Cannot create a sale document in a non sale journal"
 msgstr "Kann kein Verkaufsdokument in einem Nicht-Verkaufsjournal erstellen"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/accrued_orders.py:0
+#, python-format
+msgid "Cannot create an accrual entry with orders in different currencies."
+msgstr ""
+"Sie können keine Abgrenzungsbuchung mit Aufträgen in unterschiedlichen "
+"Währungen erstellen."
 
 #. module: account
 #. odoo-python
@@ -3681,13 +3705,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report_expression__carryover_target
 msgid "Carry Over To"
 msgstr "Übertragen nach"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_report.py:0
-#, python-format
-msgid "Carryover lines for: %s"
-msgstr "Übertragszeilen für: %s"
 
 #. module: account
 #. odoo-python
@@ -4212,6 +4229,7 @@ msgstr "Unternehmen mit Bezug zu diesem Partner"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax__company_id
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__company_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -4825,6 +4843,7 @@ msgstr "Erstellt am"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #, python-format
 msgid "Credit"
@@ -4939,6 +4958,7 @@ msgstr "Währungen"
 
 #. module: account
 #: model:ir.model,name:account.model_res_currency
+#: model:ir.model.fields,field_description:account.field_account_account__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__currency_id
@@ -5213,11 +5233,6 @@ msgid "DELIVERED DUTY PAID"
 msgstr "GELIEFERT VERZOLLT"
 
 #. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
-msgid "DOWN"
-msgstr "NACH UNTEN"
-
-#. module: account
 #: model:ir.ui.menu,name:account.menu_board_journal_1
 msgid "Dashboard"
 msgstr "Dashboard"
@@ -5247,6 +5262,7 @@ msgstr "Konsistenzprüfung von Daten"
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__date
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__figure_type__date
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5338,6 +5354,7 @@ msgstr "Tage zum Hinzufügen nach Monatsende"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #, python-format
 msgid "Debit"
@@ -5362,6 +5379,11 @@ msgstr "Buchungszeilen im Soll, die mit dieser Buchungszeile abgestimmt sind."
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
 msgid "December"
 msgstr "Dezember"
+
+#. module: account
+#: model:ir.model,name:account.model_decimal_precision
+msgid "Decimal Precision"
+msgstr "Dezimalstellen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__decimal_separator
@@ -5555,6 +5577,26 @@ msgstr "Lieferadresse"
 #: model:ir.model.fields,help:account.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
 msgstr "Lieferadresse für aktuelle Rechnung."
+
+#. module: account
+#: model:account.account.tag,name:account.demo_ceo_wages_account
+msgid "Demo CEO Wages Account"
+msgstr "Demo-Konto für CEO-Gehälter"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_capital_account
+msgid "Demo Capital Account"
+msgstr "Demo-Kapitalkonto"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_sale_of_land_account
+msgid "Demo Sale of Land Account"
+msgstr "Demo-Konto für Grundstücksverkäufe"
+
+#. module: account
+#: model:account.account.tag,name:account.demo_stock_account
+msgid "Demo Stock Account"
+msgstr "Demo-Warenbestandskonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__deprecated
@@ -5939,6 +5981,11 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
+msgid "Down"
+msgstr "Runter"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Download"
 msgstr "Herunterladen"
@@ -6089,17 +6136,6 @@ msgid "Duplicated Ref"
 msgstr "Duplizierte Ref."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"Duplicated vendor reference detected. You probably encoded twice the same "
-"vendor bill/credit note."
-msgstr ""
-"Duplizierte Lieferantenreferenz wurde erkannt. Wahrscheinlich haben Sie "
-"zweimal dieselbe Lieferantenrechnung/Gutschrift erfasst."
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Dynamische Berichte"
@@ -6163,6 +6199,11 @@ msgstr "Frühzahlerrabattmodus"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__discount_percentage
 msgid "Early Payment Discount granted for this line"
 msgstr "Für diese Position gewährter Frühzahlungsrabatt"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "Early Payment Discount of"
+msgstr "Frühzahlerrabatt von"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -6564,6 +6605,11 @@ msgstr "Buchungsjournal"
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line_template__tag_ids
 msgid "Financial Tags"
 msgstr "Finanzielle Stichwörter"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_financing
+msgid "Financing Activities"
+msgstr "Finanzielle Aktivitäten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__payment_ref_regex
@@ -7018,8 +7064,8 @@ msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
 msgstr ""
-"Lücken aufgrund von stornierten Rechnungen, gelöschten Einträgen oder "
-"manuellen Fehlern in offenen Perioden."
+"Lücken aufgrund von Stornorechnungen, gelöschten Buchungen oder manuellen "
+"Fehlern in offenen Perioden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -7142,11 +7188,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
 msgid "Growth Comparison"
 msgstr "Wachstumsvergleich"
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
-msgid "HALF-UP"
-msgstr "AUF NÄCHSTE HALBE ZAHL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
@@ -7896,6 +7937,14 @@ msgstr ""
 "Bereichsmaschine"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__tax_tags_formula
+msgid ""
+"Internal field to shorten expression_ids creation for the tax_tags engine"
+msgstr ""
+"Internes Feld zur Verkürzung der Erstellung von expression_ids für die "
+"Maschine tax_tags"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_payment__invoice_incoterm_id
@@ -7922,8 +7971,19 @@ msgstr "Ungültig"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 #, python-format
-msgid "Invalid \"Zip Range\", please configure it properly."
-msgstr "Ungültiger „PLZ-Bereich“, bitte richtig konfigurieren."
+msgid ""
+"Invalid \"Zip Range\", You have to configure both \"From\" and \"To\" values"
+" for the zip range and \"To\" should be greater than \"From\"."
+msgstr ""
+"Ungültiger „PLZ-Bereich“. Sie müssen die Werte „Von“ und „Bis“ für den PLZ-"
+"Bereich festlegen und „Bis“ sollte größer als „Von“ sein."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr "Ungültiger Bereich für Ausdruck „%s“ der Zeile „%s“: %s"
 
 #. module: account
 #. odoo-python
@@ -7936,6 +7996,11 @@ msgstr "Ungültiger letzter Tag des Geschäftsjahres"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_tag_invert
 msgid "Invert Tags"
 msgstr "Stichwörter umkehren"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_investing
+msgid "Investing & Extraordinary Activities"
+msgstr "Investitionen & Außerordentliche Aktivitäten"
 
 #. module: account
 #. odoo-python
@@ -7951,7 +8016,7 @@ msgstr "Stichwörter umkehren"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #, python-format
 msgid "Invoice"
-msgstr "Ausgangsrechnung"
+msgstr "Rechnung"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -8264,6 +8329,12 @@ msgid "Is Between"
 msgstr "Ist zwischen"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
+#: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+msgid "Is Coa Installed"
+msgstr "Ist Kontenplan installiert"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
@@ -8397,6 +8468,7 @@ msgstr "Januar"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__linked_journal_id
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -9466,6 +9538,11 @@ msgid "Memo:"
 msgstr "Vermerk:"
 
 #. module: account
+#: model:ir.model,name:account.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Assistent zum Zusammenführen von Partnern"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_has_error
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_has_error
@@ -9696,6 +9773,11 @@ msgstr ""
 "den Zahlen verbirgt"
 
 #. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
+msgid "Nearest"
+msgstr "Nächste halbe Zah"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_move__needed_terms
 #: model:ir.model.fields,field_description:account.field_account_payment__needed_terms
@@ -9718,6 +9800,13 @@ msgstr "Steuerbilanz negieren"
 #: model:ir.model.fields,help:account.field_account_payment__amount_signed
 msgid "Negative value of amount field if payment_type is outbound"
 msgstr "Negativer Wert des Betragsfeldes, wenn payment_type ausgehend ist"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+#, python-format
+msgid "Nested group of taxes are not allowed."
+msgstr "Eingebettete Steuergruppen sind nicht erlaubt."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__never
@@ -9750,6 +9839,16 @@ msgstr "Neue Werte"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__new_first
 msgid "Newest first"
 msgstr "Neueste zuerst"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_journal__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_move__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_payment__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_calendar_event_id
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Nächstes Aktivitätskalenderereignis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__activity_date_deadline
@@ -10163,6 +10262,11 @@ msgid "Off-Balance Sheet"
 msgstr "Außerbilanziell"
 
 #. module: account
+#: model:account.account.tag,name:account.demo_office_furniture_account
+msgid "Office Furniture"
+msgstr "Büromöbel"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__matching_order__old_first
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__matching_order__old_first
 msgid "Oldest first"
@@ -10295,13 +10399,6 @@ msgid "Open"
 msgstr "Offen"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "Open list"
-msgstr "Offene Liste"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
 msgid "Opening Balance"
 msgstr "Eröffnungssaldo"
@@ -10351,11 +10448,15 @@ msgstr "Eröffnungsposten gebucht"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid "Opening balance"
 msgstr "Eröffnungssaldo"
+
+#. module: account
+#: model:account.account.tag,name:account.account_tag_operating
+msgid "Operating Activities"
+msgstr "Betriebliche Aktivitäten"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -10411,7 +10512,7 @@ msgstr "Oder senden Sie eine Rechnung an %s@%s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__ordering
 msgid "Ordering"
-msgstr "Bestellen"
+msgstr "Reihenfolge"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_origin
@@ -10722,6 +10823,7 @@ msgstr "Teilzahlung"
 #: model:ir.model.fields,field_description:account.field_account_move_line__partner_id
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_partner_mapping__partner_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -10798,6 +10900,15 @@ msgstr "Partnerzuordnung für Abstimmungsmodelle"
 #, python-format
 msgid "Partners"
 msgstr "Partner"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid "Partners that are used in hashed entries cannot be merged."
+msgstr ""
+"Partner, die in Hash-Einträgen verwendet werden, können nicht "
+"zusammengeführt werden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11767,6 +11878,11 @@ msgid "Reconciliation Parts"
 msgstr "Abstimmungsteile"
 
 #. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Eine neue Lieferantenrechnung erfassen"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
@@ -12162,6 +12278,7 @@ msgstr "Buchungen stornieren"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__reversed
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reversed"
@@ -12191,7 +12308,7 @@ msgstr "Global runden"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_per_line
 msgid "Round per Line"
-msgstr "In Zeile runden"
+msgstr "Je Zeile runden"
 
 #. module: account
 #. odoo-javascript
@@ -12794,6 +12911,14 @@ msgid "Set a price"
 msgstr "Legen Sie einen Preis fest"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,help:account.field_res_users__use_partner_credit_limit
+msgid "Set a value greater than 0.0 to activate a credit limit check"
+msgstr ""
+"Legen Sie einen Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu "
+"aktivieren."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__active
 msgid "Set active to false to hide the Account Tag without removing it."
 msgstr ""
@@ -12808,6 +12933,7 @@ msgstr ""
 "entfernen."
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position_tax__tax_dest_active
 #: model:ir.model.fields,help:account.field_account_tax__active
 #: model:ir.model.fields,help:account.field_account_tax_template__active
 msgid "Set active to false to hide the tax without removing it."
@@ -13405,6 +13531,11 @@ msgid "Tax"
 msgstr "Steuer"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Tax 15%"
+msgstr "Steuer 15 %"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Tax Advance Account"
 msgstr "Steuervorschusskonto"
@@ -13603,6 +13734,11 @@ msgstr "Steuerzeichenkette"
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__tax_tags
 msgid "Tax Tags"
 msgstr "Steuer-Stichwörter"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__tax_tags_formula
+msgid "Tax Tags Formula Shortcut"
+msgstr "Kürzel für Steueretikett-Formel"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
@@ -13935,6 +14071,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid ""
+"The Availability is set to 'Country Matches' but the field Country is not "
+"set."
+msgstr ""
+"Die Verfügbarkeit ist auf „Land stimmt überein“ gesetzt, aber das Feld "
+"„Land“ ist nicht gesetzt."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The Bill/Refund date is required to validate this document."
@@ -14159,6 +14306,17 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Das Unternehmen, zu dem diese Verteilungszeile gehört."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
+"The country code of the foreign VAT number does not match any country in the"
+" group."
+msgstr ""
+"Der Ländercode der ausländischen USt.-Nummer stimmt mit keinem Land in "
+"dieser Gruppe überein."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__country_id
@@ -14515,6 +14673,7 @@ msgstr ""
 "z. B.: .*N°48748 abc123.*"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -14805,6 +14964,17 @@ msgstr ""
 "bereits vorhandene Fremdwährungsbeträge verloren gehen."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment.py:0
+#, python-format
+msgid ""
+"The selected payment method is not available for this payment, please select"
+" the payment method again."
+msgstr ""
+"Die ausgewählte Zahlungsmethode ist für diese Zahlung nicht verfügbar. Bitte"
+" wählen Sie eine andere Zahlungsmethode."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
@@ -14849,6 +15019,21 @@ msgid ""
 msgstr ""
 "Die Sequenz wird niemals neu gestartet.\n"
 "Die fortlaufende Nummer ist in diesem Fall „%(formatted_seq)s“."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The sequence will restart at 1 at the start of every financial year.\n"
+"The financial start year detected here is '%(year)s'.\n"
+"The financial end year detected here is '%(year_end)s'.\n"
+"The incrementing number in this case is '%(formatted_seq)s'."
+msgstr ""
+"Die Sequenz beginnt zu Beginn eines jeden Geschäftsjahres wieder bei 1.\n"
+"Der hier ermittelte Start des Geschäftsjahres ist „%(year)s“.\n"
+"Das hier ermittelte Ende des Geschäftsjahres ist „%(year_end)s“.\n"
+"Die aufsteigende Nummer ist in diesem Fall „%(formatted_seq)s“."
 
 #. module: account
 #. odoo-python
@@ -15291,6 +15476,16 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with a payment method. You cannot archive it"
+msgstr ""
+"Dieses Journal ist mit einer Zahlungsmethode verbunden. Sie können es nicht "
+"archivieren"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "This journal is not in strict mode."
@@ -15340,8 +15535,7 @@ msgstr "Dieser Buchungssatz wird zum Buchungsdatum gebucht: %(date)s"
 
 #. module: account
 #. odoo-javascript
-#: code:addons/account/static/src/components/account_move_form/account_move_form.js:0
-#: code:addons/account/static/src/components/account_move_list/account_move_list.js:0
+#: code:addons/account/static/src/components/account_move_service/account_move_service.js:0
 #, python-format
 msgid "This operation will create a gap in the sequence."
 msgstr "Dieser Vorgang verursacht eine Lücke in der Sequenz"
@@ -15692,12 +15886,11 @@ msgstr "Übertragung nach %s"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
-"Trigger alerts when creating Invoices and Sales Orders for Partners with a "
-"Total Receivable amount exceeding a limit."
+"Trigger alerts when creating Invoices and Sales Orders for Partners with a Total Receivable amount exceeding a limit.\n"
+"                                        <br/><small>Set a value greater than 0.0 to activate a credit limit check</small>"
 msgstr ""
-"Auslösen von Warnungen bei der Erstellung von Rechnungen und "
-"Verkaufsaufträgen für Partner, deren Gesamtforderungsbetrag eine bestimmte "
-"Grenze überschreitet."
+"Auslösen von Warnungen bei der Erstellung von Rechnungen und Verkaufsaufträgen für Partner, deren Gesamtforderungsbetrag eine bestimmte Grenze überschreitet.\n"
+"                                       <br/><small>Legen Sie einen Wert, der größer als 0,0 ist, um eine Kreditlimitprüfung zu aktivieren.</small>"
 
 #. module: account
 #. odoo-python
@@ -15758,11 +15951,6 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_partner_bank__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Typ der Ausnahmeaktivität im Datensatz."
-
-#. module: account
-#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
-msgid "UP"
-msgstr "NACH OBEN"
 
 #. module: account
 #. odoo-python
@@ -15914,6 +16102,11 @@ msgstr "Gesamter Nettobetrag"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "UoM"
 msgstr "Maßeinheit"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
+msgid "Up"
+msgstr "Hoch"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16210,8 +16403,10 @@ msgstr "Lieferantenrechnung erstellt"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
+#: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.res_partner_view_search
 #, python-format
@@ -16271,6 +16466,19 @@ msgstr "Lieferant:"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Vendors"
 msgstr "Lieferanten"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid ""
+"Vendors bills can be pre-generated based on purchase\n"
+"                orders or receipts. This allows you to control bills\n"
+"                you receive from your vendor according to the draft\n"
+"                document in Odoo."
+msgstr ""
+"Lieferantenrechnungen können vorab auf Grundlage\n"
+"                von Bestellungen oder Lieferungen erstellt werden. Dies\n"
+"                ermöglicht Ihnen die Kontrolle über die Rechnungen,\n"
+"                die Sie von Lieferanten auf Grundlage der Rechnungsentwürfe in Odoo erhalten."
 
 #. module: account
 #. odoo-javascript
@@ -16571,13 +16779,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid "You can only print the original document for purchase documents."
-msgstr "Sie können das Originaldokument nur für Einkaufsdokumente drucken."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
@@ -16699,7 +16900,7 @@ msgstr "Sie können keinen Bericht löschen, der Varianten hat."
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_payment_method.py:0
+#: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
@@ -16766,11 +16967,11 @@ msgstr ""
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid ""
-"You can't register payments for journal items being either all inbound, "
-"either all outbound."
+"You can't register payments for both inbound and outbound moves at the same "
+"time."
 msgstr ""
-"Sie können keine Zahlungen für Buchungszeilen erfassen, die entweder alle "
-"eingehend oder alle ausgehend sind."
+"Sie können nicht gleichzeitig Zahlungen für sowohl ein- als auch ausgehende "
+"Bewegungen registrieren."
 
 #. module: account
 #. odoo-python
@@ -16832,6 +17033,17 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid ""
+"You cannot create a fiscal position with a country outside of the selected "
+"country group."
+msgstr ""
+"Sie können keine Steuerposition mit einem Land außerhalb der ausgewählten "
+"Ländergruppe erstellen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+#, python-format
+msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
 msgstr ""
@@ -16874,6 +17086,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot create recursive groups."
+msgstr "Sie können keine rekursiven Gruppen erstellen."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16903,6 +17122,17 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid ""
+"You cannot delete this account tag (%s), it is used on the chart of account "
+"definition."
+msgstr ""
+"Sie können dieses Konto-Stichwort (%s) nicht löschen, sie wird für die "
+"Definition des Kontenplans verwendet."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid ""
@@ -16912,6 +17142,26 @@ msgstr ""
 "Sie können diesen Eintrag nicht löschen, da er bereits eine Folgenummer "
 "erhalten hat und nicht der letzte Eintrag in der Kette ist. Vermutlich "
 "sollten Sie ihn stattdessen rückgängig machen."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"You cannot delete this report (%s), it is used by the accounting PDF "
+"generation engine."
+msgstr ""
+"Sie können diesen Bericht nicht löschen (%s), er wird von der PDF-"
+"Generierungsmaschine der Buchhaltung verwendet."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot deprecate an account that is used in a tax distribution."
+msgstr ""
+"Ein Konto, das für eine Steuerverteilung verwendet wird, kann nicht "
+"abgeschrieben werden."
 
 #. module: account
 #. odoo-python
@@ -17005,17 +17255,24 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/company.py:0
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted.                 If you are absolutely sure you want to "
+"modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
-"Sie können das „openning_balance“ nicht importieren, wenn die "
-"Eröffnungsbuchung (%s) schon gebucht ist.                         Wenn Sie "
-"sich absolut sicher sind, dass Sie den Eröffnungssaldo Ihrer Konten ändern "
+"Sie können den „openning_balance“ nicht importieren, wenn die "
+"Eröffnungsbuchung (%s) schon gebucht ist.                   wenn Sie sich "
+"absolut sicher sind, dass Sie den Eröffnungssaldo Ihrer Konten ändern "
 "wollen, setzen Sie die Buchung auf Entwurf zurück."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "You cannot merge accounts."
+msgstr "Sie können keine Konten zusammenführen."
 
 #. module: account
 #. odoo-python
@@ -17166,10 +17423,12 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
+#: code:addons/account/models/account_move.py:0
 #, python-format
-msgid "You cannot switch the type of a posted document."
-msgstr "Sie können die Art eines gebuchten Dokuments nicht ändern."
+msgid "You cannot switch the type of a document which has been posted once."
+msgstr ""
+"Sie können die Art eines Dokuments nicht ändern, wenn es bereits gebucht "
+"wurde."
 
 #. module: account
 #. odoo-python
@@ -17499,6 +17758,11 @@ msgstr ""
 "bezahlt zu markieren."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
+msgid "has been applied."
+msgstr "wurde angewandt."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "here"
 msgstr "hier"
@@ -17690,12 +17954,6 @@ msgstr "{label}: Berichtigungsbuchung vom {new_date}"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "{percent:0.2f}% recognized on {new_date}"
-msgstr "{percent:0.2f}% realisiert am {new_date}"
-
-#. module: account
-#. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent:0.2f}% to recognize on {new_date}"

@@ -4,10 +4,10 @@ import base64
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import tests
+from odoo import http, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.gamification.tests.common import HttpCaseGamification
-from odoo.fields import Datetime
+from odoo.fields import Command, Datetime
 from odoo.modules.module import get_module_resource
 
 
@@ -197,6 +197,11 @@ class TestUiPublisher(HttpCaseGamification):
                 (4, self.env.ref('website_slides.group_website_slides_manager').id)
             ],
         })
+        self.env['slide.channel.tag.group'].create([{
+            'name': 'Your Favorite Role',
+            'tag_ids': [Command.create({'name': 'Gardening'})]}
+        ])
+        self.env['slide.tag'].create({'name': 'Practice'})
 
         self.browser_js(
             self.env['website'].get_client_action_url('/slides'),
@@ -233,3 +238,17 @@ class TestUiPublisherYoutube(HttpCaseGamification):
             'odoo.__DEBUG__.services["web_tour.tour"].run("course_publisher")',
             'odoo.__DEBUG__.services["web_tour.tour"].tours.course_publisher.ready',
             login=user_demo.login)
+
+@tests.common.tagged('external', 'post_install', '-standard', '-at_install')
+class TestPortalComposer(TestUICommon):
+    def test_portal_composer_attachment(self):
+        """Check that the access token is returned when we upload an attachment."""
+        self.authenticate('demo', 'demo')
+        response = self.url_open('/portal/attachment/add', data={
+            'name': 'image.png',
+            'res_id': self.channel.id,
+            'res_model': 'slide.channel',
+            'csrf_token': http.WebRequest.csrf_token(self),
+        }, files={'file': ('image.png', '', 'image/png')})
+        self.assertTrue(response.ok)
+        self.assertTrue(response.json().get('access_token'))

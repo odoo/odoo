@@ -79,7 +79,7 @@
        <record id="action_report_crm_lead_salesteam" model="ir.actions.act_window">
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.lead</field>
-           <field name="context">{'search_default_team_id': [active_id], 'search_default_filter_create_date': 1}}</field>
+           <field name="context">{'search_default_team_id': [active_id], 'search_default_filter_create_date': 1}</field>
            <field name="domain">[]</field>
            <field name="view_mode">graph,pivot,tree,form</field>
            <field name="view_id" ref="crm_lead_view_graph"/>
@@ -167,7 +167,7 @@
                             string="Email Alias" required="0"
                             attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                         <div class="oe_inline" name="edit_alias" style="display: inline;" >
-                            <div class="oe_edit_only" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <div class="oe_edit_only" attrs="{'invisible': [('alias_domain', '=', False)]}" dir="ltr">
                                 <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </div>
                             <button icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>

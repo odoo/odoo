@@ -6,16 +6,16 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Tony Ng, 2023
+# Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -833,7 +833,7 @@ msgstr "對齊"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid "Aline Turner, CTO"
-msgstr "Aline Turner，技術長"
+msgstr "Aline Turner，技術總監"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
@@ -971,6 +971,22 @@ msgstr "已封存"
 
 #. module: mass_mailing
 #. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Are you sure you want to unsubscribe from our mailing list?"
+msgstr "確定要取消訂閱我們的郵寄清單？"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"Are you sure you want to unsubscribe from the mailing list "
+"\"%(unsubscribed_lists)s\"?"
+msgstr "確定要取消訂閱郵寄清單「%(unsubscribed_lists)s」？"
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid ""
@@ -987,7 +1003,7 @@ msgstr "附加一個文件"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_attachment_count
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__attachment_ids
@@ -1500,6 +1516,13 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr "繼續閱讀 <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr "未能讀取網址： %s"
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -1656,7 +1679,7 @@ msgstr "刪除區塊"
 msgid ""
 "Delete the above image or replace it with a picture that illustrates your "
 "message. Click on the picture to change its <em>rounded corner</em> style."
-msgstr "刪除上圖或將其替換為說明消息的圖片。按一下圖片可更改圓<em>角</em>樣式。"
+msgstr "刪除上方圖片，或以一張能夠表達你的訊息的圖片取代。在圖片上按一下，可修改它的<u>圓角樣式</u>。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__delivered
@@ -1711,7 +1734,7 @@ msgstr "目標信件列表"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_schedule_date_view_form
 msgid "Discard"
-msgstr "取消"
+msgstr "捨棄"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1886,7 +1909,7 @@ msgstr "信件撰寫嚮導"
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "Emails"
-msgstr "電子信件"
+msgstr "電郵"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_trace_ids
@@ -2015,6 +2038,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "%(email)s 的回應： %(feedback)s"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "文件大小超出設定的最大值 (%s bytes)"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "篩選"
@@ -2090,7 +2121,7 @@ msgstr "頁尾"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind the company. "
-"He lovesto keep his hands full by participating in the development of the "
+"He loves to keep his hands full by participating in the development of the "
 "software, marketing, and customer experience strategies."
 msgstr "作為創辦人兼首席遠見者，Tony 是公司背後的推動力。他喜歡參與軟件開發、推廣和客戶體驗策略，來保持忙碌。"
 
@@ -2139,6 +2170,11 @@ msgstr "分組方式"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "分組方式⋯"
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "http路由"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2264,7 +2300,7 @@ msgstr "如果設定，將建立群發郵件，讓你可在電郵推廣應用程
 msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
-msgstr "存在於黑名單的電子信件表示收件者不會再收到任何列表的群發信件。"
+msgstr "若電郵地址在黑名單中，相關聯絡人不會再收到任何清單的群發郵件"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -2280,6 +2316,14 @@ msgstr "左圖右文"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "圖文圖"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr "圖片尺寸過大，匯入圖片必須小於4200萬像素"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -2620,17 +2664,17 @@ msgstr "郵寄"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__campaign
 msgid "Mailing Campaign"
-msgstr "信件行銷"
+msgstr "郵件推廣活動"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
 msgid "Mailing Campaigns"
-msgstr "信件行銷"
+msgstr "郵件推廣活動"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact
 msgid "Mailing Contact"
-msgstr "郵寄連絡人"
+msgstr "郵件聯絡人"
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_import
@@ -2857,7 +2901,7 @@ msgstr "群發信件分析"
 #: model:ir.model.fields,field_description:mass_mailing.field_mail_compose_message__campaign_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Mass Mailing Campaign"
-msgstr "群發信件行銷"
+msgstr "群發郵件推廣活動"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_account_invoice_send__mass_mailing_name
@@ -2963,7 +3007,7 @@ msgstr "訊息"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid "Mich Stark, COO"
-msgstr "Mich Stark，運營長"
+msgstr "Mich Stark，營運總監"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
@@ -3051,7 +3095,7 @@ msgstr "名稱"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Name / Email"
-msgstr "姓名/電子信件"
+msgstr "名稱 / 電郵"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
@@ -3248,7 +3292,7 @@ msgstr "收件人數量"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_kanban
 msgid "Number of bounced email."
-msgstr "已退回電子信件的數量。"
+msgstr "彈回電郵數目。"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error_counter
@@ -3906,7 +3950,7 @@ msgstr "郵件發送一天後，向郵寄負責人發送報告。"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_test_form
 msgid "Send a sample mailing for testing purpose to the address below."
-msgstr "發送測試用的範例郵件至以下地址。"
+msgstr "向以下地址發送測試用的範例郵件。"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_mailing__schedule_type__now
@@ -4362,13 +4406,13 @@ msgstr "此欄位用於搜索電子郵件地址，因為主電子郵件欄位可
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__group_mass_mailing_campaign
 msgid ""
 "This is useful if your marketing campaigns are composed of several emails"
-msgstr "如果您的市場行銷活動由多個電子信件組成，則此工具十分有用"
+msgstr "若你的推廣計劃牽涉多封電子郵件，此功能會很有用"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid ""
 "This is useful if your marketing campaigns are composed of several emails."
-msgstr "如果您的市場行銷活動由多個電子信件組成，則此工具十分有用。"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
@@ -4381,13 +4425,13 @@ msgstr "此郵寄尚未選定設計！"
 msgid ""
 "This tool is advised if your marketing campaign is composed of several "
 "emails."
-msgstr "如果您的市場行銷活動由多個電子信件組成，則建議使用此工具。"
+msgstr "若你的推廣計劃牽涉多封電子郵件，建議使用此工具。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid ""
 "This will send the email to all recipients. Do you still want to proceed ?"
-msgstr "這將發送電子信件給所有收件人。是否仍要繼續？"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__reply_to_mode
@@ -4484,7 +4528,7 @@ msgstr "讓每一個功能變成對你的讀者有利。"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.social_links
 msgid "Twitter"
-msgstr "推特"
+msgstr "Twitter"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__trace_type
@@ -4530,9 +4574,12 @@ msgid "Unknown error"
 msgstr "未知的錯誤"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+#, python-format
 msgid "Unsubscribe"
 msgstr "退訂"
 
@@ -4545,13 +4592,6 @@ msgstr "取消訂閱"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "取消訂閱日期"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "不支援的群發郵件模型 %s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -4600,7 +4640,7 @@ msgid ""
 "Use this snippet to build various types of components that feature a left- "
 "or right-aligned image alongside textual content. Duplicate the element to "
 "create a list that fits your needs."
-msgstr "使用此小片段建構各類型組件，這些組件有向左或向右對齊的圖像，旁邊附以文字內容。複製該元素以建立適合你需要的列表。"
+msgstr "使用此小摘要，建構各類型組件，這些組件有向左或向右對齊的圖像，旁邊附以文字內容。複製該元素以建立適合你需要的列表。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_numbers
@@ -4672,7 +4712,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
 msgid "We are in good company."
-msgstr "有很多人都是這樣。"
+msgstr "一致好評"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -4760,7 +4800,7 @@ msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
 "feature.<br/> To be successful your content needs to be useful to your "
 "readers."
-msgstr "寫一兩段話描述你的產品、服務或特定的功能.<br/>這些話要有效，內容必須是對讀者有用的."
+msgstr "寫一兩段文字，描述你的產品或服務，或個別特色及功能。<br/>成功的內容必須對讀者有用。"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form

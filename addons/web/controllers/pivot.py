@@ -5,6 +5,8 @@ from collections import deque
 import io
 import json
 
+from werkzeug.datastructures import FileStorage
+
 from odoo import http, _
 from odoo.http import content_disposition, request
 from odoo.tools import ustr, osutil
@@ -19,7 +21,7 @@ class TableExporter(http.Controller):
 
     @http.route('/web/pivot/export_xlsx', type='http', auth="user")
     def export_xlsx(self, data, **kw):
-        jdata = json.loads(data)
+        jdata = json.load(data) if isinstance(data, FileStorage) else json.loads(data)
         output = io.BytesIO()
         workbook = xlsxwriter.Workbook(output, {'in_memory': True})
         worksheet = workbook.add_worksheet(jdata['title'])

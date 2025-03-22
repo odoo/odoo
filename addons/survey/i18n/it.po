@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Wil Odoo, 2025
+# Marianna Ciofani, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +73,13 @@ msgstr "% completato"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copia)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr "%s Voti"
 
 #. module: survey
 #. odoo-python
@@ -1355,7 +1363,6 @@ msgid "Cliff Burton"
 msgstr "Cliff Burton"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1509,8 +1516,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Scrivania angolare destra"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2392,8 +2399,8 @@ msgstr ""
 "considerata una risposta con relativo punteggio."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3353,8 +3360,8 @@ msgid "Partial"
 msgstr "Parziale"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3545,6 +3552,11 @@ msgstr "Stampa"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "Prodotti"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr "URL condiviso pubblicamente"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -4616,8 +4628,8 @@ msgid "This is a Test Survey."
 msgstr "Sondaggio di prova."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4837,8 +4849,8 @@ msgstr ""
 "mittente."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4893,6 +4905,11 @@ msgstr ""
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "Utilizzare humor e fare battute"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Modello da usare"
 
 #. module: survey
 #. odoo-javascript
@@ -5314,6 +5331,7 @@ msgstr ""
 "corso delle sessioni dal vivo."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5417,11 +5435,6 @@ msgstr "Tentativi"
 #, python-format
 msgid "close"
 msgstr "chiudi"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

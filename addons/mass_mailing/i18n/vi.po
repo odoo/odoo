@@ -6,15 +6,16 @@
 # Duy BQ <duybq86@gmail.com>, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -629,7 +630,7 @@ msgstr "Một tiêu đề tuyệt vời"
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_contact_list_rel_unique_contact_list
 msgid ""
 "A mailing contact cannot subscribe to the same mailing list multiple times."
-msgstr "Một liên hệ không thể đăng ký cùng một danh sách gửi thư nhiều lần."
+msgstr "Một liên hệ không thể đăng ký cùng một danh sách liên hệ nhiều lần."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.ab_testing_description
@@ -716,7 +717,7 @@ msgstr "Tùy chọn thử nghiệm A/B không được bật"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__active
@@ -758,7 +759,7 @@ msgid ""
 msgstr ""
 "Điều chỉnh ba cột này để phù hợp với nhu cầu thiết kế của bạn. Để sao chép, "
 "xóa hoặc di chuyển cột, hãy chọn cột và sử dụng các biểu tượng trên cùng để "
-"thực hiện hành động của bạn."
+"thực hiện tác vụ của bạn."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -771,7 +772,7 @@ msgstr "Thêm"
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_to_list
 msgid "Add Contacts to Mailing List"
-msgstr "Thêm liên hệ vào danh sách gửi thư"
+msgstr "Thêm liên hệ vào danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -781,7 +782,7 @@ msgstr "Thêm liên hệ gửi thư"
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.mailing_contact_to_list_action
 msgid "Add Selected Contacts to a Mailing List"
-msgstr "Thêm liên hệ được chọn vào danh sách gửi thư"
+msgstr "Thêm liên hệ được chọn vào danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -991,7 +992,7 @@ msgstr "Lưu trữ"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__archive_src_lists
 msgid "Archive source mailing lists"
-msgstr "Lưu trữ nguồn danh sách gửi thư"
+msgstr "Lưu trữ danh sách liên hệ nguồn"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -1000,6 +1001,24 @@ msgstr "Lưu trữ nguồn danh sách gửi thư"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_search
 msgid "Archived"
 msgstr "Đã lưu"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Are you sure you want to unsubscribe from our mailing list?"
+msgstr "Bạn có chắc chắn muốn hủy đăng ký nhận thư của chúng tôi không?"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"Are you sure you want to unsubscribe from the mailing list "
+"\"%(unsubscribed_lists)s\"?"
+msgstr ""
+"Bạn có chắc chắn muốn hủy đăng ký khỏi danh sách liên hệ "
+"\"%(unsubscribed_lists)s\" không?"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1184,7 +1203,7 @@ msgid ""
 "issues, ...). Check each record to see what went wrong."
 msgstr ""
 "Trả về xảy ra khi không thể gửi thư (địa chỉ giả, sự cố máy chủ,...). Hãy "
-"kiểm tra từng tập dữ liệu để xem điều gì đã xảy ra."
+"kiểm tra từng bản ghi để xem điều gì đã xảy ra."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__bounced
@@ -1236,7 +1255,7 @@ msgstr "Ngày theo lịch"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Call to Action"
-msgstr "Nút hành động"
+msgstr "Kêu gọi hành động"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__campaign_id
@@ -1541,6 +1560,13 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr "Tiếp tục đọc <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr "Không thể truy xuất URL: %s"
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -1752,7 +1778,7 @@ msgstr "Thiết kế đã được loại khỏi %s mẫu!"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__dest_list_id
 msgid "Destination Mailing List"
-msgstr "Đích đến của danh sách mail"
+msgstr "Đích đến của danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2065,6 +2091,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "Feedback from %(email)s: %(feedback)s"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "Tập tin vượt quá dung lượng tối đa (%s bytes)"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "Bộ lọc"
@@ -2124,23 +2158,23 @@ msgstr "Font biểu tượng ví dụ: fa-tasks"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footer Center"
-msgstr "Căn giữa lề dưới"
+msgstr "Căn giữa footer"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footer Left"
-msgstr "Căn trái lề dưới"
+msgstr "Căn trái footer"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footers"
-msgstr "Footers"
+msgstr "Footer"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind the company. "
-"He lovesto keep his hands full by participating in the development of the "
+"He loves to keep his hands full by participating in the development of the "
 "software, marketing, and customer experience strategies."
 msgstr ""
 "Là nhà sáng lập và có tầm nhìn xa trông rộng, Tony là động lực phát triển "
@@ -2197,6 +2231,11 @@ msgid "Group By..."
 msgstr "Nhóm theo..."
 
 #. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "Định tuyến HTTP"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__has_message
 msgid "Has Message"
@@ -2205,7 +2244,7 @@ msgstr "Có tin nhắn"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Headers"
-msgstr "Tiêu đề"
+msgstr "Header"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
@@ -2274,7 +2313,7 @@ msgid ""
 msgstr ""
 "ID của mail_mail liên quan. Trường này là trường số nguyên vì mail_mail có "
 "liên quan có thể bị xóa tách biệt khỏi thống kê của nó. Tuy nhiên ID là cần "
-"thiết cho một số hành động và bộ điều khiển."
+"thiết cho một số tác vụ và bộ điều khiển."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__activity_exception_icon
@@ -2321,7 +2360,7 @@ msgid ""
 "the Email Marketing app."
 msgstr ""
 "Nếu thiết lập, thư hàng loạt sẽ được tạo để bạn có thể theo dõi kết quả "
-"trong ứng dụng Marketing qua Email."
+"trong ứng dụng Marketing qua email."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__is_blacklisted
@@ -2347,6 +2386,14 @@ msgstr "Hình ảnh - Văn bản"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "Ảnh chữ ảnh"
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr "Kích cỡ ảnh quá lớn, ảnh được nhập phải nhỏ hơn 42 triệu pixel."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -2381,7 +2428,7 @@ msgstr "Nhập liên hệ gửi thư"
 #: code:addons/mass_mailing/models/mailing_contact.py:0
 #, python-format
 msgid "Import Template for Mailing List Contacts"
-msgstr "Nhập mẫu liên hệ cho danh sách gửi thư"
+msgstr "Nhập mẫu liên hệ cho danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
@@ -2733,7 +2780,7 @@ msgstr "Bộ lọc thư"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_to_list__mailing_list_id
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__name
 msgid "Mailing List"
-msgstr "Danh sách Mailing"
+msgstr "Danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.actions.act_window,name:mass_mailing.action_view_mass_mailing_contacts
@@ -2744,7 +2791,7 @@ msgstr "Danh sách Mailing"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Mailing List Contacts"
-msgstr "Liên hệ của danh sách mail"
+msgstr "Liên hệ của danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_subscription_view_form
@@ -2768,7 +2815,7 @@ msgstr "Mailing List Subscriptions"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Mailing Lists"
-msgstr "Danh sách Mail"
+msgstr "Danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_report_deactivated
@@ -2963,7 +3010,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_mailing_contact_subscription
 msgid "Mass Mailing Subscription Information"
-msgstr "Thông tin đăng ký gửi thư hàng loạt"
+msgstr "Thông tin đăng ký thư hàng loạt"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__mailing_ids
@@ -3001,7 +3048,7 @@ msgstr "Hợp nhất"
 #: model:ir.model,name:mass_mailing.model_mailing_list_merge
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_merge_view_form
 msgid "Merge Mass Mailing List"
-msgstr "Gộp danh sách gửi thư"
+msgstr "Gộp danh sách liên hệ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__merge_options
@@ -3011,12 +3058,12 @@ msgstr "Lựa chọn gộp"
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__new
 msgid "Merge into a new mailing list"
-msgstr "Gộp vào một danh sách mail mới"
+msgstr "Gộp vào một danh sách liên hệ mới"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_list_merge__merge_options__existing
 msgid "Merge into an existing mailing list"
-msgstr "Gộp với một danh sách gửi thư có sẵn"
+msgstr "Gộp với một danh sách liên hệ có sẵn"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_has_error
@@ -3047,9 +3094,9 @@ msgid ""
 "Commercial Director in the software industry, Mich has helped the company to"
 " get where it is today. Mich is among the best minds."
 msgstr ""
-"Mịch rất thích thử thách. Với kinh nghiệm nhiều năm làm Giám đốc Thương mại "
-"trong ngành phần mềm, ông Mịch đã giúp công ty có được vị trí như ngày hôm "
-"nay. Mịch nằm trong số những người tâm đầu ý hợp."
+"Mich rất thích thử thách. Với kinh nghiệm nhiều năm làm Giám đốc Thương mại "
+"trong ngành phần mềm, Mich đã giúp công ty có được vị trí như ngày hôm nay. "
+"Mich là một trong số những người tài giỏi nhất."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_default_template
@@ -3134,7 +3181,7 @@ msgstr "Tên / Email"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list_merge__new_list_name
 msgid "New Mailing List Name"
-msgstr "Tên danh sách mail mới"
+msgstr "Tên danh sách liên hệ mới"
 
 #. module: mass_mailing
 #. odoo-python
@@ -3212,7 +3259,7 @@ msgid ""
 "list."
 msgstr ""
 "Không có liên hệ nào được nhập. Tất cả địa chỉ email đã có trong danh sách "
-"gửi thư."
+"liên hệ."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -3248,7 +3295,7 @@ msgid ""
 "No need to import mailing lists, you can send mailings to contacts saved in "
 "other Odoo apps."
 msgstr ""
-"Không cần nhập danh sách gửi thư, bạn có thể gửi thư đến các liên hệ được "
+"Không cần nhập danh sách liên hệ, bạn có thể liên hệ đến các liên hệ được "
 "lưu trong những ứng dụng Odoo khác."
 
 #. module: mass_mailing
@@ -3287,7 +3334,7 @@ msgstr "Normalized email address"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__message_needaction_counter
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count_blacklisted
@@ -3433,8 +3480,8 @@ msgid ""
 "Opt out flag for a specific mailing list. This field should not be used in a"
 " view without a unique and active mailing list context."
 msgstr ""
-"Cờ huỷ đăng ký cho một danh sách gửi thư cụ thể. Không nên sử dụng trường "
-"này trong chế độ xem không có ngữ cảnh danh sách gửi thư duy nhất và đang "
+"Cờ huỷ đăng ký cho một danh sách liên hệ cụ thể. Không nên sử dụng trường "
+"này trong chế độ xem không có ngữ cảnh danh sách liên hệ duy nhất và đang "
 "hoạt động."
 
 #. module: mass_mailing
@@ -3467,7 +3514,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
 msgid "Our References"
-msgstr "Thành tựu của chúng tôi"
+msgstr "Đối tác của chúng tôi"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__trace_status__outgoing
@@ -3937,17 +3984,17 @@ msgstr "Chọn và xóa các khối để xóa các tính năng."
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_import_view_form
 msgid "Select mailing lists"
-msgstr "Chọn danh sách gửi thư"
+msgstr "Chọn danh sách liên hệ"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists..."
-msgstr "Chọn Danh mục gửi mail..."
+msgstr "Chọn danh sách liên hệ..."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Select mailing lists:"
-msgstr "Chọn Danh mục gửi mail:"
+msgstr "Chọn danh sách liên hệ:"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__ab_testing_winner_selection
@@ -4359,7 +4406,7 @@ msgid ""
 "The mailing list can be accessible by recipients in the subscription "
 "management page to allows them to update their preferences."
 msgstr ""
-"Người nhận có thể truy cập danh sách gửi thư trong trang quản lý đăng ký để "
+"Người nhận có thể truy cập danh sách liên hệ trong trang quản lý đăng ký để "
 "cho phép họ cập nhật tùy chọn của mình."
 
 #. module: mass_mailing
@@ -4387,14 +4434,14 @@ msgstr ""
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>subscribed to %s</strong> mailing list(s)"
-msgstr "Người nhận <strong> đăng ký vào %s</strong> danh sách gửi thư"
+msgstr "Người nhận <strong> đăng ký vào %s</strong> danh sách liên hệ"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/models/mailing.py:0
 #, python-format
 msgid "The recipient <strong>unsubscribed from %s</strong> mailing list(s)"
-msgstr "Người nhận <strong> hủy đăng ký khỏi %s </strong> danh sách gửi thư"
+msgstr "Người nhận <strong> hủy đăng ký khỏi %s </strong> danh sách liên hệ"
 
 #. module: mass_mailing
 #. odoo-python
@@ -4592,7 +4639,7 @@ msgstr "Total Bounces"
 #. module: mass_mailing
 #: model:ir.model.constraint,message:mass_mailing.constraint_mailing_trace_check_res_id_is_set
 msgid "Traces have to be linked to records with a not null res_id."
-msgstr "Theo dõi phải được liên kết với các tập dữ liệu có res_id không rỗng."
+msgstr "Theo dõi phải được liên kết với các bản ghi có res_id không rỗng."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -4658,9 +4705,12 @@ msgid "Unknown error"
 msgstr "Lỗi chưa xác định"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+#, python-format
 msgid "Unsubscribe"
 msgstr "Ngừng đăng ký"
 
@@ -4673,13 +4723,6 @@ msgstr "Chưa được đăng ký"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "Ngày Ngừng theo dõi"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "Không hỗ trợ mô hình gửi thư hàng loạt %s"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -4812,7 +4855,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
 msgid "We are in good company."
-msgstr "Chúng tôi đang ở trong một công ty tốt."
+msgstr "Đây là một đơn vị uy tín."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -4917,7 +4960,7 @@ msgid ""
 "                    Each line will be imported as a mailing list contact."
 msgstr ""
 "Viết hoặc dán địa chỉ email vào trường dưới đây.\n"
-"                    Mỗi dòng sẽ được nhập dưới dạng liên hệ danh sách gửi thư."
+"                    Mỗi dòng sẽ được nhập dưới dạng liên hệ danh sách liên hệ."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features
@@ -4951,7 +4994,7 @@ msgstr ""
 #: code:addons/mass_mailing/wizard/mailing_list_merge.py:0
 #, python-format
 msgid "You can only apply this action from Mailing Lists."
-msgstr "Bạn chỉ có thể áp dụng hành động này từ Danh sách gửi thư."
+msgstr "Bạn chỉ có thể áp dụng tác vụ này từ Danh sách liên hệ."
 
 #. module: mass_mailing
 #. odoo-python

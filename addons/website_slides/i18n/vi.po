@@ -7,15 +7,16 @@
 # Martin Trigaux, 2022
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2022
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +52,7 @@ msgstr "# Câu hỏi"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
 msgid "# Quizz Attempts"
-msgstr "# Số lần làm bài kiểm tra"
+msgstr "# Số lần làm quiz"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_partner_view_tree
@@ -502,9 +503,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
-msgstr ""
-"<i class=\"fa fa-flag me-2\" aria-label=\"Bài kiểm tra\" role=\"img\" "
-"title=\"Bài kiểm tra\"/>"
+msgstr "<i class=\"fa fa-flag me-2\" aria-label=\"Quiz\" role=\"img\" title=\"Quiz\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_aside_training_category
@@ -585,7 +584,7 @@ msgid ""
 "            <span>Add Quiz</span>"
 msgstr ""
 "<i class=\"fa fa-plus me-2\"/>\n"
-"            <span>Thêm bài kiểm tra</span>"
+"            <span>Thêm quiz</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -702,7 +701,7 @@ msgid ""
 "m-1\">Add Quiz</span>"
 msgstr ""
 "<span class=\"badge text-bg-light badge-hide border fw-normal px-2 py-1 "
-"m-1\">Thêm bài kiểm tra</span>"
+"m-1\">Thêm quiz</span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list_slide
@@ -861,17 +860,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Thu nhỏ\" aria-label=\"Thu nhỏ\" role=\"nút\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Thu nhỏ\" aria-label=\"Thu nhỏ\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Phóng to\" aria-label=\"Phóng to\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 
@@ -1121,7 +1120,7 @@ msgstr "Thành tựu"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
@@ -1500,6 +1499,11 @@ msgstr "Đánh giá trung bình"
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Average Review"
 msgstr "Đánh giá trung bình"
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr "CÁC KHỐI DỰNG ĐƯỢC THẢ Ở ĐÂY SẼ ĐƯỢC HIỂN THỊ TRONG TẤT CẢ BÀI HỌC"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2815,7 +2819,7 @@ msgstr "Mã được nhúng bên ngoài"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__embed_ids
 msgid "External Slide Embeds"
-msgstr "Nhúng slide bên ngoài"
+msgstr "Nhúng slide ngoài"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__url
@@ -2852,8 +2856,8 @@ msgid "File Name"
 msgstr "Tên tập tin"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -2985,7 +2989,7 @@ msgstr "Từ một khúc gỗ thành một đồ nội thất đầy đủ chứ
 msgid ""
 "From here you'll be able to monitor attendees and to track their progress."
 msgstr ""
-"Từ đây bạn sẽ có thể theo dõi các học viên và cập nhật tiến trình của họ."
+"Từ đây bạn sẽ có thể theo dõi các học viên và cập nhật tiến độ của họ."
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_role_furniture
@@ -3062,7 +3066,7 @@ msgstr "Google Drive API Key"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__google_drive_id
 msgid "Google Drive ID of the external URL"
-msgstr "ID Google Drive của URL bên ngoài"
+msgstr "ID Google Drive của URL ngoài"
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_slide__slide_type__google_drive_video
@@ -3276,8 +3280,8 @@ msgid ""
 "If you want to be sure that attendees have understood and memorized the "
 "content, you can add a Quiz on the lesson. Click on <b>Add Quiz</b>."
 msgstr ""
-"Nếu bạn muốn bảo đảm người tham dự hiểu và nhớ nội dung, bạn có thể thêm Đố "
-"vui cho mỗi bài học. Bấm vào <b>Thêm đố vui</b>."
+"Nếu bạn muốn bảo đảm người tham dự hiểu và nhớ nội dung, bạn có thể thêm "
+"Quiz cho mỗi bài học. Bấm vào <b>Thêm quiz</b>."
 
 #. module: website_slides
 #. odoo-javascript
@@ -3487,7 +3491,7 @@ msgstr "Đã hoàn thành"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__is_mail_template_editor
 msgid "Is Editor"
-msgstr "Là biên tập"
+msgstr "Là trình chỉnh sửa"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_is_follower
@@ -3562,8 +3566,7 @@ msgstr "Tham gia khóa học"
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #, python-format
 msgid "Join the course to take the quiz and verify your answers!"
-msgstr ""
-"Tham gia khóa học để làm bài kiểm tra và xác minh câu trả lời của bạn!"
+msgstr "Tham gia khóa học để làm quiz và xác minh câu trả lời của bạn!"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4146,7 +4149,7 @@ msgstr "Không có thông báo"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "No Quiz data yet!"
-msgstr "Chưa có dữ liệu bài kiểm tra!"
+msgstr "Chưa có dữ liệu quiz!"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
@@ -4233,7 +4236,7 @@ msgstr "Thông báo"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__nbr_article
@@ -4343,6 +4346,13 @@ msgstr "Trên YouTube"
 #, python-format
 msgid "Once you're done, don't forget to <b>Publish</b> your course."
 msgstr "Sau khi bạn hoàn thành, đừng quên <b>Đăng</b> khóa học của bạn."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "Chỉ được đăng một một nhận xét duy nhất cho mỗi khóa học."
 
 #. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
@@ -4501,7 +4511,7 @@ msgstr "Người dùng quyền lực"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
 msgid "Powered by"
-msgstr "Được hỗ trợ bởi"
+msgstr "Cung cấp bởi"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
@@ -4513,21 +4523,13 @@ msgstr "Bài đăng"
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
 #: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
 msgid "Presentation Published"
-msgstr "Bài đăng đã được công bố"
+msgstr "Bài đăng đã được đăng"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "Xem trước"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "Riêng tư"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -4537,7 +4539,7 @@ msgstr "Khóa học riêng"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_partner_view_tree
 msgid "Progress"
-msgstr "Xử lý"
+msgstr "Tiến độ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__promoted_slide_id
@@ -4807,7 +4809,7 @@ msgstr "Đặt lại"
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__data
 #, python-format
 msgid "Resource"
-msgstr "Nguồn lực"
+msgstr "Tài nguyên"
 
 #. module: website_slides
 #. odoo-python
@@ -4821,7 +4823,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__resource_type
 msgid "Resource Type"
-msgstr "Kiểu Nguồn lực"
+msgstr "Kiểu Tài nguyên"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__user_id
@@ -5513,7 +5515,7 @@ msgstr "Từ khóa..."
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
 msgid "Take Quiz"
-msgstr "Làm bài kiểm tra"
+msgstr "Làm quiz"
 
 #. module: website_slides
 #: model:slide.channel,name:website_slides.slide_channel_demo_1_gard1
@@ -5552,7 +5554,7 @@ msgstr "Kiểm tra kiến thức!"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Test your students with small Quizzes"
-msgstr "Kiểm tra học sinh của bạn bằng các câu đố nhỏ"
+msgstr "Kiểm tra học sinh của bạn bằng các quiz nhỏ"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5657,23 +5659,7 @@ msgstr "Có thể đánh dấu slide là đã hoàn thành ngay cả khi không 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_uncompleted
 msgid "The slide can be marked as not completed and the progression"
-msgstr "Có thể đánh dấu slide là chưa hoàn thành và tiến trình"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
-msgstr ""
-"Bạn có thể lấy liên kết video để đưa vào đây bằng cách sử dụng nút 'chia sẻ'"
-" trong giao diện Vimeo."
-
-#. module: website_slides
-#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
-msgid "The vote must be 1, 0 or -1."
-msgstr "Bình chọn phải là 1, 0 hoặc -1."
+msgstr "Có thể đánh dấu slide là chưa hoàn thành và tiến độ"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5687,7 +5673,12 @@ msgstr ""
 "liên kết' trong giao diện Vimeo."
 
 #. module: website_slides
-#. openerp-web
+#: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
+msgid "The vote must be 1, 0 or -1."
+msgstr "Bình chọn phải là 1, 0 hoặc -1."
+
+#. module: website_slides
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
@@ -5716,7 +5707,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "There was an error validating this quiz."
-msgstr "Có một lỗi khi xác nhận bài kiểm tra này."
+msgstr "Có một lỗi khi xác nhận quiz này."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__url
@@ -5947,14 +5938,14 @@ msgid "Unknown error, try again."
 msgstr "Lỗi không xác định, hãy thử lại. "
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted"
 msgstr "Không công khai"
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted (paid account)"
@@ -6022,6 +6013,11 @@ msgstr "Sử dụng Thẻ nội dung để phân loại Nội dung của bạn."
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Use Course Groups to classify and organize your Courses."
 msgstr "Sử dụng Nhóm khóa học để phân loại và sắp xếp các khóa học của bạn."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Sử dụng mẫu"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -6304,7 +6300,7 @@ msgid ""
 "With Quizzes you can keep your students focused and motivated by answering "
 "some questions and gaining some karma points"
 msgstr ""
-"Với Đố vui, bạn có thể giúp học sinh tập trung và có động lực hơn bằng cách "
+"Với Quiz, bạn có thể giúp học sinh tập trung và có động lực hơn bằng cách "
 "trả lời câu hỏi và giành thêm điểm karma "
 
 #. module: website_slides
@@ -6403,8 +6399,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "You can add questions to this quiz in the 'Quiz' tab."
-msgstr ""
-"Bạn có thể thêm câu hỏi vào bài kiểm tra này trong tab 'Bài kiểm tra'."
+msgstr "Bạn có thể thêm câu hỏi vào quiz này trong tab 'Quiz'."
 
 #. module: website_slides
 #. odoo-javascript
@@ -6467,8 +6462,8 @@ msgid ""
 "You cannot mark a slide quiz as completed if you are not among its members "
 "or it is unpublished."
 msgstr ""
-"Bạn không thể đánh dấu một bài kiểm tra slide là đã hoàn thành nếu bạn không"
-" phải là thành viên hoặc nó đã bị huỷ đăng. "
+"Bạn không thể đánh dấu một quiz slide là đã hoàn thành nếu bạn không phải là"
+" thành viên hoặc nó đã bị huỷ đăng. "
 
 #. module: website_slides
 #. odoo-python
@@ -6478,8 +6473,8 @@ msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
 "members or it is unpublished."
 msgstr ""
-"Bạn không thể đánh dấu một bài kiểm tra slide là chưa hoàn thành nếu bạn "
-"không phải là thành viên hoặc nó đã bị huỷ đăng. "
+"Bạn không thể đánh dấu một quiz slide là chưa hoàn thành nếu bạn không phải "
+"là thành viên hoặc nó đã bị huỷ đăng. "
 
 #. module: website_slides
 #. odoo-python
@@ -6546,7 +6541,7 @@ msgstr "Bây giờ bạn có thể tham gia khóa eLearning. "
 #: code:addons/website_slides/static/src/js/slides_course_quiz.js:0
 #, python-format
 msgid "You must be logged to submit the quiz."
-msgstr "Bạn phải đăng nhập để gửi bài kiểm tra."
+msgstr "Bạn phải đăng nhập để gửi quiz."
 
 #. module: website_slides
 #. odoo-javascript
@@ -6655,7 +6650,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.achievement_card
 msgid "achieved"
-msgstr "lưu trữ"
+msgstr "đã đạt được"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
@@ -6736,6 +6731,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "VD: \"Loài động vật nào không thể bay?\""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr "VD: \"{{phần giữ chỗ || \"loài động vật khác\"}}\""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "ví dụ: Khoa học máy tính cho trẻ em"
@@ -6748,7 +6750,7 @@ msgid ""
 msgstr ""
 "ví dụ. Trong video này, chúng tôi sẽ cung cấp cho bạn các nội dung chính về "
 "cách Odoo có thể giúp bạn phát triển doanh nghiệp của mình. Cuối cùng, chúng"
-" tôi đề xuất cho bạn một bài kiểm tra để kiểm tra kiến thức của bạn."
+" tôi đề xuất cho bạn một quiz để kiểm tra kiến thức của bạn."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -6839,17 +6841,6 @@ msgstr "đăng nhập"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
-msgstr ""
-"? Cài đặt quyền riêng tư \"Riêng tư\" của Vimeo cho biết đây là video mà chỉ những người dùng có liên kết tới video mới có thể xem được.\n"
-"                                     Video của bạn sẽ không bao giờ xuất hiện trong kết quả tìm kiếm cũng như trên kênh của bạn."
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
 "mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
@@ -6857,7 +6848,7 @@ msgstr ""
 "                                     Video của bạn sẽ không bao giờ xuất hiện trong kết quả tìm kiếm cũng như trên kênh của bạn."
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""

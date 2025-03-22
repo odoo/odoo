@@ -4,21 +4,20 @@
 # 
 # Translators:
 # Lucia Pacheco, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
-# Martin Trigaux, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iron Graterol, 2023
 # Aimée Mendoza Sánchez, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Martin Trigaux, 2024
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,7 +287,7 @@ msgstr "Pantallas acústicas"
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__active
@@ -317,7 +316,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de la actividad  de excepción"
+msgstr "Decoración de la actividad de excepción"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
@@ -377,8 +376,8 @@ msgstr "Todos los productos"
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow users to input custom values for this attribute value"
 msgstr ""
-"Permitir a los usuarios introducir valores personalizados para este valor de"
-" atributo"
+"Permita que los usuarios introduzcan valores personalizados para este valor "
+"de atributo"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_config_settings__group_sale_pricelist
@@ -561,12 +560,12 @@ msgstr "Gabinete con puertas"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr "Puede agrandarse la imagen 1024"
+msgstr "¿Se puede ampliar la imagen 1024?"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr "¿Se puede ampliar la Imagen Variante 1024?"
+msgstr "¿Se puede ampliar la imagen 1024 de la variante?"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
@@ -688,7 +687,7 @@ msgstr "Mesa de la sala de conferencias"
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -735,22 +734,22 @@ msgstr "Contáctenos"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__qty
 msgid "Contained Quantity"
-msgstr "Cantidad contenida"
+msgstr "Cantidad incluida"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_positive_qty
 msgid "Contained Quantity should be positive."
-msgstr "La cantidad contenida debe ser positiva."
+msgstr "La cantidad incluida debe ser positiva."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Contained quantity"
-msgstr "Cantidad contenida"
+msgstr "Cantidad incluida"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr "Escritorio para sentarse en la izquierda"
+msgstr "Escritorio en L con asiento a la izquierda"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
@@ -762,7 +761,7 @@ msgstr "Escritorio en L con asiento a la derecha"
 #: model:ir.model.fields,field_description:product.field_product_template__standard_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
 msgid "Cost"
-msgstr "Coste"
+msgstr "Costo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
@@ -883,7 +882,7 @@ msgstr "Precisión decimal"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %(currency)s pricelist"
-msgstr "Lista de precios por defecto %(currency)s"
+msgstr "Lista de precios %(currency)s predeterminada"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -902,8 +901,8 @@ msgid ""
 "Default unit of measure used for purchase orders. It must be in the same "
 "category as the default unit of measure."
 msgstr ""
-"Unidad de medida utilizada por defecto para los pedidos de compra. Debe "
-"estar en la misma categoría que la unidad de medida por defecto."
+"Unidad de medida predeterminada para las órdenes de compra. Debe estar en la"
+" misma categoría que la unidad de medida predeterminada."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
@@ -1205,13 +1204,13 @@ msgstr "Generar el reporte de la lista de precios"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Get product pictures using Barcode"
-msgstr "Obtener imágenes del producto usando código de barras"
+msgstr "Asigne imágenes a los productos a través de sus códigos de barras"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
 #: model:ir.model.fields,help:product.field_product_template__packaging_ids
 msgid "Gives the different ways to package the same product."
-msgstr "Da las diferentes formas de embalar el mismo producto."
+msgstr "Proporciona las diferentes formas de empaquetar el mismo producto."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
@@ -1222,7 +1221,7 @@ msgstr "Proporciona el orden de secuencia al mostrar una lista de productos"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Google Images"
-msgstr "Imágenes de google"
+msgstr "Google Imágenes"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
@@ -1286,7 +1285,7 @@ msgstr "Icono"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icono para indicar una actividad de excepción."
+msgstr "Icono que indica una actividad de excepción."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
@@ -1296,9 +1295,7 @@ msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
-#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
-#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 
@@ -1366,14 +1363,14 @@ msgstr "Importar plantilla para listas de precios"
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
-msgstr "Importar plantilla de productos"
+msgstr "Plantilla de importación para productos"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 #, python-format
 msgid "Import Template for Vendor Pricelists"
-msgstr "Importar plantilla para listas de precios de proveedores"
+msgstr "Plantilla de importación para listas de precios de proveedores"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -1418,8 +1415,7 @@ msgstr "Referencia interna"
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr ""
-"Número de artículo internacional usado para la identificación de producto."
+msgstr "Número de artículo internacional usado para identificar el producto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1846,7 +1842,7 @@ msgstr "Porcentaje de precio"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr "Píldoras"
+msgstr "Barra"
 
 #. module: product
 #. odoo-javascript
@@ -2299,7 +2295,7 @@ msgstr "Productos: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr "Promociones, cupones, tarjeta de regalo y programa de fidelidad"
+msgstr "Promociones, cupones, tarjeta de regalo y programa de lealtad"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2341,7 +2337,7 @@ msgstr "Cantidad"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr "Ya se sleccionó la cantidad por defecto (%d)."
+msgstr "Ya hay una cantidad (%d)."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2412,12 +2408,6 @@ msgstr "Filas"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "Consejo de regla"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
-#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Error en el envío del SMS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2596,7 +2586,7 @@ msgstr "Caja de almacenaje"
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Tarifa de proveedor"
+msgstr "Lista de precios del proveedor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__name
@@ -2680,7 +2670,7 @@ msgstr "El tipo de visualización utilizado en el configurador del producto."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr "El primero en la secuencia es el aplicado por defecto."
+msgstr "El primero en la secuencia es el predeterminado."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -2883,7 +2873,7 @@ msgstr "Tipo"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de la actividad de excepción registrada."
 
 #. module: product
 #. odoo-python
@@ -2958,7 +2948,7 @@ msgstr "Conteo de valor"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr "Valor del precio adicional"
+msgstr "Precio adicional del valor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3134,18 +3124,6 @@ msgid ""
 msgstr ""
 "Le prestamos mucha atención a los detalles, por eso la calidad de nuestros "
 "escritorios es superior."
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight

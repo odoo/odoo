@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _, Command
+from odoo.tools.misc import clean_context
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -56,7 +57,7 @@ class SaleOrder(models.Model):
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         tasks_per_so = self.env['project.task']._read_group(
-            domain=['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)],
+            domain=self._tasks_ids_domain(),
             fields=['sale_order_id', 'ids:array_agg(id)'],
             groupby=['sale_order_id'],
         )
@@ -110,13 +111,14 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super()._action_confirm()
+        context = clean_context(self._context)
         if len(self.company_id) == 1:
             # All orders are in the same company
-            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+            self.order_line.sudo().with_context(context).with_company(self.company_id)._timesheet_service_generation()
         else:
             # Orders from different companies are confirmed together
             for order in self:
-                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
+                order.order_line.sudo().with_context(context).with_company(order.company_id)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
@@ -145,10 +147,12 @@ class SaleOrder(models.Model):
                 action['views'] = [(form_view_id, 'form')]
                 action['res_id'] = self.tasks_ids.id
         # filter on the task of the current SO
-        action['domain'] = [('id', 'in', self.tasks_ids.ids)]
+        action['domain'] = self._tasks_ids_domain()
         action.setdefault('context', {})
-        action['context'].update({'search_default_sale_order_id': self.id})
         return action
+
+    def _tasks_ids_domain(self):
+        return ['&', ('display_project_id', '!=', False), '|', ('sale_line_id', 'in', self.order_line.ids), ('sale_order_id', 'in', self.ids)]
 
     def action_view_project_ids(self):
         self.ensure_one()

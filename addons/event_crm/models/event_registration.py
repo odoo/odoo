@@ -148,7 +148,7 @@ class EventRegistration(models.Model):
                 if not lead.partner_id:
                     lead_values['description'] = lead.registration_ids._get_lead_description(_("Participants"), line_counter=True)
                 elif new_vals['partner_id'] != lead.partner_id.id:
-                    lead_values['description'] = lead.description + "<br/>" + lead.registration_ids._get_lead_description(_("Updated registrations"), line_counter=True, line_suffix=_("(updated)"))
+                    lead_values['description'] = (lead.description or '') + "<br/>" + lead.registration_ids._get_lead_description(_("Updated registrations"), line_counter=True, line_suffix=_("(updated)"))
             if lead_values:
                 lead.write(lead_values)
 
@@ -236,8 +236,9 @@ class EventRegistration(models.Model):
                 'phone': self._find_first_notnull('phone'),
                 'lang_id': False,
             }
+        contact_name = valid_partner.name or self._find_first_notnull('name') or self._find_first_notnull('email')
         contact_vals.update({
-            'name': "%s - %s" % (self.event_id.name, valid_partner.name or self._find_first_notnull('name') or self._find_first_notnull('email')),
+            'name': f'{self.event_id[:1].name} - {contact_name}',
             'partner_id': valid_partner.id,
             'mobile': valid_partner.mobile or self._find_first_notnull('mobile'),
         })
@@ -285,7 +286,7 @@ class EventRegistration(models.Model):
             not rewrite partner values from registration values.
 
         Tracked values are therefore the union of those two field sets. """
-        tracked_fields = list(set(self._get_lead_contact_fields()) or set(self._get_lead_description_fields()))
+        tracked_fields = list(set(self._get_lead_contact_fields()) | set(self._get_lead_description_fields()))
         return dict(
             (registration.id,
              dict((field, self._convert_value(registration[field], field)) for field in tracked_fields)

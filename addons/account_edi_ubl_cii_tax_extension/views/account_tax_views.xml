@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_invoice_form_inherit" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="ubl_cii_tax_category_code"/>
+                <field name="ubl_cii_tax_exemption_reason_code"
+                       attrs="{
+                       'invisible': [('ubl_cii_tax_category_code', 'not in', ('AE', 'E', 'G', 'O', 'K'))],
+                       'required': [('ubl_cii_tax_category_code', 'in', ('AE', 'E', 'G', 'O', 'K'))]
+                       }"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

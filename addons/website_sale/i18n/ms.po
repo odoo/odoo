@@ -3,15 +3,16 @@
 # 	* website_sale
 # 
 # Translators:
-# Mehjabin Farsana, 2023
+# Mehjabin Farsana, 2024
+# Imran Pathan, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Mehjabin Farsana, 2023\n"
+"Last-Translator: Imran Pathan, 2024\n"
 "Language-Team: Malay (https://app.transifex.com/odoo/teams/41243/ms/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -389,6 +390,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Kuantiti</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Sign In</span>\n"
@@ -412,11 +418,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
 msgstr ""
 
 #. module: website_sale
@@ -535,8 +536,8 @@ msgid "Abandoned Cart"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -842,7 +843,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
-msgstr ""
+msgstr "Billing"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -953,14 +954,7 @@ msgstr "Boleh Terbitkan"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid "Can not resequence a video at first position."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
+msgid "You can't use a video as the product's main image."
 msgstr ""
 
 #. module: website_sale
@@ -1081,15 +1075,6 @@ msgstr ""
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
 "Changing your name is not allowed once documents have been issued for your "
 "account. Please contact us directly for this operation."
 msgstr ""
@@ -1164,7 +1149,7 @@ msgstr "Warna"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Columns"
-msgstr ""
+msgstr "Columns"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -1423,6 +1408,11 @@ msgid "DHL Express Connector"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Lalai"
@@ -1579,7 +1569,7 @@ msgstr ""
 #: code:addons/website_sale/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
+msgstr "Do not have access, skip this data for user's digest email"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1659,11 +1649,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Edit"
 msgstr "Sunting"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
@@ -1888,6 +1873,16 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1952,15 +1947,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-
-#. module: website_sale
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
 
@@ -1980,7 +1966,7 @@ msgstr "Invois"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Invoicing"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
@@ -2009,7 +1995,7 @@ msgstr "Kemasukan jurnal"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Just done"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total_value
@@ -2085,7 +2071,7 @@ msgstr "Minggu lepas"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Year"
-msgstr ""
+msgstr "Last Year"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2306,7 +2292,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
+msgid "No product defined in this category."
 msgstr ""
 
 #. module: website_sale
@@ -2338,7 +2324,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_spacing__none
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "None"
-msgstr ""
+msgstr "None"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
@@ -2348,7 +2334,7 @@ msgstr "Tidak Diterbitkan"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__not_done
 msgid "Not done"
-msgstr ""
+msgstr "Not done"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
@@ -2529,7 +2515,7 @@ msgstr "Kategori Induk"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Parent Path"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parents_and_self
@@ -3006,7 +2992,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3197,7 +3182,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sale_ribbon
 msgid "Sale"
-msgstr ""
+msgstr "Sale"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
@@ -3213,7 +3198,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #, python-format
 msgid "Sales"
-msgstr ""
+msgstr "Sales"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
@@ -3610,11 +3595,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "TIN / VAT"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr ""
@@ -3907,7 +3887,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
-msgstr ""
+msgstr "Unpaid"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3944,6 +3924,11 @@ msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr ""
@@ -3951,7 +3936,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Variants"
-msgstr ""
+msgstr "Variants"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4271,11 +4256,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
 msgstr ""
 
 #. module: website_sale

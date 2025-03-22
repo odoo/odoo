@@ -3,7 +3,6 @@
 # 	* sale_project
 # 
 # Translators:
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Anni Saarelainen, 2022
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
@@ -15,14 +14,15 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"Last-Translator: Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -533,6 +533,11 @@ msgid "Quantity"
 msgstr "Määrä"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Tarjouspohjarivi"
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
 msgstr "Saavutetut virstanpylväät"
@@ -664,13 +669,6 @@ msgstr "Haku laskussa"
 #, python-format
 msgid "Search in Sales Order"
 msgstr "Hae myyntitilausta"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#, python-format
-msgid "Search in Sales Order Item"
-msgstr "Haku myyntitilauksen kohteesta"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id

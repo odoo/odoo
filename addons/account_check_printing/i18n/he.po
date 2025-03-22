@@ -13,20 +13,21 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Moshe Flam <pashute@gmail.com>, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
+# Eyal arkush, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Last-Translator: Eyal arkush, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -34,6 +35,11 @@ msgstr ""
 #, python-format
 msgid " : Check Number Sequence"
 msgstr "הרצף המספרי של שיקים"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+msgid "<span>&amp;nbsp;</span>"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -229,6 +235,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"ידני: שלם או קבל תשלום בכל שיטה מחוץ ל-Odoo.\n"
+"ספקי תשלומים: לכל ספק תשלומים יש אמצעי תשלום משלו. בקש עסקה בכרטיס/לכרטיס הודות לאסימון תשלום שנשמר על ידי השותף בקנייה או בהרשמה מקוונת.\n"
+"צ'ק: שלם חשבונות בצ'ק והדפיס אותו מ-Odoo.\n"
+"הפקדת אצווה: אסוף מספר צ'קים של לקוחות בו-זמנית, תוך הפקה והגשה של הפקדה אצווה לבנק שלך. מודול account_batch_payment הכרחי.\n"
+"העברת אשראי SEPA: שלם באזור SEPA על ידי שליחת קובץ העברת אשראי SEPA לבנק שלך. מודול account_sepa הכרחי.\n"
+"הוראת קבע SEPA: קבל תשלום באזור SEPA הודות למנדט שהשותף שלך יעניק לך. מודול account_sepa הכרחי.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -370,7 +382,7 @@ msgstr "מספר רץ של השיק המודפס הבא"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
 msgid "Show Check Number"
-msgstr ""
+msgstr "הראה מספר שיק"
 
 #. module: account_check_printing
 #. odoo-python
@@ -432,6 +444,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"אפשרות זו מאפשרת להדפיס את תווית התאריך על השיק לפי עלות לרכישה.\n"
+"השבת זאת אם ההמחאה המודפסת מראש שלך כוללת את תווית התאריך."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view

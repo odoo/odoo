@@ -5,6 +5,7 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
 const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
@@ -26,6 +27,7 @@ class TaxGroupComponent extends Component {
         onWillUpdateProps(() => {
             this.setState("readonly");
         });
+        useNumpadDecimal();
     }
 
     //--------------------------------------------------------------------------

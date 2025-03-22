@@ -18,7 +18,6 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
-# Kim Asplund <kim.asplund@gmail.com>, 2022
 # Joni Winsten, 2022
 # Mikko Virtanen <mikko.virtanen2013@gmail.com>, 2022
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2022
@@ -36,15 +35,16 @@
 # Martin Trigaux, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,11 +143,6 @@ msgstr "%s Aleemmat valmitustilaukset (MO)"
 #, python-format
 msgid "%s cannot be deleted. Try to cancel them before."
 msgstr "%s ei voida poistaa. Yritä peruuttaa ne."
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.view_immediate_production
-msgid "&gt;"
-msgstr "&gt;"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
@@ -590,6 +585,16 @@ msgid "Add tag for the workcenter"
 msgstr "Lisää työpisteen tunniste"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
+msgid "Additional time in minutes for the cleaning."
+msgstr "Puhdistukseen kuluva lisäaika minuutteina."
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
+msgid "Additional time in minutes for the setup."
+msgstr "Lisäaika minuutteina asennukseen."
+
+#. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Administrator"
 msgstr "Ylläpitäjä"
@@ -767,8 +772,8 @@ msgid "Attachment URL"
 msgstr "Liitteen URL"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1074,13 +1079,6 @@ msgid "BoM Type"
 msgstr "Osalistan tyyppi"
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-#, python-format
-msgid "BoM line product %s should not be the same as BoM product."
-msgstr "Osaluettelon rivituote %s ei saa olla sama kuin osaluettelon tuote."
-
-#. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
 msgid "Bolt"
 msgstr "Pultti"
@@ -1162,6 +1160,17 @@ msgstr "Peruuta"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Cancelled"
 msgstr "Peruttu"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Cannot compute days to prepare due to missing route info for at least 1 "
+"component or for the final product."
+msgstr ""
+"Valmistelupäiviä ei voida laskea, koska vähintään yhden komponentin tai "
+"lopputuotteen reittitiedot puuttuvat."
 
 #. module: mrp
 #. odoo-python
@@ -2564,6 +2573,7 @@ msgstr "Esto on jo poistettu."
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid ""
 "It is not possible to unplan one single Work Order. You should unplan the "
@@ -3147,8 +3157,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimivarastosääntö"
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3503,8 +3513,8 @@ msgstr ""
 "                Kukin operaatio tehdään tietyssä työkeskuksessa ja sillä on tietty kesto."
 
 #. module: mrp
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -3875,6 +3885,7 @@ msgstr "Valmistetut"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__produced_qty
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Produced Quantity"
 msgstr "Tuotettu Määrä"
 
@@ -4146,7 +4157,6 @@ msgstr "Quant"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #, python-format
 msgid "Quantity"
@@ -4193,6 +4203,11 @@ msgstr "Määrä, joka voidaan tuottaa nykyisellä komponenttivarastolla"
 #, python-format
 msgid "Quantity:"
 msgstr "Määrä:"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_stock_quant
+msgid "Quants"
+msgstr "Määrät"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_raw_ids
@@ -4272,6 +4287,11 @@ msgid "Related attachment"
 msgstr "Liittyvä liite"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Remaining Quantity"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_workorder_popover.xml:0
 #, python-format
@@ -4339,6 +4359,13 @@ msgstr "Vastuuhenkilö"
 #, python-format
 msgid "Resupply lead time."
 msgstr "Toimitusten toimitusajan varmuusmarginaali."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid "Return to Inventory"
+msgstr "Palauta varastoon"
 
 #. module: mrp
 #. odoo-javascript
@@ -5021,6 +5048,7 @@ msgstr ""
 "tuotteiden välille: %s."
 
 #. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/stock_orderpoint.py:0
 #, python-format
 msgid "The following replenishment order has been generated"
@@ -5290,16 +5318,6 @@ msgstr "Ajanseuranta"
 #, python-format
 msgid "Time Tracking: %(user)s"
 msgstr "Ajan seuranta: %(user)s"
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_stop
-msgid "Additional time in minutes for the cleaning."
-msgstr "Puhdistukseen kuluva lisäaika minuutteina."
-
-#. module: mrp
-#: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__time_start
-msgid "Additional time in minutes for the setup."
-msgstr "Lisäaika minuutteina asennukseen."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -5694,7 +5712,6 @@ msgstr "Vahvista"
 
 #. module: mrp
 #. odoo-python
-#: code:addons/addons/mrp/wizard/mrp_consumption_warning.py:0
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid ""
@@ -6445,6 +6462,17 @@ msgid "You should provide a lot number for the final product."
 msgstr "Sinun on ilmoitettava lopputuotteen eränumero."
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_quant.py:0
+#, python-format
+msgid ""
+"You should update the components quantity instead of directly updating the "
+"quantity of the kit product."
+msgstr ""
+"Sinun pitäisi päivittää komponenttien määrä sen sijaan, että päivität "
+"suoraan sarjatuotteen määrän."
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
 msgid "and build finished products using"
 msgstr "ja rakentaa valmiita tuotteita käyttäen"
@@ -6565,3 +6593,13 @@ msgstr "jaa"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
 msgstr "työtilaukset"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
+#, python-format
+msgid "{{ props.isFolded ? 'Unfold' : 'Fold' }}"
+msgstr "{{ props.isFolded ? 'Unfold' : 'Fold' }}"

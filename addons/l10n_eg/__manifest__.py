@@ -1,10 +1,22 @@
 {
     'name': "Egypt - Accounting",
+    'website': 'https://www.odoo.com/documentation/16.0/applications/finance/fiscal_localizations/egypt.html',
     'description': """
-This is the base module to manage the accounting chart for Egypt in Odoo.
+Egypt Accounting Module
 ==============================================================================
+Egypt Accounting Basic Charts and Localization.
+
+Activates:
+
+- Chart of Accounts
+- Taxes
+- VAT Return
+- Withholding Tax Report
+- Schedule Tax Report
+- Other Taxes Report
+- Fiscal Positions
     """,
-    'author': "Odoo SA",
+    'author': "Odoo S.A.",
     'category': 'Accounting/Localizations/Account Charts',
     'version': '1.0',
     'depends': ['account', 'l10n_multilang'],

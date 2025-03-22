@@ -51,6 +51,7 @@ class PaymentTransaction(models.Model):
             'item_number': self.reference,
             'last_name': partner_last_name,
             'lc': self.partner_lang,
+            'no_shipping': '1',  # Do not prompt for a delivery address.
             'notify_url': webhook_url if self.provider_id.paypal_use_ipn else None,
             'return_url': urls.url_join(base_url, PaypalController._return_url),
             'state': self.partner_state_id.name,
@@ -91,6 +92,13 @@ class PaymentTransaction(models.Model):
         super()._process_notification_data(notification_data)
         if self.provider_code != 'paypal':
             return
+
+        amount = notification_data.get('amt') or notification_data.get('mc_gross')
+        currency_code = notification_data.get('cc') or notification_data.get('mc_currency')
+        assert amount and currency_code, 'PayPal: missing amount or currency'
+        assert self.currency_id.compare_amounts(float(amount), self.amount + self.fees) == 0, \
+            'PayPal: mismatching amounts'
+        assert currency_code == self.currency_id.name, 'PayPal: mismatching currency codes'
 
         txn_id = notification_data.get('txn_id')
         txn_type = notification_data.get('txn_type')

@@ -4,20 +4,22 @@
 # 
 # Translators:
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2022
-# Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Claudia Baisan, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Hongu Cosmin <cosmin513@gmail.com>, 2024
+# Betty Keresztesi, 2024
+# Larisa_nexterp, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Larisa_nexterp, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -345,6 +347,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Răspunsurile programate vă permit să introduceți răspunsuri pre-scrise în\n"
+"                mesajele dvs. tastând <i>:shortcut</i>. Prescurtarea este\n"
+"                înlocuit direct în mesajul dvs., astfel încât să puteți edita în continuare\n"
+"               înainte de a trimite."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -472,14 +478,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
 msgid "Close"
 msgstr "Închide"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#, python-format
-msgid "Close chat window"
-msgstr "Închidere Fereastră Chat"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -761,7 +759,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__forward_operator
 msgid "Forward to Operator"
-msgstr ""
+msgstr "Redirecționați către operator"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__chatbot_script_step__step_type__free_input_single
@@ -834,8 +832,9 @@ msgstr "Ora de începere a sesiunii"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "Cum vă pot ajuta?"
@@ -1023,7 +1022,7 @@ msgstr "Live Chat"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
 msgid "Live Chat Button"
-msgstr ""
+msgstr "Butonul Live Chat"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1255,7 +1254,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Open automatically timer"
-msgstr ""
+msgstr "Deschide automat cronometrul"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -1559,8 +1558,8 @@ msgid "Select an option above"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/legacy/widgets/feedback.xml:0
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Send"
 msgstr "Trimite"
@@ -1912,6 +1911,11 @@ msgstr "Te deranjează să-ți lăsăm adresa de email pentru a te putea contact
 #, python-format
 msgid "Yesterday"
 msgstr "Ieri"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "Dumneavoastră"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action

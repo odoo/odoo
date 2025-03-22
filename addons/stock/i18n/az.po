@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
-# erpgo translator <jumshud@erpgo.az>, 2023
+# shahriyar rzayev, 2024
+# erpgo translator <jumshud@erpgo.az>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2023\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +139,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: Məhsulu %(supplier)s-dan təhciz et"
 
@@ -144,6 +153,7 @@ msgstr "%(warehouse)s: Məhsulu %(supplier)s-dan təhciz et"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -396,6 +406,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle\"/>\n"
+"                                Bütün məhsulları rezerv etmək mümkün olmadı. Məhsulları rezerv etmək üçün \"Mövcudluğu Yoxla\" düyməsini basın."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_mrp_line
@@ -470,25 +482,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Müştəri Ünvanı:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Delivery Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Çatdırılma Ünvanı:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Vendor Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Podratçı Ünvanı:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<span><strong>Warehouse Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Anbar Ünvanı:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
@@ -513,12 +525,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_no_package_section_line
 msgid "<span>Products with no package assigned</span>"
-msgstr ""
+msgstr "<span>Paket təyin edilməmiş məhsullar</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr ""
+msgstr "<span>Təhvil verilməmiş qalan miqdarlar:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -546,7 +558,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Delivered</strong>"
-msgstr ""
+msgstr "<strong>Təhvil Verildi</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -559,7 +571,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>From</strong>"
-msgstr ""
+msgstr "<strong>Kimdən</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -570,7 +582,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Lot/Serial Number</strong>"
-msgstr ""
+msgstr "<strong>Lot/Seriya Nömrəsi</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -591,12 +603,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Order:</strong>"
-msgstr ""
+msgstr "<strong>Sifariş:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Ordered</strong>"
-msgstr ""
+msgstr "<strong>Sifariş Edildi</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -616,7 +628,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product Barcode</strong>"
-msgstr ""
+msgstr "<strong>Məhsul Barkodu</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -629,27 +641,27 @@ msgstr "<strong>Məhsul</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Quantity</strong>"
-msgstr ""
+msgstr "<strong>Miqdar</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Scheduled Date:</strong>"
-msgstr ""
+msgstr "<strong>Planlaşdırılan Tarix:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Shipping Date:</strong>"
-msgstr ""
+msgstr "<strong>Göndərilmə Tarixi:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<strong>Signature</strong>"
-msgstr ""
+msgstr "<strong>İmza</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Status:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -659,7 +671,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>To</strong>"
-msgstr ""
+msgstr "<strong>Kimə</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_track_confirmation
@@ -1108,8 +1120,8 @@ msgid "Automatic No Step Added"
 msgstr ""
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1558,37 +1570,37 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr ""
+msgstr "Çatdırılma xərclərini hesabla və DHL ilə göndər"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
+msgstr "Göndərmə xərclərini hesablayın və Easypost ilə göndərin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr ""
+msgstr "Çatdırılma xərclərini hesabla və FedEx ilə göndər"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
+msgstr "Göndərmə xərclərini hesablayın və Sendcloud ilə göndərin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr ""
+msgstr "Çatdırılma xərclərini hesabla və UPS ilə göndər"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr ""
+msgstr "Çatdırılma xərclərini hesabla və USPS ilə göndər"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr ""
+msgstr "Çatdırılma xərclərini hesabla və bpost ilə göndər"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
@@ -1700,6 +1712,11 @@ msgid ""
 msgstr ""
 "Ölçü vahidləri arasındakı konversiya yalnız onlar eyni kateqoriyaya aid "
 "olduqda baş verə bilər. Konversiya nisbətlərə əsasən həyata keçiriləcək."
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2014,7 +2031,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Connector"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2267,7 +2284,7 @@ msgstr "Çatdırılma Ünvanı"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Təslimat Metodları"
 
 #. module: stock
 #. odoo-python
@@ -2634,7 +2651,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr ""
+msgstr "Easypost Connector"
 
 #. module: stock
 #. odoo-python
@@ -2796,7 +2813,7 @@ msgstr "Fevral"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
-msgstr ""
+msgstr "FedEx birləşdiricisi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_destination__filtered_location
@@ -2813,6 +2830,13 @@ msgstr "Filterlər"
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__next_serial_number
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
 msgstr ""
 
 #. module: stock
@@ -3553,7 +3577,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__ref
 msgid "Internal Reference"
-msgstr ""
+msgstr "Daxili Referans"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
@@ -3600,6 +3624,7 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr ""
@@ -3607,6 +3632,7 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
@@ -3732,7 +3758,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr ""
+msgstr "İntentarın Qiymətləndirilməsi"
 
 #. module: stock
 #. odoo-javascript
@@ -3819,7 +3845,20 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
 msgstr ""
 
 #. module: stock
@@ -4109,7 +4148,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__lead_time
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
 msgid "Lead Time"
-msgstr ""
+msgstr "Göndərmə vaxtı"
 
 #. module: stock
 #. odoo-javascript
@@ -4246,6 +4285,13 @@ msgid "Locations"
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
 msgstr "Bağlama"
@@ -4260,6 +4306,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
 msgid "Lot"
 msgstr "Partiya"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -4891,8 +4942,8 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -5054,7 +5105,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr ""
+msgstr "Əməliyyat Növləri"
 
 #. module: stock
 #. odoo-python
@@ -5159,7 +5210,7 @@ msgstr ""
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "%s tərəfindən imzalanmış sifariş"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__orderpoint_ids
@@ -5911,7 +5962,7 @@ msgstr "Məhsul Şablonu"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Məhsul Şablonu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
@@ -6851,6 +6902,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr ""
@@ -7039,7 +7098,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Məhsulları müxtəlif ölçü vahidlərində satmaq və almaq"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7066,7 +7125,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
 msgid "Sendcloud Connector"
-msgstr ""
+msgstr "Sendcloud Konnektoru"
 
 #. module: stock
 #: model:mail.template,description:stock.mail_template_data_delivery_confirmation
@@ -7254,7 +7313,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Shipping"
-msgstr ""
+msgstr "Təslimat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7389,7 +7448,7 @@ msgstr "İşarə"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__signature
 #: model:ir.model.fields,help:stock.field_stock_picking__signature
 msgid "Signature"
-msgstr ""
+msgstr "İmza"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -8629,12 +8688,12 @@ msgstr "Qeyddəki istisna fəaliyyət növü."
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
 msgid "UPS Connector"
-msgstr ""
+msgstr "UPS Konnektoru"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_usps
 msgid "USPS Connector"
-msgstr ""
+msgstr "USPS birləşdiricisi"
 
 #. module: stock
 #. odoo-javascript
@@ -9354,6 +9413,14 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9387,6 +9454,15 @@ msgstr ""
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
 msgstr ""
 
 #. module: stock
@@ -9485,6 +9561,24 @@ msgstr ""
 msgid ""
 "You cannot move the same package content more than once in the same transfer"
 " or split the same package into two location."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
 msgstr ""
 
 #. module: stock
@@ -9748,7 +9842,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_bpost
 msgid "bpost Connector"
-msgstr ""
+msgstr "bpost birləşdiricisi"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -9772,6 +9866,7 @@ msgid "e.g. CW"
 msgstr ""
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr ""

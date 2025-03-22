@@ -228,6 +228,7 @@
                                         optional="hide"
                                         context="{'default_project_id': display_project_id or project_id}"
                                         attrs="{'invisible': [('allow_milestones', '=', False)], 'column_invisible': [('parent.allow_milestones', '=', False)]}"
+                                        options="{'no_open': True, 'no_create': True, 'no_edit': True}"
                                     />
                                     <field name="company_id" invisible="1"/>
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide"/>
@@ -236,10 +237,10 @@
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="kanban_state" widget="state_selection" options="{'hide_label': True}" nolabel="1" optional="show"/>
-                                    <field name="stage_id" optional="show"/>
+                                    <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
                                             context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
-                                            attrs="{'invisible': &quot;[('display_project_id', '!=', False), ('display_project_id', '!=', active_id)]&quot;}"/>
+                                            attrs="{'invisible': &quot;[('project_id', '!=', False), ('project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
                             </field>
                         </page>

@@ -46,6 +46,7 @@ class SeoMetadata(models.AbstractModel):
         self.ensure_one()
         company = request.website.company_id.sudo()
         title = (request.website or company).name
+        site_name = title
         if 'name' in self:
             title = '%s | %s' % (self.name, title)
 
@@ -55,7 +56,7 @@ class SeoMetadata(models.AbstractModel):
         default_opengraph = {
             'og:type': 'website',
             'og:title': title,
-            'og:site_name': company.name,
+            'og:site_name': site_name,
             'og:url': url_join(request.httprequest.url_root, url_for(request.httprequest.path)),
             'og:image': request.website.image_url(request.website, img_field),
         }
@@ -222,12 +223,23 @@ class WebsitePublishedMixin(models.AbstractModel):
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
 
+    @api.depends_context('uid')
     def _compute_can_publish(self):
-        """ This method can be overridden if you need more complex rights management than just 'website_restricted_editor'
-        The publish widget will be hidden and the user won't be able to change the 'website_published' value
-        if this method sets can_publish False """
+        """ This method can be overridden if you need more complex rights
+        management than just write access to the model.
+        The publish widget will be hidden and the user won't be able to change
+        the 'website_published' value if this method sets can_publish False """
         for record in self:
-            record.can_publish = True
+            try:
+                # Some main_record might be in sudo because their content needs
+                # to be rendered by a template even if they were not supposed
+                # to be accessible
+                plain_record = record.sudo(flag=False) if self._context.get('can_publish_unsudo_main_object', False) else record
+                plain_record.check_access_rights('write')
+                plain_record.check_access_rule('write')
+                record.can_publish = True
+            except AccessError:
+                record.can_publish = False
 
     @api.model
     def _get_can_publish_error_message(self):

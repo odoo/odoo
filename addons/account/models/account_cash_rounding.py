@@ -24,7 +24,7 @@ class AccountCashRounding(models.Model):
     profit_account_id = fields.Many2one('account.account', string='Profit Account', company_dependent=True, domain="[('deprecated', '=', False), ('company_id', '=', current_company_id)]")
     loss_account_id = fields.Many2one('account.account', string='Loss Account', company_dependent=True, domain="[('deprecated', '=', False), ('company_id', '=', current_company_id)]")
     rounding_method = fields.Selection(string='Rounding Method', required=True,
-        selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
+        selection=[('UP', 'Up'), ('DOWN', 'Down'), ('HALF-UP', 'Nearest')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
     company_id = fields.Many2one('res.company', related='profit_account_id.company_id')
 
@@ -50,5 +50,6 @@ class AccountCashRounding(models.Model):
         :param amount: The amount
         :return: round(difference)
         """
+        amount = currency.round(amount)
         difference = self.round(amount) - amount
         return currency.round(difference)

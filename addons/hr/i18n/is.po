@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Heiðar Sigurðsson, 2022
+# Kristófer Arnþórsson, 2024
+# jonasyngvi, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Heiðar Sigurðsson, 2022\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: jonasyngvi, 2025\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -38,6 +40,8 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr ""
+"%s (afrit)\n"
+" "
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
@@ -275,11 +279,6 @@ msgid "<span class=\"o_stat_text\">Employee(s)</span>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "<span class=\"ps-1\">new Employees</span>"
-msgstr ""
-
-#. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
 #: model_terms:hr.job,job_details:hr.job_consultant
 #: model_terms:hr.job,job_details:hr.job_cto
@@ -315,6 +314,11 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "<span>new Employees</span>"
 msgstr ""
 
 #. module: hr
@@ -359,7 +363,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Aðgerða þörf"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__active
@@ -370,7 +374,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan__active
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__active
 msgid "Active"
-msgstr ""
+msgstr "Virk"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
@@ -463,7 +467,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 #: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
 msgid "Address"
-msgstr ""
+msgstr "Heimilisfang"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -492,7 +496,6 @@ msgid "Advanced presence of employees"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,field_description:hr.field_mail_alias__alias_contact
 msgid "Alias Contact Security"
 msgstr ""
@@ -516,9 +519,14 @@ msgid "Allow employees to update their own data."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Application Settings"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Apply"
-msgstr ""
+msgstr "Virkja"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -543,7 +551,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
-msgstr ""
+msgstr "Vistuð"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -568,7 +576,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Fjöldi viðhengja"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -671,12 +679,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
-msgstr ""
+msgstr "Númer bankareiknings"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankareikningar"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
-msgstr ""
+msgstr "Grunnur"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip
@@ -712,7 +725,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.plan_wizard
 #: model_terms:ir.ui.view,arch_db:hr.view_users_simple_form
 msgid "Cancel"
-msgstr ""
+msgstr "Eyða"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -757,7 +770,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "City"
-msgstr ""
+msgstr "Borg"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__coach_id
@@ -782,13 +795,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category__color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__color
 msgid "Color Index"
-msgstr ""
+msgstr "Litavísitala"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_company
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 msgid "Companies"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__company_id
@@ -803,7 +816,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Company"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
@@ -828,12 +841,12 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "Fullt nafn"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Stillingarvalkostir"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -849,7 +862,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "Hafa samband"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -888,12 +901,12 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Landskóði"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_of_birth
@@ -926,6 +939,16 @@ msgid "Create a new department"
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
+msgid "Create a new employment type"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
+msgid "Create a new work location"
+msgstr ""
+
+#. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -955,7 +978,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__create_date
@@ -970,7 +993,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
+msgid "Currency"
+msgstr "Gjaldmiðill"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
@@ -1029,7 +1057,7 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_department_filter
 msgid "Departments"
-msgstr ""
+msgstr "Deildir"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1079,7 +1107,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Hætta við"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1111,7 +1139,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__divorced
@@ -1165,7 +1193,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Email"
-msgstr ""
+msgstr "Netfang"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
@@ -1411,14 +1439,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Fylgjendur"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Fylgjendur (samstarfsaðilar)"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
@@ -1500,7 +1528,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Group By"
-msgstr ""
+msgstr "Hópað eftir"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
@@ -1524,7 +1552,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hefur skilaboð"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1592,7 +1620,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__id_card
@@ -1626,17 +1654,14 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ef hakað er við krefjast ný skilaboð athygli þinnar."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_department__message_has_sms_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_employee__message_has_sms_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
-#: model:ir.model.fields,help:hr.field_hr_job__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ef hakað er við hafa sum skilaboð sendingarvillu."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -1649,31 +1674,31 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1920
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1920
 msgid "Image"
-msgstr ""
+msgstr "Mynd"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Mynd 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Mynd 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Mynd 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Mynd 512"
 
 #. module: hr
 #. odoo-python
@@ -1692,7 +1717,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Er fylgjandi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
@@ -1807,7 +1832,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_contract_type__write_date
@@ -1823,7 +1848,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
@@ -1883,7 +1908,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Aðal viðhengi"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__gender__male
@@ -1969,14 +1994,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Villa við afhendingu skilaboða"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2019,7 +2044,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__name
 #: model:ir.model.fields,field_description:hr.field_hr_plan__name
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
@@ -2119,7 +2144,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Fjöldi aðgerða"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__children
@@ -2137,7 +2162,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Fjöldi villna"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_hired_employee
@@ -2149,15 +2174,15 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
+msgid "Number of messages requiring action"
+msgstr "Fjöldi skeyta sem krefjast aðgerða"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Fjöldi skeyta með sendingarvillu"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__no_of_recruitment
@@ -2202,7 +2227,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Aðgerð ekki studd"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
@@ -2255,7 +2280,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Foreldraleið"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_partner_id
@@ -2327,7 +2352,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Phone"
-msgstr ""
+msgstr "Símanúmer"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__place_of_birth
@@ -2341,7 +2366,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_search
 msgid "Plan"
-msgstr ""
+msgstr "Plan"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.hr_plan_activity_type_action
@@ -2392,7 +2417,6 @@ msgid "Play any sport with colleagues, <br>the bill is covered."
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_crm_team__alias_contact
 #: model:ir.model.fields,help:hr.field_mail_alias__alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
@@ -2527,7 +2551,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__name
 msgid "Reason"
-msgstr ""
+msgstr "Ástæða"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_recruitment
@@ -2544,15 +2568,11 @@ msgid "Register Departure"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
 msgstr ""
@@ -2651,13 +2671,6 @@ msgid "SIN No"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__message_has_sms_error
-#: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_sms_error
-#: model:ir.model.fields,field_description:hr.field_hr_job__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__ssnid
 msgid "SSN No"
 msgstr ""
@@ -2694,7 +2707,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_departure_reason__sequence
 #: model:ir.model.fields,field_description:hr.field_hr_job__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Röð"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2765,13 +2778,13 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 msgid "State"
-msgstr ""
+msgstr "Fylki"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Status"
-msgstr ""
+msgstr "Staða"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
@@ -2836,7 +2849,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Tags"
-msgstr ""
+msgstr "Merki"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
@@ -2882,6 +2895,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO landskóði í tveimur stöfum. \n"
+"Þú getur notað þennan reit fyrir skjóta leit."
 
 #. module: hr
 #. odoo-python
@@ -2960,6 +2975,13 @@ msgstr ""
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s has been started"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The user of %s's coach is not set."
 msgstr ""
 
 #. module: hr
@@ -3088,14 +3110,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
 #: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
-#, python-format
-msgid "User of coach of employee %s is not set."
-msgstr ""
+msgstr "Notandi"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -3128,7 +3143,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
-msgid "Visa Expire Date"
+msgid "Visa Expiration Date"
 msgstr ""
 
 #. module: hr
@@ -3143,21 +3158,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
 #, python-format
 msgid "Warning"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:hr.field_hr_job__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:hr.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:hr.field_hr_job__website_message_ids
-msgid "Website communication history"
-msgstr ""
+msgstr "Aðvörun"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -3367,7 +3368,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 msgid "e.g. John Doe"
-msgstr ""
+msgstr "t.d. John Doe"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
@@ -3389,4 +3390,9 @@ msgstr ""
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
 msgstr ""

@@ -36,16 +36,39 @@
                                         <input type="hidden" name="reward" t-att-value="reward.id"/>
                                         <div class="alert alert-success text-start mt16" role="alert">
                                             <div class="d-flex flex-row">
-                                                <div class="flex-grow-1">
+                                                <div class="flex-grow-1 text-break">
                                                     <strong t-esc="reward.description"/>
-                                                    <div t-if="reward.program_id.portal_visible">
-                                                        <t t-if="not reward.program_id.is_nominative"><span t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/> <span t-out="reward.point_name"/></t>
+                                                    <div t-if="reward.reward_type == 'product'"
+                                                        class="mt-1 pe-3"
+                                                    >
+                                                        <select
+                                                            t-if="reward.multi_product"
+                                                            class="o_select w-100 form-select form-select-sm css_attribute_select"
+                                                            name="product_id"
+                                                        >
+                                                            <option
+                                                                t-foreach="reward.reward_product_ids"
+                                                                t-as="product"
+                                                                t-att-value="product.id"
+                                                            >
+                                                                <t t-out="product.display_name"/>
+                                                            </option>
+                                                        </select>
                                                         <t t-else="">
-                                                            <span>You have <t t-out="website_sale_order._get_real_points_for_coupon(coupon_reward[0])"/></span> <span t-out="reward.point_name"/>
+                                                            <t t-esc="reward.reward_product_ids.display_name"/>
+                                                        </t>
+                                                    </div>
+                                                    <div t-if="reward.program_id.portal_visible">
+                                                        <t t-set="coupon" t-value="coupon_reward[0]"/>
+                                                        <t t-if="not reward.program_id.is_nominative">
+                                                            <span t-out="coupon._format_points(website_sale_order._get_real_points_for_coupon(coupon))"/>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span>You have <t t-out="coupon._format_points(website_sale_order._get_real_points_for_coupon(coupon))"/></span>
                                                             <span t-if="reward.program_id.program_type == 'ewallet'"> in your ewallet</span>
                                                             <t t-if="reward.program_id.program_type != 'ewallet'">
                                                                 <br/>
-                                                                <span>Costs <t t-out="reward.required_points"/></span> <span t-out="reward.point_name"/>
+                                                                <span>Costs <t t-out="coupon._format_points(reward.required_points)"/></span>
                                                             </t>
                                                         </t>
                                                     </div>
@@ -117,8 +140,13 @@
     </template>
 
     <template id="cart_summary" name="Payment" inherit_id="website_sale.cart_summary">
+        <!-- `tax_excluded` line price -->
         <xpath expr="//table[@id='cart_products']/tbody/tr/td[hasclass('td-price')]/child::*" position="attributes">
-            <attribute name="t-att-style">'display: None;' if line.reward_id.reward_type == 'shipping' else ''</attribute>
+            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
+        </xpath>
+        <!-- `tax_included` line price -->
+        <xpath expr="//table[@id='cart_products']/tbody/tr/td[hasclass('td-price')]/*[2]" position="attributes">
+            <attribute name="t-att-data-reward-type">line.reward_id.reward_type</attribute>
         </xpath>
     </template>
 

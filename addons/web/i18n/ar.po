@@ -5,19 +5,20 @@
 # Translators:
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # hoxhe Aits <hoxhe0@gmail.com>, 2022
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
+# Mustafa Rawi <mustafa@mrawi.com>, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Niyas Raphy, 2022
 # Martin Trigaux, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,20 @@ msgstr " السجلات "
 #, python-format
 msgid "# Code editor"
 msgstr "# محرر الكود"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is current state"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is not current state"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -321,10 +336,10 @@ msgstr "<span class=\"text-nowrap\">ضريبة 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -556,7 +571,6 @@ msgstr "تفعيل تصحيح الأصول الاختباري "
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
@@ -973,6 +987,7 @@ msgstr "كنص افتراضي عندما لا تكون هناك قيمة محد�
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Ascending"
 msgstr "تصاعدي "
@@ -981,6 +996,7 @@ msgstr "تصاعدي "
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
@@ -1055,6 +1071,7 @@ msgstr "الشارات"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Bar Chart"
@@ -1282,7 +1299,10 @@ msgstr "اختر أمر تصحيح "
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
@@ -1295,6 +1315,13 @@ msgstr "مسح "
 #, python-format
 msgid "Clear Signature"
 msgstr "مسح التوقيع "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Click to change current state to #{i.display_name}"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1531,6 +1558,13 @@ msgstr "حقوق النشر © 2004 "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Correct issues to save, or discard changes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
@@ -1540,7 +1574,6 @@ msgstr "تعذّر الاتصال بالخادم "
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -1556,7 +1589,6 @@ msgstr "تعذر عرض ملف pdf المحدد "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #, python-format
 msgid "Could not display the specified image url."
 msgstr "تعذر عرض رابط الصورة المحددة. "
@@ -1711,6 +1743,7 @@ msgstr "مستخدم الإنشاء:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
 msgstr "التراكمي"
@@ -1718,7 +1751,6 @@ msgstr "التراكمي"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Current state"
 msgstr "الحالة الحالية"
@@ -1926,6 +1958,7 @@ msgstr "حذف صف "
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Descending"
 msgstr "تنازلي "
@@ -1969,6 +2002,7 @@ msgstr "إهمال "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
@@ -2077,6 +2111,7 @@ msgstr "لا تغادر الآن،<br />ما زال التحميل جاريًا.
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Download"
@@ -2091,6 +2126,7 @@ msgstr "تحميل معاينة PDF "
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Download xlsx"
@@ -2129,7 +2165,10 @@ msgstr "إنشاء نسخة مطابقة "
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
@@ -2235,6 +2274,7 @@ msgstr "للمؤسسات "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "خطأ"
@@ -2266,6 +2306,7 @@ msgstr "كل شيء"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Expand all"
 msgstr "إظهار الكل"
@@ -2284,6 +2325,7 @@ msgstr "تصدير"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Export All"
@@ -2313,8 +2355,8 @@ msgid "Exporting grouped data to csv is not supported."
 msgstr "تصدير البيانات المجمعة إلى csv غير مدعوم. "
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
@@ -2403,7 +2445,6 @@ msgstr "الملف"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "رفع الملف"
@@ -2426,6 +2467,7 @@ msgstr "عوامل التصفية "
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Flip axis"
@@ -2567,6 +2609,7 @@ msgstr "احصل على هذه الميزة وأكثر بكثير مع نسخة 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
 msgstr "الذهاب إلى رابط URL "
@@ -2612,6 +2655,19 @@ msgstr "معالجة "
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "ترويسة النص تُعرض في الجزء العلوي لكافة التقارير. "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"انتبه! تغييراتك الأخيرة كبيرة جداً بحيث لا يمكن حفظها تلقائياً. يرجى الضغط "
+"على زر <i class=\"fa fa-cloud-upload fa-fw\"></i> الآن للتأكد من حفظ عملك "
+"قبل الخروج من علامة التبويب هذه."
 
 #. module: web
 #. odoo-javascript
@@ -2732,6 +2788,8 @@ msgstr "عدد صحيح "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
@@ -2964,6 +3022,7 @@ msgstr "أزرق فاتح"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Line Chart"
 msgstr "رسم بياني خطي"
@@ -2990,6 +3049,13 @@ msgstr "تحميل"
 #, python-format
 msgid "Load demo data"
 msgstr "تحميل البيانات التجريبية"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr "تحميل الكل بأي حال. "
 
 #. module: web
 #. odoo-javascript
@@ -3401,6 +3467,7 @@ msgstr "جديد: %s "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
@@ -3586,7 +3653,6 @@ msgstr "غير معين "
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state"
 msgstr "ليس في الحالة نشط"
@@ -3594,10 +3660,16 @@ msgstr "ليس في الحالة نشط"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "ليس في الحالة نشط، انقر لتغيير ذلك "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
+#, python-format
+msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3977,6 +4049,7 @@ msgstr "اختر لوناً "
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Pie Chart"
 msgstr "مخطط بياني دائري "
@@ -4146,6 +4219,7 @@ msgstr "معاينة الشعار"
 #. odoo-javascript
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -4551,6 +4625,13 @@ msgid "Request timeout"
 msgstr "انتهت مهلة الطلب"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "إعادة تعيين النطاق "
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "إعادة التعيين لألوان الشعار "
@@ -4680,6 +4761,7 @@ msgstr "حفظ كافتراضي"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
 msgstr "الحفظ يدوياً "
@@ -4694,6 +4776,7 @@ msgstr "حفظ السجل "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
@@ -4867,6 +4950,13 @@ msgstr "تحديد الكل "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr "قم بتحديد كافة السجلات المطابقة للبحث "
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
@@ -4908,6 +4998,7 @@ msgstr "قائمة خيارات: "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #, python-format
 msgid "Send Email"
@@ -5064,6 +5155,8 @@ msgstr "خاص:"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Stacked"
 msgstr "مكدسة"
@@ -5090,6 +5183,13 @@ msgstr "معلومات الإحصاءات "
 #, python-format
 msgid "Status"
 msgstr "الحالة"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr "شريط الحالة "
 
 #. module: web
 #. odoo-javascript
@@ -5159,10 +5259,19 @@ msgstr "خطأ في التركيب"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
 msgstr "نصيحة "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Tag color: #{colornames[color]}"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5252,8 +5361,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "الملف المحدد (%sB) تجاوز الحجم المسموح به للملفات (%sB). "
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "الملف المحدد تجاوز الحجم الأقصى: %s."
@@ -5267,6 +5382,17 @@ msgid ""
 "'ir.attachment' model."
 msgstr ""
 "نوع الحقل '%s' يجب أن يكون متعدد إلى متعدد مع علاقة بتطبيق 'ir.attachment'. "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"يوجد كم كبير جداً من البيانات. يُظهر الرسم البياني مجرد عينة. استخدم الفلاتر"
+" لتدقيق النطاق. "
 
 #. module: web
 #. odoo-python
@@ -5315,6 +5441,7 @@ msgstr "هذا التاريخ في المستقبل. تأكد من أنه ما �
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datepicker/datepicker.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
@@ -5487,7 +5614,7 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                    active filter in the search bar."
 msgstr ""
-"لإضافة بعض السجلات، أو التأكد من أنه لا يوجد عامل تصفية\n"
+"جرب إضافة بعض السجلات، أو تأكد من أنه لا يوجد عامل تصفية\n"
 "                     نشط في شريط البحث. "
 
 #. module: web
@@ -5583,8 +5710,8 @@ msgid "Uncaught Promise"
 msgstr "وعد لم يتم رصده "
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5881,6 +6008,7 @@ msgstr "أداة تبديل العرض "
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/control_panel.xml:0
 #: code:addons/web/static/src/search/favorite_menu/favorite_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
@@ -6170,9 +6298,11 @@ msgstr "منذ ساعة تقريبًا"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "الكل"
@@ -6184,6 +6314,13 @@ msgstr "الكل"
 #, python-format
 msgid "all records"
 msgstr "كافة السجلات"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "and"
+msgstr "و"
 
 #. module: web
 #. odoo-javascript
@@ -6517,8 +6654,8 @@ msgstr "لا يزال قيد التحميل... "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6598,6 +6735,14 @@ msgstr "ms"
 #, python-format
 msgid "new tab"
 msgstr "علامة تبويب جديدة "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#, python-format
+msgid "new_template"
+msgstr "new_template"
 
 #. module: web
 #. odoo-javascript
@@ -6750,6 +6895,14 @@ msgstr "السجلات المحددة، "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "self"
+msgstr "ذاتي "
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6780,7 +6933,35 @@ msgstr "اكتب نصاً افتراضياً أو اضغط على إدخال "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
+#, python-format
+msgid "{{ progressBar.count }} {{ progressBar.string }}"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#, python-format
+msgid "{{ relatedFieldName }}..."
+msgstr "{{ relatedFieldName }}..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/kanban.xml:0
+#, python-format
+msgid "{{ widget.groupByFieldString }}..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
 msgstr "— اضغط "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "— ابحث عن "

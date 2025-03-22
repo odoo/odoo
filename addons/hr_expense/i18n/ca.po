@@ -11,36 +11,46 @@
 # Arnau Ros, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # marcescu, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # eriiikgt, 2022
-# AncesLatino2004, 2022
+# 7b9408628f00af852f513eb4f12c005b_f9c6891, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Josep Anton Belchi, 2022
 # CristianCruzParra, 2022
-# Martin Trigaux, 2022
 # Ivan Espinola, 2022
 # jabiri7, 2022
-# Quim - eccit <quim@eccit.com>, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2023
 # martioodo hola, 2023
 # Albert Parera, 2023
+# Martin Trigaux, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Santiago Payà <santiagopim@gmail.com>, 2024
+# Eugeni Chafer <eugeni@chafer.cat>, 2024
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 14:21+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Albert Parera, 2023\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -67,24 +77,6 @@ msgstr ""
 #, python-format
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> (</span>"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\">) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -122,6 +114,16 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Diari de despeses dels empleats</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+msgstr "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
+msgstr "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -360,10 +362,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Adjunta un rebut - normalment una imatge o un fitxer PDF."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Adjunt"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "Nombre d'adjunts"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Adjunts"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr "Adjunts de despeses"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -483,6 +500,7 @@ msgstr "Crear"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1328,6 +1346,13 @@ msgstr "Nou informe de despeses"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "New Expense Report, paid by %(paid_by)s"
+msgstr "Nou informe de despesa, pagat per %(paid_by)s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "New Expense Reports"
 msgstr "Informes de despeses nous"
 
@@ -1335,7 +1360,7 @@ msgstr "Informes de despeses nous"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_calendar_event_id
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Proper esdeveniment del calendari d'activitats"
+msgstr "Pròxim esdeveniment del calendari d'activitats"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_date_deadline
@@ -1432,6 +1457,13 @@ msgid "Number of messages with delivery error"
 msgstr "Nombre de missatges amb error d'entrega"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+#, python-format
+msgid "Numbers computed from your personal expenses."
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
 msgid "Odoo"
 msgstr "Odoo"
@@ -1470,12 +1502,18 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
 "Només els directius i els responsables de recursos humans poden aprovar "
 "despeses"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Only Managers and HR Officers can refuse expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1532,6 +1570,21 @@ msgid "Phone bills, postage, etc."
 msgstr "Factures telefòniques, correus electrònics, etc."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Please specify a bank journal in order to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1583,6 +1636,11 @@ msgstr "Descripció del producte"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
 msgstr "Nom producte"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Variant de producte"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
@@ -1750,6 +1808,7 @@ msgstr "Escanejar"
 
 #. module: hr_expense
 #. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
@@ -1835,14 +1894,6 @@ msgstr ""
 "automàticament per a vostè."
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr ""
-"Especifiqueu el diari de despeses per generar assentaments comptables."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
@@ -1865,6 +1916,11 @@ msgstr "Despeses desglossades"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
 msgstr "Divideix possible"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "Avís d'actualització de preu estàndard"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1913,6 +1969,11 @@ msgstr "Enviat"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
 msgid "Tax"
 msgstr "Impost"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Tax 15%"
+msgstr "Impost 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
@@ -2018,6 +2079,17 @@ msgstr ""
 "La forma de pagament utilitzada quan la despesa és pagada per l'empresa."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Cal l'adreça privada de l'empleat per a publicar un informe de despeses. Si "
+"us plau, afegeix-la a la fitxa de l'empleat. "
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -2042,9 +2114,13 @@ msgstr "No hi ha informes de despeses per aprovar."
 #: code:addons/hr_expense/models/product_product.py:0
 #, python-format
 msgid ""
-"There are unposted expenses linked to this category. Updating the category "
-"cost will change expense amounts. Make sure it is what you want to do."
+"There are unsubmitted expenses linked to this category. Updating the "
+"category cost will change expense amounts. Make sure it is what you want to "
+"do."
 msgstr ""
+"Hi ha despeses pendents d'enviar vinculades en aquesta categoria. "
+"Actualitzar el cost de la categoria canviarà les quantitats de la despesa. "
+"Assegura't que és això el que vols fer."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2163,6 +2239,7 @@ msgstr "Categoria UoM"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
 msgid "Upload"
 msgstr "Pujar"
@@ -2362,8 +2439,10 @@ msgstr "No pots rebutjar les teves pròpies despeses"
 #, python-format
 msgid "You cannot report expenses for different companies in the same report."
 msgstr ""
+"No pots incloure despeses de diferents companyies en el mateix informe."
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2383,6 +2462,23 @@ msgstr "No podeu informar de les despeses sense import!"
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr "No podeu informar dues vegades a la mateixa línia!"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2464,12 +2560,3 @@ msgstr "en validació"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "utilitzeu OCR per omplir les dades d'una imatge de la factura"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid ""
-"The private address of the employee is required to post the expense report. "
-"Please add it on the employee form."
-msgstr ""

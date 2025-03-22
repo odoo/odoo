@@ -7,19 +7,21 @@
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
 # Hamid Darabi, 2023
 # Maziar Niaki <maziarmn@gmail.com>, 2023
-# F Hariri <fhari1234@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
+# F Hariri <fhari1234@gmail.com>, 2023
 # Arash Sardari <arashss77@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
+# Abbas Ebadian, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,7 +59,7 @@ msgstr ""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge text-bg-warning float-end\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-warning float-end\">لغو شد</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -647,11 +649,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "اگر علامت زده شود، برخی از پیام ها دارای خطای تحویل هستند."
 
@@ -867,7 +866,6 @@ msgstr "نوع تعمیر و نگهداری"
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
-#: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
 msgstr "تعمیر و نگهداری: درخواست های نگهداری پیشگیرانه ایجاد کنید"
 
@@ -888,7 +886,7 @@ msgstr "پیام ها"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_metrology
 msgid "Metrology"
-msgstr ""
+msgstr "سنجش"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__model
@@ -898,7 +896,7 @@ msgstr "مدل"
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_monitor
 msgid "Monitors"
-msgstr ""
+msgstr "مانیتورها"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__my_activity_date_deadline
@@ -1011,7 +1009,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام هایی که نیاز به اقدام دارند"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
@@ -1069,7 +1067,7 @@ msgstr ""
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
 msgid "Phones"
-msgstr ""
+msgstr "تلفن‌ها"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_contact
@@ -1090,6 +1088,7 @@ msgid "Preventive"
 msgstr "پیشگیرانه"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
@@ -1103,7 +1102,7 @@ msgstr "تکرار نگهداری پیشگیرانه"
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_printer
 msgid "Printers"
-msgstr ""
+msgstr "چاپگرها"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__priority
@@ -1176,10 +1175,11 @@ msgid "Request Done"
 msgstr "درخواست انجام شده"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for %s"
-msgstr ""
+msgstr "درخواست برنامه‌ریزی شده برای %s"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1208,13 +1208,6 @@ msgstr "پاسخگو"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
 msgstr "کاربر مسئول"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "خطای تحویل پیامک"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_monitor1
@@ -1473,20 +1466,7 @@ msgid "Warranty Expiration Date"
 msgstr "تاریخ انقضای گارانتی"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
-msgid "Website Messages"
-msgstr "پیام های وب سایت"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
-msgid "Website communication history"
-msgstr "تاریخچه ارتباط با وبسایت"
-
-#. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""

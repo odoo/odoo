@@ -20,7 +20,7 @@ access_res_currency_rate_account_manager,res.currency.rate account manager,base.
 
 access_account_invoice_report_readonly,account.invoice.report_user,model_account_invoice_report,account.group_account_readonly,1,0,0,0
 access_account_invoice_report_billing,account.invoice.report_billing,model_account_invoice_report,account.group_account_invoice,1,0,0,0
-access_account_invoice_report,account.invoice.report,model_account_invoice_report,account.group_account_manager,1,1,1,1
+access_account_invoice_report,account.invoice.report,model_account_invoice_report,account.group_account_manager,1,0,0,0
 
 access_account_incoterms_all,account.incoterms all,model_account_incoterms,,1,0,0,0
 access_account_incoterms_manager,account.incoterms manager,model_account_incoterms,account.group_account_manager,1,1,1,1
@@ -57,6 +57,7 @@ access_account_analytic_line_readonly,account.analytic.line invoice,model_accoun
 access_account_analytic_line_invoice,account.analytic.line invoice,model_account_analytic_line,account.group_account_invoice,1,1,1,1
 access_account_analytic_accountant,account.analytic.account accountant,analytic.model_account_analytic_account,account.group_account_user,1,1,1,1
 access_account_analytic_plan_accountant,account.analytic.plan accountant,analytic.model_account_analytic_plan,account.group_account_user,1,1,1,1
+access_account_analytic_applicability_accountant,account.analytic.applicability accountant,analytic.model_account_analytic_applicability,account.group_account_user,1,1,1,1
 access_account_analytic_distribution_readonly,account.analytic.distribution invoice,analytic.model_account_analytic_distribution_model,account.group_account_readonly,1,0,0,0
 access_account_analytic_distribution_invoice,account.analytic.distribution invoice,analytic.model_account_analytic_distribution_model,account.group_account_invoice,1,1,1,1
 
@@ -80,6 +81,7 @@ access_account_tax_internal_user,account.tax internal user,model_account_tax,bas
 access_account_tax_readonly,account.tax,model_account_tax,account.group_account_readonly,1,0,0,0
 access_account_tax_invoice,account.tax,model_account_tax,account.group_account_invoice,1,0,0,0
 access_account_tax_manager,account.tax,model_account_tax,account.group_account_manager,1,1,1,1
+access_account_tag_internal_user,account.account.tag internal user,model_account_account_tag,base.group_user,1,0,0,0
 access_account_account_tax,account.account.tag,model_account_account_tag,account.group_account_user,1,1,1,1
 access_account_account_tax_readonly,account.account.tag,model_account_account_tag,account.group_account_readonly,1,0,0,0
 access_account_account_tax_user,account.account.tag,model_account_account_tag,account.group_account_invoice,1,0,0,0

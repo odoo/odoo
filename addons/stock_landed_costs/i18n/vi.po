@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
@@ -177,6 +178,7 @@ msgid "Cost Lines"
 msgstr "Chi tiết chi phí"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid ""
@@ -353,8 +355,7 @@ msgid ""
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
 "Cho biết liệu sản phẩm có phải là chi phí nhập kho hay không: khi nhận được "
-"hóa đơn nhà cung cấp, bạn có thể phân bổ chi phí này cho các biên lai trước "
-"đó."
+"hóa đơn mua hàng, bạn có thể phân bổ chi phí này cho các biên lai trước đó."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -485,6 +486,7 @@ msgid "Name"
 msgstr "Tên"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
@@ -538,6 +540,7 @@ msgid "Number of messages with delivery error"
 msgstr "Số tin nhắn bị gửi lỗi"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Only draft landed costs can be validated"
@@ -554,12 +557,14 @@ msgid "Picking"
 msgstr "Phiếu kho"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr "Vui lòng cấu hình Tài khoản chi phí tồn kho cho sản phẩm: %s."
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid "Please define %s on which those additional costs should apply."
@@ -670,12 +675,12 @@ msgstr "Tổng"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__picking_ids
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__target_model__picking
 msgid "Transfers"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trên bản ghi."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -683,6 +688,7 @@ msgid "Validate"
 msgstr "Xác nhận"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid ""
@@ -711,7 +717,7 @@ msgstr "Điều chỉnh giá trị"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__vendor_bill_id
 msgid "Vendor Bill"
-msgstr "Hóa đơn Nhà cung cấp"
+msgstr "Hóa đơn mua hàng"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__volume
@@ -734,6 +740,7 @@ msgid "Weight"
 msgstr "Khối lượng"
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
 #, python-format
 msgid ""
@@ -741,10 +748,11 @@ msgid ""
 "applied for products with FIFO or average costing method."
 msgstr ""
 "Bạn không thể áp dụng chi phí nhập kho trên (các) %s đã chọn. Chi phí nhập "
-"kho chỉ có thể được áp dụng cho các sản phẩm có FIFO hoặc phương pháp giá "
-"vốn trung bình."
+"kho chỉ có thể được áp dụng cho các sản phẩm có FIFO hoặc phương pháp tính "
+"chi phí trung bình."
 
 #. module: stock_landed_costs
+#. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
 #, python-format
 msgid ""

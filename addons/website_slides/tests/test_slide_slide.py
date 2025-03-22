@@ -24,7 +24,7 @@ class TestSlideInternals(slides_common.SlidesCase):
 
     def test_change_content_type(self):
         """ To prevent constraint violation when changing type from video to article and vice-versa """
-        slide = self.env['slide.slide'].create({
+        slide = self.env['slide.slide'].with_context(website_slides_skip_fetch_metadata=True).create({
             'name': 'dummy',
             'channel_id': self.channel.id,
             'slide_category': 'video',
@@ -46,6 +46,8 @@ class TestVideoFromURL(slides_common.SlidesCase):
                 'https://youtu.be/W0JQcpGLSFw',
                 'https://www.youtube.com/watch?v=W0JQcpGLSFw',
                 'https://www.youtube.com/watch?v=W0JQcpGLSFw&list=PL1-aSABtP6ACZuppkBqXFgzpNb2nVctZx',
+                'https://www.youtube.com/live/W0JQcpGLSFw?feature=shared',
+                'https://youtube.com/shorts/W0JQcpGLSFw?si=N9xYS2w3f1BWuhU9',
             ],
             'vmhB-pt7EfA': [  # id starts with v, it is important
                 'https://youtu.be/vmhB-pt7EfA',

@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2024
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -396,7 +397,7 @@ msgstr "Không có hạng mục đơn bán hàng nào"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Non-billable"
-msgstr "Không thể xuất hoá đơn"
+msgstr "Không thể tính phí"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -520,6 +521,11 @@ msgid "Quantity"
 msgstr "Số lượng"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Dòng mẫu báo giá"
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
 msgstr "Mốc thời gian đã đạt"
@@ -556,6 +562,7 @@ msgstr "Bán hàng & Hoá đơn"
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order"
@@ -651,13 +658,6 @@ msgstr "Tìm kiếm trong hóa đơn"
 #, python-format
 msgid "Search in Sales Order"
 msgstr "Tìm kiếm trong đơn bán hàng"
-
-#. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#, python-format
-msgid "Search in Sales Order Item"
-msgstr "Tìm kiếm trong hạng mục đơn bán hàng"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -763,7 +763,7 @@ msgstr "Theo dõi dịch vụ"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count
 msgid "Vendor Bill Count"
-msgstr "Số hóa đơn nhà cung cấp"
+msgstr "Số hóa đơn mua hàng"
 
 #. module: sale_project
 #. odoo-python
@@ -771,7 +771,7 @@ msgstr "Số hóa đơn nhà cung cấp"
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Vendor Bills"
-msgstr "Hoá đơn nhà cung cấp"
+msgstr "Hóa đơn mua hàng"
 
 #. module: sale_project
 #. odoo-python

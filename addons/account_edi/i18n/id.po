@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Abe Manyo, 2023
+# Abe Manyo, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -368,6 +369,11 @@ msgid "Product Unit of Measure"
 msgstr "Satuan Produk"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Buat kembali nomor urut dari Entri Jurnal"
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Report Action"
@@ -426,6 +432,15 @@ msgid ""
 msgstr ""
 "File yang dibuat oleh edi_format_id saat faktur dipost (dan dokumen ini "
 "diproses)."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+"Dokumen-dokumen berikut sudah dikirim dan tidak dapat diurutkan ulang: %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

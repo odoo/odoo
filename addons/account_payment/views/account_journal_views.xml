@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="account.view_account_journal_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='inbound_payment_method_line_ids']//field[@name='payment_account_id']" position="after">
-                <field name="payment_provider_id" invisible="1"/>
                 <field name="payment_provider_state" invisible="1"/>
+                <field name="code" invisible="1"/>
+                <field name="payment_provider_id" options="{'no_open': True, 'no_create': True}" optional="hide" domain="[('code', '=', code)]"/>
                 <button name="action_open_provider_form"
                         type="object"
                         string="SETUP"

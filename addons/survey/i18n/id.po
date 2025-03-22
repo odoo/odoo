@@ -5,15 +5,16 @@
 # Translators:
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Abe Manyo, 2023
+# Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,6 +73,13 @@ msgstr "% selesai"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (salinan)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr "%s Vote"
 
 #. module: survey
 #. odoo-python
@@ -1323,7 +1331,6 @@ msgid "Cliff Burton"
 msgstr "Cliff Burton"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1478,8 +1485,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Meja Sudut Kanan"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2357,8 +2364,8 @@ msgstr ""
 "jawaban dan nilai jawaban sebelum dipertimbangkan."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3318,8 +3325,8 @@ msgid "Partial"
 msgstr "Sebagian"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3509,6 +3516,11 @@ msgstr "Cetak"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "Produk"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -4580,8 +4592,8 @@ msgid "This is a Test Survey."
 msgstr "Ini adalah Survei Test."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4798,8 +4810,8 @@ msgstr ""
 "Tidak dapat memposting pesan, mohon konfigurasi alamat email pengirim."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4853,6 +4865,11 @@ msgstr "Gunakan bantuan visual yang menyenangkan, seperti presentasi live"
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "Gunakan humor dan buat lelucon"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Gunakan templat"
 
 #. module: survey
 #. odoo-javascript
@@ -5271,6 +5288,7 @@ msgstr ""
 "selagi sesi live masih berlangsung."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5375,11 +5393,6 @@ msgstr "percobaan"
 #, python-format
 msgid "close"
 msgstr "tutup"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

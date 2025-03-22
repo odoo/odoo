@@ -28,6 +28,9 @@ import {
     createDOMPathGenerator,
     closestElement,
     closestBlock,
+    getOffsetAndCharSize,
+    ZERO_WIDTH_CHARS,
+    isButton,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -40,8 +43,9 @@ Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
         return;
     }
     // Get the size of the unicode character to remove.
-    const charSize = [...this.nodeValue.slice(0, offset)].pop().length;
-    deleteText.call(this, charSize, offset - charSize, DIRECTIONS.LEFT, alreadyMoved);
+    // If the current offset split an emoji in the middle , we need to change offset to the end of the emoji
+    const [newOffset, charSize] = getOffsetAndCharSize(this.nodeValue, offset, DIRECTIONS.LEFT);
+    deleteText.call(this, charSize, newOffset - charSize, DIRECTIONS.LEFT, alreadyMoved);
 };
 
 const isDeletable = (node) => {
@@ -49,7 +53,7 @@ const isDeletable = (node) => {
 }
 
 HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, offsetLimit) {
-    const contentIsZWS = this.textContent === '\u200B';
+    const contentIsZWS = ZERO_WIDTH_CHARS.includes(this.textContent);
     let moveDest;
     if (offset) {
         const leftNode = this.childNodes[offset - 1];
@@ -123,7 +127,7 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             const parentOffset = childNodeIndex(this);
 
             if (!nodeSize(this) || contentIsZWS) {
-                const visible = isVisible(this) && !contentIsZWS;
+                const visible = (isVisible(this) && !contentIsZWS) || isButton(this);
                 const restore = prepareUpdate(...boundariesOut(this));
                 this.remove();
                 restore();
@@ -182,13 +186,16 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
          */
         if (
             !this.previousElementSibling &&
-            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            paragraphRelatedElements.includes(this.nodeName) &&
+            this.nodeName !== 'P' &&
             !closestLi
         ) {
-            const p = document.createElement('p');
-            p.replaceChildren(...this.childNodes);
-            this.replaceWith(p);
-            setSelection(p, offset);
+            if (!this.textContent) {
+                const p = document.createElement('p');
+                p.replaceChildren(...this.childNodes);
+                this.replaceWith(p);
+                setSelection(p, offset);
+            }
             return;
         } else {
             moveDest = leftPos(this);

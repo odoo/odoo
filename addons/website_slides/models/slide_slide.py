@@ -108,7 +108,7 @@ class Slide(models.Model):
     }
     _order = 'sequence asc, is_category asc, id asc'
 
-    YOUTUBE_VIDEO_ID_REGEX = r'^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*'
+    YOUTUBE_VIDEO_ID_REGEX = r'^(?:(?:https?:)?//)?(?:www\.|m\.)?(?:youtu\.be/|youtube(-nocookie)?\.com/(?:embed/|v/|shorts/|live/|watch\?v=|watch\?.+&v=))((?:\w|-){11})\S*$'
     GOOGLE_DRIVE_DOCUMENT_ID_REGEX = r'(^https:\/\/docs.google.com|^https:\/\/drive.google.com).*\/d\/([^\/]*)'
     VIMEO_VIDEO_ID_REGEX = r'\/\/(player.)?vimeo.com\/(?:[a-z]*\/)*([0-9]{6,11})\/?([0-9a-z]{6,11})?[?]?.*'
 
@@ -118,7 +118,7 @@ class Slide(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     sequence = fields.Integer('Sequence', default=0)
     user_id = fields.Many2one('res.users', string='Uploaded by', default=lambda self: self.env.uid)
-    description = fields.Html('Description', translate=True, sanitize_attributes=False)
+    description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_overridable=True)
     channel_id = fields.Many2one('slide.channel', string="Course", required=True, ondelete='cascade')
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     is_preview = fields.Boolean('Allow Preview', default=False, help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.")
@@ -1052,7 +1052,7 @@ class Slide(models.Model):
           (e.g: 'Video could not be found') """
 
         self.ensure_one()
-        google_app_key = self.env['website'].get_current_website().website_slide_google_app_key
+        google_app_key = self.env['website'].get_current_website().sudo().website_slide_google_app_key
         error_message = False
         try:
             response = requests.get(
@@ -1143,7 +1143,7 @@ class Slide(models.Model):
                 params['access_token'] = access_token
 
         if not params.get('access_token'):
-            params['key'] = self.env['website'].get_current_website().website_slide_google_app_key
+            params['key'] = self.env['website'].get_current_website().sudo().website_slide_google_app_key
 
         error_message = False
         try:
@@ -1381,3 +1381,9 @@ class Slide(models.Model):
             data['course'] = _('Course: %s', slide.channel_id.name)
             data['course_url'] = slide.channel_id.website_url
         return results_data
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/slide/{slug(self)}')

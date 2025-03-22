@@ -5,15 +5,16 @@
 # Translators:
 # Martin Trigaux, 2023
 # Bohdan Lisnenko, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +61,7 @@ msgstr "'Друкувати бейджик - %s' % (object.name).replace('/', ''
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Onsite Interview"
-msgstr "1 Співбесіда на місці"
+msgstr "1 Співбесіда офлайн"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -729,6 +730,11 @@ msgstr "ID значка"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Номер банківського рахунку"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Банківські рахунки"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -1980,7 +1986,7 @@ msgstr "Чоловік"
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Manager"
-msgstr "Керівник співробітника"
+msgstr "Керівник структурного підрозділу"
 
 #. module: hr
 #. odoo-python
@@ -2640,15 +2646,11 @@ msgid "Register Departure"
 msgstr "Зареєструвати звільнення"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr "Пов'язаний контакт"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
 msgstr "Пов'язані контакти"
@@ -3367,7 +3369,7 @@ msgstr "Робоче розташування"
 #: model:ir.actions.act_window,name:hr.hr_work_location_action
 #: model:ir.ui.menu,name:hr.menu_hr_work_location_tree
 msgid "Work Locations"
-msgstr "Робоче розтажування"
+msgstr "Робоче розташування"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__mobile_phone
@@ -3503,3 +3505,8 @@ msgstr "план"
 #, python-format
 msgid "restricted to employees"
 msgstr "обмежено для співробітників"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

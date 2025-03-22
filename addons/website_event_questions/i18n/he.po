@@ -8,20 +8,22 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Martin Trigaux, 2022
 # yael terner, 2023
+# tomerlayline, 2024
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: yael terner, 2023\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: website_event_questions
 #: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_2
@@ -57,12 +59,12 @@ msgstr "תשובות"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "שאל פעם אחת פר הזמנה"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "תשובות משתתף"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__partner_id
@@ -115,7 +117,7 @@ msgstr "שאלת אירוע"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "תשובה לשאלת אירוע"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
@@ -125,7 +127,7 @@ msgstr "הרשמה לאירוע"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
 msgid "Event Registration Answer"
-msgstr ""
+msgstr "תשובת הרשמה לאירוע "
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_type
@@ -166,6 +168,8 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
+"אם נכון, שאלה זו תישאל רק פעם אחת והערך שלה יופץ לכל משתתף. אם לא היא תישאל "
+"עבור כל משתתף בהזמנה."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
@@ -238,16 +242,11 @@ msgid "Question Type"
 msgstr "סוג שאלה"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
 msgstr ""
-
-#. module: website_event_questions
-#: code:addons/website_event_questions/models/event_question.py:0
-#, python-format
-msgid "Question cannot belong to both the event category and itself."
-msgstr "השאלה אינה יכולה להיות שייכת לקטגוריית האירועים וגם לעצמה."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -346,25 +345,30 @@ msgid "Yes"
 msgstr "כן"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "אתה לא יכול לשנות את סוג השאלה של שאלה שכבר יש לה תשובות!"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
 "You cannot delete a question that has already been answered by attendees."
-msgstr ""
+msgstr "לא ניתן למחוק שאלה שכבר נענתה על ידי המשתתפים."
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
 msgstr ""
+"לא ניתן למחוק תשובה שכבר נבחרה על ידי המשתתפים.\n"
+"ס."
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form

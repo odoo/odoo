@@ -3,24 +3,25 @@
 # 	* utm
 # 
 # Translators:
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Martin Trigaux, 2022
 # Simon S, 2022
 # Lasse L, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Lasse L, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,10 +30,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: utm
+#. odoo-python
 #: code:addons/utm/models/utm_source.py:0
 #, python-format
 msgid "%(content)s (%(model_description)s created on %(create_date)s)"
-msgstr ""
+msgstr "%(content)s (%(model_description)s skapad på %(create_date)s)"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__active
@@ -42,17 +44,17 @@ msgstr "Aktiv"
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_campaign__is_auto_campaign
 msgid "Allows us to filter relevant Campaigns"
-msgstr ""
+msgstr "Gör det möjligt för oss att filtrera relevanta kampanjer"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Approval-based Flow"
-msgstr ""
+msgstr "Godkännande-baserat flöde"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Approved"
@@ -67,18 +69,20 @@ msgstr "Arkiverad"
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Assign tags to your campaigns to organize, filter and track them."
 msgstr ""
+"Tilldela taggar till dina kampanjer för att organisera, filtrera och spåra "
+"dem."
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Audience-driven Flow"
-msgstr ""
+msgstr "Målgruppsdrivet flöde"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__is_auto_campaign
 msgid "Automatically Generated Campaign"
-msgstr ""
+msgstr "Automatiskt genererad kampanj"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__campaign_id
@@ -88,7 +92,7 @@ msgstr "Kampanj"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__name
 msgid "Campaign Identifier"
-msgstr ""
+msgstr "Kampanjidentifierare"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__title
@@ -100,13 +104,13 @@ msgstr "Kampanjnamn"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_stage
 msgid "Campaign Stage"
-msgstr ""
+msgstr "Kampanjstadiet"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
 #: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
 msgid "Campaign Tags"
-msgstr ""
+msgstr "Kampanj Taggar"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_action
@@ -130,11 +134,13 @@ msgid "Christmas Special"
 msgstr "Julspecial"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Collect ideas, design creative content and publish it once reviewed."
 msgstr ""
+"Samla in idéer, utforma kreativt innehåll och publicera det när det har "
+"granskats."
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__color
@@ -143,7 +149,7 @@ msgid "Color Index"
 msgstr "Färgindex"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
@@ -152,22 +158,22 @@ msgstr "Copywriting"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_medium_action
 msgid "Create a Medium"
-msgstr ""
+msgstr "Skapa ett medium"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_tag
 msgid "Create a Tag"
-msgstr ""
+msgstr "Skapa en tagg"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
 msgid "Create a campaign"
-msgstr ""
+msgstr "Skapa en kampanj"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
 msgid "Create a stage for your campaigns"
-msgstr ""
+msgstr "Skapa en scen för dina kampanjer"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__create_uid
@@ -188,11 +194,11 @@ msgid "Created on"
 msgstr "Skapad"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Creative Flow"
-msgstr ""
+msgstr "Kreativt flöde"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
@@ -200,21 +206,21 @@ msgid "Delete"
 msgstr "Ta bort"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Deploy"
 msgstr "Driftsätta"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Deployed"
-msgstr ""
+msgstr "Utplacerad"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_2
@@ -232,7 +238,7 @@ msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
@@ -253,35 +259,37 @@ msgstr "Redigera"
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
-msgstr ""
+msgstr "E-postkampanj - Produkter"
 
 #. module: utm
 #: model:utm.campaign,title:utm.utm_campaign_email_campaign_services
 msgid "Email Campaign - Services"
-msgstr ""
+msgstr "E-postkampanj - Tjänster"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Event-driven Flow"
-msgstr ""
+msgstr "Händelsestyrt flöde"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Gather Data"
-msgstr ""
+msgstr "Samla in data"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid ""
 "Gather data, build a recipient list and write content based on your "
 "Marketing target."
 msgstr ""
+"Samla in data, skapa en mottagarlista och skriv innehåll baserat på ditt "
+"marknadsföringsmål."
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
@@ -303,7 +311,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
@@ -338,7 +346,7 @@ msgid "Last Updated on"
 msgstr "Senast uppdaterad på"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Later"
@@ -350,11 +358,11 @@ msgid "Link Tracker"
 msgstr "Länkspårning"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "List-Building"
-msgstr ""
+msgstr "Uppbyggnad av listor"
 
 #. module: utm
 #: model:utm.tag,name:utm.utm_tag_1
@@ -370,14 +378,14 @@ msgstr "Medium"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_medium__name
 msgid "Medium Name"
-msgstr ""
+msgstr "Medium Namn"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_medium_action
 #: model:ir.ui.menu,name:utm.menu_utm_medium
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_tree
 msgid "Mediums"
-msgstr ""
+msgstr "Media"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source_mixin__name
@@ -394,33 +402,35 @@ msgstr "Ny"
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
 msgid "No Sources yet!"
-msgstr ""
+msgstr "Inga källor ännu!"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Pre-Launch"
-msgstr ""
+msgstr "Före lansering"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Prepare Campaigns and get them approved before making them go live."
-msgstr ""
+msgstr "Förbereda kampanjer och få dem godkända innan de går live."
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid ""
 "Prepare your Campaign, test it with part of your audience and deploy it "
 "fully afterwards."
 msgstr ""
+"Förbered din kampanj, testa den med en del av din publik och distribuera den"
+" helt och hållet efteråt."
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Report"
@@ -433,7 +443,7 @@ msgid "Responsible"
 msgstr "Ansvarig"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
@@ -441,7 +451,7 @@ msgid "Review"
 msgstr "Granska"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Running"
@@ -460,10 +470,10 @@ msgstr "Schemalägg"
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
-msgstr ""
+msgstr "Sök UTM Medium"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
@@ -471,7 +481,7 @@ msgid "Send"
 msgstr "Skicka"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: model:utm.stage,name:utm.campaign_stage_3
@@ -485,18 +495,18 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Soft-Launch"
-msgstr ""
+msgstr "Mjuk lansering"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Soft-Launch Flow"
-msgstr ""
+msgstr "Mjukstartande flöde"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_mixin__source_id
@@ -542,6 +552,8 @@ msgid ""
 "Tag color. No color means no display in kanban to distinguish internal tags "
 "from public categorization tags."
 msgstr ""
+"Färg på tagg. Ingen färg innebär ingen visning i Kanban för att skilja "
+"interna taggar från publika kategoriseringstaggar."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
@@ -554,29 +566,32 @@ msgid "Tags"
 msgstr "Etiketter"
 
 #. module: utm
+#. odoo-python
 #: code:addons/utm/models/utm_medium.py:0
 #, python-format
 msgid ""
 "The UTM medium '%s' cannot be deleted as it is used in some main functional "
 "flows, such as the recruitment and the mass mailing."
 msgstr ""
+"UTM-mediet \"%s\" kan inte tas bort eftersom det används i vissa viktiga "
+"funktionella flöden, t.ex. rekrytering och massutskick."
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
 #: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
 msgid "The name must be unique"
-msgstr ""
+msgstr "Namnet måste vara unikt"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "This Month"
 msgstr "Denna Månaden"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "This Week"
@@ -607,14 +622,14 @@ msgstr ""
 "e-postlistan"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "To be Approved"
-msgstr ""
+msgstr "Ska godkännas"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid ""
@@ -632,7 +647,7 @@ msgstr "UTM kampanj"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_tree
 #: model_terms:ir.ui.view,arch_db:utm.view_utm_campaign_view_search
 msgid "UTM Campaigns"
-msgstr ""
+msgstr "UTM-kampanjer"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_medium
@@ -645,11 +660,13 @@ msgid ""
 "UTM Mediums track the mean that was used to attract traffic (e.g. "
 "\"Website\", \"Twitter\", ...)."
 msgstr ""
+"UTM-medier spårar medelvärdet som användes för att locka trafik (t.ex. "
+"\"Webbplats\", \"X\" (f.d. Twitter), ...)."
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_mixin
 msgid "UTM Mixin"
-msgstr ""
+msgstr "UTM Mixin"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source
@@ -659,7 +676,7 @@ msgstr "UTM Källa"
 #. module: utm
 #: model:ir.model,name:utm.model_utm_source_mixin
 msgid "UTM Source Mixin"
-msgstr ""
+msgstr "UTM-källa Mixin"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_source_action
@@ -667,28 +684,40 @@ msgid ""
 "UTM Sources track where traffic comes from  (e.g. \"May Newsletter\", \"\", "
 "...)."
 msgstr ""
+"UTM-källor spårar var trafiken kommer ifrån (t.ex. \"maj nyhetsbrev\", "
+"\"sommarkampanj\", ...)."
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.action_view_utm_stage
 msgid "UTM Stages"
-msgstr ""
+msgstr "UTM-stadier"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_tag
 msgid "UTM Tag"
-msgstr ""
+msgstr "UTM-tagg"
 
 #. module: utm
 #: model:ir.ui.menu,name:utm.marketing_utm
 msgid "UTMs"
-msgstr ""
+msgstr "UTM"
 
 #. module: utm
-#. openerp-web
+#. odoo-javascript
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Campaigns"
+msgstr "Använder detta för mina kampanjer"
+
+#. module: utm
+#. odoo-python
+#: code:addons/utm/models/utm_source.py:0
+#, python-format
+msgid ""
+"You cannot update multiple records with the same name. The name should be "
+"unique!"
 msgstr ""
+"Du kan inte uppdatera flera poster med samma namn. Namnet ska vara unikt!"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form

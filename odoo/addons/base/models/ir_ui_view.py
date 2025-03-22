@@ -23,12 +23,12 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path, get_resource_path
+from odoo.service.model import get_public_method
 from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheritance_specs, locate_node, str2bool
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools import safe_eval, lazy, lazy_property, frozendict
 from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
-from odoo.models import check_method_name
 from odoo.osv.expression import expression
 
 _logger = logging.getLogger(__name__)
@@ -152,6 +152,7 @@ class ViewCustom(models.Model):
     _description = 'Custom View'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
     _rec_name = 'user_id'
+    _allow_sudo_commands = False
 
     ref_id = fields.Many2one('ir.ui.view', string='Original View', index=True, required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', index=True, required=True, ondelete='cascade')
@@ -227,6 +228,7 @@ class View(models.Model):
     _name = 'ir.ui.view'
     _description = 'View'
     _order = "priority,name,id"
+    _allow_sudo_commands = False
 
     name = fields.Char(string='View Name', required=True)
     model = fields.Char(index=True)
@@ -365,11 +367,13 @@ actual arch.
             arch = False
             if mode == 'soft':
                 arch = view.arch_prev
+                write_dict = {'arch_db': arch}
             elif mode == 'hard' and view.arch_fs:
                 arch = view.with_context(read_arch_from_file=True, lang=None).arch
+                write_dict = {'arch_db': arch, 'arch_prev': False, 'arch_updated': False}
             if arch:
                 # Don't save current arch in previous since we reset, this arch is probably broken
-                view.with_context(no_save_prev=True, lang=None).write({'arch_db': arch})
+                view.with_context(no_save_prev=True, lang=None).write(write_dict)
 
     @api.depends('write_date')
     def _compute_model_data_id(self):
@@ -677,8 +681,8 @@ actual arch.
         views = self.browse(row[0] for row in rows)
 
         # optimization: fill in cache of inherit_id and mode
-        self.env.cache.update(views, type(self).inherit_id, [row[1] for row in rows])
-        self.env.cache.update(views, type(self).mode, [row[2] for row in rows])
+        self.env.cache.update(views, self._fields['inherit_id'], [row[1] for row in rows])
+        self.env.cache.update(views, self._fields['mode'], [row[2] for row in rows])
 
         # During an upgrade, we can only use the views that have been
         # fully upgraded already.
@@ -1352,7 +1356,7 @@ actual arch.
         if func is not None:
             return func(node, name_manager)
         # by default views are non-editable
-        return node.tag not in (item[0] for item in type(self).type.selection)
+        return node.tag not in (item[0] for item in self._fields['type'].selection)
 
     def _editable_tag_form(self, node, name_manager):
         return True
@@ -1584,7 +1588,7 @@ actual arch.
             elif not name:
                 self._raise_view_error(_("Button must have a name"), node)
             elif type_ == 'object':
-                func = getattr(type(name_manager.model), name, None)
+                func = getattr(name_manager.model, name, None)
                 if not func:
                     msg = _(
                         "%(action_name)s is not a valid action on %(model_name)s",
@@ -1592,15 +1596,15 @@ actual arch.
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    check_method_name(name)
-                except AccessError:
+                    get_public_method(name_manager.model, name)
+                except (AttributeError, AccessError):
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name, model=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
                 try:
-                    inspect.signature(func).bind(self=name_manager.model)
+                    inspect.signature(func).bind()
                 except TypeError:
                     msg = "%s on %s has parameters and cannot be called from a button"
                     self._log_view_warning(msg % (name, name_manager.model._name), node)
@@ -2056,6 +2060,12 @@ actual arch.
 
         node_path = e.get('data-oe-xpath')
         if node_path is None:
+            # Handle special case for jump points defined by the magic template
+            # <t>$0</t>. No branding is allowed in this case since it points to
+            # a generic template.
+            if e.get('data-oe-no-branding'):
+                e.attrib.pop('data-oe-no-branding')
+                return
             node_path = "%s/%s[%d]" % (parent_xpath, e.tag, index_map[e.tag])
         if branding:
             if e.get('t-field'):

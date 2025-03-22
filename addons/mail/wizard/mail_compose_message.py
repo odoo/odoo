@@ -14,7 +14,8 @@ def _reopen(self, res_id, model, context=None):
     # save original model in context, because selecting the list of available
     # templates requires a model in context
     context = dict(context or {}, default_model=model)
-    return {'type': 'ir.actions.act_window',
+    return {'name': _('Compose Email'),
+            'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_id': res_id,
             'res_model': self._name,
@@ -121,6 +122,7 @@ class MailComposer(models.TransientModel):
     active_domain = fields.Text('Active domain', readonly=True)
     # characteristics
     message_type = fields.Selection([
+        ('auto_comment', 'Automated Targeted Notification'),
         ('comment', 'Comment'),
         ('notification', 'System notification')],
         'Type', required=True, default='comment',
@@ -443,6 +445,16 @@ class MailComposer(models.TransientModel):
                     {'model': 'mail.message', 'res_id': 0}
                 )['attachment_ids']
 
+                # generate message_id directly; instead of letting mail_message create
+                # method doing it. Then use it to craft references, allowing to keep
+                # a trace of message_id even when email providers override it.
+                # Note that if 'auto_delete' and 'auto_delete_message' are True,
+                # mail.message is removed and parent finding based on messageID
+                # may be broken, tough life
+                message_id = self.env['mail.message']._get_message_id(mail_values)
+                mail_values['message_id'] = message_id
+                mail_values['references'] = message_id
+
             results[res_id] = mail_values
 
         results = self._process_state(results)
@@ -493,21 +505,13 @@ class MailComposer(models.TransientModel):
     def _process_state(self, mail_values_dict):
         recipients_info = self._process_recipient_values(mail_values_dict)
         blacklist_ids = self._get_blacklist_record_ids(mail_values_dict, recipients_info)
-        optout_emails = self._get_optout_emails(mail_values_dict)
-        done_emails = self._get_done_emails(mail_values_dict)
+        optout_emails = [tools.email_normalize(email) for email in self._get_optout_emails(mail_values_dict)]
+        done_emails = [tools.email_normalize(email) for email in self._get_done_emails(mail_values_dict)]
         # in case of an invoice e.g.
         mailing_document_based = self.env.context.get('mailing_document_based')
 
         for record_id, mail_values in mail_values_dict.items():
             recipients = recipients_info[record_id]
-            # when having more than 1 recipient: we cannot really decide when a single
-            # email is linked to several to -> skip that part. Mass mailing should
-            # anyway always have a single recipient per record as this is default behavior.
-            if len(recipients['mail_to']) > 1:
-                continue
-
-            mail_to = recipients['mail_to'][0] if recipients['mail_to'] else ''
-            mail_to_normalized = recipients['mail_to_normalized'][0] if recipients['mail_to_normalized'] else ''
 
             # prevent sending to blocked addresses that were included by mistake
             # blacklisted or optout or duplicate -> cancel
@@ -516,21 +520,25 @@ class MailComposer(models.TransientModel):
                 mail_values['failure_type'] = 'mail_bl'
                 # Do not post the mail into the recipient's chatter
                 mail_values['is_notification'] = False
-            elif optout_emails and mail_to in optout_emails:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_optout'
-            elif done_emails and mail_to in done_emails and not mailing_document_based:
-                mail_values['state'] = 'cancel'
-                mail_values['failure_type'] = 'mail_dup'
-            # void of falsy values -> error
-            elif not mail_to:
+            # void or falsy values -> error
+            elif not any(recipients['mail_to']):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_missing'
-            elif not mail_to_normalized:
+            elif not any(recipients['mail_to_normalized']):
                 mail_values['state'] = 'cancel'
                 mail_values['failure_type'] = 'mail_email_invalid'
+            elif optout_emails and all(
+                    mail_to in optout_emails for mail_to in recipients['mail_to_normalized']
+                ):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_optout'
+            elif done_emails and not mailing_document_based and all(
+                    mail_to in done_emails for mail_to in recipients['mail_to_normalized']
+                ):
+                mail_values['state'] = 'cancel'
+                mail_values['failure_type'] = 'mail_dup'
             elif done_emails is not None and not mailing_document_based:
-                done_emails.append(mail_to)
+                done_emails.extend(recipients['mail_to_normalized'])
 
         return mail_values_dict
 
@@ -549,7 +557,7 @@ class MailComposer(models.TransientModel):
             blacklist = {x[0] for x in self._cr.fetchall()}
             if not blacklist:
                 return blacklisted_rec_ids
-            if issubclass(type(self.env[self.model]), self.pool['mail.thread.blacklist']):
+            if isinstance(self.env[self.model], self.pool['mail.thread.blacklist']):
                 targets = self.env[self.model].browse(mail_values_dict.keys()).read(['email_normalized'])
                 # First extract email from recipient before comparing with blacklist
                 blacklisted_rec_ids.update(target['id'] for target in targets
@@ -568,7 +576,7 @@ class MailComposer(models.TransientModel):
         return []
 
     def _onchange_template_id(self, template_id, composition_mode, model, res_id):
-        """ - mass_mailing: we cannot render, so return the template values
+        r""" - mass_mailing: we cannot render, so return the template values
             - normal mode: return rendered values
             /!\ for x2many field, this onchange return command instead of ids
         """
@@ -628,6 +636,10 @@ class MailComposer(models.TransientModel):
                             'partner_ids', 'reply_to',
                             'attachment_ids', 'mail_server_id'
                            ] if key in default_values)
+
+        if template_id:  # Restore default sender if not updated on template switch (for both "mass_mail" and "comment" modes)
+            if 'email_from' not in values:
+                values['email_from'] = self.default_get(['email_from']).get('email_from')
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')

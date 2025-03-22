@@ -12,14 +12,18 @@
 # aleksandar ivanov, 2023
 # Martin Trigaux, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
+# Elena Varbanova, 2024
+# Petko Karamotchev, 2024
+# margarita.katzeva, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: margarita.katzeva, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,6 +42,7 @@ msgid "# Contracts using it"
 msgstr ""
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
@@ -46,7 +51,7 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "/ month"
-msgstr ""
+msgstr "/ месец"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -88,12 +93,12 @@ msgstr "Активно"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
 msgid "Active Employee"
-msgstr ""
+msgstr "Активен служител"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Active Employees"
-msgstr ""
+msgstr "Активни служители"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_ids
@@ -122,6 +127,7 @@ msgid "Administrator"
 msgstr "Администратор"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -174,7 +180,7 @@ msgstr "Служебен автомобил"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__company_country_id
 msgid "Company country"
-msgstr ""
+msgstr "Държава на компанията"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_id
@@ -184,6 +190,7 @@ msgid "Contract"
 msgstr "Договор"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -194,7 +201,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
-msgstr ""
+msgstr "Брой договори"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -205,18 +212,18 @@ msgstr "Данни за договор"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Contract End Date"
-msgstr ""
+msgstr "Крайна дата на договора"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Contract History"
-msgstr ""
+msgstr "История на договора"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__name
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Contract Name"
-msgstr ""
+msgstr "Име на договора"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
@@ -238,7 +245,7 @@ msgstr "Вид договор"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
 msgid "Contract Wage"
-msgstr ""
+msgstr "Договорена заплата"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
@@ -260,7 +267,7 @@ msgstr "Изтекъл договор"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_history
 msgid "Contract history"
-msgstr ""
+msgstr "История на договора"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -284,12 +291,12 @@ msgstr "Договори"
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Contracts to Review"
-msgstr ""
+msgstr "Договори за преглед"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
 msgid "Contractual Status"
-msgstr ""
+msgstr "Договорен статус"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__country_id
@@ -310,7 +317,7 @@ msgstr "Създай"
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid "Create a new contract"
-msgstr ""
+msgstr "Създаване на нов контакт"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
@@ -373,6 +380,7 @@ msgid "Departure Wizard"
 msgstr "Съветник напускане"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -394,7 +402,7 @@ msgstr "Падащо меню"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
-msgstr ""
+msgstr "Редактирай договора"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -432,7 +440,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr ""
+msgstr "Банкова сметка на служител за изплащане на заплати"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
@@ -464,7 +472,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__trial_date_end
 msgid "End of Trial Period"
-msgstr ""
+msgstr "Край на пробния период"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__close
@@ -478,7 +486,7 @@ msgstr "Изтекло"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
 msgid "First Contract Date"
-msgstr ""
+msgstr "Първа дата на договора"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
@@ -508,7 +516,7 @@ msgstr "Зелено"
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
 msgid "Grey"
-msgstr ""
+msgstr "Сив"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
@@ -519,7 +527,6 @@ msgstr "Групиране по"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr ""
 
@@ -532,7 +539,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Има съобщение"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
@@ -563,14 +570,13 @@ msgstr "Ако е отметнато, новите съобщения ще из�
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ако е отметнато, някои съобщения имат грешка при доставката."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
 msgid "Is Currently Under Contract"
-msgstr ""
+msgstr "е в момента с договор"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
@@ -632,12 +638,12 @@ msgstr "Съобщения"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Monthly Wage"
-msgstr ""
+msgstr "Месечна заплата"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Краен срок за моята дейност"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__draft
@@ -646,7 +652,7 @@ msgid "New"
 msgstr "Нов"
 
 #. module: hr_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
@@ -655,7 +661,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Следващото събитие от календара на дейностите"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
@@ -675,7 +681,7 @@ msgstr "Вид на следващо действие"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "No Contracts"
-msgstr ""
+msgstr "Без договори"
 
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.hr_contract_history_view_list_action
@@ -690,7 +696,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__blocked
 msgid "Not Under Contract"
-msgstr ""
+msgstr "Не е под договор"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__notes
@@ -711,7 +717,7 @@ msgstr "Брой грешки"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Брой съобщения, изискващи действие"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
@@ -721,7 +727,7 @@ msgstr "Брой съобщения с грешка при доставка"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Open Contract"
-msgstr ""
+msgstr "Отворен договор"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
@@ -748,6 +754,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
 msgid "Related User"
 msgstr "Свързан потребител"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
@@ -777,14 +788,9 @@ msgid "Running Contracts"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS грешка при доставка"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
-msgstr ""
+msgstr "Информация за заплата"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_payroll_structure_type
@@ -867,6 +873,7 @@ msgstr ""
 "Можете да използвате това поле за бързо търсене."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -895,7 +902,7 @@ msgstr "Вид на изключение на дейност в базата."
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
 msgid "Under Contract"
-msgstr ""
+msgstr "Под договор"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_res_users
@@ -905,7 +912,7 @@ msgstr "Потребител"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Дата на изтичане на визата"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
@@ -919,16 +926,6 @@ msgid "Wage"
 msgstr "Възнаграждение"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Съобщения в уебсайт"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "История на комуникацията на уебсайт"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "Разрешително за работа №"
@@ -939,3 +936,10 @@ msgstr "Разрешително за работа №"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Работен график"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr ""

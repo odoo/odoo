@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Wil Odoo, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Wil Odoo, 2024
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +23,32 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_job.py:0
+#, python-format
+msgid ""
+"\n"
+"            <span class=\"text-muted small\">Time to Answer</span>\n"
+"            <h6>2 open days</h6>\n"
+"            <span class=\"text-muted small\">Process</span>\n"
+"            <h6>1 Phone Call</h6>\n"
+"            <h6>1 Onsite Interview</h6>\n"
+"            <span class=\"text-muted small\">Days to get an Offer</span>\n"
+"            <h6>4 Days after Interview</h6>\n"
+"        "
+msgstr ""
+"\n"
+"            <span class=\"text-muted small\">Du temps pour répondre</span>\n"
+"            <h6>2 portes ouvertes</h6>\n"
+"            <span class=\"text-muted small\">Processus</span>\n"
+"            <h6>1 Appel</h6>\n"
+"            <h6>1 Entretien sur place</h6>\n"
+"            <span class=\"text-muted small\">Jours pour recevoir une offre</span>\n"
+"            <h6>4 Jours après un entretien</h6>\n"
+"        "
+
+#. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "%s's Application"
@@ -34,7 +61,6 @@ msgstr "12 jours / an, y compris <br/>6 de votre choix."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 msgstr ""
 "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Téléphone\" "
@@ -47,9 +73,8 @@ msgstr "<i class=\"fa fa-arrow-left\"/> Description du poste"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"E-mail\" title=\"E-mail\"/>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -95,6 +120,15 @@ msgstr "<span class=\"bg-odoo\">Publié</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid ""
+"<span class=\"d-none text-muted\" style=\"margin-left: 200px; font-size: "
+"0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+msgstr ""
+"<span class=\"d-none text-muted\" style=\"margin-left: 200px; font-size: "
+"0.8rem\">Le CV est optionnel si vous avez un profil Linkedin</span>"
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "<span class=\"s_website_form_label_content\">Department</span>"
 msgstr "<span class=\"s_website_form_label_content\">Départment</span>"
 
@@ -124,7 +158,7 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Email</span>\n"
 "                                                <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
-"<span class=\"s_website_form_label_content\">Votre email</span>\n"
+"<span class=\"s_website_form_label_content\">Votre e-mail</span>\n"
 "                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_hr_recruitment
@@ -168,15 +202,14 @@ msgstr "<span class=\"text-muted small\">Lieu de travail</span>"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid ""
-"<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
-"0.8rem\">The resume is optional if you have a Linkedin profile</span>"
+"<span class=\"text-muted\" style=\"font-size: 0.8rem\">Optional if you "
+"provided a Linkedin profile</span>"
 msgstr ""
-"<span class=\"text-muted\" style=\"margin-left: 200px; font-size: "
-"0.8rem\">Le CV est optionnel si vous avez un profil LinkedIn</span>"
+"<span class=\"text-muted\" style=\"font-size: 0.8rem\">Optionnel si vous "
+"renseignez un profil Linkedin</span>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
 "<span>\n"
 "                                            We usually reply between one and three days.<br/>\n"
@@ -298,7 +331,6 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Congratulations!"
 msgstr "Félicitations !"
 
@@ -309,7 +341,6 @@ msgstr "Contactez-nous"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Continue To Our Website"
 msgstr "Retourner à l'accueil de notre site"
 
@@ -418,7 +449,6 @@ msgstr "J'ai de la chance"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "In the meantime,"
 msgstr "Dans l'intervalle,"
 
@@ -449,12 +479,14 @@ msgid "Job Position"
 msgstr "Poste"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "Titre du poste"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/website.py:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -497,7 +529,6 @@ msgstr "Profil Linkedin"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Look around on our website:"
 msgstr "Parcourez notre site web :"
 
@@ -622,6 +653,11 @@ msgstr ""
 "rapidement"
 
 #. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
+msgid "Remote"
+msgstr "À distance"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Responsibilities"
 msgstr "Responsabilités"
@@ -634,17 +670,17 @@ msgstr "Limiter la publication sur ce site web."
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.job_pages_kanban_view
 msgid "SEO Optimized"
-msgstr "Référencement optimisé"
+msgstr "SEO optimisé"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__is_seo_optimized
 msgid "SEO optimized"
-msgstr "Référencement optimisé"
+msgstr "SEO optimisé"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__seo_name
 msgid "Seo name"
-msgstr "Nom référencement"
+msgstr "SEO nom"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_published
@@ -687,6 +723,13 @@ msgstr "Expertise technique"
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
 msgid "The full URL to access the document through the website."
 msgstr "L'URL complète pour accéder au document à travers le site web."
+
+#. module: website_hr_recruitment
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "The job offer has been closed."
+msgstr "L'offre a été fermée."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -778,18 +821,11 @@ msgstr ""
 "qui sera affichée sur la page principale des offres d'emploi."
 
 #. module: website_hr_recruitment
-#. odoo-python
-#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
-#, python-format
-msgid "The job offer has been closed."
-msgstr "L'offre a été fermée."
-
-#. module: website_hr_recruitment
 #. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #, python-format
 msgid "Your Email"
-msgstr "Votre email"
+msgstr "Votre e-mail"
 
 #. module: website_hr_recruitment
 #. odoo-javascript
@@ -800,13 +836,11 @@ msgstr "Votre nom"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
 msgstr "Votre candidature a bien été envoyée."
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been sent to:"
 msgstr "Votre candidature a été envoyée à :"
 
@@ -814,7 +848,7 @@ msgstr "Votre candidature a été envoyée à :"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.detail
 msgid "breadcrumb"
-msgstr "fil d'Ariane"
+msgstr "breadcrumb"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -825,6 +859,11 @@ msgstr "par ex. https://www.linkedin.com/in/fpodoo/"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "for job opportunities."
 msgstr "pour accéder aux offres d'emploi."
+
+#. module: website_hr_recruitment
+#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
+msgid "open position"
+msgstr "poste disponible"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
@@ -840,8 +879,3 @@ msgstr "partages"
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "unpublished"
 msgstr "non publié"
-
-#. module: website_hr_recruitment
-#: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
-msgid "Optional if you provided a Linkedin profile"
-msgstr "Optionnel si vous donnez un profil LinkedIn"

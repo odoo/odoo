@@ -328,6 +328,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.picking_client_1.state, 'done', 'Picking 1 should be done')
         self.assertEqual(self.picking_client_1.move_ids.product_uom_qty, 5, 'initial demand should be 5 after picking split')
         self.assertFalse(self.picking_client_2.batch_id)
+
     def test_put_in_pack(self):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
         self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
@@ -367,6 +368,20 @@ class TestBatchPicking(TransactionCase):
 
         # final package location should be correctly set based on wizard
         self.assertEqual(package.location_id.id, self.customer_location.id)
+
+    def test_put_in_pack_within_single_picking(self):
+        """ Test that when `action_put_in_pack` is called on a picking that is also in a batch,
+        only that picking's moves are put in the pack """
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
+
+        self.batch.action_confirm()
+        self.batch.action_assign()
+        self.batch.move_line_ids.qty_done = 5
+        package = self.picking_client_1.action_put_in_pack()
+        self.assertEqual(self.picking_client_1.move_line_ids.result_package_id, package)
+        self.assertFalse(self.picking_client_2.move_line_ids.result_package_id, "Other picking in batch shouldn't have been put in a package")
 
     def test_auto_batch(self):
         """ Test a simple auto-batch scenario with new picking type to avoid conflicts with existing picking types.
@@ -712,6 +727,33 @@ class TestBatchPicking02(TransactionCase):
         ])
         self.assertEqual(pickings.move_line_ids.result_package_id, package)
 
+    def test_add_batch_move_line(self):
+        """
+        Adding a stock move line in a batch form triggers a calculation of the
+        default dest location. This test checks if that calculation doesn't
+        raise any exceptions for a new, empty StockMoveLine object.
+        """
+        loc1, loc2 = self.stock_location.child_ids
+        picking = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+        })
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(picking)
+        batch = batch_form.save()
+        batch.action_confirm()
+        confirmed_form = Form(batch)
+        # Adding a new line should not raise an error
+        confirmed_form.move_line_ids.new()
+        # Adding a line should work also for users in storage categories group
+        self.env.user.groups_id += self.env.ref('stock.group_stock_storage_categories')
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(picking)
+        batch = batch_form.save()
+        batch.action_confirm()
+        confirmed_form = Form(batch)
+        confirmed_form.move_line_ids.new()
 
     def test_batch_validation_without_backorder(self):
         loc1, loc2 = self.stock_location.child_ids
@@ -758,6 +800,13 @@ class TestBatchPicking02(TransactionCase):
             'picking_ids': [(4, picking_1.id), (4, picking_2.id)]
         })
         batch.action_confirm()
+        # assign a responsible to the batch should assign it to the pickings
+        self.assertFalse((picking_1 | picking_2).user_id.id)
+        batch.user_id = self.env.user
+        self.assertEqual((picking_1 | picking_2).user_id, self.env.user)
+        # remove the responsible from the batch should remove it from the pickings
+        batch.user_id = False
+        self.assertFalse((picking_1 | picking_2).user_id.id)
         action = batch.action_done()
         Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
         self.assertEqual(batch.state, 'done')

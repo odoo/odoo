@@ -52,9 +52,11 @@ const GalleryWidget = publicWidget.Widget.extend({
             interval: milliseconds || 0,
             id: _.uniqueId('slideshow_'),
         }));
+        this.__onModalKeydown = this._onModalKeydown.bind(this);
         this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();
             $(this).siblings().filter('.modal-backdrop').remove(); // bootstrap leaves a modal-backdrop
+            this.removeEventListener("keydown", self.__onModalKeydown);
             $(this).remove();
             self.$modal = undefined;
         });
@@ -63,10 +65,22 @@ const GalleryWidget = publicWidget.Widget.extend({
                 editableMode: false,
                 $target: self.$modal.find('.modal-body.o_slideshow'),
             });
+            this.addEventListener("keydown", self.__onModalKeydown);
         });
         this.$modal.appendTo(document.body);
         const modalBS = new Modal(this.$modal[0], {keyboard: true, backdrop: true});
         modalBS.show();
+    },
+    _onModalKeydown(ev) {
+        if (ev.key === "ArrowLeft" || ev.key === "ArrowRight") {
+            const side = ev.key === "ArrowLeft" ? "prev" : "next";
+            this.$modal[0].querySelector(`.carousel-control-${side}`).click();
+        }
+        if (ev.key === "Escape") {
+            // If the user is connected as an editor, prevent the backend header
+            // from collapsing.
+            ev.stopPropagation();
+        }
     },
 });
 

@@ -22,16 +22,11 @@ export class ExpenseListController extends ListController {
         this.rpc = useService("rpc");
         this.user = useService("user");
         this.isExpenseSheet = this.model.rootParams.resModel === "hr.expense.sheet";
-        this.isExpense = this.model.rootParams.resModel === "hr.expense";
 
         onWillStart(async () => {
             this.is_expense_team_approver = await this.user.hasGroup("hr_expense.group_hr_expense_team_approver");
             this.is_account_invoicing = await this.user.hasGroup("account.group_account_invoice");
         });
-    }
-
-    displayCreateReport() {
-        return this.isExpense;
     }
 
     displaySubmit() {
@@ -53,23 +48,24 @@ export class ExpenseListController extends ListController {
         const records = this.model.root.selection;
         const recordIds = records.map((a) => a.resId);
         const model = this.model.rootParams.resModel;
-        await this.orm.call(model, action, [recordIds]);
+        const context = {};
+        if (action === 'approve_expense_sheets') {
+            context['validate_analytic'] = true;
+        }
+        await this.orm.call(model, action, [recordIds], {context: context});
         // sgv note: we tried this.model.notify(); and does not work
         await this.model.root.load();
         this.render(true);
     }
 
-    async onCreateReportClick() {
-        const records = this.model.root.selection;
-        const recordIds = records.map((a) => a.resId);
-        const action = await this.orm.call('hr.expense', 'get_expenses_to_submit', [recordIds]);
-        this.actionService.doAction(action);
-    }
-
 }
 patch(ExpenseListController.prototype, 'expense_list_controller_upload', ExpenseDocumentUpload);
 
-export class ExpenseListRenderer extends ListRenderer {}
+export class ExpenseListRenderer extends ListRenderer {
+    setup() {
+        super.setup()
+    }
+}
 patch(ExpenseListRenderer.prototype, 'expense_list_renderer_qrcode', ExpenseMobileQRCode);
 patch(ExpenseListRenderer.prototype, 'expense_list_renderer_qrcode_dzone', ExpenseDocumentDropZone);
 ExpenseListRenderer.template = 'hr_expense.ListRenderer';

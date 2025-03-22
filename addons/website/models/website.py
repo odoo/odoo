@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import functools
 import hashlib
 import inspect
 import json
@@ -8,6 +9,7 @@ import logging
 import operator
 import re
 import requests
+import threading
 
 from collections import defaultdict
 from functools import reduce
@@ -192,6 +194,16 @@ class Website(models.Model):
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
+    @tools.ormcache('self.env.uid', 'self.id')
+    def is_menu_cache_disabled(self):
+        """
+        Checks if the website menu contains a record like url.
+        :return: True if the menu contains a record like url
+        """
+        return any(self.env['website.menu'].browse(self._get_menu_ids()).filtered(
+            lambda menu: menu.url and re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url))
+        )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -334,7 +346,7 @@ class Website(models.Model):
         :param url: the url to check
         :return: True if the url has to be indexed, False otherwise
         """
-        return get_base_domain(url, True) == get_base_domain(self.domain, True)
+        return get_base_domain(url.lower(), True) == get_base_domain(self.domain.lower(), True)
 
     # ----------------------------------------------------------
     # Configurator
@@ -977,8 +989,12 @@ class Website(models.Model):
         # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
-        domain_name = request and request.httprequest.host or ''
-        website_id = self._get_current_website_id(domain_name, fallback=fallback)
+        domain_name = (
+            request and request.httprequest.host
+            or hasattr(threading.current_thread(), 'url') and threading.current_thread().url
+            or ''
+        )
+        website_id = self.sudo()._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
     @tools.ormcache('domain_name', 'fallback')
@@ -1158,14 +1174,17 @@ class Website(models.Model):
 
         for rule in router.iter_rules():
             if 'sitemap' in rule.endpoint.routing and rule.endpoint.routing['sitemap'] is not True:
-                if rule.endpoint.func in sitemap_endpoint_done:
+                endpoint_func = rule.endpoint.func
+                if isinstance(endpoint_func, functools.partial): # follow partial in case of redirect
+                    endpoint_func = endpoint_func.func
+                if endpoint_func.__func__ in sitemap_endpoint_done:
                     continue
-                sitemap_endpoint_done.add(rule.endpoint.func)
+                sitemap_endpoint_done.add(endpoint_func.__func__)
 
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
                     continue
-                for loc in func(self.env, rule, query_string):
+                for loc in func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
                     yield loc
                 continue
 
@@ -1201,7 +1220,7 @@ class Website(models.Model):
 
                     for rec in converter.generate(self.env, args=val, dom=query):
                         newval.append(val.copy())
-                        newval[-1].update({name: rec})
+                        newval[-1].update({name: rec.with_context(lang=self.default_lang_id.code)})
                 values = newval
 
             for value in values:
@@ -1236,6 +1255,25 @@ class Website(models.Model):
             if page['write_date']:
                 record['lastmod'] = page['write_date'].date()
             yield record
+
+    def get_website_page_ids(self):
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            # Note that `website.pages` have `0,0,0,0` ACL rights by default for
+            # everyone except for the website designer which receive `1,0,0,0`.
+            # So the "Website/Site/Content/Pages" menu to reach the page manager
+            # is not shown to the restricted users, as the action linked model
+            # (website.page) can't be access. It's how the Odoo framework works.
+            # Still, we let the restricted editor access this resource for
+            # custos granting them read and/or write access on page.
+            raise AccessError(_("Access Denied"))
+
+        domain = [('url', '!=', False)]
+        if self:
+            domain = AND([domain, self.website_domain()])
+        pages = self.env['website.page'].sudo().search(domain)
+        if self:
+            pages = pages._get_most_specific_pages()
+        return pages.ids
 
     def _get_website_pages(self, domain=None, order='name', limit=None):
         if domain is None:
@@ -1836,3 +1874,16 @@ class Website(models.Model):
                         for word in re.findall(match_pattern, value):
                             if word[0] == search[0]:
                                 yield word.lower()
+
+    def _allConsentsGranted(self):
+        """
+        Checks if all (cookies) consents have been granted. Note that in the
+        case no cookies bar has been enabled, this considers that full consent
+        has been immediately given. Indeed, in that case, we suppose that the
+        user implemented his own consent behavior through custom code / app.
+        That custom code / app is able to override this function as desired and
+        xpath the `tracking_code_config` script in `website.layout`.
+        :return: True if all consents have been granted, False otherwise
+        """
+        self.ensure_one()
+        return not self.cookies_bar or self.env['ir.http']._is_allowed_cookie('optional')

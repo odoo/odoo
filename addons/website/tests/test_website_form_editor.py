@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 # -*- coding: utf-8 -*-
 
-import odoo.tests
+from odoo.http import request
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
+from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.addons.website.tools import MockRequest
+from odoo.tests.common import tagged, TransactionCase
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install')
 class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     @classmethod
     def setUpClass(cls):
@@ -50,3 +53,30 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
         self.start_tour('/contactus', 'website_form_contactus_change_random_option', login="admin")
         self.env.company.email = 'after.change@mail.com'
         self.start_tour('/contactus', 'website_form_contactus_check_changed_email', login="portal")
+
+    def test_website_form_editable_content(self):
+        self.start_tour('/', 'website_form_editable_content', login="admin")
+
+    def test_website_form_special_characters(self):
+        self.start_tour('/', 'website_form_special_characters', login='admin')
+        mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+        self.assertIn('Test1&#34;&#39;', mail.body_html, 'The single quotes and double quotes characters should be visible on the received mail')
+        self.assertIn('Test2`\\', mail.body_html, 'The backtick and backslash characters should be visible on the received mail')
+
+
+@tagged('post_install', '-at_install')
+class TestWebsiteForm(TransactionCase):
+
+    def test_website_form_html_escaping(self):
+        website = self.env['website'].browse(1)
+        WebsiteFormController = WebsiteForm()
+        with MockRequest(self.env, website=website):
+            WebsiteFormController.insert_record(
+                request,
+                self.env['ir.model'].search([('model', '=', 'mail.mail')]),
+                {'email_from': 'odoobot@example.com', 'subject': 'John <b>Smith</b>', 'email_to': 'company@company.company'},
+                "John <b>Smith</b>",
+            )
+            mail = self.env['mail.mail'].search([], order='id desc', limit=1)
+            self.assertNotIn('<b>', mail.body_html, "HTML should be escaped in website form")
+            self.assertIn('&lt;b&gt;', mail.body_html, "HTML should be escaped in website form (2)")

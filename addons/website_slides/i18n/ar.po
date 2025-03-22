@@ -3,21 +3,21 @@
 # 	* website_slides
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
+# Mustafa Rawi <mustafa@mrawi.com>, 2022
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2023
-# Wil Odoo, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -877,17 +877,17 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"تصغير \" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"تصغير \" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"تكبير \" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"تكبير \" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 
@@ -1517,6 +1517,11 @@ msgstr "متوسط التقييم "
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_tree_report
 msgid "Average Review"
 msgstr "متوسط التقييم "
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr "سيتم عرض الكتل الإنشائية التي يتم إفلاتها هنا في كافة الدروس "
 
 #. module: website_slides
 #. odoo-javascript
@@ -2865,8 +2870,8 @@ msgid "File Name"
 msgstr "اسم الملف"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -4357,6 +4362,13 @@ msgid "Once you're done, don't forget to <b>Publish</b> your course."
 msgstr "بمجرد انتهائك، لا تنس <b>نشر</b> دورتك. "
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr "يمكن نشر مراجعة واحدة فقط لكل دورة. "
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
 msgid "Open To All"
 msgstr "مفتوح للكل "
@@ -4533,14 +4545,6 @@ msgstr "تم نشر العرض التقديمي "
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "معاينة"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "خاص"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -5676,11 +5680,11 @@ msgstr "يمكن تعيين الشريحة كغير مكتملة والتقدم 
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
-"يمكن الحصول على رابط الفيديو لادخاله هنا عن طريق استخدام زر 'مشاركة' في "
-"واجهة Vimeo. "
+"يمكن الحصول على رابط الفيديو لإدخاله هنا عن طريق استخدام زر 'مشاركة الرايط' "
+"في واجهة Vimeo. "
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5689,17 +5693,6 @@ msgstr "يجب أن يكون التصويت 1، 0، أو -1. "
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
-"The video link to input here can be obtained by using the 'Share link' "
-"button in the Vimeo interface."
-msgstr ""
-"يمكن الحصول على رابط الفيديو لإدخاله هنا عن طريق استخدام زر 'مشاركة الرايط' "
-"في واجهة Vimeo. "
-
-#. module: website_slides
-#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
@@ -5959,14 +5952,14 @@ msgid "Unknown error, try again."
 msgstr "خطأ غير معروف، حاول مجدداً. "
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted"
 msgstr "غير مدرج "
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted (paid account)"
@@ -6033,6 +6026,11 @@ msgstr "استخدم علامات تصنيف المحتوى لتصنيف محت�
 #: model_terms:ir.actions.act_window,help:website_slides.slide_channel_tag_group_action
 msgid "Use Course Groups to classify and organize your Courses."
 msgstr "استخدم مجموعات الدورات لتصنيف وتنظيم دوراتك. "
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "استخدم القالب "
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -6739,6 +6737,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "مثال: \"أي الحيوانات لا يمكنه الطيران؟\" "
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr "مثال: \"{{placeholder || \"another animal\"}}\" "
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "مثال: علوم الحاسوب للأطفال "
@@ -6842,17 +6847,6 @@ msgstr "تسجيل الدخول"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
-msgstr ""
-"؟ يعني إعداد الخصوصية \"خاص\" في Vimeo أنه مقطع فيديو يمكن عرضه فقط من قِبَل المستخدمين الذين يملكون الرابط.\n"
-"                                    لن يظهر مقطع الفيديو ضمن نتائج البحث أو في قناتك. "
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
 "mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
@@ -6860,7 +6854,7 @@ msgstr ""
 "                                    لن يظهر مقطع الفيديو ضمن نتائج البحث أو في قناتك. "
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""

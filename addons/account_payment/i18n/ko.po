@@ -7,14 +7,15 @@
 # Linkup <link-up@naver.com>, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Sarah Park, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -531,8 +532,8 @@ msgstr "지불 처리 중 오류 발생: 신용 카드 ID가 잘못되었습니�
 #, python-format
 msgid ""
 "To uninstall this module, please remove first the corresponding payment "
-"method line in the outgoing payments tab defined on the bank journal."
-msgstr "해당 모듈을 삭제하려면, 먼저 은행 전표에 있는 출금 탭에 지정되어 있는 관련 결제 방법 항목을 삭제하시기 바랍니다."
+"method line in the incoming payments tab defined on the bank journal."
+msgstr ""
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
@@ -559,23 +560,14 @@ msgstr "금지된 거래"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
-"활성화되어 있거나 테스트 중인 업체에 연결되어 있는 결제 방법은 삭제할 수 없습니다. \n"
+"활성화되어 있거나 테스트 중인 업체에 연결되어 있는 결제 수단은 삭제할 수 없습니다. \n"
 "연결되어 있는 업체: %s"
-
-#. module: account_payment
-#. odoo-python
-#: code:addons/account_payment/models/payment_provider.py:0
-#, python-format
-msgid ""
-"You cannot uninstall this module as payment method transactions already "
-"exist."
-msgstr "이 모듈은 삭제할 수 없습니다. 결제 방법을 사용한 거래가 이미 있습니다."
 
 #. module: account_payment
 #. odoo-python

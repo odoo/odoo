@@ -15,16 +15,18 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
 # Martin Trigaux, 2022
 # Tina Milas, 2022
-# Matej Mijoč, 2022
-# Bole <bole@dajmi5.com>, 2023
+# Servisi RAM d.o.o. <support@servisiram.hr>, 2024
+# Bole <bole@dajmi5.com>, 2024
+# Luka Carević <luka@uvid.hr>, 2024
+# Matej Mijoč, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"Last-Translator: Matej Mijoč, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,40 +38,40 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
 #: model:ir.model.fields,field_description:event.field_res_users__event_count
 msgid "# Events"
-msgstr "# Događaja"
+msgstr "# Događanja"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_count_done
 msgid "# Sent"
-msgstr ""
+msgstr "# Poslano"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s preostala mjesta)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (Prodano)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s preostala mjesta)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (Prodano)"
 
 #. module: event
 #. odoo-python
@@ -319,6 +321,9 @@ msgid ""
 "                                Registration statistics\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                Statistike registracija\n"
+"                            </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -832,6 +837,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
 msgstr ""
+"Dodajte neke interne bilješke (popisi zadataka, kontakt informacije, ...)"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -852,7 +858,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_sub
 msgid "After each registration"
-msgstr "Nakon svake prijave"
+msgstr "Nakon svake registracije"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
@@ -976,12 +982,14 @@ msgid ""
 "Autoconfirm Registrations. Registrations will automatically be confirmed "
 "upon creation."
 msgstr ""
+"Automatska potvrđa registracija. Registracije će biti automatski potvrđene "
+"nakon kreiranja."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Autoconfirmation"
-msgstr ""
+msgstr "Automatska potvrda"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
@@ -1224,22 +1232,22 @@ msgstr ""
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Create an Event"
-msgstr ""
+msgstr "Kreirajte događaj"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
 msgid "Create an Event Stage"
-msgstr ""
+msgstr "Kreirajte fazu događanja"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Create an Event Tag Category"
-msgstr ""
+msgstr "Kreirajte oznake kategorija događanja"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
 msgid "Create an Event Template"
-msgstr ""
+msgstr "Kreirajte predložak događanja"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__create_uid
@@ -1359,6 +1367,11 @@ msgstr "Naziv"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
 msgstr ""
 
 #. module: event
@@ -1526,7 +1539,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.event_stage_action
 #: model:ir.ui.menu,name:event.event_stage_menu
 msgid "Event Stages"
-msgstr ""
+msgstr "Faze događanja"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1549,7 +1562,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_event_category
 #: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
 msgid "Event Tags Categories"
-msgstr ""
+msgstr "Oznake kategorija događanja"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1575,7 +1588,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Templates"
-msgstr ""
+msgstr "Predlošci događanja"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_type
@@ -1584,6 +1597,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Predlošci događaja kombiniraju konfiguracije koje često koristite i \n"
+"                obično su temeljeni na vrstama događaja koje organizirate (npr \"Radionica\",\n"
+"                \"Roadshow\", \"Online webinar\", i sl.)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1613,6 +1629,8 @@ msgid ""
 "Event stages are used to track the progress of an Event from its origin "
 "until its conclusion."
 msgstr ""
+"Faze događanja koriste se za praćenje napretka događanja od  početka do "
+"završetka."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -1633,12 +1651,12 @@ msgstr ""
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr ""
+msgstr "Događanje: Potvrda registracije"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Događanje: Podsjetnik"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1708,7 +1726,7 @@ msgstr "Očekivano"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Expected Attendees"
-msgstr ""
+msgstr "Očekivani sudionici"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -2033,6 +2051,13 @@ msgid "In Progress"
 msgstr "U tijeku"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
@@ -2208,7 +2233,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Limit Registrations"
-msgstr ""
+msgstr "Ograniči registracije"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
@@ -2291,7 +2316,7 @@ msgstr "Marketing"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "Maksimum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
@@ -2303,7 +2328,7 @@ msgstr "Maksimalno sudionika"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__seats_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Maksimum registracija"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
@@ -2469,7 +2494,7 @@ msgstr "Broj grešaka"
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju aktivnost"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -2607,7 +2632,7 @@ msgstr ""
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "Program"
-msgstr ""
+msgstr "Program"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2672,12 +2697,12 @@ msgstr "Datum registracije"
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
 msgid "Registration Desk"
-msgstr ""
+msgstr "Registracija sudionika"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__end_sale_datetime
 msgid "Registration End"
-msgstr ""
+msgstr "Kraj registracije"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -2697,7 +2722,7 @@ msgstr "Mailovi registracije"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__start_sale_datetime
 msgid "Registration Start"
-msgstr ""
+msgstr "Početak registracije"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_questions
@@ -2863,7 +2888,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,description:event.event_subscription
 msgid "Sent to attendees after registering to an event"
-msgstr ""
+msgstr "Šalje se sudionicima nakon registracije za događanje"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__sequence
@@ -2876,7 +2901,7 @@ msgstr "Sekvenca"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr "Postavi na nepotvrđen"
+msgstr "Postavi na nepotvrđeno"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
@@ -3214,7 +3239,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Vremenska zona"
@@ -3279,18 +3303,18 @@ msgstr "Vrsta aktivnosti iznimke na zapisu."
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Unconfirmed"
-msgstr "Nepotvrđen"
+msgstr "Nepotvrđeno"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_unconfirmed
 msgid "Unconfirmed Registrations"
-msgstr ""
+msgstr "Nepotvrđene registracije"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_unconfirmed
 #: model_terms:ir.ui.view,arch_db:event.view_event_tree
 msgid "Unconfirmed Seats"
-msgstr ""
+msgstr "Nepotvrđene ulaznice"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3324,6 +3348,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"Koristite oznake kategorija događanja za klasifikaciju i organizaciju svojih"
+" oznaka događanja."
 
 #. module: event
 #. odoo-javascript
@@ -3361,7 +3387,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "Mjesto"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
@@ -3422,6 +3448,14 @@ msgid "What's new?"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
 msgstr ""
@@ -3465,24 +3499,24 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "Vaša registracija za {{ object.event_id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "e.g. Conference for Architects"
-msgstr ""
+msgstr "npr. IT konferencija "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "npr. Kako doći do vašeg događanja, vrijeme zatvaranja, ..."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. Online Conferences"
-msgstr ""
+msgstr "npr. Virtualna konferencija"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
@@ -3533,7 +3567,7 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "na%(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started
@@ -3558,14 +3592,14 @@ msgstr "do"
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "danas"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "sutra"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_kanban_from_event

@@ -7,7 +7,7 @@ import json
 
 from odoo import _, _lt, api, fields, models
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils, lazy
+from odoo.tools import date_utils, lazy, OrderedSet
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
@@ -313,7 +313,7 @@ class Base(models.AbstractModel):
                     }
         """
         field = self._fields[field_name]
-        if field.type == 'many2one':
+        if field.type in ('many2one', 'many2many'):
             def group_id_name(value):
                 return value
 
@@ -677,8 +677,24 @@ class Base(models.AbstractModel):
         expand = kwargs.get('expand')
 
         if field.type == 'many2many':
+            if not expand:
+                if field.base_field.groupable:
+                    domain_image = self._search_panel_domain_image(field_name, model_domain, limit=limit)
+                    image_element_ids = list(domain_image.keys())
+                else:
+                    model_records = self.search_read(model_domain, [field_name])
+                    image_element_ids = OrderedSet()
+                    for rec in model_records:
+                        if rec[field_name]:
+                            image_element_ids.update(rec[field_name])
+                    image_element_ids = list(image_element_ids)
+                comodel_domain = AND([
+                    comodel_domain,
+                    [('id', 'in', image_element_ids)],
+                ])
+
             comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
-            if expand and limit and len(comodel_records) == limit:
+            if limit and len(comodel_records) == limit:
                 return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
             group_domain = kwargs.get('group_domain')
@@ -694,7 +710,7 @@ class Base(models.AbstractModel):
                     values['group_id'] = group_id
                     values['group_name'] = group_name
 
-                if enable_counters or not expand:
+                if enable_counters:
                     search_domain = AND([
                             model_domain,
                             [(field_name, 'in', record_id)],
@@ -709,21 +725,8 @@ class Base(models.AbstractModel):
                         search_domain,
                         local_extra_domain
                     ])
-                    if enable_counters:
-                        count = self.search_count(search_count_domain)
-                    if not expand:
-                        if enable_counters and is_true_domain(local_extra_domain):
-                            inImage = count
-                        else:
-                            inImage = self.search(search_domain, limit=1)
-
-                if expand or inImage:
-                    if enable_counters:
-                        values['__count'] = count
-                    field_range.append(values)
-
-            if not expand and limit and len(field_range) == limit:
-                return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
+                    values['__count'] = self.search_count(search_count_domain)
+                field_range.append(values)
 
             return { 'values': field_range, }
 

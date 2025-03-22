@@ -1,0 +1,596 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_edi_ubl_cii_tax_extension
+# 
+# Translators:
+# Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-16 07:48+0000\n"
+"PO-Revision-Date: 2024-09-21 23:00+0000\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__ae
+msgid "AE - Vat Reverse Charge"
+msgstr "AE - ภาษีมูลค่าเพิ่มแบบเรียกเก็บย้อนหลัง"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__b
+msgid "B - Transferred (VAT), In Italy"
+msgstr "B - การโอน (VAT) ในประเทศอิตาลี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_edi_common
+msgid ""
+"Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr "ฟังก์ชันทั่วไปสำหรับเอกสาร EDI: สร้างข้อมูล ข้อจำกัด ฯลฯ"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__e
+msgid "E - Exempt from Tax"
+msgstr "E - ได้รับการยกเว้นภาษี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__g
+msgid "G - Free export item, VAT not charged"
+msgstr "G - สินค้าส่งออกฟรี ไม่คิดภาษีมูลค่าเพิ่ม"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__k
+msgid "K - VAT exempt for EEA intra-community supply of goods and services"
+msgstr ""
+"K - ยกเว้นภาษีมูลค่าเพิ่มสำหรับการจัดหาสินค้าและบริการภายในคอมมูนิตี้EEA"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__l
+msgid "L - Canary Islands general indirect tax"
+msgstr "L - ภาษีทางอ้อมทั่วไปของหมู่เกาะคานารี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__m
+msgid "M - Tax for production, services and importation in Ceuta and Melilla"
+msgstr "M - ภาษีสำหรับการผลิต การบริการ และการนำเข้าในเซวตาและเมลิลลา"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__o
+msgid "O - Services outside scope of tax"
+msgstr "O - บริการนอกเหนือขอบเขตภาษี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__s
+msgid "S - Standard rate"
+msgstr "S - อัตรามาตรฐาน"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model,name:account_edi_ubl_cii_tax_extension.model_account_tax
+msgid "Tax"
+msgstr "ภาษี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
+msgid "Tax Category Code"
+msgstr "รหัสหมวดภาษี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,field_description:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid "Tax Exemption Reason Code"
+msgstr "รหัสเหตุผลการยกเว้นภาษี"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_category_code
+msgid "The VAT category code used for electronic invoicing purposes."
+msgstr ""
+"รหัสประเภทภาษีมูลค่าเพิ่มที่ใช้เพื่อวัตถุประสงค์การออกใบแจ้งหนี้ทางอิเล็กทรอนิกส์"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields,help:account_edi_ubl_cii_tax_extension.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid ""
+"The reason why the amount is exempted from VAT or why no VAT is being "
+"charged, used for electronic invoicing purposes."
+msgstr ""
+"เหตุผลที่จำนวนเงินดังกล่าวได้รับการยกเว้นภาษีมูลค่าเพิ่ม "
+"หรือไม่มีการเรียกเก็บภาษีมูลค่าเพิ่ม "
+"ใช้เพื่อวัตถุประสงค์การออกใบแจ้งหนี้ทางอิเล็กทรอนิกส์"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132
+msgid ""
+"VATEX-EU-132 - Exempt based on article 132 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132 - ได้รับการยกเว้นตามมาตรา 132 ของคำสั่งสภายุโรป 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1a
+msgid ""
+"VATEX-EU-132-1A - Exempt based on article 132, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1A - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (a) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1b
+msgid ""
+"VATEX-EU-132-1B - Exempt based on article 132, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1B - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (b) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1c
+msgid ""
+"VATEX-EU-132-1C - Exempt based on article 132, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1C - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (c) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1d
+msgid ""
+"VATEX-EU-132-1D - Exempt based on article 132, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1D - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (d) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1e
+msgid ""
+"VATEX-EU-132-1E - Exempt based on article 132, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1E - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (e) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1f
+msgid ""
+"VATEX-EU-132-1F - Exempt based on article 132, section 1 (f) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1F - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (f) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1g
+msgid ""
+"VATEX-EU-132-1G - Exempt based on article 132, section 1 (g) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1G - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (g) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1h
+msgid ""
+"VATEX-EU-132-1H - Exempt based on article 132, section 1 (h) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1H - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (h) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1i
+msgid ""
+"VATEX-EU-132-1I - Exempt based on article 132, section 1 (i) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1I - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (i) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1j
+msgid ""
+"VATEX-EU-132-1J - Exempt based on article 132, section 1 (j) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1J - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (j) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1k
+msgid ""
+"VATEX-EU-132-1K - Exempt based on article 132, section 1 (k) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1K - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (k) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1l
+msgid ""
+"VATEX-EU-132-1L - Exempt based on article 132, section 1 (l) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1L - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (l) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1m
+msgid ""
+"VATEX-EU-132-1M - Exempt based on article 132, section 1 (m) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1M - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (m) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1n
+msgid ""
+"VATEX-EU-132-1N - Exempt based on article 132, section 1 (n) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1N - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (n) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1o
+msgid ""
+"VATEX-EU-132-1O - Exempt based on article 132, section 1 (o) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1O - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (o) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1p
+msgid ""
+"VATEX-EU-132-1P - Exempt based on article 132, section 1 (p) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1P - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (p) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-132-1q
+msgid ""
+"VATEX-EU-132-1Q - Exempt based on article 132, section 1 (q) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-132-1Q - ได้รับการยกเว้นตามมาตรา 132 หมวด 1 (q) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143
+msgid ""
+"VATEX-EU-143 - Exempt based on article 143 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143 - ได้รับการยกเว้นตามมาตรา 143 ของคำสั่งสภายุโรป 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1a
+msgid ""
+"VATEX-EU-143-1A - Exempt based on article 143, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1A - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (a) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1b
+msgid ""
+"VATEX-EU-143-1B - Exempt based on article 143, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1B - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (b) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1c
+msgid ""
+"VATEX-EU-143-1C - Exempt based on article 143, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1C - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (c) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1d
+msgid ""
+"VATEX-EU-143-1D - Exempt based on article 143, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1D - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (d) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1e
+msgid ""
+"VATEX-EU-143-1E - Exempt based on article 143, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1E - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (e) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1f
+msgid ""
+"VATEX-EU-143-1F - Exempt based on article 143, section 1 (f) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1F - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (f) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1fa
+msgid ""
+"VATEX-EU-143-1FA - Exempt based on article 143, section 1 (fa) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1FA - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (fa) ของคำสั่งสภายุโรป"
+" 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1g
+msgid ""
+"VATEX-EU-143-1G - Exempt based on article 143, section 1 (g) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1G - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (g) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1h
+msgid ""
+"VATEX-EU-143-1H - Exempt based on article 143, section 1 (h) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1H - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (h) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1i
+msgid ""
+"VATEX-EU-143-1I - Exempt based on article 143, section 1 (i) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1I - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (i) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1j
+msgid ""
+"VATEX-EU-143-1J - Exempt based on article 143, section 1 (j) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1J - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (j) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1k
+msgid ""
+"VATEX-EU-143-1K - Exempt based on article 143, section 1 (k) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1K - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (k) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-143-1l
+msgid ""
+"VATEX-EU-143-1L - Exempt based on article 143, section 1 (l) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-143-1L - ได้รับการยกเว้นตามมาตรา 143 หมวด 1 (l) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148
+msgid ""
+"VATEX-EU-148 - Exempt based on article 148 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148 - ได้รับการยกเว้นตามมาตรา 148 ของคำสั่งสภายุโรป 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-a
+msgid ""
+"VATEX-EU-148-A - Exempt based on article 148, section (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-A - ได้รับการยกเว้นตามมาตรา 148 หมวด (a) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-b
+msgid ""
+"VATEX-EU-148-B - Exempt based on article 148, section (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-B - ได้รับการยกเว้นตามมาตรา 148 หมวด (b) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-c
+msgid ""
+"VATEX-EU-148-C - Exempt based on article 148, section (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-C - ได้รับการยกเว้นตามมาตรา 148 หมวด (c) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-d
+msgid ""
+"VATEX-EU-148-D - Exempt based on article 148, section (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-D - ได้รับการยกเว้นตามมาตรา 148 หมวด (d) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-e
+msgid ""
+"VATEX-EU-148-E - Exempt based on article 148, section (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-E - ได้รับการยกเว้นตามมาตรา 148 หมวด (e) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-f
+msgid ""
+"VATEX-EU-148-F - Exempt based on article 148, section (f) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-F - ได้รับการยกเว้นตามมาตรา 148 หมวด (f) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-148-g
+msgid ""
+"VATEX-EU-148-G - Exempt based on article 148, section (g) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-148-G - ได้รับการยกเว้นตามมาตรา 148 หมวด (g) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151
+msgid ""
+"VATEX-EU-151 - Exempt based on article 151 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151 - ได้รับการยกเว้นตามมาตรา 151 ของคำสั่งสภายุโรป 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1a
+msgid ""
+"VATEX-EU-151-1A - Exempt based on article 151, section 1 (a) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151-1A - ได้รับการยกเว้นตามมาตรา 151 หมวด 1 (a) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1aa
+msgid ""
+"VATEX-EU-151-1AA - Exempt based on article 151, section 1 (aa) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151-1AA - ได้รับการยกเว้นตามมาตรา 151 หมวด 1 (aa) ของคำสั่งสภายุโรป"
+" 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1b
+msgid ""
+"VATEX-EU-151-1B - Exempt based on article 151, section 1 (b) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151-1B - ได้รับการยกเว้นตามมาตรา 151 หมวด 1 (b) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1c
+msgid ""
+"VATEX-EU-151-1C - Exempt based on article 151, section 1 (c) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151-1C - ได้รับการยกเว้นตามมาตรา 151 หมวด 1 (c) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1d
+msgid ""
+"VATEX-EU-151-1D - Exempt based on article 151, section 1 (d) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151-1D - ได้รับการยกเว้นตามมาตรา 151 หมวด 1 (d) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-151-1e
+msgid ""
+"VATEX-EU-151-1E - Exempt based on article 151, section 1 (e) of Council "
+"Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-151-1E - ได้รับการยกเว้นตามมาตรา 151 หมวด 1 (e) ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-309
+msgid ""
+"VATEX-EU-309 - Exempt based on article 309 of Council Directive 2006/112/EC"
+msgstr ""
+"VATEX-EU-309 - ได้รับการยกเว้นตามมาตรา 309 ของคำสั่งสภายุโรป 2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-eu-79-c
+msgid ""
+"VATEX-EU-79-C - Exempt based on article 79, point c of Council Directive "
+"2006/112/EC"
+msgstr ""
+"VATEX-EU-79-C - ได้รับการยกเว้นตามมาตรา 79 จุด c ของคำสั่งสภายุโรป "
+"2006/112/EC"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_ae
+msgid "VATEX-EU-AE - Reverse charge"
+msgstr "VATEX-EU-AE - การชาร์จแบบย้อนกลับ"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_d
+msgid ""
+"VATEX-EU-D - Intra-Community acquisition from second hand means of transport"
+msgstr "VATEX-EU-D - การซื้อภายในคอมมูนิตี้จากยานพาหนะมือสอง"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_f
+msgid "VATEX-EU-F - Intra-Community acquisition of second hand goods"
+msgstr "VATEX-EU-F - การจัดหาสินค้ามือสองภายในชุมชน"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_g
+msgid "VATEX-EU-G - Export outside the EU"
+msgstr "VATEX-EU-G - การส่งออกนอกสหภาพยุโรป"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_i
+msgid "VATEX-EU-I - Intra-Community acquisition of works of art"
+msgstr "VATEX-EU-I - การซื้องานศิลปะภายในชุมชน"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_ic
+msgid "VATEX-EU-IC - Intra-Community supply"
+msgstr "VATEX-EU-IC - การจัดหาภายในชุมชน"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_j
+msgid ""
+"VATEX-EU-J - Intra-Community acquisition of collectors items and antiques"
+msgstr "VATEX-EU-J - การจัดหาของสะสมและของเก่าภายในชุมชน"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_eu_o
+msgid "VATEX-EU-O - Not subject to VAT"
+msgstr "VATEX-EU-O - ไม่ต้องเสียภาษีมูลค่าเพิ่ม"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_fr-cnwvat
+msgid ""
+"VATEX-FR-CNWVAT - France domestic Credit Notes without VAT, due to supplier "
+"forfeit of VAT for discount"
+msgstr ""
+"VATEX-FR-CNWVAT - ตราสารหนี้ภายในประเทศฝรั่งเศสที่ไม่มีภาษีมูลค่าเพิ่ม "
+"เนื่องจากซัพพลายเออร์สูญเสียภาษีมูลค่าเพิ่มเพื่อรับส่วนลด"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex_fr-franchise
+msgid "VATEX-FR-FRANCHISE - France domestic VAT franchise in base"
+msgstr "VATEX-FR-FRANCHISE - แฟรนไชส์ภาษีมูลค่าเพิ่มในประเทศฝรั่งเศสในฐาน"
+
+#. module: account_edi_ubl_cii_tax_extension
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii_tax_extension.selection__account_tax__ubl_cii_tax_category_code__z
+msgid "Z - Zero rated goods"
+msgstr "Z - สินค้าที่มีคะแนนเป็นศูนย์"

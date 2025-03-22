@@ -70,3 +70,16 @@ class TestItEdiPa(TestItEdi):
         invoice_etree = self._cleanup_etree(self.edi_format._l10n_it_edi_export_invoice_as_xml(self.pa_partner_invoice))
         expected_etree = etree.fromstring(self.split_payment_invoice_content)
         self.assertXmlTreeEqual(invoice_etree, expected_etree)
+
+        split_payment_credit_note_content = self._get_test_file_content('split_payment_cn.xml')
+        expected_cn_etree = etree.fromstring(split_payment_credit_note_content)
+        credit_note_wizard = self.env['account.move.reversal'] \
+            .with_context(active_model='account.move', active_ids=self.pa_partner_invoice.ids) \
+            .create({
+                'date': datetime.date(2022, 3, 25),
+                'journal_id': self.pa_partner_invoice.journal_id.id,
+            })
+        credit_note_wizard.reverse_moves()
+        credit_note = self.env['account.move'].search([('reversed_entry_id', '=', self.pa_partner_invoice.id)])
+        cn_etree = self._cleanup_etree(self.edi_format._l10n_it_edi_export_invoice_as_xml(credit_note))
+        self.assertXmlTreeEqual(cn_etree, expected_cn_etree)

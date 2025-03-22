@@ -168,7 +168,7 @@ class IrHttp(models.AbstractModel):
     def _serve_fallback(cls):
         model = request.env['ir.attachment']
         attach = model.sudo()._get_serve_attachment(request.httprequest.path)
-        if attach:
+        if attach and (attach.store_fname or attach.db_datas):
             return Stream.from_attachment(attach).get_response()
 
     @classmethod
@@ -190,8 +190,6 @@ class IrHttp(models.AbstractModel):
             _logger.info("Generating routing map for key %s" % str(key))
             registry = Registry(threading.current_thread().dbname)
             installed = registry._init_modules.union(odoo.conf.server_wide_modules)
-            if tools.config['test_enable'] and odoo.modules.module.current_test:
-                installed.add(odoo.modules.module.current_test)
             mods = sorted(installed)
             # Note : when routing map is generated, we put it on the class `cls`
             # to make it available for all instance. Since `env` create an new instance
@@ -201,7 +199,7 @@ class IrHttp(models.AbstractModel):
             for url, endpoint in cls._generate_routing_rules(mods, converters=cls._get_converters()):
                 routing = submap(endpoint.routing, ROUTING_KEYS)
                 if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                    routing['methods'] = routing['methods'] + ['OPTIONS']
+                    routing['methods'] = [*routing['methods'], 'OPTIONS']
                 rule = werkzeug.routing.Rule(url, endpoint=endpoint, **routing)
                 rule.merge_slashes = False
                 routing_map.add(rule)
@@ -216,6 +214,8 @@ class IrHttp(models.AbstractModel):
 
     @api.autovacuum
     def _gc_sessions(self):
+        if os.getenv("ODOO_SKIP_GC_SESSIONS"):
+            return
         ICP = self.env["ir.config_parameter"]
         max_lifetime = int(ICP.get_param('sessions.max_inactivity_seconds', http.SESSION_LIFETIME))
         http.root.session_store.vacuum(max_lifetime=max_lifetime)
@@ -266,4 +266,8 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _is_allowed_cookie(cls, cookie_type):
+        return True
+
+    @api.model
+    def _verify_request_recaptcha_token(self, action):
         return True

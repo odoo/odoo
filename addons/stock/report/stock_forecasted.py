@@ -132,11 +132,7 @@ class ReplenishmentReport(models.AbstractModel):
         assert product_template_ids or product_variant_ids
         res = {}
 
-        if self.env.context.get('warehouse'):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
-        else:
-            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
-
+        warehouse = self.env['stock.warehouse'].browse(self.env['stock.warehouse']._get_warehouse_id_from_context() or self.get_warehouses()[0]['id'])
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
@@ -280,7 +276,7 @@ class ReplenishmentReport(models.AbstractModel):
                 if float_is_zero(demand, precision_rounding=product_rounding):
                     continue
                 current = currents[product.id]
-                taken_from_stock = min(demand, current)
+                taken_from_stock = min(demand, current) if (out.procure_method != 'make_to_order' or any(not m.move_orig_ids and m.location_id.id in wh_location_ids for m in self.env['stock.move'].browse(out._rollup_move_origs()))) else 0
                 if not float_is_zero(taken_from_stock, precision_rounding=product_rounding):
                     currents[product.id] -= taken_from_stock
                     demand -= taken_from_stock

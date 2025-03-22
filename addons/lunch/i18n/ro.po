@@ -6,16 +6,20 @@
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Larisa_nexterp, 2024
+# Betty Keresztesi, 2024
+# Maria Muntean, 2024
+# Alin Miclea, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
+"Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -469,6 +473,12 @@ msgid "Cancelled"
 msgstr "Anulat"
 
 #. module: lunch
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "Cannot send an email to this supplier!"
+msgstr ""
+
+#. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
@@ -589,7 +599,7 @@ msgstr "Confirmă"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Confirmare comandă"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -658,7 +668,7 @@ msgstr "Creat în"
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
 msgid "Cron"
-msgstr ""
+msgstr "Cron"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
@@ -1004,7 +1014,7 @@ msgstr "Este afișat astăzi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "Este favorit"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
@@ -1199,32 +1209,32 @@ msgid "Lunch: Supplier Order"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_236
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to The Corner"
 msgstr ""
 
@@ -1388,6 +1398,20 @@ msgid "No cash move yet"
 msgstr "Nicio mutare de numerar încă"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "No location found"
+msgstr ""
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "No lunch location available."
+msgstr ""
+
+#. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
 msgstr "Nicio comandă de prânz încă"
@@ -1442,7 +1466,7 @@ msgstr "Timpul de notificare trebuie să fie între 0 și 12"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "Notificat"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1457,7 +1481,7 @@ msgstr "Numărul de erori"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Numărul de mesaje care necesită acțiune"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
@@ -1535,7 +1559,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
-msgstr ""
+msgstr "Descoperire de cont"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
@@ -1595,6 +1619,13 @@ msgstr "Pizza Margherita"
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
 msgstr "Pizza Vegetariană"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "Please create a location to start ordering."
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
@@ -1779,7 +1810,7 @@ msgstr "Trimite"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Notification"
-msgstr ""
+msgstr "Trimite notificare"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by

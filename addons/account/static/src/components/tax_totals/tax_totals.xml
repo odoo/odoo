@@ -10,7 +10,7 @@
             <td  class="o_tax_group">
                 <t t-if="!props.isReadonly">
                     <t t-if="['edit', 'disable'].includes(state.value)">
-                        <span class="o_tax_group_edit_input">
+                        <span class="o_tax_group_edit_input" t-ref="numpadDecimal">
                             <input
                                 type="text"
                                 t-ref="taxValueInput"

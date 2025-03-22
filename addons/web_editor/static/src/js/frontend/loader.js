@@ -71,7 +71,7 @@ exports.loadFromTextarea = async (parent, textarea, options) => {
         $form.find('.note-editable').find('img.o_we_selected_image').removeClass('o_we_selected_image');
         // float-start class messes up the post layout OPW 769721
         $form.find('.note-editable').find('img.float-start').removeClass('float-start');
-        $textarea.html(wysiwyg.getValue());
+        $textarea.val(wysiwyg.getValue());
     });
 
     return wysiwyg;

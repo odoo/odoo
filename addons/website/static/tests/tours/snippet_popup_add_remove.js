@@ -19,6 +19,30 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     in_modal: false,
     trigger: '.o_we_customize_panel',
     run: () => null,
+},
+...wTourUtils.clickOnSave(),
+...wTourUtils.clickOnEditAndWaitEditMode(),
+{
+    content: 'Toggle the visibility of the Popup',
+    in_modal: false,
+    trigger: '.o_we_invisible_el_panel .o_we_invisible_entry:contains("Popup")',
+}, {
+    content: 'Edit s_popup snippet(2)',
+    in_modal: false,
+    trigger: 'iframe #wrap.o_editable [data-snippet="s_popup"] h2',
+    run: function() {
+        // Simulating pressing enter.
+        const anchor = this.$anchor[0];
+        // Trick the editor into keyboardType === 'PHYSICAL' and press enter
+        anchor.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+        // Trigger editor's '_onInput' handler, which leads to historyRollback.
+        anchor.dispatchEvent(new InputEvent('input', { inputType: 'insertLineBreak', bubbles: true }));
+    }
+}, {
+    content: 'Check the s_popup was visible',
+    in_modal: false,
+    trigger: 'iframe #wrap.o_editable [data-snippet="s_popup"]:not(.d-none)',
+    run: () => null,
 }, {
     content: `Remove the s_popup snippet`,
     in_modal: false,

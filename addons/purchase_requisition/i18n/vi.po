@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,13 +42,13 @@ msgstr "<strong>Mô tả</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Product</strong>"
-msgstr "<strong>Sản phẩm</strong>"
+msgid "<strong>Product UoM</strong>"
+msgstr "<strong>Đơn vị tính sản phẩm</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
-msgid "<strong>Product UoM</strong>"
-msgstr "<strong>Đơn vị tính sản phẩm</strong>"
+msgid "<strong>Product</strong>"
+msgstr "<strong>Sản phẩm</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -328,7 +328,7 @@ msgid ""
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
 "Tạo một thông báo mời thầu bằng cách thêm yêu cầu báo giá dự trù cho các nhà cung cấp khác nhau.\n"
-"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo nhất giữa thời gian giao hàng, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
+"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo nhất giữa thời gian hoàn thành, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
 "                            Bằng cách so sánh chi tiết sản phẩm, bạn cũng có thể quyết định đặt mua một số sản phẩm từ nhà cung cấp này và những sản phẩm khác từ nhà cung cấp khác."
 
 #. module: purchase_requisition
@@ -401,7 +401,7 @@ msgstr "Tên hiển thị"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
 msgid "Do not create RfQ lines automatically"
-msgstr "Không tự động tạo chi tiết YCBG"
+msgstr "Không tự động tạo chi tiết RFQ"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -573,7 +573,7 @@ msgstr "Chi tiết"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
-msgstr "Liên kết với YCBG hiện có"
+msgstr "Liên kết với RFQ hiện có"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
@@ -822,7 +822,7 @@ msgstr "Số lượng"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "RFQs/Orders"
-msgstr "YCBG/Đơn hàng"
+msgstr "RFQ/Đơn hàng"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__name
@@ -886,7 +886,7 @@ msgstr "Tìm kiếm hợp đồng mua hàng"
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__multiple
 msgid "Select multiple RFQ (non-exclusive)"
-msgstr "Chọn nhiều YCBG (không phải duy nhất)"
+msgstr "Chọn nhiều RFQ (không phải duy nhất)"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__exclusive__exclusive
@@ -900,9 +900,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Chỉ chọn một YCBG (duy nhất): khi một đơn mua hàng được xác nhận, hủy đơn mua hàng còn lại.\n"
+"Chỉ chọn một RFQ (duy nhất): khi một đơn mua hàng được xác nhận, hủy đơn mua hàng còn lại.\n"
 "\n"
-"                    Chọn nhiều YCBG (không phải duy nhất): cho phép nhiều đơn mua hàng. Khi xác nhận một đơn mua hàng, các đơn mua hàng còn lại sẽ không bị huỷ"
+"                    Chọn nhiều RFQ (không phải duy nhất): cho phép nhiều đơn mua hàng. Khi xác nhận một đơn mua hàng, các đơn mua hàng còn lại sẽ không bị huỷ"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -942,7 +942,7 @@ msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
 "Một số số lượng chưa bị xoá vì trạng thái của chúng không phải là trạng thái"
-" YCBG."
+" RFQ."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -1062,7 +1062,7 @@ msgstr "Tổng"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trên bản ghi."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit
@@ -1197,8 +1197,8 @@ msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
 msgstr ""
-"Bạn phải huỷ hoặc xác nhận mọi YCBG liên quan trước khi đóng một yêu cầu mua"
-" hàng."
+"Bạn phải huỷ hoặc xác nhận mọi RFQ liên quan trước khi đóng một yêu cầu mua "
+"hàng."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form

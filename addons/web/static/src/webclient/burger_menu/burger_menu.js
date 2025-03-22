@@ -2,11 +2,11 @@
 
 import { registry } from "@web/core/registry";
 import { Transition } from "@web/core/transition";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { BurgerUserMenu } from "./burger_user_menu/burger_user_menu";
 import { MobileSwitchCompanyMenu } from "./mobile_switch_company_menu/mobile_switch_company_menu";
 
-import { Component, onMounted, useState } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 /**
  * This file includes the widget Menu in mobile to render the BurgerMenu which
@@ -25,15 +25,13 @@ export class BurgerMenu extends Component {
             isBurgerOpened: false,
         });
         this.swipeStartX = null;
-        onMounted(() => {
-            this.env.bus.addEventListener("HOME-MENU:TOGGLED", () => {
+        useBus(this.env.bus, "HOME-MENU:TOGGLED", () => {
+            this._closeBurger();
+        });
+        useBus(this.env.bus, "ACTION_MANAGER:UPDATE", ({ detail: req }) => {
+            if (req.id) {
                 this._closeBurger();
-            });
-            this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", ({ detail: req }) => {
-                if (req.id) {
-                    this._closeBurger();
-                }
-            });
+            }
         });
     }
     get currentApp() {

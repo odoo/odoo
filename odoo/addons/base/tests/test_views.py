@@ -743,6 +743,40 @@ class TestTemplating(ViewCase):
         super(TestTemplating, self).setUp()
         self.patch(self.registry, '_init', False)
 
+    def test_branding_t0(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """<root>
+                <div role="search">
+                    <input type="search" name="search"/>
+                    <button type="submit">
+                        <i class="oi-search"/>
+                    </button>
+                </div>
+            </root>
+            """
+        })
+        self.View.create({
+            'name': "Extension view",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """<xpath expr="//div[@role='search']" position="replace">
+                <form>
+                    <t>$0</t>
+                </form>
+            </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).get_combined_arch()
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+        [initial] = arch.xpath("//div[@role='search']")
+        self.assertEqual(
+            '1',
+            initial.get('data-oe-no-branding'),
+            'Injected view must be marked as no-branding')
+
     def test_branding_inherit(self):
         view1 = self.View.create({
             'name': "Base view",

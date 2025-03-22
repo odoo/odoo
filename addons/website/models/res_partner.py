@@ -41,3 +41,7 @@ class Partner(models.Model):
     def _compute_display_name(self):
         self2 = self.with_context(display_website=False)
         super(Partner, self2)._compute_display_name()
+
+    def _compute_can_publish(self):
+        self2 = self.with_context(can_publish_unsudo_main_object=False)
+        super(Partner, self2)._compute_can_publish()

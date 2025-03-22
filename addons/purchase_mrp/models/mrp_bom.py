@@ -3,6 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import float_compare
 
 
 class MrpBom(models.Model):
@@ -16,7 +17,7 @@ class MrpBom(models.Model):
                 continue
             if any(bl.cost_share < 0 for bl in bom.bom_line_ids):
                 raise UserError(_("Components cost share have to be positive or equals to zero."))
-            if sum(bom.bom_line_ids.mapped('cost_share')) != 100:
+            if float_compare(sum(bom.bom_line_ids.mapped('cost_share')), 100, precision_digits=2) != 0:
                 raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
 

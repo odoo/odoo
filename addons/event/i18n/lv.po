@@ -8,16 +8,17 @@
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Anzelika Adejanova, 2022
 # Martin Trigaux, 2022
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-# ievaputnina <ievai.putninai@gmail.com>, 2023
+# Will Sensors, 2024
+# ievaputnina <ievai.putninai@gmail.com>, 2025
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -868,7 +869,7 @@ msgstr ""
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
-msgstr ""
+msgstr "Pielietot izmaiņu"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -894,7 +895,7 @@ msgstr ""
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "As a team, we are happy to contribute to this event."
-msgstr ""
+msgstr "Kā komanda, mēs esam priecīgi ieguldīties šajā notikumā."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -938,7 +939,7 @@ msgstr "Dalībnieks"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__name
 msgid "Attendee Name"
-msgstr ""
+msgstr "Apmeklētāja vārds"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -1016,7 +1017,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "Rezervēts"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -1027,7 +1028,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "Rezervēja"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
@@ -1343,6 +1344,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr ""
@@ -1427,7 +1433,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_end_date
 msgid "Event End Date"
-msgstr ""
+msgstr "Pasākuma beigu datums"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1511,7 +1517,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event Start Date"
-msgstr ""
+msgstr "Pasākuma sākuma datums"
 
 #. module: event
 #: model:ir.model,name:event.model_event_tag
@@ -1617,7 +1623,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Pasākums: Atgādinājums"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1870,7 +1876,7 @@ msgstr "Grupēt pēc"
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
 msgid "Happy to be Sponsor"
-msgstr ""
+msgstr "Priecīgi būt Sponsoram"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__has_message
@@ -2008,6 +2014,13 @@ msgstr ""
 #, python-format
 msgid "In Progress"
 msgstr "Tiek izpildīts"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -2445,7 +2458,7 @@ msgstr "Kļūdu skaits"
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "To ziņojumu skaits, kuros nepieciešama rīcība"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -2514,7 +2527,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "Darbība nav atbalstīta."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -3191,7 +3204,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Timezone"
@@ -3399,6 +3411,14 @@ msgid "What's new?"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
 msgstr ""
@@ -3435,12 +3455,12 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
 msgid "Your badge for {{ object.event_id.name }}"
-msgstr ""
+msgstr "Jūsu žetons priekš {{ object.event_id.name }}"
 
 #. module: event
 #: model:mail.template,subject:event.event_subscription
 msgid "Your registration at {{ object.event_id.name }}"
-msgstr ""
+msgstr "Jūsu reģistrācija {{ object.event_id.name }}"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create
@@ -3508,7 +3528,7 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "%(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started

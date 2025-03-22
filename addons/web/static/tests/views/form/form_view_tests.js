@@ -13,6 +13,7 @@ import {
     getFixture,
     getNodesTextContent,
     makeDeferred,
+    mockSendBeacon,
     mouseEnter,
     nextTick,
     patchTimeZone,
@@ -28,13 +29,14 @@ import { browser } from "@web/core/browser/browser";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
 import { localization } from "@web/core/l10n/localization";
-import { RPCError } from "@web/core/network/rpc_service";
+import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { scrollerService } from "@web/core/scroller_service";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { SIZES } from "@web/core/ui/ui_service";
 import { session } from "@web/session";
 import { CharField } from "@web/views/fields/char/char_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormController } from "@web/views/form/form_controller";
 import BasicModel from "web.BasicModel";
 import legacySession from "web.session";
@@ -938,6 +940,44 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_field_char");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "col-lg-6");
+    });
+
+    QUnit.test("field ids are unique (same field name in 2 form views)", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo"/>
+                        </group>
+                        <field name="p">
+                            <form>
+                                <sheet>
+                                    <group>
+                                        <field name="bar"/>
+                                        <field name="foo"/>
+                                    </group>
+                                </sheet>
+                            </form>
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_widget input#foo");
+
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.containsOnce(target, ".modal .o_form_view");
+        assert.containsOnce(target, ".o_field_widget input#foo");
+        assert.containsOnce(target, ".modal .o_field_widget input#foo");
+        assert.containsOnce(target, ".modal .o_field_widget input#bar");
     });
 
     QUnit.test("Form and subview with _view_ref contexts", async function (assert) {
@@ -11386,6 +11426,81 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("resequence list lines when previous resequencing crashed", async function (assert) {
+        serviceRegistry.add("error", errorService);
+        let onChangeCount = 0;
+        serverData.models.partner.onchanges = {
+            int_field: function (obj) {
+                if (obj.display_name === "first line") {
+                    if (onChangeCount === 0) {
+                        onChangeCount += 1;
+                        assert.step("resequence onChange crash");
+                        throw makeErrorFromResponse({
+                            code: 200,
+                            message: "Odoo Server Error",
+                            data: {
+                                name: `odoo.exceptions.${"UserError"}`,
+                                debug: "traceback",
+                                arguments: [],
+                                context: {},
+                                message: "error",
+                            },
+                        });
+                    } else {
+                        assert.step("resequence onChange ok");
+                    }
+                }
+            },
+        };
+
+        serverData.views = {
+            "partner,false,list": `
+                <tree editable="bottom">
+                    <field name="int_field" widget="handle"/>
+                    <field name="display_name" required="1"/>
+                </tree>`,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="foo"/><field name="p"/></form>`,
+        });
+
+        // Add two lines
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(target, `.o_field_cell [name="display_name"] input`, "first line");
+        await nextTick();
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+        await editInput(target, ".o_selected_row input", "second line");
+        await click(target.querySelector(".o_form_button_save"));
+        await nextTick();
+
+        const getNames = () =>
+            [...target.querySelectorAll(".o_list_char")].map((el) => el.textContent);
+        assert.deepEqual(getNames(), ["first line", "second line"]);
+
+        // drag and drop first line to the second, should crash because of onchange
+        await dragAndDrop(
+            "tbody.ui-sortable tr:nth-child(1) .o_handle_cell",
+            "tbody.ui-sortable tr:nth-child(2)"
+        );
+        await nextTick();
+        assert.deepEqual(getNames(), ["first line", "second line"]);
+
+        // drag and drop first line to the second, should work
+        await dragAndDrop(
+            "tbody.ui-sortable tr:nth-child(1) .o_handle_cell",
+            "tbody.ui-sortable tr:nth-child(2)"
+        );
+        await nextTick();
+        assert.deepEqual(getNames(), ["second line", "first line"]);
+
+        assert.verifySteps(["resequence onChange crash", "resequence onChange ok"]);
+    });
+
     QUnit.test(
         "reload company when creating records of model res.company",
         async function (assert) {
@@ -11823,6 +11938,19 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
         assert.expect(4);
 
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                if (params.method === "write" && params.model === "partner") {
+                    assert.step("save"); // should be called
+                    assert.deepEqual(params.args, [[1], { display_name: "test" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
+
         await makeView({
             type: "form",
             resModel: "partner",
@@ -11834,12 +11962,6 @@ QUnit.module("Views", (hooks) => {
                     </group>
                 </form>`,
             resId: 1,
-            mockRPC(route, { args, method, model }) {
-                if (method === "write" && model === "partner") {
-                    assert.step("save"); // should be called
-                    assert.deepEqual(args, [[1], { display_name: "test" }]);
-                }
-            },
         });
 
         assert.notStrictEqual(
@@ -11852,11 +11974,55 @@ QUnit.module("Views", (hooks) => {
         evnt.preventDefault = () => assert.step("prevented");
         window.dispatchEvent(evnt);
         await nextTick();
+        await sendBeaconDef;
         assert.verifySteps(["save"], "should not prevent unload");
     });
 
+    QUnit.test(
+        "Auto save: save on closing tab/browser (sendBeacon fails)",
+        async function (assert) {
+            mockSendBeacon(() => {
+                assert.step("save"); // should be called
+                return false;
+            });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                    </group>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.notStrictEqual(
+                target.querySelector('.o_field_widget[name="display_name"]').value,
+                "test"
+            );
+
+            await editInput(target, '.o_field_widget[name="display_name"] input', "test");
+            const evnt = new Event("beforeunload");
+            evnt.preventDefault = () => assert.step("prevented");
+            window.dispatchEvent(evnt);
+            await nextTick();
+            assert.verifySteps(["save", "prevented"], "should prevent unload as sendBeacon failed");
+            assert.containsOnce(target, ".o_notification");
+
+            await clickSave(target);
+            assert.containsNone(target, ".o_notification");
+        }
+    );
+
     QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
         assert.expect(2);
+
+        mockSendBeacon(() => {
+            assert.step("save"); // should not be called
+        });
 
         await makeView({
             type: "form",
@@ -11886,6 +12052,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Auto save: save on closing tab/browser (not dirty)", async function (assert) {
+        mockSendBeacon(() => {
+            assert.step("save"); // should not be called
+        });
+
         await makeView({
             type: "form",
             resModel: "partner",
@@ -11913,6 +12083,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "Auto save: save on closing tab/browser (not dirty but trailing spaces)",
         async function (assert) {
+            mockSendBeacon(() => {
+                throw new Error("no write should be done");
+            });
+
             serverData.models.partner.fields.foo.trim = true;
             serverData.models.partner.records[0].foo = "name with trailing spaces   ";
 
@@ -11942,6 +12116,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "Auto save: save on closing tab/browser (not dirty) with text field",
         async function (assert) {
+            mockSendBeacon(() => {
+                assert.step("save"); // should not be called
+            });
+
             serverData.models.partner.fields.bloup = {
                 string: "Bloup",
                 type: "text",
@@ -11980,6 +12158,10 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("Auto save: save on closing tab/browser (detached form)", async function (assert) {
+        mockSendBeacon(() => {
+            assert.step("save"); // should not be called
+        });
+
         serverData.actions[1] = {
             id: 1,
             name: "Partner",
@@ -12038,6 +12220,18 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("Auto save: save on closing tab/browser (onchanges)", async function (assert) {
         assert.expect(1);
 
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                if (params.method === "write" && params.model === "partner") {
+                    assert.deepEqual(params.args, [[1], { display_name: "test" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
+
         serverData.models.partner.onchanges = {
             display_name: function (obj) {
                 obj.name = `copy: ${obj.display_name}`;
@@ -12061,20 +12255,29 @@ QUnit.module("Views", (hooks) => {
                 if (method === "onchange" && model === "partner") {
                     return def;
                 }
-                if (method === "write" && model === "partner") {
-                    assert.deepEqual(args, [[1], { display_name: "test" }]);
-                }
             },
         });
 
         await editInput(target, '.o_field_widget[name="display_name"] input', "test");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+        await sendBeaconDef;
     });
 
     QUnit.test("Auto save: save on closing tab/browser (onchanges 2)", async function (assert) {
         assert.expect(1);
+
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                if (params.method === "write") {
+                    assert.deepEqual(params.args, [[1], { display_name: "test1", name: "test2" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
 
         serverData.models.partner.onchanges = {
             display_name: function () {},
@@ -12097,9 +12300,6 @@ QUnit.module("Views", (hooks) => {
                 if (method === "onchange") {
                     return def;
                 }
-                if (method === "write") {
-                    assert.deepEqual(args, [[1], { display_name: "test1", name: "test2" }]);
-                }
             },
         });
 
@@ -12107,11 +12307,24 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, '.o_field_widget[name="name"] input', "test2");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+        await sendBeaconDef;
     });
 
     QUnit.test("Auto save: save on closing tab/browser (pending change)", async function (assert) {
         assert.expect(5);
+
+        const sendBeaconDef = makeDeferred();
+        mockSendBeacon((route, blob) => {
+            blob.text().then((r) => {
+                const { params } = JSON.parse(r);
+                assert.step(`sendBeacon ${params.method}`);
+                if (params.method === "write") {
+                    assert.deepEqual(params.args, [[1], { foo: "test" }]);
+                }
+                sendBeaconDef.resolve();
+            });
+            return true;
+        });
 
         await makeView({
             type: "form",
@@ -12119,11 +12332,8 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `<form><field name="foo"/></form>`,
             resId: 1,
-            mockRPC(route, { args, method }) {
+            mockRPC(route, { method }) {
                 assert.step(method);
-                if (method === "write") {
-                    assert.deepEqual(args, [[1], { foo: "test" }]);
-                }
             },
         });
 
@@ -12134,15 +12344,31 @@ QUnit.module("Views", (hooks) => {
         await triggerEvent(input, null, "input");
 
         window.dispatchEvent(new Event("beforeunload"));
-        await nextTick();
+        await sendBeaconDef;
 
-        assert.verifySteps(["get_views", "read", "write"]);
+        assert.verifySteps(["get_views", "read", "sendBeacon write"]);
     });
 
     QUnit.test(
         "Auto save: save on closing tab/browser (onchanges + pending change)",
         async function (assert) {
             assert.expect(6);
+
+            const sendBeaconDef = makeDeferred();
+            mockSendBeacon((route, blob) => {
+                blob.text().then((r) => {
+                    const { params } = JSON.parse(r);
+                    assert.step(`sendBeacon ${params.method}`);
+                    if (params.method === "write") {
+                        assert.deepEqual(params.args, [
+                            [1],
+                            { display_name: "test", name: "test", foo: "test" },
+                        ]);
+                    }
+                    sendBeaconDef.resolve();
+                });
+                return true;
+            });
 
             serverData.models.partner.onchanges = {
                 display_name: function (obj) {
@@ -12167,12 +12393,6 @@ QUnit.module("Views", (hooks) => {
                     if (method === "onchange") {
                         return def;
                     }
-                    if (method === "write") {
-                        assert.deepEqual(args, [
-                            [1],
-                            { display_name: "test", name: "test", foo: "test" },
-                        ]);
-                    }
                 },
             });
 
@@ -12190,9 +12410,9 @@ QUnit.module("Views", (hooks) => {
 
             // trigger the 'beforeunload' event -> notifies the model directly and saves
             window.dispatchEvent(new Event("beforeunload"));
-            await nextTick();
+            await sendBeaconDef;
 
-            assert.verifySteps(["get_views", "read", "onchange", "write"]);
+            assert.verifySteps(["get_views", "read", "onchange", "sendBeacon write"]);
         }
     );
 
@@ -12200,6 +12420,11 @@ QUnit.module("Views", (hooks) => {
         "Auto save: save on closing tab/browser (invalid pending change)",
         async function (assert) {
             assert.expect(3);
+
+            mockSendBeacon(() => {
+                assert.step(`sendBeacon`);
+                assert.notOk(true, "should not call the /write route");
+            });
 
             await makeView({
                 type: "form",
@@ -12237,6 +12462,11 @@ QUnit.module("Views", (hooks) => {
                 },
             };
 
+            mockSendBeacon(() => {
+                assert.step(`sendBeacon`);
+                throw new Error("Should not save the record");
+            });
+
             const def = makeDeferred();
             await makeView({
                 type: "form",
@@ -12255,9 +12485,6 @@ QUnit.module("Views", (hooks) => {
                     if (method === "onchange") {
                         return def;
                     }
-                    if (method === "write") {
-                        throw new Error("Should not save the record");
-                    }
                 },
             });
 
@@ -12274,6 +12501,10 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "Auto save: save on closing tab/browser (onchanges + invalid field)",
         async function (assert) {
+            mockSendBeacon((route, { method, args }) => {
+                assert.step(`sendBeacon ${method}`);
+            });
+
             const def = makeDeferred();
             await makeView({
                 type: "form",
@@ -13458,47 +13689,6 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
-        serverData.models.partner_type.records.push({
-            id: 3,
-            display_name: "very".repeat(30) + "_long_name",
-            color: 10,
-        });
-
-        const record = serverData.models.partner.records[0];
-        record.timmy = [3];
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: record.id,
-            serverData,
-            arch: `
-            <form>
-                <sheet>
-                    <group>
-                        <group/>
-                        <group>
-                            <field name="timmy" widget="many2many">
-                                <tree>
-                                    <field name="display_name"/>
-                                    <field name="color"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </group>
-                </sheet>
-            </form>`,
-        });
-
-        const table = target.querySelector("table");
-        const group = target.querySelector(".o_inner_group:last-child");
-
-        assert.equal(group.clientWidth, group.scrollWidth);
-        table.style.tableLayout = "auto";
-        assert.ok(group.clientWidth < group.scrollWidth);
-    });
-
     QUnit.test(
         "reload records in the context of the form to avoid having partial field values",
         async function (assert) {
@@ -13565,6 +13755,134 @@ QUnit.module("Views", (hooks) => {
                 ["create", "action"],
                 "Verify that create is called before action load"
             );
+        }
+    );
+
+    QUnit.test("nested form view doesn't parasite the main one", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <form>
+                            <div name="button_box" attrs="{'invisible': [('crash','=',False)]}">
+                                <button name="somename" type="object" />
+                            </div>
+                            <field name="p">
+                                <form>
+                                    <footer>
+                                        <button name="someothername" type="object" />
+                                    </footer>
+                                </form>
+                                <tree><field name="display_name" /></tree>
+                            </field>
+                            <footer>
+                                <button name="somename" type="object" />
+                            </footer>
+                        </form>
+                        <tree>
+                            <field name="display_name" />
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 2,
+        });
+        assert.containsOnce(target, ".o_form_view");
+        assert.containsNone(target, ".o-form-buttonbox");
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.containsOnce(target, ".modal .modal-footer button[name='somename']");
+        assert.containsNone(target, ".modal .modal-footer button[name='someothername']");
+        await click(target, ".modal .o_field_x2many_list_row_add a");
+        assert.containsOnce(
+            target,
+            ".modal:not(.o_inactive_modal) .modal-footer button[name='someothername']"
+        );
+    });
+
+    QUnit.test("an empty json object does not pass the required check", async function (assert) {
+        assert.expect(3);
+        serverData.models.partner.fields.json_field = { type: "json" };
+        class JsonField extends Component {
+            onChange(ev) {
+                this.props.update(JSON.parse(ev.target.value));
+            }
+        }
+        JsonField.props = standardFieldProps;
+        JsonField.supportedTypes = ["json"];
+        JsonField.template = xml`<span><input t-on-change="onChange"/></span>`;
+
+        fieldRegistry.add("json", JsonField);
+        const form = await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `<form><field name="json_field" widget="json" required="1"/></form>`,
+        });
+
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, params) => {
+                assert.strictEqual(message.toString(), "<ul><li>json_field</li></ul>");
+                assert.deepEqual(params, { title: "Invalid fields: ", type: "danger" });
+            },
+        });
+        await editInput(target, ".o_field_widget[name=json_field] input", "{}");
+        await clickSave(target);
+        assert.hasClass(
+            target.querySelector(".o_field_widget[name=json_field]"),
+            "o_field_invalid"
+        );
+    });
+
+    QUnit.test("form view not freezed when record is deleted during save", async function (assert) {
+        serverData.models.partner.records[0].display_name = "test";
+        const mockRPC = (route, { method, args }) => {
+            if (method === "write") {
+                serverData.models.partner.records = [];
+                return true;
+            }
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            mockRPC,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+            resId: 1,
+        });
+        await editInput(target, ".o_field_widget[name=display_name] input", "new");
+        await click(target, ".o_form_button_save");
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
+    QUnit.test(
+        "Form status indicator for invalid field is updated on change/blur event",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                serverData,
+                resModel: "partner",
+                resId: 1,
+                arch: '<form><field name="int_field"/></form>',
+            });
+
+            const inputSelector = ".o_field_widget[name=int_field] input";
+            const statusIndicatorSelector = ".o_form_status_indicator span i.fa-warning";
+
+            assert.strictEqual(target.querySelector(inputSelector).value, "10");
+            assert.containsNone(target, statusIndicatorSelector);
+
+            await editInput(target.querySelector(inputSelector), null, "a");
+            assert.strictEqual(target.querySelector(inputSelector).value, "a");
+            assert.containsOnce(target, statusIndicatorSelector);
+
+            await editInput(target.querySelector(inputSelector), null, "10");
+            assert.strictEqual(target.querySelector(inputSelector).value, "10");
+            assert.containsNone(target, statusIndicatorSelector);
         }
     );
 });

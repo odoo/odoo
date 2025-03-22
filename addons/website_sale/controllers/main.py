@@ -4,12 +4,16 @@
 import json
 import logging
 from datetime import datetime
+
+from psycopg2.errors import LockNotAvailable
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 
 from odoo import fields, http, SUPERUSER_ID, tools, _
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
+
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment import utils as payment_utils
@@ -17,7 +21,6 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
@@ -155,6 +158,16 @@ class Website(main.Website):
             'position': request.website.currency_id.position,
         }
 
+    @http.route()
+    def change_lang(self, lang, **kwargs):
+        order_sudo = request.website.sale_get_order()
+        request.env.add_to_compute(
+            order_sudo.order_line._fields['name'],
+            order_sudo.order_line.with_context(lang=lang),
+        )
+        return super().change_lang(lang, **kwargs)
+
+
 class WebsiteSale(http.Controller):
     _express_checkout_route = '/shop/express_checkout'
 
@@ -176,6 +189,9 @@ class WebsiteSale(http.Controller):
         order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
 
+    def _add_search_subdomains_hook(self, search):
+        return []
+
     def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
@@ -187,6 +203,9 @@ class WebsiteSale(http.Controller):
                 if search_in_description:
                     subdomains.append([('website_description', 'ilike', srch)])
                     subdomains.append([('description_sale', 'ilike', srch)])
+                extra_subdomain = self._add_search_subdomains_hook(srch)
+                if extra_subdomain:
+                    subdomains.append(extra_subdomain)
                 domains.append(expression.OR(subdomains))
 
         if category:
@@ -263,6 +282,10 @@ class WebsiteSale(http.Controller):
         """ Hook to update values used for rendering website_sale.products template """
         return {}
 
+    def _get_additional_extra_shop_values(self, values, **post):
+        """ Hook to update values used for rendering website_sale.products template """
+        return self._get_additional_shop_values(values)
+
     @http.route([
         '/shop',
         '/shop/page/<int:page>',
@@ -305,6 +328,9 @@ class WebsiteSale(http.Controller):
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
 
+        if attrib_list:
+            post['attrib'] = attrib_list
+
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
         now = datetime.timestamp(datetime.now())
@@ -318,7 +344,7 @@ class WebsiteSale(http.Controller):
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
-            company_currency = website.company_id.currency_id
+            company_currency = website.company_id.sudo().currency_id
             conversion_rate = request.env['res.currency']._get_conversion_rate(
                 company_currency, pricelist.currency_id, request.website.company_id, fields.Date.today())
         else:
@@ -327,8 +353,6 @@ class WebsiteSale(http.Controller):
         url = "/shop"
         if search:
             post["search"] = search
-        if attrib_list:
-            post['attrib'] = attrib_list
 
         options = self._get_search_options(
             category=category,
@@ -446,7 +470,7 @@ class WebsiteSale(http.Controller):
             values['available_max_price'] = tools.float_round(available_max_price, 2)
         if category:
             values['main_object'] = category
-        values.update(self._get_additional_shop_values(values))
+        values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
@@ -487,7 +511,7 @@ class WebsiteSale(http.Controller):
             if not product_product:
                 product_product = request.env['product.product'].browse(
                     product_template.create_product_variant(combination_ids))
-        if product_template.has_configurable_attributes and product_product:
+        if product_template.has_configurable_attributes and product_product and not all(pa.create_variant == 'no_variant' for pa in product_template.attribute_line_ids.attribute_id):
             product_product.write({
                 'product_variant_image_ids': image_create_data
             })
@@ -537,6 +561,20 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/product/resequence-image'], type='json', auth='user', website=True)
     def resequence_product_image(self, image_res_model, image_res_id, move):
+        """
+        Move the product image in the given direction and update all images' sequence.
+
+        :param str image_res_model: The model of the image. It can be 'product.template',
+                                    'product.product', or 'product.image'.
+        :param str image_res_id: The record ID of the image to move.
+        :param str move: The direction of the move. It can be 'first', 'left', 'right', or 'last'.
+        :raises NotFound: If the user does not have the required permissions, if the model of the
+                          image is not allowed, or if the move direction is not allowed.
+        :raise ValidationError: If the product is not found.
+        :raise ValidationError: If the image to move is not found in the product images.
+        :raise ValidationError: If a video is moved to the first position.
+        :return: None
+        """
         if (
             not request.env.user.has_group('website.group_website_restricted_editor')
             or image_res_model not in ['product.product', 'product.template', 'product.image']
@@ -546,8 +584,6 @@ class WebsiteSale(http.Controller):
 
         image_res_id = int(image_res_id)
         image_to_resequence = request.env[image_res_model].browse(image_res_id)
-        product = request.env['product.product']
-        product_template = request.env['product.template']
         if image_res_model == 'product.product':
             product = image_to_resequence
             product_template = product.product_tmpl_id
@@ -577,28 +613,34 @@ class WebsiteSale(http.Controller):
         # no-op resequences
         if new_image_idx == image_idx:
             return
-        # We can not move an embedded image to the first position (main product image)
-        if image_res_model == 'product.image' and image_to_resequence.video_url and product_images[new_image_idx]._name != 'product.image':
-            raise ValidationError(_("Can not resequence embedded image/video with a non compatible image."))
 
-        # Swap images
-        other_image = product_images[new_image_idx]
-        source_field = hasattr(image_to_resequence, 'video_url') and image_to_resequence.video_url and 'video_url' or 'image_1920'
-        target_field = hasattr(other_image, 'video_url') and other_image.video_url and 'video_url' or 'image_1920'
-        if target_field == 'video_url' and image_res_model == 'product.product':
-            raise ValidationError(_("Can not resequence a video at first position."))
-        previous_data = other_image[target_field]
-        other_image[source_field] = image_to_resequence[source_field]
-        image_to_resequence[target_field] = previous_data
-        if source_field == 'video_url' and target_field != 'video_url':
-            image_to_resequence.video_url = False
-        if target_field == 'video_url' and source_field != 'video_url':
-            other_image.video_url = False
+        # Reorder images locally.
+        product_images.insert(new_image_idx, product_images.pop(image_idx))
 
-        if hasattr(other_image, 'video_url'):
-            other_image._onchange_video_url()
-        if hasattr(image_to_resequence, 'video_url'):
-            image_to_resequence._onchange_video_url()
+        # If the main image has been reordered (i.e. it's no longer in first position), use the
+        # image that's now in first position as main image instead.
+        # Additional images are product.image records. The main image is a product.product or
+        # product.template record.
+        main_image_idx = next(
+            idx for idx, image in enumerate(product_images) if image._name != 'product.image'
+        )
+        if main_image_idx != 0:
+            main_image = product_images[main_image_idx]
+            additional_image = product_images[0]
+            if additional_image.video_url:
+                raise ValidationError(_("You can't use a video as the product's main image."))
+            # Swap records.
+            product_images[main_image_idx], product_images[0] = additional_image, main_image
+            # Swap image data.
+            main_image.image_1920, additional_image.image_1920 = (
+                additional_image.image_1920, main_image.image_1920
+            )
+            additional_image.name = main_image.name  # Update image name but not product name.
+
+        # Resequence additional images according to the new ordering.
+        for idx, product_image in enumerate(product_images):
+            if product_image._name == 'product.image':
+                product_image.sequence = idx
 
     @http.route(['/shop/product/is_add_to_cart_allowed'], type='json', auth="public", website=True)
     def is_add_to_cart_allowed(self, product_id, **kwargs):
@@ -739,7 +781,7 @@ class WebsiteSale(http.Controller):
         })
         if order:
             values.update(order._get_website_sale_extra_values())
-            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
+            order.order_line.filtered(lambda l: l.product_id and not l.product_id.active).unlink()
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
@@ -1153,7 +1195,7 @@ class WebsiteSale(http.Controller):
 
                 # TDE FIXME: don't ever do this
                 # -> TDE: you are the guy that did what we should never do in commit e6f038a
-                order.message_partner_ids = [(4, partner_id), (3, request.website.partner_id.id)]
+                order.message_partner_ids = [(4, order.partner_id.id), (3, request.website.partner_id.id)]
                 if not errors:
                     return request.redirect(kw.get('callback') or '/shop/confirm_order')
 
@@ -1258,6 +1300,7 @@ class WebsiteSale(http.Controller):
         ], limit=1)
         state = request.env["res.country.state"].search([
             ('code', '=', address.pop('state')),
+            ('country_id', '=', country.id),
         ], limit=1)
         address.update(country_id=country, state_id=state)
 
@@ -1374,6 +1417,7 @@ class WebsiteSale(http.Controller):
             return redirection
 
         order.order_line._compute_tax_id()
+        self._update_so_external_taxes(order)
         request.session['sale_last_order_id'] = order.id
         request.website.sale_get_order(update_pricelist=True)
         extra_step = request.website.viewref('website_sale.extra_info_option')
@@ -1381,6 +1425,13 @@ class WebsiteSale(http.Controller):
             return request.redirect("/shop/extra_info")
 
         return request.redirect("/shop/payment")
+
+    def _update_so_external_taxes(self, order):
+        try:
+            order.validate_taxes_on_sales_order()
+        # Ignore any error here. It will be handled in next step of the checkout process (/shop/payment).
+        except ValidationError:
+            pass
 
     # ------------------------------------------------------
     # Extra step
@@ -1755,6 +1806,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
 
+        try:  # prevent concurrent payments by putting a database-level lock on the SO
+            request.env.cr.execute(
+                f'SELECT 1 FROM sale_order WHERE id = {order_sudo.id} FOR NO KEY UPDATE NOWAIT'
+            )
+        except LockNotAvailable:
+            raise UserError(_("Payment is already being processed."))
+
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': order_sudo.partner_invoice_id.id,
@@ -1764,8 +1822,14 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not kwargs.get('amount'):
             kwargs['amount'] = order_sudo.amount_total
 
-        if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
+        compare_amounts = order_sudo.currency_id.compare_amounts
+        if compare_amounts(kwargs['amount'], order_sudo.amount_total):
             raise ValidationError(_("The cart has been updated. Please refresh the page."))
+        amount_paid = sum(
+            tx.amount for tx in order_sudo.transaction_ids if tx.state in ('authorized', 'done')
+        )
+        if compare_amounts(amount_paid, order_sudo.amount_total) == 0:
+            raise UserError(_("The cart has already been paid. Please refresh the page."))
 
         tx_sudo = self._create_transaction(
             custom_create_values={'sale_order_ids': [Command.set([order_id])]}, **kwargs,

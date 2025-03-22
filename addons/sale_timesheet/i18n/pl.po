@@ -10,7 +10,7 @@
 # Maksym <ms@myodoo.pl>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
+# Piotr Strebski <strebski@gmail.com>, 2022
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
@@ -20,17 +20,17 @@
 # Jaroslaw Kaczmarski, 2022
 # Krzysztof Przygoda, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
-# Natalia Gros <nag@odoo.com>, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-15 10:57+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -167,6 +167,7 @@ msgstr ""
 " - Stock Moves: ilość pochodzi z potwierdzonych pobrań\n"
 
 #. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
 msgstr "Usługi posprzedażowe"
@@ -370,8 +371,8 @@ msgid "Create SO from project"
 msgstr "Utwórz SO z projektu"
 
 #. module: sale_timesheet
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -537,6 +538,16 @@ msgid "Hourly Cost"
 msgstr "Koszt godzinowy"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Hours Ordered,"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Hours Remaining)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__id
@@ -686,6 +697,13 @@ msgid "Junior Architect (Invoice on Timesheets)"
 msgstr "Młodszy Architekt (Faktura na arkuszach czasu pracy)"
 
 #. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+
+#. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr "Montaż kuchni (kamienie milowe)"
@@ -739,10 +757,6 @@ msgstr "Marża"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
 #, python-format
 msgid "Materials"
 msgstr "Materiały"
@@ -778,14 +792,14 @@ msgid "No activities found"
 msgstr "Nie znaleziono aktywności"
 
 #. module: sale_timesheet
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "No activities found. Let's start a new one!"
-msgstr "Nie znaleziono żadnych aktywności. Rozpocznijmy nową!"
-
-#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
 msgstr "Brak danych!"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "No timesheets found. Let's create one!"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -856,9 +870,16 @@ msgid "Order Reference"
 msgstr "Numer"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Ordered,"
-msgstr "Zamówione,"
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+msgid "Other costs"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Other revenues"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1019,11 +1040,6 @@ msgstr "Pozostałe godziny z zamówienia"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Hours on SO:"
 msgstr "Pozostałe godziny z zamówienia:"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Remaining)"
-msgstr "Pozostało)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1237,6 +1253,15 @@ msgid ""
 msgstr ""
 "Produkt %s jest wymagany przez aplikację Karty pracy i nie można go "
 "zarchiwizować ani usunąć."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1547,7 +1572,6 @@ msgstr "Śledzenie usługi"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."

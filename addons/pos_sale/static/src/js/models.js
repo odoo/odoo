@@ -71,7 +71,7 @@ const PosSaleOrderline = (Orderline) => class PosSaleOrderline extends Orderline
    * @param {'sale.order.line'} saleOrderLine
    */
   setQuantityFromSOL(saleOrderLine) {
-      if (this.product.type === 'service') {
+      if (this.product.type === 'service' && !['sent', 'draft'].includes(this.sale_order_origin_id.state)) {
         this.set_quantity(saleOrderLine.qty_to_invoice);
       } else {
         this.set_quantity(saleOrderLine.product_uom_qty - Math.max(saleOrderLine.qty_delivered, saleOrderLine.qty_invoiced));

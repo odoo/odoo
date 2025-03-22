@@ -14,20 +14,21 @@
 # yacov mosbacher <ymosba@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
+# hed shefer <hed@laylinetech.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2024\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
@@ -257,6 +258,13 @@ msgstr "כחול"
 #, python-format
 msgid "CANCELLED"
 msgstr "בוטל"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-python
@@ -761,7 +769,7 @@ msgstr "מדפסת קופה"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "PRO FORMA"
-msgstr "פרו פורמה"
+msgstr "חשבונית עסקה"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template

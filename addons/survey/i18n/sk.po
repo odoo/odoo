@@ -6,7 +6,7 @@
 # Michal Matus <misko.matus@gmail.com>, 2022
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2022
 # Filip Hanes <filip.hanes@protonmail.com>, 2022
-# rastislav Brencic <rastislav.brencic99@gmail.com>, 2022
+# Rastislav Brencic <rastislav.brencic99@gmail.com>, 2022
 # Matus Krnac <matus.krnac@gmail.com>, 2022
 # Damian Brencic <brencicdamian12313@gmail.com>, 2022
 # SAKodoo <sak@odoo.com>, 2022
@@ -15,14 +15,16 @@
 # Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # Dávid Kováč, 2023
+# Tomáš Píšek, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Dávid Kováč, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,6 +83,13 @@ msgstr "% dokončených"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kópia)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1246,7 +1255,6 @@ msgid "Cliff Burton"
 msgstr "útes Burton"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1398,8 +1406,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Rohový stôl pravý"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2250,8 +2258,8 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -2968,7 +2976,7 @@ msgstr "Počet chýb"
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
@@ -3197,8 +3205,8 @@ msgid "Partial"
 msgstr "Čiastočné"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3383,6 +3391,11 @@ msgstr "Tlač"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "Produkty"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -4427,8 +4440,8 @@ msgid "This is a Test Survey."
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4636,8 +4649,8 @@ msgid "Unable to post message, please configure the sender's email address."
 msgstr "Nemožno odoslať email, prosím nastavte emailovú adresu odosielateľa."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4691,6 +4704,11 @@ msgstr ""
 #, python-format
 msgid "Use humor and make jokes"
 msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Použiť šablónu"
 
 #. module: survey
 #. odoo-javascript
@@ -5082,6 +5100,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5178,11 +5197,6 @@ msgstr ""
 #, python-format
 msgid "close"
 msgstr "zatvoriť"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

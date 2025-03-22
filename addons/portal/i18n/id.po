@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Abe Manyo, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr "\" untuk memvalidasi action Anda."
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%1d days overdue"
-msgstr ""
+msgstr "terlambat %1d hari"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -113,6 +114,22 @@ msgstr ""
 "<small class=\"form-text text-muted\">Mengubah nama perusahaan atau nomor "
 "PPN tidak diizinkan setelah dokumen diterbitkan untuk akun Anda. <br/>Mohon "
 "hubungi kami langsung untuk operasi ini.</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Sebelumnya\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" "
+"title=\"Berikutnya\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -282,13 +299,6 @@ msgstr "Ditambahkan Pada"
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr "Sudah Didaftarkan"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Token akses harus disediakan untuk setiap lampiran."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -544,7 +554,7 @@ msgstr "Dokumen"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "Jatuh tempo dalam %1d hari"
 
 #. module: portal
 #. odoo-javascript
@@ -716,6 +726,13 @@ msgstr ""
 "                dan lengkap,"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr "Keterangan Key"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
@@ -810,7 +827,6 @@ msgstr "Password Baru:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Next"
@@ -916,11 +932,6 @@ msgid "Powered by"
 msgstr "Disajikan oleh"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Prev"
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -997,6 +1008,7 @@ msgstr "Keamanan"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Kontrol Keamanan"
@@ -1095,15 +1107,6 @@ msgstr "Lampiran %s tidak dapat dihapus karena sudah dihubungkan ke pesan."
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "Lampiran %s tidak dapat dihapus karena bukan di status pending."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
-"Lampiran %s tidak tersedia atau Anda tidak memiliki hak untuk mengaksesnya."
 
 #. module: portal
 #. odoo-python

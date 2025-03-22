@@ -14,6 +14,8 @@ import {
     splitTextNode,
     toggleClass,
     isVisible,
+    nodeSize,
+    setSelection,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -35,6 +37,19 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
     let didSplit = false;
     if (isUnbreakable(this)) {
         throw UNBREAKABLE_ROLLBACK_CODE;
+    }
+    if (
+        !this.textContent &&
+        ['BLOCKQUOTE', 'PRE'].includes(this.parentElement.nodeName) &&
+        !this.nextSibling
+    ) {
+        const parent = this.parentElement;
+        const index = childNodeIndex(this);
+        if (this.previousElementSibling) {
+            this.remove();
+            return parent.oEnter(index, !didSplit);
+        }
+        return parent.oEnter(index + 1, !didSplit);
     }
     let restore;
     if (firstSplit) {
@@ -91,12 +106,47 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
  */
 HTMLHeadingElement.prototype.oEnter = function () {
     const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
-    if ([...newEl.textContent].every(char => char === '\u200B')) { // empty or all invisible
+    if (newEl && [...newEl.textContent].every(char => char === '\u200B')) { // empty or all invisible
         const node = setTagName(newEl, 'P');
         node.replaceChildren(document.createElement('br'));
         setCursorStart(node);
     }
 };
+const isAtEdgeofLink = (link, offset) => {
+    const childNodes = [...link.childNodes];
+    let firstVisibleIndex = childNodes.findIndex(isVisible);
+    firstVisibleIndex = firstVisibleIndex === -1 ? 0 : firstVisibleIndex;
+    if (offset <= firstVisibleIndex) {
+        return 'start';
+    }
+    let lastVisibleIndex = childNodes.reverse().findIndex(isVisible);
+    lastVisibleIndex = lastVisibleIndex === -1 ? 0 : childNodes.length - lastVisibleIndex;
+    if (offset >= lastVisibleIndex) {
+        return 'end';
+    }
+    return false;
+}
+HTMLAnchorElement.prototype.oEnter = function (offset) {
+    const edge = isAtEdgeofLink(this, offset);
+    if (edge === 'start') {
+        // Do not break the link at the edge: break before it.
+        if (this.previousSibling) {
+            return HTMLElement.prototype.oEnter.call(this.previousSibling, nodeSize(this.previousSibling));
+        } else {
+            const index = childNodeIndex(this);
+            return HTMLElement.prototype.oEnter.call(this.parentElement, index ? index - 1 : 0);
+        }
+    } else if (edge === 'end') {
+        // Do not break the link at the edge: break after it.
+        if (this.nextSibling) {
+            return HTMLElement.prototype.oEnter.call(this.nextSibling, 0);
+        } else {
+            return HTMLElement.prototype.oEnter.call(this.parentElement, childNodeIndex(this));
+        }
+    } else {
+        HTMLElement.prototype.oEnter.call(this, ...arguments);
+    }
+}
 /**
  * Same specific behavior as headings elements.
  */
@@ -106,7 +156,7 @@ HTMLQuoteElement.prototype.oEnter = HTMLHeadingElement.prototype.oEnter;
  */
 HTMLLIElement.prototype.oEnter = function () {
     // If not empty list item, regular block split
-    if (this.textContent) {
+    if (this.textContent || this.querySelector('table')) {
         const node = HTMLElement.prototype.oEnter.call(this, ...arguments);
         if (node.classList.contains('o_checked')) {
             toggleClass(node, 'o_checked');
@@ -124,6 +174,11 @@ HTMLPreElement.prototype.oEnter = function (offset) {
         this.insertBefore(lineBreak, this.childNodes[offset]);
         setCursorEnd(lineBreak);
     } else {
+        if (this.parentElement.nodeName === 'LI') {
+            setSelection(this.parentElement, childNodeIndex(this) + 1);
+            HTMLLIElement.prototype.oEnter.call(this.parentElement, ...arguments);
+            return;
+        }
         const node = document.createElement('p');
         this.parentNode.insertBefore(node, this.nextSibling);
         fillEmpty(node);

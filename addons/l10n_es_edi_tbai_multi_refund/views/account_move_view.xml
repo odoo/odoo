@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n_es_edi_tbai_multi_refund</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <field name="l10n_es_tbai_refund_reason" position='after'>
+                <field name="l10n_es_tbai_reversed_ids" attrs="{'invisible': [('move_type', 'not in', ['in_refund', 'out_refund'])]}" widget="many2many_tags" options="{'no_create': True}" />
+            </field>
+        </field>
+    </record>
+</data>

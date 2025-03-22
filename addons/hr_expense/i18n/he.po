@@ -9,35 +9,43 @@
 # yizhaq agronov <yizhaq@gmail.com>, 2022
 # ilan kl <ilan@qaroads.co.il>, 2022
 # Amit Spilman <amit@laylinetech.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Moshe Flam <pashute@gmail.com>, 2022
-# ExcaliberX <excaliberx@gmail.com>, 2022
 # david danilov, 2022
 # Adi Sharashov <Adi@laylinetech.com>, 2022
-# Martin Trigaux, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
 # NoaFarkash, 2022
 # Roy Sayag, 2022
-# Ha Ketem <haketem@gmail.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2022
+# Hed Shefer <hed@laylinetech.com>, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2023
 # שהאב חוסיין <shhab89@gmail.com>, 2023
-# yael terner, 2023
+# ExcaliberX <excaliberx@gmail.com>, 2024
+# Martin Trigaux, 2024
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# yael terner, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 14:21+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: yael terner, 2023\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -61,20 +69,6 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-msgstr ""
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 msgstr ""
 
 #. module: hr_expense
@@ -105,6 +99,16 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">Employee Expense Journal</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 msgstr ""
 
 #. module: hr_expense
@@ -271,7 +275,7 @@ msgstr "חיפוש תפוצה אנליטי"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "יישומים לתכניות אנליטיות"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_precision
@@ -340,13 +344,28 @@ msgstr "צרף קבלה"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Attach a receipt - usually an image or a PDF file."
-msgstr ""
+msgstr "צרף קבלה - לרוב תמונה או קובץ PDF"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "קובץ מצורף"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "כמות קבצים מצורפים"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "קבצים מצורפים"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -464,6 +483,7 @@ msgstr "צור"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -814,7 +834,7 @@ msgstr "פיצול הוצאות"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__expense_split_line_ids
 msgid "Expense Split Line"
-msgstr ""
+msgstr "שורת פיצול הוצאה"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_split_wizard
@@ -869,7 +889,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expense split"
-msgstr ""
+msgstr "פיצול הוצאה"
 
 #. module: hr_expense
 #. odoo-python
@@ -1295,6 +1315,13 @@ msgstr "דוח הוצאות חדש"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "New Expense Report, paid by %(paid_by)s"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "New Expense Reports"
 msgstr ""
 
@@ -1389,13 +1416,20 @@ msgstr "מספר השגיאות"
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_needaction_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__message_has_error_counter
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "מספר הודעות עם שגיאת משלוח"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+#, python-format
+msgid "Numbers computed from your personal expenses."
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
@@ -1430,10 +1464,16 @@ msgstr "רק עובדי משאבי אנוש או העובד הנוגע בדבר 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr "רק מנהלים ועובדי משאבי אנוש יכולים לאשר הוצאות"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Only Managers and HR Officers can refuse expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1490,6 +1530,21 @@ msgid "Phone bills, postage, etc."
 msgstr ""
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Please specify a bank journal in order to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1541,6 +1596,11 @@ msgstr "תיאור מוצר"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
 msgstr "שם מוצר"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "וריאנט מוצר"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
@@ -1705,6 +1765,7 @@ msgstr "סרוק"
 
 #. module: hr_expense
 #. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
@@ -1777,13 +1838,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
@@ -1793,18 +1847,23 @@ msgstr "ציין האם ניתן לבחור את המוצר בהוצאה."
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Split Expense"
-msgstr ""
+msgstr "פיצול הוצאה"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_split_wizard.py:0
 #, python-format
 msgid "Split Expenses"
-msgstr ""
+msgstr "פיצול הוצאות"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
 msgstr ""
 
 #. module: hr_expense
@@ -1854,6 +1913,11 @@ msgstr "נשלח"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
 msgid "Tax"
 msgstr "מס"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Tax 15%"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
@@ -1948,6 +2012,15 @@ msgid "The payment method used when the expense is paid by the company."
 msgstr "אמצעי התשלום שבשימוש כאשר ההוצאה משולמת על ידי החברה."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -1971,8 +2044,9 @@ msgstr ""
 #: code:addons/hr_expense/models/product_product.py:0
 #, python-format
 msgid ""
-"There are unposted expenses linked to this category. Updating the category "
-"cost will change expense amounts. Make sure it is what you want to do."
+"There are unsubmitted expenses linked to this category. Updating the "
+"category cost will change expense amounts. Make sure it is what you want to "
+"do."
 msgstr ""
 
 #. module: hr_expense
@@ -2042,7 +2116,7 @@ msgstr "סך הסכום ללא מס במטבע"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_original
 msgid "Total amount of the original Expense that we are splitting"
-msgstr ""
+msgstr "הסכום הכולל של ההוצאה המקורית שפיצלנו"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__total_amount_original
@@ -2090,6 +2164,7 @@ msgstr "קטגורית יחידת מידה"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
 msgid "Upload"
 msgstr "העלה"
@@ -2280,6 +2355,7 @@ msgid "You cannot report expenses for different companies in the same report."
 msgstr ""
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2298,6 +2374,23 @@ msgstr ""
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr "אינך יכול לדווח פעמיים על אותה שורה!"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2357,7 +2450,7 @@ msgstr "נדחה"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "to be reimbursed"
-msgstr ""
+msgstr "לתשלום"
 
 #. module: hr_expense
 #. odoo-python
@@ -2371,18 +2464,9 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "under validation"
-msgstr ""
+msgstr "לאישור"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
-msgstr ""
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid ""
-"The private address of the employee is required to post the expense report. "
-"Please add it on the employee form."
 msgstr ""

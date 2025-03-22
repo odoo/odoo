@@ -10,14 +10,15 @@
 # Martin Trigaux, 2022
 # ILMIR <karamov@it-projects.info>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ivan Kropotkin <yelizariev@itpp.dev>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,8 @@ msgid ""
 "1 credit is consumed per visitor matching the website traffic conditions and"
 " whose company can be identified.<br/>"
 msgstr ""
+"1 кредит расходуется на одного посетителя, соответствующего условиям "
+"посещаемости сайта и чья компания может быть идентифицирована.<br/>"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -65,7 +68,7 @@ msgstr "Просмотр CRM Reveal"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__lead_for
 msgid "Choose whether to track companies only or companies and their contacts"
-msgstr ""
+msgstr "Выберите, что отслеживать: только компании или компании и их контакты"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__companies
@@ -75,17 +78,17 @@ msgstr "Компании"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_for__people
 msgid "Companies and their Contacts"
-msgstr ""
+msgstr "Компании и их контакты"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_min
 msgid "Company Size"
-msgstr ""
+msgstr "Размер компании"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "Размер компании Макс"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -105,13 +108,15 @@ msgstr "Дата создания"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
 msgid "Create a conversion rule"
-msgstr ""
+msgstr "Создайте правило преобразования"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.actions.act_window,help:website_crm_iap_reveal.crm_reveal_rule_action
 msgid ""
 "Create rules to generate B2B leads/opportunities from your website visitors."
 msgstr ""
+"Создавайте правила для генерации B2B-лидов/возможностей от посетителей "
+"вашего сайта."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__create_uid
@@ -136,6 +141,7 @@ msgid "Display Name"
 msgstr "Отображаемое имя"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
@@ -144,17 +150,17 @@ msgstr "Введите действительный Regex."
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__contact_filter_type
 msgid "Filter On"
-msgstr ""
+msgstr "Фильтр включен"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__filter_on_size
 msgid "Filter companies based on their size."
-msgstr ""
+msgstr "Фильтруйте компании по их размеру."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__filter_on_size
 msgid "Filter on Size"
-msgstr ""
+msgstr "Фильтр по размеру"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -244,17 +250,8 @@ msgid "Lead Generation Views"
 msgstr "Виды генерации лида"
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid ""
-"Lead Generation requires a GeoIP resolver which could not be found on your "
-"system. Please consult https://pypi.org/project/GeoIP/."
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 #: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr "Генерация лидов: лиды / генерация возможностей"
 
@@ -281,22 +278,18 @@ msgid ""
 "Make sure you know if you have to be GDPR compliant for storing personal "
 "data."
 msgstr ""
+"Убедитесь, что вы знаете, должны ли вы соответствовать GDPR при хранении "
+"персональных данных."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.constraint,message:website_crm_iap_reveal.constraint_crm_reveal_rule_limit_extra_contacts
 msgid "Maximum 5 contacts are allowed!"
-msgstr ""
+msgstr "Допускается не более 5 контактов!"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__1
 msgid "Medium"
 msgstr "Тип трафика"
-
-#. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Missing Library"
-msgstr ""
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
@@ -333,6 +326,8 @@ msgid ""
 "Only visitors of following states will be converted into "
 "leads/opportunities."
 msgstr ""
+"Только посетители из следующих штатов будут конвертированы в "
+"лиды/возможности."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__lead_type__opportunity
@@ -350,6 +345,7 @@ msgid "Opportunity Generation Conditions"
 msgstr "Условия создания возможностей"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"
@@ -384,7 +380,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__website_id
 msgid "Restrict Lead generation to this website."
-msgstr ""
+msgstr "Ограничьте генерацию свинца этим сайтом."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__role
@@ -414,7 +410,7 @@ msgstr "Продавец"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_view_search
 msgid "Search CRM Reveal Rule"
-msgstr ""
+msgstr "Правило раскрытия поиска CRM"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__seniority_id
@@ -454,6 +450,10 @@ msgid ""
 "criteria. Their details will show up in the history thread of generated "
 "leads/opportunities. One credit is consumed per tracked contact."
 msgstr ""
+"Это количество контактов, которые необходимо отслеживать, если их "
+"роль/должность соответствуют вашим критериям. Их данные будут отображаться в"
+" истории сгенерированных лидов/возможностей. На один отслеживаемый контакт "
+"расходуется один кредит."
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__suffix
@@ -482,7 +482,7 @@ msgstr "выражение URL"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Up to"
-msgstr ""
+msgstr "Вплоть до"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__sequence
@@ -502,7 +502,7 @@ msgstr "Очень высокий"
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_rule_action
 #: model:ir.ui.menu,name:website_crm_iap_reveal.crm_reveal_rule_menu_action
 msgid "Visits to Leads Rules"
-msgstr ""
+msgstr "Правила преобразования посещений в лиды"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__website_id
@@ -518,11 +518,13 @@ msgstr "Условия трафика веб-сайта"
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "additional credit(s) are consumed if the company matches this rule."
 msgstr ""
+"дополнительный кредит(ы) расходуется(ются), если компания соответствует "
+"этому правилу."
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "e.g. /page"
-msgstr ""
+msgstr "например, /page"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -532,7 +534,7 @@ msgstr "напр., Посетитель с США"
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "employees"
-msgstr ""
+msgstr "сотрудники"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form

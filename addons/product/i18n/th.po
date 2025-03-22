@@ -9,18 +9,19 @@
 # gsong <gsong2014@foxmail.com>, 2022
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
-# Wichanon Jamwutthipreecha, 2022
 # Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
 # Amin Cheloh <amincheloh@gmail.com>, 2022
 # Rasareeyar Lappiam, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -422,6 +423,8 @@ msgid ""
 "At most %d quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"สามารถแสดงปริมาณได้สูงสุด %d พร้อมกัน "
+"และลบจำนวนที่เลือกเพื่อเพิ่มรายการอื่นๆ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
@@ -864,7 +867,7 @@ msgstr "ความถูกต้องของทศนิยม"
 #: code:addons/product/models/res_company.py:0
 #, python-format
 msgid "Default %(currency)s pricelist"
-msgstr ""
+msgstr "รายการราคาเริ่มต้น %(currency)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__product_uom_id
@@ -1275,9 +1278,7 @@ msgstr "ถ้าเลือก ข้อความใหม่จะต้�
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
-#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
-#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
 
@@ -1767,6 +1768,8 @@ msgid ""
 "On the product %s you cannot associate the value %s with the attribute %s "
 "because they do not match."
 msgstr ""
+"ในสินค้า %s คุณไม่สามารถเชื่อมโยงค่า %s กับคุณสมบัติ %s ได้ "
+"เนื่องจากค่าไม่ตรงกัน"
 
 #. module: product
 #. odoo-python
@@ -1775,7 +1778,7 @@ msgstr ""
 msgid ""
 "On the product %s you cannot transform the attribute %s into the attribute "
 "%s."
-msgstr ""
+msgstr "ในสินค้า %s คุณไม่สามารถแปลงคุณสมบัติ %s ให้เป็นคุณสมบัติ %s ได้"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
@@ -2307,7 +2310,7 @@ msgstr "ปริมาณ"
 #: code:addons/product/static/src/js/product_pricelist_report.js:0
 #, python-format
 msgid "Quantity already present (%d)."
-msgstr ""
+msgstr "จำนวนที่มีอยู่แล้ว (%d)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__qty
@@ -2378,12 +2381,6 @@ msgstr "แถว"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "เคล็ดลับของกฎ"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
-#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "ข้อผิดพลาดในการส่ง SMS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2599,7 +2596,7 @@ msgstr "ประเภทของสินค้านี้ไม่ตรง
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The attribute %s must have at least one value for the product %s."
-msgstr ""
+msgstr "คุณสมบัติ %s ต้องมีค่าอย่างน้อยหนึ่งค่าสำหรับสินค้า %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
@@ -2715,7 +2712,7 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "The value %s is not defined for the attribute %s on the product %s."
-msgstr ""
+msgstr "ไม่ได้กำหนดค่า %s สำหรับคุณสมบัติ %s บนสินค้า %s"
 
 #. module: product
 #. odoo-python
@@ -3084,18 +3081,6 @@ msgstr ""
 "ซึ่งเป็นสาเหตุที่ทำให้โต๊ะทำงานของเรามีคุณภาพที่เหนือกว่า"
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "ข้อความเว็บไซต์"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "ประวัติการสื่อสารของเว็บไซต์"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -3164,6 +3149,8 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"คุณไม่สามารถเปลี่ยนโหมดการสร้างตัวเลือกย่อยสินค้าของคุณสมบัติ %s ได้ เนื่องจากมีการใช้กับผลิตภัณฑ์ต่อไปนี้:\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3179,14 +3166,14 @@ msgstr ""
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the product of the value %s set on product %s."
-msgstr ""
+msgstr "คุณไม่สามารถเปลี่ยนผลคูณของค่า %s ที่ตั้งไว้ในผลิตภัณฑ์ %s ได้"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid "You cannot change the value of the value %s set on product %s."
-msgstr ""
+msgstr "คุณไม่สามารถเปลี่ยนค่าของค่า %s ที่ตั้งไว้ในผลิตภัณฑ์ %s ได้"
 
 #. module: product
 #. odoo-python
@@ -3227,6 +3214,8 @@ msgid ""
 "You cannot delete the attribute %s because it is used on the following products:\n"
 "%s"
 msgstr ""
+"คุณไม่สามารถลบคุณสมบัติ %s ได้ เนื่องจากมีการใช้กับผลิตภัณฑ์ต่อไปนี้:\n"
+"%s"
 
 #. module: product
 #. odoo-python
@@ -3237,6 +3226,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"คุณไม่สามารถลบค่า %s ได้ เนื่องจากมีการใช้กับผลิตภัณฑ์ต่อไปนี้:\n"
+"%s\n"
+"หากค่าเคยเชื่อมโยงกับผลิตภัณฑ์ในอดีต คุณจะไม่สามารถลบออกได้"
 
 #. module: product
 #. odoo-python
@@ -3284,7 +3276,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
-msgstr ""
+msgstr "คุณไม่สามารถย้ายคุณสมบัติ %s จากผลิตภัณฑ์ %s ไปยังผลิตภัณฑ์ %s ได้"
 
 #. module: product
 #. odoo-python

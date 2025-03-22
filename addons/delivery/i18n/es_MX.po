@@ -3,17 +3,17 @@
 # 	* delivery
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2025
+# Martin Trigaux, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,12 +63,12 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-danger\">No debug</span>"
-msgstr "<span class=\"text-danger\">Sin solución de bugs</span>"
+msgstr "<span class=\"text-danger\">Sin depuración</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr "<span class=\"text-success\">Solicitudes de solución de bugs</span>"
+msgstr "<span class=\"text-success\">Solicitudes de depuración</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -190,7 +190,7 @@ msgstr "Agregar un método de envío"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Add shipping"
-msgstr "Agregar un envío"
+msgstr "Agregar envío"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__amount
@@ -336,7 +336,7 @@ msgstr "Cliente"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr "Registro de solución de bugs"
+msgstr "Registro de depuración"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
@@ -487,9 +487,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Cada transportista (por ejemplo, UPS) puede tener múltiples métodos de envío (por ejemplo,\n"
-"                UPS Express, UPS Standard) con un conjunto de reglas adjuntas\n"
-"                a cada método."
+"Cada transportista (por ejemplo, UPS) puede tener varios métodos de envío (por ejemplo,\n"
+"            UPS Express, UPS Standard) con reglas de precios ya establecidas\n"
+"            para cada método."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -517,6 +517,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
 msgstr "Costo estimado"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr "Ocurrió una excepción relacionada con el transportista del traslado"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Excepción"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -681,6 +695,13 @@ msgid "Manage delivery zip prefixes"
 msgstr "Gestionar prefijos de C.P. de envío"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "Es posible que necesite realizar acciones manuales."
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr "Margen"
@@ -836,9 +857,14 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Categoría del producto"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimientos de producto (línea de movimiento de inventario)"
+msgstr "Movimientos de producto (línea de movimiento de stock)"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__product_qty
@@ -1009,10 +1035,10 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
 "Código estandarizado para envíos internacionales y declaración de bienes. "
-"Por el momento, solo lo utiliza FedEx."
+"Por el momento, solo se utiliza para los proveedores de envío FedEx y USPS."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -1022,7 +1048,7 @@ msgstr "Estados"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento de existencias"
+msgstr "Movimiento de stock"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_package_type
@@ -1282,6 +1308,30 @@ msgstr ""
 "\n"
 "Las siguientes líneas de entrega (producto, cantidad facturada y precio) ya se procesaron:\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"No puede eliminar la categoría de productos \"Entregas\", se utiliza en los "
+"productos de transportistas de envío."
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"No es posible empaquetar productos en el mismo paquete si tienen distintos "
+"transportistas. Compruebe que todos sus traslados tienen un transportista "
+"asignado y que usan el mismo."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

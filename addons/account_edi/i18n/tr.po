@@ -11,14 +11,15 @@
 # Martin Trigaux, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -374,6 +375,11 @@ msgid "Product Unit of Measure"
 msgstr "Ürün Ölçü Birimi"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Yevmiye Kayıtlarının sırasını yeniden oluşturun."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Rapor İşlemi"
@@ -431,6 +437,14 @@ msgid ""
 msgstr ""
 "Fatura kaydedildiğinde (ve bu belge işlendiğinde) edi_format_id tarafından "
 "oluşturulan dosya."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

@@ -282,6 +282,29 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
+    QUnit.test("don't show noContentHelper if no search is done", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_setting_container">
+                        <div class="settings">
+                            <div class="app_settings_block" string="Settings" data-key="settings">
+                                <h2>Setting title</h2>
+                                <h3 class="o_setting_tip">Settings will appear below</h3>
+                            </div>
+                        </div>
+                    </div>
+                </form>`,
+        });
+        assert.isNotVisible(
+            target.querySelector(".o_nocontent_help"),
+            "record not found message shown"
+        );
+    });
+
     QUnit.test("unhighlight section not matching anymore", async function (assert) {
         await makeView({
             type: "form",

@@ -18,26 +18,29 @@
 # ExcaliberX <excaliberx@gmail.com>, 2022
 # Roy Sayag, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
-# Ha Ketem <haketem@gmail.com>, 2022
 # NoaFarkash, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # MichaelHadar, 2023
-# hed shefer <hed@laylinetech.com>, 2023
-# yael terner, 2023
+# Orel Nahmany, 2024
+# yael terner, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# Hed Shefer <hed@laylinetech.com>, 2024
+# Uri Segman, 2024
+# or balmas, 2025
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: yael terner, 2023\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard___data_fetched
@@ -64,7 +67,7 @@ msgstr "מס' הזמנות לקוח"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
-msgstr ""
+msgstr "%(line_description)s (בוטל)"
 
 #. module: sale
 #. odoo-python
@@ -81,7 +84,7 @@ msgstr "&amp;nbsp;"
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
 msgid "'PRO-FORMA - %s' % (object.name)"
-msgstr "'פרו-פורמה - %s' % (object.name)"
+msgstr "'חשבונית עסקה - %s' % (object.name)"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_saleorder
@@ -394,6 +397,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/> <b>שולם</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -717,7 +725,7 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "קבל וחתום על הצעת המחיר"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -762,7 +770,7 @@ msgstr "חשבון המשמש להפקדות"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "הזנת הכנסה נצברת"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -818,12 +826,12 @@ msgstr "הוסף מספר וריאנטים להזמנה מתצוגת רשת"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "מאפשר לך לשלוח חשבונית פרו-פורמה ללקוחות שלך"
+msgstr "מאפשר לך לשלוח חשבונית חשבונית עסקה ללקוחות שלך"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "מאפשר לך לשלוח חשבונית פרו-פורמה."
+msgstr "מאפשר לך לשלוח חשבונית חשבונית עסקה."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -876,7 +884,7 @@ msgstr "שורה אנליטית"
 #. module: sale
 #: model:ir.model,name:sale.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "יישומים לתכניות אנליטיות"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_precision
@@ -1534,7 +1542,7 @@ msgstr "סוג תצוגה"
 #: code:addons/sale/static/src/js/product_discount_field.js:0
 #, python-format
 msgid "Do you want to apply this value to all lines ?"
-msgstr ""
+msgstr "ברצונך לעדכן את ההנחה עבור כל המוצרים?"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1696,7 +1704,7 @@ msgstr "תוקף הצעת מחיר"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "פג תוקף ב%(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1830,7 +1838,7 @@ msgstr "קבץ לפי"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "האם העמדה הפיסקלית השתנתה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2515,7 +2523,7 @@ msgstr "מספר השגיאות"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
@@ -2743,7 +2751,7 @@ msgstr "אסימון מזהה PDT"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "חשבונית פרו-פורמה"
+msgstr "חשבונית עסקה"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
@@ -2794,7 +2802,7 @@ msgstr "אמצעי תשלום"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "ספק תשלום"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2877,17 +2885,17 @@ msgstr "הדפס"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "חשבונית פרו-פורמה"
+msgstr "חשבונית עסקה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr ""
+msgstr "חשבונית עסקה #"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "חשבוניות פרו-פורמה"
+msgstr "חשבוניות עסקה"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3574,7 +3582,7 @@ msgstr "מכור וריאנטים של מוצר באמצעות תכונות (ג�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "שלח חשבונית פרו-פורמה"
+msgstr "שלח חשבונית עסקה"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3831,14 +3839,14 @@ msgid "Tags"
 msgstr "תגיות"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "מס לפי ארץ"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "ח.פ / ע.מ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3959,7 +3967,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "האסימון גישה אינו חוקי."
 
 #. module: sale
 #. odoo-python
@@ -3980,12 +3988,12 @@ msgstr "הסכום הקבוע שיש לחייב מראש, מיסים לא נכל
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"לא ניתן להגביל את המוצרים הבאים לחברה %s מכיוון שכבר נעשה בהם שימוש בהצעות מחיר או הזמנות לקוח בחברה אחרת:\n"
-"%s\n"
+"לא ניתן להגביל את המוצרים הבאים לחברה %(company)s מכיוון שכבר נעשה בהם שימוש בהצעות מחיר או הזמנות לקוח בחברה אחרת:\n"
+"%(used_products)s\n"
 "באפשרותך להעביר אותם לארכיון וליצור אותם מחדש עם הגבלת החברה שלך או להשאיר אותם כמוצרים משותפים."
 
 #. module: sale
@@ -4664,8 +4672,8 @@ msgid ""
 "object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
-"(ctx.get('proforma') and 'פרו-פורמה' or 'הצעת מחיר') or 'הזמנה' }} ( מספר {{"
-" object.name or 'לא קיים' }})"
+"(ctx.get('proforma') and 'חשבונית עסקה' or 'הצעת מחיר') or 'הזמנה' }} ( מספר"
+" {{ object.name or 'לא קיים' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

@@ -13,19 +13,20 @@
 # mohammad rahmani <mohammadrahmani2o0@gmail.com>, 2023
 # Faraz Sadri Alamdari <ifarazir@gmail.com>, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
-# Martin Trigaux, 2023
 # hamid hvbnet <hvbnet@yahoo.com>, 2023
-# fardin mardani, 2023
+# fardin mardani <fmardani0@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Hanna Kheradroosta, 2023
+# Martin Trigaux, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +48,20 @@ msgstr "رکوردها"
 #, python-format
 msgid "# Code editor"
 msgstr "تعداد ویرایشگر کد"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is current state"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is not current state"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -108,7 +123,7 @@ msgstr "%s روز پیش"
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "%s records"
-msgstr ""
+msgstr "%s رکوردها"
 
 #. module: web
 #. odoo-javascript
@@ -178,7 +193,7 @@ msgstr ""
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "(%s/%sMB)"
-msgstr ""
+msgstr "‏(%s/%sمگابایت)"
 
 #. module: web
 #. odoo-javascript
@@ -206,7 +221,7 @@ msgstr "(بشمار)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(create)"
-msgstr ""
+msgstr "(ایجاد)"
 
 #. module: web
 #. odoo-javascript
@@ -214,6 +229,9 @@ msgstr ""
 #, python-format
 msgid "(current)"
 msgstr ""
+"I'm sorry, but it appears that there is no additional content provided for "
+"translation. Could you please provide the text you would like to be "
+"translated into Persian?"
 
 #. module: web
 #. odoo-javascript
@@ -248,6 +266,12 @@ msgid ""
 "                        font-style: normal;\n"
 "                    }"
 msgstr ""
+"```html\n"
+") format(\"woff\");\n"
+"                        وزن-قلم: عادی;\n"
+"                        سبک-قلم: عادی;\n"
+"                    }\n"
+"```"
 
 #. module: web
 #. odoo-javascript
@@ -255,6 +279,9 @@ msgstr ""
 #, python-format
 msgid "+ KEY"
 msgstr ""
+"```plaintext\n"
+"+ کلید\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -325,28 +352,38 @@ msgstr "<span class=\"text-nowrap\">مالیات 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"```html\n"
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">۷۷ سانتا باربارا\n"
+"                                       Rd<br/>پلزنت هیل CA ۹۴۵۲۳<br/>ایالات متحده</span>\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span id=\"line_tax_ids\">Tax 15%</span>"
 msgstr ""
+"```html\n"
+"<span id=\"line_tax_ids\">مالیات ۱۵٪</span>\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span itemprop=\"name\">Deco Addict</span>"
 msgstr ""
+"```html\n"
+"<span itemprop=\"name\">دکو ادیکت</span>\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr ""
+msgstr "<span>$ <span class=«ارزش ارز رایج- oe»>19,250.00</span></"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>5.00</span>"
-msgstr ""
+msgstr "<span>5.00</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -364,6 +401,10 @@ msgid ""
 "<span>Invoice</span>\n"
 "                           <span>INV/2023/00003</span>"
 msgstr ""
+"```html\n"
+"<span>فاکتور</span>\n"
+"                           <span>INV/2023/00003</span>\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -391,6 +432,10 @@ msgid ""
 "<span>[FURN_8220] Four Person Desk<br/>\n"
 "                                       Four person modern office workstation</span>"
 msgstr ""
+"```html\n"
+"<span>[FURN_8220] میز چهار نفره<br/>\n"
+"                                       ایستگاه کاری اداری مدرن چهار نفره</span>\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -398,6 +443,10 @@ msgid ""
 "<span>[FURN_8999] Three-Seat Sofa<br/>\n"
 "                                       Three Seater Sofa with Lounger in Steel Grey Colour</span>"
 msgstr ""
+"```html\n"
+"<span>[FURN_8999] کاناپه سه‌نفره<br/>\n"
+"                             کاناپه سه‌نفره با مکان برای استراحت در رنگ خاکستری فولادی</span>\n"
+"```"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -418,20 +467,23 @@ msgstr "<strong>کل</strong>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Untaxed Amount</strong>"
 msgstr ""
+"```html\n"
+"<strong>مبلغ بدون مالیات</strong>\n"
+"```"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=ilike"
-msgstr ""
+msgstr "= شبیه"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=like"
-msgstr ""
+msgstr "=پسندیدن"
 
 #. module: web
 #. odoo-javascript
@@ -442,6 +494,11 @@ msgid ""
 "                        font-family: \"font\";\n"
 "                        src: url(data:font/ttf;base64,"
 msgstr ""
+"```html\n"
+"        @font-face {\n"
+"                        font-family: \"فونت\";\n"
+"                        src: url(data:font/ttf;base64,\n"
+"```"
 
 #. module: web
 #. odoo-javascript
@@ -509,7 +566,7 @@ msgstr "دسترسی به همه برنامه‌های سازمانی"
 #: code:addons/web/static/src/views/fields/ace/ace_field.js:0
 #, python-format
 msgid "Ace Editor"
-msgstr ""
+msgstr "ویرایشگر ایس"
 
 #. module: web
 #. odoo-javascript
@@ -545,15 +602,14 @@ msgstr "فعال سازی خطا یابی دارایی‌ها"
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 #, python-format
 msgid "Activate Tests Assets Debugging"
-msgstr ""
+msgstr "فعال‌سازی اشکال‌زدایی دارایی‌های تست"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
-msgstr ""
+msgstr "فعال کردن حالت اشکال‌زدایی (با منابع)"
 
 #. module: web
 #. odoo-javascript
@@ -607,14 +663,14 @@ msgstr "افزودن گروه سفارشی"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "Add a Property"
-msgstr ""
+msgstr "افزودن یک دارایی"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Add a Value"
-msgstr ""
+msgstr "یک مقدار اضافه کنید"
 
 #. module: web
 #. odoo-javascript
@@ -686,7 +742,7 @@ msgstr "افزودن گره"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Add qweb directive context"
-msgstr ""
+msgstr "اضافه کردن زمینه دستورالعمل qweb"
 
 #. module: web
 #. odoo-javascript
@@ -717,7 +773,7 @@ msgstr "افزودن: "
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Add: %s"
-msgstr ""
+msgstr "اضافه کردن: %s"
 
 #. module: web
 #. odoo-javascript
@@ -732,7 +788,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt & Sign"
-msgstr ""
+msgstr "پذیرش و امضا"
 
 #. module: web
 #. odoo-javascript
@@ -792,7 +848,7 @@ msgstr "در بین"
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 #, python-format
 msgid "An error occured while uploading."
-msgstr ""
+msgstr "هنگام آپلود خطایی روی داد."
 
 #. module: web
 #. odoo-javascript
@@ -862,7 +918,7 @@ msgstr "بایگانی کردن همه"
 #, python-format
 msgid ""
 "Are you sure that you want to archive all the records from this column?"
-msgstr ""
+msgstr "آیا مطمئن هستید که می خواهید تمام رکوردهای این ستون را بایگانی کنید؟"
 
 #. module: web
 #. odoo-javascript
@@ -871,6 +927,7 @@ msgstr ""
 #, python-format
 msgid "Are you sure that you want to archive all the selected records?"
 msgstr ""
+"آیا مطمئن هستید که می‌خواهید تمام رکوردهای انتخاب‌شده را بایگانی کنید؟"
 
 #. module: web
 #. odoo-javascript
@@ -915,7 +972,7 @@ msgstr "مطمئنید می‌خواهید این رکوردها را حذف ک�
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Are you sure you want to delete this column?"
-msgstr ""
+msgstr "آیا از حذف این ستون مطمئن هستید؟"
 
 #. module: web
 #. odoo-javascript
@@ -925,6 +982,8 @@ msgid ""
 "Are you sure you want to delete this property field? It will be removed for "
 "everyone using the \"%s\" %s."
 msgstr ""
+"آیا مطمئن هستید که می‌خواهید این فیلد ویژگی را حذف کنید؟ این فیلد برای همه "
+"کسانی که از \"%s\" %s استفاده می‌کنند، حذف خواهد شد."
 
 #. module: web
 #. odoo-javascript
@@ -949,7 +1008,7 @@ msgstr "مطمئنید می‌خواهید این رکورد را حذف کنی�
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #, python-format
 msgid "Are you sure you want to perform the following update on those"
-msgstr ""
+msgstr "آیا مطمئن هستید که می‌خواهید به‌روزرسانی زیر را روی آن‌ها انجام دهید"
 
 #. module: web
 #. odoo-javascript
@@ -957,12 +1016,13 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "As a default text when no value are set"
-msgstr ""
+msgstr "به عنوان متن پیش‌فرض زمانی که هیچ مقداری تنظیم نشده باشد"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Ascending"
@@ -972,6 +1032,7 @@ msgstr "صعودی"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
@@ -990,7 +1051,7 @@ msgstr "پیوست"
 #: code:addons/web/static/src/views/fields/attachment_image/attachment_image_field.js:0
 #, python-format
 msgid "Attachment Image"
-msgstr ""
+msgstr "تصویر پیوست"
 
 #. module: web
 #. odoo-javascript
@@ -1047,6 +1108,7 @@ msgstr "بج‌ها"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Bar Chart"
 msgstr "نمودار میله‌ای"
@@ -1071,6 +1133,8 @@ msgid ""
 "Binary fields can not be exported to Excel unless their content is "
 "base64-encoded. That does not seem to be the case for %s."
 msgstr ""
+"فیلدهای دودویی نمی‌توانند به اکسل صادر شوند مگر اینکه محتوای آنها به صورت "
+"base64 رمزگذاری شده باشد. به نظر نمی‌رسد که این مورد در مورد %s صدق کند."
 
 #. module: web
 #. odoo-javascript
@@ -1087,7 +1151,7 @@ msgstr "فایل باینری"
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #, python-format
 msgid "Bugfixes guarantee"
-msgstr ""
+msgstr "گارانتی رفع اشکال"
 
 #. module: web
 #. odoo-javascript
@@ -1118,13 +1182,17 @@ msgid ""
 " all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"با کلیک کردن بر روی پذیرش و امضا، موافقت خود را اعلام می‌کنم که امضا/ابتدایی"
+" انتخاب‌شده، نماینده الکترونیکی معتبر از امضای دست‌نویس من برای تمامی اهداف "
+"خواهد بود، هنگامی که بر روی اسناد استفاده می‌شود، شامل قراردادهای قانونی "
+"الزام‌آور."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "Bytes"
-msgstr ""
+msgstr "بایت‌ها"
 
 #. module: web
 #. odoo-javascript
@@ -1132,6 +1200,7 @@ msgstr ""
 #, python-format
 msgid "Bytes|Kb|Mb|Gb|Tb|Pb|Eb|Zb|Yb"
 msgstr ""
+"بایت|کیلوبایت|مگابایت|گیگابایت|ترابایت|پتابایت|اگزابایت|زتابایت|یوتابایت"
 
 #. module: web
 #. odoo-javascript
@@ -1145,14 +1214,14 @@ msgstr ""
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CMD"
-msgstr ""
+msgstr "CMD"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CTRL"
-msgstr ""
+msgstr "CTRL"
 
 #. module: web
 #. odoo-javascript
@@ -1178,7 +1247,6 @@ msgstr "تماس"
 #: code:addons/web/static/src/views/fields/daterange/daterange_field.js:0
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#: code:addons/web/static/src/webclient/barcode/barcode_scanner.xml:0
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
@@ -1269,7 +1337,10 @@ msgstr "یک دستور دیباگ انتخاب کنید ..."
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
@@ -1282,6 +1353,13 @@ msgstr "پاک کردن"
 #, python-format
 msgid "Clear Signature"
 msgstr "پاک کردن امضاء"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Click to change current state to #{i.display_name}"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1470,21 +1548,21 @@ msgstr "کپی"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Multiline Text to Clipboard"
-msgstr ""
+msgstr "متن چند خطی را در کلیپ بورد کپی کنید"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Text to Clipboard"
-msgstr ""
+msgstr "متن را در کلیپ بورد کپی کنید"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy URL to Clipboard"
-msgstr ""
+msgstr "URL را در کلیپ بورد کپی کنید"
 
 #. module: web
 #. odoo-javascript
@@ -1518,6 +1596,13 @@ msgstr "حق تالیف © 2004"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Correct issues to save, or discard changes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
@@ -1527,7 +1612,6 @@ msgstr "نمی توان به سرور متصل شد"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -1538,12 +1622,11 @@ msgstr "نمی‌توان تصویر انتخاب شده را نمایش داد"
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 #, python-format
 msgid "Could not display the selected pdf"
-msgstr ""
+msgstr "نمی‌توان فایل پی‌دی‌اف انتخاب‌شده را نمایش داد"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #, python-format
 msgid "Could not display the specified image url."
 msgstr "نمی‌توان تصویر url مشخص شده نمایش داد."
@@ -1564,13 +1647,14 @@ msgid ""
 "Could not set the cover image: incorrect field (\"%s\") is provided in the "
 "view."
 msgstr ""
+"نمی‌توان تصویر جلد را تنظیم کرد: فیلد نادرستی (\"%s\") در نما ارائه شده است."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.js:0
 #, python-format
 msgid "Could not start scanning. "
-msgstr ""
+msgstr "اسکن کردن نمی‌تواند شروع شود."
 
 #. module: web
 #. odoo-javascript
@@ -1597,7 +1681,6 @@ msgstr "کشور"
 #: code:addons/web/static/src/views/calendar/calendar_year/calendar_year_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Create"
@@ -1617,7 +1700,7 @@ msgstr "ایجاد"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create \"%s\""
-msgstr ""
+msgstr "ایجاد \"%s\""
 
 #. module: web
 #. odoo-javascript
@@ -1632,7 +1715,14 @@ msgstr "افزودن \"<strong>%s</strong>\""
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create %s"
-msgstr ""
+msgstr "ایجاد %s"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
+#, python-format
+msgid "Create <strong>%s</strong> as a new %s?"
+msgstr "ایجاد <strong>%s</strong> به عنوان یک %s جدید؟"
 
 #. module: web
 #. odoo-javascript
@@ -1646,7 +1736,7 @@ msgstr "ایجاد و ویرایش..."
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create and edit..."
-msgstr ""
+msgstr "ایجاد و ویرایش..."
 
 #. module: web
 #. odoo-javascript
@@ -1692,14 +1782,14 @@ msgstr "ایجاد کاربر:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
-msgstr ""
+msgstr "تراکمی"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Current state"
 msgstr "حالت جاری"
@@ -1802,7 +1892,7 @@ msgstr "پیش‌فرض"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Default State"
-msgstr ""
+msgstr "حالت پیش فرض"
 
 #. module: web
 #. odoo-javascript
@@ -1817,7 +1907,7 @@ msgstr "مقدار پیش‌فرض"
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default text is used when no values are set"
-msgstr ""
+msgstr "متن پیش‌فرض زمانی استفاده می‌شود که هیچ مقداری تنظیم نشده باشد"
 
 #. module: web
 #. odoo-javascript
@@ -1825,7 +1915,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default value"
-msgstr ""
+msgstr "مقدار پیش‌فرض"
 
 #. module: web
 #. odoo-javascript
@@ -1868,7 +1958,7 @@ msgstr "حذف"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Delete Property Field"
-msgstr ""
+msgstr "حذف فیلد ویژگی"
 
 #. module: web
 #. odoo-javascript
@@ -1893,7 +1983,7 @@ msgstr "حذف گره"
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 #, python-format
 msgid "Delete row"
-msgstr ""
+msgstr "حذف ردیف"
 
 #. module: web
 #. odoo-javascript
@@ -1906,6 +1996,7 @@ msgstr "حذف ردیف"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Descending"
@@ -1923,7 +2014,7 @@ msgstr "ابزارهای توسعه دهنده"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr ""
+msgstr "ارزهای مختلف را نمی‌توان تجمیع کرد"
 
 #. module: web
 #. odoo-javascript
@@ -1951,9 +2042,10 @@ msgstr "رها کردن"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
-msgstr ""
+msgstr "تغییرات را نادیده بگیرید"
 
 #. module: web
 #. odoo-javascript
@@ -2058,6 +2150,7 @@ msgstr "لطفا خارج نشوید,<br />در حال بارگذاری..."
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Download"
@@ -2072,6 +2165,7 @@ msgstr "دانلود پیش‌نمایش PDF"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Download xlsx"
@@ -2110,7 +2204,10 @@ msgstr "تکثیر کردن"
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
@@ -2144,7 +2241,7 @@ msgstr "ویرایش دامنه"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Edit SearchView"
-msgstr ""
+msgstr "ویرایش SearchView"
 
 #. module: web
 #. odoo-javascript
@@ -2173,7 +2270,7 @@ msgstr "ویرایش رکورد"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr ""
+msgstr "ویرایش کنید: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2190,7 +2287,7 @@ msgstr "پست الکترونیک"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Empty email address"
-msgstr ""
+msgstr "آدرس ایمیل خالی"
 
 #. module: web
 #. odoo-javascript
@@ -2211,11 +2308,12 @@ msgstr "آدرس ایمیل را وارد کن"
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 #, python-format
 msgid "Enterprise"
-msgstr ""
+msgstr "سازمانی"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "خطا"
@@ -2247,6 +2345,7 @@ msgstr "همه چیز"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Expand all"
 msgstr "گسترش همه"
@@ -2265,6 +2364,7 @@ msgstr "خروجی"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Export All"
@@ -2291,11 +2391,11 @@ msgstr "قالب اکسپورت:"
 #: code:addons/web/controllers/export.py:0
 #, python-format
 msgid "Exporting grouped data to csv is not supported."
-msgstr ""
+msgstr "صادر کردن داده‌های گروه‌بندی‌شده به فرمت csv پشتیبانی نمی‌شود."
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
@@ -2384,7 +2484,6 @@ msgstr "پرونده"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "آپلود فایل"
@@ -2408,9 +2507,10 @@ msgstr "فیلترها"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Flip axis"
-msgstr ""
+msgstr "محور را برگردانید"
 
 #. module: web
 #. odoo-javascript
@@ -2453,7 +2553,7 @@ msgstr "فونت"
 #: code:addons/web/static/src/views/fields/font_selection/font_selection_field.js:0
 #, python-format
 msgid "Font Selection"
-msgstr ""
+msgstr "انتخاب فونت"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -2474,6 +2574,9 @@ msgid ""
 "\n"
 "Tip: try to flip axis, filter further or reduce the number of measures."
 msgstr ""
+"برای سازگاری با Excel، داده‌ها نمی‌توانند صادر شوند اگر بیش از ۱۶۳۸۴ ستون وجود داشته باشد.\n"
+"\n"
+"نکته: سعی کنید محور را برعکس کنید، بیشتر فیلتر کنید و یا تعداد معیارها را کاهش دهید."
 
 #. module: web
 #. odoo-javascript
@@ -2533,21 +2636,22 @@ msgstr "گواهینامه GNU LGPL"
 #: code:addons/web/static/src/views/debug_items.js:0
 #, python-format
 msgid "Get View"
-msgstr ""
+msgstr "دریافت نما"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/fields/upgrade_dialog.xml:0
 #, python-format
 msgid "Get this feature and much more with Odoo Enterprise!"
-msgstr ""
+msgstr "با Odoo Enterprise این ویژگی و بسیاری موارد دیگر را دریافت کنید!"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
-msgstr ""
+msgstr "به URL بروید"
 
 #. module: web
 #. odoo-javascript
@@ -2584,12 +2688,25 @@ msgstr "مسیریابی HTTP"
 #: code:addons/web/static/src/views/fields/handle/handle_field.js:0
 #, python-format
 msgid "Handle"
-msgstr ""
+msgstr "<span>دستگیره</span>"
 
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
+msgstr "متن سربرگ که در بالای همه گزارش‌ها نمایش داده می‌شود."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
 msgstr ""
+"توجه! تغییرات اخیر شما برای ذخیره‌سازی خودکار بسیار بزرگ هستند. لطفاً اکنون "
+"روی دکمه <i class=\"fa fa-cloud-upload fa-fw\"></i> کلیک کنید تا مطمئن شوید "
+"کار شما قبل از خروج از این برگه ذخیره می‌شود."
 
 #. module: web
 #. odoo-javascript
@@ -2603,7 +2720,7 @@ msgstr "پنهان در کانبان"
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr ""
+msgstr "در کانبان پنهان شود"
 
 #. module: web
 #. odoo-javascript
@@ -2654,7 +2771,7 @@ msgstr "من در این مورد مطمئنم."
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "I want to update data (import-compatible export)"
-msgstr ""
+msgstr "می‌خواهم داده‌ها را به‌روز کنم (صادرات قابل‌واردات)"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
@@ -2710,10 +2827,12 @@ msgstr "عدد صحیح"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
-msgstr ""
+msgstr "پیوند داخلی"
 
 #. module: web
 #. odoo-javascript
@@ -2755,7 +2874,7 @@ msgstr "دامنه نا معتبر"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Invalid field chain"
-msgstr ""
+msgstr "زنجیره فیلد نامعتبر"
 
 #. module: web
 #. odoo-javascript
@@ -2771,7 +2890,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.js:0
 #, python-format
 msgid "Invalid fields"
-msgstr ""
+msgstr "فیلدهای نامعتبر"
 
 #. module: web
 #. odoo-javascript
@@ -2787,7 +2906,14 @@ msgstr "فیلدهای نامعتبر:"
 #: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Invalid fields: "
-msgstr ""
+msgstr "فیلدهای نامعتبر:"
+
+#. module: web
+#. odoo-python
+#: code:addons/web/controllers/domain.py:0
+#, python-format
+msgid "Invalid model: %s"
+msgstr "مدل نامعتبر: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2808,12 +2934,12 @@ msgstr "دعوت کاربران جدید"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Inviting..."
-msgstr ""
+msgstr "در حال دعوت..."
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__is_company_details_empty
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "آیا جزئیات شرکت خالی است"
 
 #. module: web
 #. odoo-javascript
@@ -2826,6 +2952,11 @@ msgid ""
 "            compilation...). During rendering, the global time also takes part of the time to make\n"
 "            the profile as well as some part not logged in the function generated by the qweb."
 msgstr ""
+"این امکان وجود دارد که زمان \"t-call\" با زمان کلی قالب مطابقت نداشته باشد. "
+"زیرا زمان کلی (در منوی کشویی) مدت زمانی را که در رندرینگ نسخه‌برداری نمی‌شود"
+" (به دنبال قالب، خواندن، وراثت، کامپایل...) در نظر نمی‌گیرد. در طول رندرینگ،"
+" زمان کلی نیز بخشی از زمان را برای ایجاد پروفایل و همچنین بخشی که در تابع "
+"تولید شده توسط qweb به ثبت نرسیده است، در بر می‌گیرد."
 
 #. module: web
 #. odoo-javascript
@@ -2840,7 +2971,7 @@ msgstr "کانبان"
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.js:0
 #, python-format
 msgid "Kanban Examples"
-msgstr ""
+msgstr "مثال‌های کانبان"
 
 #. module: web
 #. odoo-javascript
@@ -2848,7 +2979,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_record.js:0
 #, python-format
 msgid "Kanban: no action for type: "
-msgstr ""
+msgstr "کانبان: هیچ اقدامی برای نوع:"
 
 #. module: web
 #. odoo-javascript
@@ -2856,7 +2987,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/state_selection/state_selection_field.js:0
 #, python-format
 msgid "Label Selection"
-msgstr ""
+msgstr "انتخاب برچسب"
 
 #. module: web
 #. odoo-python
@@ -2902,7 +3033,7 @@ msgstr "طرح بندی"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__layout_background
 msgid "Layout Background"
-msgstr ""
+msgstr "پس زمینه چیدمان"
 
 #. module: web
 #. odoo-javascript
@@ -2925,6 +3056,7 @@ msgstr "آبی روشن"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Line Chart"
@@ -2952,6 +3084,13 @@ msgstr "بارگذاری"
 #, python-format
 msgid "Load demo data"
 msgstr "بارگیری داده های نمایشی"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3038,7 +3177,7 @@ msgstr "رنگ ثانویه لوگو"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "MailDeliveryException"
-msgstr ""
+msgstr "استثنا در تحویل ایمیل"
 
 #. module: web
 #. odoo-javascript
@@ -3081,7 +3220,7 @@ msgstr "مدیریت فیلترها"
 #: code:addons/web/static/src/views/fields/many2one_barcode/many2one_barcode_field.js:0
 #, python-format
 msgid "Many2OneBarcode"
-msgstr ""
+msgstr "بسیاری2یکبارکد"
 
 #. module: web
 #. odoo-javascript
@@ -3089,7 +3228,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "Many2many"
-msgstr ""
+msgstr "چند به چند"
 
 #. module: web
 #. odoo-javascript
@@ -3098,7 +3237,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "Many2one"
-msgstr ""
+msgstr "بسیاری به یک"
 
 #. module: web
 #. odoo-javascript
@@ -3206,7 +3345,7 @@ msgstr "مدل"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "Model Record Rules"
-msgstr ""
+msgstr "قوانین ثبت مدل"
 
 #. module: web
 #. odoo-javascript
@@ -3270,7 +3409,7 @@ msgstr "بیشتر"
 #: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
 #, python-format
 msgid "Move to %s..."
-msgstr ""
+msgstr "برو به %s..."
 
 #. module: web
 #. odoo-javascript
@@ -3327,7 +3466,7 @@ msgstr "رویداد جدید"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "New Property"
-msgstr ""
+msgstr "ویژگی جدید"
 
 #. module: web
 #. odoo-javascript
@@ -3351,17 +3490,18 @@ msgstr "قالب جدید"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "New:"
-msgstr ""
+msgstr "جدید:"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "New: %s"
-msgstr ""
+msgstr "جدید: %s"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
@@ -3396,7 +3536,7 @@ msgstr "خیر"
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "No Access"
-msgstr ""
+msgstr "بدون دسترسی"
 
 #. module: web
 #. odoo-javascript
@@ -3410,7 +3550,7 @@ msgstr "بدون به روز رسانی:"
 #: code:addons/web/static/src/webclient/actions/client_actions.js:0
 #, python-format
 msgid "No action with id '%s' could be found"
-msgstr ""
+msgstr "هیچ اقدامی با شناسه '%s' یافت نشد"
 
 #. module: web
 #. odoo-javascript
@@ -3425,7 +3565,7 @@ msgstr "بدون رنگ"
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "No command found"
-msgstr ""
+msgstr "دستوری یافت نشد"
 
 #. module: web
 #. odoo-javascript
@@ -3446,14 +3586,14 @@ msgstr "داده‌ای برای نمایش نیست"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "No debug command found"
-msgstr ""
+msgstr "دستور اشکال‌زدایی یافت نشد"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.js:0
 #, python-format
 msgid "No device can be found."
-msgstr ""
+msgstr "هیچ دستگاهی یافت نشد."
 
 #. module: web
 #. odoo-javascript
@@ -3468,7 +3608,7 @@ msgstr "هیچ موردی مطابقت نداشت."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "No menu found"
-msgstr ""
+msgstr "هیچ منویی یافت نشد"
 
 #. module: web
 #. odoo-javascript
@@ -3494,7 +3634,7 @@ msgstr "هیچ رکوردی یافت نشد!"
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "No result"
-msgstr ""
+msgstr "نتیجه‌ای یافت نشد"
 
 #. module: web
 #. odoo-javascript
@@ -3518,7 +3658,7 @@ msgstr "هیچ رکورد معتبری برای ذخیره وجود ندارد"
 #: code:addons/web/static/src/webclient/actions/action_service.js:0
 #, python-format
 msgid "No view of type '%s' could be found in the current action."
-msgstr ""
+msgstr "هیچ نمایی از نوع '%s' در اقدام فعلی یافت نشد."
 
 #. module: web
 #. odoo-javascript
@@ -3548,7 +3688,6 @@ msgstr "تعیین نشده"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state"
 msgstr "حالت فعال نیست"
@@ -3556,10 +3695,16 @@ msgstr "حالت فعال نیست"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "حالت فعال نیست، کلیک کنید برای تغییر آن"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
+#, python-format
+msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3607,7 +3752,7 @@ msgstr "خطای اودو"
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "Odoo Network Error"
-msgstr ""
+msgstr "خطای شبکه اودوو"
 
 #. module: web
 #. odoo-javascript
@@ -3621,7 +3766,7 @@ msgstr "سایت اودوو "
 #: code:addons/web/static/src/core/errors/error_dialogs.js:0
 #, python-format
 msgid "Odoo Server Error"
-msgstr ""
+msgstr "خطای سرور اودوو"
 
 #. module: web
 #. odoo-javascript
@@ -3644,7 +3789,7 @@ msgstr "هشدار اودو"
 #: code:addons/web/static/src/webclient/barcode/barcode_scanner.js:0
 #, python-format
 msgid "Odoo needs your authorization first."
-msgstr ""
+msgstr "اودوو ابتدا به مجوز شما نیاز دارد."
 
 #. module: web
 #. odoo-javascript
@@ -3654,13 +3799,14 @@ msgstr ""
 msgid ""
 "Of the %d records selected, only the first %d have been archived/unarchived."
 msgstr ""
+"از %d رکورد انتخاب شده، تنها %d رکورد اول بایگانی/از بایگانی خارج شده‌اند."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Oh snap!"
-msgstr ""
+msgstr "اوه لعنتی!"
 
 #. module: web
 #. odoo-javascript
@@ -3705,20 +3851,22 @@ msgstr "فقط مقادیر صحیح یا اعشاری باید معتبر با�
 msgid ""
 "Only employees can access this database. Please contact the administrator."
 msgstr ""
+"فقط کارمندان می‌توانند به این پایگاه داده دسترسی داشته باشند. لطفاً با مدیر "
+"تماس بگیرید."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %d records have been deleted (out of %d selected)"
-msgstr ""
+msgstr "فقط اولین %d رکورد حذف شد (از %d رکورد انتخاب شده)"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %s records have been deleted (out of %s selected)"
-msgstr ""
+msgstr "فقط اولین %s رکورد حذف شد (از %s رکورد انتخاب شده)"
 
 #. module: web
 #. odoo-python
@@ -3759,10 +3907,17 @@ msgstr "بازکردن نما"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu.xml:0
+#, python-format
+msgid "Open developer tools"
+msgstr "ابزارهای توسعه‌دهنده را باز کنید"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Open:"
-msgstr ""
+msgstr "باز کردن:"
 
 #. module: web
 #. odoo-javascript
@@ -3780,14 +3935,14 @@ msgstr "باز: "
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Open: %s"
-msgstr ""
+msgstr "باز کن: %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Option Name"
-msgstr ""
+msgstr "نام گزینه"
 
 #. module: web
 #. odoo-javascript
@@ -3820,7 +3975,7 @@ msgstr "دیگر"
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 #, python-format
 msgid "PDF Viewer"
-msgstr ""
+msgstr "نمایشگر PDF"
 
 #. module: web
 #. odoo-javascript
@@ -3834,7 +3989,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #, python-format
 msgid "PDF file"
-msgstr ""
+msgstr "فایل PDF"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_striped
@@ -3861,7 +4016,7 @@ msgstr "صفحه: <span class=\"page\"/> / <span class=\"topage\"/>"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Pager"
-msgstr ""
+msgstr "صفحه‌گردان"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__paperformat_id
@@ -3891,6 +4046,9 @@ msgstr "دعوتنامه های معلق:"
 #, python-format
 msgid "PercentPie"
 msgstr ""
+"```html\n"
+"درصدپای\n"
+"```"
 
 #. module: web
 #. odoo-javascript
@@ -3928,6 +4086,7 @@ msgstr "انتخاب رنگ"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Pie Chart"
 msgstr "نمودار دایره‌ای"
@@ -3940,6 +4099,8 @@ msgid ""
 "Pie chart cannot mix positive and negative numbers. Try to change your "
 "domain to only display positive results"
 msgstr ""
+"نمودار دایره‌ای نمی‌تواند اعداد مثبت و منفی را با هم ترکیب کند. سعی کنید "
+"دامنه خود را تغییر دهید تا فقط نتایج مثبت نمایش داده شود."
 
 #. module: web
 #. odoo-javascript
@@ -3953,7 +4114,7 @@ msgstr "پیوت"
 #: code:addons/web/controllers/pivot.py:0
 #, python-format
 msgid "Pivot %(title)s (%(model_name)s)"
-msgstr ""
+msgstr "پیوت %(title)s (%(model_name)s)"
 
 #. module: web
 #. odoo-javascript
@@ -3961,7 +4122,7 @@ msgstr ""
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Pivot settings"
-msgstr ""
+msgstr "تنظیمات محور"
 
 #. module: web
 #. odoo-javascript
@@ -3984,7 +4145,7 @@ msgstr "لطفا ابتدا روی دکمه \"ذخیره\" کلیک کنید"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Please complete your properties before adding a new one"
-msgstr ""
+msgstr "لطفاً قبل افزودن ملک جدید، ویژگی‌های خود را تکمیل کنید"
 
 #. module: web
 #. odoo-javascript
@@ -4036,7 +4197,7 @@ msgstr "لطفا بروزرسانی کنید، ترجمه های :"
 #, python-format
 msgid ""
 "Please use the copy button to report the error to your support service."
-msgstr ""
+msgstr "لطفاً از دکمه کپی برای گزارش خطا به خدمات پشتیبانی خود استفاده کنید."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -4094,6 +4255,7 @@ msgstr "پیش‌نمایش لوگو"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
@@ -4136,7 +4298,7 @@ msgstr "صفحه قبلی"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__primary_color
 msgid "Primary Color"
-msgstr ""
+msgstr "Couleur primaire"
 
 #. module: web
 #. odoo-javascript
@@ -4191,14 +4353,14 @@ msgstr "مشخصات"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Property %s"
-msgstr ""
+msgstr "خصوصیت %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Property Name"
-msgstr ""
+msgstr "نام ویژگی"
 
 #. module: web
 #. odoo-javascript
@@ -4216,7 +4378,7 @@ msgstr "بنفش"
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q1"
-msgstr ""
+msgstr "س۱"
 
 #. module: web
 #. odoo-javascript
@@ -4224,7 +4386,7 @@ msgstr ""
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q2"
-msgstr ""
+msgstr "Q2"
 
 #. module: web
 #. odoo-javascript
@@ -4232,7 +4394,7 @@ msgstr ""
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q3"
-msgstr ""
+msgstr "Q3"
 
 #. module: web
 #. odoo-javascript
@@ -4240,7 +4402,7 @@ msgstr ""
 #: code:addons/web/static/src/search/utils/dates.js:0
 #, python-format
 msgid "Q4"
-msgstr ""
+msgstr "Q4"
 
 #. module: web
 #: model:ir.model.fields.selection,name:web.selection__ir_actions_act_window_view__view_mode__qweb
@@ -4307,28 +4469,28 @@ msgstr "رادیو"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record qweb"
-msgstr ""
+msgstr "رکورد کیووب"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record sql"
-msgstr ""
+msgstr "ضبط SQL"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record traces"
-msgstr ""
+msgstr "ردیابی سوابق"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Recording..."
-msgstr ""
+msgstr "در حال ضبط..."
 
 #. module: web
 #. odoo-javascript
@@ -4362,7 +4524,7 @@ msgstr "تازه سازی"
 #: code:addons/web/static/src/core/debug/debug_menu_items.js:0
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "تجدید بسته‌های دارایی‌ها"
 
 #. module: web
 #. odoo-javascript
@@ -4379,7 +4541,7 @@ msgstr "رابطه مجاز نیست"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "ارتباط برای دنبال کردن"
 
 #. module: web
 #. odoo-javascript
@@ -4394,7 +4556,7 @@ msgstr "رابطه:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "جدول رابطه‌ای"
 
 #. module: web
 #. odoo-javascript
@@ -4432,7 +4594,7 @@ msgstr "حذف تصویر رویی"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Remove Property"
-msgstr ""
+msgstr "حذف ویژگی"
 
 #. module: web
 #. odoo-javascript
@@ -4440,7 +4602,7 @@ msgstr ""
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
 #, python-format
 msgid "Remove field"
-msgstr ""
+msgstr "حذف فیلد"
 
 #. module: web
 #. odoo-javascript
@@ -4482,12 +4644,12 @@ msgstr "زیرنویس گزارش"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_layout_id
 msgid "Report Layout"
-msgstr ""
+msgstr "طرح گزارش"
 
 #. module: web
 #: model:ir.actions.report,name:web.action_report_layout_preview
 msgid "Report Layout Preview"
-msgstr ""
+msgstr "پیش‌نمایش طرح‌بندی گزارش"
 
 #. module: web
 #. odoo-javascript
@@ -4495,19 +4657,26 @@ msgstr ""
 #: code:addons/web/static/src/public/error_notifications.js:0
 #, python-format
 msgid "Request timeout"
-msgstr ""
+msgstr "پایان زمان درخواست"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "تنظیم مجدد دامنه"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
-msgstr ""
+msgstr "به رنگ‌های لوگو تنظیم مجدد شود"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/clickbot/clickbot_loader.js:0
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr ""
+msgstr "اجرا تست کلیک در همه جا"
 
 #. module: web
 #. odoo-javascript
@@ -4515,7 +4684,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr ""
+msgstr "اجرای آزمون‌های موبایل JS"
 
 #. module: web
 #. odoo-javascript
@@ -4523,7 +4692,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/debug_items.js:0
 #, python-format
 msgid "Run JS Tests"
-msgstr ""
+msgstr "اجرای تست‌های JS"
 
 #. module: web
 #. odoo-javascript
@@ -4531,7 +4700,7 @@ msgstr ""
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid "SEE RESULT"
-msgstr ""
+msgstr "ببین نتیجه را"
 
 #. module: web
 #. odoo-javascript
@@ -4608,7 +4777,7 @@ msgstr "ذخیره به عنوان :"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Save as:"
-msgstr ""
+msgstr "ذخیره به عنوان:"
 
 #. module: web
 #. odoo-javascript
@@ -4627,9 +4796,10 @@ msgstr "ذخیر به عنوان پیش فرض"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
-msgstr ""
+msgstr "ذخیره دستی"
 
 #. module: web
 #. odoo-javascript
@@ -4643,9 +4813,10 @@ msgstr "ذخیره رکورد"
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "Scan barcode"
-msgstr ""
+msgstr "اسکن بارکد"
 
 #. module: web
 #. odoo-javascript
@@ -4681,21 +4852,21 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search a field..."
-msgstr ""
+msgstr "جستجو یک فیلد..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "Search for a command..."
-msgstr ""
+msgstr "جستجو برای یک فرمان..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "Search for a menu..."
-msgstr ""
+msgstr "به دنبال یک منو بگردید..."
 
 #. module: web
 #. odoo-javascript
@@ -4780,7 +4951,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Select Default"
-msgstr ""
+msgstr "انتخاب پیش فرض"
 
 #. module: web
 #. odoo-javascript
@@ -4814,6 +4985,13 @@ msgstr "انتخاب همه"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
@@ -4825,7 +5003,7 @@ msgstr "انتخاب فیلد"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Select records"
-msgstr ""
+msgstr "انتخاب رکوردها"
 
 #. module: web
 #. odoo-javascript
@@ -4855,6 +5033,7 @@ msgstr "انتخاب :"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #, python-format
 msgid "Send Email"
@@ -4913,7 +5092,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/priority/priority_field.js:0
 #, python-format
 msgid "Set priority..."
-msgstr ""
+msgstr "تنظیم اولویت..."
 
 #. module: web
 #. odoo-javascript
@@ -4948,7 +5127,7 @@ msgstr "میانبرها"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
-msgstr ""
+msgstr "نمایش زیر-فیلدها"
 
 #. module: web
 #. odoo-javascript
@@ -4993,7 +5172,7 @@ msgstr "چیز وحشتناکی اتفاق افتاد"
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Sort graph"
-msgstr ""
+msgstr "نمودار مرتب سازی"
 
 #. module: web
 #. odoo-javascript
@@ -5009,9 +5188,11 @@ msgstr "ویژه:"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Stacked"
-msgstr ""
+msgstr "مُدرَج‌شده"
 
 #. module: web
 #. odoo-javascript
@@ -5027,7 +5208,7 @@ msgstr "شروع به تایپ کنید..."
 #: code:addons/web/static/src/views/fields/stat_info/stat_info_field.js:0
 #, python-format
 msgid "Stat Info"
-msgstr ""
+msgstr "اطلاعات آماری"
 
 #. module: web
 #. odoo-javascript
@@ -5035,6 +5216,13 @@ msgstr ""
 #, python-format
 msgid "Status"
 msgstr "وضعیت"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5048,7 +5236,7 @@ msgstr "این جا بمان"
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Stay here"
-msgstr ""
+msgstr "اینجا بمانید"
 
 #. module: web
 #. odoo-javascript
@@ -5104,9 +5292,18 @@ msgstr "خطای عبارت"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
+msgstr "نکته"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Tag color: #{colornames[color]}"
 msgstr ""
 
 #. module: web
@@ -5124,7 +5321,7 @@ msgstr "برچسب‌ها"
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "Take a minute to get a coffee,"
-msgstr ""
+msgstr "یک دقیقه وقت بگذارید تا یک قهوه بگیرید،"
 
 #. module: web
 #. odoo-javascript
@@ -5162,6 +5359,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"شماره شناسایی مالیاتی مقادیر در اینجا بر اساس قالب کشور تأیید می شوند. "
+"می‌توانید از «/» برای نشان دادن اینکه شریک مشمول مالیات نیست استفاده کنید."
 
 #. module: web
 #. odoo-python
@@ -5171,6 +5370,8 @@ msgid ""
 "The content of this cell is too long for an XLSX file (more than %s "
 "characters). Please use the CSV format for this export."
 msgstr ""
+"محتوای این سلول برای فایل XLSX خیلی طولانی است (بیش از %s کاراکتر). لطفاً "
+"برای این صادرات از فرمت CSV استفاده کنید."
 
 #. module: web
 #. odoo-javascript
@@ -5188,11 +5389,19 @@ msgid ""
 "The operation was interrupted. This usually means that the current operation"
 " is taking too much time."
 msgstr ""
+"عملیات متوقف شد. این معمولا به این معنی است که عملیات فعلی زمان زیادی "
+"می‌گیرد."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "فایل انتخاب شده (%sB) از حداکثر اندازه مجاز فایل (%sB) بیشتر است."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "فایل انتخاب شده بزرگتر از حداکثر اندازة %s است."
@@ -5207,6 +5416,15 @@ msgid ""
 msgstr ""
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 #, python-format
@@ -5214,6 +5432,9 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
+"تعداد ردیف‌ها بسیار زیاد است (%s ردیف، محدودیت: %s) برای صادر کردن به فرمت "
+"Excel 2007-2013 (.xlsx). در نظر داشته باشید که صادرات را به بخش‌های کوچکتر "
+"تقسیم کنید."
 
 #. module: web
 #. odoo-javascript
@@ -5221,7 +5442,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #, python-format
 msgid "There is no available image to be set as cover."
-msgstr ""
+msgstr "هیچ تصویری برای تنظیم به عنوان جلد وجود ندارد."
 
 #. module: web
 #. odoo-javascript
@@ -5235,7 +5456,7 @@ msgstr "خطا در هنگام بارگذاری فایل شما"
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "There was a problem while uploading your file."
-msgstr ""
+msgstr "مشکلی در هنگام بارگذاری فایل شما پیش آمد."
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
@@ -5251,6 +5472,7 @@ msgstr "تاریخ در آینده است. مطمئن شوید این چیزی �
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datepicker/datepicker.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
@@ -5269,14 +5491,14 @@ msgstr "این دامنه پشتیبانی نشده است."
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "This field is already first"
-msgstr ""
+msgstr "این فیلد در حال حاض اولین است"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "This field is already last"
-msgstr ""
+msgstr "این فیلد در حال حاضر آخرین است"
 
 #. module: web
 #. odoo-javascript
@@ -5310,7 +5532,7 @@ msgstr "این نمونه‌ای از گزارش داخلی است."
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "This tag is already available"
-msgstr ""
+msgstr "این برچسب در حال حاضر موجود است"
 
 #. module: web
 #. odoo-javascript
@@ -5318,7 +5540,7 @@ msgstr ""
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #, python-format
 msgid "This update will only consider the records of the current page."
-msgstr ""
+msgstr "این به روز رسانی فقط سوابق صفحه فعلی را در نظر می گیرد."
 
 #. module: web
 #. odoo-javascript
@@ -5344,6 +5566,8 @@ msgid ""
 "Timezone Mismatch : This timezone is different from that of your browser.\n"
 "Please, set the same timezone as your browser's to avoid time discrepancies in your system."
 msgstr ""
+"Timezone Mismatch : این منطقه زمانی با منطقه زمانی مرورگر شما متفاوت است.\n"
+"لطفاً برای جلوگیری از تفاوت‌های زمانی در سیستم شما، همان منطقه زمانی مرورگر خود را تنظیم کنید."
 
 #. module: web
 #. odoo-javascript
@@ -5362,7 +5586,7 @@ msgstr "امروز"
 #: code:addons/web/static/src/views/fields/boolean_toggle/boolean_toggle_field.js:0
 #, python-format
 msgid "Toggle"
-msgstr ""
+msgstr "toggle"
 
 #. module: web
 #. odoo-javascript
@@ -5370,7 +5594,7 @@ msgstr ""
 #: code:addons/web/static/src/webclient/burger_menu/burger_menu.xml:0
 #, python-format
 msgid "Toggle menu"
-msgstr ""
+msgstr "منوی تغییر دهید"
 
 #. module: web
 #. odoo-javascript
@@ -5385,7 +5609,7 @@ msgstr "فردا"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr ""
+msgstr "موارد زیادی برای نمایش وجود دارد."
 
 #. module: web
 #. odoo-javascript
@@ -5420,6 +5644,8 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                    active filter in the search bar."
 msgstr ""
+"تلاش کنید تا چند رکورد اضافه کنید، یا مطمئن شوید که فیلتری فعال در نوار "
+"جستجو وجود ندارد."
 
 #. module: web
 #. odoo-javascript
@@ -5433,7 +5659,7 @@ msgstr "3شنبه"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #, python-format
 msgid "Type a default text or press ENTER"
-msgstr ""
+msgstr "یک متن پیش‌فرض تایپ کنید یا دکمه ورود را فشار دهید"
 
 #. module: web
 #. odoo-javascript
@@ -5441,7 +5667,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Type your name to sign"
-msgstr ""
+msgstr "نام خود را برای امضا وارد کنید"
 
 #. module: web
 #. odoo-javascript
@@ -5466,6 +5692,8 @@ msgstr "URL"
 msgid ""
 "Unable to find Wkhtmltopdf on this system. The report will be shown in html."
 msgstr ""
+"قادر به یافتن Wkhtmltopdf در این سیستم نیستیم. گزارش به صورت HTML نمایش داده"
+" خواهد شد."
 
 #. module: web
 #. odoo-javascript
@@ -5514,8 +5742,8 @@ msgid "Uncaught Promise"
 msgstr ""
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5623,7 +5851,7 @@ msgstr "آپگرید به نسخه‌های آینده"
 #: code:addons/web/static/src/views/kanban/kanban_cover_image_dialog.xml:0
 #, python-format
 msgid "Upload and Set"
-msgstr ""
+msgstr "بارگذاری و تنظیم"
 
 #. module: web
 #. odoo-javascript
@@ -5666,7 +5894,7 @@ msgstr "خطای بارگذاری"
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.js:0
 #, python-format
 msgid "Uploading error"
-msgstr ""
+msgstr "بارگذاری خطا"
 
 #. module: web
 #. odoo-javascript
@@ -5683,7 +5911,7 @@ msgstr "در حال آپلود..."
 #: code:addons/web/static/src/core/file_upload/file_upload_progress_record.js:0
 #, python-format
 msgid "Uploading... (%s%)"
-msgstr ""
+msgstr "در حال بارگذاری... (%s%)"
 
 #. module: web
 #. odoo-javascript
@@ -5691,7 +5919,7 @@ msgstr ""
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Use This For My Kanban"
-msgstr ""
+msgstr "از این برای کانبان من استفاده کن"
 
 #. module: web
 #. odoo-javascript
@@ -5734,14 +5962,14 @@ msgstr "مقادیر"
 #: code:addons/web/static/src/views/form/form_label.js:0
 #, python-format
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "مقادیر تنظیم شده در اینجا خاص شرکت هستند."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Variation"
-msgstr ""
+msgstr "واریاسیون"
 
 #. module: web
 #. odoo-javascript
@@ -5786,7 +6014,7 @@ msgstr "نمایش متادیتا"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "View Record Rules"
-msgstr ""
+msgstr "مشاهده قوانین رکورد"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_ir_actions_act_window_view__view_mode
@@ -5807,6 +6035,7 @@ msgstr "مشاهده سوئیچ کننده"
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/control_panel.xml:0
 #: code:addons/web/static/src/search/favorite_menu/favorite_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
@@ -5882,7 +6111,7 @@ msgstr "آیا می خواهید تغییرات خود را ذخیره کنید�
 #: code:addons/web/static/src/views/fields/iframe_wrapper/iframe_wrapper_field.js:0
 #, python-format
 msgid "Wrap raw html within an iframe"
-msgstr ""
+msgstr "قراردادن HTML خام در یک آی‌فریم"
 
 #. module: web
 #. odoo-python
@@ -5943,14 +6172,14 @@ msgstr "دیروز"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "You are logged in."
-msgstr ""
+msgstr "شما وارد شده‌اید."
 
 #. module: web
 #. odoo-python
 #: code:addons/web/controllers/binary.py:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
-msgstr ""
+msgstr "شما مجاز به آپلود پیوست در اینجا نیستید."
 
 #. module: web
 #. odoo-javascript
@@ -5964,14 +6193,14 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "You do not have access to the model \"%s\"."
-msgstr ""
+msgstr "شما به مدل \"%s\" دسترسی ندارید."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/ui/block_ui.js:0
 #, python-format
 msgid "You may not believe it,"
-msgstr ""
+msgstr "ممکن است باور نکنید،"
 
 #. module: web
 #. odoo-javascript
@@ -5986,7 +6215,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_tags.js:0
 #, python-format
 msgid "You need to be able to edit parent first to add property tags"
-msgstr ""
+msgstr "برای افزودن تگ های دارایی، ابتدا باید بتوانید والد را ویرایش کنید"
 
 #. module: web
 #. odoo-javascript
@@ -6014,6 +6243,8 @@ msgid ""
 "You need to start Odoo with at least two workers to print a pdf version of "
 "the reports."
 msgstr ""
+"برای چاپ نسخه PDF از گزارش‌ها، باید اودو را با حداقل دو پردازشگر راه‌اندازی "
+"کنید."
 
 #. module: web
 #. odoo-javascript
@@ -6024,6 +6255,9 @@ msgid ""
 "to get a correct display of headers and footers as well as support for "
 "table-breaking between pages."
 msgstr ""
+"شما باید نسخه Wkhtmltopdf خود را به حداقل 0.12.0 ارتقا دهید تا نمایش صحیح "
+"سرصفحه‌ها و پاصفحه‌ها و همچنین پشتیبانی از شکستن جدول بین صفحات را داشته "
+"باشید."
 
 #. module: web
 #. odoo-javascript
@@ -6041,6 +6275,8 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html."
 msgstr ""
+"به نظر می‌رسد نصب Wkhtmltopdf شما دچار مشکل شده است. گزارش در قالب HTML "
+"نمایش داده خواهد شد."
 
 #. module: web
 #. odoo-javascript
@@ -6091,9 +6327,11 @@ msgstr "حدود یک ساعت قبل"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "همه"
@@ -6105,6 +6343,13 @@ msgstr "همه"
 #, python-format
 msgid "all records"
 msgstr "تمام رکوردها"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "and"
+msgstr "و"
 
 #. module: web
 #. odoo-javascript
@@ -6121,12 +6366,11 @@ msgstr "هر چیزی"
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #, python-format
 msgid "are valid for this update."
-msgstr ""
+msgstr "این به‌روزرسانی معتبر هستند."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
 msgid "as a new"
 msgstr ""
@@ -6439,11 +6683,11 @@ msgstr "هنوز در حال بارگذاری ..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. odoo-javascript
@@ -6475,14 +6719,14 @@ msgstr "کمتر یا مساوی با"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "like"
-msgstr ""
+msgstr "مثل"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "menus"
-msgstr ""
+msgstr "منوها"
 
 #. module: web
 #. odoo-javascript
@@ -6516,10 +6760,25 @@ msgstr "ms"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_palette.xml:0
+#, python-format
+msgid "new tab"
+msgstr "زبانه جدید"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#, python-format
+msgid "new_template"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "no description provided"
-msgstr ""
+msgstr "بدون توضیحات ارائه شده است"
 
 #. module: web
 #. odoo-javascript
@@ -6527,7 +6786,7 @@ msgstr ""
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #, python-format
 msgid "none"
-msgstr ""
+msgstr "هیچ"
 
 #. module: web
 #. odoo-javascript
@@ -6550,7 +6809,7 @@ msgstr "نباشد در"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "not like"
-msgstr ""
+msgstr "دوست نداشتن"
 
 #. module: web
 #. odoo-javascript
@@ -6581,7 +6840,7 @@ msgstr "از:"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "on any screen to show shortcut overlays and"
-msgstr ""
+msgstr "در هر صفحه برای نمایش پوشش‌های میانبر و"
 
 #. module: web
 #. odoo-javascript
@@ -6610,6 +6869,19 @@ msgstr "والدِ"
 #, python-format
 msgid "query"
 msgstr ""
+"متن: \\n در اینجا ماژول Odoo خاصی به نام /home/esmaeil/m_t/web را بررسی "
+"می‌کنیم. این متن نشان‌دهنده ویژگی‌ها و قابلیت‌های این ماژول است که در زیر "
+"بررسی خواهند شد. \\n ویژگی‌های کلیدی \\n - قابلیت اجرای فرایندهای پیچیده "
+"تجاری \\n - رابط کاربری ساده و کاربرپسند \\n - یکپارچگی با دیگر ماژول‌های "
+"Odoo \\n - امکانات گزارش‌دهی و تحلیل \\n نحوه نصب \\n برای نصب این ماژول، "
+"ابتدا باید به مسیر /home/esmaeil/m_t/web رفته و سپس دستورات نصب را اجرا "
+"کنید. \\n نحوه استفاده \\n پس از نصب، به منوی تنظیمات رفته و ماژول را فعال "
+"کنید. پس از فعال‌سازی، می‌توانید از ویژگی‌های کاربردی این ماژول بهره‌مند "
+"شوید.\\n \\n اگر در هر قسمت از نصب یا استفاده مشکل داشتید، به اسناد مربوطه "
+"مراجعه کنید و یا با پشتیبانی فنی تماس بگیرید. \\n نکات مهم \\n - قبل از نصب،"
+" اطمینان حاصل کنید که نسخه Odoo شما با این ماژول سازگار است. \\n - به "
+"روزرسانی‌های مرتب برای این ماژول منتشر می‌شود که می‌تواند قابلیت‌های جدیدی "
+"اضافه کند. \\n پایان متن:"
 
 #. module: web
 #. odoo-javascript
@@ -6665,6 +6937,14 @@ msgstr "رکوردهای انتخاب شده."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "self"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6681,24 +6961,10 @@ msgstr "تعیین (درست)"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "to open in new tab"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/core/commands/command_palette.xml:0
-#, python-format
-msgid "to open,"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "to trigger a shortcut."
-msgstr ""
+msgstr "برای فعال کردن یک میانبر."
 
 #. module: web
 #. odoo-javascript
@@ -6709,7 +6975,35 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
+#, python-format
+msgid "{{ progressBar.count }} {{ progressBar.string }}"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#, python-format
+msgid "{{ relatedFieldName }}..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/kanban.xml:0
+#, python-format
+msgid "{{ widget.groupByFieldString }}..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
-msgstr ""
+msgstr "<div> - فشار دادن </div>"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "— جستجو برای"

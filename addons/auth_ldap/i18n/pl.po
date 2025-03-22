@@ -13,14 +13,15 @@
 # Martin Trigaux, 2023
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
+# Marta Wacławek, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-16 09:20+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2023-07-13 13:02+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2023\n"
+"Last-Translator: Marta Wacławek, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +45,18 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
+"    Filtr użyty do wyszukania kont użytkownika w bazie danych LDAP. Jest to    dowolny filtr LDAP w postaci ciągu znaków. Każdy placeholder `%s`    zostanie zastąpiony przez login (identyfikator) podany przez użytkownika. Filtr    powinien zawierać przynajmniej jeden taki placeholder.\n"
+"\n"
+"    Filtr musi zwrócić dokładnie jeden (1) wynik, w przeciwnym razie login    zostanie uznany za nieprawidłowy.\n"
+"\n"
+"    Przykład (faktyczne atrybuty zależą od serwera LDAP i konfiguracji):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -95,6 +108,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
+"DN zakresu wyszukiwania użytkowników: wszystkie elementy potomne tej bazy "
+"będą przeszukiwane pod kątem użytkowników."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -115,7 +130,6 @@ msgstr "Konfiguracja LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__ldaps
 #: model:ir.model.fields,field_description:auth_ldap.field_res_config_settings__ldaps
-#: model:ir.model.fields,field_description:auth_ldap.field_res_config_test__ldaps
 msgid "LDAP Parameters"
 msgstr "Parametry LDAP"
 

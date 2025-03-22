@@ -4,16 +4,49 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.3alpha1+e\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-30 18:36+0000\n"
-"PO-Revision-Date: 2020-03-30 18:36+0000\n"
+"POT-Creation-Date: 2024-11-15 10:55+0000\n"
+"PO-Revision-Date: 2024-11-15 10:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+msgid ""
+"(AR) Exento undertakes to do its best to supply performant services in due "
+"time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. "
+"(AR) Exento cannot under any circumstances, be required by the client to "
+"appear as a third party in the context of any claim for damages filed "
+"against the client by an end consumer."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+msgid ""
+"(AR) Monotributista undertakes to do its best to supply performant services "
+"in due time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. "
+"(AR) Monotributista cannot under any circumstances, be required by the "
+"client to appear as a third party in the context of any claim for damages "
+"filed against the client by an end consumer."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"(AR) Responsable Inscripto undertakes to do its best to supply performant "
+"services in due time in accordance with the agreed timeframes. However, none"
+" of its obligations can be considered as being an obligation to achieve "
+"results. (AR) Responsable Inscripto cannot under any circumstances, be "
+"required by the client to appear as a third party in the context of any "
+"claim for damages filed against the client by an end consumer."
+msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.custom_header
@@ -149,12 +182,22 @@ msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "<strong>Supplier: </strong>"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<strong>Due Date: </strong>"
 msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<strong>Invoiced period: </strong>"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "<strong>Son: </strong>"
 msgstr ""
 
 #. module: l10n_ar
@@ -193,19 +236,16 @@ msgid "AFIP Concept"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "AFIP POS Address"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid "AFIP POS Number"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_system
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
 msgid "AFIP POS System"
 msgstr ""
@@ -257,6 +297,14 @@ msgid "AN"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_art_a_pagar
+#: model:account.account,name:l10n_ar.4_base_art_a_pagar
+#: model:account.account,name:l10n_ar.5_base_art_a_pagar
+#: model:account.account.template,name:l10n_ar.base_art_a_pagar
+msgid "ART a Pagar"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "Account"
 msgstr ""
@@ -272,8 +320,21 @@ msgid "Accounting Date"
 msgstr ""
 
 #. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
+msgid "Accounting Date: This Year"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_partner_property_form
 msgid "Accounting Documents"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_acreedores_varios
+#: model:account.account,name:l10n_ar.4_base_acreedores_varios
+#: model:account.account,name:l10n_ar.5_base_acreedores_varios
+#: model:account.account.template,name:l10n_ar.base_acreedores_varios
+msgid "Acreedores varios"
 msgstr ""
 
 #. module: l10n_ar
@@ -287,8 +348,243 @@ msgid "Activities Start"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_activo
+#: model:account.group,name:l10n_ar.4_account_group_activo
+#: model:account.group,name:l10n_ar.5_account_group_activo
+#: model:account.group.template,name:l10n_ar.account_group_activo
+msgid "Activo"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_activo_corriente
+#: model:account.group,name:l10n_ar.4_account_group_activo_corriente
+#: model:account.group,name:l10n_ar.5_account_group_activo_corriente
+#: model:account.group.template,name:l10n_ar.account_group_activo_corriente
+msgid "Activo Corriente"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_activo_no_corriente
+#: model:account.group,name:l10n_ar.4_account_group_activo_no_corriente
+#: model:account.group,name:l10n_ar.5_account_group_activo_no_corriente
+#: model:account.group.template,name:l10n_ar.account_group_activo_no_corriente
+msgid "Activo no corriente"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_activos_fijos
+#: model:account.group,name:l10n_ar.4_account_group_activos_fijos
+#: model:account.group,name:l10n_ar.5_account_group_activos_fijos
+#: model:account.group.template,name:l10n_ar.account_group_activos_fijos
+msgid "Activos Fijos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_activos_intangibles
+#: model:account.group,name:l10n_ar.4_account_group_activos_intangibles
+#: model:account.group,name:l10n_ar.5_account_group_activos_intangibles
+#: model:account.group.template,name:l10n_ar.account_group_activos_intangibles
+msgid "Activos Intangibles"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_ajuste_por_redondeo
+#: model:account.account,name:l10n_ar.4_base_ajuste_por_redondeo
+#: model:account.account,name:l10n_ar.5_base_ajuste_por_redondeo
+#: model:account.account.template,name:l10n_ar.base_ajuste_por_redondeo
+msgid "Ajuste por redondeo"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_ajuste_resultados
+#: model:account.account,name:l10n_ar.4_base_ajuste_resultados
+#: model:account.account,name:l10n_ar.5_base_ajuste_resultados
+#: model:account.account.template,name:l10n_ar.base_ajuste_resultados
+msgid "Ajuste resultados ejercicios anteriores"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_ajustes_de_capital
+#: model:account.account,name:l10n_ar.4_base_ajustes_de_capital
+#: model:account.account,name:l10n_ar.5_base_ajustes_de_capital
+#: model:account.account.template,name:l10n_ar.base_ajustes_de_capital
+msgid "Ajustes de capital"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"All our contractual relations will be governed exclusively by Argentina law."
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_alquileres_administrativos
+#: model:account.account,name:l10n_ar.4_base_alquileres_administrativos
+#: model:account.account,name:l10n_ar.5_base_alquileres_administrativos
+#: model:account.account.template,name:l10n_ar.base_alquileres_administrativos
+msgid "Alquileres Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_alquileres_comerciales
+#: model:account.account,name:l10n_ar.4_base_alquileres_comerciales
+#: model:account.account,name:l10n_ar.5_base_alquileres_comerciales
+#: model:account.account.template,name:l10n_ar.base_alquileres_comerciales
+msgid "Alquileres Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_alquileres_produccion
+#: model:account.account,name:l10n_ar.4_base_alquileres_produccion
+#: model:account.account,name:l10n_ar.5_base_alquileres_produccion
+#: model:account.account.template,name:l10n_ar.base_alquileres_produccion
+msgid "Alquileres Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_alquileres_a_pagar
+#: model:account.account,name:l10n_ar.4_base_alquileres_a_pagar
+#: model:account.account,name:l10n_ar.5_base_alquileres_a_pagar
+#: model:account.account.template,name:l10n_ar.base_alquileres_a_pagar
+msgid "Alquileres a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_derechos_de_marca
+#: model:account.account,name:l10n_ar.4_base_amortizacion_derechos_de_marca
+#: model:account.account,name:l10n_ar.5_base_amortizacion_derechos_de_marca
+#: model:account.account.template,name:l10n_ar.base_amortizacion_derechos_de_marca
+msgid "Amortización Derechos de marca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_acumulada_derechos_de_marca
+#: model:account.account,name:l10n_ar.4_base_amortizacion_acumulada_derechos_de_marca
+#: model:account.account,name:l10n_ar.5_base_amortizacion_acumulada_derechos_de_marca
+#: model:account.account.template,name:l10n_ar.base_amortizacion_acumulada_derechos_de_marca
+msgid "Amortización acumulada Derechos de marca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_acumulada_instalaciones
+#: model:account.account,name:l10n_ar.4_base_amortizacion_acumulada_instalaciones
+#: model:account.account,name:l10n_ar.5_base_amortizacion_acumulada_instalaciones
+#: model:account.account.template,name:l10n_ar.base_amortizacion_acumulada_instalaciones
+msgid "Amortización acumulada instalaciones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_acumulada_maq_y_equipos
+#: model:account.account,name:l10n_ar.4_base_amortizacion_acumulada_maq_y_equipos
+#: model:account.account,name:l10n_ar.5_base_amortizacion_acumulada_maq_y_equipos
+#: model:account.account.template,name:l10n_ar.base_amortizacion_acumulada_maq_y_equipos
+msgid "Amortización acumulada maquinarias y equipos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_acumulada_muebles_utiles
+#: model:account.account,name:l10n_ar.4_base_amortizacion_acumulada_muebles_utiles
+#: model:account.account,name:l10n_ar.5_base_amortizacion_acumulada_muebles_utiles
+#: model:account.account.template,name:l10n_ar.base_amortizacion_acumulada_muebles_utiles
+msgid "Amortización acumulada muebles y útiles"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_acumulada_rodados
+#: model:account.account,name:l10n_ar.4_base_amortizacion_acumulada_rodados
+#: model:account.account,name:l10n_ar.5_base_amortizacion_acumulada_rodados
+#: model:account.account.template,name:l10n_ar.base_amortizacion_acumulada_rodados
+msgid "Amortización acumulada rodados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_instalaciones
+#: model:account.account,name:l10n_ar.4_base_amortizacion_instalaciones
+#: model:account.account,name:l10n_ar.5_base_amortizacion_instalaciones
+#: model:account.account.template,name:l10n_ar.base_amortizacion_instalaciones
+msgid "Amortización instalaciones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_maq_y_equipos
+#: model:account.account,name:l10n_ar.4_base_amortizacion_maq_y_equipos
+#: model:account.account,name:l10n_ar.5_base_amortizacion_maq_y_equipos
+#: model:account.account.template,name:l10n_ar.base_amortizacion_maq_y_equipos
+msgid "Amortización maquinarias y equipos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_muebles_utiles
+#: model:account.account,name:l10n_ar.4_base_amortizacion_muebles_utiles
+#: model:account.account,name:l10n_ar.5_base_amortizacion_muebles_utiles
+#: model:account.account.template,name:l10n_ar.base_amortizacion_muebles_utiles
+msgid "Amortización muebles y útiles"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_amortizacion_rodados
+#: model:account.account,name:l10n_ar.4_base_amortizacion_rodados
+#: model:account.account,name:l10n_ar.5_base_amortizacion_rodados
+#: model:account.account.template,name:l10n_ar.base_amortizacion_rodados
+msgid "Amortización rodados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_anticipo_proveedores
+#: model:account.account,name:l10n_ar.4_base_anticipo_proveedores
+#: model:account.account,name:l10n_ar.5_base_anticipo_proveedores
+#: model:account.account.template,name:l10n_ar.base_anticipo_proveedores
+msgid "Anticipo a Proveedores"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_anticipo_ganancias
+#: model:account.account,name:l10n_ar.5_base_anticipo_ganancias
+#: model:account.account.template,name:l10n_ar.base_anticipo_ganancias
+msgid "Anticipo ganancias"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_anticipos_imp_a_las_ganancias_a_pagar
+#: model:account.account,name:l10n_ar.5_base_anticipos_imp_a_las_ganancias_a_pagar
+#: model:account.account.template,name:l10n_ar.base_anticipos_imp_a_las_ganancias_a_pagar
+msgid "Anticipos Imp a las Ganancias a Pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_anticipos_de_clientes
+#: model:account.account,name:l10n_ar.4_base_anticipos_de_clientes
+#: model:account.account,name:l10n_ar.5_base_anticipos_de_clientes
+#: model:account.account.template,name:l10n_ar.base_anticipos_de_clientes
+msgid "Anticipos de clientes"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_aportes_no_capitalizados
+#: model:account.account,name:l10n_ar.4_base_aportes_no_capitalizados
+#: model:account.account,name:l10n_ar.5_base_aportes_no_capitalizados
+#: model:account.account.template,name:l10n_ar.base_aportes_no_capitalizados
+msgid "Aportes no capitalizados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_aportes_no_reembolsables
+#: model:account.account,name:l10n_ar.4_base_aportes_no_reembolsables
+#: model:account.account,name:l10n_ar.5_base_aportes_no_reembolsables
+#: model:account.account.template,name:l10n_ar.base_aportes_no_reembolsables
+msgid "Aportes no reeombolsables (subsidios)"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_document_type_filter
 msgid "Argentinean Documents"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.res_config_settings_view_form
+msgid "Argentinean Localization"
 msgstr ""
 
 #. module: l10n_ar
@@ -297,12 +593,44 @@ msgid "Argentinean Statements"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_articulos_de_libreria
+#: model:account.account,name:l10n_ar.4_base_articulos_de_libreria
+#: model:account.account,name:l10n_ar.5_base_articulos_de_libreria
+#: model:account.account.template,name:l10n_ar.base_articulos_de_libreria
+msgid "Artículos de librería"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_bancos
+#: model:account.group,name:l10n_ar.4_account_group_bancos
+#: model:account.group,name:l10n_ar.5_account_group_bancos
+#: model:account.group.template,name:l10n_ar.account_group_bancos
+msgid "Bancos"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_exento
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_bienes_de_cambio
+#: model:account.group,name:l10n_ar.4_account_group_bienes_de_cambio
+#: model:account.group,name:l10n_ar.5_account_group_bienes_de_cambio
+#: model:account.group.template,name:l10n_ar.account_group_bienes_de_cambio
+msgid "Bienes de Cambio"
+msgstr ""
+
+#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_exento_product_template
 msgid "Book \"Development in Odoo\" (VAT Exempt)"
 msgstr ""
@@ -313,6 +641,7 @@ msgid "CBA"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner_bank.py:0
 #, python-format
 msgid "CBU"
@@ -444,6 +773,14 @@ msgid "CPF"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_cuentas_puentes
+#: model:account.group,name:l10n_ar.4_account_group_cuentas_puentes
+#: model:account.group,name:l10n_ar.5_account_group_cuentas_puentes
+#: model:account.group.template,name:l10n_ar.account_group_cuentas_puentes
+msgid "CUENTAS PUENTES"
+msgstr ""
+
+#. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CUIL
 msgid "CUIL"
 msgstr ""
@@ -454,14 +791,31 @@ msgid "CUIT"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid ""
-"Can not change the POS number, you can only change the first number for "
-"document type that you are creating in odoo"
+#: model:account.account,name:l10n_ar.3_base_cadeteria_y_franqueo
+#: model:account.account,name:l10n_ar.4_base_cadeteria_y_franqueo
+#: model:account.account,name:l10n_ar.5_base_cadeteria_y_franqueo
+#: model:account.account.template,name:l10n_ar.base_cadeteria_y_franqueo
+msgid "Cadeteria y franqueo"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_caja
+#: model:account.group,name:l10n_ar.4_account_group_caja
+#: model:account.group,name:l10n_ar.5_account_group_caja
+#: model:account.group.template,name:l10n_ar.account_group_caja
+msgid "Caja"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_cajas_y_bancos
+#: model:account.group,name:l10n_ar.4_account_group_cajas_y_bancos
+#: model:account.group,name:l10n_ar.5_account_group_cajas_y_bancos
+#: model:account.group.template,name:l10n_ar.account_group_cajas_y_bancos
+msgid "Cajas y Bancos"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -470,8 +824,120 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_capital_social
+#: model:account.group,name:l10n_ar.4_account_group_capital_social
+#: model:account.group,name:l10n_ar.5_account_group_capital_social
+#: model:account.group.template,name:l10n_ar.account_group_capital_social
+msgid "Capital Social"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_capital
+#: model:account.account,name:l10n_ar.4_base_capital
+#: model:account.account,name:l10n_ar.5_base_capital
+#: model:account.account.template,name:l10n_ar.base_capital
+msgid "Capital suscripto"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cargas_sociales_administrativos
+#: model:account.account,name:l10n_ar.4_base_cargas_sociales_administrativos
+#: model:account.account,name:l10n_ar.5_base_cargas_sociales_administrativos
+#: model:account.account.template,name:l10n_ar.base_cargas_sociales_administrativos
+msgid "Cargas Sociales Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cargas_sociales_comerciales
+#: model:account.account,name:l10n_ar.4_base_cargas_sociales_comerciales
+#: model:account.account,name:l10n_ar.5_base_cargas_sociales_comerciales
+#: model:account.account.template,name:l10n_ar.base_cargas_sociales_comerciales
+msgid "Cargas Sociales Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cargas_sociales_produccion
+#: model:account.account,name:l10n_ar.4_base_cargas_sociales_produccion
+#: model:account.account,name:l10n_ar.5_base_cargas_sociales_produccion
+#: model:account.account.template,name:l10n_ar.base_cargas_sociales_produccion
+msgid "Cargas Sociales Producción"
+msgstr ""
+
+#. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CdM
 msgid "CdM"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can "
+"(AR) Exento become involved in costs related to a country's legislation. The"
+" amount of the invoice will therefore be due to (AR) Exento in its entirety "
+"and does not include any costs relating to the legislation of the country in"
+" which the client is located."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can "
+"(AR) Monotributista become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to (AR) "
+"Monotributista in its entirety and does not include any costs relating to "
+"the legislation of the country in which the client is located."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can "
+"(AR) Responsable Inscripto become involved in costs related to a country's "
+"legislation. The amount of the invoice will therefore be due to (AR) "
+"Responsable Inscripto in its entirety and does not include any costs "
+"relating to the legislation of the country in which the client is located."
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cheques_rechazados
+#: model:account.account,name:l10n_ar.4_base_cheques_rechazados
+#: model:account.account,name:l10n_ar.5_base_cheques_rechazados
+#: model:account.account.template,name:l10n_ar.base_cheques_rechazados
+msgid "Cheques Rechazados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cheques_de_terceros
+#: model:account.account,name:l10n_ar.4_base_cheques_de_terceros
+#: model:account.account,name:l10n_ar.5_base_cheques_de_terceros
+msgid "Cheques de Terceros"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account.template,name:l10n_ar.base_cheques_de_terceros
+msgid "Cheques de Terceros "
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cheques_de_terceros_rechazados
+#: model:account.account,name:l10n_ar.4_base_cheques_de_terceros_rechazados
+#: model:account.account,name:l10n_ar.5_base_cheques_de_terceros_rechazados
+#: model:account.account.template,name:l10n_ar.base_cheques_de_terceros_rechazados
+msgid "Cheques de Terceros Rechazados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cheques_diferidos
+#: model:account.account,name:l10n_ar.4_base_cheques_diferidos
+#: model:account.account,name:l10n_ar.5_base_cheques_diferidos
+#: model:account.account.template,name:l10n_ar.base_cheques_diferidos
+msgid "Cheques diferidos a pagar"
 msgstr ""
 
 #. module: l10n_ar
@@ -485,6 +951,14 @@ msgid "Code must be unique!"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_comisiones
+#: model:account.account,name:l10n_ar.4_base_comisiones
+#: model:account.account,name:l10n_ar.5_base_comisiones
+#: model:account.account.template,name:l10n_ar.base_comisiones
+msgid "Comisiones Pagadas"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model,name:l10n_ar.model_res_company
 msgid "Companies"
 msgstr ""
@@ -492,6 +966,32 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_company__l10n_ar_company_requires_vat
 msgid "Company Requires Vat?"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_compra_mercaderia
+#: model:account.account,name:l10n_ar.4_base_compra_mercaderia
+#: model:account.account,name:l10n_ar.5_base_compra_mercaderia
+#: model:account.account.template,name:l10n_ar.base_compra_mercaderia
+msgid "Compra de mercadería"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.fiscal.position,name:l10n_ar.5_fiscal_position_template_free_zone
+#: model:account.fiscal.position.template,name:l10n_ar.fiscal_position_template_free_zone
+msgid "Compras / Ventas Zona Franca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.fiscal.position,name:l10n_ar.5_fiscal_position_template_exempt_operations
+#: model:account.fiscal.position.template,name:l10n_ar.fiscal_position_template_exempt_operations
+msgid "Compras / Ventas al exterior"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.fiscal.position,name:l10n_ar.5_fiscal_position_template_iva_no_corresponde
+#: model:account.fiscal.position.template,name:l10n_ar.fiscal_position_template_iva_no_corresponde
+msgid "Compras IVA no corresponde"
 msgstr ""
 
 #. module: l10n_ar
@@ -516,6 +1016,27 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_contrapartida_auxiliar
+#: model:account.account,name:l10n_ar.4_base_contrapartida_auxiliar
+#: model:account.account,name:l10n_ar.5_base_contrapartida_auxiliar
+#: model:account.account.template,name:l10n_ar.base_contrapartida_auxiliar
+msgid "Contrapartida Auxiliar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cmv
+#: model:account.account,name:l10n_ar.4_base_cmv
+#: model:account.account,name:l10n_ar.5_base_cmv
+#: model:account.account.template,name:l10n_ar.base_cmv
+#: model:account.group,name:l10n_ar.3_account_group_costo_de_mercadería_vendida
+#: model:account.group,name:l10n_ar.4_account_group_costo_de_mercadería_vendida
+#: model:account.group,name:l10n_ar.5_account_group_costo_de_mercadería_vendida
+#: model:account.group.template,name:l10n_ar.account_group_costo_de_mercadería_vendida
+msgid "Costo de Mercadería Vendida"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_company.py:0
 #, python-format
 msgid ""
@@ -536,6 +1057,78 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__create_date
 msgid "Created on"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_fiscales_ganancias
+#: model:account.group,name:l10n_ar.4_account_group_creditos_fiscales_ganancias
+#: model:account.group,name:l10n_ar.5_account_group_creditos_fiscales_ganancias
+#: model:account.group.template,name:l10n_ar.account_group_creditos_fiscales_ganancias
+msgid "Créditos Fiscales Ganancias"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_fiscales_iibb
+#: model:account.group,name:l10n_ar.4_account_group_creditos_fiscales_iibb
+#: model:account.group,name:l10n_ar.5_account_group_creditos_fiscales_iibb
+#: model:account.group.template,name:l10n_ar.account_group_creditos_fiscales_iibb
+msgid "Créditos Fiscales IIBB"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_fiscales_iva
+#: model:account.group,name:l10n_ar.4_account_group_creditos_fiscales_iva
+#: model:account.group,name:l10n_ar.5_account_group_creditos_fiscales_iva
+#: model:account.group.template,name:l10n_ar.account_group_creditos_fiscales_iva
+msgid "Créditos Fiscales IVA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_fiscales_municipales
+#: model:account.group,name:l10n_ar.4_account_group_creditos_fiscales_municipales
+#: model:account.group,name:l10n_ar.5_account_group_creditos_fiscales_municipales
+#: model:account.group.template,name:l10n_ar.account_group_creditos_fiscales_municipales
+msgid "Créditos Fiscales Municipales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_fiscales_suss
+#: model:account.group,name:l10n_ar.4_account_group_creditos_fiscales_suss
+#: model:account.group,name:l10n_ar.5_account_group_creditos_fiscales_suss
+#: model:account.group.template,name:l10n_ar.account_group_creditos_fiscales_suss
+msgid "Créditos Fiscales SUSS"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_fiscales
+#: model:account.group,name:l10n_ar.4_account_group_creditos_fiscales
+#: model:account.group,name:l10n_ar.5_account_group_creditos_fiscales
+#: model:account.group.template,name:l10n_ar.account_group_creditos_fiscales
+msgid "Créditos fiscales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_creditos_por_ventas
+#: model:account.group,name:l10n_ar.4_account_group_creditos_por_ventas
+#: model:account.group,name:l10n_ar.5_account_group_creditos_por_ventas
+#: model:account.group.template,name:l10n_ar.account_group_creditos_por_ventas
+msgid "Créditos por ventas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_cta_particular_socio_x
+#: model:account.account,name:l10n_ar.4_base_cta_particular_socio_x
+#: model:account.account,name:l10n_ar.5_base_cta_particular_socio_x
+#: model:account.account.template,name:l10n_ar.base_cta_particular_socio_x
+msgid "Cta particular socio x"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_cuentas_particulares
+#: model:account.group,name:l10n_ar.4_account_group_cuentas_particulares
+#: model:account.group,name:l10n_ar.5_account_group_cuentas_particulares
+#: model:account.group.template,name:l10n_ar.account_group_cuentas_particulares
+msgid "Cuentas Particulares"
 msgstr ""
 
 #. module: l10n_ar
@@ -561,6 +1154,14 @@ msgid "Date:"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_default_vat
+#: model:account.account,name:l10n_ar.4_base_default_vat
+#: model:account.account,name:l10n_ar.5_base_default_vat
+#: model:account.account.template,name:l10n_ar.base_default_vat
+msgid "Default VAT Payable/Receivable Account"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_line__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_account_move__l10n_ar_afip_responsibility_type_id
 #: model:ir.model.fields,help:l10n_ar.field_account_payment__l10n_ar_afip_responsibility_type_id
@@ -574,22 +1175,140 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__l10n_ar_state_id
+msgid "Delivery Province"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_derechos_de_marcas
+#: model:account.group,name:l10n_ar.4_account_group_derechos_de_marcas
+#: model:account.group,name:l10n_ar.5_account_group_derechos_de_marcas
+#: model:account.group.template,name:l10n_ar.account_group_derechos_de_marcas
+msgid "Derechos de Marcas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_derechos_de_marca
+#: model:account.account,name:l10n_ar.4_base_derechos_de_marca
+#: model:account.account,name:l10n_ar.5_base_derechos_de_marca
+#: model:account.account.template,name:l10n_ar.base_derechos_de_marca
+msgid "Derechos de marca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_descuentos_obtenidos
+#: model:account.account,name:l10n_ar.4_base_descuentos_obtenidos
+#: model:account.account,name:l10n_ar.5_base_descuentos_obtenidos
+#: model:account.account.template,name:l10n_ar.base_descuentos_obtenidos
+msgid "Descuentos Obtenidos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_comerciales
+#: model:account.group,name:l10n_ar.4_account_group_deudas_comerciales
+#: model:account.group,name:l10n_ar.5_account_group_deudas_comerciales
+#: model:account.group.template,name:l10n_ar.account_group_deudas_comerciales
+msgid "Deudas Comerciales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_comerciales_a_largo_plazo
+#: model:account.group,name:l10n_ar.4_account_group_deudas_comerciales_a_largo_plazo
+#: model:account.group,name:l10n_ar.5_account_group_deudas_comerciales_a_largo_plazo
+#: model:account.group.template,name:l10n_ar.account_group_deudas_comerciales_a_largo_plazo
+msgid "Deudas Comerciales a Largo Plazo"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_financieras
+#: model:account.group,name:l10n_ar.4_account_group_deudas_financieras
+#: model:account.group,name:l10n_ar.5_account_group_deudas_financieras
+#: model:account.group.template,name:l10n_ar.account_group_deudas_financieras
+msgid "Deudas Financieras"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_fiscales
+#: model:account.group,name:l10n_ar.4_account_group_deudas_fiscales
+#: model:account.group,name:l10n_ar.5_account_group_deudas_fiscales
+#: model:account.group.template,name:l10n_ar.account_group_deudas_fiscales
+msgid "Deudas Fiscales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_iibb
+#: model:account.group,name:l10n_ar.4_account_group_deudas_iibb
+#: model:account.group,name:l10n_ar.5_account_group_deudas_iibb
+#: model:account.group.template,name:l10n_ar.account_group_deudas_iibb
+msgid "Deudas IIBB"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_iva
+#: model:account.group,name:l10n_ar.4_account_group_deudas_iva
+#: model:account.group,name:l10n_ar.5_account_group_deudas_iva
+#: model:account.group.template,name:l10n_ar.account_group_deudas_iva
+msgid "Deudas IVA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_imp_ganancias
+#: model:account.group,name:l10n_ar.4_account_group_deudas_imp_ganancias
+#: model:account.group,name:l10n_ar.5_account_group_deudas_imp_ganancias
+#: model:account.group.template,name:l10n_ar.account_group_deudas_imp_ganancias
+msgid "Deudas Imp. Ganancias"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_proveedores_largo_plazo
+#: model:account.account,name:l10n_ar.4_base_proveedores_largo_plazo
+#: model:account.account,name:l10n_ar.5_base_proveedores_largo_plazo
+#: model:account.account.template,name:l10n_ar.base_proveedores_largo_plazo
+msgid "Deudas Proveedores a largo plazo"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_deudas_tasas_municipales
+#: model:account.group,name:l10n_ar.4_account_group_deudas_tasas_municipales
+#: model:account.group,name:l10n_ar.5_account_group_deudas_tasas_municipales
+#: model:account.group.template,name:l10n_ar.account_group_deudas_tasas_municipales
+msgid "Deudas Tasas Municipales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_otros_creditos
+#: model:account.account,name:l10n_ar.4_base_otros_creditos
+#: model:account.account,name:l10n_ar.5_base_otros_creditos
+#: model:account.account.template,name:l10n_ar.base_otros_creditos
+msgid "Deudores Varios"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_deudores_por_ventas
+#: model:account.account,name:l10n_ar.4_base_deudores_por_ventas
+#: model:account.account,name:l10n_ar.5_base_deudores_por_ventas
+#: model:account.account.template,name:l10n_ar.base_deudores_por_ventas
+msgid "Deudores por ventas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_deudores_por_ventas_pos
+#: model:account.account,name:l10n_ar.4_base_deudores_por_ventas_pos
+#: model:account.account,name:l10n_ar.5_base_deudores_por_ventas_pos
+#: model:account.account.template,name:l10n_ar.base_deudores_por_ventas_pos
+msgid "Deudores por ventas (PoS)"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_diferencias_de_cambio
+#: model:account.account,name:l10n_ar.4_base_diferencias_de_cambio
+#: model:account.account,name:l10n_ar.5_base_diferencias_de_cambio
+#: model:account.account.template,name:l10n_ar.base_diferencias_de_cambio
+msgid "Diferencias de cambio"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_country__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -610,9 +1329,34 @@ msgid "ET"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_egresos
+#: model:account.group,name:l10n_ar.4_account_group_egresos
+#: model:account.group,name:l10n_ar.5_account_group_egresos
+#: model:account.group.template,name:l10n_ar.account_group_egresos
+msgid "Egresos"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid ""
+"El crédito fiscal discriminado en el presente comprobante, sólo podrá ser "
+"computado a efectos del Régimen de Sostenimiento e Inclusión Fiscal para "
+"Pequeños Contribuyentes de la Ley Nº 27.618"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Electronic Fiscal Bond - Online Invoice"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_embargos_a_depositar
+#: model:account.account,name:l10n_ar.4_base_embargos_a_depositar
+#: model:account.account,name:l10n_ar.5_base_embargos_a_depositar
+#: model:account.account.template,name:l10n_ar.base_embargos_a_depositar
+msgid "Embargos a depositar"
 msgstr ""
 
 #. module: l10n_ar
@@ -622,12 +1366,21 @@ msgid "Exempt"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.journal,name:l10n_ar.sale_expo_journal_exento
+#: model:account.journal,name:l10n_ar.sale_expo_journal_mono
+#: model:account.journal,name:l10n_ar.sale_expo_journal_ri
+msgid "Expo Sales Journal"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Export Voucher - Billing Plus"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Export Voucher - Online Invoice"
@@ -639,9 +1392,89 @@ msgid "Fiscal Position"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_fondo_comun_de_inversion
+#: model:account.account,name:l10n_ar.4_base_fondo_comun_de_inversion
+#: model:account.account,name:l10n_ar.5_base_fondo_comun_de_inversion
+#: model:account.account.template,name:l10n_ar.base_fondo_comun_de_inversion
+msgid "Fondo común de inversión"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_formatted_vat
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_formatted_vat
 msgid "Formatted VAT"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_gastos_administrativos
+#: model:account.group,name:l10n_ar.4_account_group_gastos_administrativos
+#: model:account.group,name:l10n_ar.5_account_group_gastos_administrativos
+#: model:account.group.template,name:l10n_ar.account_group_gastos_administrativos
+msgid "Gastos Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_gastos_bancarios
+#: model:account.account,name:l10n_ar.4_base_gastos_bancarios
+#: model:account.account,name:l10n_ar.5_base_gastos_bancarios
+#: model:account.account.template,name:l10n_ar.base_gastos_bancarios
+msgid "Gastos Bancarios"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_gastos_comerciales
+#: model:account.group,name:l10n_ar.4_account_group_gastos_comerciales
+#: model:account.group,name:l10n_ar.5_account_group_gastos_comerciales
+#: model:account.group.template,name:l10n_ar.account_group_gastos_comerciales
+msgid "Gastos Comerciales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_gastos_financieros
+#: model:account.group,name:l10n_ar.4_account_group_gastos_financieros
+#: model:account.group,name:l10n_ar.5_account_group_gastos_financieros
+#: model:account.group.template,name:l10n_ar.account_group_gastos_financieros
+msgid "Gastos Financieros"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_gastos_operativos
+#: model:account.group,name:l10n_ar.4_account_group_gastos_operativos
+#: model:account.group,name:l10n_ar.5_account_group_gastos_operativos
+#: model:account.group.template,name:l10n_ar.account_group_gastos_operativos
+msgid "Gastos Operativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_gastos_varios_comerciales
+#: model:account.account,name:l10n_ar.4_base_gastos_varios_comerciales
+#: model:account.account,name:l10n_ar.5_base_gastos_varios_comerciales
+#: model:account.account.template,name:l10n_ar.base_gastos_varios_comerciales
+msgid "Gastos Varios Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_gastos_varios_produccion
+#: model:account.account,name:l10n_ar.4_base_gastos_varios_produccion
+#: model:account.account,name:l10n_ar.5_base_gastos_varios_produccion
+#: model:account.account.template,name:l10n_ar.base_gastos_varios_produccion
+msgid "Gastos Varios Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_gastos_de_producción
+#: model:account.group,name:l10n_ar.4_account_group_gastos_de_producción
+#: model:account.group,name:l10n_ar.5_account_group_gastos_de_producción
+#: model:account.group.template,name:l10n_ar.account_group_gastos_de_producción
+msgid "Gastos de Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_gastos_varios_administrativos
+#: model:account.account,name:l10n_ar.4_base_gastos_varios_administrativos
+#: model:account.account,name:l10n_ar.5_base_gastos_varios_administrativos
+#: model:account.account.template,name:l10n_ar.base_gastos_varios_administrativos
+msgid "Gastos varios Administrativos"
 msgstr ""
 
 #. module: l10n_ar
@@ -666,12 +1499,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_giro_en_descubierto
+#: model:account.account,name:l10n_ar.4_base_giro_en_descubierto
+#: model:account.account,name:l10n_ar.5_base_giro_en_descubierto
+#: model:account.account.template,name:l10n_ar.base_giro_en_descubierto
+msgid "Giro en descubierto Banco xxxxx"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Go to Companies"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Go to Journals"
@@ -698,29 +1541,53 @@ msgid "Gross Income Type"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_servicio_de_guarda
 #: model:product.template,name:l10n_ar.product_product_servicio_de_guarda_product_template
 msgid "Guard Service"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__id
+#: model:account.account,name:l10n_ar.3_base_higiene_y_seguridad
+#: model:account.account,name:l10n_ar.4_base_higiene_y_seguridad
+#: model:account.account,name:l10n_ar.5_base_higiene_y_seguridad
+#: model:account.account.template,name:l10n_ar.base_higiene_y_seguridad
+msgid "Higiene y Seguridad"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_honorarios_administracion
+#: model:account.account,name:l10n_ar.4_base_honorarios_administracion
+#: model:account.account,name:l10n_ar.5_base_honorarios_administracion
+#: model:account.account.template,name:l10n_ar.base_honorarios_administracion
+msgid "Honorarios Administración"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_honorarios_comercial
+#: model:account.account,name:l10n_ar.4_base_honorarios_comercial
+#: model:account.account,name:l10n_ar.5_base_honorarios_comercial
+#: model:account.account.template,name:l10n_ar.base_honorarios_comercial
+msgid "Honorarios Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_honorarios_produccion
+#: model:account.account,name:l10n_ar.4_base_honorarios_produccion
+#: model:account.account,name:l10n_ar.5_base_honorarios_produccion
+#: model:account.account.template,name:l10n_ar.base_honorarios_produccion
+msgid "Honorarios Producción"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__id
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__id
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_country__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__id
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__id
 msgid "ID"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_iibb
+#: model:account.group,name:l10n_ar.4_account_group_iibb
+#: model:account.group,name:l10n_ar.5_account_group_iibb
+#: model:account.group.template,name:l10n_ar.account_group_iibb
+msgid "IIBB"
 msgstr ""
 
 #. module: l10n_ar
@@ -736,8 +1603,359 @@ msgid "IIBB - Sales by jurisdiction"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_ba
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_ba
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_ba
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_ba
+msgid "IIBB ARBA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_caba
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_caba
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_caba
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_caba
+msgid "IIBB CABA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_ca
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_ca
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_ca
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_ca
+msgid "IIBB Catamarca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_ha
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_ha
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_ha
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_ha
+msgid "IIBB Chaco"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_ct
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_ct
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_ct
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_ct
+msgid "IIBB Chubut"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_rr
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_rr
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_rr
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_rr
+msgid "IIBB Corrientes"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_co
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_co
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_co
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_co
+msgid "IIBB Córdoba"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_er
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_er
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_er
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_er
+msgid "IIBB Entre Ríos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_fo
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_fo
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_fo
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_fo
+msgid "IIBB Formosa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_ju
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_ju
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_ju
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_ju
+msgid "IIBB Jujuy"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_lp
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_lp
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_lp
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_lp
+msgid "IIBB La Pampa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_lr
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_lr
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_lr
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_lr
+msgid "IIBB La Rioja"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_za
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_za
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_za
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_za
+msgid "IIBB Mendoza"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_mi
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_mi
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_mi
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_mi
+msgid "IIBB Misiones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_ne
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_ne
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_ne
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_ne
+msgid "IIBB Neuquén"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb
+msgid "IIBB Perceptions"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_rn
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_rn
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_rn
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_rn
+msgid "IIBB Río Negro"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_sa
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_sa
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_sa
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_sa
+msgid "IIBB Salta"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_nn
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_nn
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_nn
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_nn
+msgid "IIBB San Juan"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_sl
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_sl
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_sl
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_sl
+msgid "IIBB San Luis"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_az
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_az
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_az
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_az
+msgid "IIBB Santa Cruz"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_sf
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_sf
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_sf
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_sf
+msgid "IIBB Santa Fe"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_se
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_se
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_se
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_se
+msgid "IIBB Santiago del Estero"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_tf
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_tf
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_tf
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_tf
+msgid "IIBB Tierra del Fuego"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_iibb_tn
+#: model:account.account,name:l10n_ar.4_base_impuestos_iibb_tn
+#: model:account.account,name:l10n_ar.5_base_impuestos_iibb_tn
+#: model:account.account.template,name:l10n_ar.base_impuestos_iibb_tn
+msgid "IIBB Tucumán"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_iibb_a_pagar
+#: model:account.account,name:l10n_ar.4_base_iibb_a_pagar
+#: model:account.account,name:l10n_ar.5_base_iibb_a_pagar
+#: model:account.account.template,name:l10n_ar.base_iibb_a_pagar
+msgid "IIBB a pagar"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.custom_header
 msgid "IIBB:"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_0_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_0_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_0_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_0_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_0_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_0_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_0_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_0_ventas
+msgid "IVA 0%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_10_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_10_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_10_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_10_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_10_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_10_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_10_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_10_ventas
+msgid "IVA 10.5%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_25_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_25_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_25_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_25_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_25_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_25_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_25_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_25_ventas
+msgid "IVA 2,5%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_21_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_21_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_21_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_21_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_21_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_21_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_21_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_21_ventas
+msgid "IVA 21%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_27_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_27_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_27_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_27_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_27_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_27_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_27_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_27_ventas
+msgid "IVA 27%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_5_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_5_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_5_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_5_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_5_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_5_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_5_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_5_ventas
+msgid "IVA 5%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_ganancias_iva_adicional
+#: model:account.tax,name:l10n_ar.5_ri_tax_ganancias_iva_adicional
+#: model:account.tax.template,description:l10n_ar.ri_tax_ganancias_iva_adicional
+#: model:account.tax.template,name:l10n_ar.ri_tax_ganancias_iva_adicional
+msgid "IVA Adicional 20%"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_exento_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_exento_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_exento_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_exento_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_exento_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_exento_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_exento_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_exento_ventas
+msgid "IVA Exento"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_no_corresponde_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_no_corresponde_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_no_corresponde_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_no_corresponde_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_no_corresponde_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_no_corresponde_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_no_corresponde_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_no_corresponde_ventas
+msgid "IVA No Corresponde"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_no_gravado_compras
+#: model:account.tax,description:l10n_ar.5_ri_tax_vat_no_gravado_ventas
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_no_gravado_compras
+#: model:account.tax,name:l10n_ar.5_ri_tax_vat_no_gravado_ventas
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_no_gravado_compras
+#: model:account.tax.template,description:l10n_ar.ri_tax_vat_no_gravado_ventas
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_no_gravado_compras
+#: model:account.tax.template,name:l10n_ar.ri_tax_vat_no_gravado_ventas
+msgid "IVA No Gravado"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_iva_saldo_libre_disponibilidad
+#: model:account.account.template,name:l10n_ar.ri_iva_saldo_libre_disponibilidad
+msgid "IVA Saldo Libre Disponibilidad"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_iva_saldo_tecnico_favor
+#: model:account.account.template,name:l10n_ar.ri_iva_saldo_tecnico_favor
+msgid "IVA Saldo técnico"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_iva_credito_fiscal
+#: model:account.account.template,name:l10n_ar.ri_iva_credito_fiscal
+msgid "IVA crédito fiscal"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_iva_debito_fiscal
+#: model:account.account.template,name:l10n_ar.ri_iva_debito_fiscal
+msgid "IVA débito fiscal"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_iva_saldo_a_pagar
+#: model:account.account.template,name:l10n_ar.ri_iva_saldo_a_pagar
+msgid "IVA saldo a pagar"
 msgstr ""
 
 #. module: l10n_ar
@@ -746,17 +1964,206 @@ msgid "Identification Types"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_fiscal_position.py:0
-#, python-format
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
 msgid ""
-"If use AFIP Responsibility then the country / zip codes will be not take "
-"into account"
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, (AR) Exento reserves the right to call on the services of a "
+"debt recovery company. All legal expenses will be payable by the client."
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_quote_despacho
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, (AR) Monotributista reserves the right to call on the services"
+" of a debt recovery company. All legal expenses will be payable by the "
+"client."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, (AR) Responsable Inscripto reserves the right to call on the "
+"services of a debt recovery company. All legal expenses will be payable by "
+"the client."
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_imp_a_las_ganancias
+#: model:account.group,name:l10n_ar.4_account_group_imp_a_las_ganancias
+#: model:account.group,name:l10n_ar.5_account_group_imp_a_las_ganancias
+#: model:account.group.template,name:l10n_ar.account_group_imp_a_las_ganancias
+msgid "Imp a las Ganancias"
+msgstr ""
+
+#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_quote_despacho_product_template
 msgid "Import Clearance"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuesto_inmobiliario_produccion
+#: model:account.account,name:l10n_ar.4_base_impuesto_inmobiliario_produccion
+#: model:account.account,name:l10n_ar.5_base_impuesto_inmobiliario_produccion
+#: model:account.account.template,name:l10n_ar.base_impuesto_inmobiliario_produccion
+msgid "Impuesto Inmobiliario Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuesto_ganancias_a_pagar
+#: model:account.account,name:l10n_ar.5_base_impuesto_ganancias_a_pagar
+#: model:account.account.template,name:l10n_ar.base_impuesto_ganancias_a_pagar
+msgid "Impuesto a las ganancias a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_imp_debitos_computables
+#: model:account.account,name:l10n_ar.4_base_imp_debitos_computables
+#: model:account.account,name:l10n_ar.5_base_imp_debitos_computables
+#: model:account.account.template,name:l10n_ar.base_imp_debitos_computables
+msgid "Impuesto a los Débitos Computables"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_impuestos
+#: model:account.group,name:l10n_ar.4_account_group_impuestos
+#: model:account.group,name:l10n_ar.5_account_group_impuestos
+#: model:account.group.template,name:l10n_ar.account_group_impuestos
+msgid "Impuestos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_a_las_ganancias
+#: model:account.account,name:l10n_ar.5_base_impuestos_a_las_ganancias
+#: model:account.account.template,name:l10n_ar.base_impuestos_a_las_ganancias
+msgid "Impuestos a las ganancias"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_impuestos_debitos_y_creditos
+#: model:account.account,name:l10n_ar.4_base_impuestos_debitos_y_creditos
+#: model:account.account,name:l10n_ar.5_base_impuestos_debitos_y_creditos
+#: model:account.account.template,name:l10n_ar.base_impuestos_debitos_y_creditos
+msgid "Impuestos a los débitos y créditos bancarios"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+msgid ""
+"In order for it to be admissible, (AR) Exento must be notified of any claim "
+"by means of a letter sent by recorded delivery to its registered office "
+"within 8 days of the delivery of the goods or the provision of the services."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+msgid ""
+"In order for it to be admissible, (AR) Monotributista must be notified of "
+"any claim by means of a letter sent by recorded delivery to its registered "
+"office within 8 days of the delivery of the goods or the provision of the "
+"services."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"In order for it to be admissible, (AR) Responsable Inscripto must be "
+"notified of any claim by means of a letter sent by recorded delivery to its "
+"registered office within 8 days of the delivery of the goods or the "
+"provision of the services."
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_ingresos
+#: model:account.group,name:l10n_ar.4_account_group_ingresos
+#: model:account.group,name:l10n_ar.5_account_group_ingresos
+#: model:account.group.template,name:l10n_ar.account_group_ingresos
+msgid "Ingresos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_ingresos_extraordinarios
+#: model:account.group,name:l10n_ar.4_account_group_ingresos_extraordinarios
+#: model:account.group,name:l10n_ar.5_account_group_ingresos_extraordinarios
+#: model:account.group.template,name:l10n_ar.account_group_ingresos_extraordinarios
+msgid "Ingresos Extraordinarios"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_ingresos_por_resultados_financieros
+#: model:account.group,name:l10n_ar.4_account_group_ingresos_por_resultados_financieros
+#: model:account.group,name:l10n_ar.5_account_group_ingresos_por_resultados_financieros
+#: model:account.group.template,name:l10n_ar.account_group_ingresos_por_resultados_financieros
+msgid "Ingresos por resultados financieros"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_ingresos_por_ventas
+#: model:account.group,name:l10n_ar.4_account_group_ingresos_por_ventas
+#: model:account.group,name:l10n_ar.5_account_group_ingresos_por_ventas
+#: model:account.group.template,name:l10n_ar.account_group_ingresos_por_ventas
+msgid "Ingresos por ventas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_instalaciones
+#: model:account.account,name:l10n_ar.4_base_instalaciones
+#: model:account.account,name:l10n_ar.5_base_instalaciones
+#: model:account.account.template,name:l10n_ar.base_instalaciones
+#: model:account.group,name:l10n_ar.3_account_group_instalaciones
+#: model:account.group,name:l10n_ar.4_account_group_instalaciones
+#: model:account.group,name:l10n_ar.5_account_group_instalaciones
+#: model:account.group.template,name:l10n_ar.account_group_instalaciones
+msgid "Instalaciones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_intereses_a_pagar
+#: model:account.account,name:l10n_ar.4_base_intereses_a_pagar
+#: model:account.account,name:l10n_ar.5_base_intereses_a_pagar
+#: model:account.account.template,name:l10n_ar.base_intereses_a_pagar
+msgid "Intereses a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_intereses_fiscales
+#: model:account.account,name:l10n_ar.4_base_intereses_fiscales
+#: model:account.account,name:l10n_ar.5_base_intereses_fiscales
+#: model:account.account.template,name:l10n_ar.base_intereses_fiscales
+msgid "Intereses fiscales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_resultado_intereses_ganados
+#: model:account.account,name:l10n_ar.4_base_resultado_intereses_ganados
+#: model:account.account,name:l10n_ar.5_base_resultado_intereses_ganados
+#: model:account.account.template,name:l10n_ar.base_resultado_intereses_ganados
+msgid "Intereses ganados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_intereses_por_descubierto
+#: model:account.account,name:l10n_ar.4_base_intereses_por_descubierto
+#: model:account.account,name:l10n_ar.5_base_intereses_por_descubierto
+#: model:account.account.template,name:l10n_ar.base_intereses_por_descubierto
+msgid "Intereses por descubierto"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_resultado_intereses_y_recargos
+#: model:account.account,name:l10n_ar.4_base_resultado_intereses_y_recargos
+#: model:account.account,name:l10n_ar.5_base_resultado_intereses_y_recargos
+#: model:account.account.template,name:l10n_ar.base_resultado_intereses_y_recargos
+msgid "Intereses por préstamos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_intereses_por_venta_de_valores
+#: model:account.account,name:l10n_ar.4_base_intereses_por_venta_de_valores
+#: model:account.account,name:l10n_ar.5_base_intereses_por_venta_de_valores
+#: model:account.account.template,name:l10n_ar.base_intereses_por_venta_de_valores
+msgid "Intereses por venta de valores"
 msgstr ""
 
 #. module: l10n_ar
@@ -765,9 +2172,40 @@ msgid "Internal Taxes"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#, python-format
+msgid "Invalid Checksum"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#, python-format
+msgid "Invalid Format"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#, python-format
+msgid "Invalid Length"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Invalid length for \"%s\""
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_inversiones
+#: model:account.group,name:l10n_ar.4_account_group_inversiones
+#: model:account.group,name:l10n_ar.5_account_group_inversiones
+#: model:account.group.template,name:l10n_ar.account_group_inversiones
+msgid "Inversiones"
 msgstr ""
 
 #. module: l10n_ar
@@ -786,6 +2224,11 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model,name:l10n_ar.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_LC
 msgid "LC"
 msgstr ""
@@ -796,22 +2239,7 @@ msgid "LE"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group____last_update
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_country____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_currency____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -849,6 +2277,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_suss_a_pagar
+#: model:account.account,name:l10n_ar.4_base_suss_a_pagar
+#: model:account.account,name:l10n_ar.5_base_suss_a_pagar
+#: model:account.account.template,name:l10n_ar.base_suss_a_pagar
+msgid "Leyes Sociales a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_l10nar_base_chart_template_liquidity_transfer
+#: model:account.account,name:l10n_ar.4_l10nar_base_chart_template_liquidity_transfer
+#: model:account.account,name:l10n_ar.5_l10nar_base_chart_template_liquidity_transfer
+#: model:account.account.template,name:l10n_ar.l10nar_base_chart_template_liquidity_transfer
+msgid "Liquidity Transfer"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,help:l10n_ar.field_account_fiscal_position__l10n_ar_afip_responsibility_type_ids
 msgid ""
 "List of AFIP responsibilities where this fiscal position should be auto-"
@@ -866,9 +2310,90 @@ msgid "Logo"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_mantenimiento_y_reparaciones_produccion
+#: model:account.account,name:l10n_ar.4_base_mantenimiento_y_reparaciones_produccion
+#: model:account.account,name:l10n_ar.5_base_mantenimiento_y_reparaciones_produccion
+#: model:account.account.template,name:l10n_ar.base_mantenimiento_y_reparaciones_produccion
+msgid "Mantenimiento y Reparaciones Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_mantenimiento_y_limpieza
+#: model:account.account,name:l10n_ar.4_base_mantenimiento_y_limpieza
+#: model:account.account,name:l10n_ar.5_base_mantenimiento_y_limpieza
+msgid "Mantenimiento y limpieza"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account.template,name:l10n_ar.base_mantenimiento_y_limpieza
+msgid "Mantenimiento y limpieza "
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_maquinarias_y_equipos
+#: model:account.group,name:l10n_ar.4_account_group_maquinarias_y_equipos
+#: model:account.group,name:l10n_ar.5_account_group_maquinarias_y_equipos
+#: model:account.group.template,name:l10n_ar.account_group_maquinarias_y_equipos
+msgid "Maquinarias y Equipos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_maq_y_equipos
+#: model:account.account,name:l10n_ar.4_base_maq_y_equipos
+#: model:account.account,name:l10n_ar.5_base_maq_y_equipos
+#: model:account.account.template,name:l10n_ar.base_maq_y_equipos
+msgid "Maquinarias y equipos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_materia_prima
+#: model:account.account,name:l10n_ar.4_base_materia_prima
+#: model:account.account,name:l10n_ar.5_base_materia_prima
+#: model:account.account.template,name:l10n_ar.base_materia_prima
+msgid "Materia Prima"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_mercaderia_reventa
+#: model:account.account,name:l10n_ar.4_base_mercaderia_reventa
+#: model:account.account,name:l10n_ar.5_base_mercaderia_reventa
+#: model:account.account.template,name:l10n_ar.base_mercaderia_reventa
+msgid "Mercaderia de reventa"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Missing Partner Configuration"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_movilidad_y_viaticos
+#: model:account.account,name:l10n_ar.4_base_movilidad_y_viaticos
+#: model:account.account,name:l10n_ar.5_base_movilidad_y_viaticos
+msgid "Movilidad y viáticos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account.template,name:l10n_ar.base_movilidad_y_viaticos
+msgid "Movilidad y viáticos "
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_muebles_y_útiles
+#: model:account.group,name:l10n_ar.4_account_group_muebles_y_útiles
+#: model:account.group,name:l10n_ar.5_account_group_muebles_y_útiles
+#: model:account.group.template,name:l10n_ar.account_group_muebles_y_útiles
+msgid "Muebles y Útiles"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_muebles_y_utiles
+#: model:account.account,name:l10n_ar.4_base_muebles_y_utiles
+#: model:account.account,name:l10n_ar.5_base_muebles_y_utiles
+#: model:account.account.template,name:l10n_ar.base_muebles_y_utiles
+msgid "Muebles y útiles"
 msgstr ""
 
 #. module: l10n_ar
@@ -897,13 +2422,13 @@ msgid "Natural Person VAT"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "No VAT configured for partner [%i] %s"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_cero
 #: model:product.template,name:l10n_ar.product_product_cero_product_template
 msgid "Non-industrialized animals and vegetables (VAT Zero)"
 msgstr ""
@@ -930,12 +2455,14 @@ msgid "Number..."
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "On invoice id \"%s\" you must use VAT Not Applicable on every line."
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -944,12 +2471,14 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Online Invoice"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Only numbers allowed for \"%s\""
@@ -972,6 +2501,64 @@ msgid "Other VAT"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_otras_deudas_documentadas
+#: model:account.account,name:l10n_ar.4_base_otras_deudas_documentadas
+#: model:account.account,name:l10n_ar.5_base_otras_deudas_documentadas
+#: model:account.account.template,name:l10n_ar.base_otras_deudas_documentadas
+msgid "Otras deudas documentadas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_otros_impuestos
+#: model:account.group,name:l10n_ar.4_account_group_otros_impuestos
+#: model:account.group,name:l10n_ar.5_account_group_otros_impuestos
+#: model:account.group.template,name:l10n_ar.account_group_otros_impuestos
+#: model:account.tax.group,name:l10n_ar.tax_group_otros_impuestos
+msgid "Otros Impuestos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_otros_creditos
+#: model:account.group,name:l10n_ar.4_account_group_otros_creditos
+#: model:account.group,name:l10n_ar.5_account_group_otros_creditos
+#: model:account.group.template,name:l10n_ar.account_group_otros_creditos
+msgid "Otros créditos"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, (AR) Exento reserves the right to request a "
+"fixed interest payment amounting to 10% of the sum remaining due. (AR) "
+"Exento will be authorized to suspend any provision of services without prior"
+" warning in the event of late payment."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, (AR) Monotributista reserves the right to "
+"request a fixed interest payment amounting to 10% of the sum remaining due. "
+"(AR) Monotributista will be authorized to suspend any provision of services "
+"without prior warning in the event of late payment."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, (AR) Responsable Inscripto reserves the right "
+"to request a fixed interest payment amounting to 10% of the sum remaining "
+"due. (AR) Responsable Inscripto will be authorized to suspend any provision "
+"of services without prior warning in the event of late payment."
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "Page: <span class=\"page\"/> / <span class=\"topage\"/>"
 msgstr ""
@@ -982,30 +2569,1444 @@ msgid "Partner"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_pasivo
+#: model:account.group,name:l10n_ar.4_account_group_pasivo
+#: model:account.group,name:l10n_ar.5_account_group_pasivo
+#: model:account.group.template,name:l10n_ar.account_group_pasivo
+msgid "Pasivo"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_pasivo_corriente
+#: model:account.group,name:l10n_ar.4_account_group_pasivo_corriente
+#: model:account.group,name:l10n_ar.5_account_group_pasivo_corriente
+#: model:account.group.template,name:l10n_ar.account_group_pasivo_corriente
+msgid "Pasivo Corriente"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_pasivo_no_corriente
+#: model:account.group,name:l10n_ar.4_account_group_pasivo_no_corriente
+#: model:account.group,name:l10n_ar.5_account_group_pasivo_no_corriente
+#: model:account.group.template,name:l10n_ar.account_group_pasivo_no_corriente
+msgid "Pasivo no Corriente"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_patentes_comercial
+#: model:account.account,name:l10n_ar.4_base_patentes_comercial
+#: model:account.account,name:l10n_ar.5_base_patentes_comercial
+#: model:account.account.template,name:l10n_ar.base_patentes_comercial
+msgid "Patentes Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_patrimonio_neto
+#: model:account.group,name:l10n_ar.4_account_group_patrimonio_neto
+#: model:account.group,name:l10n_ar.5_account_group_patrimonio_neto
+#: model:account.group.template,name:l10n_ar.account_group_patrimonio_neto
+msgid "Patrimonio Neto"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_ganancias_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_ganancias_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_ganancias_aplicada
+msgid "Perc Ganancias A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_ganancias_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_ganancias_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_ganancias_sufrida
+msgid "Perc Ganancias S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_ba
+msgid "Perc IIBB ARBA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ba_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ba_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ba_aplicada
+msgid "Perc IIBB ARBA A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ba_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_ba_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ba_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ba_sufrida
+msgid "Perc IIBB ARBA S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_caba
+msgid "Perc IIBB CABA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_caba_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_caba_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_caba_aplicada
+msgid "Perc IIBB CABA A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_caba_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_caba_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_caba_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_caba_sufrida
+msgid "Perc IIBB CABA S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_ca
+msgid "Perc IIBB Catamarca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ca_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ca_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ca_aplicada
+msgid "Perc IIBB Catamarca A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ca_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_ca_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ca_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ca_sufrida
+msgid "Perc IIBB Catamarca S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_ha
+msgid "Perc IIBB Chaco"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ha_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ha_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ha_aplicada
+msgid "Perc IIBB Chaco A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ha_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_ha_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ha_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ha_sufrida
+msgid "Perc IIBB Chaco S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_ct
+msgid "Perc IIBB Chubut"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ct_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ct_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ct_aplicada
+msgid "Perc IIBB Chubut A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ct_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_ct_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ct_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ct_sufrida
+msgid "Perc IIBB Chubut S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_rr
+msgid "Perc IIBB Corrientes"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_rr_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_rr_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_rr_aplicada
+msgid "Perc IIBB Corrientes A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_rr_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_rr_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_rr_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_rr_sufrida
+msgid "Perc IIBB Corrientes S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_co
+msgid "Perc IIBB Córdoba"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_co_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_co_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_co_aplicada
+msgid "Perc IIBB Córdoba A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_co_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_co_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_co_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_co_sufrida
+msgid "Perc IIBB Córdoba S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_er
+msgid "Perc IIBB Entre Ríos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_er_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_er_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_er_aplicada
+msgid "Perc IIBB Entre Ríos A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_er_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_er_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_er_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_er_sufrida
+msgid "Perc IIBB Entre Ríos S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_fo
+msgid "Perc IIBB Formosa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_fo_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_fo_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_fo_aplicada
+msgid "Perc IIBB Formosa A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_fo_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_fo_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_fo_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_fo_sufrida
+msgid "Perc IIBB Formosa S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_ju
+msgid "Perc IIBB Jujuy"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ju_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ju_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ju_aplicada
+msgid "Perc IIBB Jujuy A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ju_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_ju_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ju_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ju_sufrida
+msgid "Perc IIBB Jujuy S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_lp
+msgid "Perc IIBB La Pampa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_lp_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_lp_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_lp_aplicada
+msgid "Perc IIBB La Pampa A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_lp_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_lp_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_lp_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_lp_sufrida
+msgid "Perc IIBB La Pampa S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_lr
+msgid "Perc IIBB La Rioja"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_lr_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_lr_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_lr_aplicada
+msgid "Perc IIBB La Rioja A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_lr_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_lr_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_lr_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_lr_sufrida
+msgid "Perc IIBB La Rioja S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_za
+msgid "Perc IIBB Mendoza"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_za_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_za_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_za_aplicada
+msgid "Perc IIBB Mendoza A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_za_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_za_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_za_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_za_sufrida
+msgid "Perc IIBB Mendoza S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_mi
+msgid "Perc IIBB Misiones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_mi_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_mi_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_mi_aplicada
+msgid "Perc IIBB Misiones A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_mi_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_mi_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_mi_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_mi_sufrida
+msgid "Perc IIBB Misiones S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_ne
+msgid "Perc IIBB Neuquén"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ne_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ne_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ne_aplicada
+msgid "Perc IIBB Neuquén A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_ne_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_ne_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_ne_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_ne_sufrida
+msgid "Perc IIBB Neuquén S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_rn
+msgid "Perc IIBB Río Negro"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_rn_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_rn_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_rn_aplicada
+msgid "Perc IIBB Río Negro A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_rn_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_rn_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_rn_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_rn_sufrida
+msgid "Perc IIBB Río Negro S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_sa
+msgid "Perc IIBB Salta"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_sa_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_sa_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_sa_aplicada
+msgid "Perc IIBB Salta A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_sa_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_sa_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_sa_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_sa_sufrida
+msgid "Perc IIBB Salta S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_nn
+msgid "Perc IIBB San Juan"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_nn_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_nn_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_nn_aplicada
+msgid "Perc IIBB San Juan A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_nn_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_nn_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_nn_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_nn_sufrida
+msgid "Perc IIBB San Juan S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_sl
+msgid "Perc IIBB San Luis"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_sl_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_sl_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_sl_aplicada
+msgid "Perc IIBB San Luis A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_sl_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_sl_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_sl_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_sl_sufrida
+msgid "Perc IIBB San Luis S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_az
+msgid "Perc IIBB Santa Cruz"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_az_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_az_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_az_aplicada
+msgid "Perc IIBB Santa Cruz A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_az_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_az_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_az_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_az_sufrida
+msgid "Perc IIBB Santa Cruz S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_sf
+msgid "Perc IIBB Santa Fe"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_sf_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_sf_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_sf_aplicada
+msgid "Perc IIBB Santa Fe A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_sf_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_sf_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_sf_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_sf_sufrida
+msgid "Perc IIBB Santa Fe S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_se
+msgid "Perc IIBB Santiago del Estero"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_se_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_se_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_se_aplicada
+msgid "Perc IIBB Santiago del Estero A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_se_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_se_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_se_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_se_sufrida
+msgid "Perc IIBB Santiago del Estero S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_tf
+msgid "Perc IIBB Tierra del Fuego"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_tf_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_tf_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_tf_aplicada
+msgid "Perc IIBB Tierra del Fuego A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_tf_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_tf_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_tf_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_tf_sufrida
+msgid "Perc IIBB Tierra del Fuego S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax.group,name:l10n_ar.tax_group_percepcion_iibb_tn
+msgid "Perc IIBB Tucumán"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_tn_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_tn_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_tn_aplicada
+msgid "Perc IIBB Tucumán A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iibb_tn_sufrida
+#: model:account.tax,description:l10n_ar.4_ri_tax_percepcion_iibb_tn_sufrida
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iibb_tn_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iibb_tn_sufrida
+msgid "Perc IIBB Tucumán S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.3_ri_tax_percepcion_iva_aplicada
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iva_aplicada
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iva_aplicada
+msgid "Perc IVA A"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,description:l10n_ar.5_ri_tax_percepcion_iva_sufrida
+#: model:account.tax.template,description:l10n_ar.ri_tax_percepcion_iva_sufrida
+msgid "Perc IVA S"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_ganancias_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_ganancias_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_ganancias_sufrida
+msgid "Percepciones de Ganancias Sufridas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_ganancias_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_ganancias_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_ganancias_aplicada
+msgid "Percepción Ganancias Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_ganancias_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_ganancias_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_ganancias_sufrida
+msgid "Percepción Ganancias Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ba_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ba_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ba_aplicada
+msgid "Percepción IIBB ARBA Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ba_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_ba_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ba_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ba_sufrida
+msgid "Percepción IIBB ARBA Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_ba_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_ba_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_ba_aplicada
+msgid "Percepción IIBB ARBA aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_ba_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_ba_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_ba_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_ba_sufrida
+msgid "Percepción IIBB Buenos Aires sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_caba_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_caba_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_caba_aplicada
+msgid "Percepción IIBB CABA Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_caba_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_caba_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_caba_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_caba_sufrida
+msgid "Percepción IIBB CABA Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_caba_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_caba_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_caba_aplicada
+msgid "Percepción IIBB CABA aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_caba_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_caba_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_caba_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_caba_sufrida
+msgid "Percepción IIBB CABA sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ca_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ca_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ca_aplicada
+msgid "Percepción IIBB Catamarca Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ca_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_ca_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ca_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ca_sufrida
+msgid "Percepción IIBB Catamarca Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_ca_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_ca_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_ca_aplicada
+msgid "Percepción IIBB Catamarca aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_ca_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_ca_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_ca_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_ca_sufrida
+msgid "Percepción IIBB Catamarca sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ha_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ha_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ha_aplicada
+msgid "Percepción IIBB Chaco Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ha_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_ha_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ha_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ha_sufrida
+msgid "Percepción IIBB Chaco Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_ha_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_ha_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_ha_aplicada
+msgid "Percepción IIBB Chaco aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_ha_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_ha_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_ha_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_ha_sufrida
+msgid "Percepción IIBB Chaco sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ct_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ct_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ct_aplicada
+msgid "Percepción IIBB Chubut Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ct_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_ct_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ct_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ct_sufrida
+msgid "Percepción IIBB Chubut Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_ct_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_ct_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_ct_aplicada
+msgid "Percepción IIBB Chubut aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_ct_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_ct_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_ct_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_ct_sufrida
+msgid "Percepción IIBB Chubut sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_rr_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_rr_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_rr_aplicada
+msgid "Percepción IIBB Corrientes Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_rr_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_rr_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_rr_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_rr_sufrida
+msgid "Percepción IIBB Corrientes Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_rr_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_rr_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_rr_aplicada
+msgid "Percepción IIBB Corrientes aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_rr_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_rr_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_rr_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_rr_sufrida
+msgid "Percepción IIBB Corrientes sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_co_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_co_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_co_aplicada
+msgid "Percepción IIBB Córdoba Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_co_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_co_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_co_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_co_sufrida
+msgid "Percepción IIBB Córdoba Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_co_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_co_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_co_aplicada
+msgid "Percepción IIBB Córdoba aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_co_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_co_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_co_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_co_sufrida
+msgid "Percepción IIBB Córdoba sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_er_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_er_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_er_aplicada
+msgid "Percepción IIBB Entre Río aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_er_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_er_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_er_aplicada
+msgid "Percepción IIBB Entre Ríos Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_er_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_er_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_er_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_er_sufrida
+msgid "Percepción IIBB Entre Ríos Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_er_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_er_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_er_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_er_sufrida
+msgid "Percepción IIBB Entre Ríos sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_fo_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_fo_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_fo_aplicada
+msgid "Percepción IIBB Formosa Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_fo_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_fo_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_fo_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_fo_sufrida
+msgid "Percepción IIBB Formosa Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_fo_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_fo_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_fo_aplicada
+msgid "Percepción IIBB Formosa aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_fo_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_fo_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_fo_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_fo_sufrida
+msgid "Percepción IIBB Formosa sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ju_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ju_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ju_aplicada
+msgid "Percepción IIBB Jujuy Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ju_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_ju_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ju_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ju_sufrida
+msgid "Percepción IIBB Jujuy Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_ju_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_ju_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_ju_aplicada
+msgid "Percepción IIBB Jujuy aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_ju_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_ju_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_ju_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_ju_sufrida
+msgid "Percepción IIBB Jujuy sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_lp_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_lp_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_lp_aplicada
+msgid "Percepción IIBB La Pampa Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_lp_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_lp_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_lp_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_lp_sufrida
+msgid "Percepción IIBB La Pampa Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_lp_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_lp_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_lp_aplicada
+msgid "Percepción IIBB La Pampa aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_lp_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_lp_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_lp_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_lp_sufrida
+msgid "Percepción IIBB La Pampa sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_lr_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_lr_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_lr_aplicada
+msgid "Percepción IIBB La Rioja Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_lr_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_lr_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_lr_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_lr_sufrida
+msgid "Percepción IIBB La Rioja Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_lr_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_lr_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_lr_aplicada
+msgid "Percepción IIBB La Rioja aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_lr_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_lr_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_lr_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_lr_sufrida
+msgid "Percepción IIBB La Rioja sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_za_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_za_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_za_aplicada
+msgid "Percepción IIBB Mendoza Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_za_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_za_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_za_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_za_sufrida
+msgid "Percepción IIBB Mendoza Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_za_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_za_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_za_aplicada
+msgid "Percepción IIBB Mendoza aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_za_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_za_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_za_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_za_sufrida
+msgid "Percepción IIBB Mendoza sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_mi_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_mi_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_mi_aplicada
+msgid "Percepción IIBB Misiones Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_mi_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_mi_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_mi_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_mi_sufrida
+msgid "Percepción IIBB Misiones Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_mi_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_mi_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_mi_aplicada
+msgid "Percepción IIBB Misiones aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_mi_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_mi_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_mi_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_mi_sufrida
+msgid "Percepción IIBB Misiones sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ne_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ne_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ne_aplicada
+msgid "Percepción IIBB Neuquén Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_ne_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_ne_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_ne_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_ne_sufrida
+msgid "Percepción IIBB Neuquén Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_ne_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_ne_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_ne_aplicada
+msgid "Percepción IIBB Neuquén aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_ne_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_ne_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_ne_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_ne_sufrida
+msgid "Percepción IIBB Neuquén sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_rn_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_rn_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_rn_aplicada
+msgid "Percepción IIBB Río Negro Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_rn_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_rn_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_rn_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_rn_sufrida
+msgid "Percepción IIBB Río Negro Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_rn_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_rn_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_rn_aplicada
+msgid "Percepción IIBB Río Negro aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_rn_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_rn_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_rn_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_rn_sufrida
+msgid "Percepción IIBB Río Negro sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_sa_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_sa_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_sa_aplicada
+msgid "Percepción IIBB Salta Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_sa_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_sa_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_sa_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_sa_sufrida
+msgid "Percepción IIBB Salta Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_sa_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_sa_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_sa_aplicada
+msgid "Percepción IIBB Salta aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_sa_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_sa_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_sa_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_sa_sufrida
+msgid "Percepción IIBB Salta sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_nn_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_nn_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_nn_aplicada
+msgid "Percepción IIBB San Juan Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_nn_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_nn_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_nn_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_nn_sufrida
+msgid "Percepción IIBB San Juan Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_nn_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_nn_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_nn_aplicada
+msgid "Percepción IIBB San Juan aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_nn_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_nn_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_nn_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_nn_sufrida
+msgid "Percepción IIBB San Juan sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_sl_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_sl_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_sl_aplicada
+msgid "Percepción IIBB San Luis Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_sl_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_sl_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_sl_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_sl_sufrida
+msgid "Percepción IIBB San Luis Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_sl_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_sl_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_sl_aplicada
+msgid "Percepción IIBB San Luis aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_sl_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_sl_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_sl_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_sl_sufrida
+msgid "Percepción IIBB San Luis sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_az_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_az_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_az_aplicada
+msgid "Percepción IIBB Santa Cruz Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_az_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_az_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_az_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_az_sufrida
+msgid "Percepción IIBB Santa Cruz Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_az_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_az_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_az_aplicada
+msgid "Percepción IIBB Santa Cruz aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_az_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_az_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_az_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_az_sufrida
+msgid "Percepción IIBB Santa Cruz sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_sf_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_sf_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_sf_aplicada
+msgid "Percepción IIBB Santa Fe Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_sf_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_sf_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_sf_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_sf_sufrida
+msgid "Percepción IIBB Santa Fe Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_sf_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_sf_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_sf_aplicada
+msgid "Percepción IIBB Santa Fe aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_sf_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_sf_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_sf_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_sf_sufrida
+msgid "Percepción IIBB Santa Fe sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_se_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_se_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_se_aplicada
+msgid "Percepción IIBB Santiago del Estero Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_se_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_se_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_se_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_se_sufrida
+msgid "Percepción IIBB Santiago del Estero Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_se_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_se_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_se_aplicada
+msgid "Percepción IIBB Santiago del Estero aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_se_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_se_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_se_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_se_sufrida
+msgid "Percepción IIBB Santiago del Estero sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_tf_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_tf_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_tf_aplicada
+msgid "Percepción IIBB Tierra del Fuego Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_tf_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_tf_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_tf_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_tf_sufrida
+msgid "Percepción IIBB Tierra del Fuego Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_tf_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_tf_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_tf_aplicada
+msgid "Percepción IIBB Tierra del Fuego aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_tf_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_tf_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_tf_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_tf_sufrida
+msgid "Percepción IIBB Tierra del Fuego sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_tn_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_tn_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_tn_aplicada
+msgid "Percepción IIBB Tucumán Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iibb_tn_sufrida
+#: model:account.tax,name:l10n_ar.4_ri_tax_percepcion_iibb_tn_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iibb_tn_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iibb_tn_sufrida
+msgid "Percepción IIBB Tucumán Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iibb_tn_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iibb_tn_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iibb_tn_aplicada
+msgid "Percepción IIBB Tucumán aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_percepcion_iibb_tn_sufrida
+#: model:account.account,name:l10n_ar.4_base_percepcion_iibb_tn_sufrida
+#: model:account.account,name:l10n_ar.5_base_percepcion_iibb_tn_sufrida
+#: model:account.account.template,name:l10n_ar.base_percepcion_iibb_tn_sufrida
+msgid "Percepción IIBB Tucumán sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.3_ri_tax_percepcion_iva_aplicada
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iva_aplicada
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iva_aplicada
+msgid "Percepción IVA Aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iva_sufrida
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iva_sufrida
+#: model:account.tax,name:l10n_ar.5_ri_tax_percepcion_iva_sufrida
+#: model:account.tax.template,name:l10n_ar.ri_tax_percepcion_iva_sufrida
+msgid "Percepción IVA Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_iva_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_iva_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_iva_aplicada
+msgid "Percepción IVA aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_percepcion_ganancias_aplicada
+#: model:account.account,name:l10n_ar.5_ri_percepcion_ganancias_aplicada
+#: model:account.account.template,name:l10n_ar.ri_percepcion_ganancias_aplicada
+msgid "Percepción ganancias aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.chart.template,name:l10n_ar.l10nar_base_chart_template
+msgid "Plan Contable Genérico Argentina Monotributista / Base"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.chart.template,name:l10n_ar.l10nar_ex_chart_template
+msgid "Plan Contable Genérico Argentina para Exentos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.chart.template,name:l10n_ar.l10nar_ri_chart_template
+msgid "Plan Contable Genérico Argentina para Responsables Inscriptos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_planes_a_pagar_afip
+#: model:account.account,name:l10n_ar.5_base_planes_a_pagar_afip
+#: model:account.account.template,name:l10n_ar.base_planes_a_pagar_afip
+msgid "Plan Ganancias a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_base_plan_iva_a_pagar
+#: model:account.account.template,name:l10n_ar.base_plan_iva_a_pagar
+msgid "Plan IVA a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_plan_tasa_municipal_a_pagar
+#: model:account.account,name:l10n_ar.4_base_plan_tasa_municipal_a_pagar
+#: model:account.account,name:l10n_ar.5_base_plan_tasa_municipal_a_pagar
+#: model:account.account.template,name:l10n_ar.base_plan_tasa_municipal_a_pagar
+msgid "Plan Tasa Municipal a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_plan_de_iibb_a_pagar
+#: model:account.account,name:l10n_ar.4_base_plan_de_iibb_a_pagar
+#: model:account.account,name:l10n_ar.5_base_plan_de_iibb_a_pagar
+#: model:account.account.template,name:l10n_ar.base_plan_de_iibb_a_pagar
+msgid "Plan de IIBB a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_plazo_fijo
+#: model:account.account,name:l10n_ar.4_base_plazo_fijo
+#: model:account.account,name:l10n_ar.5_base_plazo_fijo
+#: model:account.account.template,name:l10n_ar.base_plazo_fijo
+msgid "Plazo fijo"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Please define a valid AFIP POS number (5 digits max)"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Please define an AFIP POS number"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Pre-printed Invoice"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_prestamo_banco_x
+#: model:account.account,name:l10n_ar.4_base_prestamo_banco_x
+#: model:account.account,name:l10n_ar.5_base_prestamo_banco_x
+#: model:account.account.template,name:l10n_ar.base_prestamo_banco_x
+msgid "Prestamo Banco xxxxx"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_prevision_gastos
+#: model:account.account,name:l10n_ar.4_base_prevision_gastos
+#: model:account.account,name:l10n_ar.5_base_prevision_gastos
+#: model:account.account.template,name:l10n_ar.base_prevision_gastos
+msgid "Prevision gastos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_previsiones
+#: model:account.group,name:l10n_ar.4_account_group_previsiones
+#: model:account.group,name:l10n_ar.5_account_group_previsiones
+#: model:account.group.template,name:l10n_ar.account_group_previsiones
+msgid "Previsiones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_prevision_sac_a_pagar
+#: model:account.account,name:l10n_ar.4_base_prevision_sac_a_pagar
+#: model:account.account,name:l10n_ar.5_base_prevision_sac_a_pagar
+#: model:account.account.template,name:l10n_ar.base_prevision_sac_a_pagar
+msgid "Previsión SAC a Pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_prevision_para_despidos
+#: model:account.account,name:l10n_ar.4_base_prevision_para_despidos
+#: model:account.account,name:l10n_ar.5_base_prevision_para_despidos
+#: model:account.account.template,name:l10n_ar.base_prevision_para_despidos
+msgid "Previsión para Despidos"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Product Coding - Online Voucher"
@@ -1017,13 +4018,60 @@ msgid "Product Unit of Measure"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_productos_en_proceso
+#: model:account.account,name:l10n_ar.4_base_productos_en_proceso
+#: model:account.account,name:l10n_ar.5_base_productos_en_proceso
+#: model:account.account.template,name:l10n_ar.base_productos_en_proceso
+msgid "Productos en proceso"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_productos_terminados
+#: model:account.account,name:l10n_ar.4_base_productos_terminados
+#: model:account.account,name:l10n_ar.5_base_productos_terminados
+#: model:account.account.template,name:l10n_ar.base_productos_terminados
+msgid "Productos terminados"
+msgstr ""
+
+#. module: l10n_ar
 #: model:account.tax.group,name:l10n_ar.tax_group_percepcion_ganancias
 msgid "Profit Perceptions"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_proveedores
+#: model:account.account,name:l10n_ar.4_base_proveedores
+#: model:account.account,name:l10n_ar.5_base_proveedores
+#: model:account.account.template,name:l10n_ar.base_proveedores
+msgid "Proveedores"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_provision_imp_a_las_ganancias
+#: model:account.account,name:l10n_ar.5_base_provision_imp_a_las_ganancias
+#: model:account.account.template,name:l10n_ar.base_provision_imp_a_las_ganancias
+msgid "Provisión Imp a las Ganancias"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_publicidad
+#: model:account.account,name:l10n_ar.4_base_publicidad
+#: model:account.account,name:l10n_ar.5_base_publicidad
+#: model:account.account.template,name:l10n_ar.base_publicidad
+msgid "Publicidad"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__purchase_aliquots
 msgid "Purchase Aliquots"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_r_e_c_p_a_m
+#: model:account.account,name:l10n_ar.4_base_r_e_c_p_a_m
+#: model:account.account,name:l10n_ar.5_base_r_e_c_p_a_m
+#: model:account.account.template,name:l10n_ar.base_r_e_c_p_a_m
+msgid "R.E.C.P.A.M."
 msgstr ""
 
 #. module: l10n_ar
@@ -1035,8 +4083,795 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_recupero_de_gastos
+#: model:account.account,name:l10n_ar.4_base_recupero_de_gastos
+#: model:account.account,name:l10n_ar.5_base_recupero_de_gastos
+#: model:account.account.template,name:l10n_ar.base_recupero_de_gastos
+msgid "Recupero de gastos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_remueraciones_y_cargas_sociales
+#: model:account.group,name:l10n_ar.4_account_group_remueraciones_y_cargas_sociales
+#: model:account.group,name:l10n_ar.5_account_group_remueraciones_y_cargas_sociales
+#: model:account.group.template,name:l10n_ar.account_group_remueraciones_y_cargas_sociales
+msgid "Remuneraciones y Cargas Sociales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_reserva_estatuitaria
+#: model:account.account,name:l10n_ar.4_base_reserva_estatuitaria
+#: model:account.account,name:l10n_ar.5_base_reserva_estatuitaria
+#: model:account.account.template,name:l10n_ar.base_reserva_estatuitaria
+msgid "Reserva estatuitaria"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_reserva_legal
+#: model:account.account,name:l10n_ar.4_base_reserva_legal
+#: model:account.account,name:l10n_ar.5_base_reserva_legal
+#: model:account.account.template,name:l10n_ar.base_reserva_legal
+msgid "Reserva legal"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_reservas
+#: model:account.group,name:l10n_ar.4_account_group_reservas
+#: model:account.group,name:l10n_ar.5_account_group_reservas
+#: model:account.group.template,name:l10n_ar.account_group_reservas
+msgid "Reservas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_reservas_facultativas
+#: model:account.account,name:l10n_ar.4_base_reservas_facultativas
+#: model:account.account,name:l10n_ar.5_base_reservas_facultativas
+#: model:account.account.template,name:l10n_ar.base_reservas_facultativas
+msgid "Reservas facultativas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_futuras_inversiones
+#: model:account.account,name:l10n_ar.4_base_futuras_inversiones
+#: model:account.account,name:l10n_ar.5_base_futuras_inversiones
+#: model:account.account.template,name:l10n_ar.base_futuras_inversiones
+msgid "Reservas futuras inversiones"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.menu_afip_responsibility_type
 msgid "Responsibility Types"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_resultado_del_ejercicio
+#: model:account.account,name:l10n_ar.4_base_resultado_del_ejercicio
+#: model:account.account,name:l10n_ar.5_base_resultado_del_ejercicio
+#: model:account.account.template,name:l10n_ar.base_resultado_del_ejercicio
+msgid "Resultado del ejercicio"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_resultado_venta_bienes_de_uso
+#: model:account.account,name:l10n_ar.4_base_resultado_venta_bienes_de_uso
+#: model:account.account,name:l10n_ar.5_base_resultado_venta_bienes_de_uso
+#: model:account.account.template,name:l10n_ar.base_resultado_venta_bienes_de_uso
+msgid "Resultado venta bienes de uso"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_resultados
+#: model:account.group,name:l10n_ar.4_account_group_resultados
+#: model:account.group,name:l10n_ar.5_account_group_resultados
+#: model:account.group.template,name:l10n_ar.account_group_resultados
+msgid "Resultados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_resultado_acumulados
+#: model:account.account,name:l10n_ar.4_base_resultado_acumulados
+#: model:account.account,name:l10n_ar.5_base_resultado_acumulados
+#: model:account.account.template,name:l10n_ar.base_resultado_acumulados
+msgid "Resultados de ejercicios anteriores"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_ret_percepcion_tasa_municipal
+#: model:account.account,name:l10n_ar.4_base_ret_percepcion_tasa_municipal
+#: model:account.account,name:l10n_ar.5_base_ret_percepcion_tasa_municipal
+#: model:account.account.template,name:l10n_ar.base_ret_percepcion_tasa_municipal
+msgid "Ret/Percepción Tasa Municipal"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_ganancias_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_ganancias_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_ganancias_sufrida
+msgid "Retenciones de Ganancias Sufridas"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_ba_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_ba_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_ba_aplicada
+msgid "Retención IIBB ARBA aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_ba_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_ba_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_ba_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_ba_sufrida
+msgid "Retención IIBB Buenos Aires sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_caba_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_caba_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_caba_aplicada
+msgid "Retención IIBB CABA aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_caba_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_caba_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_caba_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_caba_sufrida
+msgid "Retención IIBB CABA sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_ca_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_ca_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_ca_aplicada
+msgid "Retención IIBB Catamarca aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_ca_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_ca_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_ca_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_ca_sufrida
+msgid "Retención IIBB Catamarca sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_ha_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_ha_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_ha_aplicada
+msgid "Retención IIBB Chaco aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_ha_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_ha_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_ha_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_ha_sufrida
+msgid "Retención IIBB Chaco sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_ct_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_ct_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_ct_aplicada
+msgid "Retención IIBB Chubut aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_ct_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_ct_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_ct_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_ct_sufrida
+msgid "Retención IIBB Chubut sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_rr_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_rr_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_rr_aplicada
+msgid "Retención IIBB Corrientes aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_rr_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_rr_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_rr_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_rr_sufrida
+msgid "Retención IIBB Corrientes sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_co_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_co_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_co_aplicada
+msgid "Retención IIBB Córdoba aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_co_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_co_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_co_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_co_sufrida
+msgid "Retención IIBB Córdoba sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_er_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_er_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_er_aplicada
+msgid "Retención IIBB Entre Río aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_er_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_er_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_er_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_er_sufrida
+msgid "Retención IIBB Entre Ríos sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_fo_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_fo_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_fo_aplicada
+msgid "Retención IIBB Formosa aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_fo_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_fo_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_fo_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_fo_sufrida
+msgid "Retención IIBB Formosa sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_ju_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_ju_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_ju_aplicada
+msgid "Retención IIBB Jujuy aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_ju_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_ju_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_ju_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_ju_sufrida
+msgid "Retención IIBB Jujuy sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_lp_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_lp_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_lp_aplicada
+msgid "Retención IIBB La Pampa aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_lp_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_lp_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_lp_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_lp_sufrida
+msgid "Retención IIBB La Pampa sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_lr_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_lr_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_lr_aplicada
+msgid "Retención IIBB La Rioja aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_lr_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_lr_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_lr_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_lr_sufrida
+msgid "Retención IIBB La Rioja sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_za_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_za_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_za_aplicada
+msgid "Retención IIBB Mendoza aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_za_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_za_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_za_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_za_sufrida
+msgid "Retención IIBB Mendoza sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_mi_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_mi_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_mi_aplicada
+msgid "Retención IIBB Misiones aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_mi_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_mi_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_mi_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_mi_sufrida
+msgid "Retención IIBB Misiones sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_ne_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_ne_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_ne_aplicada
+msgid "Retención IIBB Neuquén aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_ne_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_ne_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_ne_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_ne_sufrida
+msgid "Retención IIBB Neuquén sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_rn_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_rn_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_rn_aplicada
+msgid "Retención IIBB Río Negro aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_rn_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_rn_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_rn_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_rn_sufrida
+msgid "Retención IIBB Río Negro sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_sa_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_sa_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_sa_aplicada
+msgid "Retención IIBB Salta aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_sa_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_sa_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_sa_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_sa_sufrida
+msgid "Retención IIBB Salta sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_nn_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_nn_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_nn_aplicada
+msgid "Retención IIBB San Juan aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_nn_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_nn_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_nn_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_nn_sufrida
+msgid "Retención IIBB San Juan sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_sl_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_sl_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_sl_aplicada
+msgid "Retención IIBB San Luis aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_sl_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_sl_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_sl_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_sl_sufrida
+msgid "Retención IIBB San Luis sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_az_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_az_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_az_aplicada
+msgid "Retención IIBB Santa Cruz aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_az_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_az_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_az_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_az_sufrida
+msgid "Retención IIBB Santa Cruz sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_sf_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_sf_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_sf_aplicada
+msgid "Retención IIBB Santa Fe aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_sf_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_sf_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_sf_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_sf_sufrida
+msgid "Retención IIBB Santa Fe sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_se_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_se_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_se_aplicada
+msgid "Retención IIBB Santiago del Estero aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_se_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_se_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_se_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_se_sufrida
+msgid "Retención IIBB Santiago del Estero sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_tf_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_tf_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_tf_aplicada
+msgid "Retención IIBB Tierra del Fuego aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_tf_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_tf_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_tf_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_tf_sufrida
+msgid "Retención IIBB Tierra del Fuego sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_tn_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_tn_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_tn_aplicada
+msgid "Retención IIBB Tucumán aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_iibb_tn_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_iibb_tn_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_iibb_tn_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_iibb_tn_sufrida
+msgid "Retención IIBB Tucumán sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.5_ri_retencion_iva_sufrida
+#: model:account.account.template,name:l10n_ar.ri_retencion_iva_sufrida
+msgid "Retención IVA Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iva_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_iva_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_iva_aplicada
+msgid "Retención IVA aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_retencion_suss_sufrida
+#: model:account.account,name:l10n_ar.4_base_retencion_suss_sufrida
+#: model:account.account,name:l10n_ar.5_base_retencion_suss_sufrida
+#: model:account.account.template,name:l10n_ar.base_retencion_suss_sufrida
+msgid "Retención SUSS Sufrida"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_ganancias_aplicada
+#: model:account.account,name:l10n_ar.5_ri_retencion_ganancias_aplicada
+#: model:account.account.template,name:l10n_ar.ri_retencion_ganancias_aplicada
+msgid "Retención ganancias aplicada"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_iibb_a_pagar
+#: model:account.account,name:l10n_ar.5_ri_retencion_iibb_a_pagar
+#: model:account.account.template,name:l10n_ar.ri_retencion_iibb_a_pagar
+msgid "Retención/Percepción IIBB a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_rodados
+#: model:account.account,name:l10n_ar.4_base_rodados
+#: model:account.account,name:l10n_ar.5_base_rodados
+#: model:account.account.template,name:l10n_ar.base_rodados
+#: model:account.group,name:l10n_ar.3_account_group_rodados
+#: model:account.group,name:l10n_ar.4_account_group_rodados
+#: model:account.group,name:l10n_ar.5_account_group_rodados
+#: model:account.group.template,name:l10n_ar.account_group_rodados
+msgid "Rodados"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_ri_retencion_sicore_a_pagar
+#: model:account.account,name:l10n_ar.5_ri_retencion_sicore_a_pagar
+#: model:account.account.template,name:l10n_ar.ri_retencion_sicore_a_pagar
+msgid "SICORE a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_sircreb
+#: model:account.account,name:l10n_ar.4_base_sircreb
+#: model:account.account,name:l10n_ar.5_base_sircreb
+#: model:account.account.template,name:l10n_ar.base_sircreb
+msgid "SIRCREB"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_ganancias
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_ganancias
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_ganancias
+msgid "Saldo a favor Ganancias"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_ba
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_ba
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_ba
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_ba
+msgid "Saldo a favor IIBB Buenos Aires"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_caba
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_caba
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_caba
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_caba
+msgid "Saldo a favor IIBB CABA"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_ca
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_ca
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_ca
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_ca
+msgid "Saldo a favor IIBB Catamarca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_ha
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_ha
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_ha
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_ha
+msgid "Saldo a favor IIBB Chaco"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_ct
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_ct
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_ct
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_ct
+msgid "Saldo a favor IIBB Chubut"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_rr
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_rr
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_rr
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_rr
+msgid "Saldo a favor IIBB Corrientes"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_co
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_co
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_co
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_co
+msgid "Saldo a favor IIBB Córdoba"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_er
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_er
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_er
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_er
+msgid "Saldo a favor IIBB Entre Ríos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_fo
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_fo
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_fo
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_fo
+msgid "Saldo a favor IIBB Formosa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_ju
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_ju
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_ju
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_ju
+msgid "Saldo a favor IIBB Jujuy"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_lp
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_lp
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_lp
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_lp
+msgid "Saldo a favor IIBB La Pampa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_lr
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_lr
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_lr
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_lr
+msgid "Saldo a favor IIBB La Rioja"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_za
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_za
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_za
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_za
+msgid "Saldo a favor IIBB Mendoza"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_mi
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_mi
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_mi
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_mi
+msgid "Saldo a favor IIBB Misiones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_ne
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_ne
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_ne
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_ne
+msgid "Saldo a favor IIBB Neuquén"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_rn
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_rn
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_rn
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_rn
+msgid "Saldo a favor IIBB Río Negro"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_sa
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_sa
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_sa
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_sa
+msgid "Saldo a favor IIBB Salta"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_nn
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_nn
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_nn
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_nn
+msgid "Saldo a favor IIBB San Juan"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_sl
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_sl
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_sl
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_sl
+msgid "Saldo a favor IIBB San Luis"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_az
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_az
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_az
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_az
+msgid "Saldo a favor IIBB Santa Cruz"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_sf
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_sf
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_sf
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_sf
+msgid "Saldo a favor IIBB Santa Fe"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_se
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_se
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_se
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_se
+msgid "Saldo a favor IIBB Santiago del Estero"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_tf
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_tf
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_tf
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_tf
+msgid "Saldo a favor IIBB Tierra del Fuego"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_favor_iibb_tn
+#: model:account.account,name:l10n_ar.4_base_saldo_favor_iibb_tn
+#: model:account.account,name:l10n_ar.5_base_saldo_favor_iibb_tn
+#: model:account.account.template,name:l10n_ar.base_saldo_favor_iibb_tn
+msgid "Saldo a favor IIBB Tucumán"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_a_favor_suss
+#: model:account.account,name:l10n_ar.4_base_saldo_a_favor_suss
+#: model:account.account,name:l10n_ar.5_base_saldo_a_favor_suss
+#: model:account.account.template,name:l10n_ar.base_saldo_a_favor_suss
+msgid "Saldo a favor SUSS"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_saldo_a_favor_tasa_municipal
+#: model:account.account,name:l10n_ar.4_base_saldo_a_favor_tasa_municipal
+#: model:account.account,name:l10n_ar.5_base_saldo_a_favor_tasa_municipal
+#: model:account.account.template,name:l10n_ar.base_saldo_a_favor_tasa_municipal
+msgid "Saldo a favor Tasa Municipal"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_seguro_de_vida_a_pagar
+#: model:account.account,name:l10n_ar.4_base_seguro_de_vida_a_pagar
+#: model:account.account,name:l10n_ar.5_base_seguro_de_vida_a_pagar
+#: model:account.account.template,name:l10n_ar.base_seguro_de_vida_a_pagar
+msgid "Seguro de Vida a Pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_seguros_administracion
+#: model:account.account,name:l10n_ar.4_base_seguros_administracion
+#: model:account.account,name:l10n_ar.5_base_seguros_administracion
+#: model:account.account.template,name:l10n_ar.base_seguros_administracion
+msgid "Seguros Administración"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_seguros_comercial
+#: model:account.account,name:l10n_ar.4_base_seguros_comercial
+#: model:account.account,name:l10n_ar.5_base_seguros_comercial
+#: model:account.account.template,name:l10n_ar.base_seguros_comercial
+msgid "Seguros Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_seguros_produccion
+#: model:account.account,name:l10n_ar.4_base_seguros_produccion
+#: model:account.account,name:l10n_ar.5_base_seguros_produccion
+#: model:account.account.template,name:l10n_ar.base_seguros_produccion
+msgid "Seguros Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_sellados_y_certificaciones
+#: model:account.account,name:l10n_ar.4_base_sellados_y_certificaciones
+#: model:account.account,name:l10n_ar.5_base_sellados_y_certificaciones
+#: model:account.account.template,name:l10n_ar.base_sellados_y_certificaciones
+msgid "Sellados y Certificaciones"
 msgstr ""
 
 #. module: l10n_ar
@@ -1045,14 +4880,88 @@ msgid "Sequence"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_sequence_ids
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_sequence_ids
-msgid "Sequences"
+#: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
+msgid "Service Date"
 msgstr ""
 
 #. module: l10n_ar
-#: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
-msgid "Service Date"
+#: model:account.account,name:l10n_ar.3_base_servicio_de_luz_administrativos
+#: model:account.account,name:l10n_ar.4_base_servicio_de_luz_administrativos
+#: model:account.account,name:l10n_ar.5_base_servicio_de_luz_administrativos
+#: model:account.account.template,name:l10n_ar.base_servicio_de_luz_administrativos
+msgid "Servicio Eléctrico Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicios_de_luz_ecomercial
+#: model:account.account,name:l10n_ar.4_base_servicios_de_luz_ecomercial
+#: model:account.account,name:l10n_ar.5_base_servicios_de_luz_ecomercial
+#: model:account.account.template,name:l10n_ar.base_servicios_de_luz_ecomercial
+msgid "Servicio Eléctrico Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_luz_produccion
+#: model:account.account,name:l10n_ar.4_base_servicio_de_luz_produccion
+#: model:account.account,name:l10n_ar.5_base_servicio_de_luz_produccion
+#: model:account.account.template,name:l10n_ar.base_servicio_de_luz_produccion
+msgid "Servicio Eléctrico Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_agua_administrativos
+#: model:account.account,name:l10n_ar.4_base_servicio_de_agua_administrativos
+#: model:account.account,name:l10n_ar.5_base_servicio_de_agua_administrativos
+#: model:account.account.template,name:l10n_ar.base_servicio_de_agua_administrativos
+msgid "Servicio de Agua Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_agua_comercial
+#: model:account.account,name:l10n_ar.4_base_servicio_de_agua_comercial
+#: model:account.account,name:l10n_ar.5_base_servicio_de_agua_comercial
+#: model:account.account.template,name:l10n_ar.base_servicio_de_agua_comercial
+msgid "Servicio de Agua Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_agua_produccion
+#: model:account.account,name:l10n_ar.4_base_servicio_de_agua_produccion
+#: model:account.account,name:l10n_ar.5_base_servicio_de_agua_produccion
+#: model:account.account.template,name:l10n_ar.base_servicio_de_agua_produccion
+msgid "Servicio de Agua Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_gas_administrativos
+#: model:account.account,name:l10n_ar.4_base_servicio_de_gas_administrativos
+#: model:account.account,name:l10n_ar.5_base_servicio_de_gas_administrativos
+#: model:account.account.template,name:l10n_ar.base_servicio_de_gas_administrativos
+msgid "Servicio de Gas Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_gas_comercial
+#: model:account.account,name:l10n_ar.4_base_servicio_de_gas_comercial
+#: model:account.account,name:l10n_ar.5_base_servicio_de_gas_comercial
+#: model:account.account.template,name:l10n_ar.base_servicio_de_gas_comercial
+msgid "Servicio de Gas Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_gas_produccion
+#: model:account.account,name:l10n_ar.4_base_servicio_de_gas_produccion
+#: model:account.account,name:l10n_ar.5_base_servicio_de_gas_produccion
+#: model:account.account.template,name:l10n_ar.base_servicio_de_gas_produccion
+msgid "Servicio de Gas Producción"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_servicio_de_internet
+#: model:account.account,name:l10n_ar.4_base_servicio_de_internet
+#: model:account.account,name:l10n_ar.5_base_servicio_de_internet
+#: model:account.account.template,name:l10n_ar.base_servicio_de_internet
+msgid "Servicio de Internet"
 msgstr ""
 
 #. module: l10n_ar
@@ -1069,21 +4978,90 @@ msgid "Sigd"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__l10n_ar_state_id
+#: model:account.account,name:l10n_ar.3_base_aportes_sindicales_a_pagar
+#: model:account.account,name:l10n_ar.4_base_aportes_sindicales_a_pagar
+#: model:account.account,name:l10n_ar.5_base_aportes_sindicales_a_pagar
+#: model:account.account.template,name:l10n_ar.base_aportes_sindicales_a_pagar
+msgid "Sindicato a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_sistema_y_software
+#: model:account.account,name:l10n_ar.4_base_sistema_y_software
+#: model:account.account,name:l10n_ar.5_base_sistema_y_software
+#: model:account.account.template,name:l10n_ar.base_sistema_y_software
+msgid "Sistema y Software"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "State"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_tasa_estadistica
 #: model:product.template,name:l10n_ar.product_product_tasa_estadistica_product_template
 msgid "Statistics Rate"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_arancel
+#: model:account.account,name:l10n_ar.3_base_sueldos_a_pagar
+#: model:account.account,name:l10n_ar.4_base_sueldos_a_pagar
+#: model:account.account,name:l10n_ar.5_base_sueldos_a_pagar
+#: model:account.account.template,name:l10n_ar.base_sueldos_a_pagar
+msgid "Sueldos a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_haberes_administrativos
+#: model:account.account,name:l10n_ar.4_base_haberes_administrativos
+#: model:account.account,name:l10n_ar.5_base_haberes_administrativos
+#: model:account.account.template,name:l10n_ar.base_haberes_administrativos
+msgid "Sueldos y SAC Administrativos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_haberes_comerciales
+#: model:account.account,name:l10n_ar.4_base_haberes_comerciales
+#: model:account.account,name:l10n_ar.5_base_haberes_comerciales
+#: model:account.account.template,name:l10n_ar.base_haberes_comerciales
+msgid "Sueldos y SAC Comercial"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_haberes_produccion
+#: model:account.account,name:l10n_ar.4_base_haberes_produccion
+#: model:account.account,name:l10n_ar.5_base_haberes_produccion
+#: model:account.account.template,name:l10n_ar.base_haberes_produccion
+msgid "Sueldos y SAC Producción"
+msgstr ""
+
+#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_arancel_product_template
 msgid "Tariff"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_tasa_municipal
+#: model:account.account,name:l10n_ar.4_base_tasa_municipal
+#: model:account.account,name:l10n_ar.5_base_tasa_municipal
+#: model:account.account.template,name:l10n_ar.base_tasa_municipal
+msgid "Tasa Municipal"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.account,name:l10n_ar.3_base_tasa_municipal_a_pagar
+#: model:account.account,name:l10n_ar.4_base_tasa_municipal_a_pagar
+#: model:account.account,name:l10n_ar.5_base_tasa_municipal_a_pagar
+#: model:account.account.template,name:l10n_ar.base_tasa_municipal_a_pagar
+msgid "Tasa Municipal a pagar"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.group,name:l10n_ar.3_account_group_tasas_municipales
+#: model:account.group,name:l10n_ar.4_account_group_tasas_municipales
+#: model:account.group,name:l10n_ar.5_account_group_tasas_municipales
+#: model:account.group.template,name:l10n_ar.account_group_tasas_municipales
+msgid "Tasas Municipales"
 msgstr ""
 
 #. module: l10n_ar
@@ -1092,7 +5070,6 @@ msgid "Tax Group"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_telefonia
 #: model:product.template,name:l10n_ar.product_product_telefonia_product_template
 msgid "Telephone service (VAT 27)"
 msgstr ""
@@ -1103,6 +5080,28 @@ msgid "Template for Fiscal Position"
 msgstr ""
 
 #. module: l10n_ar
+#: model_terms:res.company,sign_terms:l10n_ar.company_exento
+#: model_terms:res.company,sign_terms:l10n_ar.company_mono
+#: model_terms:res.company,sign_terms:l10n_ar.company_ri
+#: model_terms:res.company,sign_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,sign_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,sign_terms_html:l10n_ar.company_ri
+msgid "Terms &amp; Conditions"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1111,6 +5110,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid ""
@@ -1121,12 +5121,14 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid "The number of import Dispatch must be 16 characters"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1135,15 +5137,20 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "The validation digit is not valid for \"%s\""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
-msgid "There should be a single tax from the \"VAT\" tax group per line, add it to \"%s\". If you already have it, please check the tax configuration, in advanced options, in the corresponding field \"Tax Group\"."
+msgid ""
+"There should be a single tax from the \"VAT\" tax group per line, add it to "
+"\"%s\". If you already have it, please check the tax configuration, in "
+"advanced options, in the corresponding field \"Tax Group\"."
 msgstr ""
 
 #. module: l10n_ar
@@ -1160,13 +5167,11 @@ msgid "This field is required in order to print the invoice report properly"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "This is the address used for invoice reports of this POS"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid ""
 "This is the point of sale number assigned by AFIP in order to generate "
@@ -1185,32 +5190,11 @@ msgid "Type of gross income: exempt, local, multilateral"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,uom_name:l10n_ar.product_product_arancel
-#: model:product.product,uom_name:l10n_ar.product_product_cero
-#: model:product.product,uom_name:l10n_ar.product_product_exento
-#: model:product.product,uom_name:l10n_ar.product_product_no_gravado
-#: model:product.product,uom_name:l10n_ar.product_product_quote_despacho
-#: model:product.product,uom_name:l10n_ar.product_product_servicio_de_guarda
-#: model:product.product,uom_name:l10n_ar.product_product_tasa_estadistica
-#: model:product.product,uom_name:l10n_ar.product_product_telefonia
-#: model:product.template,uom_name:l10n_ar.product_product_arancel_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_cero_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_exento_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_no_gravado_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_quote_despacho_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_servicio_de_guarda_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_tasa_estadistica_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_telefonia_product_template
-msgid "Units"
-msgstr ""
-
-#. module: l10n_ar
 #: model:ir.model.fields.selection,name:l10n_ar.selection__account_tax_group__l10n_ar_vat_afip_code__1
 msgid "Untaxed"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_no_gravado
 #: model:product.template,name:l10n_ar.product_product_no_gravado_product_template
 msgid "Untaxed concepts (VAT NT)"
 msgstr ""
@@ -1282,15 +5266,19 @@ msgid "VAT Untaxed"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_fiscal_position.py:0
-#, python-format
-msgid "Warning"
+#: model:account.account,name:l10n_ar.3_base_venta_de_mercaderia
+#: model:account.account,name:l10n_ar.4_base_venta_de_mercaderia
+#: model:account.account,name:l10n_ar.5_base_venta_de_mercaderia
+#: model:account.account.template,name:l10n_ar.base_venta_de_mercaderia
+msgid "Venta de mercadería"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner.py:0
-#, python-format
-msgid "We were not able to sanitize the identification number"
+#: model:account.account,name:l10n_ar.3_base_venta_de_servicios
+#: model:account.account,name:l10n_ar.4_base_venta_de_servicios
+#: model:account.account,name:l10n_ar.5_base_venta_de_servicios
+#: model:account.account.template,name:l10n_ar.base_venta_de_servicios
+msgid "Venta de servicios"
 msgstr ""
 
 #. module: l10n_ar
@@ -1299,6 +5287,7 @@ msgid "With Document"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1307,6 +5296,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1315,14 +5305,8 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_chart_template.py:0
-#, python-format
-msgid ""
-"You are trying to install a chart of account for the %s responsibility but "
-"your company is configured as %s type"
-msgstr ""
-
-#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
 "You can not change the journal's configuration if it already has validated "
@@ -1330,10 +5314,29 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#, python-format
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,invoice_terms_html:l10n_ar.company_ri
+msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,sign_terms:l10n_ar.company_exento
+#: model_terms:res.company,sign_terms:l10n_ar.company_mono
+#: model_terms:res.company,sign_terms:l10n_ar.company_ri
+#: model_terms:res.company,sign_terms_html:l10n_ar.company_exento
+#: model_terms:res.company,sign_terms_html:l10n_ar.company_mono
+#: model_terms:res.company,sign_terms_html:l10n_ar.company_ri
+msgid "Your conditions..."
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:res.company,lunch_notify_message:l10n_ar.company_exento
+#: model_terms:res.company,lunch_notify_message:l10n_ar.company_mono
+#: model_terms:res.company,lunch_notify_message:l10n_ar.company_ri
 msgid ""
-"You can not change the journal's configuration if journal already have "
-"validated invoices"
+"Your lunch has been delivered.\n"
+"Enjoy your meal!"
 msgstr ""
 
 #. module: l10n_ar
@@ -1342,6 +5345,7 @@ msgid "Zero"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid "is not a valid value for"
@@ -1351,26 +5355,4 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
 msgid "to"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#, python-format
-msgid "Invalid Checksum"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#, python-format
-msgid "Invalid Format"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#, python-format
-msgid "Invalid Length"
 msgstr ""

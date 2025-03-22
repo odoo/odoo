@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Junko Augias, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -31,18 +31,6 @@ msgid ""
 msgstr ""
 "\"\n"
 "                (ID:"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"コード・サーバー・アクションは、専用コントローラーを使用してWebサイトから実行できます。 "
-"アドレスは<base>/website/action/<website_path>です。ユーザーがこの操作を実行できるようにするには、このフィールドをTrueに設定します。"
-" Falseに設定されている場合は、Webサイトでアクションを実行することはできません。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -112,14 +100,8 @@ msgid "Automation"
 msgstr "自動化"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "ウェブサイトで使用可"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "基本アクションルール：チェックして実行する"
 
@@ -164,19 +146,6 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr "実行される子サーバー・アクション。最後のリターンは、アクション値は、グローバル戻り値として返され使用されることに注意してください。"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
-msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
-"SMS送信方法を選ぶ：\n"
-"SMS：一括SMS\n"
-"メッセージとして投稿する：ドキュメントへのログオン\n"
-"メモとして投稿する：アーカイブ付一括SMS"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -228,14 +197,14 @@ msgid "Delay type"
 msgstr "遅延タイプ"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr "アクションの無効化"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -264,7 +233,7 @@ msgid "Due type"
 msgstr "期限タイプ"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -276,6 +245,7 @@ msgid "Email Template"
 msgstr "メールテンプレート"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -294,6 +264,7 @@ msgid "Fields that trigger the onchange."
 msgstr "変更があると発動する動作をトリガーするフィールド。"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -402,6 +373,7 @@ msgid "Note"
 msgstr "ノート"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -458,19 +430,9 @@ msgid "Responsible"
 msgstr "担当者"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
-msgstr "SMSテンプレート"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
 msgstr "以下として送信："
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
-msgstr "以下として送信（SMS）"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -520,6 +482,7 @@ msgid "Target Model Name"
 msgstr "対象モデル名"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -535,7 +498,7 @@ msgid ""
 msgstr "これらのフィールドのいずれかが更新された場合にのみ、アクションがトリガーされる。空の場合、すべてのフィールドが監視されます。"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -544,11 +507,6 @@ msgid ""
 msgstr ""
 "自動化されたアクションの実行中にエラーが発生しました\n"
 "                \""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "ウェブサイトを通じてサーバーアクションにアクセスするための完全なURL。"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -637,21 +595,12 @@ msgid "Value Mapping"
 msgstr "値マッピング"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "警告"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "ウェブサイトのパス"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "ウェブサイトのURL"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -690,7 +639,7 @@ msgstr ""
 "アクションが実行するPythonコードを記述します。一部の変数を使用できます; Pythonの表現に関するヘルプは、ヘルプタブに表示されます。"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -698,13 +647,14 @@ msgid ""
 msgstr "この自動化されたアクションを無効にするか修正するように管理者に依頼できます。"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr "この自動化されたアクションを無効にするか、編集して問題を解決できます。"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""

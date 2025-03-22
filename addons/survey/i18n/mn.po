@@ -13,22 +13,22 @@
 # Bayarkhuu Bataa, 2022
 # Minj P <pminj322@gmail.com>, 2022
 # Батболд <batbold.ts@gmail.com>, 2022
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2022
 # 486aab72cd7cb5d98a82d40b0db4c5f2_4397374 <25b041e3e1ecd3f217ca34118196bd3e_836923>, 2022
 # Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022
 # Насан-Очир <nasaaskii@gmail.com>, 2022
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # Torbat Jargalsaikhan, 2023
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2025
+# Martin Trigaux, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Torbat Jargalsaikhan, 2023\n"
+"Last-Translator: Martin Trigaux, 2025\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,6 +87,13 @@ msgstr ""
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (хуулбар)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1237,7 +1244,6 @@ msgid "Cliff Burton"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1389,8 +1395,8 @@ msgid "Corner Desk Right Sit"
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -1659,7 +1665,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_4
 msgid "Drawer"
-msgstr ""
+msgstr "Шүүгээ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -2237,8 +2243,8 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -2955,7 +2961,7 @@ msgstr "Алдааны тоо"
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Үйлдэл шаардсан зурвасын тоо"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
@@ -3184,8 +3190,8 @@ msgid "Partial"
 msgstr "Хэсэгчилсэн"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3358,7 +3364,7 @@ msgstr "Урьдчилан харах"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2
 msgid "Prices"
-msgstr ""
+msgstr "Үнэ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3370,6 +3376,11 @@ msgstr "Хэвлэх"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "Бараа"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -4416,8 +4427,8 @@ msgid "This is a Test Survey."
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4625,8 +4636,8 @@ msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4680,6 +4691,11 @@ msgstr ""
 #, python-format
 msgid "Use humor and make jokes"
 msgstr ""
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Загвар ашиглах"
 
 #. module: survey
 #. odoo-javascript
@@ -5071,6 +5087,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5167,11 +5184,6 @@ msgstr ""
 #, python-format
 msgid "close"
 msgstr "хаах"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5291,7 +5303,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "this page"
-msgstr ""
+msgstr "Энэ хуудас"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

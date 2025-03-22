@@ -101,10 +101,9 @@ class IrQWeb(models.AbstractModel):
         # update options
 
         irQweb = irQweb.with_context(website_id=current_website.id)
-
         if 'inherit_branding' not in irQweb.env.context and not self.env.context.get('rendering_bundle'):
             if editable:
-                # in edit mode add brancding on ir.ui.view tag nodes
+                # in edit mode add branding on ir.ui.view tag nodes
                 irQweb = irQweb.with_context(inherit_branding=True)
             elif has_group_restricted_editor and not translatable:
                 # will add the branding on fields (into values)
@@ -114,6 +113,13 @@ class IrQWeb(models.AbstractModel):
 
     def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
         return AssetsBundleMultiWebsite(xmlid, files, env=env)
+
+    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+        website = self.env['website'].get_current_website(fallback=False)
+        self_website = self
+        if website:
+            self_website = self.with_context(website_id=website.id)
+        return super(IrQWeb, self_website)._get_asset_nodes(bundle, css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load, media=media)
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
@@ -187,7 +193,7 @@ class IrQWeb(models.AbstractModel):
                 _, _, _, id_unique, name = bundle_url.split('/')
                 attachment_id, unique = id_unique.split('-')
                 url_pattern = f'/web/assets/%s-%s/{website.id}/{name}'
-                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))])
+                existing = self.env['ir.attachment'].search([('url', '=like', url_pattern % ('%', '%'))], limit=1)
                 if existing:
                     if f'-{unique}/' in existing.url:
                         continue

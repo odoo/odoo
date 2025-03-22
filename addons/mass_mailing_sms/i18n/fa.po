@@ -8,8 +8,10 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Hanna Kheradroosta, 2023
 # Ali Reza Feizi Derakhshi, 2023
+# Abbas Ebadian, 2024
+# Hanna Kheradroosta, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
@@ -17,13 +19,34 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ali Reza Feizi Derakhshi, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers and opt-out link) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including opt-out link) "
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -189,7 +212,7 @@ msgstr "تلفن لیست‌سیاه شده، موبایل است"
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
 msgid "Blacklisted Phone Numbers"
-msgstr ""
+msgstr "شماره‌های تلفن مسدود شده"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -459,7 +482,7 @@ msgstr "پیگیری لینک"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mailing_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "Mailing"
-msgstr ""
+msgstr "ارسال ایمیل"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact
@@ -482,7 +505,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mass_mailing_sms.mailing_list_menu_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_contacts
 msgid "Mailing Lists"
-msgstr ""
+msgstr "لیست‌های پستی"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_trace
@@ -540,7 +563,7 @@ msgstr "پیام ها"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_missing
 msgid "Missing Number"
-msgstr ""
+msgstr "عدد گمشده"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile
@@ -594,7 +617,7 @@ msgstr "تعداد خطاها"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام هایی که نیاز به اقدام دارند"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error_counter
@@ -614,7 +637,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "انصراف داد"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -624,7 +647,7 @@ msgstr "گزینه‌ها"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "پیامک خروجی"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
@@ -697,7 +720,7 @@ msgstr "خطای تحویل پیامک"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "SMS ID"
-msgstr ""
+msgstr "شناسه پیامک"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id_int
@@ -755,13 +778,13 @@ msgstr ""
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS : %s"
+msgid "STOP SMS : %(unsubscribe_url)s"
 msgstr ""
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "شماره معتبر شده"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -787,7 +810,7 @@ msgstr "ارسال پیامک"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "جادوگر ارسال پیامک"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -909,12 +932,12 @@ msgstr "کمپین UTM"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_utm_medium
 msgid "UTM Medium"
-msgstr ""
+msgstr "رسانه UTM"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
 msgid "Unregistered Account"
-msgstr ""
+msgstr "حساب ثبت‌نشده"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
@@ -972,7 +995,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_number_format
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "فرمت اشتباه شماره"
 
 #. module: mass_mailing_sms
 #: model:utm.campaign,title:mass_mailing_sms.utm_campaign_0

@@ -4,6 +4,7 @@ from datetime import datetime, time
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from collections import defaultdict
 
 
 PURCHASE_REQUISITION_STATES = [
@@ -232,7 +233,7 @@ class PurchaseRequisitionLine(models.Model):
 
     @api.depends('requisition_id.purchase_ids.state')
     def _compute_ordered_qty(self):
-        line_found = set()
+        line_found = defaultdict(set)
         for line in self:
             total = 0.0
             for po in line.requisition_id.purchase_ids.filtered(lambda purchase_order: purchase_order.state in ['purchase', 'done']):
@@ -241,9 +242,9 @@ class PurchaseRequisitionLine(models.Model):
                         total += po_line.product_uom._compute_quantity(po_line.product_qty, line.product_uom_id)
                     else:
                         total += po_line.product_qty
-            if line.product_id not in line_found:
+            if line.product_id not in line_found[line.requisition_id]:
                 line.qty_ordered = total
-                line_found.add(line.product_id)
+                line_found[line.requisition_id].add(line.product_id)
             else:
                 line.qty_ordered = 0
 

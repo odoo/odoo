@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -255,12 +256,12 @@ msgstr "Movimenti a valle"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
 msgid "Dropship Address"
-msgstr "Indirizzo per spedizione diretta"
+msgstr "Indirizzo per dropshipping"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr "Spedizione diretta"
+msgstr "Dropshipping"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__effective_date
@@ -490,11 +491,13 @@ msgstr "Punto di riordino"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months; the number of products received on time divided by "
-"the number of ordered products."
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
 msgstr ""
-"Negli ultimi 12 mesi, numero di prodotti ricevuti in tempo diviso per il "
-"numero di prodotti ordinati."
+"Negli ultimi x giorni, il numero di prodotti ricevuti in tempo diviso per il"
+" numero di prodotti ordinati. x rappresenta il parametro di sistema "
+"purchase_stock.on_time_delivery_days o il valore predefinito 365"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -514,6 +517,7 @@ msgid "Process all the receipt quantities."
 msgstr "Elabora tutte le quantità ricevute."
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "Gruppo di approvvigionamento"
@@ -725,8 +729,7 @@ msgstr "Info fornitori"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
-"Campo tecnico utilizzato per visualizzare l'indirizzo di spedizione diretta"
+msgstr "Campo tecnico utilizzato per visualizzare l'indirizzo di dropshipping"
 
 #. module: purchase_stock
 #. odoo-python
@@ -769,9 +772,9 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
-"Aggiunge un percorso di spedizione diretta da applicare ai prodotti, per "
-"richiedere ai fornitori di consegnare ai clienti. Un prodotto a spedizione "
-"diretta genera una richiesta di preventivo per l'acquisto dopo la conferma "
+"Aggiunge un percorso di dropshipping da applicare ai prodotti, per "
+"richiedere ai fornitori di consegnare ai clienti. Un prodotto dropshipping "
+"genera una richiesta di preventivo per l'acquisto dopo la conferma "
 "dell'ordine di vendita, è un flusso su richiesta. L'indirizzo di consegna "
 "richiesto corrisponde a quello del cliente e non al magazzino."
 

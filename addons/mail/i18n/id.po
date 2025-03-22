@@ -9,16 +9,17 @@
 # arfa simoncelli, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Abe Manyo, 2023
 # Edi Santoso <repopamor@gmail.com>, 2023
+# Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Edi Santoso <repopamor@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,14 +63,14 @@ msgstr ""
 #: code:addons/mail/static/src/models/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr ""
+msgstr "\"%s\" membutuhkan akses mikrofon"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/channel_member_list_category_view.js:0
 #, python-format
 msgid "%(categoryText)s - %(memberCount)s"
-msgstr ""
+msgstr "%(categoryText)s - %(memberCount)s"
 
 #. module: mail
 #. odoo-python
@@ -87,7 +88,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/notification_request_view.js:0
 #, python-format
 msgid "%(odoobotName)s has a request"
-msgstr ""
+msgstr "%(odoobotName)s memiliki sebuah permintaan"
 
 #. module: mail
 #. odoo-python
@@ -1452,8 +1453,8 @@ msgid "Animals & Nature"
 msgstr "Animals & Nature"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1701,9 +1702,22 @@ msgid "Auto subscription"
 msgstr "Subskripsi otomatis"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
+#: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__auto_comment
+msgid "Automated Targeted Notification"
+msgstr "Notifikasi Otomatis Terarah"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
 msgstr "Kegiatan Otomatis"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message.js:0
+#, python-format
+msgid "Automated message"
+msgstr "Pesan otomatis"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__triggered_next_type_id
@@ -2417,9 +2431,11 @@ msgstr "Perusahaan"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2883,7 +2899,7 @@ msgstr "Tipe Dekorasi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__default
 msgid "Default"
-msgstr "Baku"
+msgstr "Default"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__default_display_mode
@@ -3704,7 +3720,10 @@ msgstr "Gagal"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render QWeb template : %s)"
+msgid ""
+"Failed to render QWeb template : %s\n"
+"\n"
+"%s)"
 msgstr ""
 
 #. module: mail
@@ -4265,6 +4284,7 @@ msgstr "Templat Tersembunyi"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Hide Call Settings"
@@ -4272,7 +4292,6 @@ msgstr "Sembunyikan Pengaturan Call"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
@@ -5547,10 +5566,10 @@ msgstr "Log catatan"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
+#: code:addons/mail/static/src/components/welcome_view/welcome_view.js:0
 #, python-format
-msgid "Logged as"
-msgstr "Login sebagai"
+msgid "Logged in as %s"
+msgstr "Terhubung sebagai %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -6911,6 +6930,8 @@ msgstr ""
 #, python-format
 msgid "Only users belonging to the \"%s\" group can modify dynamic templates."
 msgstr ""
+"Hanya user yang berasal dari kelompok \"%s\" dapat memodifikasi templat "
+"dinamik. "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_member__fold_state__open
@@ -6924,6 +6945,14 @@ msgstr "Terbuka"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Open Document"
 msgstr "Buka Dokumen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Buka Tautan"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -7611,7 +7640,7 @@ msgstr "Tanggal Dibaca"
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read Less"
-msgstr ""
+msgstr "Baca Lebih Sedikit"
 
 #. module: mail
 #. odoo-javascript
@@ -8272,14 +8301,14 @@ msgstr "Cari: %s"
 #: code:addons/mail/static/src/models/message_seen_indicator.js:0
 #, python-format
 msgid "Seen by %s"
-msgstr ""
+msgstr "Dilihat oleh %s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/message_seen_indicator.js:0
 #, python-format
 msgid "Seen by %s and %s"
-msgstr ""
+msgstr "Dilihat oleh %s dan %s"
 
 #. module: mail
 #. odoo-javascript
@@ -8554,6 +8583,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Show Call Settings"
@@ -8568,7 +8598,6 @@ msgstr "Tunjukkan Pengikut"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
@@ -8696,7 +8725,7 @@ msgstr "Mulai Call"
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Start a Video Call"
-msgstr ""
+msgstr "Mulai Panggilan Video"
 
 #. module: mail
 #. odoo-javascript
@@ -9290,6 +9319,13 @@ msgstr ""
 "(Jenis dokumen: %s, Operasi: %s)"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/blur_manager.js:0
+#, python-format
+msgid "The selfie segmentation library was not loaded"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
@@ -9345,7 +9381,7 @@ msgstr "Action ini tidak dapat dilakukan pada model transient."
 #: code:addons/mail/static/src/xml/activity_view.xml:0
 #, python-format
 msgid "This action will send an email."
-msgstr ""
+msgstr "Action ini akan mengirim email."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -10087,16 +10123,6 @@ msgstr ""
 "server email yang siap dipakai (@mycompany.odoo.com)."
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-"Value untuk `mail.catchall.domain.allowed` tidak dapat divalidasi.\n"
-"Harusnya merupakan daftar domain yang dipisahkan koma contohnya contoh.com,example.org."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10117,6 +10143,17 @@ msgstr "VS"
 #, python-format
 msgid "VS button"
 msgstr "VS button"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"Value untuk `mail.catchall.domain.allowed` tidak dapat divalidasi.\n"
+"Harusnya merupakan daftar domain yang dipisahkan koma contohnya contoh.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -16419,8 +16456,8 @@ msgid "doctor"
 msgstr "doctor"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0

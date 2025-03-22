@@ -1,5 +1,6 @@
 /** @odoo-module **/
-
+import { browser } from "@web/core/browser/browser";
+const sessionStorage = browser.sessionStorage
 import concurrency from 'web.concurrency';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
@@ -665,7 +666,7 @@ export class Configurator extends Component {
     }
 
     clearStorage() {
-        window.sessionStorage.removeItem(this.storageItemName);
+        sessionStorage.removeItem(this.storageItemName);
     }
 
     async getInitialState() {
@@ -698,7 +699,7 @@ export class Configurator extends Component {
             palettes[paletteName] = palette;
         });
 
-        const localState = JSON.parse(window.sessionStorage.getItem(this.storageItemName));
+        const localState = JSON.parse(sessionStorage.getItem(this.storageItemName));
         if (localState) {
             let themes = [];
             if (localState.selectedIndustry && localState.selectedPalette) {
@@ -755,7 +756,7 @@ export class Configurator extends Component {
             selectedType: state.selectedType,
             recommendedPalette: state.recommendedPalette,
         });
-        window.sessionStorage.setItem(this.storageItemName, newState);
+        sessionStorage.setItem(this.storageItemName, newState);
     }
 
     async skipConfigurator() {

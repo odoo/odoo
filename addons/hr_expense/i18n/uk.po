@@ -4,21 +4,29 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-26 14:21+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "%(date_from)s - %(date_to)s"
+msgstr "%(date_from)s - %(date_to)s"
 
 #. module: hr_expense
 #. odoo-python
@@ -44,24 +52,6 @@ msgstr ""
 #, python-format
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
-
-#. module: hr_expense
-#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
-msgid ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
-"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -98,6 +88,16 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Журнал витрат співробітника</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" role=\"img\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\"/>"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
+msgstr ""
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
+msgid "<span class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -335,10 +335,25 @@ msgid "Attach a receipt - usually an image or a PDF file."
 msgstr "Додайте квитанцію - зазвичай це зображення або файл PDF."
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_ir_attachment
+msgid "Attachment"
+msgstr "Прикріплення"
+
+#. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__message_attachment_count
 msgid "Attachment Count"
 msgstr "Підрахунок прикріплення"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__attachment_ids
+msgid "Attachments"
+msgstr "Прикріплення"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__attachment_ids
+msgid "Attachments of expenses"
+msgstr "Прикріплення витрат"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__bank_journal_id
@@ -459,6 +474,7 @@ msgstr "Створити"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #: code:addons/hr_expense/static/src/xml/documents_upload_views.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1296,6 +1312,13 @@ msgstr "Новий звіт про витрати"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
+msgid "New Expense Report, paid by %(paid_by)s"
+msgstr "Новий звіт про витрати, оплачено %(paid_by)s"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
 msgid "New Expense Reports"
 msgstr "Нові звіти витрат"
 
@@ -1400,6 +1423,13 @@ msgid "Number of messages with delivery error"
 msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/components/expense_dashboard.xml:0
+#, python-format
+msgid "Numbers computed from your personal expenses."
+msgstr "Цифри, обчислені з ваших особистих витрат."
+
+#. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register_no_user
 msgid "Odoo"
 msgstr "Odoo"
@@ -1438,11 +1468,17 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
-#: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Only Managers and HR Officers can approve expenses"
 msgstr ""
 "Витрати можуть затверджувати тільки менеджери та працівники відділу кадрів"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Only Managers and HR Officers can refuse expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -1499,6 +1535,21 @@ msgid "Phone bills, postage, etc."
 msgstr "Рахунки за телефон, поштові витрати тощо."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid "Please specify a bank journal in order to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"Please specify an expense journal in order to generate accounting entries."
+msgstr ""
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
@@ -1550,6 +1601,11 @@ msgstr "Опис товару"
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Product Name"
 msgstr "Назва товару"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_product_product
+msgid "Product Variant"
+msgstr "Варіант товару"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_tree_view
@@ -1716,6 +1772,7 @@ msgstr "Сканування"
 
 #. module: hr_expense
 #. odoo-javascript
+#: code:addons/hr_expense/static/src/components/qrcode_action.xml:0
 #: code:addons/hr_expense/static/src/xml/expense_qr_modal_template.xml:0
 #, python-format
 msgid "Scan this QR code to get the Odoo app:"
@@ -1799,13 +1856,6 @@ msgstr ""
 "вас витрати."
 
 #. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid "Specify expense journal to generate accounting entries."
-msgstr "Вкажіть журнал витрат для створення бухгалтерських проведень."
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
 #: model:ir.model.fields,help:hr_expense.field_product_template__can_be_expensed
 msgid "Specify whether the product can be selected in an expense."
@@ -1828,6 +1878,11 @@ msgstr "Розділити витрати"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split_wizard__split_possible
 msgid "Split Possible"
 msgstr "Розділення можливе"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_product_product__standard_price_update_warning
+msgid "Standard Price Update Warning"
+msgstr "Попередження про оновлення стандартної ціни"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__state
@@ -1876,6 +1931,11 @@ msgstr "Відправлено"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__tax_ids
 msgid "Tax"
 msgstr "Податок"
+
+#. module: hr_expense
+#: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
+msgid "Tax 15%"
+msgstr "Податок 15%"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_tax_company
@@ -1979,6 +2039,17 @@ msgid "The payment method used when the expense is paid by the company."
 msgstr "Спосіб оплати, коли витрати понесені іншою компанією."
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"The private address of the employee is required to post the expense report. "
+"Please add it on the employee form."
+msgstr ""
+"Для розміщення звіту про витрати потрібна приватна адреса працівника. Будь "
+"ласка, додайте його до форми працівника."
+
+#. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
@@ -1996,6 +2067,19 @@ msgstr "Сума після розділеного закриття залиша
 #, python-format
 msgid "There are no expense reports to approve."
 msgstr "Немає жодного звіту про витрати для завтердження."
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/product_product.py:0
+#, python-format
+msgid ""
+"There are unsubmitted expenses linked to this category. Updating the "
+"category cost will change expense amounts. Make sure it is what you want to "
+"do."
+msgstr ""
+"Є неподані витрати, пов’язані з цією категорією. Оновлення вартості "
+"категорії змінить суми витрат. Переконайтеся, що це те, що ви хочете "
+"зробити."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2114,6 +2198,7 @@ msgstr "Категорія одиниці вимірювання"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #, python-format
 msgid "Upload"
 msgstr "Завантажити"
@@ -2313,6 +2398,7 @@ msgid "You cannot report expenses for different companies in the same report."
 msgstr "Ви не можете звітувати про витрати різних компаній в одному звіті."
 
 #. module: hr_expense
+#. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
@@ -2332,6 +2418,23 @@ msgstr "Ви не можете звітувати про витрати без �
 #, python-format
 msgid "You cannot report twice the same line!"
 msgstr "Ви не можете звітувати двічі той же рядок!"
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense "
+"report."
+msgstr ""
+
+#. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+#, python-format
+msgid ""
+"You don't have the rights to bypass the validation process of this expense."
+msgstr ""
 
 #. module: hr_expense
 #. odoo-python
@@ -2413,14 +2516,3 @@ msgstr "в стадії підтвердження"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "use OCR to fill data from a picture of the bill"
 msgstr "використовуйте OCR, щоб заповнити дані із зображення у рахунок"
-
-#. module: hr_expense
-#. odoo-python
-#: code:addons/hr_expense/models/hr_expense.py:0
-#, python-format
-msgid ""
-"The private address of the employee is required to post the expense report. "
-"Please add it on the employee form."
-msgstr ""
-"Для розміщення звіту про витрати потрібна приватна адреса працівника. Будь "
-"ласка, додайте його до форми працівника."

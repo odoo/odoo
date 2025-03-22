@@ -25,6 +25,8 @@ import {
 import * as cpHelpers from "@web/../tests/search/helpers";
 import { listView } from "@web/views/list/list_view";
 import { companyService } from "@web/webclient/company_service";
+import { GraphModel } from "@web/views/graph/graph_model";
+import { fakeCookieService } from "../../helpers/mock_services";
 
 let serverData;
 let target;
@@ -480,7 +482,8 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.test("stores and restores scroll position", async function (assert) {
+    QUnit.test("stores and restores scroll position (in kanban)", async function (assert) {
+        serverData.actions[3].views = [[false, "kanban"]];
         assert.expect(3);
         for (let i = 0; i < 60; i++) {
             serverData.models.partner.records.push({ id: 100 + i, foo: `Record ${i}` });
@@ -501,6 +504,31 @@ QUnit.module("ActionManager", (hooks) => {
         // go back using the breadcrumbs
         await click(target.querySelector(".o_control_panel .breadcrumb a"));
         assert.strictEqual(target.querySelector(".o_content").scrollTop, 100);
+    });
+
+    QUnit.test("stores and restores scroll position (in list)", async function (assert) {
+        for (let i = 0; i < 60; i++) {
+            serverData.models.partner.records.push({ id: 100 + i, foo: `Record ${i}` });
+        }
+        const container = document.createElement("div");
+        container.classList.add("o_web_client");
+        container.style.height = "250px";
+        target.appendChild(container);
+        const webClient = await createWebClient({ target: container, serverData });
+        // execute a first action
+        await doAction(webClient, 3);
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
+        assert.strictEqual(target.querySelector(".o_list_renderer").scrollTop, 0);
+        // simulate a scroll
+        target.querySelector(".o_list_renderer").scrollTop = 100;
+        await nextTick();
+        // execute a second action (in which we don't scroll)
+        await doAction(webClient, 4);
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
+        // go back using the breadcrumbs
+        await click(target.querySelector(".o_control_panel .breadcrumb a"));
+        assert.strictEqual(target.querySelector(".o_content").scrollTop, 0);
+        assert.strictEqual(target.querySelector(".o_list_renderer").scrollTop, 100);
     });
 
     QUnit.test(
@@ -547,6 +575,39 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsOnce(document.body, ".modal .o_form_view");
             await doAction(webClient, 5); // target 'new'
             assert.containsN(document.body, ".modal .o_form_view", 2);
+        }
+    );
+
+    QUnit.test(
+        "search defaults are removed from context when switching view",
+        async function (assert) {
+            assert.expect(1);
+            serverData.views["partner,false,graph"] = `<graph/>`;
+            serverData.views["partner,false,list"] = `<list/>`;
+            const context = {
+                search_default_x: true,
+                searchpanel_default_y: true,
+            };
+            registry.category("services").add("cookie", fakeCookieService);
+            patchWithCleanup(GraphModel.prototype, {
+                load(searchParams) {
+                    assert.deepEqual(searchParams.context, { lang: "en", tz: "taht", uid: 7 });
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, {
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "graph"],
+                ],
+                context,
+            });
+            // list view is loaded, switch to graph view
+            await cpHelpers.switchView(target, "graph");
         }
     );
 

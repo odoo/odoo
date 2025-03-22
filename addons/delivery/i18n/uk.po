@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -517,6 +518,20 @@ msgid "Estimated cost"
 msgstr "Орієнтована вартість"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Виняток:"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
@@ -680,6 +695,13 @@ msgid "Manage delivery zip prefixes"
 msgstr "Керуйте префіксами індексу доставки"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr "Маржа"
@@ -744,7 +766,7 @@ msgstr "Замовлення"
 #: model:ir.model.fields,field_description:delivery.field_product_product__country_of_origin
 #: model:ir.model.fields,field_description:delivery.field_product_template__country_of_origin
 msgid "Origin of Goods"
-msgstr "Походження твоарів"
+msgstr "Походження товарів"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -831,6 +853,11 @@ msgstr "Друкувати етикетку повернення"
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product"
 msgstr "Товар"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Категорія товару"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
@@ -1004,10 +1031,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
-"Стандартизований код для міжнародної доставки та декларації товарів. На "
-"даний момент використовується лише для провайдера доставки FedEx."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -1274,6 +1299,30 @@ msgstr ""
 "\n"
 "Наступні рядки доставки (товар, к-сть виставлена у рахунку та ціна) вже були оброблені:\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+"Ви не можете видалити категорію товару доставки, оскільки вона "
+"використовується на товарах доставки постачальника."
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
+"Ви не можете запакувати товари в одну упаковку, якщо вони мають різні "
+"перевізники (тобто переконайтеся, що для всіх їхніх переміщень призначено "
+"перевізника та вони використовують одного перевізника)."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

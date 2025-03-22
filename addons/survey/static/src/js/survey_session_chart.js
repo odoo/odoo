@@ -146,7 +146,8 @@ publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
                             maxRotation: 0,
                             fontSize: '35',
                             fontStyle: 'bold',
-                            fontColor: '#212529'
+                            fontColor: '#212529',
+                            autoSkip: false,
                         },
                         gridLines: {
                             drawOnChartArea: false,

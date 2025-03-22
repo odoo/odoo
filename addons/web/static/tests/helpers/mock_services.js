@@ -152,6 +152,7 @@ export function makeMockFetch(mockRPC) {
             res = await _rpc(route, params);
             status = 200;
         } catch (_e) {
+            res = { error: _e.message };
             status = 500;
         }
         const blob = new Blob([JSON.stringify(res || {})], { type: "application/json" });
@@ -267,11 +268,12 @@ export function makeFakeNotificationService(mock) {
     };
 }
 
-export function makeFakeDialogService(addDialog) {
+export function makeFakeDialogService(addDialog, closeAllDialog) {
     return {
         start() {
             return {
                 add: addDialog || (() => () => {}),
+                closeAll: closeAllDialog || (() => () => {}),
             };
         },
     };

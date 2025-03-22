@@ -17,7 +17,7 @@ class ProductAttribute(models.Model):
 
     name = fields.Char('Attribute', required=True, translate=True)
     value_ids = fields.One2many('product.attribute.value', 'attribute_id', 'Values', copy=True)
-    sequence = fields.Integer('Sequence', help="Determine the display order", index=True)
+    sequence = fields.Integer('Sequence', help="Determine the display order", index=True, default=20)
     attribute_line_ids = fields.One2many('product.template.attribute.line', 'attribute_id', 'Lines')
     create_variant = fields.Selection([
         ('always', 'Instantly'),
@@ -90,7 +90,7 @@ class ProductAttribute(models.Model):
             'name': _("Related Products"),
             'res_model': 'product.template',
             'view_mode': 'tree,form',
-            'domain': [('id', 'in', self.product_tmpl_ids.ids)],
+            'domain': [('id', 'in', self.with_context(active_test=False).product_tmpl_ids.ids)],
         }
 
 
@@ -603,6 +603,27 @@ class ProductTemplateAttributeExclusion(models.Model):
     value_ids = fields.Many2many(
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
         string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id), ('ptav_active', '=', True)]")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        exclusions = super().create(vals_list)
+        exclusions.product_tmpl_id._create_variant_ids()
+        return exclusions
+
+    def unlink(self):
+        # Keep a reference to the related templates before the deletion.
+        templates = self.product_tmpl_id
+        res = super().unlink()
+        templates._create_variant_ids()
+        return res
+
+    def write(self, values):
+        templates = self.env['product.template']
+        if 'product_tmpl_id' in values:
+            templates = self.product_tmpl_id
+        res = super().write(values)
+        (templates | self.product_tmpl_id)._create_variant_ids()
+        return res
 
 
 class ProductAttributeCustomValue(models.Model):

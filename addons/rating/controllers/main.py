@@ -24,15 +24,10 @@ class Rating(http.Controller):
         if rate not in (1, 3, 5):
             raise ValueError(_("Incorrect rating: should be 1, 3 or 5 (received %d)"), rate)
 
-        rating, record_sudo = self._get_rating_and_record(token)
-
-        record_sudo.rating_apply(
-            rate,
-            rating=rating,
-            feedback=_('Customer rated %r.', record_sudo.display_name),
-            subtype_xmlid=None,
-            notify_delay_send=True,
-        )
+        # This route used to allow sending a rating with a GET, the
+        # feature proved incompatible with various email provider URL crawlers and
+        # has been removed.
+        rating, _record_sudo = self._get_rating_and_record(token)
 
         lang = rating.partner_id.lang or get_lang(request.env).code
         return request.env['ir.ui.view'].with_context(lang=lang)._render_template('rating.rating_external_page_submit', {

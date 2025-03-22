@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Saudi Arabia - Point of Sale',
-    'author': 'Odoo S.A',
+    'author': 'Odoo S.A.',
     'category': 'Accounting/Localizations/Point of Sale',
+    'icon': '/l10n_sa/static/description/icon.png',
     'description': """
-K.S.A. POS Localization
-=======================================================
+Saudi Arabia POS Localization
     """,
     'license': 'LGPL-3',
     'depends': [

@@ -22,18 +22,19 @@
 # Jonatan Gk, 2022
 # jabiri7, 2022
 # Ivan Espinola, 2023
-# martioodo hola, 2023
 # Josep Anton Belchi, 2023
+# martioodo hola, 2023
 # Albert Parera, 2023
-# Óscar Fonseca <tecnico@pyming.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Noemi Pla, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2023\n"
+"Last-Translator: Noemi Pla, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,6 +165,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: Proporcionat per %(supplier)s"
 
@@ -171,6 +179,7 @@ msgstr "%(warehouse)s: Proporcionat per %(supplier)s"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -209,7 +218,7 @@ msgstr "'comtat Full'"
 msgid ""
 "'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
 msgstr ""
-"'Albarà d\\'entrega - %s - %s' % (object.partner_id.name or '', object.name)"
+"\"Albarà d'entrega - %s - %s\" % (object.partner_id.name or '', object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_location_barcode
@@ -406,6 +415,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hola, <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>:<br><br>\n"
+"        Ens complau informar-te de què la teva comanda ha estat enviada.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            La teva referència de seguiment és\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Aquí tens la comanda de lliurament adjunta per a més informació.<br><br>\n"
+"        Gràcies,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -558,7 +600,7 @@ msgstr "<span>Products sense paquet assignat </span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr "<span>Remainant quantitats encara no es reparteixen: </span>"
+msgstr "<span>Quantitats pendents de servir: </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -959,7 +1001,7 @@ msgstr "Permet un nou producte"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr "Permet els productes mixts"
+msgstr "Permetre productes mixtos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1172,8 +1214,8 @@ msgid "Automatic No Step Added"
 msgstr "Automàtic pas no afegit"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1796,6 +1838,11 @@ msgid ""
 msgstr ""
 "La conversió entre les unitats de mesura només és possible si pertanyen a la"
 " mateixa categoria. La conversió es basarà en les ràtios establertes."
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2712,7 +2759,7 @@ msgstr "Mostra el contingut del paquet"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_quant_package__package_use__disposable
 msgid "Disposable Box"
-msgstr "Caixa desposible"
+msgstr "Caixa d'un sol ús"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
@@ -2968,6 +3015,13 @@ msgstr "Filtres"
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
 msgid "First SN"
 msgstr "Primera SN"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
@@ -3315,7 +3369,7 @@ msgstr "Té variants"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Having Category"
-msgstr "S' està tenint la categoria"
+msgstr "Tenint la categoria"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__height
@@ -3806,6 +3860,7 @@ msgstr "Domini invàlid per l'operant esquerra %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "Domini invàlid per l'operant %s"
@@ -3813,6 +3868,7 @@ msgstr "Domini invàlid per l'operant %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
@@ -4026,9 +4082,21 @@ msgstr "No és possible reservar més productes de %s dels que tens en estoc."
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
 msgstr ""
-"No és possible deixar de reservar més productes de %s dels que tens en estoc"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4458,6 +4526,13 @@ msgstr "Ubicació: quan arribi a"
 #, python-format
 msgid "Locations"
 msgstr "Ubicacions"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5128,8 +5203,8 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -7059,8 +7134,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"S' usen caixes reutilitzades per a la recollida de lots i després es buidaran després per a ser reutilitzades. En l' aplicació de codi de barres, s' explora una caixa reutilitzable afegirà els productes en aquesta caixa.\n"
-"        Les caixes discrepables no es fan servir, quan s' explora una caixa d' ús en l' aplicació de codis de barres, els productes continguts s' afegeixen a la transferència."
+"Si es fan servir caixes reutilitzables per a la recollida de lots i després es buidaran per a ser reutilitzades. A l'aplicació de codi de barres, si s'escaneja una caixa reutilitzable s'afegiran els productes a aquesta caixa.\n"
+"        Les caixes d'un sol ús no son reutilitzables, quan s'escaneja una caixa d'un sol ús a l'aplicació de codi de barres, els productes continguts s'afegeixen a la transferència."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -7130,6 +7205,14 @@ msgid ""
 msgstr ""
 "Es crearan rutes per a aquests magatzems de reaprovisionament i podreu "
 "activar-les en els productes i categories de productes"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -8060,7 +8143,7 @@ msgstr "Funcionalitats d' emmagatzematge"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Storage Categories"
-msgstr "Categories d' emmagatzematge"
+msgstr "Categories d'emmagatzematge"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_storage_category
@@ -9851,6 +9934,14 @@ msgstr "No podeu canviar el tipus de producte que ja s'utilitzava."
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9887,6 +9978,15 @@ msgstr "Només podeu introduir quantitats positives."
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "Només pots processar 1.0 %s dels productes amb número de sèrie únic."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10007,6 +10107,24 @@ msgid ""
 msgstr ""
 "No pots moure el contingut del mateix paquet més d'un cop en la mateixa "
 "transferència o dividir el mateix paquet entre dues ubicacions. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10333,6 +10451,7 @@ msgid "e.g. CW"
 msgstr "p.ex. CW"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr "per exemple. Central Warehouse"

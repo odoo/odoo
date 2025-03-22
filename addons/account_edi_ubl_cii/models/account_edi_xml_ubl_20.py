@@ -1,15 +1,25 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, _
-from odoo.tools import html2plaintext, cleanup_xml_node
 from lxml import etree
 from collections import defaultdict
+
+from odoo import models, _
+from odoo.tools import html2plaintext, cleanup_xml_node
+
+UBL_NAMESPACES = {
+    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+}
 
 
 class AccountEdiXmlUBL20(models.AbstractModel):
     _name = "account.edi.xml.ubl_20"
     _inherit = 'account.edi.common'
     _description = "UBL 2.0"
+
+    def _find_value(self, xpath, tree, nsmap=False):
+        # EXTENDS account.edi.common
+        return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
     # EXPORT
@@ -56,14 +66,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }]
 
     def _get_partner_party_legal_entity_vals_list(self, partner):
-        commercial_partner = partner.commercial_partner_id
-
         return [{
-            'commercial_partner': commercial_partner,
-
-            'registration_name': commercial_partner.name,
-            'company_id': commercial_partner.vat,
-            'registration_address_vals': self._get_partner_address_vals(commercial_partner),
+            'commercial_partner': partner,
+            'registration_name': partner.name,
+            'company_id': partner.vat,
+            'registration_address_vals': self._get_partner_address_vals(partner),
         }]
 
     def _get_partner_contact_vals(self, partner):
@@ -77,11 +84,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _get_partner_party_vals(self, partner, role):
         return {
             'partner': partner,
-            'party_identification_vals': self._get_partner_party_identification_vals_list(partner),
-            'party_name_vals': [{'name': partner.name}],
+            'party_identification_vals': self._get_partner_party_identification_vals_list(partner.commercial_partner_id),
+            'party_name_vals': [{'name': partner.display_name}],
             'postal_address_vals': self._get_partner_address_vals(partner),
-            'party_tax_scheme_vals': self._get_partner_party_tax_scheme_vals_list(partner, role),
-            'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner),
+            'party_tax_scheme_vals': self._get_partner_party_tax_scheme_vals_list(partner.commercial_partner_id, role),
+            'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner.commercial_partner_id),
             'contact_vals': self._get_partner_contact_vals(partner),
         }
 
@@ -149,9 +156,15 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return vals
 
     def _get_invoice_payment_means_vals_list(self, invoice):
+        payment_means_code, payment_means_name = (30, 'credit transfer') if invoice.move_type == 'out_invoice' else (57, 'standing agreement')
+        # in Denmark payment code 30 is not allowed. we hardcode it to 1 ("unknown") for now
+        # as we cannot deduce this information from the invoice
+        if invoice.partner_id.country_code == 'DK':
+            payment_means_code, payment_means_name = 1, 'unknown'
+
         vals = {
-            'payment_means_code': 30,
-            'payment_means_code_attrs': {'name': 'credit transfer'},
+            'payment_means_code': payment_means_code,
+            'payment_means_code_attrs': {'name': payment_means_name},
             'payment_due_date': invoice.invoice_date_due or invoice.invoice_date,
             'instruction_id': invoice.payment_reference,
             'payment_id_vals': [invoice.payment_reference or invoice.name],
@@ -199,8 +212,21 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 tax_totals_vals['tax_subtotal_vals'].append(subtotal)
 
         if epd_tax_to_discount:
-            # early payment discounts: hence, need to recompute the total tax amount
+            # early payment discounts: hence, need to recompute the total tax amount...
             tax_totals_vals['tax_amount'] = sum([subtot['tax_amount'] for subtot in tax_totals_vals['tax_subtotal_vals']])
+            # ... and add a subtotal section
+            tax_totals_vals['tax_subtotal_vals'].append({
+                'currency': invoice.currency_id,
+                'currency_dp': invoice.currency_id.decimal_places,
+                'taxable_amount': sum(epd_tax_to_discount.values()),
+                'tax_amount': 0.0,
+                'tax_category_vals': {
+                    'id': 'E',
+                    'percent': 0.0,
+                    'tax_scheme_id': "VAT",
+                    'tax_exemption_reason': "Exempt from tax",
+                },
+            })
         return [tax_totals_vals]
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -249,7 +275,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                         'tax_scheme_id': 'VAT',
                     }],
                 })
-            # ne global Charge (VAT exempted)
+            # One global Charge (VAT exempted)
             vals_list.append({
                 'charge_indicator': 'true',
                 'allowance_charge_reason_code': 'ZZZ',
@@ -341,7 +367,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'currency_dp': line.currency_id.decimal_places,
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
-            'price_amount': gross_price_unit,
+            'price_amount': round(gross_price_unit, 10),
             'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
 
             # The number of item units to which the price applies.
@@ -363,7 +389,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         total_fixed_tax_amount = sum(
             vals['amount']
             for vals in allowance_charge_vals_list
-            if vals['allowance_charge_reason_code'] == 'AEO'
+            if vals.get('charge_indicator') == 'true'
         )
         return {
             'currency': line.currency_id,
@@ -464,7 +490,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 charge_total_amount += allowance_charge_vals['amount']
 
         supplier = invoice.company_id.partner_id.commercial_partner_id
-        customer = invoice.commercial_partner_id
+        customer = invoice.partner_id
 
         # OrderReference/SalesOrderID (sales_order_id) is optional
         sales_order_id = 'sale_line_ids' in invoice.invoice_line_ids._fields \
@@ -541,15 +567,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         constraints = self._invoice_constraints_common(invoice)
         constraints.update({
             'ubl20_supplier_name_required': self._check_required_fields(vals['supplier'], 'name'),
-            'ubl20_customer_name_required': self._check_required_fields(vals['customer'], 'name'),
-            'ubl20_commercial_customer_name_required': self._check_required_fields(vals['customer'].commercial_partner_id, 'name'),
+            'ubl20_customer_name_required': self._check_required_fields(vals['customer'].commercial_partner_id, 'name'),
             'ubl20_invoice_name_required': self._check_required_fields(invoice, 'name'),
             'ubl20_invoice_date_required': self._check_required_fields(invoice, 'invoice_date'),
         })
         return constraints
 
     def _export_invoice(self, invoice):
-        vals = self._export_invoice_vals(invoice)
+        vals = self._export_invoice_vals(invoice.with_context(lang=invoice.partner_id.lang))
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render(vals['main_template'], vals)
         return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8'), set(errors)
@@ -559,12 +584,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_fill_invoice_form(self, journal, tree, invoice, qty_factor):
-
-        def _find_value(xpath, element=tree):
-            # avoid 'TypeError: empty namespace prefix is not supported in XPath'
-            nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
-            return self.env['account.edi.format']._find_value(xpath, element, nsmap)
-
         logs = []
 
         if qty_factor == -1:
@@ -573,11 +592,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_id ====
 
         role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID', tree)
-        phone = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
-        mail = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
-        name = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name', tree)
-        country_code = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
+        vat = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        phone = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
+        mail = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
+        name = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:Name', tree) or \
+            self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cbc:RegistrationName', tree)
+        country_code = self._find_value(f'.//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
         self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
 
         # ==== currency_id ====
@@ -608,6 +628,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if invoice_date_due_node is not None and invoice_date_due_node.text:
                 invoice.invoice_date_due = invoice_date_due_node.text
                 break
+
+        # ==== Bank Details ====
+
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+
+        if bank_details:
+            self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
 
         # ==== Reference ====
 
@@ -713,7 +741,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         tax_nodes = tree.findall('.//{*}Item/{*}ClassifiedTaxCategory/{*}Percent')
         if not tax_nodes:
             for elem in tree.findall('.//{*}TaxTotal'):
-                tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}TaxCategory/{*}Percent')
+                if not percentage_nodes:
+                    percentage_nodes = elem.findall('.//{*}TaxSubtotal/{*}Percent')
+                tax_nodes += percentage_nodes
         return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line, inv_line_vals, logs)
 
     def _correct_invoice_tax_amount(self, tree, invoice):
@@ -722,6 +753,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # For each tax in our tax total, get the amount as well as the total in the xml.
         for elem in tree.findall('.//{*}TaxTotal/{*}TaxSubtotal'):
             percentage = elem.find('.//{*}TaxCategory/{*}Percent')
+            if percentage is None:
+                percentage = elem.find('.//{*}Percent')
             amount = elem.find('.//{*}TaxAmount')
             if (percentage is not None and percentage.text is not None) and (amount is not None and amount.text is not None):
                 tax_percent = float(percentage.text)

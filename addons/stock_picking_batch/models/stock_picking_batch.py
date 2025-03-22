@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
-from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.tools.float_utils import float_is_zero
 
 class StockPickingBatch(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -109,7 +109,7 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.move_ids = batch.picking_ids.move_ids
             batch.move_line_ids = batch.picking_ids.move_line_ids
-            batch.show_check_availability = any(m.state not in ['assigned', 'done'] for m in batch.move_ids)
+            batch.show_check_availability = any(m.state not in ['assigned', 'cancel', 'done'] for m in batch.move_ids)
 
     @api.depends('picking_ids', 'picking_ids.show_validate')
     def _compute_show_validate(self):
@@ -181,7 +181,7 @@ class StockPickingBatch(models.Model):
             if batch_without_picking_type:
                 picking = self.picking_ids and self.picking_ids[0]
                 batch_without_picking_type.picking_type_id = picking.picking_type_id.id
-        if vals.get('user_id'):
+        if 'user_id' in vals:
             self.picking_ids.assign_batch_user(vals['user_id'])
         return res
 
@@ -273,7 +273,7 @@ class StockPickingBatch(models.Model):
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            move_line_ids = self.picking_ids[0]._package_move_lines()
+            move_line_ids = self.picking_ids[0]._package_move_lines(batch_pack=True)
             if move_line_ids:
                 res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:

@@ -6,7 +6,7 @@ from datetime import date, datetime, timedelta
 
 from odoo import fields, Command
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
-from odoo.tests import Form, HttpCase, tagged
+from odoo.tests import Form, tagged, new_test_user
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 import pytz
 import re
@@ -153,6 +153,51 @@ class TestCalendar(SavepointCaseWithUserDemo):
         self.assertEqual(test_event.res_id, test_record.id)
         self.assertEqual(len(test_record.activity_ids), 1)
 
+    def test_activity_event_multiple_meetings(self):
+        # Creating multiple meetings from an activity creates additional activities
+        # ensure meeting activity type exists
+        meeting_act_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        if not meeting_act_type:
+            meeting_act_type = self.env['mail.activity.type'].create({
+                'name': 'Meeting Test',
+                'category': 'meeting',
+            })
+
+        # have a test model inheriting from activities
+        test_record = self.env['res.partner'].create({
+            'name': 'Test',
+        })
+
+        activity_id = self.env['mail.activity'].create({
+            'summary': 'Meeting with partner',
+            'activity_type_id': meeting_act_type.id,
+            'res_model_id': self.env['ir.model']._get_id('res.partner'),
+            'res_id': test_record.id,
+        })
+
+        calendar_action = activity_id.with_context(default_res_model='res.partner', default_res_id=test_record.id).action_create_calendar_event()
+        event_1 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Meeting 1',
+            'start': datetime(2025, 3, 10, 17),
+            'stop': datetime(2025, 3, 10, 22),
+        })
+
+        self.assertEqual(event_1.activity_ids, activity_id)
+
+        total_activities = self.env['mail.activity'].search_count(domain=[])
+
+        event_2 = self.env['calendar.event'].with_context(calendar_action['context']).create({
+            'name': 'Meeting 2',
+            'start': datetime(2025, 3, 11, 17),
+            'stop': datetime(2025, 3, 11, 22),
+        })
+        self.assertEqual(event_1.activity_ids, activity_id, "Event 1's activity should still be the first activity")
+        self.assertEqual(activity_id.calendar_event_id, event_1, "The first activity's event should still be event 1")
+        self.assertEqual(total_activities + 1, self.env['mail.activity'].search_count(domain=[]), "1 more activity record should have been created (by event 2)")
+        self.assertNotEqual(event_2.activity_ids, activity_id, "Event 2's activity should not be the first activity")
+        self.assertEqual(event_2.activity_ids.activity_type_id, activity_id.activity_type_id, "Event 2's activity should be the same activity type as the first activity")
+        self.assertEqual(test_record.activity_ids, activity_id | event_2.activity_ids, "Resource record should now have both activities")
+
     def test_event_allday(self):
         self.env.user.tz = 'Pacific/Honolulu'
 
@@ -190,13 +235,13 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.assertEqual(d.minute, 30)
 
     def test_recurring_ny(self):
-        self.env.user.tz = 'US/Eastern'
-        f = Form(self.CalendarEvent.with_context(tz='US/Eastern'))
+        self.env.user.tz = 'America/New_York'
+        f = Form(self.CalendarEvent.with_context(tz='America/New_York'))
         f.name = 'test'
         f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
         f.recurrency = True
         self.assertEqual(f.weekday, 'WED')
-        self.assertEqual(f.event_tz, 'US/Eastern', "The value should correspond to the user tz")
+        self.assertEqual(f.event_tz, 'America/New_York', "The value should correspond to the user tz")
         self.assertEqual(f.count, 1, "The default value should be displayed")
         self.assertEqual(f.interval, 1, "The default value should be displayed")
         self.assertEqual(f.month_by, "date", "The default value should be displayed")
@@ -350,6 +395,23 @@ class TestCalendar(SavepointCaseWithUserDemo):
 
         # no more email should be sent
         _test_one_mail_per_attendee(self, partners)
+
+    def test_event_creation_internal_user_invitation_ics(self):
+        """ Check that internal user can read invitation.ics attachment """
+        internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user')
+
+        partner = internal_user.partner_id
+        self.event_tech_presentation.write({
+            'partner_ids': [(4, partner.id)],
+        })
+        msg = self.env['mail.message'].search([
+            ('notified_partner_ids', 'in', partner.id),
+        ])
+        msg.invalidate_recordset()
+
+
+        # internal user can read the attachment without errors
+        self.assertEqual(msg.with_user(internal_user).attachment_ids.name, 'invitation.ics')
 
     def test_event_creation_sudo_other_company(self):
         """ Check Access right issue when create event with sudo

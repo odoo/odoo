@@ -94,7 +94,10 @@ class MailNotification(models.Model):
             ('res_partner_id.partner_share', '=', False),
             ('notification_status', 'in', ('sent', 'canceled'))
         ]
-        return self.search(domain).unlink()
+        records = self.search(domain, limit=models.GC_UNLINK_LIMIT)
+        if len(records) >= models.GC_UNLINK_LIMIT:
+            self.env.ref('base.autovacuum_job')._trigger()
+        return records.unlink()
 
     # ------------------------------------------------------------
     # TOOLS
@@ -103,7 +106,7 @@ class MailNotification(models.Model):
     def format_failure_reason(self):
         self.ensure_one()
         if self.failure_type != 'unknown':
-            return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
+            return dict(self._fields['failure_type'].selection).get(self.failure_type, _('No Error'))
         else:
             return _("Unknown error") + ": %s" % (self.failure_reason or '')
 

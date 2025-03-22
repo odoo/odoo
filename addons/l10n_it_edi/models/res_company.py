@@ -35,7 +35,7 @@ class ResCompany(models.Model):
         help="Please select the Tax system to which you are subjected.")
 
     # Economic and Administrative Index
-    l10n_it_has_eco_index = fields.Boolean(default=False,
+    l10n_it_has_eco_index = fields.Boolean(
         help="The seller/provider is a company listed on the register of companies and as\
         such must also indicate the registration data on all documents (art. 2250, Italian\
         Civil Code)")
@@ -44,7 +44,7 @@ class ResCompany(models.Model):
     l10n_it_eco_index_number = fields.Char(string="Number in register of companies", size=20,
         help="This field must contain the number under which the\
         seller/provider is listed on the register of companies.")
-    l10n_it_eco_index_share_capital = fields.Float(default=0.0, string="Share capital actually paid up",
+    l10n_it_eco_index_share_capital = fields.Float(string="Share capital actually paid up",
         help="Mandatory if the seller/provider is a company with share\
         capital (SpA, SApA, Srl), this field must contain the amount\
         of share capital actually paid up as resulting from the last\
@@ -63,7 +63,7 @@ class ResCompany(models.Model):
 
 
     # Tax representative
-    l10n_it_has_tax_representative = fields.Boolean(default=False,
+    l10n_it_has_tax_representative = fields.Boolean(
         help="The seller/provider is a non-resident subject which\
         carries out transactions in Italy with relevance for VAT\
         purposes and which takes avail of a tax representative in\
@@ -107,3 +107,9 @@ class ResCompany(models.Model):
                 raise ValidationError(_("Your tax representative partner must have a tax number."))
             if not record.l10n_it_tax_representative_partner_id.country_id:
                 raise ValidationError(_("Your tax representative partner must have a country."))
+
+    @api.onchange("l10n_it_has_tax_representative")
+    def _onchange_l10n_it_has_tax_represeentative(self):
+        for company in self:
+            if not company.l10n_it_has_tax_representative:
+                company.l10n_it_tax_representative_partner_id = False

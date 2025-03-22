@@ -14,7 +14,7 @@ registerModel({
         onClickNext(ev) {
             ev.preventDefault();
             const index = this.thread.attachmentsInWebClientView.findIndex(attachment => attachment === this.thread.mainAttachment);
-            this.setMainAttachmentFromIndex(index === this.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1);
+            this.setMainAttachmentFromIndex(index >= this.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1);
         },
         /**
          * @param {MouseEvent} ev
@@ -22,7 +22,7 @@ registerModel({
         onClickPrevious(ev) {
             ev.preventDefault();
             const index = this.thread.attachmentsInWebClientView.findIndex(attachment => attachment === this.thread.mainAttachment);
-            this.setMainAttachmentFromIndex(index === 0 ? this.thread.attachmentsInWebClientView.length - 1 : index - 1);
+            this.setMainAttachmentFromIndex(index <= 0 ? this.thread.attachmentsInWebClientView.length - 1 : index - 1);
         },
         onComponentUpdate() {
             if (this.iframeViewerPdfRef.el) {

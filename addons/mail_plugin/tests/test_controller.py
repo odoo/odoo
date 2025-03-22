@@ -34,7 +34,7 @@ class TestMailPluginController(TestMailPluginControllerCommon):
     @mock_auth_method_outlook('employee')
     def test_get_partner_blacklisted_domain(self):
         """Test enrichment on a blacklisted domain, should return an error."""
-        domain = list(iap_tools._MAIL_DOMAIN_BLACKLIST)[0]
+        domain = min(iap_tools._MAIL_PROVIDERS)
 
         data = {
             "id": 0,

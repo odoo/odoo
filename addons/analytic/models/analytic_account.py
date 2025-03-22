@@ -12,7 +12,7 @@ class AccountAnalyticAccount(models.Model):
     _description = 'Analytic Account'
     _order = 'plan_id, name asc'
     _check_company_auto = True
-    _rec_names_search = ['name', 'code', 'partner_id']
+    _rec_names_search = ['name', 'code']
 
     name = fields.Char(
         string='Analytic Account',
@@ -74,17 +74,14 @@ class AccountAnalyticAccount(models.Model):
     balance = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Balance',
-        groups='account.group_account_readonly',
     )
     debit = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Debit',
-        groups='account.group_account_readonly',
     )
     credit = fields.Monetary(
         compute='_compute_debit_credit_balance',
         string='Credit',
-        groups='account.group_account_readonly',
     )
 
     currency_id = fields.Many2one(

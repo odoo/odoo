@@ -3,24 +3,27 @@
 # 	* note
 # 
 # Translators:
-# Nikola Iliev, 2023
+# KeyVillage, 2023
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
 # Александра Николова <alexandra1nikolova@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Ivan Goychev <igoychev.projects@gmail.com>, 2023
+# Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # aleksandar ivanov, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
+# Petko Karamotchev, 2024
+# Martin Dinovski, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Martin Dinovski, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,14 +108,14 @@ msgid "Add a new tag"
 msgstr "Добавете нов етикет"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
 msgstr "Добави бележка"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
@@ -134,7 +137,7 @@ msgid "By sticky note Category"
 msgstr "По категория на лепкавите бележки"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
@@ -230,7 +233,7 @@ msgstr "Групиране по"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Има съобщение"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -256,7 +259,6 @@ msgstr "Ако е отметнато, новите съобщения ще из�
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
-#: model:ir.model.fields,help:note.field_note_note__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ако е отметнато, някои съобщения имат грешка при доставката."
 
@@ -314,7 +316,7 @@ msgstr "Съобщения"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Краен срок за моята дейност"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
@@ -324,7 +326,7 @@ msgstr "Нов"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Следващото събитие от календара на дейностите"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -369,6 +371,7 @@ msgid "Note Tag"
 msgstr "Маркер на бележка"
 
 #. module: note
+#. odoo-python
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
@@ -398,7 +401,7 @@ msgstr "Брой грешки"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Брой съобщения, изискващи действие"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
@@ -417,7 +420,7 @@ msgid "Related Note"
 msgstr ""
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
@@ -427,7 +430,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "Напомняне"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
@@ -435,16 +438,11 @@ msgid "Responsible User"
 msgstr "Отговорник"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS грешка при доставка"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -526,7 +524,7 @@ msgid "Tags"
 msgstr "Маркери"
 
 #. module: note
-#. openerp-web
+#. odoo-javascript
 #: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
@@ -551,13 +549,3 @@ msgstr "Вид на изключение на дейност в базата."
 #: model:ir.model,name:note.model_res_users
 msgid "User"
 msgstr "Потребител"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "Съобщения в уебсайт"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "История на комуникацията на уебсайт"

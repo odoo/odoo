@@ -437,13 +437,19 @@ registerModel({
          * @param {boolean} param1.sticky
          * @param {string} param1.title
          * @param {boolean} param1.warning
+         * @param {string} param1.type
          */
-        _handleNotificationSimpleNotification({ message, message_is_html, sticky, title, warning }) {
+        _handleNotificationSimpleNotification({ message, message_is_html, sticky, title, warning, type }) {
+            type = warning
+               ? "warning"
+               : ["info", "success", "warning", "danger"].includes(type)
+               ? type
+               : "danger";
             this.messaging.notify({
                 message: message_is_html ? Markup(message) : message,
                 sticky,
                 title,
-                type: warning ? 'warning' : 'danger',
+                type,
             });
         },
         /**

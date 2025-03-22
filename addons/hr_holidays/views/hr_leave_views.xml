@@ -181,7 +181,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('o_leave_kanban_info')]" position='before'>
                 <div class="col-3">
-                    <img t-att-src="kanban_image('hr.employee', 'avatar_128', record.employee_id.raw_value)"
+                    <img t-att-src="kanban_image('hr.employee.public', 'avatar_128', record.employee_id.raw_value)"
                         t-att-title="record.employee_id.value"
                         t-att-alt="record.employee_id.value"
                         class="o_image_64_cover float-start mr4"/>
@@ -235,13 +235,13 @@
             <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <field name="has_stress_day" invisible="1"/>
             <header>
-                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('active', '=', False)]}"/>
-                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
+                <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', '!=', 'draft'), ('active', '=', False)]}"/>
+                <button string="Approve" name="action_approve" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('active', '=', False), ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', ('active', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
+                <button string="Refuse" name="action_refuse" type="object" attrs="{'invisible': ['|', '|', '|', ('id', '=', False), ('active', '=', False), ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
                 <button string="Cancel" name="action_cancel" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('can_cancel', '=', False)]}" />
                 <button string="Mark as Draft" name="action_draft" type="object"
-                        attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                        attrs="{'invisible': ['|', '|', ('id', '=', False), ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate" attrs="{'invisible': [('active', '=', False)]}"/>
             </header>
             <sheet>
@@ -549,13 +549,16 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_approve']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="states"/>
+                <attribute name="attrs">{'invisible': 1}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_validate']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="states"/>
+                <attribute name="attrs">{'invisible': 1}</attribute>
             </xpath>
             <xpath expr="//button[@name='action_refuse']" position="attributes">
-                <attribute name="invisible">1</attribute>
+                <attribute name="states"/>
+                <attribute name="attrs">{'invisible': 1}</attribute>
             </xpath>
         </field>
     </record>

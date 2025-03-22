@@ -15,15 +15,15 @@
 # Tomaž Jug <tomaz@editor.si>, 2023
 # Neun Pro, 2023
 # Grega Vavtar <grega@hbs.si>, 2023
-# Katja Deržič, 2023
+# Katja Deržič, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Katja Deržič, 2023\n"
+"Last-Translator: Katja Deržič, 2024\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,12 +49,12 @@ msgstr "# mesecev"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
 msgid "# Opportunities"
-msgstr "# Opportunities"
+msgstr "# Priložnosti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_count
 msgid "# Overdue Opportunities"
-msgstr "# Overdue Opportunities"
+msgstr "# Zapadle priložnosti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
@@ -231,17 +231,17 @@ msgstr "<span class=\"o_stat_text\"> Leads</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"oe_grey p-2 d-none d-sm-block\"> at </span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2\"> at </span>"
-msgstr "<span class=\"oe_grey p-2\">ob </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -479,7 +479,7 @@ msgstr "Aktivno"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr "Active Leads"
+msgstr "Aktivne priložnosti"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
@@ -723,7 +723,7 @@ msgstr "Assignment domain for team %(team)s is incorrectly formatted"
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_id
 msgid "Associated Lead"
-msgstr "Associated Lead"
+msgstr "Povezane priložnosti"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
@@ -2212,7 +2212,7 @@ msgstr "Indici/Priložnosti"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr "Leads/Opportunities count"
+msgstr "Število indici/priložnosti"
 
 #. module: crm
 #. odoo-javascript
@@ -2472,7 +2472,7 @@ msgstr "Monthly average leads capacity for all salesmen belonging to the team"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr "Multi Teams"
+msgstr "Več ekip"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -3161,7 +3161,7 @@ msgstr "Recurring Plan"
 #: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
 #: model:ir.ui.menu,name:crm.crm_recurring_plan_menu_config
 msgid "Recurring Plans"
-msgstr "Recurring Plans"
+msgstr "Ponavljajoči načrti"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -3172,7 +3172,7 @@ msgstr "Recurring Revenue"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__group_use_recurring_revenues
 msgid "Recurring Revenues"
-msgstr "Recurring Revenues"
+msgstr "Ponavljajoči se prihodki"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -3383,7 +3383,7 @@ msgstr "Prikaz menija indici"
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
 msgid "Show Recurring Revenues Menu"
-msgstr "Show Recurring Revenues Menu"
+msgstr "Pokaži meni s ponavljajočimi se prihodki"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3958,11 +3958,6 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr "Use the top left <i>Create</i> button, or send an email to"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
 msgstr "Use the <i>New</i> button, or send an email to"
 
@@ -3971,29 +3966,9 @@ msgstr "Use the <i>New</i> button, or send an email to"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid ""
-"Use the top left <i>Create</i> button, or send an email to %s to test the "
-"email gateway."
-msgstr ""
-"Uporabite levi zgornji <i>Ustvari</i> gumb, ali pošljite e-pošto na  %s za "
-"testiranje e-poštnega prehoda ."
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-#, python-format
-msgid ""
 "Use the <i>New</i> button, or send an email to %s to test the email gateway."
 msgstr ""
 "Use the <i>New</i> button, or send an email to %s to test the email gateway."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid ""
-"Use the top left Create button, or configure an email alias to test the "
-"email gateway."
-msgstr ""
-"Use the top left Create button, or configure an email alias to test the "
-"email gateway."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

@@ -601,6 +601,27 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertFalse(self.test_record.message_follower_ids)
         self.assertFalse(self.test_record.message_partner_ids)
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_manual_send_user_notification_email_from_queue(self):
+        """ Test sending a mail from the queue that is not related to the admin user sending it.
+        Will throw a security error not having access to the mail."""
+
+        with self.mock_mail_gateway():
+            new_notification = self.test_record.message_notify(
+                subject='This should be a subject',
+                body='<p>You have received a notification</p>',
+                partner_ids=[self.partner_1.id],
+                message_type='user_notification',
+                force_send=False
+            )
+
+        self.assertNotIn(self.user_admin.partner_id, new_notification.mail_ids.partner_ids, "Our admin user should not be within the partner_ids")
+
+        with self.mock_mail_gateway():
+            new_notification.mail_ids.with_user(self.user_admin).send()
+
+        self.assertEqual(new_notification.mail_ids.state, 'exception', 'Email will be sent but with exception state - write access denied')
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('employee')
     def test_message_post(self):
@@ -1130,7 +1151,6 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertSentEmail(
             self.user_employee.partner_id,
             [self.partner_1],
-            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
             # references should be sorted from the oldest to the newest
             references=f'{parent_msg.message_id} {msg.message_id}',
         )
@@ -1152,8 +1172,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             body_content='<p>Test Answer Bis</p>',
             reply_to=msg.reply_to,
             subject='Re: %s' % self.test_record.name,
-            references_content='openerp-%d-mail.test.simple' % self.test_record.id,
-            references=f'{parent_msg.message_id} {new_msg.message_id}',
+            references=f'{parent_msg.message_id} {msg.message_id} {new_msg.message_id}',
         )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
@@ -1185,6 +1204,22 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertEqual(reply.notified_partner_ids, self.user_employee.partner_id)
         self.assertEqual(reply.parent_id, msg)
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
+
+    @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_post_with_view_no_message_log(self):
+        """ Test posting on documents based on a view is forced to be a message posted and not a note """
+
+        test_record = self.test_record.with_user(self.env.user)
+        with self.mock_mail_gateway():
+            test_record.message_post_with_view(
+                'test_mail.mail_template_simple_test',
+                values={'partner': self.user_employee.partner_id},
+                partner_ids=self.partner_1.ids,
+                message_log=True,
+            )
+        self.assertSentEmail(self.user_employee.partner_id, [self.partner_1])
+        self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_comment'))
 
 
 @tagged('mail_post')

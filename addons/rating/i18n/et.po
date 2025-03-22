@@ -13,17 +13,19 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
-# Anna, 2023
 # JanaAvalah, 2023
 # Leaanika Randmets, 2023
+# Anna, 2024
+# Siim Raasuke, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,12 +81,6 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:0
-#, python-format
-msgid "Customer rated %r."
-msgstr "Klient hindas %r."
-
-#. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Date"
 msgstr "Kuupäev"
@@ -95,9 +91,14 @@ msgid "Display Name"
 msgstr "Näidatav nimi"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ko
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Dissatisfied"
@@ -148,7 +149,7 @@ msgstr "Pool tähest"
 #: model:ir.model.fields,help:rating.field_rating_rating__is_internal
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
-msgstr ""
+msgstr "Peida portaali kasutajad, eraldiseisvalt alamtüübi sätetest."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -166,6 +167,7 @@ msgid "Image URL"
 msgstr "Pildi URL"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #: code:addons/rating/controllers/main.py:0
 #, python-format
@@ -214,8 +216,12 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
 msgid "No Rating yet"
 msgstr "Hinnang puudub"
 
@@ -225,9 +231,14 @@ msgid "No rating yet"
 msgstr "Hinnang puudub"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Okay"
@@ -236,27 +247,27 @@ msgstr "Korras"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Põhidokument"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Põhidokumendi mudel "
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "Põhidokumendi nimi "
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Parent Holder"
-msgstr ""
+msgstr "Põhidokumendi hoidja "
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
 msgid "Parent Ref"
-msgstr ""
+msgstr "Põhidokumendi viide"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
@@ -269,6 +280,7 @@ msgid "Percentage of happy ratings"
 msgstr "Positiivse hinnangu protsent"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Posting a rating should be done using message post API."
@@ -278,7 +290,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated Operator"
-msgstr ""
+msgstr "Hinnatud operaator"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
@@ -354,7 +366,7 @@ msgid "Rating should be between 0 and 5"
 msgstr "Hinnang peab olema 0 ja 5 vahel"
 
 #. module: rating
-#. openerp-web
+#. odoo-javascript
 #: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
 #: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #, python-format
@@ -401,9 +413,14 @@ msgid "Resource name"
 msgstr "Ressursi nimi"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Satisfied"

@@ -112,18 +112,22 @@ $-seen-urls: ();
     @include print-variable('custom-colors', $custom-colors);
 }
 
+@mixin body-image-bg-style() {
+    background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+    background-position: center;
+    background-attachment: fixed;
+    @if o-website-value('body-image-type') == 'pattern' {
+        background-size: auto;
+        background-repeat: repeat;
+    } @else {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+};
+
 #wrapwrap {
     @if o-website-value('body-image') {
-        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
-        background-position: center;
-        background-attachment: fixed;
-        @if o-website-value('body-image-type') == 'pattern' {
-            background-size: auto;
-            background-repeat: repeat;
-        } @else {
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
+        @include body-image-bg-style();
     }
 
     @if o-website-value('layout') != 'full' {
@@ -819,10 +823,6 @@ $-transition-duration: 200ms;
     }
 }
 
-.o_hoverable_dropdown .nav-link.dropdown-toggle:focus {
-    outline: none;
-}
-
 // Navbar
 .navbar .o_extra_menu_items > .show {
     > li {
@@ -847,6 +847,9 @@ $-transition-duration: 200ms;
         > .o_mega_menu .row > div { // remove mega menu col-lg-* style
             width: 100%;
             flex: auto;
+        }
+        > .o_mega_menu_container_size {
+            transform: unset;
         }
     }
 }
@@ -1062,6 +1065,9 @@ header {
                     // make sense to show it if the dropdown is always open.
                     display: none;
                 }
+                @if o-website-value('header-template') == 'slogan' {
+                    justify-content: unset !important;
+                }
             }
             @if o-website-value('header-template') == 'vertical' {
                 .oe_structure_solo {
@@ -1215,7 +1221,7 @@ header {
                             padding-right: $nav-link-padding-x;
                             padding-left: $nav-link-padding-x;
                         }
-                        .dropdown-menu {
+                        .dropdown-menu:not(.o_mega_menu) {
                             position: absolute;
                         }
                     }
@@ -1389,7 +1395,11 @@ header {
                     // Ensure a transparent snippet at the end of the content
                     // still appears with the same background when hovering the
                     // footer during the scroll effect.
-                    background-color: $body-bg;
+                    @if o-website-value('body-image') {
+                        @include body-image-bg-style();
+                    } @else {
+                        background-color: $body-bg;
+                    }
                 }
                 @if o-website-value('footer-effect') == 'slideout_shadow' {
                     box-shadow: $box-shadow;
@@ -1413,6 +1423,20 @@ header {
 
         > * {
             vertical-align: middle;
+        }
+    }
+
+    @if index(
+        ('default', 'slogan', 'Contact', 'centered_logo', 'image'),
+        o-website-value('header-template')
+    ) != null {
+        @include media-breakpoint-down(md) {
+            .dropdown-toggle {
+                display: block;
+            }
+            .dropdown-menu {
+                position: static;
+            }
         }
     }
 }
@@ -1439,6 +1463,12 @@ span.list-inline-item.o_add_language:last-child {
     #o_footer_scrolltop_wrapper {
         position: relative;
         z-index: 1;
+
+        &:last-child {
+            height: 3rem !important;
+            margin-top: -3rem;
+            margin-bottom: 1rem;
+        }
     }
     #o_footer_scrolltop {
         $-footer-color: o-color('footer-custom') or o-color('footer') or rgba(0, 0, 0, 0);
@@ -1584,9 +1614,16 @@ $ribbon-padding: 100px;
     flex: 1;
 }
 
+.o_cookies_bar_toggle {
+    gap: 0.5rem;
+    inset-inline-end: 1rem;
+    inset-block-end: var(--cookies-bar-toggle-inset-block-end, 1rem);
+    z-index: $zindex-modal + 1; // Over the modal backdrop.
+}
+
 .o_website_btn_loading {
-    cursor: wait;
     opacity: $btn-disabled-opacity;
+
     .fa:not(.fa-spin) {
         display: none;
     }
@@ -1673,7 +1710,7 @@ input[value*="data-oe-translation-initial-sha"] {
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
 
-    &.o_rtl {
+    &.o_rtl, .o_rtl {
         // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
         // left-overflowing animations on RTL web pages. Note: using overflow on
         // the main element hides animated elements outside of it (e.g. "Framed"
@@ -1681,6 +1718,7 @@ input[value*="data-oe-translation-initial-sha"] {
         // best workaround for now.
         > main {
             overflow-x: hidden;
+            overflow-y: hidden;
         }
     }
     .o_footer_slideout {

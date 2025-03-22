@@ -662,6 +662,7 @@ class TestQWebNS(TransactionCase):
             """
         })
 
+        error_msg = ''
         try:
             "" + 0
         except TypeError as e:
@@ -702,6 +703,11 @@ class TestQWebBasic(TransactionCase):
             ("['test_' + x for x in ['a', 'b']]",       {},                             ['test_a', 'test_b']),
             ("""1 and 2 and 0
                 or 9""",                                {},                             9),
+            ('[x for x in (1,2)]',                      {},                             [1, 2]),  # LOAD_FAST_AND_CLEAR
+            ('list(x for x in (1,2))',                  {},                             [1, 2]),  # END_FOR, CALL_INTRINSIC_1
+            ('v if v is None else w',                   {'v': False, 'w': 'foo'},       'foo'),  # POP_JUMP_IF_NONE
+            ('v if v is not None else w',               {'v': None, 'w': 'foo'},        'foo'),  # POP_JUMP_IF_NOT_NONE
+            ('{a for a in (1, 2)}',                     {},                             {1, 2}),  # RERAISE
         ]
 
         IrQweb = self.env['ir.qweb']

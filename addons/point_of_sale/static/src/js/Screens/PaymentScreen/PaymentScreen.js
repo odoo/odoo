@@ -9,6 +9,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
     const Registries = require('point_of_sale.Registries');
     const { isConnectionError } = require('point_of_sale.utils');
     const utils = require('web.utils');
+    const round_pr = utils.round_precision;
 
     class PaymentScreen extends PosComponent {
         setup() {
@@ -44,6 +45,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // When the buffer is updated, trigger this event.
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
+                useWithBarcode: true,
             };
             // Check if pos has a cash payment method
             const hasCashPaymentMethod = this.payment_methods_from_config.some(
@@ -81,6 +83,10 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         }
         addNewPaymentLine({ detail: paymentMethod }) {
             // original function: click_paymentmethods
+            if(!this.env.pos.get_order().check_paymentlines_rounding()) {
+                this._display_popup_error_paymentlines_rounding();
+                return false;
+            }
             let result = this.currentOrder.add_paymentline(paymentMethod);
             if (result){
                 NumberBuffer.reset();
@@ -92,6 +98,36 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     body: this.env._t('There is already an electronic payment in progress.'),
                 });
                 return false;
+            }
+        }
+        _display_popup_error_paymentlines_rounding() {
+            if(this.env.pos.config.cash_rounding) {
+                const orderlines = this.paymentLines;
+                const cash_rounding = this.env.pos.cash_rounding[0].rounding;
+                const default_rounding = this.env.pos.currency.rounding;
+                for(var id in orderlines) {
+                    var line = orderlines[id];
+                    var diff = round_pr(round_pr(line.amount, cash_rounding) - round_pr(line.amount, default_rounding), default_rounding);
+
+                    if(diff && (line.payment_method.is_cash_count || !this.env.pos.config.only_round_cash_method)) {
+                        const upper_amount = round_pr(round_pr(line.amount, default_rounding) + cash_rounding / 2, cash_rounding)
+                        const lower_amount = round_pr(round_pr(line.amount, default_rounding) - cash_rounding / 2, cash_rounding)
+                        this.showPopup("ErrorPopup", {
+                            title: this.env._t("Rounding error in payment lines"),
+                            body: _.str.sprintf(
+                                this.env._t(
+                                    "The amount of your payment lines must be rounded to validate the transaction.\n" +
+                                    "The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
+                                ),
+                                cash_rounding.toFixed(this.env.pos.currency.decimal_places),
+                                lower_amount.toFixed(this.env.pos.currency.decimal_places),
+                                upper_amount.toFixed(this.env.pos.currency.decimal_places),
+                                line.amount.toFixed(this.env.pos.currency.decimal_places)
+                            ),
+                        });
+                        return;
+                    }
+                }
             }
         }
         _updateSelectedPaymentline() {
@@ -174,10 +210,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
         async validateOrder(isForceValidate) {
             if(this.env.pos.config.cash_rounding) {
                 if(!this.env.pos.get_order().check_paymentlines_rounding()) {
-                    this.showPopup('ErrorPopup', {
-                        title: this.env._t('Rounding error in payment lines'),
-                        body: this.env._t("The amount of your payment lines must be rounded to validate the transaction."),
-                    });
+                    this._display_popup_error_paymentlines_rounding();
                     return;
                 }
             }
@@ -188,6 +221,20 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 }
                 await this._finalizeValidation();
             }
+        }
+        async doInvoice(accountMoveId) {
+            const actionRecord = this.env.pos.invoiceActionRecord;
+            if (actionRecord && this.env.pos.shouldInvoiceNewTab(actionRecord)) {
+                return this.env.legacyActionManager.do_action({
+                    type: "ir.actions.act_url",
+                    url: `/report/pdf/${actionRecord.report_name}/${accountMoveId}`,
+                });
+            }
+            return this.env.legacyActionManager.do_action(this.env.pos.invoiceReportAction, {
+                additional_context: {
+                    active_ids: [accountMoveId],
+                },
+            });
         }
         async _finalizeValidation() {
             if ((this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) && this.env.pos.config.iface_cashdrawer && this.env.proxy && this.env.proxy.printer) {
@@ -212,11 +259,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // 2. Invoice.
                 if (this.shouldDownloadInvoice() && this.currentOrder.is_to_invoice()) {
                     if (syncOrderResult.length) {
-                        await this.env.legacyActionManager.do_action('account.account_invoices', {
-                            additional_context: {
-                                active_ids: [syncOrderResult[0].account_move],
-                            },
-                        });
+                        await this.doInvoice(syncOrderResult[0].account_move);
                     } else {
                         throw { code: 401, message: 'Backend Invoice', data: { order: this.currentOrder } };
                     }
@@ -236,6 +279,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     }
                 }
             } catch (error) {
+                // unblock the UI before showing the error popup
+                this.env.services.ui.unblock();
                 if (error.code == 700 || error.code == 701)
                     this.error = true;
 

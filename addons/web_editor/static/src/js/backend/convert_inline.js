@@ -58,8 +58,22 @@ function addTables($editable) {
         const table = _createTable(snippet.attributes);
 
         const row = document.createElement('tr');
-        const col = document.createElement('td');
+        let col = document.createElement('td');
         row.appendChild(col);
+        if (snippet.classList.contains('o_basic_theme')) {
+            const div = document.createElement('div');
+            div.classList.add('o_apple_wrapper_padding');
+            col.appendChild(div);
+            col = div;
+            const style = document.createElement('style');
+            // We create a nested media query because it's only supported by a
+            // handful of clients, including Apple Mail, and we actually only
+            // want this for Apple Mail.
+            const padding = '34px'; // This is what's needed to align the content with Apple Mail's header.
+            style.textContent = `@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding:${snippet.style.padding};}}}` +
+                `@media(min-width:961px){@media{@media{.o_basic_theme div.o_apple_wrapper_padding{padding-left:${padding};}}}}`;
+            div.before(style);
+        }
         table.appendChild(row);
 
         for (const child of [...snippet.childNodes]) {
@@ -253,8 +267,10 @@ function bootstrapToTable(editable) {
                 } else if (gridIndex + columnSize === 12) {
                     // Finish the row.
                     currentCol = grid[gridIndex];
-                    _applyColspan(currentCol, columnSize, containerWidth);
-                    currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
+                    if (currentCol) {
+                        _applyColspan(currentCol, columnSize, containerWidth);
+                    }
+                    currentRow.append(...grid.filter(td => td.getAttribute('colspan')));    
                     if (columnIndex !== bootstrapColumns.length - 1) {
                         // The row was filled before we handled all of its
                         // columns. Create a new one and start again from there.
@@ -267,7 +283,9 @@ function bootstrapToTable(editable) {
                 } else {
                     // Fill the row with what was in the grid before it
                     // overflowed.
-                    _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    if (grid[gridIndex]) {
+                        _applyColspan(grid[gridIndex], 12 - gridIndex, containerWidth);
+                    }
                     currentRow.append(...grid.filter(td => td.getAttribute('colspan')));
                     // Start a new row that starts with the current col.
                     const previousRow = currentRow;
@@ -333,7 +351,7 @@ function cardToTable(editable) {
         for (const child of [...card.childNodes]) {
             const row = document.createElement('tr');
             const col = document.createElement('td');
-            if (isBlock(child)) {
+            if (!['IMG', 'A'].includes(child.nodeName) && isBlock(child)) {
                 for (const attr of child.attributes) {
                     col.setAttribute(attr.name, attr.value);
                 }
@@ -358,9 +376,14 @@ function cardToTable(editable) {
             superCol.append(subTable);
             superRow.append(superCol);
             table.append(superRow);
-            if (child.classList && child.classList.contains('card-img-top')) {
-                // Collect .card-img-top superRows to manipulate their heights.
-                cardImgTopSuperRows.push(superRow);
+            if (child.nodeType === Node.ELEMENT_NODE) {
+                const hasImgTop = [child, ...child.querySelectorAll('.card-img-top')].some(node => (
+                    node.classList && node.classList.contains('card-img-top') && node.closest && node.closest('.card') === table
+                ));
+                if (hasImgTop) {
+                    // Collect .card-img-top superRows to manipulate their heights.
+                    cardImgTopSuperRows.push(superRow);
+                }
             }
         }
         // We expect successive .card-img-top to have the same height so the
@@ -407,7 +430,7 @@ function classToStyle($editable, cssRules) {
 
     for (const node of nodeToRules.keys()) {
         const nodeRules = nodeToRules.get(node);
-        const css = nodeRules ? _getMatchedCSSRules(node, nodeRules) : {};
+        const css = nodeRules ? _getMatchedCSSRules(node, nodeRules, true) : {};
         // Flexbox
         for (const styleName of node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
@@ -420,10 +443,12 @@ function classToStyle($editable, cssRules) {
         // Outlook doesn't support inline !important
         style = style.replace(/!important/g,'');
         for (const [key, value] of Object.entries(css)) {
-            if (!(new RegExp(`(^|;)\\s*${key}`).test(style))) {
+            if (!(new RegExp(`(^|;)\\s*${key}[ :]`).test(style))) {
                 style = `${key}:${value};${style}`;
             }
         };
+
+        style = correctBorderAttributes(style);
         if (_.isEmpty(style)) {
             writes.push(() => { node.removeAttribute('style'); });
         } else {
@@ -1445,6 +1470,29 @@ function _getColumnOffsetSize(column) {
     const offsetSize = offsetOptions && (offsetOptions.length === 2 ? +offsetOptions[1] : +offsetOptions[0]) || 0;
     return offsetSize;
 }
+
+
+function isBlacklistedStyle(node, selector, key) {
+    return (
+        node.matches("table, thead, tbody, tfoot, tr, td, th") &&
+        ["table", "thead", "tbody", "tfoot", "tr", "td", "th"].some((elName) => selector.includes(elName)) &&
+        key.includes("color")
+    );
+}
+
+function removeBlacklistedStyles(rule, node, checkBlacklisted) {
+    if (!checkBlacklisted || !rule.style) {
+        return rule.style;
+    }
+    const styles = {};
+    for (const [key, value] of Object.entries(rule.style)) {
+        if (isBlacklistedStyle(node, rule.selector, key)) {
+            continue;
+        }
+        styles[key] = value;
+    }
+    return styles;
+}
 /**
  * Return the CSS rules which applies on an element, tweaked so that they are
  * browser/mail client ok.
@@ -1455,9 +1503,11 @@ function _getColumnOffsetSize(column) {
  *                          specificity: number;}>
  * @returns {Object} {[styleName]: string}
  */
-function _getMatchedCSSRules(node, cssRules) {
+function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
     node.matches = node.matches || node.webkitMatchesSelector || node.mozMatchesSelector || node.msMatchesSelector || node.oMatchesSelector;
-    const styles = cssRules.map((rule) => rule.style).filter(Boolean);
+    const styles = cssRules
+        .map((rule) => removeBlacklistedStyles(rule, node, checkBlacklisted))
+        .filter(Boolean);
 
     // Add inline styles at the highest specificity.
     if (node.style.length) {
@@ -1656,6 +1706,61 @@ function _normalizeStyle(style) {
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
+}
+
+/**
+ * Corrects the `border-style` attribute in the provided inline style string.
+ * This is specifically for Outlook, which displays borders even when their widths are set to 0px.
+ * If all border widths are 0, the function updates `border-style` to `none`.
+ *
+ * @param {string} style - The inline style string to correct.
+ * @returns {string} - The corrected inline style string.
+ */
+function correctBorderAttributes(style) {
+    const stylesObject = style
+        .replace(/\s+/g, " ")
+        .split(";")
+        .reduce((styles, styleString) => {
+            const [attribute, value] = styleString.split(":").map((str) => str.trim());
+            if (attribute) {
+                styles[attribute] = value;
+            }
+            return styles;
+        }, {});
+
+    const BORDER_WIDTHS_ATTRIBUTES = [
+        "border-bottom-width",
+        "border-left-width",
+        "border-right-width",
+        "border-top-width",
+    ];
+
+    const isBorderStyleApplied = BORDER_WIDTHS_ATTRIBUTES.some(
+        (attribute) => attribute in stylesObject
+    );
+
+    if (!isBorderStyleApplied) {
+        return style;
+    }
+
+    const totalBorderWidth = BORDER_WIDTHS_ATTRIBUTES.reduce((totalWidth, attribute) => {
+        const widthValue = stylesObject[attribute] || "0px";
+        const numericWidth = parseFloat(widthValue.replace("px", "")) || 0;
+        return totalWidth + numericWidth;
+    }, 0);
+
+    if (totalBorderWidth === 0) {
+        let correctedStyle = style.trim();
+        if (correctedStyle.slice(-1) != ';') {
+            correctedStyle += ';';
+        }
+        correctedStyle = correctedStyle.replace(
+            /(;|^)\s*border-style\s*:[^;]*(;|$)|$/, '$1border-style:none$2'
+        );
+        return correctedStyle;
+    }
+
+    return style;
 }
 
 export default {

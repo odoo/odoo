@@ -14,7 +14,6 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
 # Mikko Salmela <salmemik@gmail.com>, 2022
 # Jussi Lehto <jussi@gulfeo.com>, 2022
-# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2022
 # Martin Trigaux, 2022
@@ -23,14 +22,16 @@
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +127,7 @@ msgid "Activity Type Icon"
 msgstr "Toimenpiteen ikoni"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
@@ -144,6 +146,7 @@ msgid "Add to"
 msgstr "Lisää kohteeseen"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_move_line.py:0
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree_detailed_wave
@@ -172,6 +175,7 @@ msgid "Allowed Picking"
 msgstr "Sallittu keräily"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid "Assigned to %s Responsible"
@@ -231,6 +235,7 @@ msgid "Batch"
 msgstr "Erä"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
@@ -286,6 +291,7 @@ msgid "Cancelled"
 msgstr "Peruttu"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "Cannot create wave transfers"
@@ -297,12 +303,14 @@ msgid "Check Availability"
 msgstr "Tarkista saatavuus"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Labels Layout"
 msgstr "Valitse tunnisteiden asettelu"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
@@ -459,6 +467,7 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Jos valittu, joitakin viestejä ei ole toimitettu."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -626,6 +635,7 @@ msgid "Picking Type"
 msgstr "Keräilyn tyyppi"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
@@ -725,6 +735,11 @@ msgid "Show Clear Qty Button"
 msgstr "Näytä Tyhjennä määrä -painike"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_lots_text
+msgid "Show Lots Text"
+msgstr "Näytä erät"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
 msgstr "Näytä aseta määrä -painike"
@@ -806,6 +821,7 @@ msgid "Summary:"
 msgstr "Yhteenveto:"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid ""
@@ -844,24 +860,28 @@ msgstr ""
 "                    auttaa toimintojen ajoituksen hallinnassa (tehtävät, jotka on tehtävä klo 13)."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected operations should belong to a unique company."
 msgstr "Valittujen toimintojen on kuuluttava ainutlaatuiseen yritykseen."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_picking_to_batch.py:0
 #, python-format
 msgid "The selected pickings should belong to an unique company."
 msgstr "Valittujen poimintojen olisi kuuluttava ainutlaatuiseen yritykseen."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to a unique company."
 msgstr "Valittujen siirtojen on kuuluttava ainutlaatuiseen yritykseen."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/wizard/stock_add_to_wave.py:0
 #, python-format
 msgid "The selected transfers should belong to the same operation type"
@@ -889,6 +909,7 @@ msgid "Transfer"
 msgstr "Siirto"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
@@ -909,6 +930,13 @@ msgstr "Toiminnon tyyppi"
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr "Poikkeusaktiviteetin tyyppi tietueella"
+
+#. module: stock_picking_batch
+#. odoo-python
+#: code:addons/stock_picking_batch/models/stock_picking.py:0
+#, python-format
+msgid "Unassigned responsible from %s"
+msgstr "Lopettanut oli vastuussa %s"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -957,12 +985,14 @@ msgid "When checked, create the batch in draft status"
 msgstr "Kun valittu, erä luodaan luonnostilassa"
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
 msgstr "Et voi poistaa valmiita eräsiirtoja."
 
 #. module: stock_picking_batch
+#. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."

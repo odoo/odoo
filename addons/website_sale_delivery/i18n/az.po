@@ -5,14 +5,15 @@
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
 # erpgo translator <jumshud@erpgo.az>, 2022
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2022\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2024\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,13 +33,16 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Müştərilərinizə çatdırmaq istədiyiniz məhsulun təsviri. Bu təsvir hər bir "
+"Satış Sifarişinə, Çatdırılma Sifarişinə və Müştəri Fakturasına köçürüləcək."
 
 #. module: website_sale_delivery
+#. odoo-python
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid "Anonymous express checkout partner for order %s"
-msgstr ""
+msgstr "%s sifarişi üçün anonim ekspress ödəniş partnyoru"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
@@ -48,7 +52,7 @@ msgstr "Dərc Oluna Bilər"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
 msgid "Choose a delivery method"
-msgstr ""
+msgstr "Çatdırılma metodunu seçin"
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
@@ -58,17 +62,17 @@ msgstr "Ölkə"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "DHL Shipping Methods"
-msgstr ""
+msgstr "DHL Çatdırılma Metodları"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
-msgstr ""
+msgstr "Təslimat Məbləği"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid "Delivery will be updated after choosing a new delivery method"
-msgstr ""
+msgstr "Təslimat, yeni çatdırma metodu seçdikdən sonra yenilənəcək"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -78,25 +82,25 @@ msgstr ""
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr ""
+msgstr "E-commerce və onlayn təkliflərdə göstəriləcək olan Təsvir"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr ""
+msgstr "Onlayn Təkliflər üçün Təsvir"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Easypost Shipping Methods"
-msgstr ""
+msgstr "Easypost Çatdırılma Metodları"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "FedEx Shipping Methods"
-msgstr ""
+msgstr "FedEx Çatdırma Metodları"
 
 #. module: website_sale_delivery
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
 #, python-format
 msgid "Free"
@@ -108,28 +112,44 @@ msgid "Is Published"
 msgstr "Paylaşılıb"
 
 #. module: website_sale_delivery
+#. odoo-python
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "It seems that a delivery method is not compatible with your address. Please "
 "refresh the page and try again."
 msgstr ""
+"Görünən odur ki, təslimat metodu sizin ünvanınızla uyğun deyil. Zəhmət "
+"olmasa səhifəni yeniləyib yenidən cəhd edəsiniz."
 
 #. module: website_sale_delivery
+#. odoo-python
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "It seems that there is already a transaction for your order, you can not "
 "change the delivery method anymore"
 msgstr ""
+"Görünən odur ki, sizin artıq sifarişiniz üçün əməliyyat mövcuddur. "
+"Çatdırılma metodunu artıq dəyişə bilməzsiniz."
 
 #. module: website_sale_delivery
+#. odoo-python
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
 msgstr ""
+"Hazırki sifariş və çatdırılma ünvanınız üçün çatdırılma metodu mövcud deyil."
+"  Zəhmət olmasa daha çox məlumat üçün bizimlə əlaqə saxlayın."
+
+#. module: website_sale_delivery
+#. odoo-python
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "No shipping method is selected."
+msgstr "Təslimat metodu seçilməyib."
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -161,13 +181,14 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Təslimat Metodları"
 
 #. module: website_sale_delivery
+#. odoo-python
 #: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr ""
+msgstr "Bağışlayın, sifarişinizi çatdıra bilmirik"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
@@ -182,7 +203,7 @@ msgstr "Veb sayt vasitəsilə sənədə daxil olmaq üçün tam URL."
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "USPS Shipping Methods"
-msgstr ""
+msgstr "USPS Çatdırma Metodları"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
@@ -202,4 +223,4 @@ msgstr "Veb sayt URL-u"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
 msgid "bpost Shipping Methods"
-msgstr ""
+msgstr "bpost Çatdırılma Metodları"

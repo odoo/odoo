@@ -12,7 +12,7 @@ let colorpickerArch;
 const ColorPaletteWidget = Widget.extend({
     template: 'web_editor.snippet.option.colorpicker',
     events: {
-        'click .o_we_color_btn': '_onColorButtonClick',
+        'click .o_we_color_btn:not(.o_custom_gradient_btn)': '_onColorButtonClick',
         'mouseenter .o_we_color_btn': '_onColorButtonEnter',
         'mouseleave .o_we_color_btn': '_onColorButtonLeave',
         'click .o_we_colorpicker_switch_pane_btn': '_onSwitchPaneButtonClick',
@@ -734,8 +734,14 @@ const ColorPaletteWidget = Widget.extend({
             // instead of style but seems necessary for custom colors right
             // now...
             const value = buttonEl.dataset.color || buttonEl.style.backgroundColor;
+            // Buttons in the theme-colors tab of the palette have
+            // no opacity, hence they should be searched by removing
+            // opacity of 0.6 (which was applied by default) from
+            // the selected color.
+            const isCommonColor = buttonEl.classList.contains('o_common_color');
+            const selectedColor = isCommonColor ? this._opacifyColor(this.selectedColor) : this.selectedColor;
             buttonEl.classList.toggle('selected', value
-                && (this.selectedCC === value || weUtils.areCssValuesEqual(this.selectedColor, value)));
+                && (this.selectedCC === value || weUtils.areCssValuesEqual(selectedColor, value)));
         }
     },
     /**

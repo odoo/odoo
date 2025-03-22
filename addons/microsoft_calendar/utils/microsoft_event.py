@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+
 from odoo.api import model
 from typing import Iterator, Mapping
 from collections import abc
-from odoo.tools import ReadonlyDict
+from odoo.tools import ReadonlyDict, email_normalize
 from odoo.addons.microsoft_calendar.utils.event_id_storage import combine_ids
 
 
@@ -47,7 +49,9 @@ class MicrosoftEvent(abc.Set):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
         event_id = list(self._events.keys())[0]
-        return self._events[event_id].get(name)
+        value = self._events[event_id].get(name)
+        json.dumps(value)
+        return value
 
     def __repr__(self):
         return '%s%s' % (self.__class__.__name__, self.ids)
@@ -166,9 +170,14 @@ class MicrosoftEvent(abc.Set):
         """
         if self.isOrganizer:
             return env.user.id
-        if self.organizer.get('emailAddress') and self.organizer.get('emailAddress').get('address'):
+
+        if not self.organizer:
+            return False
+
+        organizer_email = self.organizer.get('emailAddress') and email_normalize(self.organizer.get('emailAddress').get('address'))
+        if organizer_email:
             # Warning: In Microsoft: 1 email = 1 user; but in Odoo several users might have the same email
-            user = env['res.users'].search([('email', '=', self.organizer.get('emailAddress').get('address'))], limit=1)
+            user = env['res.users'].search([('email', '=', organizer_email)], limit=1)
             return user.id if user else False
         return False
 

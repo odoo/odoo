@@ -9,17 +9,17 @@
 # Martin Trigaux, 2023
 # Mohammed Alreshi <alreshim@hotmail.com>, 2023
 # Niyas Raphy, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Muhammed Fawzy <egy.crash@gmail.com>, 2023
-# Wil Odoo, 2023
+# Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -613,6 +613,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>مصرح له</b>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/> <b>تم الدفع</b> "
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1713,7 +1718,7 @@ msgstr "إيداع "
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "منتج الإيداع "
+msgstr "منتج التأمين "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -2289,7 +2294,7 @@ msgstr "المفوتر هذا الشهر"
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "الفواتير"
+msgstr "فواتير العملاء "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
@@ -4082,14 +4087,14 @@ msgid "Tags"
 msgstr "علامات التصنيف "
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "ضريبة 15% "
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "دولة الضريبة "
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "معرف الضريبة"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4234,12 +4239,12 @@ msgstr "المبلغ الثابت لفوترته مسبقاً، شامل الض�
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"لا يمكن تقييد المنتجات التالية للشركة %s لأنه قد تم استخدامها بالفعل في عروض أسعار في شركة أخرى: \n"
-"%s\n"
+"لا يمكن تقييد المنتجات التالية للشركة %(company)s لأنه قد تم استخدامها بالفعل في عروض أسعار في شركة أخرى: \n"
+"%(used_products)s\n"
 "بإمكانك أرشفة تلك المنتجات لإعادة إنشائها بضوابط شركتك، أو اتركها كمنتجات مشتركة. "
 
 #. module: sale

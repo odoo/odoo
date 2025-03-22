@@ -657,39 +657,51 @@
          * @private
          * @returns Deferred
          */
-        _renderSlide: function () {
-            var slide = this.get('slide');
-            var $content = this.$('.o_wslides_fs_content');
-            $content.empty();
+        _renderSlide: async function () {
+            // Avoid concurrent execution of the slide rendering as it writes the content at the same place anyway.
+            if (this._renderSlideRunning) { return; }
+            this._renderSlideRunning = true;
+            try {
+                var slide = this.get('slide');
+                var $content = this.$('.o_wslides_fs_content');
+                $content.empty();
+                if (this.websiteAnimateWidget) {
+                    this.websiteAnimateWidget.destroy()
+                    this.websiteAnimateWidget = null;
+                }
 
-            // display quiz slide, or quiz attached to a slide
-            if (slide.category === 'quiz' || slide.isQuiz) {
-                $content.addClass('bg-white');
-                var QuizWidget = new Quiz(this, slide, this.channel);
-                return QuizWidget.appendTo($content);
-            }
+                // display quiz slide, or quiz attached to a slide
+                if (slide.category === 'quiz' || slide.isQuiz) {
+                    $content.addClass('bg-white');
+                    var QuizWidget = new Quiz(this, slide, this.channel);
+                    return await QuizWidget.appendTo($content);
+                }
 
-            // render slide content
-            if (_.contains(['document', 'infographic'], slide.category)) {
-                $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
-            } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
-                this.videoPlayer = new VideoPlayerYouTube(this, slide);
-                return this.videoPlayer.appendTo($content);
-            } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
-                this.videoPlayer = new VideoPlayerVimeo(this, slide);
-                return this.videoPlayer.appendTo($content);
-            } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
-                $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
-            } else if (slide.category === 'article'){
-                var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto');
-                $wpContainer.html(slide.htmlContent);
-                $content.append($wpContainer);
-                this.trigger_up('widgets_start_request', {
-                    $target: $content,
-                });
+                // render slide content
+                if (_.contains(['document', 'infographic'], slide.category)) {
+                    $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
+                } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
+                    this.videoPlayer = new VideoPlayerYouTube(this, slide);
+                    return await this.videoPlayer.appendTo($content);
+                } else if (slide.category === 'video' && slide.videoSourceType === 'vimeo') {
+                    this.videoPlayer = new VideoPlayerVimeo(this, slide);
+                    return await this.videoPlayer.appendTo($content);
+                } else if (slide.category === 'video' && slide.videoSourceType === 'google_drive') {
+                    $content.html(QWeb.render('website.slides.fullscreen.video.google_drive', {widget: this}));
+                } else if (slide.category === 'article'){
+                    this.websiteAnimateWidget = new publicWidget.registry.WebsiteAnimate();
+                    var $wpContainer = $('<div>').addClass('o_wslide_fs_article_content bg-white block w-100 overflow-auto p-3');
+                    $wpContainer.html(slide.htmlContent);
+                    $content.append($wpContainer);
+                    this.trigger_up('widgets_start_request', {
+                        $target: $content,
+                    });
+                    this.websiteAnimateWidget.attachTo($wpContainer);
+                }
+                unhideConditionalElements();
+            } finally {
+                this._renderSlideRunning = false;
             }
-            unhideConditionalElements();
-            return Promise.resolve();
         },
         //--------------------------------------------------------------------------
         // Handlers

@@ -64,10 +64,6 @@ class Registry(Mapping):
                 return cls.registries[db_name]
             except KeyError:
                 return cls.new(db_name)
-            finally:
-                # set db tracker - cleaned up at the WSGI dispatching phase in
-                # odoo.http.root
-                threading.current_thread().dbname = db_name
 
     @classmethod
     @locked
@@ -76,6 +72,7 @@ class Registry(Mapping):
         t0 = time.time()
         registry = object.__new__(cls)
         registry.init(db_name)
+        registry.new = registry.init = registry.registries = None
 
         # Initializing a registry will call general code which will in
         # turn call Registry() to obtain the registry being initialized.
@@ -104,7 +101,6 @@ class Registry(Mapping):
         registry._init = False
         registry.ready = True
         registry.registry_invalidated = bool(update_module)
-        registry.new = registry.init = registry.registries = None
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
         return registry
@@ -663,8 +659,8 @@ class Registry(Mapping):
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         table2model = {
             model._table: name
-            for name, model in env.items()
-            if not model._abstract and model.__class__._table_query is None
+            for name, model in env.registry.items()
+            if not model._abstract and model._table_query is None
         }
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
 

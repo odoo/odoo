@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tests.common import TransactionCase
 
 
@@ -10,6 +10,7 @@ class TestRobustness(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestRobustness, cls).setUpClass()
+        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
@@ -260,3 +261,102 @@ class TestRobustness(TransactionCase):
         moveA._set_lot_ids()
 
         self.assertEqual(moveA.quantity_done, 5)
+
+    def test_unreserve_error(self):
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 5)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_lot_id_product_id_mix_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+        quant = self.env['stock.quant']._gather(
+            self.product1, self.stock_location, strict=True)
+        quant.sudo().write({"reserved_quantity": 0})
+        server_action = self.env.ref(
+            'stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if server_action:
+            with self.assertRaises(RedirectWarning):
+                move._do_unreserve()
+        else:
+            with self.assertRaises(UserError):
+                move._do_unreserve()
+
+    def test_unreserve_fix(self):
+        self.env['stock.quant']._update_available_quantity(
+            self.product1, self.stock_location, 5)
+
+        move = self.env['stock.move'].create({
+            'name': 'test_lot_id_product_id_mix_move_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 5.0,
+        })
+
+        move._action_confirm()
+        move._action_assign()
+
+        quant = self.env['stock.quant']._gather(
+            self.product1, self.stock_location, strict=True)
+        quant.sudo().write({"reserved_quantity": 0})
+        server_action = self.env.ref(
+            'stock.stock_quant_stock_move_line_desynchronization', raise_if_not_found=False)
+        if not server_action:
+            return
+        server_action.run()
+        self.assertEqual(move.reserved_availability, 0)
+        self.assertEqual(move.state, 'confirmed')
+        self.assertEqual(quant.reserved_quantity, 0)
+
+    def test_new_move_done_picking(self):
+        """ Ensure that adding a Draft move to a Done picking doesn't change the picking state
+        """
+        categ_id = self.env.ref('product.product_category_all').id
+        product1 = self.env['product.product'].create({'name': 'P1', 'type': 'product', 'categ_id': categ_id})
+        product2 = self.env['product.product'].create({'name': 'P2', 'type': 'product', 'categ_id': categ_id})
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+        })
+        move1 = self.env['stock.move'].create({
+            'name': 'P1',
+            'location_id': receipt.location_id.id,
+            'location_dest_id': receipt.location_dest_id.id,
+            'picking_id': receipt.id,
+            'product_id': product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        receipt.action_confirm()
+        receipt.action_assign()
+        move1.move_line_ids.qty_done = 1
+
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(move1.state, 'done')
+
+        move2 = self.env['stock.move'].create({
+            'name': 'P2',
+            'location_id': receipt.location_id.id,
+            'location_dest_id': receipt.location_dest_id.id,
+            'picking_id': receipt.id,
+            'state': 'draft',
+            'product_id': product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'quantity_done': 1.0,
+        })
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(move1.state, 'done')
+        self.assertEqual(move2.state, 'done')

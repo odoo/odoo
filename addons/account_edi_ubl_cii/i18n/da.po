@@ -3,16 +3,16 @@
 # 	* account_edi_ubl_cii
 # 
 # Translators:
-# jonas jensen <j.jensen@tcomp.dk>, 2022
 # Martin Trigaux, 2022
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +23,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
 msgid "42"
-msgstr ""
+msgstr "42"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -43,6 +43,13 @@ msgstr ""
 #, python-format
 msgid ""
 "<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -74,6 +81,14 @@ msgstr ""
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
+#, python-format
+msgid "Conditional cash/payment discount"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -118,7 +133,7 @@ msgstr "Forudbetalinger"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_efff
 msgid "E-FFF (BE)"
-msgstr ""
+msgstr "E-FFF (BE)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_format
@@ -128,13 +143,20 @@ msgstr "EDI format"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "EN 16931"
-msgstr ""
+msgstr "EN 16931"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "Each invoice line should have a product or a label."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -211,41 +233,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "No gross price nor net price found for line in xml"
+msgid ""
+"No gross price, net price nor line subtotal amount found for line in xml"
 msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Odoo"
 msgstr "Odoo"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, low"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, middle"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, raw fish"
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, regular rate"
-msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -260,14 +255,14 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
-msgstr ""
+msgstr "SI-UBL 2.0 (NLCIUS)"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "Moms '%s' er ugyldig: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -280,10 +275,31 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The VAT of the %s should be prefixed with its country code."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The customer %s must have a Bronnoysund company registry."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -325,6 +341,7 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
+"Fakturaen er konverteret til en kreditnota og mængderne er tilbageført."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -337,7 +354,6 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
@@ -353,12 +369,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
 msgid "UBL 2.0"
-msgstr ""
+msgstr "UBL 2.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_21
 msgid "UBL 2.1"
-msgstr ""
+msgstr "UBL 2.1"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
@@ -390,16 +406,11 @@ msgid "factur-x.xml"
 msgstr ""
 
 #. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "Falsk"
-
-#. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "fx"
-msgstr ""
+msgstr "fx"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-msgstr ""
+msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"

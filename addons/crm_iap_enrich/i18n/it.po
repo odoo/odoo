@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,9 +48,8 @@ msgstr "Consenti arricchimento manuale"
 #. module: crm_iap_enrich
 #: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
 #: model:ir.cron,cron_name:crm_iap_enrich.ir_cron_lead_enrichment
-#: model:ir.cron,name:crm_iap_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr "CRM: arricchimento contatti (IAP)"
+msgstr "CRM: arricchimento lead (IAP)"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_res_config_settings
@@ -82,26 +81,29 @@ msgstr "Arricchimento completato"
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment (based on email address)"
-msgstr "Arricchimento contatto (in base all'indirizzo e-mail)"
+msgstr "Arricchimento lead (in base all'indirizzo e-mail)"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr "Contatto arricchito in base all'indirizzo e-mail"
+msgstr "Lead arricchito in base all'indirizzo e-mail"
 
 #. module: crm_iap_enrich
 #: model:ir.model,name:crm_iap_enrich.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Contatto/Opportunità"
+msgstr "Lead/Opportunità"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Not enough credits for Lead Enrichment"
-msgstr "Crediti non sufficienti per l'arricchimento del contatto"
+msgstr "Crediti non sufficienti per l'arricchimento del lead"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "Sent batch %s enrich requests: failed with exception %s"
@@ -110,10 +112,11 @@ msgstr ""
 "%s"
 
 #. module: crm_iap_enrich
+#. odoo-python
 #: code:addons/crm_iap_enrich/models/crm_lead.py:0
 #, python-format
 msgid "The leads/opportunities have successfully been enriched"
-msgstr "I contatti/opportunità sono stati arricchiti con successo"
+msgstr "I lead/opportunità sono stati arricchiti con successo"
 
 #. module: crm_iap_enrich
 #: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
@@ -121,5 +124,5 @@ msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
 msgstr ""
-"Indica se su questo contatto è stato eseguito il servizio IAP per "
+"Indica se su questo lead è stato eseguito il servizio IAP per "
 "l'arricchimento basato sull'e-mail."

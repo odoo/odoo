@@ -3,12 +3,12 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
 
     const { createTourMethods } = require('point_of_sale.tour.utils');
     const { Do: ProductScreenDo } = require('point_of_sale.tour.ProductScreenTourMethods');
-    const { Do: PaymentScreenDo } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { Do: PaymentScreenDo, Check: PaymentScreenCheck } = require('point_of_sale.tour.PaymentScreenTourMethods');
     const { Do: ReceiptScreenDo } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { Do: ChromeDo } = require('point_of_sale.tour.ChromeTourMethods');
 
     const ProductScreen = { do: new ProductScreenDo() };
-    const PaymentScreen = { do: new PaymentScreenDo() };
+    const PaymentScreen = { do: new PaymentScreenDo(), check: new PaymentScreenCheck() };
     const ReceiptScreen = { do: new ReceiptScreenDo() };
     const Chrome = { do: new ChromeDo() };
 
@@ -40,6 +40,11 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 {
                     content: 'confirm inputted code',
                     trigger: '.popup-textinput .button.confirm',
+                },
+                {
+                    content: 'verify popup is closed',
+                    trigger: 'body:not(:has(.popup-textinput))',
+                    run: function () {}, // it's a check
                 },
             ];
             return steps;
@@ -165,6 +170,15 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 }
             ]
         }
+        pointsAwardedAre(points_str) {
+            return [
+                {
+                    content: 'loyalty points awarded ' + points_str,
+                    trigger: '.loyalty-points-won.value:contains("' + points_str + '")',
+                    run: function () {}, // it's a check
+                },
+            ];
+        }
     }
 
     class Execute {
@@ -173,13 +187,23 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
             this.check = new Check();
         }
         finalizeOrder(paymentMethod, amount) {
-            return [
+            const actions = [
                 ...ProductScreen.do.clickPayButton(),
                 ...PaymentScreen.do.clickPaymentMethod(paymentMethod),
-                ...PaymentScreen.do.pressNumpad([...amount].join(' ')),
+            ];
+            if (amount) {
+                actions.push(...PaymentScreen.do.pressNumpad([...amount].join(' ')));
+            } else {
+                actions.push(
+                    ...PaymentScreen.check.remainingIs('0.0'),
+                    ...PaymentScreen.check.changeIs('0.0'),
+                )
+            }
+            actions.push(
                 ...PaymentScreen.do.clickValidate(),
                 ...ReceiptScreen.do.clickNextOrder(),
-            ];
+            );
+            return actions;
         }
         removeRewardLine(name) {
             return [

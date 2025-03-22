@@ -6,18 +6,19 @@
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
+# Jiří Podhorecký <jirka.p@volny.cz>, 2022
 # Ivana Bartonkova, 2023
 # Jakub Smolka, 2023
 # Tomáš Píšek, 2023
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Tomáš Píšek, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,6 +169,7 @@ msgid "Each invoice line should have a product or a label."
 msgstr "Každá faktura by měla mít produkt nebo popis."
 
 #. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
@@ -255,34 +257,6 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, low"
-msgstr "DPH na výstupu, snížená sazba, nízká"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, middle"
-msgstr "DPH na výstupu, snížená sazba, střední"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, reduced rate, raw fish"
-msgstr "DPH na výstupu, snížená sazba, syrové ryby"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Output VAT, regular rate"
-msgstr "DPH na výstupu, běžná sazba"
-
-#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
 msgid "Report Action"
 msgstr "Nahlásit akci"
@@ -316,11 +290,32 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The VAT of the %s should be prefixed with its country code."
+msgstr "Před DPH %s by měl být uveden kód země."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The country is required for the %s."
+msgstr "Země je vyžadována pro %s."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
 msgstr "Měna '%s' není aktivní."
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#, python-format
+msgid "The customer %s must have a Bronnoysund company registry."
+msgstr "Zákazník %s musí být uveden v Bronnoysund obchodním rejstříku."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -354,17 +349,6 @@ msgstr "Pole \"Sanované číslo účtu\" je v bance příjemce povinné."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#, python-format
-msgid ""
-"The invoice contains line(s) with a negative unit price, which is not "
-"allowed. You might need to set a negative quantity instead."
-msgstr ""
-"Faktura obsahuje řádek se zápornou jednotkovou cenou, což není povolené. "
-"Měli byste místo toho použít záporné množství."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
@@ -384,7 +368,6 @@ msgstr "Deník, do kterého se má nahrávat, má být typu Prodej nebo Nákup."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
@@ -440,11 +423,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "factur-x.xml"
 msgstr "factur-x.xml"
-
-#. module: account_edi_ubl_cii
-#: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
-msgid "false"
-msgstr "false"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata

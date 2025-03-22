@@ -9,14 +9,16 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2023
 # odooers ir, 2023
+# Abbas Ebadian, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: odooers ir, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -111,6 +113,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>هیچ گزینه پرداخت مناسب یافت نشد</strong><br/>\n"
+"اگر فکر می‌کنید که این یک خطا است، لطفاً با مدیر وب‌سایت تماس بگیرید"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -119,32 +123,34 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>هشدار!</strong> There is a refund pending for this یک بازپرداخت معوقه برای این پرداخت وجود دارد. \n"
+"یک دقیقه صبر کنید تا پردازش شود. اگر بازپرداخت هنوز معوقه بود، لطفاً پیکربندی ارائه‌ی دهنده‌ی خدمات خود را بررسی کنید."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "یک تراکنش پرداخت با شماره‌ی ارجاع %s از قبل وجود دارد."
 
 #. module: account_payment
 #. odoo-python
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A token is required to create a new payment transaction."
-msgstr ""
+msgstr "برای ایجاد یک تراکنش پرداخت جدید، یک توکن موردنیاز است."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "حساب موجود برای بازپرداخت"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_move__amount_paid
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_paid
 msgid "Amount paid"
-msgstr ""
+msgstr "مبلغ پرداخت شده"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -219,7 +225,7 @@ msgstr "تولید یک لینک پرداخت"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "یک بازپرداخت معوقه وجود دارد"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__id
@@ -232,6 +238,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the provider."
 msgstr ""
+"در حالت آزمایشی، یک پرداخت جعلی از طریق رابط پرداخت آزمایشی پردازش می‌شود. \n"
+"این حالت هنگام تعیین ارائه‌دهنده‌ی خدمات توصیه می‌شود."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_transaction_form
@@ -249,7 +257,7 @@ msgstr "فاکتورها"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__invoices_count
 msgid "Invoices Count"
-msgstr ""
+msgstr "تعداد فاکتورها"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_journal
@@ -279,7 +287,7 @@ msgstr "آخرین بروز رسانی در"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "حداکثر بازپرداخت مجاز"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
@@ -287,6 +295,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"توجه داشته باشید که تنها توکن‌های ارائه‌دهندگانی که امکان اطلاع از مبلغ را "
+"فراهم می‌کنند، موجود هستند."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -294,6 +304,8 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"توجه داشته باشید، توکن‌های ارائه‌دهندگانی که تنها برای صدور مجوز (به جای "
+"اطلاع از مبلغ) تراکنش‌ها انتخاب شده‌اند موجود نیستند."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -351,7 +363,7 @@ msgstr "سرویس دهندگان پرداخت"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "برنامه‌ی بازپرداخت مبلغ"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
@@ -421,7 +433,7 @@ msgstr "ثبت پرداخت"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "شروع"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
@@ -436,7 +448,7 @@ msgstr "توکن پرداخت ذخیره شده"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "پرداخت اولیه"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -454,7 +466,7 @@ msgstr "توکن پرداخت مناسب"
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "توکن دسترسی نامعتبر است."
 
 #. module: account_payment
 #. odoo-python
@@ -462,12 +474,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "مبلغی بازپرداخت باید مثبت و بیشتر از %s باشد."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "دفتر روزنامه‌ای که تراکنش‌های موفق در آن ثبت می‌شوند."
 
 #. module: account_payment
 #. odoo-python
@@ -476,7 +488,7 @@ msgstr ""
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr ""
+msgstr "پرداخت مرتبط با تراکنش %(ref)s ثبت شده است: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -484,12 +496,12 @@ msgstr ""
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "پارامترهای ارائه شده نامعتبر هستند."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "پرداخت اولیه‌ی مربوط به بازپرداخت‌ها"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -502,15 +514,28 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"در جریان پردازش پرداخت شما خطایی رخ داده است: صدور با اعتبارسنجی شناسه‌ی "
+"کارت اعتباری."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "در جریان پرداخت شما خطایی رخ داده است: تراکنش ناموفق. <br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
+msgstr ""
+"در جریان پردازش پرداخت شما خطایی رخ داده است: شناسه‌ی کارت اعتباری نامعتبر  "
+"است."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the incoming payments tab defined on the bank journal."
 msgstr ""
 
 #. module: account_payment
@@ -523,13 +548,13 @@ msgstr "تراکنش ها"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "نوع بازپرداختی که پشتیبانی می‌شود"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "استفاده از روش پرداخت الکترونیک"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
@@ -538,21 +563,14 @@ msgstr "تراکنش خالی"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
-
-#. module: account_payment
-#. odoo-python
-#: code:addons/account_payment/models/payment_provider.py:0
-#, python-format
-msgid ""
-"You cannot uninstall this module as payment method transactions already "
-"exist."
-msgstr ""
+"شما نمی‌توانید روش پرداختی که با یک ارائه‌دهنده در وضعیت فعال یا آزمایشی در ارتباط است را حذف کنید.\n"
+"ارائه‌دهنده‌(های) مرتبط: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -562,3 +580,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+" پیش از حذف دفتر روزنامه‌ی ارائه‌دهنده‌ی خدمات پرداخت، ابتدا باید آن را غیرفعال کنید.\n"
+"ارائه‌دهنده‌(های) مرتبط: %s"

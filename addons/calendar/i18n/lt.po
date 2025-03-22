@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
-# Gailius Kazlauskas <gailius@vialaurea.lt>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
@@ -17,14 +16,16 @@
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
+# Greta Šeštokė, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2023\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,27 +47,29 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"nuo %(date_start)s %(time_start)s iki %(date_end)s %(time_end)s "
+"(%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s (nuo %(start)s iki %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has accepted the invitation"
-msgstr ""
+msgstr "%s priėmė kvietimą"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has declined the invitation"
-msgstr ""
+msgstr "%s atšaukė kvietimą"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -117,7 +120,7 @@ msgid ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>May 2021</t>\n"
@@ -145,7 +148,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -247,7 +250,7 @@ msgid ""
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"recurrent\">\n"
-"                            <li>When: <t t-out=\"object.recurrence_id.name or ''\"></t></li>\n"
+"                            <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\"></t></li>\n"
 "                        </t>\n"
 "                        <t t-if=\"not object.allday and object.duration\">\n"
 "                            <li>Duration:\n"
@@ -316,7 +319,7 @@ msgid ""
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">May 2021</t>\n"
@@ -347,7 +350,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -414,7 +417,7 @@ msgid ""
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"EEEE\", lang_code=object.env.lang) or \"\"'>Tuesday</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
-"                <t t-out=\"str(object.event_id.start.day) or ''\">4</t>\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
 "            </div>\n"
 "            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
 "                <t t-out='format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=\"MMMM y\", lang_code=object.env.lang) or \"\"'>May 2021</t>\n"
@@ -442,7 +445,7 @@ msgid ""
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"recurrent\">\n"
-"                    <li>When: <t t-out=\"object.recurrence_id.name or ''\">Every 1 Weeks, for 3 events</t></li>\n"
+"                    <li>When: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Every 1 Weeks, for 3 events</t></li>\n"
 "                </t>\n"
 "                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
 "                    <li>Duration: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0H30</t></li>\n"
@@ -506,12 +509,12 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Google Kalendorius</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Outlook Kalendorius</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -524,6 +527,8 @@ msgid ""
 "<strong>The following attendees have invalid email addresses and won't "
 "receive any email notifications:</strong>"
 msgstr ""
+"<strong>Šių dalyvių el. pašto adresai nurodyti neteisingai ir jie negaus "
+"jokių  pranešimų el. paštu\\:</strong>"
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
@@ -590,13 +595,13 @@ msgstr "Veiklos tipas"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
 msgid "Additional Message"
-msgstr ""
+msgstr "Papildoma žinutė"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr ""
+msgstr "Papildoma žinutė, kuri bus išsiųsta su priminimo pranešimu"
 
 #. module: calendar
 #. odoo-javascript
@@ -611,7 +616,7 @@ msgstr "Visą dieną"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Visą dieną, %(day)s"
 
 #. module: calendar
 #. odoo-javascript
@@ -619,7 +624,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 #, python-format
 msgid "All events"
-msgstr ""
+msgstr "Visi susitikimai"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -664,7 +669,7 @@ msgstr "Pasiekiamas"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "Pasiekiamas/Užimtas"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -717,7 +722,7 @@ msgstr "Įvykis kalendoriuje"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr ""
+msgstr "Kalendoriaus filtrai"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -737,7 +742,7 @@ msgstr ""
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr ""
+msgstr "Kalendorius\\: Atnaujinta data"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -748,17 +753,17 @@ msgstr "Kalendorius: renginių priminimas"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_update
 msgid "Calendar: Event Update"
-msgstr ""
+msgstr "Kalendorius\\: Atnaujintas susitikimas"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Calendar\\: Kvietimas į susitikimą"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Kalendorius\\: Priminimas"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -833,7 +838,7 @@ msgstr "Kontaktas"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Contact Attendees"
-msgstr ""
+msgstr "Susisiekite su dalyviais"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__count
@@ -1091,7 +1096,108 @@ msgstr "Renginio laikas"
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
-msgid "Every %(count)s %(period)s"
+msgid "Every %(interval)s Days"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Days for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Days until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months day %(day)s until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Months on the %(position)s %(weekday)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
+"events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid ""
+"Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Weeks on %(days)s until %(until)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years for %(count)s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "Every %(interval)s Years until %(until)s"
 msgstr ""
 
 #. module: calendar
@@ -1187,13 +1293,6 @@ msgid "Group By"
 msgstr "Grupuoti pagal"
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_event.py:0
-#, python-format
-msgid "Grouping by %s is not allowed on private events."
-msgstr ""
-
-#. module: calendar
 #: model:ir.model,name:calendar.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP nukreipimas"
@@ -1274,7 +1373,7 @@ msgstr "Pakvietimo informacija"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr ""
+msgstr "Siųsti pakvietimo el. laišką naujiems dalyviams"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1284,7 +1383,7 @@ msgstr "Pakvietimas"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_invitation
 msgid "Invitation to {{ object.event_id.name }}"
-msgstr ""
+msgstr "Pakvietimas {{ object.event_id.name }}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1580,7 +1679,7 @@ msgstr "Klaidų kiekis"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
@@ -1603,7 +1702,7 @@ msgstr "Gerai"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "Tik vidiniams naudotojams"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
@@ -1678,14 +1777,7 @@ msgstr "Privatumas"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_event.py:0
-#, python-format
-msgid "Private Event Excluded"
-msgstr ""
+msgstr "Privatus"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -1707,7 +1799,7 @@ msgstr "Pasikartojimas"
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__recurrence_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_id
 msgid "Recurrence Rule"
-msgstr ""
+msgstr "Pasikartojimo taisyklė"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
@@ -1803,7 +1895,7 @@ msgstr "Šeštadienis"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "Suplanavo"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1824,7 +1916,7 @@ msgstr "Pasirinkti dalyvius..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Siųsti el. lašką dalyviams"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1887,7 +1979,7 @@ msgstr "Būsena"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr ""
+msgstr "Būsena\\:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -1931,7 +2023,7 @@ msgstr "Sinchronizuoti savo kalendorių su \"Google Calendar\""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Synchronize your calendar with Outlook"
-msgstr ""
+msgstr "Sinchronizuoti savo kalendorių su \"Outlook\""
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
@@ -1981,7 +2073,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr ""
+msgstr "Diena turi būti tarp 1 ir 31"
 
 #. module: calendar
 #. odoo-python
@@ -2003,7 +2095,7 @@ msgstr "Pabaigos data negali būti ankstesnė nei pradžios data."
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The interval cannot be negative."
-msgstr ""
+msgstr "Intervalas negali būti neigiamas"
 
 #. module: calendar
 #. odoo-python
@@ -2017,7 +2109,7 @@ msgstr ""
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Šiuose susitikimuose nėra dalyvių."
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -2031,7 +2123,7 @@ msgstr "Trečias"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
-msgstr ""
+msgstr "Šis ir kiti susitikimai"
 
 #. module: calendar
 #. odoo-javascript
@@ -2039,7 +2131,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
 msgid "This event"
-msgstr ""
+msgstr "Šį susitikimą"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
@@ -2127,7 +2219,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Videocall URL"
-msgstr ""
+msgstr "Video skambučio nuoroda (URL)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -2186,56 +2278,21 @@ msgid "You have to choose at least one day in the week"
 msgstr ""
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "day %s"
-msgstr ""
-
-#. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
 msgstr "pvz. verslo pietūs"
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "for %s events"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "on %s"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "on the %(position)s %(weekday)s"
-msgstr ""
-
-#. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/calendar_recurrence.py:0
-#, python-format
-msgid "until %s"
-msgstr ""
-
-#. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - Priminimas"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}\\: Atnaujinta data"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}\\: Atnaujintas susitikimas"

@@ -8,14 +8,15 @@
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
 # Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +84,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__company_size_max
 msgid "Company Size Max"
-msgstr ""
+msgstr "حداکثر اندازه شرکت"
 
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
@@ -134,6 +135,7 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
@@ -162,7 +164,7 @@ msgstr "از"
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_ids
 msgid "Generated Lead / Opportunity"
-msgstr ""
+msgstr "تولید شده سرنخ / فرصت"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model,name:website_crm_iap_reveal.model_ir_http
@@ -233,7 +235,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_rule_id
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view__reveal_rule_id
 msgid "Lead Generation Rule"
-msgstr ""
+msgstr "قانون تولید سرنخ"
 
 #. module: website_crm_iap_reveal
 #: model:ir.actions.act_window,name:website_crm_iap_reveal.crm_reveal_view_action
@@ -242,17 +244,8 @@ msgid "Lead Generation Views"
 msgstr ""
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid ""
-"Lead Generation requires a GeoIP resolver which could not be found on your "
-"system. Please consult https://pypi.org/project/GeoIP/."
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
 #: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr ""
 
@@ -289,12 +282,6 @@ msgid "Medium"
 msgstr "متوسط"
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Missing Library"
-msgstr ""
-
-#. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
 msgid "Not Found"
 msgstr ""
@@ -302,12 +289,12 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__extra_contacts
 msgid "Number of Contacts"
-msgstr ""
+msgstr "تعداد مخاطبین"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__lead_count
 msgid "Number of Generated Leads"
-msgstr ""
+msgstr "تعداد سرنخ‌های ایجاد شده"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__opportunity_count
@@ -344,20 +331,21 @@ msgid "Opportunity Generation Conditions"
 msgstr ""
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"
-msgstr ""
+msgstr "فرصت ایجاد شده توسط تولید سرنخ اودوو"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__other_role_ids
 msgid "Other Roles"
-msgstr ""
+msgstr "سایر نقش‌ها"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__preferred_role_id
 msgid "Preferred Role"
-msgstr ""
+msgstr "نقش ترجیحی"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__priority
@@ -411,7 +399,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__seniority_id
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__contact_filter_type__seniority
 msgid "Seniority"
-msgstr ""
+msgstr "سناریته"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__sequence
@@ -471,7 +459,7 @@ msgstr ""
 #. module: website_crm_iap_reveal
 #: model_terms:ir.ui.view,arch_db:website_crm_iap_reveal.crm_reveal_rule_form
 msgid "Up to"
-msgstr ""
+msgstr "تا"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,help:website_crm_iap_reveal.field_crm_reveal_rule__sequence

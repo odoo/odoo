@@ -4,14 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Gautam Hingrajiya, 2024
+# Wil Odoo, 2024
+# Ronald Kung, 2025
+# Manav Shah, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Manav Shah, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +163,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello<br/><br/>\n"
+"        Hello<br><br>\n"
 "        You have been invited to join a new course: <t t-out=\"object.channel_id.name or ''\">Basics of Gardening</t>.\n"
 "    </p>\n"
 "</div>\n"
@@ -171,10 +175,10 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br>\n"
 "                        <p><b>Congratulations!</b></p>\n"
 "                        <p>You've completed the course <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
-"                        <p>Check out the other available courses.</p><br/>\n"
+"                        <p>Check out the other available courses.</p><br>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
@@ -183,8 +187,8 @@ msgid ""
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"object.channel_id.user_id.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                            <br>\n"
+"                            <t t-out=\"object.channel_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </div>\n"
@@ -196,11 +200,11 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br/><br/>\n"
+"                        Hello<br><br>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <strong t-out=\"object.name or ''\">document</strong> with you!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.website_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
@@ -208,8 +212,8 @@ msgid ""
 "                                View <strong t-out=\"object.name or ''\">Document</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
@@ -221,19 +225,19 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br/><br/>\n"
+"                        Hello<br><br>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <t t-out=\"object.slide_category or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> with you!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
 "                        </div>\n"
 "                        <t t-if=\"user.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
@@ -245,13 +249,13 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hello<br/><br/>\n"
-"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br/><br/>\n"
+"                        Hello<br><br>\n"
+"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br><br>\n"
 "                        <center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
 "                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
 "                                <a t-att-href=\"object.website_share_url\">\n"
-"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\">\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        </t>\n"
@@ -260,8 +264,8 @@ msgid ""
 "                        </div>\n"
 "                        Enjoy this exclusive content!\n"
 "                        <t t-if=\"user.signature\">\n"
-"                            <br/>\n"
-"                            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"                            <br>\n"
+"                            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "                        </t>\n"
 "                    </p>\n"
 "                </div>\n"
@@ -706,10 +710,10 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
@@ -962,12 +966,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__active
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__active
 msgid "Active"
-msgstr ""
+msgstr "सक्रिय"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "गतिविधियाँ"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_exception_decoration
@@ -1335,6 +1339,11 @@ msgid "Average Review"
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
@@ -1468,7 +1477,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__slide_category
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Category"
-msgstr ""
+msgstr "वर्ग"
 
 #. module: website_slides
 #: model:slide.channel.tag,name:website_slides.slide_channel_tag_other_1
@@ -1696,7 +1705,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Comments"
-msgstr ""
+msgstr "टिप्पणियाँ"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -1797,7 +1806,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "कॉन्फ़िगरेशन"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
@@ -1840,7 +1849,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "संपर्क"
 
 #. module: website_slides
 #. odoo-python
@@ -1868,7 +1877,7 @@ msgstr ""
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_2_1
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_4_0
 msgid "Contact us"
-msgstr ""
+msgstr "हमसे संपर्क करें"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__slide_content_ids
@@ -2158,7 +2167,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__create_uid
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "द्वारा निर्मित"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_answer__create_date
@@ -2179,7 +2188,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.rating_rating_view_search_slide_channel
 msgid "Creation Date"
-msgstr ""
+msgstr "निर्माण दिनांक"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__html_content
@@ -2243,7 +2252,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #, python-format
 msgid "Delete"
-msgstr ""
+msgstr "हटाएं"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2267,7 +2276,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Description"
-msgstr ""
+msgstr "विवरण"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__description_html
@@ -2426,7 +2435,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__completed
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_home_user_achievements_small
 msgid "Done"
-msgstr ""
+msgstr "हो गया"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2471,7 +2480,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Duration"
-msgstr ""
+msgstr "अवधि"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -2661,8 +2670,8 @@ msgid "File Name"
 msgstr ""
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -3140,6 +3149,24 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Image Source"
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_channel.py:0
+#, python-format
+msgid ""
+"Impossible to send emails. Select a \"Channel Share Template\" for courses "
+"%(course_names)s first"
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/slide_slide.py:0
+#, python-format
+msgid ""
+"Impossible to send emails. Select a \"Share Template\" for courses "
+"%(course_names)s first"
 msgstr ""
 
 #. module: website_slides
@@ -3688,7 +3715,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_ids
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "संदेश"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_category_demo_1_1
@@ -3776,7 +3803,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_resource__name
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag__name
 msgid "Name"
-msgstr ""
+msgstr "नाम"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
@@ -4039,7 +4066,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction_counter
 #: model:ir.model.fields,help:website_slides.field_slide_slide__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: website_slides
@@ -4104,6 +4131,13 @@ msgid "Once you're done, don't forget to <b>Publish</b> your course."
 msgstr ""
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
 msgid "Open To All"
 msgstr ""
@@ -4141,7 +4175,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_partner__partner_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_partner__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "साथी"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__partner_has_new_content
@@ -4268,14 +4302,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.lesson_card
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
-msgstr ""
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
 msgstr ""
 
 #. module: website_slides
@@ -4575,7 +4601,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.course_sidebar
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Responsible"
-msgstr ""
+msgstr "जिम्मेदार"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_user_id
@@ -4860,13 +4886,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_question__sequence
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "अनुक्रम"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.website_slides_action_settings
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_config_settings
 msgid "Settings"
-msgstr ""
+msgstr "कॉन्फ़िगरेशन"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_fullscreen
@@ -5130,7 +5156,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__subject
 msgid "Subject"
-msgstr ""
+msgstr "विषय"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
@@ -5232,7 +5258,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_tag_tree
 #, python-format
 msgid "Tags"
-msgstr ""
+msgstr "टैग"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -5379,8 +5405,8 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
 
 #. module: website_slides
@@ -5589,7 +5615,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Type"
-msgstr ""
+msgstr "प्रकार"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_exception_decoration
@@ -5642,6 +5668,20 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_course_enroll_email.js:0
 #, python-format
 msgid "Unknown error, try again."
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted"
+msgstr ""
+
+#. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
+#, python-format
+msgid "Unlisted (paid account)"
 msgstr ""
 
 #. module: website_slides
@@ -5706,6 +5746,11 @@ msgid "Use Course Groups to classify and organize your Courses."
 msgstr ""
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
 msgid "Used to categorize and filter displayed channels/courses"
 msgstr ""
@@ -5718,7 +5763,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_res_users
 msgid "User"
-msgstr ""
+msgstr "उपयोगकर्ता"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_vote
@@ -6379,6 +6424,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr ""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr ""
@@ -6479,7 +6531,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
+"mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
 

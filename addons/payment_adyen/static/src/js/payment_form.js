@@ -3,6 +3,7 @@ odoo.define('payment_adyen.payment_form', require => {
     'use strict';
 
     const core = require('web.core');
+    const { pyToJsLocale } = require('@web/core/l10n/utils');
     const checkoutForm = require('payment.checkout_form');
     const manageForm = require('payment.manage_form');
 
@@ -53,10 +54,10 @@ odoo.define('payment_adyen.payment_form', require => {
          * @param {object} error - The error in the drop-in
          * @return {undefined}
          */
-        _dropinOnError: function (error) {
+        _dropinOnError: function (error='') {
             this._displayError(
                 _t("Incorrect Payment Details"),
-                error.message.data.message
+                _t("Please verify your payment details."),
             );
         },
 
@@ -159,11 +160,14 @@ odoo.define('payment_adyen.payment_form', require => {
                         paymentMethodsResponse: paymentMethodsResult['payment_methods_data'],
                         amount: paymentMethodsResult['amount_formatted'],
                         clientKey: providerInfo.client_key,
-                        locale: (this._getContext().lang || 'en-US').replace('_', '-'),
+                        locale: pyToJsLocale(this._getContext().lang || 'en-US'),
                         environment: providerInfo.state === 'enabled' ? 'live' : 'test',
                         onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
                         onError: this._dropinOnError.bind(this),
                         onSubmit: this._dropinOnSubmit.bind(this),
+                        paymentMethodsConfiguration: {
+                            card: {hasHolderName: true, holderNameRequired: true},
+                        }
                     };
                     const checkout = new AdyenCheckout(configuration);
                     this.adyenDropin = checkout.create(
@@ -236,7 +240,10 @@ odoo.define('payment_adyen.payment_form', require => {
                     _t("Server Error"), _t("We are not able to process your payment.")
                 );
             } else {
-                return await this.adyenDropin.submit();
+                await this.adyenDropin.submit();
+                if (!this.adyenDropin.isValid) {
+                    this._dropinOnError();
+                }
             }
         },
 

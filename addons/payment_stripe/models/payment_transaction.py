@@ -135,6 +135,7 @@ class PaymentTransaction(models.Model):
                 'checkout/sessions', payload={
                     **common_session_values,
                     'mode': 'setup',
+                    'currency': self.currency_id.name,
                     'success_url': return_url,
                     'cancel_url': return_url,
                     'setup_intent_data[description]': self.reference,

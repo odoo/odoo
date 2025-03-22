@@ -1274,26 +1274,24 @@
         <field name="tax_group_id" ref="tax_group_iva_22"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
                 'repartition_type': 'base',
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
     </record>
@@ -1350,26 +1348,24 @@
         <field name="tax_group_id" ref="tax_group_iva_10"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
                 'repartition_type': 'base',
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
     </record>
@@ -1426,26 +1422,24 @@
         <field name="tax_group_id" ref="tax_group_iva_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
                 'repartition_type': 'base',
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
     </record>
@@ -1502,26 +1496,24 @@
         <field name="tax_group_id" ref="tax_group_iva_4"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
-                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'plus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
                 'repartition_type': 'base',
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'plus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'repartition_type': 'base',
-                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag')],
+                'minus_report_expression_ids': [ref('tax_report_line_vp2_tag'), ref('tax_report_line_ve38_tag')],
             }),
             (0,0, {
                 'repartition_type': 'tax',
                 'account_id': ref('2608'),
                 'use_in_tax_closing': False,
-                'minus_report_expression_ids': [ref('tax_report_line_ve38_tag')],
             }),
         ]"/>
     </record>

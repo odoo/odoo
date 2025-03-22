@@ -2,12 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import json
 
 from werkzeug.urls import url_encode
 
 import odoo
 import odoo.tests
+from odoo import http
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.web_editor.controllers.main import Web_Editor
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -150,8 +153,35 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'test_html_editor_scss', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_html_editor_scss_2', login='demo')
 
-    def media_dialog_undraw(self):
+    def test_media_dialog_undraw(self):
+        BASE_URL = self.base_url()
+        banner = '/website/static/src/img/snippets_demo/s_banner.jpg'
+
+        def mock_media_library_search(self, **params):
+            return {
+                'results': 1,
+                'media': [{
+                    'id': 1,
+                    'media_url': BASE_URL + banner,
+                    'thumbnail_url': BASE_URL + banner,
+                    'tooltip': False,
+                    'author': 'undraw',
+                    'author_link': BASE_URL,
+                }],
+            }
+
+        # disable undraw, no third party should be called in tests
+        # Mocked for the previews in the media dialog
+        mock_media_library_search.routing_type = 'json'
+        Web_Editor.media_library_search = http.route(['/web_editor/media_library_search'], type='json', auth='user', website=True)(mock_media_library_search)
+
         self.start_tour("/", 'website_media_dialog_undraw', login='admin')
+
+
+@odoo.tests.tagged('external', '-standard', '-at_install', 'post_install')
+class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
+    def test_media_dialog_external_library(self):
+        self.start_tour("/", 'website_media_dialog_external_library', login='admin')
 
 
 @odoo.tests.tagged('-at_install', 'post_install')
@@ -330,6 +360,7 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour('/web', 'conditional_visibility_2', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_3', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
     def test_11_website_snippet_background_edition(self):
         self.env['ir.attachment'].create({
@@ -429,12 +460,11 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_24_snippet_cache_across_websites(self):
         default_website = self.env.ref('website.default_website')
-        if self.env['website'].search_count([]) == 1:
-            self.env['website'].create({
-                'name': 'My Website 2',
-                'domain': '',
-                'sequence': 20,
-            })
+        website = self.env['website'].create({
+            'name': 'Test Website',
+            'domain': '',
+            'sequence': 20
+        })
         self.env['ir.ui.view'].with_context(website_id=default_website.id).save_snippet(
             name='custom_snippet_test',
             arch="""
@@ -445,7 +475,9 @@ class TestUi(odoo.tests.HttpCase):
             thumbnail_url='/website/static/src/img/snippets_thumbs/s_text_block.svg',
             snippet_key='s_text_block',
             template_key='website.snippets')
-        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin')
+        self.start_tour('/@/', 'snippet_cache_across_websites', login='admin', cookies={
+            'websiteIdMapping': json.dumps({'Test Website': website.id})
+        })
 
     def test_25_website_edit_discard(self):
         self.start_tour('/web', 'homepage_edit_discard', login='admin')
@@ -458,6 +490,9 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_28_website_text_edition(self):
         self.start_tour('/@/', 'website_text_edition', login='admin')
+
+    def test_20_website_edit_megamenu_big_icons_subtitles(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'edit_megamenu_big_icons_subtitles', login='admin')
 
     def test_29_website_backend_menus_redirect(self):
         Menu = self.env['ir.ui.menu']
@@ -476,3 +511,63 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_website_media_dialog_image_shape(self):
         self.start_tour("/", 'website_media_dialog_image_shape', login='admin')
+
+    def test_website_extra_items_no_dirty_page(self):
+        """
+        Having enough menus to trigger the "+" folded menus has been known to
+        wrongfully mark the page as dirty. There are 3 cases:
+
+        - the menu is not folded outside of edit mode and when entering edit
+          mode, the "+" appears and some menu are folded
+
+        - the menu is folded outside of edit mode and when entering edit mode
+          the resize actually makes it so different menu items are folded
+
+        - the menu is folded outside of edit mode and when entering edit mode it
+          stays the same (known to have been broken because edit mode tweaks the
+          dropdown behavior)
+
+        Those are fixed. This test makes sure the third case stays fixed.
+        At the moment, the first two cases are not marking the page as dirty but
+        the related "+" menu behavior is kinda broken so it would be difficult
+        to test (TODO).
+        """
+        # Remove all menu items but the first one
+        website = self.env['website'].get_current_website()
+        website.menu_id.child_id[1:].unlink()
+        # Create a new menu item whose text is very long so that we are sure
+        # it is folded into the extra items "+" menu outside of edit mode and
+        # stays the same when entering edit mode.
+        self.env['website.menu'].create({
+            'name': 'Menu %s' % ('a' * 200),  # Very long text
+            'website_id': website.id,
+            'parent_id': website.menu_id.id,
+        })
+
+        self.start_tour('/', 'website_no_action_no_dirty_page', login='admin')
+
+    def test_website_no_dirty_page(self):
+        # Previous tests are testing the dirty behavior when the extra items
+        # "+" menu comes in play. For other "no dirty" tests, we just remove
+        # most menu items first to make sure they pass independently.
+        website = self.env['website'].get_current_website()
+        website.menu_id.child_id[1:].unlink()
+
+        self.start_tour('/', 'website_no_dirty_page', login='admin')
+
+    def test_widget_lifecycle(self):
+        self.env['ir.asset'].create({
+            'name': 'wysiwyg_patch_start_and_destroy',
+            'bundle': 'website.assets_wysiwyg',
+            'path': 'website/static/tests/tour_utils/widget_lifecycle_patch_wysiwyg.js',
+        })
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'widget_lifecycle', login='admin')
+
+    def test_snippet_carousel(self):
+        self.start_tour('/', 'snippet_carousel', login='admin')
+
+    def test_media_iframe_video(self):
+        self.start_tour("/", "website_media_iframe_video", login="admin")
+
+    def test_snippet_background_video(self):
+        self.start_tour("/", "website_snippet_background_video", login="admin")

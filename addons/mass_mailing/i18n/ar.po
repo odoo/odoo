@@ -3,20 +3,21 @@
 # 	* mass_mailing
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
+# Mustafa Rawi <mustafa@mrawi.com>, 2022
 # Mehjabin Farsana, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Niyas Raphy, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1021,6 +1022,24 @@ msgstr "مؤرشف"
 
 #. module: mass_mailing
 #. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid "Are you sure you want to unsubscribe from our mailing list?"
+msgstr "هل أنت متأكد من أنك ترغب في إلغاء اشتراكك من قائمتنا البريدية؟ "
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
+#, python-format
+msgid ""
+"Are you sure you want to unsubscribe from the mailing list "
+"\"%(unsubscribed_lists)s\"?"
+msgstr ""
+"هل أنت متأكد من أنك ترغب في إلغاء اشتراكك من القائمة البريدية "
+"\"%(unsubscribed_lists)s\"؟ "
+
+#. module: mass_mailing
+#. odoo-python
 #: code:addons/mass_mailing/models/mailing_list.py:0
 #, python-format
 msgid ""
@@ -1557,6 +1576,13 @@ msgid "Continue reading <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 msgstr "متابعة القراءة <i class=\"fa fa-long-arrow-right align-middle ms-1\"/>"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "Could not retrieve URL: %s"
+msgstr "تعذر إحضار رابط URL: %s "
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__message_bounce
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact_subscription__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
@@ -2077,6 +2103,14 @@ msgid "Feedback from %(email)s: %(feedback)s"
 msgstr "ملاحظات من %(email)s: %(feedback)s "
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid "File size exceeds configured maximum (%s bytes)"
+msgstr "حجم الملف يتجاوز الحد الأقصى المضبوط (%s بايت)"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
 msgid "Filter"
 msgstr "عامل التصفية "
@@ -2152,7 +2186,7 @@ msgstr "التذييلات "
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_company_team
 msgid ""
 "Founder and chief visionary, Tony is the driving force behind the company. "
-"He lovesto keep his hands full by participating in the development of the "
+"He loves to keep his hands full by participating in the development of the "
 "software, marketing, and customer experience strategies."
 msgstr ""
 "توني، المؤسس وصاحب الرؤية، هو القوة الدافعة وراء الشركة. يحب العمل باستمرار "
@@ -2206,6 +2240,11 @@ msgstr "التجميع حسب "
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 msgid "Group By..."
 msgstr "التجميع حسب.."
+
+#. module: mass_mailing
+#: model:ir.model,name:mass_mailing.model_ir_http
+msgid "HTTP Routing"
+msgstr "مسار HTTP"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__has_message
@@ -2355,6 +2394,15 @@ msgstr "صورة - نص "
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
 msgid "Image Text Image"
 msgstr "صورة نص صورة "
+
+#. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/models/mailing.py:0
+#, python-format
+msgid ""
+"Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr ""
+"حجم الصورة كبير جداً، يجب أن تكون الصور المستوردة أصغر من 42 مليون بكسل "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -4657,9 +4705,12 @@ msgid "Unknown error"
 msgstr "خطأ غير معروف"
 
 #. module: mass_mailing
+#. odoo-python
+#: code:addons/mass_mailing/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
+#, python-format
 msgid "Unsubscribe"
 msgstr "إلغاء الاشتراك"
 
@@ -4672,13 +4723,6 @@ msgstr "تم إلغاء الاشتراك "
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__unsubscription_date
 msgid "Unsubscription Date"
 msgstr "تاريخ إلغاء الاشتراك"
-
-#. module: mass_mailing
-#. odoo-python
-#: code:addons/mass_mailing/models/mailing.py:0
-#, python-format
-msgid "Unsupported mass mailing model %s"
-msgstr "نموذج المراسلة الجماعية غير مدعوم %s "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -4810,7 +4854,7 @@ msgstr ""
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_references
 msgid "We are in good company."
-msgstr "لدينا رفقة رائعة. "
+msgstr "نحن في أيدٍ أمينة. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe

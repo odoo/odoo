@@ -4,18 +4,20 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Martin Trigaux, 2024
+# Lucia Pacheco, 2024
+# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,7 +127,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "<b>Predictive Lead Scoring</b>"
-msgstr "<b>Puntaje predictivo de leads</b>"
+msgstr "<b>Puntuación predictiva de leads</b>"
 
 #. module: crm
 #. odoo-javascript
@@ -225,17 +227,17 @@ msgstr "<span class=\"o_stat_text\"> Leads</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"oe_grey p-2 d-none d-sm-block\"> at </span>"
+msgstr "<span class=\"oe_grey p-2 d-none d-sm-block\"> en </span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> en </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2\"> at </span>"
-msgstr "<span class=\"oe_grey p-2\"> en </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -383,13 +385,13 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hola <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
-"                            Reciba la bienvenida a <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t>.\n"
-"                            ¡Es un placer conocerle! Ahora que está abordo, descubrirá lo que <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t> tiene para ofrecer. Me llamo <t t-out=\"object.user_id.name or ''\">Marc Demo</t>  le ayudaré a aprovechar Odoo al máximo. ¿Podemos agendar una demostración pronto?<br>\n"
-"                            ¡Siéntase libre de contactarme en cualquier momento!<br><br>\n"
+"                            Le damos la bienvenida a <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t>.\n"
+"                            Mucho gusto en conocerle. Ahora que está con nosotros, descubrirá lo que <t t-out=\"object.company_id.name or ''\">Mi Empresa (San Francisco)</t> tiene para ofrecer. Me llamo <t t-out=\"object.user_id.name or ''\">Marc Demo</t> y le ayudaré a aprovechar Odoo al máximo. ¿Por qué no agendamos una demostración?<br>\n"
+"                            No dude en contactarme si necesita ayuda.<br><br>\n"
 "                            Saludos,<br>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>Correo electrónico: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br>Correo electrónico: <t t-out=\"object.user_id.email or ''\">mark.brown23@ejemplo.com</t>\n"
 "                                <br>Teléfono: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
@@ -460,7 +462,7 @@ msgstr "Aceptar correos electrónicos de"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__active
@@ -510,7 +512,7 @@ msgstr "Descripción de la actividad"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad de excepción"
+msgstr "Decoración de la actividad de excepción"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -546,8 +548,7 @@ msgstr "Agregar una descripción..."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before the creation of an opportunity"
-msgstr ""
-"Agregue un paso de calificación antes de la creación de una oportunidad."
+msgstr "Agregue un paso de calificación antes de crear una oportunidad"
 
 #. module: crm
 #. odoo-javascript
@@ -669,7 +670,7 @@ msgstr "Asignar oportunidades a"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Assign salespersons into multiple Sales Teams."
-msgstr "Asignar vendedores a múltiples equipos de ventas."
+msgstr "Asigne vendedores a varios equipos de ventas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -815,7 +816,7 @@ msgstr "CRM: asignación de lead"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
-msgstr "Calendario de eventos"
+msgstr "Evento del calendario"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -1466,17 +1467,17 @@ msgstr "Correo electrónico: demostración de bienvenida"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
 msgid "Enrich all leads automatically"
-msgstr "Enriquecer todos los leads automáticamente"
+msgstr "Enriquecer todos los leads en automático"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_enrich_auto
 msgid "Enrich lead automatically"
-msgstr "Enriquecer el lead automáticamente"
+msgstr "Enriquecer el lead en automático"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__manual
 msgid "Enrich leads on demand only"
-msgstr "Enriquecer leads bajo demanda solamente"
+msgstr "Enriquecer leads solo bajo demanda"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_enrich
@@ -1523,7 +1524,7 @@ msgstr "Cierre esperado"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Expected Closing:"
-msgstr "Fecha de cierre prevista:"
+msgstr "Cierre esperado:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
@@ -1577,13 +1578,14 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo que se utiliza para almacenar el número de teléfono depurado. Ayuda a "
-"acelerar las búsquedas y las comparaciones."
+"Campo donde se almacena el número de teléfono válido. Ayuda a acelerar "
+"búsquedas y comparaciones."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr "Campos que se pueden utilizar para predecir el puntaje de leads"
+msgstr ""
+"Campos que se pueden utilizar para predecir la puntuación de los leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1745,7 +1747,7 @@ msgstr "Icono"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icono para indicar una actividad de excepción."
+msgstr "Icono que indica una actividad de excepción."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1785,8 +1787,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si se establece, este contenido se enviará automáticamente a usuarios no "
-"autorizados en lugar del mensaje predeterminado."
+"Si se establece, este contenido se enviará en automático a los usuarios no "
+"autorizados en vez del mensaje predeterminado."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1795,8 +1797,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de correo electrónico está en la lista negra, el contacto ya"
-" no recibirá correo masivo de ninguna lista."
+"El contacto ya no recibirá correos masivos de ninguna lista si la dirección "
+"de correo electrónico está en la lista de exclusión."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -1804,8 +1806,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Si el teléfono depurado está en la lista negra, el contacto ya no recibirá "
-"envío masivo de sms de ninguna lista."
+"El contacto ya no recibirá SMS de envío masivo de ninguna lista si el "
+"teléfono depurado está en la lista de exclusión."
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1842,9 +1844,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica si el número de teléfono depurado de la lista negra es un número "
-"celular. Sirve para distinguir qué número está en la lista negra cuando hay "
-"un campo de celular y otro de teléfono fijo en un modelo."
+"Indica si el número de teléfono válido en la lista de exclusión es un "
+"celular. Sirve para distinguir el número que está en la lista de exclusión "
+"cuando un modelo tiene los campos de celular y de teléfono fijo."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1918,7 +1920,7 @@ msgstr "Estado de kanban"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_lead_created_value
 msgid "Kpi Crm Lead Created Value"
-msgstr "Valor de KPI creado de iniciativa del CRM"
+msgstr "Valor de KPI creado de lead del CRM"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_digest_digest__kpi_crm_opportunities_won_value
@@ -2057,27 +2059,27 @@ msgstr "Propiedades del lead"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr "Frecuencia de puntaje de leads"
+msgstr "Frecuencia de puntuación de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr "Campos de frecuencia de puntaje de leads"
+msgstr "Campos de frecuencia de puntuación de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
 msgid "Lead Scoring Frequency Fields in String"
-msgstr "Frecuencia de puntaje de leads en cadena"
+msgstr "Campos de frecuencia de puntuación de leads en cadena"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr "Fecha de inicio del puntaje de leads"
+msgstr "Fecha de inicio de la puntuación de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Fecha de inicio del puntaje de leads en cadena"
+msgstr "Fecha de inicio de la puntuación de leads en cadena"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2263,7 +2265,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
 msgid "Locale Code"
-msgstr "Código de localidad"
+msgstr "Código de idioma"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
@@ -2314,18 +2316,18 @@ msgstr "Número de perdidos"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Lost Reason"
-msgstr "Razón de pérdida"
+msgstr "Motivo de pérdida"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Lost Reason:"
-msgstr "Razón de pérdida:"
+msgstr "Motivo de pérdida:"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lost_reason_action
 #: model:ir.ui.menu,name:crm.menu_crm_lost_reason
 msgid "Lost Reasons"
-msgstr "Razones de pérdida"
+msgstr "Motivos de pérdida"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__priority__0
@@ -2362,7 +2364,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
 msgid "Manually"
-msgstr "Manualmente"
+msgstr "Manual"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.action_mark_as_lost
@@ -2490,7 +2492,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
-msgstr "Múltiples equipos"
+msgstr "Varios equipos"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_my_activities
@@ -2641,7 +2643,7 @@ msgstr "¡No se encontró información!"
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action_team
 msgid "No data yet!"
-msgstr "¡No hay datos aún!"
+msgstr "Todavía no hay información"
 
 #. module: crm
 #. odoo-python
@@ -3100,7 +3102,9 @@ msgstr "Etiquetas de campo de puntuación predictiva de leads"
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr "Puntaje predictivo de leads: recalcula probabilidades automatizadas"
+msgstr ""
+"Puntuación predictiva de leads: volver a calcular las probabilidades "
+"automatizadas"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3258,7 +3262,7 @@ msgstr "Restaurar"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_use_auto_assignment
 msgid "Rule-Based Assignment"
-msgstr "Asignación según las reglas"
+msgstr "Asignación por reglas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3268,7 +3272,7 @@ msgstr "En ejecución"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega de SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_sales
@@ -3442,12 +3446,12 @@ msgstr "Mostrar únicamente oportunidades"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_optout
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Skip auto assignment"
-msgstr "Saltar autoasignación"
+msgstr "Omitir la asignación automática"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Snooze 7d"
-msgstr "Silenciar 7d"
+msgstr "Posponer 7d"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__source_id
@@ -3650,9 +3654,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quiere es obtener los correos para "
-"<jobs@example.odoo.com>"
+"El nombre del seudónimo de correo electrónico. Por ejemplo, \"trabajos\" si "
+"desea recibir correos electrónicos en <trabajos@ejemplo.odoo.com>."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3720,8 +3723,8 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
-"Esto puede usarse para asignar leads de forma automática a los vendedores "
-"según las reglas"
+"Puede usar esto para asignar leads de forma automática a los vendedores "
+"según las reglas establecidas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3760,8 +3763,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Este es un nombre que facilita el seguimiento de sus diferentes proyectos de"
-" campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
+"Este es un nombre que facilita el seguimiento de sus distintos proyectos de "
+"campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
@@ -3784,8 +3787,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Este número de teléfono está en la lista negra para el marketing por SMS. "
-"Haga clic para retirarlo de la lista negra."
+"Este número de teléfono está en la lista de exclusión de Marketing por SMS. "
+"Haga clic para quitarlo de la lista de exclusión."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -3793,8 +3796,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Esta etapa se pliega en la vista de kanban cuando no hay registros para "
-"mostrar en la misma."
+"Esta etapa está oculta en la vista de kanban cuando no tiene registros para "
+"mostrar."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -3896,7 +3899,7 @@ msgstr "El tipo se utiliza para separar leads y oportunidades"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de la actividad de excepción registrada."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3995,17 +3998,10 @@ msgid ""
 msgstr ""
 "Utilice leads si necesita un paso de calificación antes de crear una "
 "oportunidad o cliente. Puede ser una tarjeta de presentación que recibió, un"
-" formulario de contacto proveniente de su sitio web, o un archivo de "
-"prospectos sin calificar que importó, etc. Una vez calificado, el lead puede"
-" convertirse en una oportunidad empresarial y/o en un nuevo cliente en su "
+" formulario de contacto que se haya llenado desde su sitio web, un archivo "
+"de clientes que no ha calificado, etc. Una vez calificado, el lead puede "
+"convertirse en una oportunidad de negocios o en un nuevo cliente en su "
 "directorio."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr ""
-"Utilice el botón de <i>Crear</i> en la parte superior izquierda o envíe un "
-"correo electrónico para"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4017,30 +4013,10 @@ msgstr "Use el botón <i>Nuevo</i> o envíe un correo a"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid ""
-"Use the top left <i>Create</i> button, or send an email to %s to test the "
-"email gateway."
-msgstr ""
-"Utilice el botón de <i>crear</i> en la parte superior izquierda, o envíe un "
-"correo electrónico a %s para probar el correo electrónico."
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-#, python-format
-msgid ""
 "Use the <i>New</i> button, or send an email to %s to test the email gateway."
 msgstr ""
 "Utilice el botón <i>Nuevo</i> o envíe un correo electrónico a %s para probar"
 " la puerta de enlace de correo electrónico."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid ""
-"Use the top left Create button, or configure an email alias to test the "
-"email gateway."
-msgstr ""
-"Utilice el botón de Crear en la parte superior izquierda o configure un "
-"seudónimo de correo electrónico para probar el portal de correo electrónico."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4108,7 +4084,7 @@ msgstr "Mensajes del sitio web"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__website

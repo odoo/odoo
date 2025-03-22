@@ -75,6 +75,8 @@ class WebsocketCase(HttpCase):
         ws = websocket.create_connection(
             type(self)._WEBSOCKET_URL, *args, **kwargs
         )
+        ws.ping()
+        ws.recv_data_frame(control_frame=True) # pong
         self._websockets.add(ws)
         return ws
 

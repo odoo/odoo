@@ -2,13 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* digest
 # 
+# Translators:
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -38,7 +43,7 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
 msgid "Activate"
-msgstr ""
+msgstr "Virkja"
 
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__activated
@@ -62,6 +67,7 @@ msgid "Available Fields"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Choose the metrics you care about"
@@ -70,12 +76,12 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__company_id
 msgid "Company"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: digest
 #: model:ir.model,name:digest.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Stillingarvalkostir"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
@@ -83,6 +89,7 @@ msgid "Configure Digest Emails"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Connect"
@@ -97,18 +104,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_uid
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__create_date
 #: model:ir.model.fields,field_description:digest.field_digest_tip__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Gjaldmiðill"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_digest_view_form
@@ -134,7 +141,7 @@ msgstr ""
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Melta"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_id
@@ -146,7 +153,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:digest.digest_digest_action
 #: model:ir.actions.server,name:digest.ir_cron_digest_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:digest.ir_cron_digest_scheduler_action
-#: model:ir.cron,name:digest.ir_cron_digest_scheduler_action
 #: model:ir.model.fields,field_description:digest.field_res_config_settings__digest_emails
 #: model:ir.ui.menu,name:digest.digest_menu
 msgid "Digest Emails"
@@ -173,7 +179,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
@@ -206,9 +212,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_digest_digest__id
 #: model:ir.model.fields,field_description:digest.field_digest_tip__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/controllers/portal.py:0
 #, python-format
 msgid "Invalid periodicity set on digest"
@@ -251,18 +258,21 @@ msgid "Kpi Res Users Connected Value"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 24 hours"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 30 Days"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Last 7 Days"
@@ -278,13 +288,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_digest_digest__write_uid
 #: model:ir.model.fields,field_description:digest.field_digest_tip__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__write_date
 #: model:ir.model.fields,field_description:digest.field_digest_tip__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__kpi_mail_message_total
@@ -300,7 +310,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:digest.field_digest_digest__name
 #: model:ir.model.fields,field_description:digest.field_digest_tip__name
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
@@ -328,9 +338,10 @@ msgstr ""
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.digest_mail_main
 msgid "Powered by"
-msgstr ""
+msgstr "Knúið af"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Prefer a broader overview ?"
@@ -373,7 +384,7 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_tip__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Röð"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
@@ -383,9 +394,10 @@ msgstr ""
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__state
 msgid "Status"
-msgstr ""
+msgstr "Staða"
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Switch to weekly Digests"
@@ -466,7 +478,7 @@ msgstr ""
 #. module: digest
 #: model:ir.model,name:digest.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Notandi"
 
 #. module: digest
 #: model:ir.model.fields,help:digest.field_digest_tip__user_ids
@@ -479,12 +491,14 @@ msgid "Want to add your own KPIs?<br/>"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "Want to customize this email?"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid ""
@@ -528,18 +542,21 @@ msgid "e.g. Your Weekly Digest"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "monthly"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "quarterly"
 msgstr ""
 
 #. module: digest
+#. odoo-python
 #: code:addons/digest/models/digest.py:0
 #, python-format
 msgid "weekly"

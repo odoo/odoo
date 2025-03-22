@@ -320,7 +320,7 @@ class Project(models.Model):
         string='Members')
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite', compute_sudo=True,
         string='Show Project on Dashboard')
-    label_tasks = fields.Char(string='Use Tasks as', default='Tasks', translate=True,
+    label_tasks = fields.Char(string='Use Tasks as', default=lambda s: _('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one(
@@ -632,6 +632,11 @@ class Project(models.Model):
         return projects
 
     def write(self, vals):
+        if vals.get('access_token'):
+            self.ensure_one()  # We are not supposed to add a single access token to multiple project
+            if self.privacy_visibility != 'portal':
+                vals['access_token'] = ''
+
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
             vals.pop('is_favorite')
@@ -738,6 +743,19 @@ class Project(models.Model):
                 res -= dependency_subtype
         return res
 
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        """ Give access to the portal user/customer if the project visibility is portal. """
+        groups = super()._notify_get_recipients_groups(msg_vals=msg_vals)
+        if not self:
+            return groups
+
+        self.ensure_one()
+        portal_privacy = self.privacy_visibility == 'portal'
+        for group_name, _group_method, group_data in groups:
+            if group_name in ['portal', 'portal_customer'] and not portal_privacy:
+                group_data['has_button_access'] = False
+        return groups
+
     # ---------------------------------------------------
     #  Actions
     # ---------------------------------------------------
@@ -769,7 +787,7 @@ class Project(models.Model):
         favorite_projects.write({'favorite_user_ids': [(3, self.env.uid)]})
 
     def action_view_tasks(self):
-        action = self.env['ir.actions.act_window'].with_context({'active_id': self.id})._for_xml_id('project.act_project_project_2_project_task_all')
+        action = self.env['ir.actions.act_window'].with_context(active_id=self.id)._for_xml_id('project.act_project_project_2_project_task_all')
         action['display_name'] = _("%(name)s", name=self.name)
         context = action['context'].replace('active_id', str(self.id))
         context = ast.literal_eval(context)
@@ -1019,6 +1037,9 @@ class Project(models.Model):
                 portal_users = project.message_partner_ids.user_ids.filtered('share')
                 project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
                 project.tasks._unsubscribe_portal_users()
+                # revoke access_token since the project and its tasks are no longer accessible for portal/public users
+                project.tasks.access_token = ''
+                project.access_token = ''
 
     # ---------------------------------------------------
     # Project sharing
@@ -1087,7 +1108,7 @@ class Task(models.Model):
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
         search_domain = [('id', 'in', stages.ids)]
-        if 'default_project_id' in self.env.context:
+        if 'default_project_id' in self.env.context and 'project_kanban' in self.env.context:
             search_domain = ['|', ('project_ids', '=', self.env.context['default_project_id'])] + search_domain
 
         stage_ids = stages._search(search_domain, order=order, access_rights_uid=SUPERUSER_ID)
@@ -1789,6 +1810,9 @@ class Task(models.Model):
         fields = {name for name, field in self._fields.items() if getattr(field, 'task_dependency_tracking', None)}
         return fields and set(self.fields_get(fields))
 
+    def _portal_get_parent_hash_token(self, pid):
+        return self.project_id._sign_token(pid)
+
     # ----------------------------------------
     # Case management
     # ----------------------------------------
@@ -1910,6 +1934,33 @@ class Task(models.Model):
                     error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
                 raise AccessError(error_message)
 
+    def _get_portal_sudo_vals(self, vals, defaults=False):
+        """ returns the values which must be written without and with sudo when a portal user creates / writes a task.
+            :param vals: dict of {field: value}, the values to create/write
+            :return: a tuple with 2 dicts:
+                - the first with the values to write without sudo
+                - the second with the values to write with sudo
+        """
+        vals_no_sudo = {key: val for key, val in vals.items() if self._fields[key].type in ('one2many', 'many2many')}
+        if defaults:
+            vals_no_sudo.update({
+                key[8:]: value
+                for key, value in self.env.context.items()
+                if key.startswith('default_') and key[8:] in self.SELF_WRITABLE_FIELDS and self._fields[key[8:]].type in ('one2many', 'many2many')
+            })
+        vals_sudo = {key: val for key, val in vals.items() if key not in vals_no_sudo}
+        return vals_no_sudo, vals_sudo
+
+    @api.model
+    def _get_portal_sudo_context(self):
+        return {
+            key: value for key, value in self.env.context.items()
+            if key == 'default_project_id'
+            or key == 'default_user_ids' and value is False \
+            or not key.startswith('default_')
+            or key[8:] in (field for field in self.SELF_WRITABLE_FIELDS if self._fields[field].type not in ('one2many', 'many2many'))
+        }
+
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
         return super(Task, self).read(fields=fields, load=load)
@@ -1930,6 +1981,10 @@ class Task(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [expression.TRUE_LEAF, expression.FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
+        for index, leaf in enumerate(args):
+            if leaf[0] == 'personal_stage_type_ids' and leaf[1] == '=' and not leaf[2]:
+                types = self.env['project.task.type']._search([('user_id', '=', self.env.uid)])
+                args[index] = ('personal_stage_type_ids', 'not in', types)
         return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
     def mapped(self, func):
@@ -2034,15 +2089,12 @@ class Task(models.Model):
         # in order to compute the field tracking
         was_in_sudo = self.env.su
         if is_portal_user:
-            ctx = {
-                key: value for key, value in self.env.context.items()
-                if key == 'default_project_id' \
-                    or key == 'default_user_ids' and value is False \
-                    or not key.startswith('default_') \
-                    or key[8:] in self.SELF_WRITABLE_FIELDS
-            }
-            self = self.with_context(ctx).sudo()
-        tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+            vals_list_no_sudo, vals_list = zip(*(self._get_portal_sudo_vals(vals, defaults=True) for vals in vals_list))
+            self_no_sudo, self = self, self.with_context(self._get_portal_sudo_context()).sudo()
+        tasks = super(Task, self).create(vals_list)
+        if is_portal_user:
+            for task, vals in zip(tasks.with_env(self_no_sudo.env), vals_list_no_sudo):
+                task.write(vals)
         tasks._populate_missing_personal_stages()
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
 
@@ -2121,7 +2173,8 @@ class Task(models.Model):
         # requires the write access on others models, as rating.rating
         # in order to keep the same name than the task.
         if portal_can_write:
-            tasks = tasks.sudo()
+            tasks_no_sudo, tasks = tasks, tasks.sudo()
+            vals_no_sudo, vals = self._get_portal_sudo_vals(vals)
 
         # Track user_ids to send assignment notifications
         old_user_ids = {t: t.user_ids for t in self}
@@ -2130,6 +2183,8 @@ class Task(models.Model):
             del vals['personal_stage_type_id']
 
         result = super(Task, tasks).write(vals)
+        if portal_can_write:
+            super(Task, tasks_no_sudo).write(vals_no_sudo)
 
         if 'user_ids' in vals:
             tasks._populate_missing_personal_stages()
@@ -2493,7 +2548,12 @@ class Task(models.Model):
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
         # use the sanitized body of the email from the message thread to populate the task's description
-        if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
+        if (
+           not self.description
+           and message.subtype_id == self._creation_subtype()
+           and self.partner_id == message.author_id
+           and msg_vals['message_type'] == 'email'
+        ):
             self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
@@ -2743,14 +2803,14 @@ class ProjectTags(models.Model):
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         if 'project_id' in self.env.context:
-            tag_ids = self._name_search()
+            tag_ids = self._name_search(limit=None)
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
         return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if 'project_id' in self.env.context:
-            tag_ids = self._name_search()
+            tag_ids = self._name_search(limit=None)
             domain = expression.AND([domain, [('id', 'in', tag_ids)]])
             return self.arrange_tag_list_by_id(super().search_read(domain=domain, fields=fields, offset=offset, limit=limit), tag_ids)
         return super().search_read(domain=domain, fields=fields, offset=offset, limit=limit, order=order)

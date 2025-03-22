@@ -22,7 +22,7 @@ class ResPartner(models.Model):
     def _compute_product_pricelist(self):
         res = self.env['product.pricelist']._get_partner_pricelist_multi(self.ids)
         for partner in self:
-            partner.property_product_pricelist = res.get(partner.id)
+            partner.property_product_pricelist = res.get(partner._origin.id)
 
     def _inverse_product_pricelist(self):
         for partner in self:

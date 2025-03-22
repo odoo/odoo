@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Abe Manyo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -72,7 +72,7 @@ msgid "Default visibility for custom messages."
 msgstr "Visibilitas standar untuk pesan-pesan kustom."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
@@ -86,13 +86,14 @@ msgstr ""
 "persediaan - cadangan)"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
 msgstr "Email Invalid"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
@@ -104,7 +105,7 @@ msgid "Inventory Defaults"
 msgstr "Inventaris Standar"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Only"
@@ -116,7 +117,7 @@ msgid "Order Now"
 msgstr "Pesan Sekarang"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
@@ -135,6 +136,7 @@ msgid "Out-of-Stock Message"
 msgstr "Pesan Persediaan-Habis"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #: model:ir.model,name:website_sale_stock.model_product_template
 #, python-format
@@ -149,7 +151,6 @@ msgstr "Varian Produk"
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 #: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
-#: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
 msgstr "Produk: kirim email mengenai ketersediaan produk"
 
@@ -189,6 +190,7 @@ msgid "Show availability Qty"
 msgstr "Tunjukkan ketersediaan Kuantitas"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -204,13 +206,14 @@ msgid "The following product is now available."
 msgstr "Produk berikut sekarang tersedia."
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "Produk '%(product_name)s' sekarang tersedia"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
@@ -234,7 +237,7 @@ msgid "Warehouse"
 msgstr "Gudang"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
@@ -252,29 +255,40 @@ msgid "Website where this order has been placed, for eCommerce orders."
 msgstr "Website dimana pesanan dilakukan, untuk pesanan eCommerce."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "Anda sudah menambahkan"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
 msgstr "Anda sudah menambahkan semua produk yang tersedia ke keranjang Anda."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
 msgstr "Anda sudah memiliki %s produk di keranjang Anda."
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:0
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"Anda meminta %(desired_qty)s %(product_name)s tapi hanya %(new_qty)s yang "
+"tersedia"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
@@ -282,7 +296,7 @@ msgstr ""
 " tersedia"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
@@ -290,14 +304,14 @@ msgid "You ask for %s Units but only %s are available."
 msgstr "Anda meminta %s barang tapi hanya %s yang masih tersedia."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "di keranjang Anda."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "left in stock."
@@ -310,7 +324,7 @@ msgid "only if below"
 msgstr "hanya bila di bawah"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"

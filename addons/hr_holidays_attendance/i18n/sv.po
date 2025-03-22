@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Martin Trigaux, 2022
 # Simon S, 2022
-# Lasse Larsson, 2023
+# Lasse L, 2023
+# Martin Trigaux, 2024
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-02-03 09:16+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Lasse Larsson, 2023\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +24,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
-msgstr ""
+msgstr "%s timmar tillgängliga"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Närvaro"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Available"
@@ -43,10 +50,10 @@ msgstr "Bolag"
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "Räkna extra timmar"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Days"
@@ -57,7 +64,7 @@ msgstr "Dagar"
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_employee_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.res_users_view_form
 msgid "Deduct Extra Hours"
-msgstr ""
+msgstr "Avdrag för extra timmar"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -69,16 +76,16 @@ msgstr "Avbryt"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_id
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_id
 msgid "Extra Hours"
-msgstr ""
+msgstr "Extra timmar"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_attendance_holidays_hr_leave_allocation_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_view_form
 msgid "Extra Hours Available"
-msgstr ""
+msgstr "Extra timmar tillgängliga"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Hours"
@@ -93,25 +100,34 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "Ny begäran om tilldelning"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
+msgstr "När denna typ av ledighet har godkänts dras extra närvarotimmar av."
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Only an Officer or Administrator is allowed to edit the allocation duration "
+"in this status."
 msgstr ""
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__overtime_deductible
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__overtime_deductible
 msgid "Overtime Deductible"
-msgstr ""
+msgstr "Självrisk för övertid"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_res_users__request_overtime
 msgid "Request Overtime"
-msgstr ""
+msgstr "Begär övertid"
 
 #. module: hr_holidays_attendance
 #: model_terms:ir.ui.view,arch_db:hr_holidays_attendance.hr_leave_allocation_overtime_view_form
@@ -119,19 +135,26 @@ msgid "Save"
 msgstr "Spara"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "The employee does not have enough extra hours to extend this allocation."
 msgstr ""
+"Den anställde har inte tillräckligt med extra timmar för att förlänga denna "
+"tilldelning."
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr ""
+"Den anställde har inte tillräckligt med extra timmar för att förlänga denna "
+"ledighet."
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -139,18 +162,23 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr ""
+"Den anställde har inte tillräckligt med extra timmar för att begära denna "
+"ledighet."
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
 "The employee does not have enough overtime hours to request this leave."
 msgstr ""
+"Den anställde har inte tillräckligt med övertidstimmar för att begära denna "
+"ledighet."
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave
@@ -171,7 +199,7 @@ msgstr "Frånvarotyp"
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave_allocation__employee_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "Totalt övertid"
 
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_res_users
@@ -179,8 +207,9 @@ msgid "User"
 msgstr "Användare"
 
 #. module: hr_holidays_attendance
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"
 msgstr ""
+"Du har inte tillräckligt med extra timmar för att begära denna ledighet"

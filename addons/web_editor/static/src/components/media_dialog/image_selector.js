@@ -288,7 +288,7 @@ export class ImageSelector extends FileSelector {
         return Promise.all(selected.map(async (attachment) => {
             const imageEl = document.createElement('img');
             let src = attachment.image_src;
-            if (!attachment.public) {
+            if (!attachment.public && !attachment.url) {
                 let accessToken = attachment.access_token;
                 if (!accessToken) {
                     [accessToken] = await orm.call(
@@ -329,7 +329,8 @@ export class ImageSelector extends FileSelector {
         const mediaUrl = imgEl.src;
         try {
             const response = await fetch(mediaUrl);
-            if (response.headers.get('content-type') === 'image/svg+xml') {
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.startsWith("image/svg+xml")) {
                 let svg = await response.text();
                 const dynamicColors = {};
                 const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');

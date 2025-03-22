@@ -5,18 +5,20 @@
 # Translators:
 # Jinjiu Liu, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Mustafa Rawi <mustafa@cubexco.com>, 2022
+# Mustafa Rawi <mustafa@mrawi.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
+# Mohammad Abdulmoneim, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,6 +148,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr "%(name)s (نسخة)(%(id)s) "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: التزويد بالمنتج من %(supplier)s"
 
@@ -153,6 +162,7 @@ msgstr "%(warehouse)s: التزويد بالمنتج من %(supplier)s"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -1180,8 +1190,8 @@ msgid "Automatic No Step Added"
 msgstr "تمت إضافة رقم الخطة التلقائي "
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1791,6 +1801,11 @@ msgid ""
 msgstr ""
 "لا يمكن التحويل بين وحدات القياس إلا إذا كانت تنتمي لنفس الفئة. سيتم إجراء "
 "التحويل بناءً على النسب."
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2957,6 +2972,13 @@ msgid "First SN"
 msgstr "أول رقم تسلسلي "
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "ثابت"
@@ -3236,7 +3258,7 @@ msgstr "يعرض ترتيب التسلسل عند عرض المستودعات. "
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr "أيام الظهور العالمي "
+msgstr "أيام الظهور العامة "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -3781,6 +3803,7 @@ msgstr "Invalid domain left operand %s"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "مشغّل النطاق غير صالح %s "
@@ -3788,6 +3811,7 @@ msgstr "مشغّل النطاق غير صالح %s "
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr ""
@@ -4003,8 +4027,21 @@ msgstr "لا يمكن حجز كمية أكبر من المنتج %s مما تم�
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "لا يمكن إلغاء حجز كمية أكبر من المنتج %s مما تملك في مخزونك. "
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4432,6 +4469,13 @@ msgid "Locations"
 msgstr "المواقع "
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr "المواقع التي سيتم تحديثها"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
 msgstr "قفل "
@@ -4446,6 +4490,11 @@ msgstr "اللوجستيات"
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
 msgid "Lot"
 msgstr "المجموعة "
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "تقرير عنوان المجموعة "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -5095,8 +5144,8 @@ msgid "Normal"
 msgstr "عادي"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -7087,6 +7136,14 @@ msgstr ""
 "وفئات المنتجات "
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "تنتمي القاعدة %s إلى %s بينما ينتمي المسار إلى %s. "
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "رسالة القاعدة"
@@ -8608,6 +8665,9 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"بادئة هذا التسلسل قيد الاستخدام بالفعل من قِبَل نوع عملية آخر. نوصي بتحديد "
+"بادئة فريدة لتجنب المشاكل و/أو القيم المرجعية المتكررة، أو قم بتعيين التسلسل"
+" المرجعي الموجود بالفعل لنوع العملية هذا. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9738,6 +9798,14 @@ msgstr "لا يمكنك تغيير نوع منتج قد تم استخدامه ب
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr "لا يمكنك إنشاء نقطة طلب خاملة لا يتم تشغيلها يدوياً. "
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9774,6 +9842,17 @@ msgstr "يمكنك إدخال كميات موجبة فقط. "
 #, python-format
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr "يمكنك معالجة 1.0 %s فقط من المنتجات برقم تسلسلي فريد. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"يمكنك فقط جعل نقاط الطلب اليدوية خاملة. من الأفضل أرشفة نقاط الطلب ذات "
+"'التشغيل الآلي' إذا كنت ترغب في ألا يتم تشغيلها. "
 
 #. module: stock
 #. odoo-python
@@ -9884,6 +9963,26 @@ msgid ""
 msgstr ""
 "لا يمكنك نقل محتوى نفس الطرد أكثر من مرة في نفس الشحنة أو تقسيم الطرد إلى "
 "موقعين. "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"لا يمكنك حزم المنتجات في نفس الطرد عندما تكون من شحنات مختلفة مع أنواع "
+"عمليات مختلفة. "
 
 #. module: stock
 #. odoo-python
@@ -10196,6 +10295,7 @@ msgid "e.g. CW"
 msgstr "مثال: المستودع المركزي "
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr "مثال: المستودع المركزي "

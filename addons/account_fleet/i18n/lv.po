@@ -6,14 +6,16 @@
 # ievaputnina <ievai.putninai@gmail.com>, 2022
 # Martin Trigaux, 2022
 # JanisJanis <jbojars@gmail.com>, 2022
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2024
+# Will Sensors, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: JanisJanis <jbojars@gmail.com>, 2022\n"
+"Last-Translator: Will Sensors, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +26,7 @@ msgstr ""
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__account_move_ids
 msgid "Account Move"
-msgstr ""
+msgstr "Konta kustība"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
@@ -34,7 +36,12 @@ msgstr "Bills"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_fleet_vehicle__bill_count
 msgid "Bills Count"
-msgstr ""
+msgstr "Rēķini skaits"
+
+#. module: account_fleet
+#: model:ir.model,name:account_fleet.model_account_automatic_entry_wizard
+msgid "Create Automatic Entries"
+msgstr "Automātisko ierakstu izveide"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.account_move_view_tree
@@ -54,13 +61,14 @@ msgstr "Kontējums"
 #. module: account_fleet
 #: model:ir.model.fields,field_description:account_fleet.field_account_move_line__need_vehicle
 msgid "Need Vehicle"
-msgstr ""
+msgstr "Nepieciešams transportlīdzeklis"
 
 #. module: account_fleet
+#. odoo-python
 #: code:addons/account_fleet/models/account_move.py:0
 #, python-format
 msgid "Service Vendor Bill: %s"
-msgstr ""
+msgstr "Pakalpojums izmaksa: %s"
 
 #. module: account_fleet
 #: model:ir.model,name:account_fleet.model_fleet_vehicle
@@ -71,9 +79,9 @@ msgstr "Transportlīdzeklis"
 #. module: account_fleet
 #: model:fleet.service.type,name:account_fleet.data_fleet_service_type_vendor_bill
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Izmaksa"
 
 #. module: account_fleet
 #: model_terms:ir.ui.view,arch_db:account_fleet.fleet_vehicle_view_form
 msgid "show the vendor bills for this vehicle"
-msgstr ""
+msgstr "parādīt izmaksas šim tranportlīdzeklim"

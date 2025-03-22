@@ -128,11 +128,31 @@ class AccountMove(models.Model):
     def _get_l10n_es_tbai_sequence_and_number(self):
         """Get the TicketBAI sequence a number values for this invoice."""
         self.ensure_one()
-        sequence, number = self.name.rsplit('/', 1)  # NOTE non-decimal characters should not appear in the number
-        sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
-        sequence = regex_sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
-        # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
-        sequence += "TEST" if self.company_id.l10n_es_edi_test_env else ""
+        if self.is_purchase_document(): # Batuz
+            # Check if we are cancelling or not
+            doc = self.env['account.edi.document'].search([('state', '=', 'to_cancel'),
+                                                           ('edi_format_id.code', '=', 'es_tbai')], limit=1)
+            if doc and self.l10n_es_tbai_post_xml:
+                vals = self._get_l10n_es_tbai_values_from_xml({
+                    'sequence': './/CabeceraFactura/SerieFactura',
+                    'number': './/CabeceraFactura/NumFactura',
+                })
+                if vals['sequence'] and vals['number']:
+                    return vals['sequence'], vals['number']
+
+            number = self.ref
+            sequence = "TEST" if self.company_id.l10n_es_edi_test_env else ""
+        else:
+            sequence = self.sequence_prefix.rstrip('/')
+
+            # NOTE non-decimal characters should not appear in the number
+            seq_length = self._get_sequence_format_param(self.name)[1]['seq_length']
+            number = f"{self.sequence_number:0{seq_length}d}"
+
+            sequence = regex_sub(r"[^0-9A-Za-z.\_\-\/]", "", sequence)  # remove forbidden characters
+            sequence = regex_sub(r"\s+", " ", sequence)  # no more than one consecutive whitespace allowed
+            # NOTE (optional) not recommended to use chars out of ([0123456789ABCDEFGHJKLMNPQRSTUVXYZ.\_\-\/ ])
+            sequence += "TEST" if self.company_id.l10n_es_edi_test_env else ""
         return sequence, number
 
     def _get_l10n_es_tbai_signature_and_date(self):
@@ -239,7 +259,8 @@ class AccountMove(models.Model):
             for tax in line.tax_ids.filtered(lambda t: t.l10n_es_type not in ('recargo', 'retencion')):
                 results[tax]['base_amount'] += line.balance
 
-            if ((tax := line.tax_line_id) and tax.l10n_es_type not in ('recargo', 'retencion') and
+            tax = line.tax_line_id
+            if (tax and tax.l10n_es_type not in ('recargo', 'retencion') and
                 line.tax_repartition_line_id.factor_percent != -100.0):
                 results[tax]['tax_amount'] += line.balance
         iva_values = []

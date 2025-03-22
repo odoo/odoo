@@ -534,7 +534,7 @@
                                         <field name="alias_enabled" invisible="1"/>
                                         <label for="alias_name" class="fw-bold o_form_label" string="Create tasks by sending an email to"/>
                                         <field name="alias_value" class="oe_read_only d-inline" readonly="1" widget="email" attrs="{'invisible':  [('alias_name', '=', False)]}" />
-                                        <span class="oe_edit_only">
+                                        <span class="oe_edit_only" dir="ltr">
                                             <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                         </span>
                                     </div>
@@ -756,8 +756,8 @@
                         </h1>
                     </div>
                     <field name="user_id" invisible="1"/>
-                    <div class="row mt16 o_settings_container"/>
-                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <div class="row o_settings_container"/>
+                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}" dir="ltr">
                         <label for="alias_name" class="oe_inline mt-4" string="Create tasks by sending an email to"/>
                         <field name="alias_enabled" invisible="1"/>
                         <span>
@@ -1790,8 +1790,8 @@
             <field name="name">Assigned Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="context">{'search_default_user_ids': [active_id], 'default_user_ids': [(6, 0, [active_id])]}</field>
-            <field name="domain">[('display_project_id', '!=', False)]</field>
+            <field name="context">{'default_user_ids': [(6, 0, [active_id])]}</field>
+            <field name="domain">[('display_project_id', '!=', False), ('user_ids', 'in', [active_id])]</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
             <field name="binding_view_types">form</field>
         </record>

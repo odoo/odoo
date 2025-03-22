@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
 
 // TODO: This part should be moved in a QUnit test
@@ -33,16 +34,16 @@ const checkWebsiteFilter = [{
     content: "Click on My Website",
     trigger: "button.dropdown-toggle:contains('My Website')",
 }, {
-    content: "Select My Website 2",
-    trigger: ".dropdown-menu.show > .dropdown-item:contains('My Website 2')",
+    content: "Select Test Website",
+    trigger: ".dropdown-menu.show > .dropdown-item:contains('Test Website')",
 }, {
-    content: "Check that the homepage is now the one of My Website 2",
+    content: "Check that the homepage is now the one of Test Website",
     trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
-             "~ .o_data_cell[name=website_id]:contains('My Website 2')",
+             "~ .o_data_cell[name=website_id]:contains('Test Website')",
     run: () => null, // it's a check
 }, {
-    content: "Click on My Website 2",
-    trigger: "button.dropdown-toggle:contains('My Website 2')",
+    content: "Click on Test Website",
+    trigger: "button.dropdown-toggle:contains('Test Website')",
 }, {
     content: "Go back to My Website",
     trigger: ".dropdown-menu.show > .dropdown-item:contains('My Website')",
@@ -111,3 +112,37 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
         run: () => null,
     },
 ]);
+
+wTourUtils.registerWebsitePreviewTour('website_page_manager_session_forced', {
+    test: true,
+    url: '/',
+}, [...wTourUtils.testSwitchWebsite('Test Website'), {
+    content: "Click on Site",
+    trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
+}, {
+    content: "Click on Pages",
+    trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
+}, {
+    content: "Check that the homepage is the one of Test Website",
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
+             "~ .o_data_cell[name=website_id]:contains('Test Website')",
+    run: () => null, // it's a check
+}, {
+    content: "Check that the selected website is Test Website",
+    trigger: ".o_search_options .dropdown-toggle:contains('Test Website')",
+    run: () => null, // it's a check
+}]);
+
+tour.register('website_page_manager_direct_access', {
+    test: true,
+    url: '/web#action=website.action_website_pages_list',
+}, [{
+    content: "Check that the homepage is the one of Test Website",
+    trigger: ".o_list_table .o_data_row .o_data_cell[name=name]:contains('Home') " +
+             "~ .o_data_cell[name=website_id]:contains('Test Website')",
+    run: () => null, // it's a check
+}, {
+    content: "Check that the selected website is Test Website",
+    trigger: ".o_search_options .dropdown-toggle:contains('Test Website')",
+    run: () => null, // it's a check
+}]);

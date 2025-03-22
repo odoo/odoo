@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -77,6 +77,7 @@ msgid "Access Token Expiration Timestamp"
 msgstr "Pääsytunnisteen viimeinen voimassaoloaika"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
@@ -84,6 +85,7 @@ msgid "An error occur during the authentication process."
 msgstr "Todentamisprosessin aikana tapahtui virhe."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
@@ -107,6 +109,7 @@ msgid "Config Settings"
 msgstr "Asetukset"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -117,6 +120,7 @@ msgstr ""
 "Sinut ohjataan Gmailin kirjautumissivulle, jossa sinun on hyväksyttävä Odoolle lupa käyttää tiliäsi."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -163,6 +167,7 @@ msgid "Incoming Mail Server"
 msgstr "Saapuvan sähköpostin palvelin"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -178,18 +183,21 @@ msgid "Mail Server"
 msgstr "Sähköpostipalvelin"
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Only the administrator can link a Gmail mail server."
 msgstr "Vain järjestelmänvalvoja voi linkittää Gmail-palvelimen."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "Please configure your Gmail credentials."
 msgstr "Määritä Gmail-tunnuksesi."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -202,6 +210,7 @@ msgstr ""
 "OAuthentication käyttötunnisteen hankkimiseen."
 
 #. module: google_gmail
+#. odoo-python
 #: code:addons/google_gmail/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -254,16 +263,6 @@ msgstr ""
 #: model:ir.model.fields,help:google_gmail.field_ir_mail_server__google_gmail_uri
 msgid "The URL to generate the authorization code from Google"
 msgstr "URL, josta Googlen valtuutusavain luodaan"
-
-#. module: google_gmail
-#: code:addons/google_gmail/models/ir_mail_server.py:0
-#, python-format
-msgid ""
-"This server %r can only be used for your personal email address. Please fill"
-" the \"from_filter\" field with %r."
-msgstr ""
-"Tätä palvelinta %r voi käyttää vain henkilökohtaiseen "
-"sähköpostiosoitteeseesi. Täytä \"from_filter\"-kenttään %r."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

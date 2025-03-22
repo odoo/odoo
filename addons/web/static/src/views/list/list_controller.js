@@ -18,7 +18,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 
-import { Component, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillStart, useSubEnv, useEffect, useRef } from "@odoo/owl";
 
 export class ListViewHeaderButton extends ViewButton {
     async onClick() {
@@ -53,6 +53,7 @@ export class ListController extends Component {
         this.notificationService = useService("notification");
         this.userService = useService("user");
         this.rpc = useService("rpc");
+        this.orm = useService("orm");
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
@@ -83,6 +84,15 @@ export class ListController extends Component {
 
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
+        });
+
+        onMounted(() => {
+            const { rendererScrollPositions } = this.props.state || {};
+            if (rendererScrollPositions) {
+                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                renderer.scrollLeft = rendererScrollPositions.left;
+                renderer.scrollTop = rendererScrollPositions.top;
+            }
         });
 
         this.archiveEnabled =
@@ -118,8 +128,10 @@ export class ListController extends Component {
                 }
             },
             getLocalState: () => {
+                const renderer = this.rootRef.el.querySelector(".o_list_renderer");
                 return {
                     rootState: this.model.root.exportState(),
+                    rendererScrollPositions: { left: renderer.scrollLeft, top: renderer.scrollTop },
                 };
             },
             getOrderBy: () => {
@@ -286,6 +298,10 @@ export class ListController extends Component {
     }
 
     async onSelectDomain() {
+        if (!this.isTotalTrustable) {
+            const limit = DynamicRecordList.WEB_SEARCH_READ_COUNT_LIMIT;
+            this.nbRecordsMatchingDomain = await this.orm.searchCount(this.props.resModel, this.model.root.domain, { limit })
+        }
         this.model.root.selectDomain(true);
         if (this.props.onSelectionChanged) {
             const resIds = await this.model.root.getResIds(true);
@@ -308,6 +324,10 @@ export class ListController extends Component {
 
     get isDomainSelected() {
         return this.model.root.isDomainSelected;
+    }
+
+    get isTotalTrustable() {
+        return !this.model.root.isGrouped || this.model.root.count <= this.model.root.limit;
     }
 
     get nbTotal() {

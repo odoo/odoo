@@ -13,6 +13,117 @@
             <field name="name">Closest Location</field>
             <field name="method">closest</field>
         </record>
+        <record id="stock_quant_stock_move_line_desynchronization" model="ir.actions.server">
+            <field name="name">Correct inconsistencies for reservation</field>
+            <field name="model_id" ref="base.model_ir_actions_server"/>
+            <field name="state">code</field>
+            <field name="code">
+MoveLines = env['stock.move.line'].sudo()
+Quants = env['stock.quant'].sudo()
+tracked_fields = ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id']
+impacted_quants, impacted_move_lines = set(), set()
+all_errors = {}
+
+# Compute rounding precision for each UOM
+uom_roundings = {
+    u['id']: u['rounding'] for u in env['uom.uom'].sudo().with_context(active_test=False).search_read([], ['rounding'])
+}
+products_rounding = {
+    p['id']: uom_roundings[p['uom_id'][0]]
+    for p in env['product.product'].sudo().with_context(active_test=False).search_read([], ['uom_id'])
+}
+
+# Move that bypass reservations
+ignore_moves = env['stock.move'].sudo().search([('state', 'not in', ['draft', 'cancel', 'done'])])
+ignore_moves = ignore_moves.filtered(lambda m: m._should_bypass_reservation()).ids
+
+# Get move_lines with incorrect reservation (negative or invalid on state)
+incorrect_lines_grouped = MoveLines.read_group(
+    [
+        '|',
+        ('reserved_qty', '&lt;', 0),
+        '&amp;',
+        ('reserved_qty', '!=', 0),
+        '|',
+        ('state', 'in', ['done', 'draft', 'cancel']),
+        ('move_id', '=', False),
+    ],
+    tracked_fields + ['ids:array_agg(id)', 'reserved_qty:sum'],
+    tracked_fields,
+    lazy=False,
+)
+for lines_grp in incorrect_lines_grouped:
+    rd = products_rounding[lines_grp['product_id'][0]]
+    if float_compare(0, lines_grp['reserved_qty'], precision_rounding=rd) != 0:
+        impacted_move_lines.update(lines_grp['ids'])
+
+# Get key to match between quants and sml
+def get_key(res):
+    return res['product_id'], res['location_id'], res['lot_id'], res['package_id'], res['owner_id']
+
+# Create a python dictionary containing all quants with reserved quantities in the following format:
+#   (product_id, location_id, lot_id, package_id, owner_id): (id, reserved_quantity, quantity, rounding)
+all_quants = {
+    get_key(q): (q['id'], q['reserved_quantity'], q['quantity'], products_rounding[q['product_id'][0]])
+    for q in Quants.search_read([('reserved_quantity', '!=', 0)], tracked_fields + ['reserved_quantity', 'quantity'])
+}
+
+# Get all move_lines with reserved quantities
+all_grouped_move_lines = MoveLines.read_group(
+    [
+        ('move_id', 'not in', ignore_moves),
+        ('state', 'not in', ['done', 'draft', 'cancel']),
+        ('reserved_qty', '&gt;', 0),
+        ('move_id', '!=', False),
+    ],
+    tracked_fields + ['ids:array_agg(id)', 'reserved_qty:sum'],
+    tracked_fields,
+    lazy=False,
+)
+
+def check_quant(quant_key, quant_val=None, lines=None):
+    if quant_val is None and lines is None:
+        return
+    if quant_val is None:
+        quant_val = (None, 0, 0, products_rounding[quant_key[0][0]])
+    if lines is None:
+        lines = {'ids': [], 'reserved_qty': 0}
+
+    quant_id, quant_res, quant_qty, rounding = quant_val
+    err = False
+    # Quant reserved must be inferior or equal to the Quant quantity (Before Odoo 17)
+    err |= float_compare(quant_qty, quant_res, precision_rounding=rounding) == -1
+    # Quant reserved must be higher or equal to 0
+    err |= float_compare(0, quant_res, precision_rounding=rounding) == 1
+    # Quant reserved must be equal to Move reserved
+    err |= float_compare(lines['reserved_qty'], quant_res, precision_rounding=rounding) != 0
+    if err:
+        impacted_move_lines.update(lines['ids'])
+        if quant_id:
+            impacted_quants.add(quant_id)
+
+# Check errors on Move Lines and Quants
+for lines_grp in all_grouped_move_lines:
+    sq_key = get_key(lines_grp)
+    check_quant(sq_key, quant_val=all_quants.pop(sq_key, None), lines=lines_grp)
+# Quants with reservation without move lines reserved on it
+for sq_key, sq_val in all_quants.items():
+    check_quant(sq_key, quant_val=sq_val, lines=None)
+
+if impacted_quants:
+    Quants.browse(impacted_quants).write({'reserved_quantity': 0})
+if impacted_move_lines:
+    lines = MoveLines.browse(impacted_move_lines)
+    lines.with_context(bypass_reservation_update=True).write({'reserved_uom_qty': 0})
+    lines.move_id._recompute_state()
+if impacted_quants or impacted_move_lines:
+    report = "Reserved quantity set to 0 for the following: \n- stock.quant: {}\n- stock.move.line: {}".format(
+        impacted_quants, impacted_move_lines
+    )
+    log(report, level="debug")
+    action = {'type': 'ir.actions.client', 'tag': 'reload'}
+            </field>
+        </record>
     </data>
     <data noupdate="1">
         <!-- Resource: stock.location -->

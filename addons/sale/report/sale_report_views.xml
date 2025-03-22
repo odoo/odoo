@@ -89,7 +89,7 @@
     <record id="action_order_report_all" model="ir.actions.act_window">
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
-        <field name="view_mode">graph,pivot</field>
+        <field name="view_mode">graph,pivot,tree</field>
         <field name="view_id"></field>  <!-- force empty -->
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="domain">[('state', '!=', 'cancel')]</field>
@@ -100,13 +100,13 @@
     <record id="report_all_channels_sales_action" model="ir.actions.act_window">
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
-        <field name="view_mode">pivot</field>
+        <field name="view_mode">pivot,tree,graph</field>
     </record>
 
     <record id="action_order_report_quotation_salesteam" model="ir.actions.act_window">
         <field name="name">Quotations Analysis</field>
         <field name="res_model">sale.report</field>
-        <field name="view_mode">graph</field>
+        <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','=','draft'),('team_id', '=', active_id)]</field>
         <field name="context">{'search_default_order_month':1}</field>
         <field name="help">This report performs analysis on your quotations. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
@@ -115,7 +115,7 @@
     <record id="action_order_report_so_salesteam" model="ir.actions.act_window">
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
-        <field name="view_mode">graph</field>
+        <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','not in',('draft','cancel'))]</field>
         <field name="context">{
             'search_default_Sales': 1,

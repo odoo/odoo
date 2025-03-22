@@ -13,17 +13,18 @@
 # Kevilyn Rosa, 2023
 # Adriano Prado <adrianojprado@gmail.com>, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
-# Maitê Dietze, 2023
-# Layna Nascimento, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # douglas custodio <douglascstd@yahoo.com>, 2023
+# Wil Odoo, 2024
+# Maitê Dietze, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: douglas custodio <douglascstd@yahoo.com>, 2023\n"
+"Last-Translator: Maitê Dietze, 2024\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1467,8 +1468,8 @@ msgid "Animals & Nature"
 msgstr "Animais e natureza"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1719,9 +1720,22 @@ msgid "Auto subscription"
 msgstr "Auto inscrição"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
+#: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__auto_comment
+msgid "Automated Targeted Notification"
+msgstr "Notificação automatizada direcionada"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
 msgstr "Atividade Automática"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message.js:0
+#, python-format
+msgid "Automated message"
+msgstr "Mensagem automatizada"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__triggered_next_type_id
@@ -2438,9 +2452,11 @@ msgstr "Empresas"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -3724,8 +3740,11 @@ msgstr "Falhou"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render QWeb template : %s)"
-msgstr "Falhou ao renderizar o modelo QWeb: %s)"
+msgid ""
+"Failed to render QWeb template : %s\n"
+"\n"
+"%s)"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -4286,6 +4305,7 @@ msgstr "Modelo escondido"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Hide Call Settings"
@@ -4293,7 +4313,6 @@ msgstr "Ocultar configurações de chamada"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
@@ -5430,7 +5449,7 @@ msgstr "Sair"
 #: code:addons/mail/static/src/models/messaging_initializer.js:0
 #, python-format
 msgid "Leave this channel"
-msgstr "Deixar o canal"
+msgstr "Sair do canal"
 
 #. module: mail
 #. odoo-javascript
@@ -5571,10 +5590,10 @@ msgstr "Notas internas"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
+#: code:addons/mail/static/src/components/welcome_view/welcome_view.js:0
 #, python-format
-msgid "Logged as"
-msgstr "Logado como"
+msgid "Logged in as %s"
+msgstr "Conectado como %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -6952,6 +6971,14 @@ msgid "Open Document"
 msgstr "Abrir documento"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Abrir link"
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "Open Parent Document"
 msgstr "Abrir documento principal"
@@ -7171,24 +7198,24 @@ msgstr "Servidores POP/IMAP"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
 msgid "Parent"
-msgstr "Superior (Conta-pai)"
+msgstr "Principal"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_mail__parent_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__parent_id
 msgid "Parent Message"
-msgstr "Mensagem Principal"
+msgstr "Mensagem primária"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Modelo Principal"
+msgstr "Modelo primário"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID da thread do registro primário"
+msgstr "ID do tópico do registro primário"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -8582,6 +8609,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Show Call Settings"
@@ -8596,7 +8624,6 @@ msgstr "Mostrar Seguidores"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
@@ -9327,6 +9354,13 @@ msgstr ""
 "(Tipo de documento: %s, Operação: %s)"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/blur_manager.js:0
+#, python-format
+msgid "The selfie segmentation library was not loaded"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
@@ -9837,7 +9871,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Unblacklist"
-msgstr "Fora da Lista Negra"
+msgstr "Remover da lista de bloqueio"
 
 #. module: mail
 #. odoo-python
@@ -10132,16 +10166,6 @@ msgstr ""
 " servidor de e-mail pronto para uso (@mycompany.odoo.com)."
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-"O valor para `mail.catchall.domain.allowed` não pode ser validado.\n"
-"Deve ser uma lista de domínios separada por vírgulas, ex., example.com,example.org."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10162,6 +10186,17 @@ msgstr "VS"
 #, python-format
 msgid "VS button"
 msgstr "Botão VS"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"O valor para `mail.catchall.domain.allowed` não pode ser validado.\n"
+"Deve ser uma lista de domínios separada por vírgulas, ex., example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -16464,8 +16499,8 @@ msgid "doctor"
 msgstr "doctor"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0

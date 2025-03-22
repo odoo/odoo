@@ -9,20 +9,20 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
+"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,6 +61,9 @@ msgid ""
 "                    Some deliveries are already done. Returns can be created from the Delivery Orders.\n"
 "                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('display_delivery_alert', '=', False)]}\">\n"
+"                    Kai kurie inventoriaus judėjimai jau įvykdyti. Grąžinimai gali būti sukuriami iš pristatymo užsakymų.\n"
+"                </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -115,7 +118,7 @@ msgstr ""
 "- Atsargų perkėlimai: kiekis ateina iš patvirtintų paėmimų\n"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -133,7 +136,7 @@ msgid "As soon as possible"
 msgstr "Kaip įmanoma greičiau"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.js:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -141,7 +144,7 @@ msgid "Availability"
 msgstr "Pasiekiamumas"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -149,7 +152,7 @@ msgid "Available"
 msgstr "Pasiekiamas"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -184,7 +187,7 @@ msgstr "Data:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr ""
+msgstr "Sandėlis pagal nutylėjimą"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -204,7 +207,7 @@ msgstr "Pristatymo užsakymai"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_status
 msgid "Delivery Status"
-msgstr ""
+msgstr "Pristatymo būsena"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -237,6 +240,7 @@ msgid "Display incoterms on orders &amp; invoices"
 msgstr "Rodyti Incoterm sąlygas užsakymuose ir sąskaitose"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -256,12 +260,12 @@ msgstr "Įsigaliojimo data"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr "Paėmimo metu pasitaikiusios išimtis:"
+msgstr "Judėjimo metu pasitaikiusios išimtis(-ys):"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "Pardavimo užsakyme (-uose) pasitaikiusios išimtys:"
+msgstr "Pardavimo užsakyme(-uose) pasitaikiusios išimtis(-ys):"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -275,7 +279,7 @@ msgid "Expected Date"
 msgstr "Planuojama pristatymo data"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -293,7 +297,7 @@ msgid "Forecast Expected Date"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -308,7 +312,7 @@ msgstr "Šiandien laisvas kiekis"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__full
 msgid "Fully Delivered"
-msgstr ""
+msgstr "Pilnai pristatyta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -339,7 +343,7 @@ msgstr "Incoterm sąlygos"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm_location
 msgid "Incoterm Location"
-msgstr ""
+msgstr "Incoterm vieta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
@@ -397,6 +401,7 @@ msgid "Lot/Serial"
 msgstr "Partijos / serijinis numeris"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Make To Order"
@@ -442,21 +447,21 @@ msgid "Move forward expected delivery dates by"
 msgstr "Numatomas pristatymo datas pastumti į priekį per"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No enough future availaibility"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availaibility"
@@ -465,10 +470,10 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
 msgid "Not Delivered"
-msgstr ""
+msgstr "Nepristatyta"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
@@ -484,7 +489,7 @@ msgstr ""
 "pirkėjui."
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -494,7 +499,7 @@ msgstr "  "
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__partial
 msgid "Partially Delivered"
-msgstr ""
+msgstr "Dalinis pristatymas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -523,22 +528,22 @@ msgid "Qty To Deliver"
 msgstr "Pristatymo kiekis"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Quotations"
 msgstr "Komerciniai pasiūlymai"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Likęs poreikis bus pasiekiamas"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -647,6 +652,11 @@ msgid "Shipping Policy"
 msgstr "Pristatymo politika"
 
 #. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+msgid "Started"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
 msgstr "Atsargų perkėlimas"
@@ -678,13 +688,14 @@ msgid "Stock rule report"
 msgstr "Atsargų taisyklių ataskaita"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
 msgstr ""
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -694,15 +705,16 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid ""
-"The ordered quantity cannot be decreased below the amount already delivered."
-" Instead, create a return in your inventory."
+"The ordered quantity of a sale order line cannot be decreased below the "
+"amount already delivered. Instead, create a return in your inventory."
 msgstr ""
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -725,7 +737,7 @@ msgid "User"
 msgstr "Vartotojas"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -745,6 +757,7 @@ msgid "Warehouse"
 msgstr "Sandėlis"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Warning!"
@@ -787,8 +800,8 @@ msgid "processed instead of"
 msgstr "apdorota vietoje"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."
-msgstr ""
+msgstr "bus vėliau"

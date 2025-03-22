@@ -34,6 +34,7 @@ import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { Domain } from "@web/core/domain";
+import { GraphModel } from "@web/views/graph/graph_model";
 
 const serviceRegistry = registry.category("services");
 
@@ -1369,6 +1370,56 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test(
+        "line chart rendering (one groupBy, several domains with date identification) without stacked attribute",
+        async function (assert) {
+            serverData.models.foo.records = [
+                { date: "2021-01-04", revenue: 12 },
+                { date: "2021-01-12", revenue: 5 },
+                { date: "2021-01-19", revenue: 15 },
+                { date: "2021-01-26", revenue: 2 },
+                { date: "2021-02-04", revenue: 14 },
+                { date: "2021-02-17", revenue: false },
+                { date: false, revenue: 0 },
+            ];
+            await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `
+                    <graph type="line">
+                        <field name="revenue" type="measure"/>
+                        <field name="date" interval="week"/>
+                    </graph>
+                `,
+                comparison: {
+                    domains: [
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-02-01"],
+                                ["date", "<=", "2021-02-28"],
+                            ],
+                            description: "February 2021",
+                        },
+                        {
+                            arrayRepr: [
+                                ["date", ">=", "2021-01-01"],
+                                ["date", "<=", "2021-01-31"],
+                            ],
+                            description: "January 2021",
+                        },
+                    ],
+                    fieldName: "date",
+                },
+            });
+            assert.doesNotHaveClass(
+                target.querySelector(".o_graph_button[data-tooltip=Stacked]"),
+                "active",
+                "The stacked mode should be disabled"
+            );
+        }
+    );
+
+    QUnit.test(
         "line chart rendering (one groupBy, several domains with date identification)",
         async function (assert) {
             assert.expect(19);
@@ -2208,13 +2259,18 @@ QUnit.module("Views", (hooks) => {
             });
             assert.containsNone(target, ".o_view_nocontent");
             assert.containsOnce(target, ".o_graph_canvas_container");
-            checkDatasets(assert, graph, ["backgroundColor", "borderColor", "data", "label", "stack"], {
-                backgroundColor: ["#1f77b4"],
-                borderColor: getBorderWhite(),
-                data: [2],
-                label: "",
-                stack: undefined,
-            });
+            checkDatasets(
+                assert,
+                graph,
+                ["backgroundColor", "borderColor", "data", "label", "stack"],
+                {
+                    backgroundColor: ["#1f77b4"],
+                    borderColor: getBorderWhite(),
+                    data: [2],
+                    label: "",
+                    stack: undefined,
+                }
+            );
         }
     );
 
@@ -2321,7 +2377,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("process default view description", async function (assert) {
         assert.expect(1);
         const propsFromArch = new GraphArchParser().parse();
-        assert.deepEqual(propsFromArch, { fields: {}, fieldAttrs: {}, groupBy: [] });
+        assert.deepEqual(propsFromArch, { fields: {}, fieldAttrs: {}, groupBy: [], measures: [] });
     });
 
     QUnit.test("process simple arch (no field tag)", async function (assert) {
@@ -2335,6 +2391,7 @@ QUnit.module("Views", (hooks) => {
             fields,
             fieldAttrs: {},
             groupBy: [],
+            measures: [],
             mode: "line",
             order: "ASC",
         });
@@ -2346,6 +2403,7 @@ QUnit.module("Views", (hooks) => {
             fields,
             fieldAttrs: {},
             groupBy: [],
+            measures: [],
             stacked: false,
             title: "Title",
         });
@@ -2373,8 +2431,30 @@ QUnit.module("Views", (hooks) => {
                 fighters: { string: "FooFighters" },
             },
             measure: "revenue",
+            measures: ["revenue"],
             groupBy: ["date:day", "foo"],
             mode: "pie",
+        });
+    });
+
+    QUnit.test("process arch with non stored field tags of type measure", async function (assert) {
+        assert.expect(1);
+        const fields = serverData.models.foo.fields;
+        fields.revenue.store = false;
+        const arch = `
+            <graph>
+                <field name="product_id"/>
+                <field name="revenue" type="measure"/>
+                <field name="foo" type="measure"/>
+            </graph>
+        `;
+        const propsFromArch = new GraphArchParser().parse(arch, fields);
+        assert.deepEqual(propsFromArch, {
+            fields,
+            fieldAttrs: {},
+            measure: "foo",
+            measures: ["revenue", "foo"],
+            groupBy: ["product_id"],
         });
     });
 
@@ -2965,6 +3045,28 @@ QUnit.module("Views", (hooks) => {
         checkLegend(assert, graph, "Product");
         assert.strictEqual(getYAxeLabel(graph), "Product");
     });
+
+    QUnit.test(
+        "non store fields defined on the arch are present in the measures",
+        async function (assert) {
+            serverData.models.foo.fields.revenue.store = false;
+            await makeView({
+                serverData,
+                type: "graph",
+                resModel: "foo",
+                arch: `<graph>
+                <field name="product_id"/>
+                <field name="revenue" type="measure"/>
+                <field name="foo" type="measure"/>
+            </graph>`,
+            });
+            await toggleMenu(target, "Measures");
+            assert.deepEqual(
+                Array.from(target.querySelectorAll(".o_menu_item")).map((e) => e.innerText.trim()),
+                ["Foo", "Revenue", "Count"]
+            );
+        }
+    );
 
     QUnit.test('graph view "graph_measure" field in context', async function (assert) {
         assert.expect(6);
@@ -4149,10 +4251,10 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 this._super(...arguments);
                 onRendered(() => {
-                    assert.step("rendering")
+                    assert.step("rendering");
                 });
-            }
-        })
+            },
+        });
         await makeView({
             serverData,
             type: "graph",
@@ -4161,5 +4263,80 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["rendering"]);
         await validateSearch(target);
         assert.verifySteps(["rendering"]);
+    });
+
+    QUnit.test("limit dataset amount", async function (assert) {
+        serverData.models.project = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+            },
+            records: [],
+        };
+        serverData.models.stage = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+            },
+            records: [],
+        };
+        serverData.models.task = {
+            fields: {
+                id: { type: "integer" },
+                name: { type: "char" },
+                project_id: {
+                    type: "many2one",
+                    relation: "project",
+                    sortable: true,
+                    string: "Project",
+                },
+                stage_id: { type: "many2one", relation: "stage", sortable: true, string: "Stage" },
+            },
+            records: [],
+        };
+        for (let i = 1; i <= 600; i++) {
+            serverData.models.project.records.push({
+                id: i,
+                name: `Project ${i}`,
+            });
+            serverData.models.stage.records.push({
+                id: i,
+                name: `Stage ${i}`,
+            });
+            serverData.models.task.records.push({
+                id: i,
+                project_id: i,
+                stage_id: i,
+                name: `Task ${i}`,
+            });
+        }
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "task",
+            arch: `
+                <graph>
+                    <field name="project_id"/>
+                    <field name="stage_id"/>
+                </graph>
+            `,
+        });
+
+        assert.strictEqual(graph.model.data.exceeds, true);
+        assert.strictEqual(graph.model.data.datasets.length, 80);
+        assert.strictEqual(graph.model.data.labels.length, 80);
+        assert.containsN(target, `.o_graph_alert`, 1);
+
+        patchWithCleanup(GraphModel.prototype, {
+            notify() {
+                assert.step("rerender");
+            },
+        });
+        await click(target, `.o_graph_load_all_btn`);
+        assert.verifySteps(["rerender"]);
+        assert.strictEqual(graph.model.data.exceeds, false);
+        assert.strictEqual(graph.model.data.datasets.length, 600);
+        assert.strictEqual(graph.model.data.labels.length, 600);
     });
 });

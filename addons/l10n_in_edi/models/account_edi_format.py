@@ -41,13 +41,28 @@ class AccountEdiFormat(models.Model):
            + self.env.ref("l10n_in.tax_tag_non_gst_supplies").ids
         )
 
+    def _get_l10n_in_gst_tags(self):
+        return (
+           self.env.ref('l10n_in.tax_tag_base_sgst')
+           + self.env.ref('l10n_in.tax_tag_base_cgst')
+           + self.env.ref('l10n_in.tax_tag_base_igst')
+           + self.env.ref('l10n_in.tax_tag_base_cess')
+           + self.env.ref('l10n_in.tax_tag_zero_rated')
+        ).ids
+
+    def _get_l10n_in_non_taxable_tags(self):
+        return (
+           self.env.ref("l10n_in.tax_tag_exempt")
+           + self.env.ref("l10n_in.tax_tag_nil_rated")
+           + self.env.ref("l10n_in.tax_tag_non_gst_supplies")
+        ).ids
+
     def _get_move_applicability(self, move):
         # EXTENDS account_edi
         self.ensure_one()
         if self.code != 'in_einvoice_1_03':
             return super()._get_move_applicability(move)
-        all_base_tags = self._get_l10n_in_base_tags()
-        is_under_gst = any(move_line_tag.id in all_base_tags for move_line_tag in move.line_ids.tax_tag_ids)
+        is_under_gst = any(move_line_tag.id in self._get_l10n_in_gst_tags() for move_line_tag in move.line_ids.tax_tag_ids)
         if move.is_sale_document(include_receipts=True) and move.country_code == 'IN' and is_under_gst and move.l10n_in_gst_treatment in (
             "regular",
             "composition",
@@ -83,7 +98,7 @@ class AccountEdiFormat(models.Model):
         error_message += self._l10n_in_validate_partner(move.company_id.partner_id, is_company=True)
         if not re.match("^.{1,16}$", move.name):
             error_message.append(_("Invoice number should not be more than 16 characters"))
-        all_base_tags = self._get_l10n_in_base_tags()
+        all_base_tags = self._get_l10n_in_gst_tags() + self._get_l10n_in_non_taxable_tags()
         for line in move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding')):
             if line.price_subtotal < 0:
                 # Line having a negative amount is not allowed.
@@ -197,6 +212,7 @@ class AccountEdiFormat(models.Model):
                         error_codes = [e.get("code") for e in error]
             if "9999" in error_codes:
                 response = {}
+                error = []
                 odoobot = self.env.ref("base.partner_root")
                 invoice.message_post(author_id=odoobot.id, body=_(
                     "Somehow this invoice had been cancelled to government before." \
@@ -210,7 +226,7 @@ class AccountEdiFormat(models.Model):
                     "error": self._l10n_in_edi_get_iap_buy_credits_message(invoice.company_id),
                     "blocking_level": "error",
                 }}
-            else:
+            if error:
                 error_message = "<br/>".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in error])
                 return {invoice: {
                     "success": False,
@@ -220,13 +236,15 @@ class AccountEdiFormat(models.Model):
         if not response.get("error"):
             json_dump = json.dumps(response.get("data", {}))
             json_name = "%s_cancel_einvoice.json" % (invoice.name.replace("/", "_"))
-            attachment = self.env["ir.attachment"].create({
-                "name": json_name,
-                "raw": json_dump.encode(),
-                "res_model": "account.move",
-                "res_id": invoice.id,
-                "mimetype": "application/json",
-            })
+            attachment = False
+            if json_dump:
+                attachment = self.env["ir.attachment"].create({
+                    "name": json_name,
+                    "raw": json_dump.encode(),
+                    "res_model": "account.move",
+                    "res_id": invoice.id,
+                    "mimetype": "application/json",
+                })
             return {invoice: {"success": True, "attachment": attachment}}
 
     def _l10n_in_validate_partner(self, partner, is_company=False):
@@ -238,7 +256,7 @@ class AccountEdiFormat(models.Model):
             message.append(_("- Street2 should be min 3 and max 100 characters"))
         if not re.match("^.{3,100}$", partner.city or ""):
             message.append(_("- City required min 3 and max 100 characters"))
-        if not re.match("^.{3,50}$", partner.state_id.name or ""):
+        if partner.country_id.code == "IN" and not re.match("^.{3,50}$", partner.state_id.name or ""):
             message.append(_("- State required min 3 and max 50 characters"))
         if partner.country_id.code == "IN" and not re.match("^[0-9]{6,}$", partner.zip or ""):
             message.append(_("- Zip code required 6 digits"))
@@ -480,7 +498,7 @@ class AccountEdiFormat(models.Model):
                 "TaxSch": "GST",
                 "SupTyp": self._l10n_in_get_supply_type(invoice, tax_details_by_code),
                 "RegRev": tax_details_by_code.get("is_reverse_charge") and "Y" or "N",
-                "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst") and "Y" or "N"},
+                "IgstOnIntra": is_intra_state and tax_details_by_code.get("igst_amount") and "Y" or "N"},
             "DocDtls": {
                 "Typ": invoice.move_type == "out_refund" and "CRN" or "INV",
                 "No": invoice.name,
@@ -528,7 +546,7 @@ class AccountEdiFormat(models.Model):
         if is_overseas:
             json_payload.update({
                 "ExpDtls": {
-                    "RefClm": tax_details_by_code.get("igst") and "Y" or "N",
+                    "RefClm": tax_details_by_code.get("igst_amount") and "Y" or "N",
                     "ForCur": invoice.currency_id.name,
                     "CntCode": saler_buyer.get("buyer_details").country_id.code or "",
                 }
@@ -621,8 +639,7 @@ class AccountEdiFormat(models.Model):
         return {'error': [{
             'code': '0',
             'message': _(
-                "Unable to send e-Invoice."
-                "Create an API user in NIC portal, and set it using the top menu: Configuration > Settings."
+                "Ensure GST Number set on company setting and API are Verified."
             )}
         ]}
 

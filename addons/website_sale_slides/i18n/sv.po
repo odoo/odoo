@@ -5,20 +5,19 @@
 # Translators:
 # Simon S, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
-# Kristoffer Grundström <lovaren@gmail.com>, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2022\n"
+"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>, 2024\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,52 +48,37 @@ msgstr ""
 "En tjänst är en icke-materiell produkt du tillhandahåller."
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "About us"
-msgstr "Om oss"
-
-#. module: website_sale_slides
+#. odoo-python
 #: code:addons/website_sale_slides/models/product_product.py:0
 #, python-format
 msgid "Access to:%s%s"
-msgstr ""
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"As a leading professional services firm,\n"
-"                                we know that success is all about the\n"
-"                                commitment we put on strong services."
-msgstr ""
-"Som ett ledande företag av professionella tjänster\n"
-"                                vet vi att framgång helt är beroende av\n"
-"                                engagemanget vi lägger i våra tjänster."
+msgstr "Tillgång till:%s%s"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
 msgid "Buy Now Button"
-msgstr ""
+msgstr "Köp nu-knapp"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course to validate your answers!"
 msgstr "Köp kursen för att få dina svar rättade!"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Buy this Course"
-msgstr ""
+msgstr "Köp denna kurs"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
 msgid "Come back once your courses starts selling to report on your revenues."
 msgstr ""
+"Kom tillbaka när dina kurser börjar säljas för att rapportera om dina "
+"intäkter."
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_slide_channel
@@ -103,20 +87,19 @@ msgid "Course"
 msgstr "Kurs"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.default_product_course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
-msgstr ""
+msgstr "Tillgång till kursen"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
 msgid "Course Page"
-msgstr ""
+msgstr "Tävlingssida"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "Course Unavailable"
-msgstr ""
+msgstr "Kursen är inte tillgänglig"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_product_product__channel_ids
@@ -129,7 +112,6 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.product_course_channel_6
 #: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
 msgid "DIY Furniture Course"
 msgstr "Gör Det Själv Möbel Kurs"
@@ -137,7 +119,7 @@ msgstr "Gör Det Själv Möbel Kurs"
 #. module: website_sale_slides
 #: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
 msgid "Defines how people can enroll to your Course."
-msgstr ""
+msgstr "Definierar hur människor kan anmäla sig till din kurs."
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
@@ -151,38 +133,12 @@ msgid "Free Preview"
 msgstr "Gratis förhandsvisning"
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"Great quotation templates will significantly\n"
-"                                <strong>boost your success rate</strong>. The\n"
-"                                first section is usually about your company,\n"
-"                                your references, your methodology or\n"
-"                                guarantees, your team, SLA, terms and conditions, etc."
-msgstr ""
-"Grymma offertmallar kommer definitivt att\n"
-"                                <strong>öka din försäljning</strong>. Den\n"
-"                                första sektionen är vanligtvis om ditt företag,\n"
-"                                dina referenser, garantier\n"
-"                                ditt team, villkor eller liknande."
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"If you edit a quotation from the 'Preview' of a quotation, you will\n"
-"                        update that quotation only. If you edit the quotation\n"
-"                        template (from the Configuration menu), all future quotations will\n"
-"                        use this modified template."
-msgstr ""
-
-#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "Join this Course"
-msgstr ""
+msgstr "Gå med i denna Kurs"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid ""
@@ -194,7 +150,7 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
 msgid "No sales data yet!"
-msgstr ""
+msgstr "Ännu inga försäljningsuppgifter!"
 
 #. module: website_sale_slides
 #: model:ir.model.fields.selection,name:website_sale_slides.selection__slide_channel__enroll__payment
@@ -205,35 +161,13 @@ msgstr "På betalning"
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Once your order is paid &amp; confirmed, you will gain access to:"
 msgstr ""
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Our Offer"
-msgstr "Vårt erbjudande"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Our Quality"
-msgstr "Vår kvalitet"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Our Service"
-msgstr "Vår tjänst"
+"När din beställning är betald &amp; bekräftad, kommer du att få tillgång "
+"till:"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
 msgid "Preview"
 msgstr "Förhandsgranskning"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Price"
-msgstr "Pris"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_template
@@ -258,15 +192,6 @@ msgid "Product is required for on payment channels."
 msgstr "Produkt krävs för betalningskanaler."
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"Product quality is the foundation we\n"
-"                                stand on; we build it with a relentless\n"
-"                                focus on fabric, performance and craftsmanship."
-msgstr ""
-
-#. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
 msgid "Revenues"
 msgstr "Intäkter"
@@ -283,14 +208,14 @@ msgid "Sales Order"
 msgstr "Order"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
 msgstr "Logga in"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign in and buy the course to take the quiz"
@@ -299,10 +224,9 @@ msgstr "Logga in och köp kursen så kan du besvara frågorna"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Start Learning"
-msgstr ""
+msgstr "Börja lära dig"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.product_course_channel_1
 #: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
 msgid "Taking care of Trees Course"
 msgstr "Ta hand om trädenkurs"
@@ -310,29 +234,19 @@ msgstr "Ta hand om trädenkurs"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
 msgid "This course cannot be bought because its linked product"
-msgstr ""
+msgstr "Denna kurs kan inte köpas eftersom den är kopplad till en produkt"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
-msgstr "Denna kurs är betalad"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the <i>Sales</i>\n"
-"                                application, using the menu: Configuration /\n"
-"                                Quotation Templates."
-msgstr ""
+msgstr "Denna kurs är betalad."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
 msgid "Total Revenues"
-msgstr ""
+msgstr "Totala intäkter"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__product_sale_revenues
@@ -340,50 +254,21 @@ msgid "Total revenues"
 msgstr "Totala intäkter"
 
 #. module: website_sale_slides
-#: model:product.product,uom_name:website_sale_slides.default_product_course
-#: model:product.product,uom_name:website_sale_slides.product_course_channel_1
-#: model:product.product,uom_name:website_sale_slides.product_course_channel_6
-#: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
-#: model:product.template,uom_name:website_sale_slides.product_course_channel_1_product_template
-#: model:product.template,uom_name:website_sale_slides.product_course_channel_6_product_template
-msgid "Units"
-msgstr "Enheter"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"We always ensure that our products are\n"
-"                                set at a fair price so that you will be\n"
-"                                happy to buy them."
-msgstr ""
-
-#. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_website
 msgid "Website"
 msgstr "Webbplats"
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"You can <strong>set a description per product</strong>. Odoo will\n"
-"                        automatically create a quotation using the descriptions\n"
-"                        of all products in the proposal. The table of content\n"
-"                        on the left is generated automatically using the styles you\n"
-"                        used in your description (heading 1, heading 2, ...)"
-msgstr ""
-
-#. module: website_sale_slides
+#. odoo-python
 #: code:addons/website_sale_slides/models/sale_order.py:0
 #, python-format
 msgid "You can only add a course once in your cart."
-msgstr ""
+msgstr "Du kan bara lägga till en kurs en gång i din varukorg."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "You have gained access to the following course(s):"
-msgstr ""
+msgstr "Du har fått tillgång till följande kurs(er):"
 
 #. module: website_sale_slides
 #: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
@@ -398,14 +283,14 @@ msgstr "eLearning Försäljningsanalys"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
 msgid "is not published."
-msgstr ""
+msgstr "är inte publicerad."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "step(s)"
-msgstr ""
+msgstr "steg"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "to access resources"
-msgstr ""
+msgstr "för att nå resurser"

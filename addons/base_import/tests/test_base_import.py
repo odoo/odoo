@@ -383,7 +383,7 @@ class TestPreview(TransactionCase):
         ])
         self.assertEqual(result['preview'], [['foo', 'bar', 'qux'], ['1', '3', '5'], ['2', '4', '6']])
 
-    @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
+    @unittest.skipUnless(can_import('xlrd.xlsx') or can_import('openpyxl'), "XLRD/XLSX not available")
     def test_xlsx_success(self):
         xlsx_file_path = get_module_resource('base_import', 'tests', 'test.xlsx')
         file_content = open(xlsx_file_path, 'rb').read()

@@ -216,7 +216,7 @@ ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer('AAA Partner');
 ProductScreen.do.clickDisplayedProduct('Test Product A');
 PosLoyalty.do.clickRewardButton();
-ProductScreen.check.totalAmountIs('138.50');
+ProductScreen.check.totalAmountIs('139');
 
 Tour.register('PosLoyaltyTour6', { test: true, url: '/pos/web' }, getSteps());
 
@@ -252,9 +252,184 @@ ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer('AAA Partner');
 ProductScreen.do.clickDisplayedProduct('Product B');
 ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.totalAmountIs('210.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.clickRewardButton();
 ProductScreen.check.totalAmountIs('205.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.do.clickRewardButton();
 ProductScreen.check.totalAmountIs('200.00');
 
 Tour.register('PosLoyaltyTour9', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Product Test');
+ProductScreen.check.totalAmountIs('1.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.claimReward('Free Product B');
+PosLoyalty.check.hasRewardLine('Free Product B', '-1.00');
+ProductScreen.check.totalAmountIs('1.00');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+
+Tour.register('PosLoyaltyTour10', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+PosLoyalty.check.customerIs('AAA Partner');
+ProductScreen.exec.addOrderline('Product Test', '3');
+ProductScreen.check.totalAmountIs('150.00');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+PosLoyalty.exec.finalizeOrder('Cash');
+
+Tour.register('PosLoyaltyTour11.1', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+PosLoyalty.check.customerIs('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Product Test');
+ProductScreen.check.totalAmountIs('50.00');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+PosLoyalty.do.enterCode('123456');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+PosLoyalty.check.hasRewardLine('Free Product', '-3.00');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+ProductScreen.check.totalAmountIs('50.00');
+PosLoyalty.exec.finalizeOrder('Cash', '50');
+
+Tour.register('PosLoyaltyTour11.2', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.exec.addOrderline('Free Product A', '2');
+ProductScreen.do.clickDisplayedProduct('Free Product A');
+ProductScreen.check.totalAmountIs('2.00');
+PosLoyalty.check.hasRewardLine('Free Product', '-1.00');
+
+ProductScreen.exec.addOrderline('Free Product B', '2');
+ProductScreen.do.clickDisplayedProduct('Free Product B');
+ProductScreen.check.totalAmountIs('4.00');
+PosLoyalty.check.hasRewardLine('Free Product', '-2.00');
+
+ProductScreen.exec.addOrderline('Free Product B', '5');
+ProductScreen.do.clickDisplayedProduct('Free Product B');
+ProductScreen.check.totalAmountIs('6.00');
+PosLoyalty.check.hasRewardLine('Free Product', '-3.00');
+
+Tour.register('PosLoyaltyTour12', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.selectedOrderlineHas('Product A', '1.00', '20.00');
+PosLoyalty.check.orderTotalIs('20.00');
+
+ProductScreen.do.clickDisplayedProduct('Product B');
+ProductScreen.check.selectedOrderlineHas('Product B', '1.00', '30.00');
+PosLoyalty.check.orderTotalIs('50.00');
+
+ProductScreen.do.clickDisplayedProduct('Product A');
+ProductScreen.check.selectedOrderlineHas('Product A', '2.00', '40.00');
+PosLoyalty.check.orderTotalIs('66.00');
+
+Tour.register('PosLoyaltyMinAmountAndSpecificProductTour', {test: true, url: '/pos/web'}, getSteps());
+
+function createOrderCoupon(totalAmount, couponName, couponAmount, loyaltyPoints) {
+    return [
+        ProductScreen.do.confirmOpeningPopup(),
+        ProductScreen.do.clickHomeCategory(),
+        ProductScreen.do.clickPartnerButton(),
+        ProductScreen.do.clickCustomer("partner_a"),
+        ProductScreen.exec.addOrderline("product_a", "1"),
+        ProductScreen.exec.addOrderline("product_b", "1"),
+        PosLoyalty.do.enterCode("promocode"),
+        PosLoyalty.check.hasRewardLine(`${couponName}`, `${couponAmount}`),
+        PosLoyalty.check.orderTotalIs(`${totalAmount}`),
+        PosLoyalty.check.pointsAwardedAre(`${loyaltyPoints}`),
+        PosLoyalty.exec.finalizeOrder("Cash"),
+    ];
+}
+
+startSteps();
+createOrderCoupon("135.00", "10% on your order", "-15.00", "135");
+Tour.register("PosLoyaltyPointsDiscountNoDomainProgramNoDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+createOrderCoupon("135.00", "10% on your order", "-15.00", "100");
+Tour.register("PosLoyaltyPointsDiscountNoDomainProgramDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+createOrderCoupon("140.00", "10% on food", "-10.00", "90");
+Tour.register("PosLoyaltyPointsDiscountWithDomainProgramDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+ProductScreen.do.confirmOpeningPopup(),
+ProductScreen.do.clickHomeCategory(),
+ProductScreen.do.clickPartnerButton(),
+ProductScreen.do.clickCustomer("partner_a"),
+ProductScreen.exec.addOrderline("product_a", "1"),
+PosLoyalty.check.hasRewardLine('10% on your order', '-10.00');
+PosLoyalty.check.orderTotalIs('90'),
+PosLoyalty.check.pointsAwardedAre("90"),
+PosLoyalty.exec.finalizeOrder("Cash", "90"),
+Tour.register("PosLoyaltyPointsGlobalDiscountProgramNoDomain", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer("partner_a");
+
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+PosLoyalty.check.checkNoClaimableRewards();
+ProductScreen.check.selectedOrderlineHas('Test Product A', '1.00', '100.00');
+PosLoyalty.exec.finalizeOrder("Cash");
+
+Tour.register('PosLoyaltyArchivedRewardProductsInactive', {test: true, url: '/pos/web'}, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer("partner_a");
+
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+ProductScreen.check.selectedOrderlineHas('Test Product A', '1.00', '100.00');
+PosLoyalty.exec.finalizeOrder("Cash");
+
+Tour.register('PosLoyaltyArchivedRewardProductsActive', {test: true, url: '/pos/web'}, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer("partner_a");
+
+ProductScreen.exec.addOrderline("Test Product A", "5"),
+ProductScreen.do.clickDisplayedProduct('Test Product B');
+PosLoyalty.check.hasRewardLine('10% on your order', '-3.00');
+PosLoyalty.check.hasRewardLine('10% on Test Product B', '-0.45');
+PosLoyalty.exec.finalizeOrder("Cash");
+
+Tour.register('PosLoyalty2DiscountsSpecificGlobal', {test: true, url: '/pos/web'}, getSteps());

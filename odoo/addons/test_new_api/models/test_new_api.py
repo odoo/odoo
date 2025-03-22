@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 _logger = logging.getLogger('precompute_setter')
 
@@ -156,7 +157,7 @@ class Message(models.Model):
     @api.constrains('author', 'discussion')
     def _check_author(self):
         for message in self.with_context(active_test=False):
-            if message.discussion and message.author not in message.discussion.participants:
+            if message.discussion and message.author not in message.discussion.sudo().participants:
                 raise ValidationError(_("Author must be among the discussion participants."))
 
     @api.depends('author.name', 'discussion.name')
@@ -1152,19 +1153,31 @@ class ModelMany2oneReference(models.Model):
 
     res_model = fields.Char('Resource Model')
     res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+    const = fields.Boolean(default=True)
 
 
 class InverseM2oRef(models.Model):
     _name = 'test_new_api.inverse_m2o_ref'
     _description = 'dummy m2oref inverse model'
 
-    model_ids = fields.One2many('test_new_api.model_many2one_reference', 'res_id', string="Models")
+    model_ids = fields.One2many(
+        'test_new_api.model_many2one_reference', 'res_id',
+        string="Models",
+    )
     model_ids_count = fields.Integer("Count", compute='_compute_model_ids_count')
+    model_computed_ids = fields.One2many(
+        'test_new_api.model_many2one_reference',
+        string="Models Computed",
+        compute='_compute_model_computed_ids',
+    )
 
     @api.depends('model_ids')
     def _compute_model_ids_count(self):
         for rec in self:
             rec.model_ids_count = len(rec.model_ids)
+
+    def _compute_model_computed_ids(self):
+        self.model_computed_ids = []
 
 
 class ModelChildM2o(models.Model):
@@ -1438,7 +1451,9 @@ class ComputeMember(models.Model):
 
 class User(models.Model):
     _name = _description = 'test_new_api.user'
+    _allow_sudo_commands = False
 
+    name = fields.Char()
     group_ids = fields.Many2many('test_new_api.group')
     group_count = fields.Integer(compute='_compute_group_count', store=True)
 
@@ -1450,7 +1465,9 @@ class User(models.Model):
 
 class Group(models.Model):
     _name = _description = 'test_new_api.group'
+    _allow_sudo_commands = False
 
+    name = fields.Char()
     user_ids = fields.Many2many('test_new_api.user')
 
 
@@ -1882,3 +1899,13 @@ class UnsearchableO2M(models.Model):
     def _compute_parent_id(self):
         for r in self:
             r.parent_id = r.stored_parent_id
+
+
+class ModelAutovacuumed(models.Model):
+    _name = _description = 'test_new_api.autovacuumed'
+
+    expire_at = fields.Datetime('Expires at')
+
+    @api.autovacuum
+    def _gc(self):
+        self.search([('expire_at', '<', datetime.datetime.now() - datetime.timedelta(days=1))]).unlink()

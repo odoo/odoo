@@ -177,7 +177,7 @@
                     <field name="currency_id" readonly="1" groups="base.group_multi_currency" optional="hide" string="Currency" attrs="{'invisible':[('is_same_currency', '=', True)]}"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
-                    <field name="tax_tag_ids" string="Tax Grids" widget="many2many_tags" width="0.5" optional="hide"/>
+                    <field name="tax_tag_ids" string="Tax Grids" domain="[('applicability', '=', 'taxes')]" widget="many2many_tags" width="0.5" optional="hide"/>
                     <field name="discount_date" string="Discount Date" optional="hide" />
                     <field name="discount_amount_currency" string="Discount Amount" optional="hide" />
                     <field name="tax_line_id" string="Originator Tax" optional="hide" readonly="1"/>
@@ -344,6 +344,7 @@
                     <filter string="Report Dates" name="date_between" domain="[('date', '&gt;=', context.get('date_from')), ('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <filter string="Report Dates" name="date_before" domain="[('date', '&lt;=', context.get('date_to'))]" invisible="1"/>
                     <separator/>
+                    <filter string="Analytic Accounts" name="analytic_accounts" domain="[('analytic_distribution', 'in', context.get('analytic_ids'))]" invisible="1"/>
                     <group expand="0" string="Group By">
                         <filter string="Journal Entry" name="group_by_move" domain="[]" context="{'group_by': 'move_name'}"/>
                         <filter string="Account" name="group_by_account" domain="[]" context="{'group_by': 'account_id'}"/>
@@ -543,7 +544,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
-                                        <span><field name="amount_total" widget='monetary'/></span>
+                                        <span><field name="amount_total_in_currency_signed" widget='monetary'/></span>
                                         <span><field name="currency_id" invisible="1"/></span>
                                     </div>
                                     <div class="col-6">
@@ -596,7 +597,7 @@
                         <!-- Preview (only customer invoices) -->
                         <button name="preview_invoice" type="object" string="Preview" data-hotkey="o"
                                 title="Preview invoice"
-                                attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund'))]}"/>
+                                attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('state', '==', 'cancel')]}"/>
                         <!-- Reverse -->
                         <button name="%(action_view_account_move_reversal)d" string="Reverse Entry"
                                 type="action" groups="account.group_account_invoice" data-hotkey="z"
@@ -754,7 +755,7 @@
                                 <field name="name" attrs="{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
                                 'readonly': [('state', '!=', 'draft')]}" placeholder="Draft"/>
 
-                                <span attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('quick_edit_mode', '=', True)]}">Draft</span>
+                                <span attrs="{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), ('name', '!=', '/'), ('posted_before', '=', True), ('quick_edit_mode', '=', True)]}">Draft</span>
                             </h1>
                         </div>
                         <group>
@@ -840,7 +841,7 @@
                                      invisible="context.get('default_journal_id') and context.get('move_type', 'entry') != 'entry'">
                                     <field name="journal_id"
                                         options="{'no_create': True, 'no_open': True}"
-                                        attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                        attrs="{'readonly': [('posted_before', '=', True), ('name', 'not in', (False, '', '/'))]}"/>
                                     <span class="oe_inline o_form_label mx-3"
                                           groups="base.group_multi_currency"
                                           attrs="{'invisible': [('move_type', '=', 'entry')]}"> in </span>
@@ -1306,6 +1307,8 @@
                     <filter name="open" string="Unpaid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]"/>
                     <!-- in_payment & paid -->
                     <filter name="closed" string="Paid" domain="[('state', '=', 'posted'), ('payment_state', 'in', ('in_payment', 'paid'))]"/>
+                    <!-- reversed -->
+                    <filter name="reversed" string="Reversed" domain="[('state', '=', 'posted'), ('payment_state', '=', 'reversed')]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
                         ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
@@ -1326,10 +1329,14 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Salesperson" name="salesperson" context="{'group_by':'invoice_user_id'}"/>
-                        <filter name="status" string="Status" context="{'group_by':'state'}"/>
+                        <filter string="Partner" name="groupy_by_partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Status" name="status" context="{'group_by':'state'}"/>
+                        <filter string="Journal" name="groupy_by_journal" domain="[]" context="{'group_by': 'journal_id'}"/>
                         <separator/>
                         <filter string="Invoice Date" name="invoicedate" context="{'group_by': 'invoice_date'}"/>
                         <filter string="Due Date" name="duedate" context="{'group_by': 'invoice_date_due'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                        <filter string="Company" name="group_by_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Sequence Prefix" name="group_by_sequence_prefix" context="{'group_by': 'sequence_prefix'}" invisible="1"/>
                     </group>
                </search>

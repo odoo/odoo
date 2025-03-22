@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,7 @@ msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 
 #. module: auth_oauth
+#. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid "Access Denied"
@@ -38,12 +40,12 @@ msgstr "Acceso denegado"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
-msgstr "Permitir a los usuarios acceder con Google"
+msgstr "Permita que los usuarios inicien sesión con Google"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Allow users to sign in with their Google account"
-msgstr "Permitir a los usuarios firmar con su cuenta Google"
+msgstr "Permita que los usuarios inicien sesión con su cuenta de Google"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__enabled
@@ -53,7 +55,7 @@ msgstr "Permitido"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
 msgid "Authorization URL"
-msgstr "Enlace de autorización"
+msgstr "URL de autorización"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -64,17 +66,17 @@ msgstr "Clase CSS"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_client_id
 msgid "Client ID"
-msgstr "Identificación del cliente"
+msgstr "ID de cliente"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr "Identificación del cliente:"
+msgstr "ID de cliente:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__create_uid
@@ -109,7 +111,7 @@ msgstr "Autenticación de Google"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__id
 msgid "ID"
-msgstr "Identificación"
+msgstr "ID"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider____last_update
@@ -129,7 +131,7 @@ msgstr "Última actualización el"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
 msgid "Link text in Login Dialog"
-msgstr "Enlace en la ventana de acceso"
+msgstr "Texto del enlace en la ventana de acceso"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
@@ -190,7 +192,7 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users__oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "Identificación de usuario OAuth para el proveedor"
+msgstr "user_id del proveedor OAuth "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__name
@@ -215,9 +217,10 @@ msgstr "Secuencia"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__server_uri_google
 msgid "Server uri"
-msgstr "Servidor uri"
+msgstr "URI del servidor"
 
 #. module: auth_oauth
+#. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid "Sign up is not allowed on this database."
@@ -236,9 +239,10 @@ msgstr "Usuario"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
 msgid "UserInfo URL"
-msgstr "Enlace de la información del usuario"
+msgstr "URL de UserInfo"
 
 #. module: auth_oauth
+#. odoo-python
 #: code:addons/auth_oauth/controllers/main.py:0
 #, python-format
 msgid ""
@@ -246,17 +250,17 @@ msgid ""
 "Please ask for an invitation and be sure to follow the link in your "
 "invitation email."
 msgstr ""
-"No tiene permiso para acceder a esta base de datos o su invitación ha "
-"expirado. Por favor solicite una invitación y asegúrese de hacer clic en el "
-"enlace en el correo de invitación."
+"No tiene acceso a esta base de datos o su invitación ha expirado. Solicite "
+"una invitación y asegúrese de hacer clic en el enlace del correo de "
+"invitación."
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr "arco"
+msgstr "arquitectura"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
-msgstr "ej.. 1234-xyz.apps.googleusercontent.com"
+msgstr "ej. 1234-xyz.apps.googleusercontent.com"

@@ -501,7 +501,7 @@
                     <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                     <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
-                        <div class="oe_edit_only" name="edit_alias">
+                        <div class="oe_edit_only" name="edit_alias" dir="ltr">
                             <field name="alias_name" class="oe_inline o_job_alias" placeholder="e.g. sales-manager"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                         </div>
                         <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
@@ -542,7 +542,7 @@
                 <label for="alias_name" string="Email Alias" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                 <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
-                    <div class="oe_edit_only" name="edit_alias">
+                    <div class="oe_edit_only" name="edit_alias" dir="ltr">
                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                     </div>
                 </div>
@@ -758,7 +758,7 @@
         <field name="model">ir.attachment</field>
         <field name="mode">primary</field>
         <field name="arch" type="xml">
-            <tree create="0">
+            <tree>
                 <field name="name" invisible="1"/>
                 <field name="res_id" invisible="1"/>
                 <field name="res_model" invisible="1"/>

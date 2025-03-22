@@ -381,6 +381,22 @@ def model(method):
     return method
 
 
+def private(method):
+    """ Decorate a record-style method to indicate that the method cannot be
+        called using RPC. Example::
+
+            @api.private
+            def method(self, args):
+                ...
+
+        If you have business methods that should not be called over RPC, you
+        should prefix them with "_". This decorator may be used in case of
+        existing public methods that become non-RPC callable or for ORM
+        methods.
+    """
+    method._api_private = True
+    return method
+
 _create_logger = logging.getLogger(__name__ + '.create')
 
 
@@ -456,7 +472,9 @@ def _call_kw_multi(method, self, args, kwargs):
 
 def call_kw(model, name, args, kwargs):
     """ Invoke the given method ``name`` on the recordset ``model``. """
-    method = getattr(type(model), name)
+    method = getattr(type(model), name, None)
+    if not method:
+        raise AttributeError(f"The method '{name}' does not exist on the model '{model._name}'")
     api = getattr(method, '_api', None)
     if api == 'model':
         result = _call_kw_model(method, model, args, kwargs)
@@ -500,11 +518,17 @@ class Environment(Mapping):
         """ Reset the transaction, see :meth:`Transaction.reset`. """
         self.transaction.reset()
 
-    def __new__(cls, cr, uid, context, su=False):
+    def __new__(cls, cr, uid, context, su=False, uid_origin=None):
+        assert isinstance(cr, BaseCursor)
         if uid == SUPERUSER_ID:
             su = True
+
+        # isinstance(uid, int) is to handle `RequestUID`
+        uid_origin = uid_origin or (uid if isinstance(uid, int) else None)
+        if uid_origin == SUPERUSER_ID:
+            uid_origin = None
+
         assert context is not None
-        args = (cr, uid, context, su)
 
         # determine transaction object
         transaction = cr.transaction
@@ -513,13 +537,13 @@ class Environment(Mapping):
 
         # if env already exists, return it
         for env in transaction.envs:
-            if env.args == args:
+            if (env.cr, env.uid, env.context, env.su, env.uid_origin) == (cr, uid, context, su, uid_origin):
                 return env
 
         # otherwise create environment, and add it in the set
         self = object.__new__(cls)
-        args = (cr, uid, frozendict(context), su)
-        self.cr, self.uid, self.context, self.su = self.args = args
+        self.cr, self.uid, self.context, self.su = self.args = (cr, uid, frozendict(context), su)
+        self.uid_origin = uid_origin
 
         self.transaction = self.all = transaction
         self.registry = transaction.registry
@@ -574,7 +598,7 @@ class Environment(Mapping):
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
         su = (user is None and self.su) if su is None else su
-        return Environment(cr, uid, context, su)
+        return Environment(cr, uid, context, su, self.uid_origin)
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ Return the record corresponding to the given ``xml_id``.
@@ -1155,6 +1179,8 @@ class Cache(object):
             except KeyError:
                 ids.append(record_id)
             else:
+                if field.type == "monetary":
+                    value = field.convert_to_cache(value, records.browse(record_id))
                 if val != value:
                     ids.append(record_id)
         return records.browse(ids)
@@ -1323,3 +1349,4 @@ class Starred:
 # keep those imports here in order to handle cyclic dependencies correctly
 from odoo import SUPERUSER_ID
 from odoo.modules.registry import Registry
+from .sql_db import BaseCursor

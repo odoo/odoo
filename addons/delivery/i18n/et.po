@@ -10,7 +10,6 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Algo Kärp <algokarp@gmail.com>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
@@ -18,14 +17,18 @@
 # JanaAvalah, 2023
 # Anna, 2023
 # Leaanika Randmets, 2023
+# Tairi Tiimann, 2024
+# Stevin Lilla, 2024
+# Algo Kärp <algokarp@gmail.com>, 2024
+# Patrick-Jordan Kiudorv, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Patrick-Jordan Kiudorv, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -525,6 +528,20 @@ msgid "Estimated cost"
 msgstr "Hinnanguline maksumus"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Erand:"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr "Fill this field if you plan to invoice the shipping based on picking."
@@ -686,6 +703,13 @@ msgid "Manage delivery zip prefixes"
 msgstr "Halda tarne sihtnumbri prefiks"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr "Marginaal"
@@ -798,6 +822,10 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"Selle vedaja puhul kehtivad sihtnumbri prefiksid. Pange tähele, et tavalisi "
+"regulaaravaldisi saab kasutada riikide jaoks, millel on erineva pikkusega "
+"postikoodid, st '$' saab lisada prefiksi lõppu, et sobitada täpset "
+"postiindeksi (nt '100$' sobib ainult '100' ja mitte '1000')."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -831,6 +859,11 @@ msgstr "Prindi tagastussilt"
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product"
 msgstr "Toode"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Toote kategooria"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
@@ -984,6 +1017,8 @@ msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
 msgstr ""
+" Saatmiskindlustus on teenus, mis võib hüvitada saatjatele, kelle pakid on "
+"kadunud, varastatud või kahjustatud transpordi käigus."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -999,7 +1034,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
 
 #. module: delivery
@@ -1133,11 +1168,13 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
 msgstr ""
+"Pakitud ja pakkimata toodete kogumass. Pakid ilma saadetise kaaluta on "
+"vaikimisi toote kaaluga. Seda kaalu kasutatakse saatekulude arvutamiseks."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Pakkimata toodete kogu kaal."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_quant_package__shipping_weight
@@ -1255,6 +1292,29 @@ msgid ""
 "\n"
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
+msgstr ""
+"Sa ei saa muuta saatmiskulusid tellimusel, millel on arve juba saadetud!\n"
+"\n"
+"Järgmised kohaletoimetamise read (toode, arveldatud kogus ja hind) on juba töödeldud: \n"
+"\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
 msgstr ""
 
 #. module: delivery

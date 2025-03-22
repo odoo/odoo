@@ -674,7 +674,7 @@ class account_journal(models.Model):
         action = self.env["ir.actions.act_window"]._for_xml_id(action_name)
 
         context = self._context.copy()
-        if 'context' in action and type(action['context']) == str:
+        if 'context' in action and isinstance(action['context'], str):
             context.update(ast.literal_eval(action['context']))
         else:
             context.update(action.get('context', {}))

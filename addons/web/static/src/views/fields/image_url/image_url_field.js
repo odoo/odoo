@@ -34,9 +34,6 @@ export class ImageUrlField extends Component {
 
     onLoadFailed() {
         this.state.src = this.constructor.fallbackSrc;
-        this.notification.add(this.env._t("Could not display the specified image url."), {
-            type: "info",
-        });
     }
 }
 

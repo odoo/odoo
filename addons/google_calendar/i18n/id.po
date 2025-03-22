@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Abe Manyo, 2023
+# Abe Manyo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,30 +21,35 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
 msgstr "%(id)s dan %(length)s mengikuti"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Days"
 msgstr "%(reminder_type)s - %(duration)s Hari"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Hours"
 msgstr "%(reminder_type)s - %(duration)s Jam"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Minutes"
 msgstr "%(reminder_type)s - %(duration)s Menit"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
@@ -58,7 +63,7 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
@@ -69,6 +74,7 @@ msgstr ""
 "menggunakannya!"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid ""
@@ -129,7 +135,7 @@ msgid "Config Settings"
 msgstr "Pengaturan Konfigurasi"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
@@ -175,6 +181,7 @@ msgid "Display Name"
 msgstr "Nama Tampilan"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "Email"
@@ -186,7 +193,7 @@ msgid "Event Recurrence Rule"
 msgstr "Peraturan Acara Rutin"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
@@ -228,7 +235,6 @@ msgstr "ID Google Calendar"
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
-#: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
 msgstr "Google Calendar: sinkronisasi"
 
@@ -239,6 +245,7 @@ msgid "Google Synchronization stopped"
 msgstr "Sinkronisasi Google diberhentikan"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
@@ -256,7 +263,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
-"Jika kolom aktif distel ke Salah, Anda dapat menyembunyikan informasi alarm "
+"Jika kolom aktif diatur ke False, Anda dapat menyembunyikan informasi alarm "
 "acara tanpa menghapusnya."
 
 #. module: google_calendar
@@ -311,6 +318,7 @@ msgid "Next Synchronization"
 msgstr "Sinkronisasi Berikutnya"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "Notification"
@@ -333,7 +341,7 @@ msgid "Reset Google Calendar Account"
 msgstr "Reset Akun Google Calendar"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Success"
@@ -355,7 +363,7 @@ msgid "Synchronize only new events"
 msgstr "Sinkronisasi hanya acara baru"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
@@ -366,12 +374,14 @@ msgstr ""
 "apakah Anda ingin melakukannya sekarang?"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
 msgstr "Akun untuk layanan Google Calendar tidak dikonfigurasi."
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""
@@ -380,7 +390,7 @@ msgid ""
 msgstr ""
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
@@ -421,7 +431,7 @@ msgid "User's Existing Events"
 msgstr "Acara User yang Tersedia"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
@@ -432,6 +442,7 @@ msgstr ""
 "Anda yakin ingin melanjutkan?"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
@@ -439,6 +450,7 @@ msgid "undefined time"
 msgstr "waktu belum didefinisikan"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""

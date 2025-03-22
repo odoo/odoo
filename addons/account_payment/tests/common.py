@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from contextlib import contextmanager
 
-from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.payment.tests.common import PaymentCommon
 
@@ -14,21 +14,13 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
         # chart_template_ref is dropped on purpose because not needed for account_payment tests.
         super().setUpClass()
 
-        Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
-
-        def _get_payment_method_information(self):
-            res = Method_get_payment_method_information(self)
-            res['none'] = {'mode': 'multi', 'domain': [('type', '=', 'bank')]}
-            return res
-
-        with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
-            cls.env['account.payment.method'].sudo().create({
+        with cls.mocked_get_payment_method_information(cls):
+            cls.dummy_provider_method = cls.env['account.payment.method'].sudo().create({
                 'name': 'Dummy method',
                 'code': 'none',
                 'payment_type': 'inbound'
             })
-
-        cls.dummy_provider.journal_id = cls.company_data['default_journal_bank'].id,
+            cls.dummy_provider.journal_id = cls.company_data['default_journal_bank']
 
         cls.account = cls.company.account_journal_payment_credit_account_id
         cls.invoice = cls.env['account.move'].create({
@@ -55,7 +47,29 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
     def setUp(self):
         self.enable_reconcile_after_done_patcher = False
         super().setUp()
+
     #=== Utils ===#
+
+    @contextmanager
+    def mocked_get_payment_method_information(self):
+        Method_get_payment_method_information = self.env['account.payment.method']._get_payment_method_information
+
+        def _get_payment_method_information(*args, **kwargs):
+            res = Method_get_payment_method_information()
+            res['none'] = {'mode': 'electronic', 'domain': [('type', '=', 'bank')]}
+            return res
+
+        with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
+            yield
+
+    @contextmanager
+    def mocked_get_default_payment_method_id(self):
+
+        def _get_default_payment_method_id(*args, **kwargs):
+            return self.dummy_provider_method.id
+
+        with patch.object(self.env.registry['payment.provider'], '_get_default_payment_method_id', _get_default_payment_method_id):
+            yield
 
     @classmethod
     def _prepare_provider(cls, provider_code='none', company=None, update_values=None):

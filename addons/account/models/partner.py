@@ -71,10 +71,10 @@ class AccountFiscalPosition(models.Model):
     @api.constrains('zip_from', 'zip_to')
     def _check_zip(self):
         for position in self:
-            if position.zip_from and position.zip_to and position.zip_from > position.zip_to:
-                raise ValidationError(_('Invalid "Zip Range", please configure it properly.'))
+            if bool(position.zip_from) != bool(position.zip_to) or position.zip_from > position.zip_to:
+                raise ValidationError(_('Invalid "Zip Range", You have to configure both "From" and "To" values for the zip range and "To" should be greater than "From".'))
 
-    @api.constrains('country_id', 'state_ids', 'foreign_vat')
+    @api.constrains('country_id', 'country_group_id', 'state_ids', 'foreign_vat')
     def _validate_foreign_vat_country(self):
         for record in self:
             if record.foreign_vat:
@@ -87,15 +87,28 @@ class AccountFiscalPosition(models.Model):
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country without assigning it a state."))
                         else:
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
+                if record.country_group_id and record.country_id:
+                    if record.country_id not in record.country_group_id.country_ids:
+                        raise ValidationError(_("You cannot create a fiscal position with a country outside of the selected country group."))
 
                 similar_fpos_domain = [
                     ('foreign_vat', '!=', False),
-                    ('country_id', '=', record.country_id.id),
                     ('company_id', '=', record.company_id.id),
                     ('id', '!=', record.id),
                 ]
+
+                if record.country_group_id:
+                    foreign_vat_country = self.country_group_id.country_ids.filtered(lambda c: c.code == record.foreign_vat[:2].upper())
+                    if not foreign_vat_country:
+                        raise ValidationError(_("The country code of the foreign VAT number does not match any country in the group."))
+                    similar_fpos_domain += [('country_group_id', '=', record.country_group_id.id), ('country_id', '=', foreign_vat_country.id)]
+                elif record.country_id:
+                    similar_fpos_domain += [('country_id', '=', record.country_id.id), ('country_group_id', '=', False)]
+
                 if record.state_ids:
                     similar_fpos_domain.append(('state_ids', 'in', record.state_ids.ids))
+                else:
+                    similar_fpos_domain.append(('state_ids', '=', False))
 
                 similar_fpos_count = self.env['account.fiscal.position'].search_count(similar_fpos_domain)
                 if similar_fpos_count:
@@ -106,7 +119,7 @@ class AccountFiscalPosition(models.Model):
             return taxes
         result = self.env['account.tax']
         for tax in taxes:
-            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax._origin)
+            taxes_correspondance = self.tax_ids.filtered(lambda t: t.tax_src_id == tax._origin and (not t.tax_dest_id or t.tax_dest_active))
             result |= taxes_correspondance.tax_dest_id if taxes_correspondance else tax
         return result
 
@@ -130,23 +143,24 @@ class AccountFiscalPosition(models.Model):
     @api.onchange('country_id')
     def _onchange_country_id(self):
         if self.country_id:
-            self.zip_from = self.zip_to = self.country_group_id = False
+            self.zip_from = self.zip_to = False
             self.state_ids = [(5,)]
             self.states_count = len(self.country_id.state_ids)
 
     @api.onchange('country_group_id')
     def _onchange_country_group_id(self):
         if self.country_group_id:
-            self.zip_from = self.zip_to = self.country_id = False
+            self.zip_from = self.zip_to = False
             self.state_ids = [(5,)]
 
     @api.model
     def _convert_zip_values(self, zip_from='', zip_to=''):
-        max_length = max(len(zip_from), len(zip_to))
-        if zip_from.isdigit():
-            zip_from = zip_from.rjust(max_length, '0')
-        if zip_to.isdigit():
-            zip_to = zip_to.rjust(max_length, '0')
+        if zip_from and zip_to:
+            max_length = max(len(zip_from), len(zip_to))
+            if zip_from.isdigit():
+                zip_from = zip_from.rjust(max_length, '0')
+            if zip_to.isdigit():
+                zip_to = zip_to.rjust(max_length, '0')
         return zip_from, zip_to
 
     @api.model_create_multi
@@ -264,6 +278,7 @@ class AccountFiscalPositionTax(models.Model):
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     tax_src_id = fields.Many2one('account.tax', string='Tax on Product', required=True, check_company=True)
     tax_dest_id = fields.Many2one('account.tax', string='Tax to Apply', check_company=True)
+    tax_dest_active = fields.Boolean(related="tax_dest_id.active")
 
     _sql_constraints = [
         ('tax_src_dest_uniq',
@@ -351,7 +366,7 @@ class ResPartner(models.Model):
     def _asset_difference_search(self, account_type, operator, operand):
         if operator not in ('<', '=', '>', '>=', '<='):
             return []
-        if type(operand) not in (float, int):
+        if not isinstance(operand, (float, int)):
             return []
         sign = 1
         if account_type == 'liability_payable':
@@ -389,7 +404,7 @@ class ResPartner(models.Model):
         all_partner_ids = []
         for partner in self.filtered('id'):
             # price_total is in the company currency
-            all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
+            all_partners_and_children[partner] = set(self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids)
             all_partner_ids += all_partners_and_children[partner]
 
         domain = [
@@ -463,7 +478,8 @@ class ResPartner(models.Model):
         company_dependent=True, copy=False, readonly=False)
     use_partner_credit_limit = fields.Boolean(
         string='Partner Limit', groups='account.group_account_invoice,account.group_account_readonly',
-        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit')
+        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
+        help='Set a value greater than 0.0 to activate a credit limit check')
     show_credit_limit = fields.Boolean(
         default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
@@ -501,6 +517,7 @@ class ResPartner(models.Model):
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
+    supplier_invoice_count = fields.Integer(compute='_compute_supplier_invoice_count', string='# Vendor Bills')
     has_unreconciled_entries = fields.Boolean(compute='_compute_has_unreconciled_entries',
         help="The partner has at least one unreconciled debit and credit since last time the invoices & payments matching was performed.")
     last_time_entries_checked = fields.Datetime(
@@ -523,12 +540,32 @@ class ResPartner(models.Model):
     duplicated_bank_account_partners_count = fields.Integer(
         compute='_compute_duplicated_bank_account_partners_count',
     )
+    is_coa_installed = fields.Boolean(store=False, default=lambda partner: bool(partner.env.company.chart_template_id))
 
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
         mapped_data = dict([(bank['partner_id'][0], bank['partner_id_count']) for bank in bank_data])
         for partner in self:
             partner.bank_account_count = mapped_data.get(partner.id, 0)
+
+    def _compute_supplier_invoice_count(self):
+        # retrieve all children partners
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+
+        supplier_invoice_groups = self.env['account.move']._read_group(
+            domain=[('partner_id', 'in', all_partners.ids),
+                    ('move_type', 'in', ('in_invoice', 'in_refund'))],
+            fields=['partner_id'], groupby=['partner_id']
+        )
+        partners = self.browse()
+        for group in supplier_invoice_groups:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.supplier_invoice_count += group['partner_id_count']
+                    partners |= partner
+                partner = partner.parent_id
+        (self - partners).supplier_invoice_count = 0
 
     def _get_duplicated_bank_accounts(self):
         self.ensure_one()
@@ -659,6 +696,7 @@ class ResPartner(models.Model):
                     """).format(field=sql.Identifier(field))
                     self.env.cr.execute(query, {'partner_ids': tuple(self.ids), 'n': n})
                     self.invalidate_recordset([field])
+                    self.modified([field])
             except DatabaseError as e:
                 # 55P03 LockNotAvailable
                 # 40001 SerializationFailure

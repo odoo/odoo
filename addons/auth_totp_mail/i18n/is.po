@@ -2,13 +2,17 @@
 # This file contains the translation of the following modules:
 # 	* auth_totp_mail
 # 
+# Translators:
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,8 +24,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
 "        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
 "        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
@@ -37,10 +41,11 @@ msgid ""
 msgstr ""
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
-msgstr ""
+msgstr "Aðgangsöryggi"
 
 #. module: auth_totp_mail
 #: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
@@ -48,6 +53,7 @@ msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr ""
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid ""
@@ -68,7 +74,7 @@ msgstr ""
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: auth_totp_mail
 #: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
@@ -83,4 +89,4 @@ msgstr ""
 #. module: auth_totp_mail
 #: model:ir.model,name:auth_totp_mail.model_res_users
 msgid "User"
-msgstr ""
+msgstr "Notandi"

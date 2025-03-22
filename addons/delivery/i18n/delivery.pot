@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:50+0000\n"
-"PO-Revision-Date: 2022-12-15 12:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
+"PO-Revision-Date: 2025-02-10 08:27+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -485,6 +485,20 @@ msgid "Estimated cost"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
@@ -642,6 +656,13 @@ msgid "Manage delivery zip prefixes"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr ""
@@ -786,6 +807,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
 msgstr ""
 
 #. module: delivery
@@ -951,7 +977,7 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
 
 #. module: delivery
@@ -1201,6 +1227,25 @@ msgid ""
 "\n"
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
 msgstr ""
 
 #. module: delivery

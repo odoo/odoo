@@ -8,7 +8,6 @@
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
-# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Jonas Zinkevicius <jozi@odoo.com>, 2022
@@ -17,14 +16,17 @@
 # Arunas V. <arunas@devoro.com>, 2023
 # Donatas <donatasvaliulis16@gmail.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
+# Duma <domantasdoom@gmail.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
+# Tautvydas M, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2023\n"
+"Last-Translator: Tautvydas M, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +45,7 @@ msgid "# Contracts using it"
 msgstr "# Naudojančios sutartys"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
@@ -51,7 +54,7 @@ msgstr ""
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "/ month"
-msgstr ""
+msgstr "/ mėn."
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -127,6 +130,7 @@ msgid "Administrator"
 msgstr "Administratorius"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -189,6 +193,7 @@ msgid "Contract"
 msgstr "Sutartis"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -378,6 +383,7 @@ msgid "Departure Wizard"
 msgstr ""
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -443,7 +449,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_history__wage
 msgid "Employee's monthly gross wage."
-msgstr "Darbuotojo mėnesinis atlyginimas į rankas"
+msgstr "Darbuotojo mėnesinis atlyginimas neatskaičius mokesčių."
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_view_list_action
@@ -524,7 +530,6 @@ msgstr "Grupuoti pagal"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr "Darbo sutartis: statuso atnaujinimas"
 
@@ -568,7 +573,6 @@ msgstr "Jeigu pažymėta, naujiems pranešimams reikės jūsų dėmesio."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Jei pažymėta, yra žinučių, turinčių pristatymo klaidų."
 
@@ -651,7 +655,7 @@ msgid "New"
 msgstr "Naujas"
 
 #. module: hr_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
@@ -716,7 +720,7 @@ msgstr "Klaidų kiekis"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
@@ -755,6 +759,11 @@ msgid "Related User"
 msgstr "Susietas vartotojas"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "Ištekliaus darbo laikas"
@@ -780,11 +789,6 @@ msgstr "Galiojanti"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Running Contracts"
 msgstr "Galiojančios sutartys"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS pristatymo klaida"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -872,6 +876,7 @@ msgstr ""
 "Galite naudoti šį lauką greitai paieškai."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -924,16 +929,6 @@ msgid "Wage"
 msgstr "Atlyginimas"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Interneto svetainės žinutės"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "Svetainės komunikacijos istorija"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "Leidimo dirbti nr."
@@ -944,3 +939,10 @@ msgstr "Leidimo dirbti nr."
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Darbo grafikas"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr ""

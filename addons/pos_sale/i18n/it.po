@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Marianna Ciofani, 2023
-# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2024
+# Wil Odoo, 2024
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +39,7 @@ msgstr "(tasse incluse)"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Down Payment Product</span>"
-msgstr "<span class=\"o_form_label\">Prodotto pagamento acconto</span>"
+msgstr "<span class=\"o_form_label\">Prodotto anticipo</span>"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -140,12 +141,12 @@ msgstr "Vuoi caricare i NS/Lotti collegati all'ordine di vendita?"
 #. module: pos_sale
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
-msgstr "Acconto (POS)"
+msgstr "Anticipo (POS)"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
 msgid "Down Payment Details"
-msgstr "Dettagli pagamento dell'acconto"
+msgstr "Dettagli anticipo"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
@@ -159,6 +160,13 @@ msgstr "Prodotto anticipo"
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
 msgstr "Es. cliente: assistente di volo, data: 2020-05-09"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr "Errore importo troppo alto"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -244,7 +252,7 @@ msgstr "No"
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
-msgstr "Nessun prodotto di acconto"
+msgstr "Nessun prodotto anticipo"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
@@ -268,7 +276,7 @@ msgstr "Ordina"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
 msgid "Order lines Transfered to Point of Sale"
-msgstr "Linee d'ordine trasferite al punto vendita"
+msgstr "Righe ordine trasferite al punto vendita"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -310,7 +318,7 @@ msgstr "Punti vendita"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr "Totale ordini POS"
+msgstr "Numero ordini POS"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
@@ -323,14 +331,14 @@ msgstr "Confermato"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr "Elenco ordini precedente"
+msgstr "Elenco ordini precedenti"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Products not available in POS"
-msgstr "Prodotti non disponibili nel Punto Vendita"
+msgstr "Prodotti non disponibili nel POS"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -351,7 +359,7 @@ msgstr "Preventivo inviato"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr "Preventivo / Ordine"
+msgstr "Preventivo/Ordine"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -366,7 +374,7 @@ msgstr "Caricamento NS/Lotti"
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "SO"
-msgstr "Ordine di vendita"
+msgstr "OdV"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
@@ -480,7 +488,7 @@ msgstr "Riga ordine di vendita di origine"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "State"
-msgstr "Provincia"
+msgstr "Stato/Provincia"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
@@ -532,6 +540,11 @@ msgstr "Questo prodotto sarà utilizzato come acconto su un ordine di vendita."
 #, python-format
 msgid "Total"
 msgstr "Totale"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Trasferimento"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale

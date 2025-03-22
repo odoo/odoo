@@ -13,14 +13,17 @@
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Abbas Ebadian, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Tiffany Chang, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
+"Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,18 +39,19 @@ msgstr "# قراردادها"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
 msgid "# Contracts using it"
-msgstr ""
+msgstr "# قراردادهایی که از آن استفاده می‌کنند"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
-msgstr ""
+msgstr "تاریخچه قراردادهای %s"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "/ month"
-msgstr ""
+msgstr "/ ماه"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -129,6 +133,7 @@ msgid "Administrator"
 msgstr "مدیر"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -136,6 +141,9 @@ msgid ""
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
+"یک کارمند می‌تواند تنها یک قرارداد در یک زمان داشته باشد. (به استثنای قراردادهای پیش‌نویس و لغو شده).\n"
+"\n"
+"کارمند: %(employee_name)s"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -191,12 +199,15 @@ msgid "Contract"
 msgstr "قرارداد"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
 "Contract %(contract)s: start date (%(start)s) must be earlier than contract "
 "end date (%(end)s)."
 msgstr ""
+"قرارداد %(contract)s: تاریخ شروع (%(start)s) باید زودتر از تاریخ پایان "
+"قرارداد (%(end)s) باشد."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
@@ -380,6 +391,7 @@ msgid "Departure Wizard"
 msgstr "ویزارد خروج"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -434,12 +446,12 @@ msgstr "اطلاعات کارمند"
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_employee_manager
 msgid "Employee Manager"
-msgstr ""
+msgstr "مدیر کارمند"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_res_users__bank_account_id
 msgid "Employee bank account to pay salaries"
-msgstr ""
+msgstr "حساب بانکی کارمند برای پرداخت حقوق"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__wage
@@ -526,7 +538,6 @@ msgstr "گروه‌بندی برمبنای"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr "قرارداد منابع انسانی: بروزرسانی وضعیت"
 
@@ -571,14 +582,13 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "اگر علامت زده شود، برخی از پیام ها دارای خطای تحویل هستند."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
 msgid "Is Currently Under Contract"
-msgstr ""
+msgstr "در حال حاضر تحت قرارداد است"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
@@ -654,7 +664,7 @@ msgid "New"
 msgstr "جدید"
 
 #. module: hr_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
@@ -719,7 +729,7 @@ msgstr "تعداد خطاها"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام هایی که نیاز به اقدام دارند"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
@@ -729,7 +739,7 @@ msgstr "تعداد پیامهای با خطای تحویل"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Open Contract"
-msgstr ""
+msgstr "قرارداد را باز کنید"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
@@ -756,6 +766,11 @@ msgstr "زمان کار مرجع"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
 msgid "Related User"
 msgstr "کاربر مروبطه"
+
+#. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "جزئیات مرخصی منابع"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
@@ -785,11 +800,6 @@ msgid "Running Contracts"
 msgstr "قراردادهای در حال اجرا"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "خطای تحویل پیامک"
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
 msgstr "اطلاعات حقوق و دستمزد"
@@ -812,7 +822,7 @@ msgstr "جستجوی قرارداد"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Search Reference Contracts"
-msgstr ""
+msgstr "جستجوی قراردادهای مرجع"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_departure_wizard__set_date_end
@@ -875,6 +885,7 @@ msgstr ""
 "می توانید از این قسمت برای جستجوی سریع استفاده کنید."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -893,7 +904,7 @@ msgstr "فعالیت های امروز"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Type in notes about this contract..."
-msgstr ""
+msgstr "یادداشت‌هایی درباره این قرارداد وارد کنید..."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
@@ -913,7 +924,7 @@ msgstr "کاربر"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "تاریخ انقضای ویزا"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
@@ -927,16 +938,6 @@ msgid "Wage"
 msgstr "دستمزد"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "پیام های وب سایت"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "تاریخچه ارتباط با وبسایت"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "شماره مجوز کار"
@@ -947,3 +948,10 @@ msgstr "شماره مجوز کار"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "برنامه‌ی زمانی کار"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr ""

@@ -8,6 +8,7 @@ import hashlib
 import pytz
 import threading
 import re
+import warnings
 
 import requests
 from collections import defaultdict
@@ -173,6 +174,7 @@ class Partner(models.Model):
     _inherit = ['format.address.mixin', 'avatar.mixin']
     _name = "res.partner"
     _order = "display_name ASC, id DESC"
+    _allow_sudo_commands = False
     _rec_names_search = ['display_name', 'email', 'ref', 'vat', 'company_registry']  # TODO vat must be sanitized the same way for storing/searching
 
     def _default_category(self):
@@ -350,7 +352,7 @@ class Partner(models.Model):
     @api.depends_context('lang')
     @api.depends('display_name')
     def _compute_translated_display_name(self):
-        names = dict(self.with_context({'lang': self.env.lang}).name_get())
+        names = dict(self.with_context(lang=self.env.lang).name_get())
         for partner in self:
             partner.translated_display_name = names.get(partner.id)
 
@@ -983,8 +985,7 @@ class Partner(models.Model):
         return base64.b64encode(res.content)
 
     def _email_send(self, email_from, subject, body, on_error=None):
-        for partner in self.filtered('email'):
-            tools.email_send(email_from, [partner.email], subject, body, on_error)
+        warnings.warn("Partner._email_send has not done anything but raise errors since 15.0", stacklevel=2, category=DeprecationWarning)
         return True
 
     def address_get(self, adr_pref=None):
@@ -1060,7 +1061,7 @@ class Partner(models.Model):
             'company_name': self.commercial_company_name or '',
         })
         for field in self._formatting_address_fields():
-            args[field] = getattr(self, field) or ''
+            args[field] = self[field] or ''
         if without_company:
             args['company_name'] = ''
         elif self.commercial_company_name:

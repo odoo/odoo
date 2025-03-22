@@ -5,16 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # JH CHOI <hwangtog@gmail.com>, 2022
-# Sarah Park, 2023
 # Daye Jeong, 2023
+# Wil Odoo, 2024
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 08:56+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Daye Jeong, 2023\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -490,6 +491,13 @@ msgid "End -"
 msgstr "종료 -"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "오류"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__event_id
 msgid "Event"
@@ -835,6 +843,11 @@ msgid "Not Published"
 msgstr "게시 안됨"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Online Events"
+msgstr "온라인 행사"
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
@@ -880,7 +893,7 @@ msgstr "적어도 한 개 이상의 티켓을 선택하십시오."
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Published"
-msgstr "게시 됨"
+msgstr "게시 완료"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
@@ -898,8 +911,8 @@ msgid "Ref:"
 msgstr "참조;"
 
 #. module: website_event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
@@ -1067,6 +1080,13 @@ msgstr "시작 <span/>"
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Sub-menu (Specific)"
 msgstr "하위 메뉴 (특정) "
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "구글 reCaptcha에서 의심스러운 활동이 감지되었습니다."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options

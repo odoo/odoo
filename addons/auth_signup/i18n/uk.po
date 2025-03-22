@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -743,6 +744,7 @@ msgid "Let your customers log in to see their documents"
 msgstr "Дозвольте вашим клієнтам увійти, щоби переглянути їх документи"
 
 #. module: auth_signup
+#. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Multiple accounts found for this login"
@@ -952,6 +954,14 @@ msgstr "Реєстрація: не вказано ім'я або партнер�
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
 msgid "Status"
 msgstr "Статус"
+
+#. module: auth_signup
+#. odoo-python
+#: code:addons/auth_signup/controllers/main.py:0
+#: code:addons/auth_signup/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha виявила підозрілу активність."
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id

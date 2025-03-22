@@ -58,14 +58,14 @@ function connect () {
 	# make network choice persistent
 	if [ -n "${ESSID}" ] ; then
 		if [ -n "${PERSIST}" ] ; then
-			logger -t posbox_connect_to_wifi "Making network selection permanent"
+			logger -t posbox_connect_to_server_wifi "Making network selection permanent"
 			sudo mount -o remount,rw /
 			echo "${ESSID}" > ${PERSISTENT_WIFI_NETWORK_FILE}
 			echo "${PASSWORD}" >> ${PERSISTENT_WIFI_NETWORK_FILE}
 			sudo mount -o remount,ro /
 		fi
 	else
-		logger -t posbox_connect_to_wifi "Reading configuration from ${PERSISTENT_WIFI_NETWORK_FILE}"
+		logger -t posbox_connect_to_server_wifi "Reading configuration from ${PERSISTENT_WIFI_NETWORK_FILE}"
 		ESSID=$(head -n 1 "${PERSISTENT_WIFI_NETWORK_FILE}" | tr -d '\n')
 		PASSWORD=$(tail -n 1 "${PERSISTENT_WIFI_NETWORK_FILE}" | tr -d '\n')
 	fi
@@ -73,29 +73,48 @@ function connect () {
 	echo "${ESSID}" > ${CURRENT_WIFI_NETWORK_FILE}
 	echo "${PASSWORD}" >> ${CURRENT_WIFI_NETWORK_FILE}
 
-	logger -t posbox_connect_to_wifi "Connecting to ${ESSID}"
+	logger -t posbox_connect_to_server_wifi "Connecting to ${ESSID}"
 	sudo service hostapd stop
+
 	sudo killall nginx
-	sudo service nginx restart
-	sudo service dnsmasq stop
 
-	sudo pkill wpa_supplicant
-	sudo ifconfig wlan0 down
-	sudo ifconfig wlan0 0.0.0.0  # this is how you clear the interface's configuration
-	sudo ifconfig wlan0 up
-
-	if [ -z "${PASSWORD}" ] ; then
-		sudo iwconfig wlan0 essid "${ESSID}"
+	current_iotbox_version=$(cat "/var/odoo/iotbox_version")
+	# Above this version we need the NetworkManager
+	required_version="23.09"
+	if [[ "$current_iotbox_version" > "$required_version" ]]; then
+		logger -t posbox_connect_to_server_wifi "USING NETWORK MANAGER"
+		# Necessary when comming from the access point
+		sudo ip address del 10.11.12.1/24 dev wlan0
+		sudo nmcli g reload
+		if [ -z "${PASSWORD}" ] ; then
+			sudo nmcli d wifi connect "${ESSID}"
+		else
+			sudo nmcli d wifi connect "${ESSID}" password "${PASSWORD}"
+		fi
+		sudo service nginx restart
 	else
-		# Necessary in stretch: https://www.raspberrypi.org/forums/viewtopic.php?t=196927
-		sudo cp /etc/wpa_supplicant/wpa_supplicant.conf "${WPA_PASS_FILE}"
-		sudo chmod 777 "${WPA_PASS_FILE}"
-		sudo wpa_passphrase "${ESSID}" "${PASSWORD}" >> "${WPA_PASS_FILE}"
-		sudo wpa_supplicant -B -i wlan0 -c "${WPA_PASS_FILE}"
-	fi
+		logger -t posbox_connect_to_server_wifi "USING WPA_SUPPLICANT"
+		sudo service nginx restart
+		sudo service dnsmasq stop
 
-	sudo systemctl daemon-reload
-	sudo service dhcpcd restart
+		sudo pkill wpa_supplicant
+		sudo ifconfig wlan0 down
+		sudo ifconfig wlan0 0.0.0.0  # this is how you clear the interface's configuration
+		sudo ifconfig wlan0 up
+
+		if [ -z "${PASSWORD}" ] ; then
+			sudo iwconfig wlan0 essid "${ESSID}"
+		else
+			# Necessary in stretch: https://www.raspberrypi.org/forums/viewtopic.php?t=196927
+			sudo cp /etc/wpa_supplicant/wpa_supplicant.conf "${WPA_PASS_FILE}"
+			sudo chmod 777 "${WPA_PASS_FILE}"
+			sudo wpa_passphrase "${ESSID}" "${PASSWORD}" >> "${WPA_PASS_FILE}"
+			sudo wpa_supplicant -B -i wlan0 -c "${WPA_PASS_FILE}"
+		fi
+
+		sudo systemctl daemon-reload
+		sudo service dhcpcd restart
+	fi
 
 	# give dhcp some time
 	timeout 30 sh -c 'until ifconfig wlan0 | grep "inet " ; do sleep 0.1 ; done'
@@ -103,7 +122,7 @@ function connect () {
 
 
 	if [ ${TIMEOUT_RETURN} -eq 124 ] && [ -z "${NO_AP}" ] ; then
-		logger -t posbox_connect_to_wifi "Failed to connect, forcing Posbox AP"
+		logger -t posbox_connect_to_server_wifi "Failed to connect, forcing Posbox AP"
 		sudo /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/wireless_ap.sh "force" &
 	else
 		if [ ${TIMEOUT_RETURN} -ne 124 ] ; then
@@ -111,14 +130,14 @@ function connect () {
 		fi
 
 		if [ ! -f "${LOST_WIFI_FILE}" ] ; then
-			logger -t posbox_connect_to_wifi "Restarting odoo"
+			logger -t posbox_connect_to_server_wifi "Restarting odoo"
 		fi
 
 		if [ ${WIFI_WAS_LOST} -eq 0 ] ; then
 			touch "${LOST_WIFI_FILE}"
 		fi
 
-		logger -t posbox_connect_to_wifi "Starting wifi keep alive script"
+		logger -t posbox_connect_to_server_wifi "Starting wifi keep alive script"
 		/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/keep_wifi_alive.sh &
 	fi
 

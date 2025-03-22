@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
+import { contains } from "@web/../tests/utils";
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -143,6 +144,43 @@ QUnit.test('simplest layout + editable', async function (assert) {
         document.querySelectorAll(`.o_AttachmentCard_asideItemDownload`).length,
         1,
         "attachment should have a download button"
+    );
+});
+
+QUnit.test('link-type attachment should have open button instead of download button', async function (assert) {
+    assert.expect(4);
+
+    const pyEnv = await startServer();
+    const channelId = pyEnv['mail.channel'].create({
+        channel_type: 'channel',
+        name: 'channel1',
+    });
+    const messageAttachmentId = pyEnv['ir.attachment'].create({
+        name: "url.example",
+        mimetype: 'text/plain',
+        type: 'url',
+        url: 'https://www.odoo.com',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [messageAttachmentId],
+        body: "<p>Test</p>",
+        model: 'mail.channel',
+        res_id: channelId
+    });
+    const { openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
+
+    await contains('.o_AttachmentCard', { count: 1 });
+    await contains('.o_AttachmentCard_asideItemOpenLink', { count: 1 });
+    await contains('.o_AttachmentCard_asideItemDownload', { count: 0 });
+    assert.strictEqual(
+        document.querySelector(`.o_AttachmentCard_asideItemOpenLink`).target,
+        '_blank',
+        "attachment should have a open link button in a new tab"
     );
 });
 

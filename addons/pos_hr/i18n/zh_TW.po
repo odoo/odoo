@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Tony Ng, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +35,7 @@ msgid "Cashier"
 msgstr "收銀員"
 
 #. module: pos_hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Change Cashier"
@@ -54,6 +55,7 @@ msgid "Employee"
 msgstr "員工"
 
 #. module: pos_hr
+#. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid "Employee: %s - PoS Config(s): %s \n"
@@ -72,21 +74,21 @@ msgid "If left empty, all employees can log in to the PoS session"
 msgstr "如果留空，所有員工都可以登入到 PoS營業點"
 
 #. module: pos_hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Incorrect Password"
 msgstr "密碼錯誤"
 
 #. module: pos_hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Log in to"
 msgstr "登入到"
 
 #. module: pos_hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/js/SelectCashierMixin.js:0
 #, python-format
 msgid "Password ?"
@@ -120,20 +122,26 @@ msgid "Point of Sale Session"
 msgstr "POS營業點"
 
 #. module: pos_hr
-#. openerp-web
+#: model:ir.model,name:pos_hr.model_hr_employee_public
+msgid "Public Employee"
+msgstr "公開員工"
+
+#. module: pos_hr
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Scan your badge"
 msgstr "掃瞄您的工作識別證"
 
 #. module: pos_hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "Select Cashier"
 msgstr "選擇收銀員"
 
 #. module: pos_hr
+#. odoo-python
 #: code:addons/pos_hr/models/hr_employee.py:0
 #, python-format
 msgid ""
@@ -142,7 +150,7 @@ msgid ""
 msgstr "您不能刪除可能在開啟PoS營業點中使用的員工，請先關閉POS營業點：\n"
 
 #. module: pos_hr
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
 #, python-format
 msgid "or"

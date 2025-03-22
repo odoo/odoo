@@ -5,16 +5,16 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Martin Trigaux, 2023
-# Tony Ng, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -481,14 +481,6 @@ msgstr "關閉"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#, python-format
-msgid "Close chat window"
-msgstr "關閉聊天視窗"
-
-#. module: im_livechat
-#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Close conversation"
@@ -578,7 +570,7 @@ msgstr "建立一個頻道，開始聊天就可以生成交談記錄。"
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Create a new canned response"
-msgstr "建立罐頭回應"
+msgstr "建立預設回應"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__create_uid
@@ -620,7 +612,7 @@ msgstr "建立日期(小時)"
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
 #: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
 msgid "Customer Ratings"
-msgstr "客戶點評"
+msgstr "客戶評分"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
@@ -827,7 +819,7 @@ msgstr "歷史"
 #: model:chatbot.script.step,message:im_livechat.chatbot_script_welcome_step_pricing
 msgid ""
 "Hmmm, let me check if I can find someone that could help you with that..."
-msgstr "嗯，讓我檢查一下我是否能找到可以幫助你的人......"
+msgstr "嗯，讓我看看有沒有人可以幫助你⋯"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__start_date_hour
@@ -836,8 +828,9 @@ msgstr "對話視窗開始的小時數"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "請問有什麼可以幫到您？"
@@ -1118,14 +1111,14 @@ msgstr "實時聊天視窗"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_mail_channel__livechat_active
 msgid "Livechat session is active until visitor leaves the conversation."
-msgstr "實時聊天對話時段處於活動狀態，直至訪問者離開對話。"
+msgstr "實時聊天對話時段會一直生效，直至訪客離開對話。"
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_view/public_livechat_view.xml:0
 #, python-format
 msgid "Loading older messages..."
-msgstr "正在加載歷史消息"
+msgstr "正在載入較舊訊息⋯"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__sequence
@@ -1296,7 +1289,7 @@ msgstr ""
 msgid ""
 "Operators that do not show any activity In Odoo for more than 30 minutes "
 "will be considered as disconnected."
-msgstr "在 Odoo 中未顯示任何活動超過 30 分鐘的操作人員將被視為已斷開連接。"
+msgstr "操作員若超過 30 分鐘未有在 Odoo 內顯示任何活動，將被視為已斷線。"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_answer_view_tree
@@ -1376,7 +1369,7 @@ msgstr "疑問"
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
-msgstr "點評"
+msgstr "評分"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg_text
@@ -1424,7 +1417,7 @@ msgstr "評級: %s"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_ids
 msgid "Ratings"
-msgstr "點評"
+msgstr "評分"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat
@@ -1436,12 +1429,12 @@ msgstr "線上客服頻道的評價"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Receive a copy of this conversation"
-msgstr "若您欲取得本次對話副本，請填入您的email"
+msgstr "接收此對話的副本"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
 msgid "Redirect Link"
-msgstr "Redirect Link"
+msgstr "重新導向連結"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1510,7 +1503,7 @@ msgstr "儲存您的頻道以獲得您的配置小工具。"
 #: code:addons/im_livechat/static/src/public_models/public_livechat_window.js:0
 #, python-format
 msgid "Say something"
-msgstr "說些什麼..."
+msgstr "說些東西⋯"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_script_view_form
@@ -1558,8 +1551,8 @@ msgid "Select an option above"
 msgstr "選擇上方一個選項"
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/legacy/widgets/feedback.xml:0
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Send"
 msgstr "發送"
@@ -1777,7 +1770,7 @@ msgstr "已處理的對話視窗"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Try again"
-msgstr ""
+msgstr "再試"
 
 #. module: im_livechat
 #. odoo-python
@@ -1847,7 +1840,7 @@ msgstr "用戶的原始答案"
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Visitor"
-msgstr "訪問者"
+msgstr "訪客"
 
 #. module: im_livechat
 #. odoo-python
@@ -1908,6 +1901,11 @@ msgstr "介意留下你的電郵地址，以便我們回覆你嗎？"
 #, python-format
 msgid "Yesterday"
 msgstr "昨天"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "你"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action

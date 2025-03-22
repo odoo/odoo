@@ -6,15 +6,17 @@
 # Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
-# Wil Odoo, 2023
+# Larissa Manderfeld, 2024
+# Manon Rondou, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -612,6 +614,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Geautoriseerd</b>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Betaald</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Teruggedraaid</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1801,7 +1808,7 @@ msgstr "Domein"
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_sample_quotation_state__done
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_quotation_onboarding_state__done
 msgid "Done"
-msgstr "Gereed"
+msgstr "Afgehandeld"
 
 #. module: sale
 #. odoo-python
@@ -4114,14 +4121,14 @@ msgid "Tags"
 msgstr "Labels"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Btw 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "BTW land"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "Btw nr."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4270,12 +4277,12 @@ msgstr "Het vooraf te factureren vaste bedrag, exclusief BTW."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Deze producten kunnen niet tot één bedrijf %s beperkt worden omdat die al gebruikt werden voor een offerte of order in een andere bedrijf:\n"
-"%s\n"
+"Deze producten kunnen niet tot één bedrijf %(company)s beperkt worden omdat die al gebruikt werden voor een offerte of order in een andere bedrijf:\n"
+"%(used_products)s\n"
 "In plaats daarvan kun je deze producten archiveren en opnieuw aanmaken met een bedrijfsrestrictie, of ze als gemeenschappelijk product laten staan."
 
 #. module: sale
@@ -4645,12 +4652,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Unit Price"
-msgstr "Prijs"
+msgstr "Eenheidsprijs"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Unit Price:"
-msgstr "Prijs:"
+msgstr "Eenheidsprijs:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom

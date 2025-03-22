@@ -10,8 +10,8 @@ from dateutil.parser import parse
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context, email_normalize
-from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.sql_db import BaseCursor
 
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
@@ -27,6 +27,7 @@ _logger = logging.getLogger(__name__)
 def after_commit(func):
     @wraps(func)
     def wrapped(self, *args, **kwargs):
+        assert isinstance(self.env.cr, BaseCursor)
         dbname = self.env.cr.dbname
         context = self.env.context
         uid = self.env.uid
@@ -83,12 +84,25 @@ class GoogleSync(models.AbstractModel):
             for vals in vals_list:
                 vals.update({'need_sync': False})
         records = super().create(vals_list)
+        self._handle_allday_recurrences_edge_case(records, vals_list)
 
         google_service = GoogleCalendarService(self.env['google.service'])
         records_to_sync = records.filtered(lambda r: r.need_sync and r.active)
         for record in records_to_sync:
             record.with_user(record._get_event_user())._google_insert(google_service, record._google_values(), timeout=3)
         return records
+
+    def _handle_allday_recurrences_edge_case(self, records, vals_list):
+        """
+        When creating 'All Day' recurrent event, the first event is wrongly synchronized as
+        a single event and then its recurrence creates a duplicated event. We must manually
+        set the 'need_sync' attribute as False in order to avoid this unwanted behavior.
+        """
+        if vals_list and self._name == 'calendar.event':
+            forbid_sync = all(not vals.get('need_sync', True) for vals in vals_list)
+            records_to_skip = records.filtered(lambda r: r.need_sync and r.allday and r.recurrency and not r.recurrence_id)
+            if forbid_sync and records_to_skip:
+                records_to_skip.with_context(send_updates=False).need_sync = False
 
     def unlink(self):
         """We can't delete an event that is also in Google Calendar. Otherwise we would
@@ -149,6 +163,7 @@ class GoogleSync(models.AbstractModel):
         """
         existing = google_events.exists(self.env)
         new = google_events - existing - google_events.cancelled()
+        write_dates = self._context.get('write_dates', {})
 
         odoo_values = [
             dict(self._odoo_values(e, default_reminders), need_sync=False)
@@ -156,7 +171,7 @@ class GoogleSync(models.AbstractModel):
         ]
         new_odoo = self.with_context(dont_notify=True)._create_from_google(new, odoo_values)
         cancelled = existing.cancelled()
-        cancelled_odoo = self.browse(cancelled.odoo_ids(self.env))
+        cancelled_odoo = self.browse(cancelled.odoo_ids(self.env)).exists()
 
         # Check if it is a recurring event that has been rescheduled.
         # We have to check if an event already exists in Odoo.
@@ -171,13 +186,20 @@ class GoogleSync(models.AbstractModel):
 
         cancelled_odoo._cancel()
         synced_records = new_odoo + cancelled_odoo
-        for gevent in existing - cancelled:
+        pending = existing - cancelled
+        pending_odoo = self.browse(pending.odoo_ids(self.env)).exists()
+        for gevent in pending:
+            odoo_record = self.browse(gevent.odoo_id(self.env))
+            if odoo_record not in pending_odoo:
+                # The record must have been deleted in the mean time; nothing left to sync
+                continue
             # Last updated wins.
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
-            odoo_record = self.browse(gevent.odoo_id(self.env))
+            # Use the record's write_date to apply Google updates only if they are newer than Odoo's write_date.
+            odoo_record_write_date = write_dates.get(odoo_record.id, odoo_record.write_date)
             # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
-            if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
+            if not odoo_record_write_date or updated >= pytz.utc.localize(odoo_record_write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.with_context(dont_notify=True)._write_from_google(gevent, vals)
                 synced_records |= odoo_record

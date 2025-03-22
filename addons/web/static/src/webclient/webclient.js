@@ -99,7 +99,7 @@ export class WebClient extends Component {
         // we let the browser do the default behavior and
         // we do not want any other listener to execute.
         if (
-            ev.ctrlKey &&
+            (ev.ctrlKey || ev.metaKey) &&
             !ev.target.isContentEditable &&
             ((ev.target instanceof HTMLAnchorElement && ev.target.href) ||
                 (ev.target instanceof HTMLElement && ev.target.closest("a[href]:not([href=''])")))

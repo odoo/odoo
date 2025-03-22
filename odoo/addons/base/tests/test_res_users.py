@@ -4,7 +4,7 @@
 from types import SimpleNamespace
 from unittest.mock import patch
 from odoo.addons.base.models.res_users import is_selection_groups, get_selection_groups, name_selection_groups
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import TransactionCase, Form, tagged, new_test_user
 from odoo.tools import mute_logger
 
@@ -189,6 +189,20 @@ class TestUsers(TransactionCase):
         self.assertTrue(portal_user_2.exists(), 'Should have kept the user')
         self.assertTrue(portal_partner_2.exists(), 'Should have kept the partner')
         self.assertEqual(asked_deletion_2.state, 'fail', 'Should have marked the deletion as failed')
+
+    def test_user_home_action_restriction(self):
+        test_user = new_test_user(self.env, 'hello world')
+
+        # Find an action that contains restricted context ('active_id')
+        restricted_action = self.env['ir.actions.act_window'].search([('context', 'ilike', 'active_id')], limit=1)
+        with self.assertRaises(ValidationError):
+            test_user.action_id = restricted_action.id
+
+        # Find an action without restricted context
+        allowed_action = self.env['ir.actions.act_window'].search(['!', ('context', 'ilike', 'active_id')], limit=1)
+
+        test_user.action_id = allowed_action.id
+        self.assertEqual(test_user.action_id.id, allowed_action.id)
 
     def test_context_get_lang(self):
         self.env['res.lang'].with_context(active_test=False).search([

@@ -26,18 +26,18 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # ismail eski <ismaileski@gmail.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2023
-# Murat Kaplan <muratk@projetgrup.com>, 2023
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2023
 # Melih Melik Sonmez, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Murat Kaplan <muratk@projetgrup.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2024-01-25 10:43+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -341,10 +341,8 @@ msgstr "<span class=\"text-nowrap\">Vergi 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
-"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa "
-"Barbara Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -2253,6 +2251,7 @@ msgstr "Kurumsal"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -2421,7 +2420,6 @@ msgstr "Dosya"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Dosya yükle"
@@ -2631,6 +2629,16 @@ msgstr "İşlemek"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Tüm raporların en üstünde görüntülenen üstbilgi metni."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -4571,6 +4579,13 @@ msgid "Request timeout"
 msgstr "İstek zaman aşımına uğradı"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr ""
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "Logo renklerine sıfırla"
@@ -4888,6 +4903,13 @@ msgstr "Hepsini Seç"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Select field"
@@ -5179,6 +5201,7 @@ msgstr "Söz dizimi hatası"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
@@ -5272,8 +5295,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "Seçilen dosya maksimum dosya boyutunu %s aşıyor."
@@ -5902,6 +5931,7 @@ msgstr "Görünüm değiştirici"
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/control_panel.xml:0
 #: code:addons/web/static/src/search/favorite_menu/favorite_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
@@ -6211,6 +6241,13 @@ msgstr "tüm"
 #, python-format
 msgid "all records"
 msgstr "tüm kayıtlar"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "and"
+msgstr "ve"
 
 #. module: web
 #. odoo-javascript
@@ -6544,8 +6581,8 @@ msgstr "hala yükleniyor..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6811,3 +6848,10 @@ msgstr "varsayılan bir metin yazın veya ENTER tuşuna basın"
 #, python-format
 msgid "— press"
 msgstr "— basın"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr ""

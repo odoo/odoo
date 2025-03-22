@@ -5,14 +5,15 @@
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
 # erpgo translator <jumshud@erpgo.az>, 2023
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2023\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2024\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,7 +95,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">Ölkə...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -107,6 +108,18 @@ msgid ""
 "<small class=\"form-text text-muted\">Changing company name or VAT number is"
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: portal
@@ -279,13 +292,6 @@ msgid "Already Registered"
 msgstr ""
 
 #. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr ""
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Are you sure you want to do this?"
 msgstr ""
@@ -320,6 +326,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"VÖEN nömrəsini dəyişdirmək, sənəd(lər) hesabınız üçün təqdim edildikdən "
+"sonra mümkün deyil. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -327,6 +335,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Şirkət adını dəyişdirmək, sənəd(lər) hesabınız üçün təqdim edildikdən sonra "
+"mümkün deyil. Bu əməliyyat üçün birbaşa bizimlə əlaqə saxlayın."
 
 #. module: portal
 #. odoo-javascript
@@ -654,6 +664,7 @@ msgstr ""
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
+"Xarab E-poçt ünvanı. Zəhmət olmasa düzgün e-poçt ünvanı daxil edəsiniz."
 
 #. module: portal
 #. odoo-python
@@ -689,6 +700,13 @@ msgstr ""
 msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
 msgstr ""
 
 #. module: portal
@@ -784,7 +802,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Növbəti"
@@ -889,11 +906,6 @@ msgid "Powered by"
 msgstr "Tərəfindən dəstəklənir"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr ""
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -968,6 +980,7 @@ msgstr "Təhlükəsizlik"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr ""
@@ -1023,12 +1036,12 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr ""
+msgstr "Bəzi tələb olunan xanalar boşdur."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "State / Province"
-msgstr ""
+msgstr "Ştat / Vilayət"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
@@ -1060,14 +1073,6 @@ msgstr ""
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
 msgstr ""
 
 #. module: portal

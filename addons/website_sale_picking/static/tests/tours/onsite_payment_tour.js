@@ -9,7 +9,7 @@ tour.register('onsite_payment_tour', {
         url: '/web',
     },
     [
-        ...wsTourUtils.addToCart({productName: 'Chair floor protection'}),
+        ...wsTourUtils.addToCart({productName: 'Product Consumable'}),
         wsTourUtils.goToCart(),
         wTourUtils.clickOnElement('Proceed to checkout', 'a:contains(Process Checkout)'),
         ...wsTourUtils.fillAdressForm(),
@@ -21,8 +21,8 @@ tour.register('onsite_payment_tour', {
         },
 
         // Test multi products (Either physical or not)
-        ...wsTourUtils.addToCart({productName: 'Customizable Desk', productHasVariants: true}),
-        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        ...wsTourUtils.addToCart({productName: 'Product Consumable'}),
+        ...wsTourUtils.addToCart({productName: 'Product Service'}),
         wsTourUtils.goToCart({quantity: 2}),
         wTourUtils.clickOnElement('Go to payment page', 'a:contains("Process Checkout")'),
         ...wsTourUtils.fillAdressForm(),
@@ -34,7 +34,7 @@ tour.register('onsite_payment_tour', {
         },
 
         // Test without any physical product (option pay on site should not appear)
-        ...wsTourUtils.addToCart({productName: 'Warranty'}),
+        ...wsTourUtils.addToCart({productName: 'Product Service'}),
         wsTourUtils.goToCart(),
         wTourUtils.clickOnElement('Go to payment page', 'a:contains("Process Checkout")'),
         ...wsTourUtils.fillAdressForm(),

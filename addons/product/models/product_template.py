@@ -7,6 +7,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, tools, _, SUPERUSER_ID
 from odoo.exceptions import ValidationError, RedirectWarning, UserError
+from odoo.models import PREFETCH_MAX
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
@@ -474,7 +475,18 @@ class ProductTemplate(models.Model):
             default = {}
         if 'name' not in default:
             default['name'] = _("%s (copy)", self.name)
-        return super(ProductTemplate, self).copy(default=default)
+
+        res = super().copy(default=default)
+
+        # Since we don't copy the product template attribute values, we need to match the extra prices.
+        for ptal, copied_ptal in zip(self.attribute_line_ids, res.attribute_line_ids):
+            for ptav, copied_ptav in zip(ptal.product_template_value_ids, copied_ptal.product_template_value_ids):
+                if not ptav.price_extra:
+                    continue
+                # security check
+                if ptav.attribute_id == copied_ptav.attribute_id and ptav.product_attribute_value_id == copied_ptav.product_attribute_value_id:
+                    copied_ptav.price_extra = ptav.price_extra
+        return res
 
     def name_get(self):
         # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
@@ -494,10 +506,12 @@ class ProductTemplate(models.Model):
         while True:
             domain = templates and [('product_tmpl_id', 'not in', templates.ids)] or []
             args = args if args is not None else []
-            # Product._name_search has default value limit=100
-            # So, we either use that value or override it to None to fetch all products at once
-            kwargs = {} if limit else {'limit': None}
-            products_ids = Product._name_search(name, args+domain, operator=operator, name_get_uid=name_get_uid, **kwargs)
+            # Pathological case: there is no limit, so we'll need to search on all products.
+            # We iteratively _name_search with a larger bound, but not unbounded to avoid
+            # performance regressions or OOM errors while manipulating extremely large list of ids.
+            # For other cases, we use PREFETCH_MAX as an upper bound.
+            search_limit = PREFETCH_MAX * 10 if not limit else PREFETCH_MAX
+            products_ids = Product._name_search(name, args+domain, operator=operator, limit=search_limit, name_get_uid=name_get_uid)
             products = Product.browse(products_ids)
             new_templates = products.mapped('product_tmpl_id')
             if new_templates & templates:
@@ -552,7 +566,7 @@ class ProductTemplate(models.Model):
         return {
             'name': _('Price Rules'),
             'view_mode': 'tree,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',
@@ -670,7 +684,7 @@ class ProductTemplate(models.Model):
 
             else:
                 for variant in existing_variants.values():
-                    is_combination_possible = self._is_combination_possible_by_config(
+                    is_combination_possible = tmpl_id._is_combination_possible_by_config(
                         combination=variant.product_template_attribute_value_ids,
                         ignore_no_variant=True,
                     )

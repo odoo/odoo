@@ -15,7 +15,6 @@ from odoo.exceptions import AccessError
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
-from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 from odoo.exceptions import UserError
 from odoo.http import request
@@ -128,7 +127,7 @@ class WebsiteForum(WebsiteProfile):
         if my:
             url_args['my'] = my
         pager = tools.lazy(lambda: request.website.pager(url=url, total=question_count, page=page,
-                                      step=self._post_per_page, scope=self._post_per_page,
+                                      step=self._post_per_page, scope=5,
                                       url_args=url_args))
 
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
@@ -213,7 +212,7 @@ class WebsiteForum(WebsiteProfile):
                 type='http', auth="public", website=True, sitemap=False)
     def old_question(self, forum, question, **post):
         # Compatibility pre-v14
-        return request.redirect(_build_url_w_params("/forum/%s/%s" % (slug(forum), slug(question)), request.params), code=301)
+        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)), code=301)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=True)

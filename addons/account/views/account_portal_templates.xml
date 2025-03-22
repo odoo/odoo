@@ -92,7 +92,7 @@
                             <b t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <b t-else="1" t-field="invoice.amount_total"/>
                         </h2>
-                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
+                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment', 'reversed') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
                     </t>
 
                     <t t-set="entries">

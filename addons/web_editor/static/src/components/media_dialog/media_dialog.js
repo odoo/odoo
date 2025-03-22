@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
+import {_lt} from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
+import { Mutex } from "@web/core/utils/concurrency";
 import { useWowlService } from '@web/legacy/utils';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Notebook } from '@web/core/notebook/notebook';
@@ -14,22 +16,22 @@ import { Component, useState, onRendered, xml } from "@odoo/owl";
 export const TABS = {
     IMAGES: {
         id: 'IMAGES',
-        title: "Images",
+        title: _lt("Images"),
         Component: ImageSelector,
     },
     DOCUMENTS: {
         id: 'DOCUMENTS',
-        title: "Documents",
+        title: _lt("Documents"),
         Component: DocumentSelector,
     },
     ICONS: {
         id: 'ICONS',
-        title: "Icons",
+        title: _lt("Icons"),
         Component: IconSelector,
     },
     VIDEOS: {
         id: 'VIDEOS',
-        title: "Videos",
+        title: _lt("Videos"),
         Component: VideoSelector,
     },
 };
@@ -43,6 +45,7 @@ export class MediaDialog extends Component {
         this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.notificationService = useService('notification');
+        this.mutex = new Mutex();
 
         this.tabs = [];
         this.selectedMedia = useState({});
@@ -159,7 +162,14 @@ export class MediaDialog extends Component {
         const saveSelectedMedia = selectedMedia.length
             && (this.state.activeTab !== TABS.ICONS.id || selectedMedia[0].initialIconChanged || !this.props.media);
         if (saveSelectedMedia) {
-            const elements = await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm });
+            // Calling a mutex to make sure RPC calls inside `createElements`
+            // are properly awaited (e.g. avoid creating multiple attachments
+            // when clicking multiple times on the same media). As
+            // `createElements` is static, the mutex has to be set on the media
+            // dialog itself to be destroyed with its instance.
+            const elements = await this.mutex.exec(async() =>
+                await TABS[this.state.activeTab].Component.createElements(selectedMedia, { rpc: this.rpc, orm: this.orm })
+            );
             elements.forEach(element => {
                 if (this.props.media) {
                     element.classList.add(...this.props.media.classList);
@@ -173,6 +183,17 @@ export class MediaDialog extends Component {
                         }
                         if (this.props.media.dataset.shapeColors) {
                             element.dataset.shapeColors = this.props.media.dataset.shapeColors;
+                        }
+                    } else if ([TABS.VIDEOS.id, TABS.DOCUMENTS.id].includes(this.state.activeTab)) {
+                        const parentEl = this.props.media.parentElement;
+                        if (
+                            parentEl &&
+                            parentEl.tagName === "A" &&
+                            parentEl.children.length === 1 &&
+                            this.props.media.tagName === "IMG"
+                        ) {
+                            // If an image is wrapped in an <a> tag, we remove the link when replacing it with a video or document
+                            parentEl.replaceWith(parentEl.firstElementChild);
                         }
                     }
                 }

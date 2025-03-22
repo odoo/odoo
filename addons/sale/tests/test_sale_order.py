@@ -643,3 +643,205 @@ class TestSalesTeam(SaleCommon):
         self.assertEqual(sale_order.team_id, crm_team0, "Sales team should change to partner's")
         sale_order.with_user(self.user_not_in_team).write({'partner_id': partner_b.id})
         self.assertEqual(sale_order.team_id, crm_team1, "Sales team should change to partner's")
+
+    def test_qty_delivered_on_creation(self):
+        """Checks that the qty delivered of sol is automatically set to 0.0 when an so is created"""
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                })],
+        })
+        # As we want to determine if the value is set in the DB we need to perform a search
+        self.assertFalse(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', False)]))
+        self.assertEqual(self.env['sale.order.line'].search(['&', ('order_id', '=', sale_order.id), ('qty_delivered', '=', 0.0)]), sale_order.order_line)
+
+    def test_action_recompute_taxes(self):
+        '''
+        This test verifies the taxes recomputation action that can be triggered
+        after updating the fiscal position on a sale order document.
+        '''
+        special_tax = self.env['account.tax'].create({
+            'name': "special_tax_10",
+            'amount_type': 'percent',
+            'amount': 25.0,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+
+        mapped_tax_a = self.env['account.tax'].create({
+            'name': "tax_a",
+            'amount_type': 'percent',
+            'amount': 12.5,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+
+        mapped_tax_b = self.env['account.tax'].create({
+            'name': "tax_b",
+            'amount_type': 'percent',
+            'amount': 5.0,
+            'include_base_amount': True,
+            'price_include': True,
+        })
+
+        sales_tax = self.env['account.tax'].create({
+            'name': "VAT 20%",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'price_include': True,
+        })
+
+        mapping_a = self.env['account.fiscal.position'].create({
+            'name': 'Special Tax Reduction',
+            'tax_ids': [Command.create({'tax_src_id': special_tax.id, 'tax_dest_id': mapped_tax_a.id})],
+        })
+        mapping_b = self.env['account.fiscal.position'].create({
+            'name': 'Special Tax Reduction',
+            'tax_ids': [Command.create({'tax_src_id': special_tax.id, 'tax_dest_id': mapped_tax_b.id})],
+        })
+
+        # taxes and standard price need to be set on the product, as they will be
+        # recomputed when changing the fiscal position.
+        self.consumable_product.write({
+            'lst_price': 300,
+            'taxes_id': [Command.set((special_tax + sales_tax).ids)],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.consumable_product.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+
+        self.assertEqual(order.amount_total, 300)
+        self.assertEqual(order.amount_tax, 100)
+        order.fiscal_position_id = mapping_a
+        order._recompute_prices()
+        order.action_update_taxes()
+        self.assertEqual(order.amount_total, 270)
+        self.assertEqual(order.amount_tax, 70)
+        order.fiscal_position_id = mapping_b
+        order._recompute_prices()
+        order.action_update_taxes()
+        self.assertEqual(order.amount_total, 252)
+        self.assertEqual(order.amount_tax, 52)
+
+    def test_recompute_taxes_rounded_globally_multi_company_currency(self):
+        '''
+        Check that taxes computation are made in the currency of the company
+        configured on the SO lines.
+        '''
+        # create a currency with no decimal
+        currency_b = self.env['res.currency'].create({
+            'name': 'B',
+            'symbol': 'B',
+            'rounding': 1.000000,
+        })
+        # create a company with USD as currency (rounding == 0.01)
+        company_a = self.env['res.company'].create({
+            'name': 'Company A',
+            'country_id': self.env.ref('base.us').id,
+        })
+        # create a company with currency_b as currency
+        company_b = self.env['res.company'].create({
+            'name': 'Company B',
+            'tax_calculation_rounding_method': 'round_globally',
+            'currency_id': currency_b.id,
+        })
+        # set company_b as default company of current user
+        self.env.user.company_id = company_b
+        tax_a = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'amount': 10,
+            'company_id': company_a.id,
+            'country_id': self.env.ref('base.us').id,
+        })
+        # create a SO from company_a
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': company_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 123.4,
+                    'tax_id': tax_a.ids,
+                }),
+            ],
+        })
+        # edit the price unit
+        so.write({
+            'order_line': [
+                Command.update(so.order_line[0].id, {'price_unit': 123.5}),
+            ],
+        })
+        # call "flush_all" as it is done in "call_kw" method to test
+        # the tax values that have been recomputed after it
+        self.env.flush_all()
+        self.assertEqual(so.amount_tax, 12.35)
+        self.assertEqual(so.amount_total, 135.85)
+        # set "Rounding Method" of company A to "Round Globally"
+        company_a.tax_calculation_rounding_method = 'round_globally'
+        # edit the price unit
+        so.write({
+            'order_line': [
+                Command.update(so.order_line[0].id, {'price_unit': 123.6}),
+            ],
+        })
+        self.env.flush_all()
+        self.assertEqual(so.amount_tax, 12.36)
+        self.assertEqual(so.amount_total, 135.96)
+
+    def test_recompute_taxes_rounded_globally_currency_precision(self):
+        '''
+        Check that taxes computation are made in the currency of the company
+        configured on the SO lines.
+        '''
+        # create a currency with no decimal
+        currency_b = self.env['res.currency'].create({
+            'name': 'B',
+            'symbol': 'B',
+            'rounding': 1.000000,
+        })
+        # create a company with currency_b as currency
+        company_b = self.env['res.company'].create({
+            'name': 'Company B',
+            'tax_calculation_rounding_method': 'round_globally',
+            'currency_id': currency_b.id,
+        })
+        # set company_b as default company of current user
+        self.env.user.company_id = company_b
+
+        pricelist_b = self.env['product.pricelist'].with_company(company_b).create({
+            'name': 'pricelist b',
+            'currency_id': self.env.ref('base.USD').id,
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'Tax A',
+            'amount': 19,
+            'company_id': company_b.id,
+            'country_id': self.env.ref('base.us').id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': company_b.id,
+            'pricelist_id': pricelist_b.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 15.31,
+                    'tax_id': tax.ids,
+                }),
+            ],
+        })
+        self.assertEqual(so.amount_tax, 2.91)
+        self.assertEqual(so.amount_total, 18.22)
+        self.assertEqual(so.order_line.price_tax, 2.91)
+        self.assertEqual(so.order_line.price_total, 18.22)

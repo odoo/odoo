@@ -5,14 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Wil Odoo, 2024
+# Larissa Manderfeld, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"Last-Translator: Larissa Manderfeld, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,12 +25,12 @@ msgstr ""
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_option_buy_course_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
-msgstr "<i class=\"fa fa-bolt\"/>Comprar ahora"
+msgstr "<i class=\"fa fa-bolt\"/> Comprar ahora"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_button
 msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
-msgstr "<i class=\"fa fa-shopping-cart\"/> Agregar al carrito"
+msgstr "<i class=\"fa fa-shopping-cart\"/> Añadir a la cesta"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,help:website_sale_slides.field_product_product__detailed_type
@@ -38,52 +40,35 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona stock. La aplicación de inventario debe estar instalada.\n"
-"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
+"Un producto almacenable es un producto para el que se gestiona el stock. La aplicación de inventario debe estar instalada.\n"
+"Un producto consumible es un producto para el que no se gestiona el stock.\n"
 "Un servicio es un producto no material."
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "About us"
-msgstr "Acerca de"
-
-#. module: website_sale_slides
+#. odoo-python
 #: code:addons/website_sale_slides/models/product_product.py:0
 #, python-format
 msgid "Access to:%s%s"
 msgstr "Acceso a: %s%s"
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"As a leading professional services firm,\n"
-"                                we know that success is all about the\n"
-"                                commitment we put on strong services."
-msgstr ""
-"Como empresa líder de servicios profesionales,\n"
-"                                sabemos que el éxito radica en el\n"
-"                                compromiso que adquirimos en nuestros servicios más destacados."
-
-#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.snippet_options
 msgid "Buy Now Button"
-msgstr "Botón comprar ahora"
+msgstr "Botón de comprar ahora"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Buy the course to validate your answers!"
 msgstr "Compre el curso para comprobar sus respuestas."
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Buy this Course"
-msgstr "Compra este curso"
+msgstr "Comprar este curso"
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -99,7 +84,6 @@ msgid "Course"
 msgstr "Curso"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.default_product_course
 #: model:product.template,name:website_sale_slides.default_product_course_product_template
 msgid "Course Access"
 msgstr "Acceso al curso"
@@ -125,10 +109,9 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.product_course_channel_6
 #: model:product.template,name:website_sale_slides.product_course_channel_6_product_template
 msgid "DIY Furniture Course"
-msgstr "Curso Muebles de bricolaje"
+msgstr "Curso de muebles DIY"
 
 #. module: website_sale_slides
 #: model:ir.model.fields,help:website_sale_slides.field_slide_channel__enroll
@@ -139,7 +122,7 @@ msgstr "Define cómo las personas se pueden inscribir a su curso."
 #: model:ir.model.fields,field_description:website_sale_slides.field_slide_channel__enroll
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_form_add_inherit_sale_slides
 msgid "Enroll Policy"
-msgstr "Política de registro"
+msgstr "Política de inscripción"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
@@ -147,50 +130,20 @@ msgid "Free Preview"
 msgstr "Vista previa gratis"
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"Great quotation templates will significantly\n"
-"                                <strong>boost your success rate</strong>. The\n"
-"                                first section is usually about your company,\n"
-"                                your references, your methodology or\n"
-"                                guarantees, your team, SLA, terms and conditions, etc."
-msgstr ""
-"El uso de buenas plantillas para presupuestos hará que\n"
-" <strong>aumente significativamente su efectividad</strong>. La\n"
-" primera parte contiene generalmente información sobre su  empresa,\n"
-" sus referencias, su metodología y\n"
-" las garantías, el equipo con el que cuenta, el contrato sobre el nivel de servicios ofrecido, las condiciones aplicables etc."
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"If you edit a quotation from the 'Preview' of a quotation, you will\n"
-"                        update that quotation only. If you edit the quotation\n"
-"                        template (from the Configuration menu), all future quotations will\n"
-"                        use this modified template."
-msgstr ""
-"Si edita un presupuesto desde la 'Vista previa' del mismo, solo\n"
-"                        actualizará el presupuesto. Si edita la plantilla de\n"
-"                        presupuesto(desde el menú Configuración), todas los futuros presupuestos\n"
-"                        utilizarán esta plantilla modificada."
-
-#. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link
 msgid "Join this Course"
 msgstr "Unirse a este curso"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid ""
 "Leaving the course and re-enrolling afterwards means that you'll be charged "
 "again."
 msgstr ""
-"Al abandonar el curso y volver a matricularse después significa que se le "
-"cobrará de nuevo."
+"Si abandona el curso y se vuelve a inscribir después, se le cobrará de "
+"nuevo."
 
 #. module: website_sale_slides
 #: model_terms:ir.actions.act_window,help:website_sale_slides.sale_report_action_slides
@@ -206,36 +159,12 @@ msgstr "En el momento del pago"
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Once your order is paid &amp; confirmed, you will gain access to:"
 msgstr ""
-"Una vez que realice el pago y se confirme su orden, obtendrá acceso a:"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Our Offer"
-msgstr "Nuestra oferta"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Our Quality"
-msgstr "Nuestra calidad"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Our Service"
-msgstr "Nuestro servicio"
+"Una vez que realice el pago y se confirme su pedido, obtendrá acceso a:"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_slides_list_slide
 msgid "Preview"
-msgstr "Previsualizar"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid "Price"
-msgstr "Precio"
+msgstr "Vista previa"
 
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_template
@@ -252,24 +181,12 @@ msgstr "Tipo de producto"
 #. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_product_product
 msgid "Product Variant"
-msgstr "Variantes de producto"
+msgstr "Variante de producto"
 
 #. module: website_sale_slides
 #: model:ir.model.constraint,message:website_sale_slides.constraint_slide_channel_product_id_check
 msgid "Product is required for on payment channels."
 msgstr "El producto es necesario para los canales de pago."
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"Product quality is the foundation we\n"
-"                                stand on; we build it with a relentless\n"
-"                                focus on fabric, performance and craftsmanship."
-msgstr ""
-"La calidad del producto es la base en la que\n"
-"                                estamos parados; Lo construimos con un enfoque\n"
-"                                incesante en la fábrica, el rendimiento y la artesanía."
 
 #. module: website_sale_slides
 #: model:ir.ui.menu,name:website_sale_slides.website_slides_menu_report_revenues
@@ -288,14 +205,14 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/slide_course_join.xml:0
 #, python-format
 msgid "Sign in"
-msgstr "Identificarse"
+msgstr "Iniciar sesión"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_sale_slides_quiz.xml:0
 #, python-format
 msgid "Sign in and buy the course to take the quiz"
@@ -304,13 +221,12 @@ msgstr "Inicie sesión y compre el curso para realizar el cuestionario"
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "Start Learning"
-msgstr "Comience a aprender"
+msgstr "Comenzar a aprender"
 
 #. module: website_sale_slides
-#: model:product.product,name:website_sale_slides.product_course_channel_1
 #: model:product.template,name:website_sale_slides.product_course_channel_1_product_template
 msgid "Taking care of Trees Course"
-msgstr "Curso Cuidado de los Árboles"
+msgstr "Curso sobre el cuidado de los árboles"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_main
@@ -318,25 +234,11 @@ msgid "This course cannot be bought because its linked product"
 msgstr "Este curso no se puede comprar porque su producto está vinculado"
 
 #. module: website_sale_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_slides/static/src/xml/website_slides_unsubscribe.xml:0
 #, python-format
 msgid "This course is paid."
-msgstr "Este curso es pagado."
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"This is a <strong>sample quotation template</strong>. You should\n"
-"                                customize it to fit your own needs from the <i>Sales</i>\n"
-"                                application, using the menu: Configuration /\n"
-"                                Quotation Templates."
-msgstr ""
-"Esta es una <strong>plantilla de presupuesto de ejemplo</strong>. Debe\n"
-"                                personalizarla según sus necesidades desde la aplicación de <i>Ventas</i>,\n"
-"                                con el menú: Configuración /\n"
-"                                Plantillas de Presupuesto."
+msgstr "Este curso tiene un coste."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.slide_channel_view_tree_report
@@ -349,58 +251,21 @@ msgid "Total revenues"
 msgstr "Ingresos totales"
 
 #. module: website_sale_slides
-#: model:product.product,uom_name:website_sale_slides.default_product_course
-#: model:product.product,uom_name:website_sale_slides.product_course_channel_1
-#: model:product.product,uom_name:website_sale_slides.product_course_channel_6
-#: model:product.template,uom_name:website_sale_slides.default_product_course_product_template
-#: model:product.template,uom_name:website_sale_slides.product_course_channel_1_product_template
-#: model:product.template,uom_name:website_sale_slides.product_course_channel_6_product_template
-msgid "Units"
-msgstr "Unidades"
-
-#. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"We always ensure that our products are\n"
-"                                set at a fair price so that you will be\n"
-"                                happy to buy them."
-msgstr ""
-"Siempre garantizamos que nuestros productos\n"
-"                                tengan un precio justo, de forma\n"
-"                                que se alegrará de comprarlos."
-
-#. module: website_sale_slides
 #: model:ir.model,name:website_sale_slides.model_website
 msgid "Website"
 msgstr "Sitio web"
 
 #. module: website_sale_slides
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_1
-#: model_terms:sale.order,website_description:website_sale_slides.sale_order_course_2
-msgid ""
-"You can <strong>set a description per product</strong>. Odoo will\n"
-"                        automatically create a quotation using the descriptions\n"
-"                        of all products in the proposal. The table of content\n"
-"                        on the left is generated automatically using the styles you\n"
-"                        used in your description (heading 1, heading 2, ...)"
-msgstr ""
-"Puede <strong>elegir una descripción por producto</strong>. Odoo creará\n"
-"                        un presupuesto automáticamente con las descripciones\n"
-"                        de todos los productos de la propuesta. La tabla de contenidos\n"
-"                        de la izquierda se genera de forma automática con los estilos\n"
-"                       que haya usado en la descripción (encabezado 1, encabezado 2...)"
-
-#. module: website_sale_slides
+#. odoo-python
 #: code:addons/website_sale_slides/models/sale_order.py:0
 #, python-format
 msgid "You can only add a course once in your cart."
-msgstr "Solo puede añadir un curso una vez en su carrito."
+msgstr "Solo puede añadir un curso una vez en su cesta."
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "You have gained access to the following course(s):"
-msgstr "Obtuvo acceso a los siguientes cursos:"
+msgstr "Ha obtenido acceso a los siguientes cursos:"
 
 #. module: website_sale_slides
 #: model:ir.actions.act_window,name:website_sale_slides.sale_report_action_slides
@@ -420,7 +285,7 @@ msgstr "no esta publicado."
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_purchased_confirmation_message
 msgid "step(s)"
-msgstr "pasos"
+msgstr "paso(s)"
 
 #. module: website_sale_slides
 #: model_terms:ir.ui.view,arch_db:website_sale_slides.course_buy_course_link

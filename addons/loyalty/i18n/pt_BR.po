@@ -9,17 +9,19 @@
 # Martin Trigaux, 2022
 # Éder Brito <britoederr@gmail.com>, 2022
 # Kevilyn Rosa, 2023
-# Layna Nascimento, 2023
-# adrianojprado <adrianojprado@gmail.com>, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
+# Adriano Prado <adrianojprado@gmail.com>, 2023
 # mariana rodrigues <mariana12v@gmail.com>, 2023
+# Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: mariana rodrigues <mariana12v@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,7 +134,6 @@ msgstr "10% no seu pedido"
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
@@ -905,6 +906,11 @@ msgid "Discount Mode"
 msgstr "Discount Mode"
 
 #. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
+msgid "Discount Product"
+msgstr "Produto com desconto"
+
+#. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
 msgid "Discount Product Domain"
 msgstr "Discount Product Domain"
@@ -925,6 +931,11 @@ msgstr "Discount code"
 #, python-format
 msgid "Discount point(s)"
 msgstr "Discount point(s)"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+msgid "Discount product"
+msgstr "Produto com desconto"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -1000,6 +1011,13 @@ msgstr "Excluído"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
 msgid "Expiration Date"
 msgstr "Data de expiração"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+#, python-format
+msgid "Expiration date cannot be set on a loyalty card."
+msgstr "Expiration date cannot be set on a loyalty card."
 
 #. module: loyalty
 #. odoo-python
@@ -1100,16 +1118,23 @@ msgid "Generate Gift Cards"
 msgstr "Generate Gift Cards"
 
 #. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Generate eWallet"
-msgstr "Generate eWallet"
-
-#. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers."
 msgstr ""
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid "Generate eWallet"
+msgstr "Generate eWallet"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "Generate {{props.context.program_item_name}}"
+msgstr "Gerar {{props.context.program_item_name}}"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1254,7 +1279,7 @@ msgstr "É um seguidor"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__is_global_discount
 msgid "Is Global Discount"
-msgstr "Is Global Discount"
+msgstr "É um desconto global"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__is_nominative
@@ -1534,7 +1559,7 @@ msgid "Product Variant"
 msgstr "Variação do Produto"
 
 #. module: loyalty
-#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr "Produto usado na ordem do cliente para aplicar o desconto."
 
@@ -1586,13 +1611,6 @@ msgstr "Program trigger"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promotion Program"
-msgstr "Programa de Promoção"
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
 msgid "Promo point(s)"
 msgstr "Promo point(s)"
 
@@ -1603,6 +1621,13 @@ msgstr "Promo point(s)"
 #, python-format
 msgid "Promos"
 msgstr "Promos"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Promotion Program"
+msgstr "Programa de Promoção"
 
 #. module: loyalty
 #. odoo-python
@@ -1678,6 +1703,7 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rewards"
 msgstr "Recompensas"
 
@@ -1788,6 +1814,13 @@ msgstr "O código promocional deve ser exclusivo."
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
 msgid "The required points for a reward must be strictly positive."
 msgstr "The required points for a reward must be strictly positive."
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
+msgstr "O campo de descrição da recompensa não pode estar vazio."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_product_qty_positive
@@ -2104,3 +2137,10 @@ msgstr "usages"
 #, python-format
 msgid "your order"
 msgstr "your order"
+
+#. module: loyalty
+#. odoo-javascript
+#: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, python-format
+msgid "{{loyalty_el_title}}"
+msgstr "{{loyalty_el_title}}"

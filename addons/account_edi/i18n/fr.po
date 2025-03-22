@@ -6,14 +6,16 @@
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
+# Manon Rondou, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,7 +259,7 @@ msgstr "État de la facturation électronique"
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
 msgid "Email Templates"
-msgstr "Modèles d'email"
+msgstr "Modèles d'e-mail"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
@@ -369,9 +371,14 @@ msgid "Product Unit of Measure"
 msgstr "Unité de mesure de produit"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Refaire la séquence des pièces comptables."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
-msgstr "Signaler l'action"
+msgstr "Action de rapport"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -426,6 +433,16 @@ msgid ""
 msgstr ""
 "Le fichier généré par edi_format_id lorsque les factures sont publiées (et "
 "ce document est traité)."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+"Les documents suivants ont déjà été envoyés et ne peuvent pas être "
+"réordonnés : %s"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit

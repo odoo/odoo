@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from '@web/core/utils/hooks';
-import session from 'web.session';
+import { formatMonetary } from "@web/views/fields/formatters";
 
 const { Component, onWillStart, useState } = owl;
 
@@ -22,16 +22,7 @@ export class ExpenseDashboard extends Component {
     }
 
     renderMonetaryField(value, currency_id) {
-        value = value.toFixed(2);
-        const currency = session.get_currency(currency_id);
-        if (currency) {
-            if (currency.position === "after") {
-                value += currency.symbol;
-            } else {
-                value = currency.symbol + value;
-            }
-        }
-        return value;
+        return formatMonetary(value, { currencyId: currency_id});;
     }
 }
 ExpenseDashboard.template = 'hr_expense.ExpenseDashboard';

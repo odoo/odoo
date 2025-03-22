@@ -6,6 +6,7 @@
     'category': 'Accounting/Payment Providers',
     'sequence': 350,
     'summary': "A Dutch payment provider covering Europe and the US.",
+    'description': " ",  # Non-empty string to avoid loading the README file.
     'depends': ['payment'],
     'data': [
         'views/payment_adyen_templates.xml',

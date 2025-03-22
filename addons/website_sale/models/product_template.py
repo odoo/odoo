@@ -179,6 +179,7 @@ class ProductTemplate(models.Model):
 
         sales_prices = pricelist._get_products_price(self, 1.0)
         show_discount = pricelist.discount_policy == 'without_discount'
+        show_strike_price = self.env.user.has_group('website_sale.group_product_price_comparison')
 
         base_sales_prices = self.price_compute('list_price', currency=pricelist.currency_id)
 
@@ -188,7 +189,6 @@ class ProductTemplate(models.Model):
 
             product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id == t.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
-            tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
 
             template_price_vals = {
                 'price_reduce': price_reduce
@@ -196,7 +196,7 @@ class ProductTemplate(models.Model):
             base_price = None
             price_list_contains_template = pricelist.currency_id.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
 
-            if template.compare_list_price:
+            if template.compare_list_price and show_strike_price:
                 # The base_price becomes the compare list price and the price_reduce becomes the price
                 base_price = template.compare_list_price
                 if not price_list_contains_template:
@@ -216,13 +216,15 @@ class ProductTemplate(models.Model):
             if base_price and base_price != price_reduce:
                 if not template.compare_list_price:
                     # Compare_list_price are never tax included
-                    base_price = self.env['account.tax']._fix_tax_included_price_company(
-                        base_price, product_taxes, taxes, self.env.company)
-                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
-                        tax_display]
+                    base_price = self._price_with_tax_computed(
+                        base_price, product_taxes, taxes, self.env.company.id,
+                        pricelist, template, partner_sudo,
+                    )
                 template_price_vals['base_price'] = base_price
-            template_price_vals['price_reduce'] = self.env['account.tax']._fix_tax_included_price_company(template_price_vals['price_reduce'], product_taxes, taxes, self.env.company)
-            template_price_vals['price_reduce'] = taxes.compute_all(template_price_vals['price_reduce'], pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+            template_price_vals['price_reduce'] = self._price_with_tax_computed(
+                template_price_vals['price_reduce'], product_taxes, taxes, self.env.company.id,
+                pricelist, template, partner_sudo,
+            )
 
             res[template.id] = template_price_vals
 
@@ -295,16 +297,25 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
+    @api.model
     def _price_with_tax_computed(
         self, price, product_taxes, taxes, company_id, pricelist, product, partner
     ):
-        price = self.env['account.tax']._fix_tax_included_price_company(
-            price, product_taxes, taxes, company_id
+        price = self.env['product.product']._get_tax_included_unit_price_from_price(
+            price,
+            pricelist.currency_id,
+            product_taxes,
+            product_taxes_after_fp=taxes,
         )
         show_tax_excluded = self.user_has_groups('account.group_show_line_subtotals_tax_excluded')
         tax_display = 'total_excluded' if show_tax_excluded else 'total_included'
-        # The list_price is always the price of one.
-        return taxes.compute_all(price, pricelist.currency_id, 1, product, partner)[tax_display]
+        return taxes.compute_all(
+            price_unit=price,
+            currency=pricelist.currency_id,
+            quantity=1,  # `list_price` is always the price of one
+            product=product.sudo(),  # tax computation may require access to restricted fields
+            partner=partner,
+        )[tax_display]
 
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.
@@ -539,11 +550,11 @@ class ProductTemplate(models.Model):
         monetary_options = {'display_currency': mapping['detail']['display_currency']}
         if combination_info['prevent_zero_price_sale']:
             website = self.env['website'].get_current_website()
-            price = website.prevent_zero_price_sale_text
-        else:
-            price = self.env['ir.qweb.field.monetary'].value_to_html(
-                combination_info['price'], monetary_options
-            )
+            return website.prevent_zero_price_sale_text, None
+
+        price = self.env['ir.qweb.field.monetary'].value_to_html(
+            combination_info['price'], monetary_options
+        )
         if combination_info['has_discounted_price']:
             list_price = self.env['ir.qweb.field.monetary'].value_to_html(
                 combination_info['list_price'], monetary_options

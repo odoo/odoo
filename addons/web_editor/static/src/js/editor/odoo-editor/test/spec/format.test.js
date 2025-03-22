@@ -1,5 +1,5 @@
 import { isSelectionFormat } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, setTestSelection, Direction, unformat, insertText } from '../utils.js';
+import { BasicEditor, testEditor, setTestSelection, Direction, unformat, insertText, triggerEvent } from '../utils.js';
 
 const bold = async editor => {
     await editor.execCommand('bold');
@@ -52,6 +52,55 @@ describe('Format', () => {
                 contentBefore: '<p>ab[cde]fg</p>',
                 stepFunction: bold,
                 contentAfter: `<p>ab${strong(`[cde]`)}fg</p>`,
+            });
+        });
+        it('should make a few characters bold inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'b', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${strong(`[abc`)}</p></td>
+                                <td class="o_selected_td"><p>${strong(`def`)}</p></td>
+                                <td class="o_selected_td"><p>${strong(`]<br>`)}</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
             });
         });
         it('should make a few characters not bold', async () => {
@@ -228,6 +277,55 @@ describe('Format', () => {
                 contentAfter: `<p>ab${em(`[cde]`)}fg</p>`,
             });
         });
+        it('should make a few characters italic inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'i', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${em(`[abc`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${em(`def`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${em(`]<br>`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+            });
+        });
         it('should make a few characters not italic', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${em(`ab[cde]fg`)}</p>`,
@@ -316,6 +414,55 @@ describe('Format', () => {
                 contentAfter: `<p>ab${u(`[cde]`)}fg</p>`,
             });
         });
+        it('should make a few characters underline inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'u', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${u(`[abc`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${u(`def`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td class="o_selected_td"><p>${u(`]<br>`)}</p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+            });
+        });
         it('should make a few characters not underline', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: `<p>${u(`ab[cde]fg`)}</p>`,
@@ -402,6 +549,55 @@ describe('Format', () => {
                 contentBefore: `<p>ab[cde]fg</p>`,
                 stepFunction: strikeThrough,
                 contentAfter: `<p>ab${s(`[cde]`)}fg</p>`,
+            });
+        });
+        it('should make a few characters strikeThrough inside table', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>[abc</p></td>
+                                <td class="o_selected_td"><p>def</p></td>
+                                <td class="o_selected_td"><p>]<br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
+                stepFunction: async editor => {
+                    await triggerEvent(editor.editable, 'keydown', { key: '5', ctrlKey: true });
+                },
+                contentAfterEdit: unformat(`
+                    <table class="table table-bordered o_table o_selected_table">
+                        <tbody>
+                            <tr>
+                                <td class="o_selected_td"><p>${s(`[abc`)}</p></td>
+                                <td class="o_selected_td"><p>${s(`def`)}</p></td>
+                                <td class="o_selected_td"><p>${s(`]<br>`)}</p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>`
+                ),
             });
         });
         it('should make a few characters not strikeThrough', async () => {
@@ -835,6 +1031,34 @@ describe('Format', () => {
                 contentAfter: '<table><tbody><tr><td><h1><span style="font-size: 18px;">[]<br></span></h1></td><td><h1><span style="font-size: 18px;"><br></span></h1></td></tr><tr><td><h1><br></h1></td><td><h1><br></h1></td></tr></tbody></table>',
             });
         });
+        it('should apply font size in unbreakable span with class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<h1><span class="oe_unbreakable">some [text]</span></h1>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<h1><span class="oe_unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+            });
+        });
+        it('should apply font size in unbreakable span without class', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<h1><span t="unbreakable">some [text]</span></h1>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<h1><span t="unbreakable">some <span style="font-size: 18px;">[text]</span></span></h1>`,
+            });
+        });
+        it('should apply font size on top of `u` and `s` tags', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<u>[b]</u>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><u>[b]</u></span>c</p>`,
+            });
+        });
+        it('should apply font size on topmost `u` or `s` tags if multiple applied', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>a<s><u>[b]</u></s>c</p>`,
+                stepFunction: setFontSize('18px'),
+                contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
@@ -900,6 +1124,34 @@ describe('Format', () => {
                 contentBefore: '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
                 stepFunction: editor => editor.execCommand('removeFormat'),
                 contentAfter: '<div><p>[ab]</p></div>',
+            });
+        });
+        it('should remove all the colors for the text separated by Shift+Enter when using removeFormat button', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="color: rgb(255, 0, 0);">[abc</font><br><font style="color: rgb(255, 0, 0);">abc</font><br><font style="color: rgb(255, 0, 0);">abc</font><br><font style="color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc<br>abc<br>abc<br>abc]</h1></div>`
+
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="background-color: rgb(255, 0, 0);">[abc</font><br><font style="background-color: rgb(255, 0, 0);">abc</font><br><font style="background-color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc<br>abc<br>abc]</h1></div>`
+
+            });
+        })
+        it('should remove all the colors for the text separated by Enter when using removeFormat button' , async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="background-color: rgb(255, 0, 0);">[abc</font></h1><h1><font style="background-color: rgb(255, 0, 0);">abc</font></h1><h1><font style="background-color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
+
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1><font style="color: rgb(255, 0, 0);">[abc</font></h1><h1><font style="color: rgb(255, 0, 0);">abc</font></h1><h1><font style="color: rgb(255, 0, 0);">abc]</font></h1></div>`,
+                stepFunction: editor => editor.execCommand('removeFormat'),
+                contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
+
             });
         });
     });
@@ -986,6 +1238,13 @@ describe('setTagName', () => {
                 contentAfter: '<p>[before</p><h1 contenteditable="false">noneditable</h1><p>after]</p>',
             });
         });
+        it('should turn a heading 4 with class h5 into a paragraph', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="text-uppercase h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'p'),
+                contentAfter: '<p class="text-uppercase">[abcd]</p>',
+            });
+        });
     });
     describe('to heading 1', () => {
         it('should turn a paragraph into a heading 1', async () => {
@@ -1029,6 +1288,20 @@ describe('setTagName', () => {
                 stepFunction: editor => editor.execCommand('setTag', 'h1'),
                 // The custom table selection is removed in cleanForSave and the selection is collapsed.
                 contentAfter: '<table><tbody><tr><td><h1>[]a</h1></td><td><h1>b</h1></td><td><h1>c</h1></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a heading 4 with class h5 into a heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="text-uppercase h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<h1 class="text-uppercase">[abcd]</h1>',
+            });
+        });
+        it('should not transfer attributes of list to heading 1', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<ul><li class="nav-item"><h1>[abcd]</h1></li></ul>',
             });
         });
     });
@@ -1076,6 +1349,13 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><h2>[]a</h2></td><td><h2>b</h2></td><td><h2>c</h2></td></tr></tbody></table>',
             });
         });
+        it('should not transfer attributes of list to heading 2', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h2'),
+                contentAfter: '<ul><li class="nav-item"><h2>[abcd]</h2></li></ul>',
+            });
+        });
     });
     describe('to heading 3', () => {
         it('should turn a heading 1 into a heading 3', async () => {
@@ -1121,6 +1401,13 @@ describe('setTagName', () => {
                 contentAfter: '<table><tbody><tr><td><h3>[]a</h3></td><td><h3>b</h3></td><td><h3>c</h3></td></tr></tbody></table>',
             });
         });
+        it('should not transfer attributes of list to heading 3', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'h3'),
+                contentAfter: '<ul><li class="nav-item"><h3>[abcd]</h3></li></ul>',
+            });
+        });
     });
     describe('to pre', () => {
         it('should turn a heading 1 into a pre', async () => {
@@ -1150,6 +1437,20 @@ describe('setTagName', () => {
                 stepFunction: editor => editor.execCommand('setTag', 'pre'),
                 // The custom table selection is removed in cleanForSave and the selection is collapsed.
                 contentAfter: '<table><tbody><tr><td><pre>[]a</pre></td><td><pre>b</pre></td><td><pre>c</pre></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a paragraph into pre preserving the cursor position', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>abcd<br>[]<br></p>',
+                stepFunction: editor => editor.execCommand('setTag', 'pre'),
+                contentAfter: '<pre>abcd<br>[]<br></pre>',
+            });
+        });
+        it('should not transfer attributes of list to pre', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item" id="test">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'pre'),
+                contentAfter: '<ul><li class="nav-item" id="test"><pre>[abcd]</pre></li></ul>',
             });
         });
     });
@@ -1196,6 +1497,20 @@ describe('setTagName', () => {
                 stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
                 // The custom table selection is removed in cleanForSave and the selection is collapsed.
                 contentAfter: '<table><tbody><tr><td><blockquote>[]a</blockquote></td><td><blockquote>b</blockquote></td><td><blockquote>c</blockquote></td></tr></tbody></table>',
+            });
+        });
+        it('should turn a heading 4 with class h5 into a blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h4 class="h5">[abcd]</h4>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                contentAfter: '<blockquote>[abcd]</blockquote>',
+            });
+        });
+        it('should not transfer attributes of list to blockquote', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<ul><li class="nav-item" style="color: red;">[abcd]</li></ul>',
+                stepFunction: editor => editor.execCommand('setTag', 'blockquote'),
+                contentAfter: '<ul><li class="nav-item" style="color: red;"><blockquote>[abcd]</blockquote></li></ul>',
             });
         });
     });

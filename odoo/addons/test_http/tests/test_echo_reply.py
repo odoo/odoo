@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-from urllib.parse import urlparse
 
 from odoo.http import Request
 from odoo.tests import tagged
@@ -43,7 +42,7 @@ class TestHttpEchoReplyHttpNoDB(TestHttpBase):
     def test_echohttp5_post_csrf(self):
         res = self.nodb_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor'})
         self.assertEqual(res.status_code, 303)
-        self.assertEqual(urlparse(res.headers.get('Location', '')).path, '/web/database/selector')
+        self.assertURLEqual(res.headers.get('Location'), '/web/database/selector')
 
     def test_echohttp6_json_over_http(self):
         payload = json.dumps({'commander': 'Thor'})
@@ -92,9 +91,13 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpWithDB(TestHttpBase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.jackoneill = new_test_user(cls.env, 'jackoneill', context={'lang': 'en_US'})
+
     def setUp(self):
         super().setUp()
-        self.jackoneill = new_test_user(self.env, 'jackoneill', context={'lang': 'en_US'})
         self.authenticate('jackoneill', 'jackoneill')
 
     def test_echohttp0_get_qs_db(self):

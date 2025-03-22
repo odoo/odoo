@@ -11,24 +11,26 @@
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
-# Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Birgit Vijar, 2023
-# JanaAvalah, 2023
 # Martin Trigaux, 2023
-# Anna, 2023
 # Mihkel avalah, 2023
 # Leaanika Randmets, 2023
+# Birgit Vijar, 2024
+# Siim Raasuke, 2025
+# Stevin Lilla, 2025
+# Eneli Õigus <enelioigus@gmail.com>, 2025
+# JanaAvalah, 2025
+# Anna, 2025
+# Arma Gedonsky <armagedonsky@hot.ee>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -372,7 +374,7 @@ msgstr "<span>Km</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "<span>new Employees</span>"
-msgstr ""
+msgstr "<span>uued töötajad</span>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -449,7 +451,7 @@ msgstr "Tegevus"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Tegevuse erandlik kohendus"
+msgstr "Tegevuse erandi tüüp"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan
@@ -744,6 +746,11 @@ msgid "Bank Account Number"
 msgstr "Pangakonto number"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Pangakontod"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "Alus"
@@ -998,12 +1005,12 @@ msgstr "Looge uus osakond"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "Loo uus töötamise tüüp"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Loo uus töökoht"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2646,15 +2653,11 @@ msgid "Register Departure"
 msgstr "Registreerimisosakond"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr "Seotud kontakt"
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
 msgstr "Seotud kontaktid"
@@ -3076,7 +3079,7 @@ msgstr "Plaan %s on käivitatud"
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "The user of %s's coach is not set."
-msgstr ""
+msgstr "Kasutaja %s juhendaja ei ole määratud."
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
@@ -3244,7 +3247,7 @@ msgstr "Kehtiv tööluba Belgias"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Viisa aegumise kuupäev"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3501,3 +3504,8 @@ msgstr "plaan"
 #, python-format
 msgid "restricted to employees"
 msgstr "piiratud töötajatega"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

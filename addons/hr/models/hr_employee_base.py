@@ -8,7 +8,7 @@ from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import format_time
+from odoo.tools import clean_context, format_time
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -31,7 +31,7 @@ class HrEmployeeBase(models.AbstractModel):
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
-    related_contact_ids = fields.Many2many('res.partner', 'Related Contacts', compute='_compute_related_contacts')
+    related_contact_ids = fields.Many2many('res.partner', string='Related Contacts', compute='_compute_related_contacts')
     related_contacts_count = fields.Integer('Number of related contacts', compute='_compute_related_contacts_count')
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute="_compute_work_location_id", store=True, readonly=False,
     domain="[('address_id', '=', address_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -186,7 +186,7 @@ class HrEmployeeBase(models.AbstractModel):
     def _inverse_work_contact_details(self):
         for employee in self:
             if not employee.work_contact_id:
-                employee.work_contact_id = self.env['res.partner'].sudo().create({
+                employee.work_contact_id = self.env['res.partner'].sudo().with_context(clean_context(self._context)).create({
                     'email': employee.work_email,
                     'mobile': employee.mobile_phone,
                     'name': employee.name,

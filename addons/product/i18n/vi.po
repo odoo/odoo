@@ -3,20 +3,20 @@
 # 	* product
 # 
 # Translators:
+# Martin Trigaux, 2022
 # Dung Nguyen Thi <dungnt@trobz.com>, 2022
 # Vo Thanh Thuy, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -236,8 +236,8 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "Mô tả sản phẩm mà bạn muốn giới thiệu cho khách hàng của mình. Mô tả này sẽ "
-"được sao chép vào mọi Đơn bán hàng, Phiếu xuất kho và Hóa đơn khách "
-"hàng/Giấy báo có."
+"được sao chép vào mọi Đơn bán hàng, Phiếu xuất kho và Hóa đơn bán hàng/Giấy "
+"báo có."
 
 #. module: product
 #. odoo-python
@@ -501,8 +501,8 @@ msgid ""
 "a transfer in the Barcode app to move all the contained units"
 msgstr ""
 "Mã vạch được sử dụng để nhận dạng bao bì. Quét mã vạch bao bì này từ một "
-"điều chuyển trong ứng dụng Mã vạch để dịch chuyển tất cả các sản phẩm có "
-"trong đó"
+"lệnh chuyển hàng trong ứng dụng Mã vạch để dịch chuyển tất cả các sản phẩm "
+"có trong đó"
 
 #. module: product
 #. odoo-python
@@ -914,7 +914,7 @@ msgstr "Xác định đơn vị tính khối lượng của bạn"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
-msgstr "Thời gian giao hàng"
+msgstr "Thời gian hoàn thành"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description
@@ -1288,9 +1288,7 @@ msgstr "Nếu chọn, bạn cần chú ý tới các tin nhắn mới."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
-#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
-#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
@@ -2400,18 +2398,12 @@ msgstr "Phương pháp làm tròn"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
 msgid "Rows"
-msgstr "Dòng"
+msgstr "Hàng"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "Mẹo quy tắc"
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
-#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Lỗi gửi SMS"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2865,7 +2857,7 @@ msgstr "Loại"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trên tập dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trên bản ghi."
 
 #. module: product
 #. odoo-python
@@ -3118,18 +3110,6 @@ msgstr ""
 " vượt trội của những chiếc bàn làm việc mà chúng tôi tạo ra."
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Thông báo trên trang web"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Lịch sử trao đổi qua trang web"
-
-#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -3171,7 +3151,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr "Bạn có thể áp dụng tăng giá bằng cách đặt chiết khấu âm."
+msgstr "Bạn có thể áp dụng markup bằng cách đặt chiết khấu âm."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

@@ -4,12 +4,10 @@
 # 
 # Translators:
 # Vojislav Opačić <vojislav.opacic@gmail.com>, 2022
-# KRISTINA PALAŠ <kristina.palas@storm.hr>, 2022
 # Jasmina Otročak <jasmina@uvid.hr>, 2022
 # Davor Bojkić <davor.bojkic@storm.hr>, 2022
 # Ivana Šimek <ivanasimek@gmail.com>, 2022
 # Mario Jureša <mario.juresa@uvid.hr>, 2022
-# Vladimir Vrgoč, 2022
 # Ivan Marijanović <ivanm101@yahoo.com>, 2022
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2022
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
@@ -25,17 +23,22 @@
 # hrvoje sić <hrvoje.sic@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Matej Mijoč, 2022
-# Matija Gudlin, 2023
 # Carlo Štefanac, 2023
-# Bole <bole@dajmi5.com>, 2023
+# Matija Gudlin, 2024
+# Alen Komljen, 2024
+# Gordana Bilas, 2024
+# Kristina Palaš, 2024
+# Luka Carević <luka@uvid.hr>, 2024
+# Vladimir Vrgoč, 2025
+# Bole <bole@dajmi5.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"Last-Translator: Bole <bole@dajmi5.com>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,6 +96,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
+"(object.state in ('draft', 'sent') and 'Ponuda - %s' % (object.name)) or "
+"'Prodajni nalog - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -102,6 +107,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Čestitamo</b>, vaša prva ponuda je poslana!<br>Provjerite svoju e-poštu "
+"da potvrdite ponudu."
 
 #. module: sale
 #. odoo-javascript
@@ -401,6 +408,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Plaćeno</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Čeka plaćanje</b>"
 
@@ -497,6 +509,8 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                            <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Pogled od</span>\n"
+"                            <span class=\"o_stat_text\">kupca</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
@@ -535,6 +549,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Jeste li sigurni da želite otkazati ovu narudžbu? <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
+"                            Nacrti računa za ovu narudžbu bit će otkazani. <br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -767,7 +785,7 @@ msgstr "Račun koji se koristi za polog"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
 msgid "Accrued Revenue Entry"
-msgstr ""
+msgstr "Unos obračunatog prihoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction
@@ -861,12 +879,12 @@ msgstr "Analitika"
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__analytic_account_id
 msgid "Analytic Account"
-msgstr "Konto analitike"
+msgstr "Analitički konto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Pretraga analitičkih distribucija"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -1329,7 +1347,7 @@ msgstr "Država kupca"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr "Kupčev entitet"
+msgstr "Nadređena tvrtka"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1397,7 +1415,7 @@ msgstr "Datum:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deduct_down_payments
 msgid "Deduct down payments"
-msgstr "Odbij pologe"
+msgstr "Odbij predujmove"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1461,7 +1479,7 @@ msgstr "Načini dostave"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Količina za isporuku"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1570,22 +1588,22 @@ msgstr "Riješeno"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payment"
-msgstr "Polog"
+msgstr "Predujam"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount
 msgid "Down Payment Amount"
-msgstr "Iznos pologa"
+msgstr "Iznos predujma"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr "Iznos pologa (fiksni)"
+msgstr "Iznos predujma (fiksni)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
 msgid "Down Payment Product"
-msgstr "Polog za proizvod"
+msgstr "Proizvod predujma"
 
 #. module: sale
 #. odoo-python
@@ -1600,7 +1618,7 @@ msgstr "Avansno plaćanje: %s (Nacrt)"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down Payments"
-msgstr "Polog"
+msgstr "Predujmovi"
 
 #. module: sale
 #. odoo-python
@@ -1612,19 +1630,19 @@ msgstr "Avansno plaćanje"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
 msgid "Down payment (fixed amount)"
-msgstr "Polog (fiksni iznos)"
+msgstr "Predujam (fiksni iznos)"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__percentage
 msgid "Down payment (percentage)"
-msgstr "Polog (postotak)"
+msgstr "Predujam (postotak)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 #, python-format
 msgid "Down payment of %s%%"
-msgstr "Polog u postotku %s%%"
+msgstr "Predujam u postotku %s%%"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__is_downpayment
@@ -1632,8 +1650,8 @@ msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
 msgstr ""
-"Polog se vrši prilikom izrade računa iz prodajnog naloga. Ne kopiraju se "
-"prilikom kopiranja prodajnog naloga."
+"Predujam se vrši prilikom izrade računa iz prodajnog naloga. Ne kopiraju se "
+"prilikom dupliciranja prodajnog naloga."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1709,7 +1727,7 @@ msgstr "Istječe"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "Istječe %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1726,7 +1744,7 @@ msgstr "Dodatne vrijednosti"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "Extra line with %s"
-msgstr ""
+msgstr "Dodatne stavke s %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex
@@ -1858,7 +1876,7 @@ msgstr "Je li promijenjen cjenik"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
 msgid "Has down payments"
-msgstr "Ima polog"
+msgstr "Ima predujam"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2077,6 +2095,8 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                    them before validation."
 msgstr ""
+"Fakture će biti izrađene u nacrtu kako biste ih mogli pregledati\n"
+"                    prije validacije."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -2116,7 +2136,7 @@ msgstr "Adresa računa i dostave:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
 msgid "Is Downpayment"
-msgstr "Je polog"
+msgstr "Je predujam"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
@@ -2136,7 +2156,7 @@ msgstr "Je pratitelj"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_downpayment
 msgid "Is a down payment"
-msgstr "Je li polog"
+msgstr "Je li predujam"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_expense
@@ -2529,7 +2549,7 @@ msgstr "Broj grešaka"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju aktivnost"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error_counter
@@ -2565,8 +2585,8 @@ msgid ""
 "Once the quotation is confirmed, it becomes a sales order.<br> You will be "
 "able to create an invoice and collect the payment."
 msgstr ""
-"Jednom kada se polog potvrdi, postaje prodajni nalog.<br> Moći ćete stvoriti"
-" račun i prikupiti uplatu."
+"Jednom kada se ponuda potvrdi, postaje prodajni nalog.<br> Moći ćete "
+"stvoriti račun i prikupiti uplatu."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2666,7 +2686,7 @@ msgstr "Datum ponude"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Datum naloga: Zadnjih 365 dana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -2767,7 +2787,7 @@ msgstr "Pakiranje"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Količina u pakiranju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -3106,7 +3126,7 @@ msgstr "Ponuda poslana"
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 #, python-format
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr ""
+msgstr "Valjanost ponude je obavezna i mora biti veća od 0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3125,7 +3145,7 @@ msgstr "Ponuda poslana"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Ponudu vidio kupac: %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3196,7 +3216,7 @@ msgstr "Vezna oznaka"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
-msgstr ""
+msgstr "Referenca na dokument koji je generirao ovaj upit za ponudom"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3216,7 +3236,7 @@ msgstr "Odbij ovu ponudu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model renderiranja"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -3415,7 +3435,7 @@ msgstr "Stavke prodajnog naloga vezane za moj prodajni nalog"
 #: model_terms:ir.ui.view,arch_db:sale.transaction_form_inherit_sale
 #, python-format
 msgid "Sales Order(s)"
-msgstr ""
+msgstr "Prodajni nalozi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -3480,17 +3500,17 @@ msgstr "Po prodajnoj cijeni"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "Prodaja: Otkazivanje naloga"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Prodaja: Potvrđivanje naloga"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Prodaja: Pošalji ponudu"
 
 #. module: sale
 #. odoo-python
@@ -3603,7 +3623,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "Pošalji i odustani"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3687,7 +3707,7 @@ msgstr "Prikazuje sve zapise kojima je sljedeći datum akcije prije danas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show margins on orders"
-msgstr ""
+msgstr "Prikaži maržu na ponudama"
 
 #. module: sale
 #. odoo-python
@@ -3842,14 +3862,14 @@ msgid "Tags"
 msgstr "Oznake"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Porez 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Država poreza"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "PDV ID"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3860,7 +3880,7 @@ msgstr "Ukupno poreza"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Ukupno poreza"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -3895,14 +3915,14 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 msgid "Terms & Conditions format"
-msgstr ""
+msgstr "Format Odredbi i Uvijeta"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr ""
+msgstr "Odredbe i uvjeti\\: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -3992,8 +4012,8 @@ msgstr "Fiksni iznos za koji se računa unaprijed, bez poreza."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
 
@@ -4029,7 +4049,7 @@ msgstr "Naručena količina je ažurirana."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr ""
+msgstr "Komunikacija plaćanja za ovu ponudu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -4056,6 +4076,10 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
+"Proizvod koji se koristi za izdavanje računa predujma mora imati postavljenu"
+" politiku izdavanja računa na \"Naručene količine\". Molimo vas da ažurirate"
+" postavke vašeg proizvoda za predujam kako biste omogućili izdavanje računa "
+"za predujam."
 
 #. module: sale
 #. odoo-python
@@ -4063,7 +4087,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Parametri nisu valjani."
 
 #. module: sale
 #. odoo-python
@@ -4400,7 +4424,7 @@ msgstr "Ukupno bez poreza"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
-msgstr "UoM"
+msgstr "JM"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4692,4 +4716,4 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
-msgstr ""
+msgstr "{{ object.company_id.name }} Otkazani (Ref {{ object.name or '/' }})"

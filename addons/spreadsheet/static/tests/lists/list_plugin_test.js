@@ -433,6 +433,11 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.deepEqual(model.getters.getListDefinition(listId).domain, [["foo", "in", [55]]]);
         await waitForDataSourcesLoaded(model);
         assert.strictEqual(getCellValue(model, "B2"), "");
+        const result = model.dispatch("UPDATE_ODOO_LIST_DOMAIN", {
+            listId: "invalid",
+            domain: [],
+        });
+        assert.deepEqual(result.reasons, [CommandResult.ListIdNotFound]);
     });
 
     QUnit.test("edited domain is exported", async (assert) => {

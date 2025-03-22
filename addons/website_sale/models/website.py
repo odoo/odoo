@@ -186,7 +186,9 @@ class Website(models.Model):
             pricelists |= partner_pricelist
 
         # This method is cached, must not return records! See also #8795
-        return pricelists.ids
+        # sudo is needed to ensure no records rules are applied during the sorted call,
+        # we only want to reorder the records on hand, not filter them.
+        return pricelists.sudo().sorted().ids
 
     def get_pricelist_available(self, show_visible=False):
         """ Return the list of pricelists that can be used on website for the current user.
@@ -284,7 +286,10 @@ class Website(models.Model):
         return pricelist
 
     def sale_product_domain(self):
-        return expression.AND([self._product_domain(), self.get_current_website().website_domain()])
+        website_domain = self.get_current_website().website_domain()
+        if not self.env.user._is_internal():
+            website_domain = expression.AND([website_domain, [('is_published', '=', True)]])
+        return expression.AND([self._product_domain(), website_domain])
 
     def _product_domain(self):
         return [('sale_ok', '=', True)]
@@ -407,9 +412,8 @@ class Website(models.Model):
         self.ensure_one()
         addr = partner_sudo.address_get(['delivery'])
         if not request.website.is_public_user():
-            # FIXME VFE why not use last_website_so_id field ?
             last_sale_order = self.env['sale.order'].sudo().search(
-                [('partner_id', '=', partner_sudo.id)],
+                [('partner_id', '=', partner_sudo.id), ('website_id', '=', self.id)],
                 limit=1,
                 order="date_order desc, id desc",
             )
@@ -465,7 +469,7 @@ class Website(models.Model):
 
         # If the current user is the website public user, the fiscal position
         # is computed according to geolocation.
-        if request and request.website.partner_id.id == partner_sudo.id:
+        if request and hasattr(request, 'website') and request.website.partner_id.id == partner_sudo.id:
             country_code = request.geoip.get('country_code')
             if country_code:
                 country_id = self.env['res.country'].search([('code', '=', country_code)], limit=1).id

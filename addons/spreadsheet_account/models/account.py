@@ -67,7 +67,7 @@ class AccountMove(models.Model):
             ]
             for code in codes
         )
-        account_ids = self.env["account.account"].search(code_domain).ids
+        account_ids = self.env["account.account"].with_company(company_id).search(code_domain).ids
         code_domain = [("account_id", "in", account_ids)]
         period_domain = expression.OR([balance_domain, pnl_domain])
         domain = expression.AND([code_domain, period_domain, [("company_id", "=", company_id)]])
@@ -113,7 +113,7 @@ class AccountMove(models.Model):
             company_id = args["company_id"] or self.env.company.id
             domain = self._build_spreadsheet_formula_domain(args)
             # remove this when _search always returns a Query object
-            if domain == expression.FALSE_DOMAIN:
+            if expression.is_false(self.env["account.move.line"], domain):
                 results.append({"credit": 0, "debit": 0})
                 continue
             MoveLines = self.env["account.move.line"].with_company(company_id)

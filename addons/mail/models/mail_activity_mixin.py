@@ -195,7 +195,7 @@ class MailActivityMixin(models.AbstractModel):
     @api.depends('activity_ids.date_deadline')
     def _compute_activity_date_deadline(self):
         for record in self:
-            record.activity_date_deadline = record.activity_ids[:1].date_deadline
+            record.activity_date_deadline = fields.first(record.activity_ids).date_deadline
 
     def _search_activity_date_deadline(self, operator, operand):
         if operator == '=' and not operand:
@@ -359,12 +359,12 @@ class MailActivityMixin(models.AbstractModel):
         :param additional_domain: if set, filter on that domain;
         """
         if self.env.context.get('mail_activity_automation_skip'):
-            return False
+            return self.env['mail.activity']
 
         Data = self.env['ir.model.data'].sudo()
         activity_types_ids = [type_id for type_id in (Data._xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
         if not any(activity_types_ids):
-            return False
+            return self.env['mail.activity']
 
         domain = [
             '&', '&', '&',

@@ -151,7 +151,13 @@ import LivechatButton from '@im_livechat/legacy/widgets/livechat_button';
         const selectedAnswer = $target.data('chatbotStepAnswerId');
 
         const redirectLink = $target.data('chatbotStepRedirectLink');
-        this.messaging.publicLivechatGlobal.chatbot.update({ isRedirecting: !!redirectLink });
+        let isRedirecting = false;
+        if (redirectLink && URL.canParse(redirectLink, window.location.href)) {
+            const url = new URL(window.location.href);
+            const nextURL = new URL(redirectLink, window.location.href);
+            isRedirecting = url.pathname !== nextURL.pathname || url.origin !== nextURL.origin;
+        }
+        this.messaging.publicLivechatGlobal.chatbot.update({ isRedirecting });
 
         await this.messaging.publicLivechatGlobal.livechatButtonView.sendMessage({
             content: $target.text().trim(),

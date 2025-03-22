@@ -433,8 +433,14 @@ class MailRenderMixin(models.AbstractModel):
 
         :return dict: updated version of rendered per record ID;
         """
+        # TODO make this a parameter
+        model = self.env.context.get('mail_render_postprocess_model')
+        res_ids = list(rendered.keys())
         for res_id, rendered_html in rendered.items():
-            rendered[res_id] = self._replace_local_links(rendered_html)
+            base_url = None
+            if model:
+                base_url = self.env[model].browse(res_id).with_prefetch(res_ids).get_base_url()
+            rendered[res_id] = self._replace_local_links(rendered_html, base_url)
         return rendered
 
     @api.model
@@ -475,7 +481,7 @@ class MailRenderMixin(models.AbstractModel):
             rendered = self._render_template_inline_template(template_src, model, res_ids,
                                                              add_context=add_context, options=options)
         if post_process:
-            rendered = self._render_template_postprocess(rendered)
+            rendered = self.with_context(mail_render_postprocess_model=model)._render_template_postprocess(rendered)
 
         return rendered
 

@@ -5,7 +5,9 @@ import json
 
 from werkzeug.urls import url_encode
 
+from unittest.mock import patch, Mock
 from odoo import tests
+from odoo.addons.website.controllers.main import Website
 from odoo.tools import mute_logger, submap
 
 
@@ -52,7 +54,6 @@ class TestControllers(tests.HttpCase):
         self.assertEqual(set(last_modified_values), set(last_5_url_edited) - matching_pages)
 
     def test_02_client_action_iframe_url(self):
-        base_url = self.base_url()
         urls = [
             '/',  # Homepage URL (special case)
             '/contactus',  # Regular website.page URL
@@ -61,13 +62,13 @@ class TestControllers(tests.HttpCase):
         ]
         for url in urls:
             resp = self.url_open(f'/@{url}')
-            self.assertEqual(resp.url, base_url + url, "Public user should have landed in the frontend")
+            self.assertURLEqual(resp.url, url, "Public user should have landed in the frontend")
         self.authenticate("admin", "admin")
         for url in urls:
             resp = self.url_open(f'/@{url}')
             backend_params = url_encode(dict(action='website.website_preview', path=url))
-            self.assertEqual(
-                resp.url, f'{base_url}/web#{backend_params}',
+            self.assertURLEqual(
+                resp.url, f'/web#{backend_params}',
                 "Internal user should have landed in the backend")
 
     def test_03_website_image(self):
@@ -103,3 +104,72 @@ class TestControllers(tests.HttpCase):
             partner.website_published = True
             res = self.url_open(f'/website/image/res.partner/{partner.id}/avatar_128?download=1')
             self.assertEqual(res.status_code, 200, "Public user should access avatar of published partners")
+
+        with self.subTest(published=True):
+            partner.website_published = True
+            self.patch(self.env.registry[partner._name].avatar_128, 'groups', 'base.group_system')
+            res = self.url_open(f'/website/image/res.partner/{partner.id}/avatar_128?download=1')
+            self.assertEqual(
+                res.status_code,
+                404,
+                "Public user shouldn't access record fields with a `groups` even if published"
+            )
+
+    @patch('requests.get')
+    def test_05_seo_suggest_language_regex(self, mock_get):
+        """
+        Test the seo_suggest method to verify it properly handles different
+        language inputs, sends correct parameters ('hl' for host language and
+        'gl' for geolocation) to the Google API, and returns the expected
+        suggestions. The test checks a variety of cases including:
+        - Regional language codes (e.g., 'en_US', 'fr_FR')
+        - Basic language codes (e.g., 'es', 'sr')
+        - Language codes with script modifier (e.g., 'sr_RS@latin',
+          'zh_CN@pinyin')
+        - Empty string input to handle default case
+        """
+
+        # Mocking the response from Google API to simulate what would be
+        # returned by the seo_suggest method.
+        mock_response = Mock()
+        mock_response.content = '''<?xml version="1.0"?>
+        <toplevel>
+            <CompleteSuggestion>
+                <suggestion data="test suggestion"/>
+            </CompleteSuggestion>
+        </toplevel>'''
+        mock_get.return_value = mock_response
+
+        # Test cases with different language inputs and expected hl and gl
+        # values.
+        test_cases = [
+            ('en_US', ['en', 'US']),         # US English
+            ('fr_FR', ['fr', 'FR']),         # French in France
+            ('es', ['es', '']),              # Spanish without country code
+            ('sr_RS@latin', ['sr', 'RS']),   # Serbian with script in Serbia
+            ('zh_CN@pinyin', ['zh', 'CN']),  # Chinese with pinyin script in China
+            ('sr@latin', ['sr', '']),        # Serbian with script but no country
+            ('', ['en', 'US'])               # Default case (empty lang. input)
+        ]
+
+        for lang_input, expected_output in test_cases:
+            # subTest creates an isolated context for each test case, allowing
+            # failures to be reported separately.
+            with self.subTest(lang=lang_input):
+                result = Website.seo_suggest(self, keywords="test", lang=lang_input)
+
+                # Extract the parameters that were passed in the mock
+                # requests.get call.
+                called_params = mock_get.call_args[1]['params']
+
+                # Verify that the 'hl' parameter (host language) matches the
+                # expected output
+                self.assertEqual(called_params['hl'], expected_output[0])
+
+                # Verify that the 'gl' parameter (geolocation) matches the
+                # expected output
+                self.assertEqual(called_params['gl'], expected_output[1])
+
+                # Verify that the returned result contains the expected
+                # suggestion "test suggestion"
+                self.assertIn('test suggestion', result)

@@ -47,8 +47,8 @@ class ResConfigSettings(models.TransientModel):
     group_product_pricelist = fields.Boolean(
         compute='_compute_group_product_pricelist', store=True, readonly=False)
 
-    enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout")
-    enabled_buy_now_button = fields.Boolean(string="Buy Now")
+    enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout", compute='_compute_checkout_process_steps', readonly=False, store=True)
+    enabled_buy_now_button = fields.Boolean(string="Buy Now", compute='_compute_checkout_process_steps', readonly=False, store=True)
 
     account_on_checkout = fields.Selection(
         string="Customer Accounts",
@@ -81,19 +81,20 @@ class ResConfigSettings(models.TransientModel):
 
         res.update(
             sale_delivery_settings=sale_delivery_settings,
-            enabled_extra_checkout_step=self.env.ref('website_sale.extra_info_option').active,
-            enabled_buy_now_button=self.env.ref('website_sale.product_buy_now').active,
         )
         return res
 
     def set_values(self):
         super().set_values()
-        extra_step_view = self.env.ref('website_sale.extra_info_option')
-        if extra_step_view.active != self.enabled_extra_checkout_step:
-            extra_step_view.active = self.enabled_extra_checkout_step
-        buy_now_view = self.env.ref('website_sale.product_buy_now')
-        if buy_now_view.active != self.enabled_buy_now_button:
-            buy_now_view.active = self.enabled_buy_now_button
+        if self.website_id:
+            website = self.with_context(website_id=self.website_id.id).website_id
+            extra_step_view = website.viewref('website_sale.extra_info_option')
+            buy_now_view = website.viewref('website_sale.product_buy_now')
+
+            if extra_step_view.active != self.enabled_extra_checkout_step:
+                extra_step_view.active = self.enabled_extra_checkout_step
+            if buy_now_view.active != self.enabled_buy_now_button:
+                buy_now_view.active = self.enabled_buy_now_button
 
     @api.depends('sale_delivery_settings')
     def _compute_module_delivery(self):
@@ -111,6 +112,22 @@ class ResConfigSettings(models.TransientModel):
     def _compute_account_on_checkout(self):
         for record in self:
             record.account_on_checkout = record.website_id.account_on_checkout or 'disabled'
+
+    @api.depends('website_id')
+    def _compute_checkout_process_steps(self):
+        """
+        Computing the extra info step and buy now settings when changing
+        the website in the res.config.settings page to show the correct value
+        in the checkbox.
+        """
+        for record in self:
+            website = record.with_context(website_id=record.website_id.id).website_id
+            record.enabled_extra_checkout_step = website.is_view_active(
+                'website_sale.extra_info_option'
+            )
+            record.enabled_buy_now_button = website.is_view_active(
+                'website_sale.product_buy_now'
+            )
 
     def _inverse_account_on_checkout(self):
         for record in self:

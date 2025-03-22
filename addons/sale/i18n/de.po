@@ -8,16 +8,16 @@
 # Thomas, 2023
 # Michael Hofer, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -507,7 +507,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"        <t t-set=\"doc_name\" t-value=\"'Angebot' if object.state in ('draft', 'sent') else 'Auftrag'\"></t>\n"
 "        Hallo,\n"
 "        <br><br>\n"
 "        Ihre\n"
@@ -615,6 +615,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Autorisiert</b>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/><b>Bezahlt</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Storniert</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1654,7 +1659,7 @@ msgstr "Standard-Limit:"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__use_quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr "Gültigkeit des Standardangebots"
+msgstr "Standardgültigkeit für Angebot"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
@@ -2162,7 +2167,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_packaging__sales
 msgid "If true, the packaging can be used for sales orders"
-msgstr "Wenn wahr, kann die Verpackung für Verkaufsaufträge verwendet werden."
+msgstr "Wenn Wahr, kann die Verpackung für Verkaufsaufträge verwendet werden."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -2408,7 +2413,7 @@ msgstr "Ist Aufwand"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
-"Ist wahr, wenn die Verkaufsauftragszeile aus einer Ausgabe oder einer "
+"Ist Wahr, wenn die Verkaufsauftragszeile aus einer Ausgabe oder einer "
 "Lieferantenrechnung stammt."
 
 #. module: sale
@@ -3434,7 +3439,7 @@ msgstr "Angebote und Verkäufe"
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
 msgid "Re-Invoice Expenses"
-msgstr "Auslagen weiterberechnen"
+msgstr "Spesen weiterberechnen"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
@@ -3657,7 +3662,7 @@ msgstr "Verkaufsauftrag bestätigt"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr "Verkaufsauftragsposition"
+msgstr "Auftragsposition"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -4127,14 +4132,14 @@ msgid "Tags"
 msgstr "Stichwörter"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Steuer 15 %"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Steuerland"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "USt-IdNr"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4285,12 +4290,12 @@ msgstr "Der im Voraus zu berechnende Festbetrag, ohne Steuern."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Die folgenden Produkte können nicht auf das Unternehmen %s beschränkt werden, da sie bereits in Angeboten oder Verkaufsaufträgen in einem anderen Unternehmen verwendet wurden:\n"
-"%s\n"
+"Die folgenden Produkte können nicht auf das Unternehmen %(company)s beschränkt werden, da sie bereits in Angeboten oder Verkaufsaufträgen in einem anderen Unternehmen verwendet wurden:\n"
+"%(used_products)s\n"
 "Sie können diese Produkte archivieren und sie stattdessen mit Ihrer Unternehmensbeschränkung neu erstellen oder sie als gemeinsames Produkt belassen."
 
 #. module: sale

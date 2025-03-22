@@ -22,14 +22,14 @@
 # Josep Anton Belchi, 2022
 # Ivan Espinola, 2022
 # jabiri7, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # Albert Parera, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Albert Parera, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -490,6 +490,12 @@ msgstr "Cancel·lar"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Cancelled"
 msgstr "Cancel·lat"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "Cannot send an email to this supplier!"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -1223,32 +1229,32 @@ msgid "Lunch: Supplier Order"
 msgstr "Lunch: Comanda del proveïdor"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_236
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr "Lunch: alerta la notificació del xat (avís per a l'Office 3)"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr "Lunch: envia un correu electrònic automàtic a Coin gourmand"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr "Lunch: envia un correu electrònic automàtic al proveïdor de Lunch"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr "Lunch: envia un correu electrònic automàtic a Pizza Inn"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr "Lunch: envia un correu electrònic automàtic a la botiga Sushi"
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to The Corner"
 msgstr "Lunch: envia un correu electrònic automàtic a la cantonada"
 
@@ -1410,6 +1416,20 @@ msgstr "No hi ha lliurament"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
 msgstr "Encara no hi ha cap moviment en efectiu"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "No location found"
+msgstr ""
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "No lunch location available."
+msgstr ""
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
@@ -1619,6 +1639,13 @@ msgstr "Pizza Margherita"
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
 msgstr "Pizza Vegetariana"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "Please create a location to start ordering."
+msgstr ""
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3

@@ -121,8 +121,7 @@ var DateTimePicker = function ($, moment) {
         keyState = {},
         keyPressHandled = {};
 
-    var MinViewModeNumber = 0,
-        Default = {
+    var Default = {
         timeZone: '',
         format: false,
         dayViewHeaderFormat: 'MMMM YYYY',
@@ -358,6 +357,7 @@ var DateTimePicker = function ($, moment) {
             this.actualFormat = null;
             this.parseFormats = null;
             this.currentViewMode = null;
+            this.MinViewModeNumber = 0;
 
             this._int();
         }
@@ -599,7 +599,7 @@ var DateTimePicker = function ($, moment) {
                 return;
             }
             if (dir) {
-                this.currentViewMode = Math.max(MinViewModeNumber, Math.min(3, this.currentViewMode + dir));
+                this.currentViewMode = Math.max(this.MinViewModeNumber, Math.min(3, this.currentViewMode + dir));
             }
             this.widget.find('.datepicker > div').hide().filter('.datepicker-' + DatePickerModes[this.currentViewMode].CLASS_NAME).show();
         };
@@ -775,16 +775,16 @@ var DateTimePicker = function ($, moment) {
             this.use24Hours = this.actualFormat.toLowerCase().indexOf('a') < 1 && this.actualFormat.replace(/\[.*?]/g, '').indexOf('h') < 1;
 
             if (this._isEnabled('y')) {
-                MinViewModeNumber = 2;
+                this.MinViewModeNumber = 2;
             }
             if (this._isEnabled('M')) {
-                MinViewModeNumber = 1;
+                this.MinViewModeNumber = 1;
             }
             if (this._isEnabled('d')) {
-                MinViewModeNumber = 0;
+                this.MinViewModeNumber = 0;
             }
 
-            this.currentViewMode = Math.max(MinViewModeNumber, this.currentViewMode);
+            this.currentViewMode = Math.max(this.MinViewModeNumber, this.currentViewMode);
 
             if (!this.unset) {
                 this._setValue(this._dates[0], 0);
@@ -1256,7 +1256,7 @@ var DateTimePicker = function ($, moment) {
             }
 
             this._options.viewMode = _viewMode;
-            this.currentViewMode = Math.max(DateTimePicker.ViewModes.indexOf(_viewMode) - 1, DateTimePicker.MinViewModeNumber);
+            this.currentViewMode = Math.max(DateTimePicker.ViewModes.indexOf(_viewMode) - 1, this.MinViewModeNumber);
 
             this._showMode();
         };
@@ -1571,11 +1571,6 @@ var DateTimePicker = function ($, moment) {
              * @return {number}
              */
 
-        }, {
-            key: 'MinViewModeNumber',
-            get: function get() {
-                return MinViewModeNumber;
-            }
         }, {
             key: 'Event',
             get: function get() {
@@ -2275,7 +2270,7 @@ var TempusDominusBootstrap4 = function ($) {
                     {
                         var month = $(e.target).closest('tbody').find('span').index($(e.target));
                         this._viewDate.month(month);
-                        if (this.currentViewMode === DateTimePicker.MinViewModeNumber) {
+                        if (this.currentViewMode === this.MinViewModeNumber) {
                             this._setValue(lastPicked.clone().year(this._viewDate.year()).month(this._viewDate.month()), this._getLastPickedDateIndex());
                             if (!this._options.inline) {
                                 this.hide();
@@ -2291,7 +2286,7 @@ var TempusDominusBootstrap4 = function ($) {
                     {
                         var year = parseInt($(e.target).text(), 10) || 0;
                         this._viewDate.year(year);
-                        if (this.currentViewMode === DateTimePicker.MinViewModeNumber) {
+                        if (this.currentViewMode === this.MinViewModeNumber) {
                             this._setValue(lastPicked.clone().year(this._viewDate.year()), this._getLastPickedDateIndex());
                             if (!this._options.inline) {
                                 this.hide();
@@ -2307,7 +2302,7 @@ var TempusDominusBootstrap4 = function ($) {
                     {
                         var _year = parseInt($(e.target).data('selection'), 10) || 0;
                         this._viewDate.year(_year);
-                        if (this.currentViewMode === DateTimePicker.MinViewModeNumber) {
+                        if (this.currentViewMode === this.MinViewModeNumber) {
                             this._setValue(lastPicked.clone().year(this._viewDate.year()), this._getLastPickedDateIndex());
                             if (!this._options.inline) {
                                 this.hide();

@@ -6,15 +6,17 @@
 # Rémi CAZENAVE, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -73,6 +75,13 @@ msgstr "% terminé"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr "%s Votes"
 
 #. module: survey
 #. odoo-python
@@ -832,7 +841,7 @@ msgid ""
 "Add a list of email recipients (separated by commas, semicolons or line "
 "breaks). They will not be converted into contacts."
 msgstr ""
-"Ajoutez une liste de destinataires d'emails (séparés par des virgules, des "
+"Ajoutez une liste de destinataires d'e-mails (séparés par des virgules, des "
 "points-virgules ou des sauts de ligne). Ils ne seront pas convertis en "
 "contacts."
 
@@ -860,7 +869,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__emails
 msgid "Additional emails"
-msgstr "Emails supplémentaires"
+msgstr "E-mails supplémentaires"
 
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
@@ -1076,8 +1085,8 @@ msgid ""
 "Automated email sent to the user when they succeed the certification, "
 "containing their certification document."
 msgstr ""
-"Email automatisé envoyé à l'utilisateur lorsqu'il réussit la certification, "
-"il contient son document de certification."
+"E-mail automatisé envoyé à l'utilisateur lorsqu'il réussit la certification,"
+" il contient son document de certification."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug3
@@ -1087,7 +1096,7 @@ msgstr "Automne"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid "Average"
-msgstr "Moyen"
+msgstr "Moyenne"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
@@ -1291,7 +1300,7 @@ msgstr "Certifié"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_mail_template_id
 msgid "Certified Email Template"
-msgstr "Modèle d'email de certification"
+msgstr "Modèle d'e-mail de certification"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_1
@@ -1361,7 +1370,6 @@ msgid "Cliff Burton"
 msgstr "Cliff Burton"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1423,7 +1431,7 @@ msgstr "Sondages terminés"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Compose Email"
-msgstr "Rédiger un email"
+msgstr "Rédiger un e-mail"
 
 #. module: survey
 #. odoo-python
@@ -1515,8 +1523,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Bureau d'angle avec siège à droite"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -1816,7 +1824,7 @@ msgstr "Editer dans le backend"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__email
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -1852,7 +1860,7 @@ msgstr "Europe"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug3
 msgid "European Yew"
-msgstr "Juif européen"
+msgstr "If européen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -1867,7 +1875,7 @@ msgstr "Partenaire existant"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_emails
 msgid "Existing emails"
-msgstr "Emails existants"
+msgstr "E-mails existants"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q3_sug2
@@ -2282,7 +2290,7 @@ msgid ""
 "If checked, this option will save the user's answer as its email address."
 msgstr ""
 "Si cochée, cette option enregistrera la réponse de l'utilisateur sous son "
-"adresse email."
+"adresse e-mail."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__save_as_nickname
@@ -2402,8 +2410,8 @@ msgstr ""
 "réponse et une note de réponse pour être pris en compte."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -2418,7 +2426,7 @@ msgstr "Inefficace"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_email
 msgid "Input must be an email"
-msgstr "La saisie doit contenir une adresse email"
+msgstr "La saisie doit contenir une adresse e-mail"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
@@ -3292,7 +3300,7 @@ msgid ""
 "object.partner_id.lang }}."
 msgstr ""
 "Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
-"d'un email. S'il n'est pas défini, la version anglaise sera utilisée. Il "
+"d'un e-mail. S'il n'est pas défini, la version anglaise sera utilisée. Il "
 "doit généralement s'agir d'une expression d'espace réservé qui fournit le "
 "langage approprié, par ex. {{ object.partner_id.lang }}."
 
@@ -3365,8 +3373,8 @@ msgid "Partial"
 msgstr "Partiel"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3556,6 +3564,11 @@ msgstr "Imprimer"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "Produits"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr "URL de partage public"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -3810,7 +3823,7 @@ msgstr "Salicacées"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
 msgid "Save as user email"
-msgstr "Enregistrer comme email de l'utilisateur"
+msgstr "Enregistrer comme e-mail de l'utilisateur"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
@@ -4041,7 +4054,7 @@ msgstr "Souple"
 #, python-format
 msgid "Some emails you just entered are incorrect: %s"
 msgstr ""
-"Certaines adresses emails que vous venez de saisir sont incorrectes : %s"
+"Certaines adresses e-mails que vous venez de saisir sont incorrectes : %s"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p1
@@ -4487,7 +4500,7 @@ msgstr "Les clients suivants ont déjà reçu une invitation"
 #: code:addons/survey/wizard/survey_invite.py:0
 #, python-format
 msgid "The following emails have already received an invite"
-msgstr "Les emails suivants ont déjà reçu une invitation"
+msgstr "Les e-mails suivants ont déjà reçu une invitation"
 
 #. module: survey
 #. odoo-python
@@ -4601,14 +4614,14 @@ msgstr ""
 #: code:addons/survey/tests/test_survey.py:0
 #, python-format
 msgid "This answer must be an email address"
-msgstr "La réponse doit être une adresse email"
+msgstr "La réponse doit être une adresse e-mail"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_form.js:0
 #, python-format
 msgid "This answer must be an email address."
-msgstr "Cette réponse doit être une adresse email."
+msgstr "Cette réponse doit être une adresse e-mail."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_classic
@@ -4639,8 +4652,8 @@ msgid "This is a Test Survey."
 msgstr "Ceci est un sondage test."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4662,9 +4675,9 @@ msgid ""
 "This list of emails of recipients will not be converted in contacts.        "
 "Emails must be separated by commas, semicolons or newline."
 msgstr ""
-"La liste des emails des destinataires ne sera pas convertie en contacts. Les"
-" adresses email doivent être séparées par des virgules, des points-virgule "
-"ou des sauts à la ligne."
+"La liste des e-mails des destinataires ne sera pas convertie en contacts. "
+"Les adresses e-mail doivent être séparées par des virgules, des points-"
+"virgule ou des sauts à la ligne."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description_done
@@ -4858,12 +4871,12 @@ msgstr "Ulmacées"
 #, python-format
 msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
-"Impossible de publier un message, veuillez configurer l'adresse email de "
+"Impossible de publier un message, veuillez configurer l'adresse e-mail de "
 "l'expéditeur."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4917,6 +4930,11 @@ msgstr "Utilisez un support visuel amusant, comme une présentation en direct"
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "Utilisez l'humour et faites des blagues"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Utiliser un modèle"
 
 #. module: survey
 #. odoo-javascript
@@ -5131,7 +5149,7 @@ msgstr "Quelle est la plus grande ville du monde ?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email ?"
-msgstr "Quel est votre adresse email ?"
+msgstr "Quel est votre adresse e-mail ?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q2
@@ -5324,7 +5342,7 @@ msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
 msgstr ""
-"Vous pouvez partager vos liens par différents moyens : email, raccourci "
+"Vous pouvez partager vos liens par différents moyens : e-mail, raccourci "
 "d'invitation, présentation en direct, ..."
 
 #. module: survey
@@ -5339,6 +5357,7 @@ msgstr ""
 " pendant les sessions en direct."
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5443,11 +5462,6 @@ msgstr "tentatives"
 #, python-format
 msgid "close"
 msgstr "fermer"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

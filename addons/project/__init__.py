@@ -35,3 +35,9 @@ def _project_post_init(cr, registry):
         ['mail_message_id', 'old_value_integer'],
         where=f'field={project_task_stage_field_id}'
     )
+
+def _project_uninstall_hook(cr, registry):
+    """Since the m2m table for the project share wizard's `partner_ids` field is not dropped at uninstall, it is
+    necessary to ensure it is emptied, else re-installing the module will fail due to foreign keys constraints."""
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env['project.share.wizard'].search([("partner_ids", "!=", False)]).partner_ids = False

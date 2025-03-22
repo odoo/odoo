@@ -70,9 +70,9 @@ class TestAccountFrFec(AccountTestInvoicingCommon):
         self.wizard.generate_fec()
         expected_content = (
             "JournalCode|JournalLib|EcritureNum|EcritureDate|CompteNum|CompteLib|CompAuxNum|CompAuxLib|PieceRef|PieceDate|EcritureLib|Debit|Credit|EcritureLet|DateLet|ValidDate|Montantdevise|Idevise\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
-            "INV|Customer Invoices|INV/2021/00001|20210502|701100|Ventes de produits finis (ou groupe) A|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Ventes de produits finis|||-|20210502|Hello Darkness|0,00| 000000000001437,12|||20210502|-000000000001437,12|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Ventes de produits finis|||-|20210502|my old friend|0,00| 000000000001676,64|||20210502|-000000000001676,64|EUR\r\n"
+            "INV|Customer Invoices|INV/2021/00001|20210502|701000|Ventes de produits finis|||-|20210502|/|0,00| 000000000003353,28|||20210502|-000000000003353,28|EUR\r\n"
             "INV|Customer Invoices|INV/2021/00001|20210502|445710|TVA collectée|||-|20210502|TVA 20,0%|0,00| 000000000001293,41|||20210502|-000000000001293,41|EUR\r\n"
             f"INV|Customer Invoices|INV/2021/00001|20210502|411100|Clients - Ventes de biens ou de prestations de services|{self.partner_a.id}|partner_a|-|20210502|INV/2021/00001| 000000000007760,45|0,00|||20210502| 000000000007760,45|EUR"
         )

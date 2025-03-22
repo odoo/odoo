@@ -10,16 +10,16 @@
 # fanha99 <fanha99@hotmail.com>, 2022
 # Martin Trigaux, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,6 +56,11 @@ msgstr "%s nhận xét"
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; Giao hàng"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -433,6 +438,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Số lượng</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Sign In</span>\n"
@@ -463,11 +473,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
 msgstr "<span>Video xem trước</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -631,15 +636,15 @@ msgid "Abandoned Cart"
 msgstr "Giỏ hàng dang dở"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
 msgid "Abandoned Carts"
-msgstr "Giỏ hàng dang dở"
+msgstr "Giỏ hàng bỏ dở"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.crm_team_view_kanban_dashboard
@@ -713,7 +718,7 @@ msgstr "Thêm vào giỏ hàng"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
-msgstr "Hành động Thêm vào giỏ hàng"
+msgstr "Tác vụ Thêm vào giỏ hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
@@ -1056,22 +1061,6 @@ msgid "Can Publish"
 msgstr "Có thể đăng"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr "Không thể sắp xếp lại video ở vị trí đầu tiên."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-"Không thể sắp xếp lại hình ảnh/video được nhúng với hình ảnh không tương "
-"thích."
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
@@ -1189,18 +1178,6 @@ msgid ""
 msgstr ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Không được phép thay đổi tên của bạn khi đã lập hóa đơn hành cho tài khoản "
-"của bạn. Vui lòng liên hệ trực tiếp với chúng tôi để thực hiện hoạt động "
-"này."
 
 #. module: website_sale
 #. odoo-python
@@ -1556,7 +1533,12 @@ msgstr "Tùy chỉnh mẫu email"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr "Kết nối DHL Express"
+msgstr "Liên kết DHL Express"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr "THẢ KHỐI DỰNG TẠI ĐÂY ĐỂ CHÚNG KHẢ DỤNG TRÊN TẤT CẢ SẢN PHẨM"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1751,7 +1733,7 @@ msgstr "Nhấp đôi để điền mô tả sản phẩm"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag building blocks here to customize the header for \""
-msgstr "Kéo khối dựng ở đây để tùy chỉnh phần tiêu đề cho \""
+msgstr "Kéo khối dựng ở đây để tùy chỉnh phần header cho \""
 
 #. module: website_sale
 #. odoo-javascript
@@ -1808,11 +1790,6 @@ msgstr "Thương mại điện tử: Khôi phục giỏ hàng"
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Edit"
 msgstr "Sửa"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr "Sửa trong ứng dụng Tạo website "
 
 #. module: website_sale
 #. odoo-javascript
@@ -2041,6 +2018,19 @@ msgstr ""
 "hoàn tất giỏ hàng của họ"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
+"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
+"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2103,18 +2093,6 @@ msgstr "Thanh toán ngay, thay vì thêm vào giỏ hàng"
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-"Nếu bạn đang đặt hàng cho người bên ngoài, vui lòng đặt hàng qua back-end. "
-"Nếu bạn muốn thay đổi tên hoặc địa chỉ email của mình, vui lòng thực hiện "
-"việc đó trong cài đặt tài khoản hoặc liên hệ với quản trị viên."
-
-#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -2361,7 +2339,7 @@ msgstr "Mondial Relay"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_delivery_mondialrelay
 msgid "Mondial Relay Connector"
-msgstr "Kết nối Mondial Relay"
+msgstr "Liên kết Mondial Relay"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
@@ -2471,7 +2449,7 @@ msgstr "Chưa có sản phẩm"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in this category."
-msgstr ""
+msgstr "Không có sản phẩm nào được chỉ định trong danh mục này."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
@@ -2738,6 +2716,13 @@ msgstr "Mã thanh toán"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
 msgid "Payment Transactions"
 msgstr "Giao dịch thanh toán"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr "Thanh toán đang được xử lý."
 
 #. module: website_sale
 #. odoo-javascript
@@ -3178,7 +3163,6 @@ msgstr "SL:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3789,11 +3773,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr "Phụ kiện được gợi ý trong giỏ hàng eCommerce "
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "VAT"
-msgstr "Mã số thuế"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Tag"
@@ -3848,6 +3827,13 @@ msgid ""
 msgstr ""
 "Số tiền sẽ được hiển thị dưới dạng gạch ngang trên trang sản phẩm Thương mại"
 " điện tử"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has already been paid. Please refresh the page."
+msgstr "Giỏ hàng đã được thanh toán. Vui lòng làm mới trang."
 
 #. module: website_sale
 #. odoo-python
@@ -4141,6 +4127,11 @@ msgstr ""
 "Sử dụng Google Places API để xác thực các địa chỉ mà khách truy cập đã nhập"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "Mã số thuế"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Biến thể"
@@ -4413,6 +4404,13 @@ msgstr ""
 "                                            Nếu muốn thay đổi địa chỉ giao hàng, tạo một"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr "Bạn không thể sử dụng video làm hình ảnh chính của sản phẩm."
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4488,11 +4486,6 @@ msgid "Zip Code"
 msgstr "Mã Zip"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr "viền-chính"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
 msgstr "bpost"
@@ -4519,7 +4512,7 @@ msgstr "vd. đèn,thùng"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #, python-format
 msgid "eCommerce"
-msgstr "thương mại điện tử"
+msgstr "Thương mại điện tử"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_category_action

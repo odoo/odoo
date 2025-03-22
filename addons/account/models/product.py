@@ -62,13 +62,16 @@ class ProductTemplate(models.Model):
         return fiscal_pos.map_accounts(accounts)
 
     @api.depends('taxes_id', 'list_price')
+    @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record._construct_tax_string(record.list_price)
 
     def _construct_tax_string(self, price):
         currency = self.currency_id
-        res = self.taxes_id.compute_all(price, product=self, partner=self.env['res.partner'])
+        res = self.taxes_id.filtered(lambda t: t.company_id == self.env.company).compute_all(
+            price, product=self, partner=self.env['res.partner']
+        )
         joined = []
         included = res['total_included']
         if currency.compare_amounts(included, price):
@@ -114,11 +117,10 @@ class ProductProduct(models.Model):
     def _get_product_accounts(self):
         return self.product_tmpl_id._get_product_accounts()
 
-    @api.model
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
-            is_refund_document=False, product_uom=None, product_currency=None,
-            product_price_unit=None, product_taxes=None, fiscal_position=None
-        ):
+        is_refund_document=False, product_uom=None, product_currency=None,
+        product_price_unit=None, product_taxes=None, fiscal_position=None
+    ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
         """
@@ -152,34 +154,13 @@ class ProductProduct(models.Model):
 
         # Apply fiscal position.
         if product_taxes and fiscal_position:
-            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
-            flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
-            flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
-            taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
-
-            if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
-                taxes_res = flattened_taxes_before_fp.with_context(round=False, round_base=False).compute_all(
-                    product_price_unit,
-                    quantity=1.0,
-                    currency=currency,
-                    product=product,
-                    is_refund=is_refund_document,
-                )
-                product_price_unit = taxes_res['total_excluded']
-
-                if any(tax.price_include for tax in flattened_taxes_after_fp):
-                    taxes_res = flattened_taxes_after_fp.with_context(round=False, round_base=False).compute_all(
-                        product_price_unit,
-                        quantity=1.0,
-                        currency=currency,
-                        product=product,
-                        is_refund=is_refund_document,
-                        handle_price_include=False,
-                    )
-                    for tax_res in taxes_res['taxes']:
-                        tax = self.env['account.tax'].browse(tax_res['id'])
-                        if tax.price_include:
-                            product_price_unit += tax_res['amount']
+            product_price_unit = self._get_tax_included_unit_price_from_price(
+                product_price_unit,
+                currency,
+                product_taxes,
+                fiscal_position=fiscal_position,
+                is_refund_document=is_refund_document,
+            )
 
         # Apply currency rate.
         if currency != product_currency:
@@ -187,7 +168,54 @@ class ProductProduct(models.Model):
 
         return product_price_unit
 
+    @api.model  # the product is optional for `compute_all`
+    def _get_tax_included_unit_price_from_price(
+        self, product_price_unit, currency, product_taxes,
+        fiscal_position=None,
+        product_taxes_after_fp=None,
+        is_refund_document=False,
+    ):
+        if not product_taxes:
+            return product_price_unit
+
+        if product_taxes_after_fp is None:
+            if not fiscal_position:
+                return product_price_unit
+
+            product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
+
+        flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
+        flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
+        taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
+
+        if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
+            taxes_res = flattened_taxes_before_fp.with_context(round=False, round_base=False).compute_all(
+                product_price_unit,
+                quantity=1.0,
+                currency=currency,
+                product=self,
+                is_refund=is_refund_document,
+            )
+            product_price_unit = taxes_res['total_excluded']
+
+            if any(tax.price_include for tax in flattened_taxes_after_fp):
+                taxes_res = flattened_taxes_after_fp.with_context(round=False, round_base=False).compute_all(
+                    product_price_unit,
+                    quantity=1.0,
+                    currency=currency,
+                    product=self,
+                    is_refund=is_refund_document,
+                    handle_price_include=False,
+                )
+                for tax_res in taxes_res['taxes']:
+                    tax = self.env['account.tax'].browse(tax_res['id'])
+                    if tax.price_include:
+                        product_price_unit += tax_res['amount']
+
+        return product_price_unit
+
     @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
+    @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
             record.tax_string = record.product_tmpl_id._construct_tax_string(record.lst_price)

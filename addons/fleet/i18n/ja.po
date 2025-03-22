@@ -10,17 +10,17 @@
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Andy Yiu, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Wil Odoo, 2023
-# Junko Augias, 2023
+# Wil Odoo, 2024
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -895,7 +895,7 @@ msgstr "最初の契約日"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fiscality"
-msgstr "財政重視"
+msgstr "経済性"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -999,7 +999,7 @@ msgstr "フルハイブリッド"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__future_driver_id
@@ -1450,6 +1450,13 @@ msgid "New Request"
 msgstr "新規依頼"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
@@ -1633,7 +1640,7 @@ msgstr "注文済"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_33
 msgid "Other Maintenance"
-msgstr "その他メンテナンス"
+msgstr "その他整備"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__overdue
@@ -1975,10 +1982,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づく状態\n"
-"延滞：期限は既に過ぎました\n"
-"当日：活動日は本日です\n"
-"予定：将来の活動。"
+"活動に基づくステータス\n"
+"遅延: 期日が過ぎています\n"
+"今日: 活動日は今日です\n"
+"予定: 今後の活動。"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vechicle_costs_report_view_tree
@@ -2062,7 +2069,7 @@ msgstr "タイヤサービス"
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_to_order
 msgid "To Order"
-msgstr "注文予定"
+msgstr "オーダ予定"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__today
@@ -2273,7 +2280,7 @@ msgstr "仕入先"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__inv_ref
 msgid "Vendor Reference"
-msgstr "仕入先参照"
+msgstr "仕入先登録番号"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vendors

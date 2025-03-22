@@ -10,14 +10,15 @@
 # SAKodoo <sak@odoo.com>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2022
+# Tomáš Píšek, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2022\n"
+"Last-Translator: Tomáš Píšek, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -157,7 +158,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_todo_request_action_from_dashboard
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid "Add a new maintenance request"
-msgstr ""
+msgstr "Pridať novú požiadavku na údržbu"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
@@ -637,11 +638,8 @@ msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 
@@ -757,7 +755,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_count
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__maintenance_count
 msgid "Maintenance Count"
-msgstr ""
+msgstr "Počet údržbových prác"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__maintenance_duration
@@ -840,7 +838,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Maintenance Team"
-msgstr ""
+msgstr "Tím údržby"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_dashboard_action
@@ -857,7 +855,6 @@ msgstr ""
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
-#: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
 msgstr ""
 
@@ -1001,7 +998,7 @@ msgstr "Počet chýb"
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error_counter
@@ -1081,6 +1078,7 @@ msgid "Preventive"
 msgstr "Preventívne"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
@@ -1167,10 +1165,11 @@ msgid "Request Done"
 msgstr "Požiadavka urobená"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for %s"
-msgstr ""
+msgstr "Plánovaná požiadavka pre %s"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1199,13 +1198,6 @@ msgstr "Zodpovedný"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
 msgstr "Zodpovedný užívateľ"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Chyba doručenia SMS"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_monitor1
@@ -1308,7 +1300,7 @@ msgstr "Zmena statusu"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_subcontractor
 msgid "Subcontractor"
-msgstr ""
+msgstr "Subdodávateľ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1462,20 +1454,7 @@ msgid "Warranty Expiration Date"
 msgstr ""
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
-msgid "Website Messages"
-msgstr "Správy webstránok"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webstránok"
-
-#. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""

@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Tony Ng, 2023
+# Tony Ng, 2025
+# Wil Odoo, 2025
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -374,12 +375,12 @@ msgstr "交貨方法"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr "交貨包裹選擇嚮導"
+msgstr "交貨貨件選擇嚮導"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__delivery_package_type_id
 msgid "Delivery Package Type"
-msgstr "快遞包裹類型"
+msgstr "快遞貨件類型"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
@@ -454,7 +455,7 @@ msgstr "決定顯示順序"
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "取消"
+msgstr "捨棄"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -506,6 +507,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
 msgstr "估計費用"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr "處理轉運時，承運人發生異常"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "例外："
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -609,7 +624,7 @@ msgstr "憑單訊息"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
 msgid "Invoicing Policy"
-msgstr "開立應收憑單策略"
+msgstr "發票政策"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__is_return_picking
@@ -665,6 +680,13 @@ msgid "Manage delivery zip prefixes"
 msgstr "管理送貨郵政編碼字首"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr "可能需要手動操作。"
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr "毛利"
@@ -699,7 +721,7 @@ msgstr "新服務商"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__stock_package_type__package_carrier_type__none
 msgid "No carrier integration"
-msgstr "無承運商串接"
+msgstr "沒有承運商整合功能"
 
 #. module: delivery
 #. odoo-python
@@ -732,7 +754,7 @@ msgstr "貨物原產地"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "包裹"
+msgstr "貨件"
 
 #. module: delivery
 #. odoo-python
@@ -746,18 +768,18 @@ msgstr "包裝詳情"
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "包裹太重！"
+msgstr "貨件太重！"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__package_ids
 msgid "Packages"
-msgstr "包裹"
+msgstr "貨件"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "揀貨"
+msgstr "提貨"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -814,6 +836,11 @@ msgid "Product"
 msgstr "商品"
 
 #. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "產品分類"
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "產品移動(移庫明細)"
@@ -855,7 +882,7 @@ msgstr "退貨單可由客戶帳號介面中下載"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "退回揀貨"
+msgstr "退回提貨"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__country_of_origin
@@ -948,7 +975,7 @@ msgstr "郵寄方式"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "寄送方式"
+msgstr "運送方式"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -966,7 +993,7 @@ msgstr "裝運重量："
 msgid ""
 "Shipping insurance is a service which may reimburse senders whose parcels "
 "are lost, stolen, and/or damaged in transit."
-msgstr "運輸保險服務，可為包裹在運輸途中丟失、被盜和/或損壞的寄件人提供補償。"
+msgstr "運輸保險服務，可為貨件在運輸途中丟失、被盜和/或損壞的寄件人提供補償。"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -980,13 +1007,13 @@ msgstr "送貨方式詳細資料將包含在底部銷售訂單及其確認電子
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
-msgstr "國際航運和貨物申報的標準化代碼。目前，僅用於聯邦快遞航運供應商。"
+"moment, only used for FedEx and USPS shipping providers."
+msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
 msgid "States"
-msgstr "縣市"
+msgstr "狀態"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -1037,7 +1064,7 @@ msgstr "郵政"
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr "無法建立包裹，因為揀貨單上產品的重量總計是 0.0 %s"
+msgstr "無法建立貨件，因為提貨單上產品的重量總計是 0.0 %s"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
@@ -1076,7 +1103,7 @@ msgstr "當完成運貨後將更新運費."
 msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "this package type. Please choose another package type."
-msgstr "您的包裹的重量高於這個包裝類型所授權的最大重量。請選擇另一個包類型。"
+msgstr "您的貨件的重量高於這個包裝類型所授權的最大重量。請選擇另一個包類型。"
 
 #. module: delivery
 #. odoo-python
@@ -1111,7 +1138,7 @@ msgid ""
 "Total weight of packages and products not in a package. Packages with no "
 "shipping weight specified will default to their products' total weight. This"
 " is the weight used to compute the cost of the shipping."
-msgstr "包裹和不在包裹內的產品的總重量. 未指定運輸重量的包裹將預設為其產品的總重量. 這是用於計算運輸成本的重量."
+msgstr "貨件和不在貨件內的產品的總重量. 未指定運輸重量的貨件將預設為其產品的總重量. 這是用於計算運輸成本的重量."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
@@ -1218,7 +1245,7 @@ msgstr "裝運重量"
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "重量單位計量標籤"
+msgstr "重量計量單位標籤"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.report_package_barcode_small_delivery
@@ -1241,6 +1268,25 @@ msgstr ""
 "\n"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr "你不可刪除送貨產品類別，因為它用於送貨物流商產品。"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr "若產品的承運物流商不同，便不可包裝至同一個貨件中。（即是說，請檢查產品的所有轉移是否已有指定物流商並使用同一物流商。）"
+
+#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr "您有多個追蹤器連結，它們在聊天中可用。"
@@ -1252,7 +1298,7 @@ msgstr "您有多個追蹤器連結，它們在聊天中可用。"
 msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
-msgstr "快遞服務商的網站對您的配送方式沒有追蹤此訂單的連結。"
+msgstr "你的送貨方式在快遞商網站上沒有重新導向，可用作追蹤此訂單。"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

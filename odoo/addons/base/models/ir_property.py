@@ -35,6 +35,7 @@ TYPE2CLEAN = {
 class Property(models.Model):
     _name = 'ir.property'
     _description = 'Company Property'
+    _allow_sudo_commands = False
 
     name = fields.Char(index=True)
     res_id = fields.Char(string='Resource', index=True, help="If not set, acts as a default value for new resources",)

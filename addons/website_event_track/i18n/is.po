@@ -2,13 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* website_event_track
 # 
+# Translators:
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -16,6 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 #, python-format
 msgid "\"Events App Name\" field is required."
@@ -28,24 +34,28 @@ msgid "# Wishlisted"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s from %(company)s"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s, %(function)s at %(company)s"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/website.py:0
 #, python-format
 msgid "%s Events"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/controllers/webmanifest.py:0
 #, python-format
 msgid "%s Online Events Application"
@@ -110,20 +120,20 @@ msgstr ""
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
 "    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br/>\n"
+"    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
@@ -161,6 +171,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
 "specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -253,12 +265,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Aðgerða þörf"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__active
 msgid "Active"
-msgstr ""
+msgstr "Virk"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
@@ -314,6 +326,7 @@ msgid "Advanced reporting"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Agenda"
@@ -330,7 +343,7 @@ msgid "Allow Track Proposals"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Allow push notifications?"
@@ -355,7 +368,7 @@ msgid "Announced"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "Application"
@@ -364,7 +377,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Archived"
-msgstr ""
+msgstr "Vistuð"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
@@ -385,7 +398,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Fjöldi viðhengja"
 
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
@@ -410,67 +423,8 @@ msgid "Biography"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track_stage.py:0
-#: model:event.track,legend_blocked:website_event_track.event_7_track_1
-#: model:event.track,legend_blocked:website_event_track.event_7_track_10
-#: model:event.track,legend_blocked:website_event_track.event_7_track_11
-#: model:event.track,legend_blocked:website_event_track.event_7_track_12
-#: model:event.track,legend_blocked:website_event_track.event_7_track_13
-#: model:event.track,legend_blocked:website_event_track.event_7_track_14
-#: model:event.track,legend_blocked:website_event_track.event_7_track_15
-#: model:event.track,legend_blocked:website_event_track.event_7_track_16
-#: model:event.track,legend_blocked:website_event_track.event_7_track_17
-#: model:event.track,legend_blocked:website_event_track.event_7_track_18
-#: model:event.track,legend_blocked:website_event_track.event_7_track_19
-#: model:event.track,legend_blocked:website_event_track.event_7_track_2
-#: model:event.track,legend_blocked:website_event_track.event_7_track_20
-#: model:event.track,legend_blocked:website_event_track.event_7_track_21
-#: model:event.track,legend_blocked:website_event_track.event_7_track_22
-#: model:event.track,legend_blocked:website_event_track.event_7_track_23
-#: model:event.track,legend_blocked:website_event_track.event_7_track_24
-#: model:event.track,legend_blocked:website_event_track.event_7_track_25
-#: model:event.track,legend_blocked:website_event_track.event_7_track_26
-#: model:event.track,legend_blocked:website_event_track.event_7_track_3
-#: model:event.track,legend_blocked:website_event_track.event_7_track_4
-#: model:event.track,legend_blocked:website_event_track.event_7_track_5
-#: model:event.track,legend_blocked:website_event_track.event_7_track_6
-#: model:event.track,legend_blocked:website_event_track.event_7_track_7
-#: model:event.track,legend_blocked:website_event_track.event_7_track_8
-#: model:event.track,legend_blocked:website_event_track.event_7_track_9
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_1
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_10
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_11
-#: model:event.track,legend_blocked:website_event_track.event_7_track_l3_2
-#: model:event.track,legend_blocked:website_event_track.event_track1
-#: model:event.track,legend_blocked:website_event_track.event_track10
-#: model:event.track,legend_blocked:website_event_track.event_track11
-#: model:event.track,legend_blocked:website_event_track.event_track12
-#: model:event.track,legend_blocked:website_event_track.event_track13
-#: model:event.track,legend_blocked:website_event_track.event_track14
-#: model:event.track,legend_blocked:website_event_track.event_track15
-#: model:event.track,legend_blocked:website_event_track.event_track16
-#: model:event.track,legend_blocked:website_event_track.event_track17
-#: model:event.track,legend_blocked:website_event_track.event_track18
-#: model:event.track,legend_blocked:website_event_track.event_track19
-#: model:event.track,legend_blocked:website_event_track.event_track2
-#: model:event.track,legend_blocked:website_event_track.event_track20
-#: model:event.track,legend_blocked:website_event_track.event_track21
-#: model:event.track,legend_blocked:website_event_track.event_track22
-#: model:event.track,legend_blocked:website_event_track.event_track23
-#: model:event.track,legend_blocked:website_event_track.event_track24
-#: model:event.track,legend_blocked:website_event_track.event_track25
-#: model:event.track,legend_blocked:website_event_track.event_track27
-#: model:event.track,legend_blocked:website_event_track.event_track28
-#: model:event.track,legend_blocked:website_event_track.event_track29
-#: model:event.track,legend_blocked:website_event_track.event_track3
-#: model:event.track,legend_blocked:website_event_track.event_track30
-#: model:event.track,legend_blocked:website_event_track.event_track31
-#: model:event.track,legend_blocked:website_event_track.event_track4
-#: model:event.track,legend_blocked:website_event_track.event_track5
-#: model:event.track,legend_blocked:website_event_track.event_track6
-#: model:event.track,legend_blocked:website_event_track.event_track7
-#: model:event.track,legend_blocked:website_event_track.event_track8
-#: model:event.track,legend_blocked:website_event_track.event_track9
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage0
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage1
 #: model:event.track.stage,legend_blocked:website_event_track.event_track_stage2
@@ -524,7 +478,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Getur gefið út"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
@@ -534,17 +488,17 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
 msgid "Cancelled"
-msgstr ""
+msgstr "Eytt"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Categories"
-msgstr ""
+msgstr "Flokkar"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
 msgid "Category"
-msgstr ""
+msgstr "Flokkur"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
@@ -555,14 +509,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
 msgid "Color"
-msgstr ""
+msgstr "Litur"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
 msgid "Color Index"
-msgstr ""
+msgstr "Litavísitala"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 #, python-format
 msgid "Coming soon"
@@ -576,17 +531,17 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
 msgid "Company"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
 msgid "Company Name"
-msgstr ""
+msgstr "Nafn fyrirtækis"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Stillingarvalkostir"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
@@ -596,7 +551,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
 msgid "Confirmed"
-msgstr ""
+msgstr "Staðfest"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_13
@@ -608,11 +563,12 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 #, python-format
 msgid "Contact"
-msgstr ""
+msgstr "Hafa samband"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -620,6 +576,7 @@ msgid "Contact Details"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__contact_email
 #, python-format
@@ -675,7 +632,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
@@ -685,12 +642,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 msgid "Customer"
-msgstr ""
+msgstr "Viðskiptavinur"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_19
@@ -700,7 +657,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Date"
-msgstr ""
+msgstr "Dagsetning"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_11
@@ -741,7 +698,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__description
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Description"
-msgstr ""
+msgstr "Lýsing"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
@@ -776,7 +733,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
@@ -788,7 +745,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
 msgid "Done"
-msgstr ""
+msgstr "Lokið"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -820,7 +777,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Email"
-msgstr ""
+msgstr "Netfang"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -828,11 +785,11 @@ msgid "Email Template"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Villa"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_event
@@ -934,7 +891,7 @@ msgid "Events PWA"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -975,12 +932,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Fylgjendur"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Fylgjendur (samstarfsaðilar)"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
@@ -990,7 +947,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
 msgid "Format"
-msgstr ""
+msgstr "Snið"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
@@ -1036,7 +993,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr ""
+msgstr "Hópað eftir"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
@@ -1046,7 +1003,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hefur skilaboð"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
@@ -1121,7 +1078,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
@@ -1143,13 +1100,13 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ef hakað er við krefjast ný skilaboð athygli þinnar."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ef hakað er við hafa sum skilaboð sendingarvillu."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
@@ -1181,67 +1138,8 @@ msgid "In"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track_stage.py:0
-#: model:event.track,legend_normal:website_event_track.event_7_track_1
-#: model:event.track,legend_normal:website_event_track.event_7_track_10
-#: model:event.track,legend_normal:website_event_track.event_7_track_11
-#: model:event.track,legend_normal:website_event_track.event_7_track_12
-#: model:event.track,legend_normal:website_event_track.event_7_track_13
-#: model:event.track,legend_normal:website_event_track.event_7_track_14
-#: model:event.track,legend_normal:website_event_track.event_7_track_15
-#: model:event.track,legend_normal:website_event_track.event_7_track_16
-#: model:event.track,legend_normal:website_event_track.event_7_track_17
-#: model:event.track,legend_normal:website_event_track.event_7_track_18
-#: model:event.track,legend_normal:website_event_track.event_7_track_19
-#: model:event.track,legend_normal:website_event_track.event_7_track_2
-#: model:event.track,legend_normal:website_event_track.event_7_track_20
-#: model:event.track,legend_normal:website_event_track.event_7_track_21
-#: model:event.track,legend_normal:website_event_track.event_7_track_22
-#: model:event.track,legend_normal:website_event_track.event_7_track_23
-#: model:event.track,legend_normal:website_event_track.event_7_track_24
-#: model:event.track,legend_normal:website_event_track.event_7_track_25
-#: model:event.track,legend_normal:website_event_track.event_7_track_26
-#: model:event.track,legend_normal:website_event_track.event_7_track_3
-#: model:event.track,legend_normal:website_event_track.event_7_track_4
-#: model:event.track,legend_normal:website_event_track.event_7_track_5
-#: model:event.track,legend_normal:website_event_track.event_7_track_6
-#: model:event.track,legend_normal:website_event_track.event_7_track_7
-#: model:event.track,legend_normal:website_event_track.event_7_track_8
-#: model:event.track,legend_normal:website_event_track.event_7_track_9
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_1
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_10
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_11
-#: model:event.track,legend_normal:website_event_track.event_7_track_l3_2
-#: model:event.track,legend_normal:website_event_track.event_track1
-#: model:event.track,legend_normal:website_event_track.event_track10
-#: model:event.track,legend_normal:website_event_track.event_track11
-#: model:event.track,legend_normal:website_event_track.event_track12
-#: model:event.track,legend_normal:website_event_track.event_track13
-#: model:event.track,legend_normal:website_event_track.event_track14
-#: model:event.track,legend_normal:website_event_track.event_track15
-#: model:event.track,legend_normal:website_event_track.event_track16
-#: model:event.track,legend_normal:website_event_track.event_track17
-#: model:event.track,legend_normal:website_event_track.event_track18
-#: model:event.track,legend_normal:website_event_track.event_track19
-#: model:event.track,legend_normal:website_event_track.event_track2
-#: model:event.track,legend_normal:website_event_track.event_track20
-#: model:event.track,legend_normal:website_event_track.event_track21
-#: model:event.track,legend_normal:website_event_track.event_track22
-#: model:event.track,legend_normal:website_event_track.event_track23
-#: model:event.track,legend_normal:website_event_track.event_track24
-#: model:event.track,legend_normal:website_event_track.event_track25
-#: model:event.track,legend_normal:website_event_track.event_track27
-#: model:event.track,legend_normal:website_event_track.event_track28
-#: model:event.track,legend_normal:website_event_track.event_track29
-#: model:event.track,legend_normal:website_event_track.event_track3
-#: model:event.track,legend_normal:website_event_track.event_track30
-#: model:event.track,legend_normal:website_event_track.event_track31
-#: model:event.track,legend_normal:website_event_track.event_track4
-#: model:event.track,legend_normal:website_event_track.event_track5
-#: model:event.track,legend_normal:website_event_track.event_track6
-#: model:event.track,legend_normal:website_event_track.event_track7
-#: model:event.track,legend_normal:website_event_track.event_track8
-#: model:event.track,legend_normal:website_event_track.event_track9
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage0
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage1
 #: model:event.track.stage,legend_normal:website_event_track.event_track_stage2
@@ -1263,14 +1161,14 @@ msgid "In this video, I covered 6 tips and tricks to help out beginners:"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install Application"
@@ -1294,12 +1192,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Er fylgjandi"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Birt"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
@@ -1404,7 +1302,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
@@ -1414,7 +1312,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1448,7 +1346,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Live"
-msgstr ""
+msgstr "Beint"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
@@ -1500,7 +1398,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Aðal viðhengi"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1517,7 +1415,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
-msgstr ""
+msgstr "Miðlungs"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -1527,12 +1425,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Villa við afhendingu skilaboða"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track22
@@ -1585,7 +1483,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -1628,7 +1526,7 @@ msgid "No Track Visitors yet!"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "No results found"
@@ -1653,22 +1551,22 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Fjöldi aðgerða"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Fjöldi villna"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
+msgid "Number of messages requiring action"
+msgstr "Fjöldi skeyta sem krefjast aðgerða"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Fjöldi skeyta með sendingarvillu"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_24
@@ -1683,7 +1581,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Félagi"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track14
@@ -1695,7 +1593,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Phone"
-msgstr ""
+msgstr "Símanúmer"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1708,14 +1606,14 @@ msgid "Plan your experience by adding your favorites talks to your wishlist"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please enter either a contact email address or a contact phone number."
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "Please fill out the form correctly."
@@ -1768,7 +1666,7 @@ msgstr ""
 #: model:event.track.stage,name:website_event_track.event_track_stage3
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Published"
-msgstr ""
+msgstr "Birt"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track10
@@ -1776,67 +1674,8 @@ msgid "Raising qualitive insights from your customers"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track_stage.py:0
-#: model:event.track,legend_done:website_event_track.event_7_track_1
-#: model:event.track,legend_done:website_event_track.event_7_track_10
-#: model:event.track,legend_done:website_event_track.event_7_track_11
-#: model:event.track,legend_done:website_event_track.event_7_track_12
-#: model:event.track,legend_done:website_event_track.event_7_track_13
-#: model:event.track,legend_done:website_event_track.event_7_track_14
-#: model:event.track,legend_done:website_event_track.event_7_track_15
-#: model:event.track,legend_done:website_event_track.event_7_track_16
-#: model:event.track,legend_done:website_event_track.event_7_track_17
-#: model:event.track,legend_done:website_event_track.event_7_track_18
-#: model:event.track,legend_done:website_event_track.event_7_track_19
-#: model:event.track,legend_done:website_event_track.event_7_track_2
-#: model:event.track,legend_done:website_event_track.event_7_track_20
-#: model:event.track,legend_done:website_event_track.event_7_track_21
-#: model:event.track,legend_done:website_event_track.event_7_track_22
-#: model:event.track,legend_done:website_event_track.event_7_track_23
-#: model:event.track,legend_done:website_event_track.event_7_track_24
-#: model:event.track,legend_done:website_event_track.event_7_track_25
-#: model:event.track,legend_done:website_event_track.event_7_track_26
-#: model:event.track,legend_done:website_event_track.event_7_track_3
-#: model:event.track,legend_done:website_event_track.event_7_track_4
-#: model:event.track,legend_done:website_event_track.event_7_track_5
-#: model:event.track,legend_done:website_event_track.event_7_track_6
-#: model:event.track,legend_done:website_event_track.event_7_track_7
-#: model:event.track,legend_done:website_event_track.event_7_track_8
-#: model:event.track,legend_done:website_event_track.event_7_track_9
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_1
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_10
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_11
-#: model:event.track,legend_done:website_event_track.event_7_track_l3_2
-#: model:event.track,legend_done:website_event_track.event_track1
-#: model:event.track,legend_done:website_event_track.event_track10
-#: model:event.track,legend_done:website_event_track.event_track11
-#: model:event.track,legend_done:website_event_track.event_track12
-#: model:event.track,legend_done:website_event_track.event_track13
-#: model:event.track,legend_done:website_event_track.event_track14
-#: model:event.track,legend_done:website_event_track.event_track15
-#: model:event.track,legend_done:website_event_track.event_track16
-#: model:event.track,legend_done:website_event_track.event_track17
-#: model:event.track,legend_done:website_event_track.event_track18
-#: model:event.track,legend_done:website_event_track.event_track19
-#: model:event.track,legend_done:website_event_track.event_track2
-#: model:event.track,legend_done:website_event_track.event_track20
-#: model:event.track,legend_done:website_event_track.event_track21
-#: model:event.track,legend_done:website_event_track.event_track22
-#: model:event.track,legend_done:website_event_track.event_track23
-#: model:event.track,legend_done:website_event_track.event_track24
-#: model:event.track,legend_done:website_event_track.event_track25
-#: model:event.track,legend_done:website_event_track.event_track27
-#: model:event.track,legend_done:website_event_track.event_track28
-#: model:event.track,legend_done:website_event_track.event_track29
-#: model:event.track,legend_done:website_event_track.event_track3
-#: model:event.track,legend_done:website_event_track.event_track30
-#: model:event.track,legend_done:website_event_track.event_track31
-#: model:event.track,legend_done:website_event_track.event_track4
-#: model:event.track,legend_done:website_event_track.event_track5
-#: model:event.track,legend_done:website_event_track.event_track6
-#: model:event.track,legend_done:website_event_track.event_track7
-#: model:event.track,legend_done:website_event_track.event_track8
-#: model:event.track,legend_done:website_event_track.event_track9
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage0
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage1
 #: model:event.track.stage,legend_done:website_event_track.event_track_stage2
@@ -1906,12 +1745,12 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO bjartsýni"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS sendingarvilla"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_online
@@ -1925,7 +1764,7 @@ msgid "Securing your Lumber during transport"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "Select categories"
@@ -1941,7 +1780,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo nafn"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_location__sequence
@@ -1949,10 +1788,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Röð"
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
@@ -1981,6 +1820,7 @@ msgid "Speaker Bio"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speaker Email"
@@ -2009,6 +1849,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "Speakers"
@@ -2079,36 +1920,38 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
-msgstr ""
+msgstr "Merki"
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #, python-format
 msgid "Talk Proposals"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk added to your Favorites"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk already in your Favorites"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Talk removed from your Favorites"
 msgstr ""
 
 #. module: website_event_track
+#. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
 #, python-format
@@ -2131,7 +1974,7 @@ msgid "Task is blocked. Click to unblock or set as done."
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "Thank you for your proposal."
@@ -2140,7 +1983,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
+msgstr "Heildarslóðin til að fá aðgang að skjalinu í gegnum vefsíðuna."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -2415,7 +2258,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Unpublished"
-msgstr ""
+msgstr "Óbirt"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -2450,7 +2293,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Sýnilegt á núverandi vefsíðu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
@@ -2502,7 +2345,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/event_track_proposal_templates.xml:0
 #, python-format
 msgid "We will evaluate your proposition and get back to you shortly."
@@ -2511,7 +2354,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website
 msgid "Website"
-msgstr ""
+msgstr "Vefsíða"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
@@ -2536,42 +2379,42 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Skilaboð á vefsíðu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
-msgstr ""
+msgstr "Vefslóð vefsvæðis"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "Gestur vefsíðunnar"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Samskiptasaga vefsíðu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
 msgid "Website meta description"
-msgstr ""
+msgstr "Meta lýsing á vefsíðu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr ""
+msgstr "Meta leitarorð vefsvæðis"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
-msgstr ""
+msgstr "Meta titill vefsíðu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Vefsíða opengraph mynd"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_10
@@ -2614,7 +2457,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Wishlists"
-msgstr ""
+msgstr "Óskalistar"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_7
@@ -2622,14 +2465,14 @@ msgid "Woodworking: How I got started!"
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form.js:0
 #, python-format
 msgid "You cannot access this page."
 msgstr ""
 
 #. module: website_event_track
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid ""

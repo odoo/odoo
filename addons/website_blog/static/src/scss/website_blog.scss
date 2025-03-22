@@ -45,6 +45,26 @@ $o-wblog-loader-size: 50px;
 // Website Blog
 //------------------------------------------------------------------------------
 .website_blog {
+    .o_website_blog_nav_container {
+        // Overrides the value from portal, useless in >=17
+        &::before, &::after {
+            display: none !important;
+        }
+    }
+
+    > nav > .container {
+        > ul.navbar-nav {
+            flex-wrap: wrap;
+            flex-shrink: 2;
+        }
+        // If the navbar contains at least 10 items (random choice), the search
+        // input is placed at the top to avoid being centered in a multi-line
+        // navbar, which wouldn’t look good.
+        &:has(> ul.navbar-nav .nav-item:nth-child(10)) .o_searchbar_form {
+            align-self: start;
+        }
+    }
+
     .css_website_mail {
         .o_has_error {
             border-color: red;
@@ -127,6 +147,22 @@ $o-wblog-loader-size: 50px;
         }
         a.oe_mail_expand {
             font-weight: bold;
+        }
+    }
+
+    #o_wblog_post_content, .blog_header {
+        > nav.breadcrumb {
+            .breadcrumb-item:not(.active) {
+                flex-shrink: 0;
+            }
+            @include media-breakpoint-down(md) {
+                flex-wrap: wrap !important;
+
+                .breadcrumb-item {
+                    flex-shrink: 1 !important;
+                    @include text-truncate();
+                }
+            }
         }
     }
 
@@ -283,6 +319,13 @@ $o-wblog-loader-size: 50px;
             }
             .o_wblog_post_cover_nocard .o_record_cover_container {
                 padding-top: 33%;
+            }
+
+            @include media-breakpoint-down(md) {
+                > .row {
+                    margin-left: 0;
+                    margin-right: 0;
+                }
             }
         }
 

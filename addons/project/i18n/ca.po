@@ -7,14 +7,14 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
-# Josep Sànchez <papapep@gmx.com>, 2022
+# Josep Sànchez <papapep@pinatell.net>, 2022
 # Susanna Pujol, 2022
-# AncesLatino2004, 2022
+# 7b9408628f00af852f513eb4f12c005b_f9c6891, 2022
 # eriiikgt, 2022
 # oscaryuu, 2022
 # Jonatan Gk, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # CristianCruzParra, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Gemma Bochaca <gemma.bochaca@gmail.com>, 2022
@@ -24,19 +24,19 @@
 # marcescu, 2022
 # Josep Anton Belchi, 2022
 # M Palau <mpalau@tda.ad>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # Ivan Espinola, 2023
 # Martin Trigaux, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Albert Parera, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Albert Parera, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,6 +98,12 @@ msgid "# of Tasks"
 msgstr "# de tasques"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
@@ -105,6 +111,12 @@ msgid ""
 msgstr ""
 "#{record.milestone_count_reached.value} Fites assolides de  "
 "#{record.milestone_count.value}"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -140,13 +152,6 @@ msgstr "Puntuació de %(name)s"
 #, python-format
 msgid "%(name)s's Tasks Analysis"
 msgstr "Anàlisi de tasques de %(name)s"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "%(name)s's Timesheets"
-msgstr "Fulls d'hores de %(name)s"
 
 #. module: project
 #. odoo-python
@@ -959,7 +964,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Ancestor Task"
-msgstr "Tasca d'avantpassat"
+msgstr "Tasca pare"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -1076,8 +1081,6 @@ msgid "Assigned to"
 msgstr "Assignat a"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1087,7 +1090,6 @@ msgstr "Assignat a"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr "Assignats"
 
@@ -2116,8 +2118,8 @@ msgstr ""
 "Sense accés, omet aquesta informació per a usuaris amb correu electrònic"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2661,8 +2663,8 @@ msgstr ""
 "Si el camp actiu es desmarca, permet ocultar el projecte sense eliminar-ho."
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3089,17 +3091,17 @@ msgstr "Deixar un comentari"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#, python-format
-msgid "Let's create your first <b>stage</b>."
-msgstr ""
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/js/tours/project.js:0
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
 msgstr "Crearem el teu primer <b>projecte</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3269,8 +3271,8 @@ msgid "Messages"
 msgstr "Missatges"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3437,8 +3439,8 @@ msgid "Neutral face"
 msgstr "Cara neutral"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -4031,7 +4033,7 @@ msgid ""
 "Portal users will be removed from the followers of the project and its "
 "tasks."
 msgstr ""
-"Els usuaris portuaris seran retirats dels seguidors del projecte i de les "
+"Els usuaris de portal s'eliminaran com a seguidors del projecte i de les "
 "seves tasques."
 
 #. module: project
@@ -4101,8 +4103,8 @@ msgid "Progress Percentage"
 msgstr "Percentatge del progrés"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -5035,8 +5037,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint en curs"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5372,6 +5374,7 @@ msgstr "Tasca:"
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task

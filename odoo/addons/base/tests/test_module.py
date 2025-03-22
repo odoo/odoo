@@ -57,7 +57,7 @@ class TestModuleManifest(BaseCase):
             'live_test_url': '',
             'name': f'Temp {self.module_name}',
             'post_init_hook': '',
-            'post_load': None,
+            'post_load': '',
             'pre_init_hook': '',
             'sequence': 100,
             'snippet_lists': {},

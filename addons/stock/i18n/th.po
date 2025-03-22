@@ -12,15 +12,16 @@
 # Odoo Thaidev <odoothaidev@gmail.com>, 2022
 # Wichanon Jamwutthipreecha, 2022
 # Amin Cheloh <amincheloh@gmail.com>, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,6 +151,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
+msgid "%(name)s (copy)(%(id)s)"
+msgstr "%(name)s (สำเนา)(%(id)s)"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_warehouse.py:0
+#, python-format
 msgid "%(warehouse)s: Supply Product from %(supplier)s"
 msgstr "%(warehouse)s: จัดหาสินค้าจาก %(supplier)s"
 
@@ -157,6 +165,7 @@ msgstr "%(warehouse)s: จัดหาสินค้าจาก %(supplier)s"
 #. odoo-python
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_package_type.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_storage_category.py:0
 #, python-format
 msgid "%s (copy)"
@@ -1184,8 +1193,8 @@ msgid "Automatic No Step Added"
 msgstr "ไม่มีขั้นตอนอัตโนมัติถูกเพิ่ม"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -1798,6 +1807,11 @@ msgid ""
 msgstr ""
 "การแปลงระหว่างหน่วยวัดจะเกิดขึ้นได้ก็ต่อเมื่ออยู่ในหมวดหมู่เดียวกัน "
 "การแปลงจะอิงตามอัตราส่วน"
+
+#. module: stock
+#: model:ir.actions.server,name:stock.stock_quant_stock_move_line_desynchronization
+msgid "Correct inconsistencies for reservation"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2961,6 +2975,13 @@ msgid "First SN"
 msgstr "SN แรก"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Fix discrepancies"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__group_propagation_option__fixed
 msgid "Fixed"
 msgstr "คงที่"
@@ -3782,6 +3803,7 @@ msgstr "ตัวถูกดําเนินการด้านซ้าย
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain operator %s"
 msgstr "ของผู้ให้บริการโดเมนไม่ถูกต้อง %s"
@@ -3789,6 +3811,7 @@ msgstr "ของผู้ให้บริการโดเมนไม่ถ
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0 code:addons/stock/models/product.py:0
+#: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Invalid domain right operand '%s'. It must be of type Integer/Float"
 msgstr "ตัวดำเนินการสิทธิ์โดเมน '%s' ไม่ถูกต้อง ต้องเป็นประเภท Integer/Float"
@@ -4001,8 +4024,21 @@ msgstr "ไม่สามารถจองผลิตภัณฑ์ %s ไ�
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
-"It is not possible to unreserve more products of %s than you have in stock."
-msgstr "ไม่สามารถยกเลิก %s ผลิตภัณฑ์ได้มากกว่าที่คุณมีในสต็อก"
+"It is not possible to reserve more products of %s than you have in stock.\n"
+"\n"
+"You can fix the discrepancies by clicking on the button below.\n"
+"The correction will remove the reservation of the impacted operations on all companies.\n"
+"If the error persists, or you see this message appear often, please submit a Support Ticket at https://www.odoo.com/help"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"It is not possible to unreserve more products of %s than you have in stock.\n"
+"Please contact your system administrator to rectify this issue."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
@@ -4430,6 +4466,13 @@ msgid "Locations"
 msgstr "ตำแหน่ง"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Lock"
 msgstr "ล็อก"
@@ -4444,6 +4487,11 @@ msgstr "โลจิสติกส์"
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__lot
 msgid "Lot"
 msgstr "ล็อต"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_label_lot_template_view
+msgid "Lot Label Report"
+msgstr "รายงานป้ายกำกับล็อต"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__lots
@@ -4620,7 +4668,7 @@ msgstr "การดำเนินการด้วยตนเอง"
 #: code:addons/stock/wizard/product_replenish.py:0
 #, python-format
 msgid "Manual Replenishment"
-msgstr ""
+msgstr "การเติมสินค้าด้วยตนเอง"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__manual
@@ -5092,8 +5140,8 @@ msgid "Normal"
 msgstr "ปกติ"
 
 #. module: stock
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -7082,6 +7130,14 @@ msgstr ""
 "และคุณสามารถเลือกมันจากสินค้าและหมวดสินค้า"
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_location.py:0
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Rule %s belongs to %s while the route belongs to %s."
+msgstr "กฎ %s เป็นของ %s ในขณะที่เส้นทางเป็นของ %s"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
 msgstr "ข้อความกฎ"
@@ -8613,6 +8669,9 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
+"คำนำหน้าลำดับนี้ถูกใช้แล้วโดยประเภทการดำเนินการอื่น "
+"ขอแนะนำให้คุณเลือกคำนำหน้าที่ไม่ซ้ำกันเพื่อหลีกเลี่ยงปัญหาและ/หรือค่าอ้างอิงที่ซ้ำกัน"
+" หรือกำหนดลำดับการอ้างอิงที่มีอยู่ให้กับประเภทการดำเนินการนี้"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9743,6 +9802,15 @@ msgstr "คุณไม่สามารถเปลี่ยนประเภ
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can not create a snoozed orderpoint that is not manually triggered."
+msgstr ""
+"คุณไม่สามารถสร้างจุดสั่งซื้อที่ถูกพักไว้ซึ่งไม่ได้ถูกเรียกใช้งานด้วยตนเองได้"
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -9780,6 +9848,18 @@ msgstr "คุณสามารถป้อนได้เฉพาะปริ
 msgid "You can only process 1.0 %s of products with unique serial number."
 msgstr ""
 "คุณสามารถประมวลผลได้เพียง 1.0 %s ของสินค้าที่มีหมายเลขซีเรียลที่ไม่ซ้ำกัน"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_orderpoint.py:0
+#, python-format
+msgid ""
+"You can only snooze manual orderpoints. You should rather archive 'auto-"
+"trigger' orderpoints if you do not want them to be triggered."
+msgstr ""
+"คุณสามารถระงับการทำงานของจุดสั่งซื้อด้วยตนเองได้เท่านั้น "
+"คุณควรเก็บจุดสั่งซื้อแบบ 'ทริกเกอร์อัตโนมัติ' ไว้เป็นไฟล์ถาวร "
+"หากคุณไม่ต้องการให้จุดสั่งซื้อเหล่านั้นถูกทริกเกอร์"
 
 #. module: stock
 #. odoo-python
@@ -9893,6 +9973,25 @@ msgid ""
 msgstr ""
 "คุณไม่สามารถย้ายของในแพ็คเกจเดียวกันมากกว่าหนึ่งครั้งในการโอนย้ายเดียวกันได้"
 " หรือแยกแพ็คเกจเดียวกันออกเป็นสองตำแหน่ง"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from both "
+"immediate and planned transfers."
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they are from different "
+"transfers with different operation types."
+msgstr ""
+"คุณไม่สามารถบรรจุผลิตภัณฑ์ลงในบรรจุภัณฑ์เดียวกันได้เมื่อมาจากการโอนที่แตกต่างกันและมีประเภทการดำเนินการต่างกัน"
 
 #. module: stock
 #. odoo-python
@@ -10208,6 +10307,7 @@ msgid "e.g. CW"
 msgstr "เช่น CW"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
 msgstr "เช่น คลังสินค้ากลาง"

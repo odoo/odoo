@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # List of contributors:
@@ -13,9 +12,9 @@
 # Roberto Lizana <robertolizana@trey.es>
 
 {
-    "name" : "Spain - Accounting (PGCE 2008)",
-    "version" : "5.2",
-    "author" : "Spanish Localization Team",
+    "name": "Spain - Accounting (PGCE 2008)",
+    "version": "5.3",
+    "author": "Spanish Localization Team",
     'category': 'Accounting/Localizations/Account Charts',
     "description": """
 Spanish charts of accounts (PGCE 2008).
@@ -29,13 +28,15 @@ Spanish charts of accounts (PGCE 2008).
     * Defines tax templates
     * Defines fiscal positions for spanish fiscal legislation
     * Defines tax reports mod 111, 115 and 303
+
+5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944
 """,
-    "depends" : [
+    "depends": [
         "account",
         "base_iban",
         "base_vat",
     ],
-    "data" : [
+    "data": [
         'data/account_chart_template_data.xml',
         'data/account_group.xml',
         'data/account.account.template-common.csv',

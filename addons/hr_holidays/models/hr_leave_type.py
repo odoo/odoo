@@ -10,6 +10,7 @@ from collections import defaultdict
 from datetime import time, timedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools import format_date
 from odoo.tools.translate import _
@@ -78,7 +79,8 @@ class HolidaysType(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_id = fields.Many2one(
         'res.users', 'Responsible Time Off Officer',
-        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id)],
+        domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
+                             ('share', '=', False)],
         help="Choose the Time Off Officer who will be notified to approve allocation or Time Off request")
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
@@ -123,8 +125,19 @@ class HolidaysType(models.Model):
             or that don't need an allocation
             return [('id', domain_operator, [x['id'] for x in res])]
         """
-        date_to = self._context.get('default_date_from') or fields.Date.today().strftime('%Y-1-1')
-        date_from = self._context.get('default_date_to') or fields.Date.today().strftime('%Y-12-31')
+
+        if {'default_date_from', 'default_date_to', 'tz'} <= set(self._context):
+            default_date_from_dt = fields.Datetime.to_datetime(self._context.get('default_date_from'))
+            default_date_to_dt = fields.Datetime.to_datetime(self._context.get('default_date_to'))
+
+            # Cast: Datetime -> Date using user's tz
+            date_to = fields.Date.context_today(self, default_date_from_dt)
+            date_from = fields.Date.context_today(self, default_date_to_dt)
+
+        else:
+            date_to = fields.Date.today().strftime('%Y-1-1')
+            date_from = fields.Date.today().strftime('%Y-12-31')
+
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id')) or self.env.user.employee_id.id
 
         if not isinstance(value, bool):
@@ -168,6 +181,16 @@ class HolidaysType(models.Model):
                 holiday_type.has_valid_allocation = bool(allocation)
             else:
                 holiday_type.has_valid_allocation = True
+
+    def _load_records_write(self, values):
+        if 'requires_allocation' in values and self.requires_allocation == values['requires_allocation']:
+            values.pop('requires_allocation')
+        return super()._load_records_write(values)
+
+    @api.constrains('requires_allocation')
+    def check_allocation_requirement_edit_validity(self):
+        if self.env['hr.leave'].search_count([('holiday_status_id', 'in', self.ids)], limit=1):
+            raise UserError(_("The allocation requirement of a time off type cannot be changed once leaves of that type have been taken. You should create a new time off type instead."))
 
     def _search_max_leaves(self, operator, value):
         value = float(value)
@@ -382,6 +405,7 @@ class HolidaysType(models.Model):
                         if interval_to != future_allocations_date_to
                         else {'days': float('inf'), 'hours': float('inf')}
                     )
+                    reached_remaining_days_limit = False
                     for allocation in interval_allocations:
                         if allocation.date_from > search_date:
                             continue
@@ -394,11 +418,12 @@ class HolidaysType(models.Model):
                             remaining_days_allocation = (allocation.number_of_hours_display - days_consumed['virtual_leaves_taken'])
                         if quantity_available <= remaining_days_allocation:
                             search_date = interval_to.date() + timedelta(days=1)
-                        days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
                         days_consumed['max_leaves'] = allocation.number_of_days if allocation.type_request_unit in ['day', 'half_day'] else allocation.number_of_hours_display
-                        days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
+                        if not reached_remaining_days_limit:
+                            days_consumed['virtual_remaining_leaves'] += min(quantity_available, remaining_days_allocation)
+                            days_consumed['remaining_leaves'] = days_consumed['max_leaves'] - days_consumed['leaves_taken']
                         if remaining_days_allocation >= quantity_available:
-                            break
+                            reached_remaining_days_limit = True
                         # Check valid allocations with still availabe leaves on it
                         if days_consumed['virtual_remaining_leaves'] > 0 and allocation.date_to and allocation.date_to > date:
                             allocations_with_remaining_leaves |= allocation

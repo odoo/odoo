@@ -136,6 +136,12 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assertEqual(mail_server, self.server_notification, 'Should take the notification email')
         self.assertEqual(mail_from, 'notifications@test.com')
 
+        # test if notification server is selected if email_from = False
+        mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from=False)
+        self.assertEqual(mail_server, self.server_notification,
+                         'Should select the notification email server if passed FROM address was False')
+        self.assertEqual(mail_from, 'notifications@test.com')
+
         # remove the notifications email to simulate a mis-configured Odoo database
         # so we do not have the choice, we have to spoof the FROM
         # (otherwise we can not send the email)
@@ -145,7 +151,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             self.assertEqual(mail_server.from_filter, False, 'No notifications email set, must be forced to spoof the FROM')
             self.assertEqual(mail_from, 'test@unknown_domain.com')
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     def test_mail_server_send_email(self):
         IrMailServer = self.env['ir.mail_server']
         default_bounce_adress = self.env['ir.mail_server']._get_default_bounce_address()
@@ -225,6 +231,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
         # Test that the mail from / recipient envelop are encoded using IDNA
+        self.server_domain.from_filter = 'ééééééé.com'
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'ééééééé.com')
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='test@ééééééé.com')
@@ -236,7 +243,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             smtp_from='bounce.test@xn--9caaaaaaa.com',
             smtp_to_list=['dest@xn--example--i1a.com'],
             message_from='test@=?utf-8?b?w6nDqcOpw6nDqcOpw6k=?=.com',
-            from_filter=False,
+            from_filter='ééééééé.com',
         )
 
         # Test the case when the "mail.default.from" contains a full email address and not just the local part
@@ -257,6 +264,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
         # Test when forcing the mail server and when smtp_encryption is "starttls"
         self.server_domain.smtp_encryption = "starttls"
+        self.server_domain.from_filter = "test.com"
         with self.mock_smtplib_connection():
             message = self._build_email(mail_from='specific_user@test.com')
             IrMailServer.send_email(message, mail_server_id=self.server_domain.id)
@@ -268,6 +276,19 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter='test.com',
         )
 
+        # miss-configured database, no mail servers from filter
+        # match the user / notification email
+        self.env['ir.mail_server'].search([]).from_filter = "random.domain"
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='specific_user@test.com')
+            IrMailServer.send_email(message)
+
+        self.connect_mocked.assert_called_once()
+        self.assert_email_sent_smtp(
+            smtp_from='test@custom_domain.com',
+            message_from='"specific_user" <test@custom_domain.com>',
+            from_filter='random.domain',
+        )
 
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_smtp_session(self):
@@ -483,3 +504,30 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             message_from='specific_user@example.com',
             from_filter='example.com',
         )
+
+    def test_eml_attachment_encoding(self):
+        """Test that message/rfc822 attachments are encoded using 7bit, 8bit, or binary encoding."""
+        IrMailServer = self.env['ir.mail_server']
+
+        # Create a sample .eml file content
+        eml_content = b"From: user@example.com\nTo: user2@example.com\nSubject: Test Email\n\nThis is a test email."
+        attachments = [('test.eml', eml_content, 'message/rfc822')]
+
+        # Build the email with the .eml attachment
+        message = IrMailServer.build_email(
+            email_from='john.doe@from.example.com',
+            email_to='destinataire@to.example.com',
+            subject='Subject with .eml attachment',
+            body='This email contains a .eml attachment.',
+            attachments=attachments,
+        )
+
+        # Verify that the attachment is correctly encoded
+        acceptable_encodings = {'7bit', '8bit', 'binary'}
+        for part in message.iter_attachments():
+            if part.get_content_type() == 'message/rfc822':
+                self.assertIn(
+                    part.get('Content-Transfer-Encoding'),
+                    acceptable_encodings,
+                    "The message/rfc822 attachment should be encoded using 7bit, 8bit, or binary encoding.",
+                )

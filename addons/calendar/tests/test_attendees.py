@@ -2,8 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user, Form
+from odoo import fields, Command
+from freezegun import freeze_time
 
 
 class TestEventNotifications(TransactionCase):
@@ -134,3 +137,50 @@ class TestEventNotifications(TransactionCase):
         })
         self.assertIn(self.partner, event.attendee_ids.partner_id, "Partner should be in attendee")
         self.assertNotIn(partner_bis, event.attendee_ids.partner_id, "Partner bis should not be in attendee")
+
+    def test_push_meeting_start(self):
+        """
+        Checks that you can push the start date of an all day meeting.
+        """
+        attendee = self.env['res.partner'].create({
+            'name': "Xavier",
+            'email': "xavier@example.com",
+            })
+        event = self.env['calendar.event'].create({
+            'name': "Doom's day",
+            'attendee_ids': [Command.create({'partner_id': attendee.id})],
+            'allday': True,
+            'start_date': fields.Date.today(),
+            'stop_date': fields.Date.today(),
+        })
+        initial_start = event.start
+        with Form(event) as event_form:
+            event_form.stop_date = datetime.today() + relativedelta(days=1)
+            event_form.start_date = datetime.today() + relativedelta(days=1)
+        self.assertFalse(initial_start == event.start)
+
+    @freeze_time("2019-10-24 09:00:00", tick=True)
+    def test_multi_attendee_mt_note_default(self):
+        mt_note = self.env.ref("mail.mt_note")
+        mt_note.default = True
+        user_exta = new_test_user(self.env, "extra", email="extra@il.com")
+        partner_extra = user_exta.partner_id
+        event = self.env["calendar.event"].create({
+            "name": "Team meeting",
+            "attendee_ids": [
+                (0, 0, {"partner_id": self.partner.id}),
+                (0, 0, {"partner_id": partner_extra.id})
+            ],
+            "start": datetime(2019, 10, 25, 8, 0),
+            "stop": datetime(2019, 10, 25, 10, 0),
+        })
+        messages = self.env["mail.message"].search([
+            ("model", "=", event._name),
+            ("res_id", "=", event.id),
+            ("message_type", "=", "user_notification")
+        ])
+        self.assertEqual(len(messages), 2)
+        mesage_user = messages.filtered(lambda x: self.partner in x.partner_ids)
+        self.assertNotIn(partner_extra, mesage_user.notified_partner_ids)
+        mesage_user_extra = messages.filtered(lambda x: partner_extra in x.partner_ids)
+        self.assertNotIn(self.partner, mesage_user_extra.notified_partner_ids)

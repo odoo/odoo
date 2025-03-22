@@ -142,11 +142,14 @@ class WebsiteCustomer(http.Controller):
     # Do not use semantic controller due to SUPERUSER_ID
     @http.route(['/customers/<partner_id>'], type='http', auth="public", website=True)
     def partners_detail(self, partner_id, **post):
+        current_slug = partner_id
         _, partner_id = unslug(partner_id)
         if partner_id:
             partner = request.env['res.partner'].sudo().browse(partner_id)
             if partner.exists() and partner.website_published:
+                if slug(partner) != current_slug:
+                    return request.redirect('/customers/%s' % slug(partner))
                 values = {}
                 values['main_object'] = values['partner'] = partner
                 return request.render("website_customer.details", values)
-        return self.customers(**post)
+        raise request.not_found()

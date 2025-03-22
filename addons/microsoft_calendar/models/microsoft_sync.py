@@ -12,6 +12,7 @@ from odoo import api, fields, models, registry
 from odoo.tools import ormcache_context
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.sql_db import BaseCursor
 
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
 from odoo.addons.microsoft_calendar.utils.microsoft_calendar import MicrosoftCalendarService
@@ -29,6 +30,7 @@ MAX_RECURRENT_EVENT = 720
 def after_commit(func):
     @wraps(func)
     def wrapped(self, *args, **kwargs):
+        assert isinstance(self.env.cr, BaseCursor)
         dbname = self.env.cr.dbname
         context = self.env.context
         uid = self.env.uid
@@ -433,7 +435,7 @@ class MicrosoftSync(models.AbstractModel):
         microsoft_service = self._get_microsoft_service()
         sender_user = self._get_event_user_m(user_id)
         with microsoft_calendar_token(sender_user.sudo()) as token:
-            if token:
+            if token and not sender_user.microsoft_synchronization_stopped:
                 microsoft_service.delete(event_id, token=token, timeout=timeout)
 
     @after_commit

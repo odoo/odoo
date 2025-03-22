@@ -1,0 +1,25 @@
+<odoo>
+   <record id="view_generate_compliance_letter" model="ir.ui.view">
+        <field name="name">compliance.letter.wizard.form</field>
+        <field name="model">compliance.letter.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Compliance Letter">
+                <label string="Company" for="company_id"/>
+                <field name="company_id"/>
+                <footer>
+                    <button name="generate_letter" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_generate_compliance_letter" model="ir.actions.act_window">
+        <field name="name">Compliance Letter</field>
+        <field name="res_model">compliance.letter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menu_compliance_letter" name="Compliance Letter"
+              action="l10n_mt_pos.action_generate_compliance_letter"
+              parent="point_of_sale.menu_point_rep" sequence="6"/>
+</odoo>

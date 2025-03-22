@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
+from odoo.addons.website.tools import MockRequest
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @tagged('post_install', '-at_install')
-class TestGetCurrentWebsite(TransactionCase):
+class TestGetCurrentWebsite(HttpCaseWithUserDemo):
 
     def setUp(self):
+        super().setUp()
         # Unlink unused website(s) to avoid messing with the expected results
         self.website = self.env.ref('website.default_website')
         for w in self.env['website'].search([('id', '!=', self.website.id)]):
@@ -85,3 +88,56 @@ class TestGetCurrentWebsite(TransactionCase):
 
         user = self.env['res.users'].create({'website_id': website.id, 'login': 'sad@mail.com', 'name': 'Hope Fully'})
         self.assertTrue(user.website_id == user.partner_id.website_id == website)
+
+    def test_03_rpc_signin_user_website_id(self):
+        def rpc_login_user_demo():
+            """
+            Login with demo using JSON-RPC
+            :return: the user's id or False if login failed
+            """
+            response = self.url_open('/jsonrpc', data=json.dumps({
+                "params": {
+                    "service": "common",
+                    "method": "login",
+                    "args": [self.env.cr.dbname, 'demo', 'demo']
+                },
+            }), headers={"Content-Type": "application/json"})
+            return response.json()['result']
+
+        website1 = self.website
+        website1.domain = self.base_url()
+
+        website2 = self.env['website'].create({'name': 'My Website 2'})
+        website2.domain = False
+
+        # It should login successfully since the host used in the RPC call is
+        # the same as the website set on the user.
+        self.user_demo.website_id = website1
+        self.assertTrue(rpc_login_user_demo())
+
+        # It should not login since the website set on the user has no domain.
+        self.user_demo.website_id = website2
+        self.assertFalse(rpc_login_user_demo())
+
+    def test_recursive_current_website(self):
+        Website = self.env['website']
+        self.env['ir.rule'].create({
+            'name': 'Recursion Test',
+            'model_id': self.env.ref('website.model_website').id,
+            'domain_force': [(1, '=', 1)],
+            'groups': [],
+        })
+        # Ensure the cache is invalidated, it is not needed at the time but some
+        # code might one day go through get_current_website_id before reaching
+        # this code, making this test useless
+        Website.clear_caches()
+        failed = False
+        # website is added in ir.rule context only when in frontend
+        with MockRequest(self.env, website=self.website):
+            try:
+                Website.with_user(self.env.ref('base.public_user').id).search([])
+            except RecursionError:
+                # Do not fail test from here to avoid dumping huge stack.
+                failed = True
+        if failed:
+            self.fail("There should not be a RecursionError")

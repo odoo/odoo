@@ -8,14 +8,15 @@
 # Jorunn D. Newth, 2022
 # Henning Fyllingsnes, 2023
 # Martin Trigaux, 2023
+# Rune Restad, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Rune Restad, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,14 +87,14 @@ msgstr "%s har deltatt"
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat.js:0
 #, python-format
 msgid "%s is typing..."
-msgstr ""
+msgstr "%s skriver..."
 
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/models/public_livechat.js:0
 #, python-format
 msgid "%s, %s and more are typing..."
-msgstr ""
+msgstr "%s, %s og flere skriver... "
 
 #. module: im_livechat
 #. odoo-python
@@ -277,7 +278,7 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Gjennomsnittlig rating"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_avg_percentage
@@ -341,6 +342,9 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Ferdigskrevne svar lar deg sette inn forhåndsskrevede svar i \n"
+"                meldingene dine ved å skrive <i>:snarvei</i>. Snarveien erstattes \n"
+"direkte i meldingen din, slik at du fortsatt kan redigere den før du sender."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -468,14 +472,6 @@ msgstr "Lukk"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#, python-format
-msgid "Close chat window"
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Close conversation"
@@ -567,7 +563,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
 msgid "Create a new canned response"
-msgstr ""
+msgstr "Opprett et nytt forhåndsdefinert svar"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__create_uid
@@ -598,7 +594,7 @@ msgstr "Opprettelsesdato"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Creation date"
-msgstr ""
+msgstr "Opprettelsesdato"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
@@ -801,7 +797,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
 msgid "Hide"
-msgstr ""
+msgstr "Skjul"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action
@@ -823,8 +819,9 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "Hva kan jeg hjelpe deg med?"
@@ -902,7 +899,7 @@ msgstr "Bilde 512"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.js:0
 #, python-format
 msgid "Invalid email address"
-msgstr ""
+msgstr "Ugyldig epostadresse"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_step__is_forward_operator_child
@@ -1544,8 +1541,8 @@ msgid "Select an option above"
 msgstr ""
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/legacy/widgets/feedback.xml:0
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Send"
 msgstr "Send"
@@ -1813,7 +1810,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users_settings
 msgid "User Settings"
-msgstr ""
+msgstr "Bruker innstillinger"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_message__user_script_answer_id
@@ -1894,6 +1891,11 @@ msgstr ""
 #, python-format
 msgid "Yesterday"
 msgstr "I går"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "Du"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action

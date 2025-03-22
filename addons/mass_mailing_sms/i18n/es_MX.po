@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Lucia Pacheco, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,13 +15,36 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers and opt-out link) "
+msgstr ""
+" (incluyendo los rastreadores de enlaces y el enlace para cancelar la "
+"suscripción)"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers) "
+msgstr " (incluyendo los rastreadores de enlaces)"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including opt-out link) "
+msgstr " (incluyendo el enlace para cancelar la suscripción)"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -160,7 +184,7 @@ msgstr "Prueba A/B: %s"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_needaction
 msgid "Action Needed"
-msgstr "Acción requerida"
+msgstr "Se requiere una acción"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_attachment_count
@@ -322,17 +346,17 @@ msgstr "Duplicar"
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 #, python-format
 msgid "Email Marketing"
-msgstr "Marketing por email"
+msgstr "Marketing por correo electrónico"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_contact_view_search
 msgid "Exclude Blacklisted Phone"
-msgstr "Excluir teléfono en la lista negra"
+msgstr "No incluir el teléfono en la lista de exclusión"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr "Tipo de fallo"
+msgstr "Tipo de error"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -340,8 +364,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
-"Campo utilizado para almacenar el número de teléfono depurado. Ayuda a "
-"acelerar las búsquedas y las comparaciones."
+"Campo donde se almacena el número de teléfono válido. Ayuda a acelerar "
+"búsquedas y comparaciones."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
@@ -379,7 +403,7 @@ msgstr "Tiene un mensaje"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__clicks_ratio
 msgid "Highest Click Rate"
-msgstr "Mayor índice de clics"
+msgstr "Mayor tasa de clics"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__id
@@ -403,8 +427,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Si el teléfono está en la lista negra, el contacto ya no recibirá envío "
-"masivo de sms de ninguna lista."
+"El contacto ya no recibirá SMS de envío masivo de ninguna lista si el "
+"teléfono depurado está en la lista de exclusión."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
@@ -428,9 +452,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Indica si el número de teléfono depurado de la lista negra es un número "
-"celular. Sirve para distinguir qué número está en la lista negra cuando hay "
-"un campo de celular y otro de teléfono fijo en un modelo."
+"Indica si el número de teléfono válido en la lista de exclusión es un "
+"celular. Sirve para distinguir el número que está en la lista de exclusión "
+"cuando un modelo tiene los campos de celular y de teléfono fijo."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -481,7 +505,7 @@ msgstr "Última actualización el"
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.link_tracker_menu
 msgid "Link Tracker"
-msgstr "Rastrear enlaces"
+msgstr "Rastreador de enlaces"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_sms_test__mailing_id
@@ -724,7 +748,7 @@ msgstr "Contenido del SMS"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega del SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form
@@ -788,8 +812,8 @@ msgstr "Elección del SMS ganador"
 #. module: mass_mailing_sms
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS : %s"
-msgstr "DETENER SMS:%s"
+msgid "STOP SMS : %(unsubscribe_url)s"
+msgstr "CANCELAR SMS: %(unsubscribe_url)s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -905,8 +929,8 @@ msgstr "Hubo un error al intentar cancelar la suscripción"
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Este número de teléfono está en la lista negra para el marketing por SMS. "
-"Haga clic para retirarlo de la lista negra."
+"Este número de teléfono está en la lista de exclusión de Marketing por SMS. "
+"Haga clic para quitarlo de la lista de exclusión."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -993,7 +1017,7 @@ msgstr "Mensajes del sitio web"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms

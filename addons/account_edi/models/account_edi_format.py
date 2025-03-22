@@ -487,7 +487,7 @@ class AccountEdiFormat(models.Model):
             return self.env['res.partner'].search(domain + extra_domain, limit=1)
 
         for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
-            for extra_domain in ([('company_id', '=', self.env.company.id)], []):
+            for extra_domain in ([('company_id', '=', self.env.company.id)], [('company_id', '=', False)]):
                 partner = search_method(extra_domain)
                 if partner:
                     return partner

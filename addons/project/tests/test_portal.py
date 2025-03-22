@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.project.tests.test_access_rights import TestProjectPortalCommon
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger
@@ -37,3 +38,46 @@ class TestPortalProject(TestProjectPortalCommon):
         # Data: task follower cleaning
         self.task_1.with_user(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_portal.partner_id.id])
         self.task_3.with_user(self.user_projectuser).message_unsubscribe(partner_ids=[self.user_portal.partner_id.id])
+
+    def test_reset_access_token_when_privacy_visibility_changes(self):
+        self.assertNotEqual(self.project_pigs.privacy_visibility, 'portal', 'Make sure the privacy visibility is not yet the portal one.')
+        self.assertFalse(self.project_pigs.access_token, 'The access token should not be set on the project since it is not public')
+        self.project_pigs.privacy_visibility = 'portal'
+        self.assertFalse(self.project_pigs.access_token, 'The access token should not yet available since the project has not been shared yet.')
+        wizard = self.env['project.share.wizard'].create({
+            'access_mode': 'read',
+            'res_model': 'project.project',
+            'res_id': self.project_pigs.id,
+            'partner_ids': [
+                Command.link(self.partner_1.id),
+            ]
+        })
+        wizard.action_send_mail()
+        self.assertEqual(self.task_1.project_id, self.project_pigs)
+        self.assertTrue(self.project_pigs.access_token, 'The access token should be set since the project has been shared.')
+        self.assertTrue(self.task_1.access_token, 'The access token should be set since the task has been shared.')
+        access_token = self.project_pigs.access_token
+        task_access_token = self.task_1.access_token
+        self.project_pigs.privacy_visibility = 'followers'
+        self.assertFalse(self.project_pigs.access_token, 'The access token should no longer be set since now the project is private.')
+        self.assertFalse(all(self.project_pigs.tasks.mapped('access_token')), 'The access token should no longer be set in any tasks linked to the project since now the project is private.')
+        self.project_pigs.privacy_visibility = 'portal'
+        self.assertFalse(self.project_pigs.access_token, 'The access token should still not be set since now the project has not been shared yet.')
+        self.assertFalse(all(self.project_pigs.tasks.mapped('access_token')), 'The access token should no longer be set in any tasks linked to the project since now the project is private.')
+        wizard.action_send_mail()
+        self.assertTrue(self.project_pigs.access_token, 'The access token should now be regenerated for this project since that project has been shared to an external partner.')
+        self.assertFalse(self.task_1.access_token)
+        task_wizard = self.env['portal.share'].create({
+            'res_model': 'project.task',
+            'res_id': self.task_1.id,
+            'partner_ids': [
+                Command.link(self.partner_1.id),
+            ],
+        })
+        task_wizard.action_send_mail()
+        self.assertTrue(self.task_1.access_token, 'The access token should be set since the task has been shared.')
+        self.assertNotEqual(self.project_pigs.access_token, access_token, 'The new access token generated for the project should not be the old one.')
+        self.assertNotEqual(self.task_1.access_token, task_access_token, 'The new access token generated for the task should not be the old one.')
+        self.project_pigs.privacy_visibility = 'employees'
+        self.assertFalse(self.project_pigs.access_token, 'The access token should no longer be set since now the project is only available by internal users.')
+        self.assertFalse(all(self.project_pigs.tasks.mapped('access_token')), 'The access token should no longer be set in any tasks linked to the project since now the project is only available by internal users.')

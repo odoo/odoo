@@ -900,3 +900,83 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(mo_2.unbuild_ids.produce_line_ids[0].lot_ids, finished_product_sn)
         self.assertEqual(mo_2.unbuild_ids.produce_line_ids[1].product_id, component)
         self.assertEqual(mo_2.unbuild_ids.produce_line_ids[1].lot_ids, component_sn)
+
+    def test_unbuild_different_qty(self):
+        """
+        Test that the quantity to unbuild is the qty produced in the MO
+
+        BoM:
+        - 4x final product
+        components:
+        - 2 x (storable)
+        - 4 x (consumable)
+        - Create a MO with 4 final products to produce.
+        - Confirm and validate, then unlock the mo and update the qty produced to 10
+        - open the wizard to unbuild > the quantity proposed should be 10
+        - unbuild 4 units
+        - the move lines should be created with the correct quantity
+        """
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo = mo_form.save()
+
+        mo.action_confirm()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 4
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done', "Production order should be in done state.")
+        # unlock and update the qty produced
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 10
+        self.assertEqual(mo.qty_producing, 10)
+        #unbuild order
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.mo_id = mo
+        # check that the quantity to unbuild is the qty produced in the MO
+        self.assertEqual(unbuild_form.product_qty, 10)
+        unbuild_form.product_qty = 3
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+        self.assertRecordValues(unbuild_order.produce_line_ids.move_line_ids, [
+            # pylint: disable=bad-whitespace
+            {'product_id': self.bom_1.product_id.id, 'qty_done': 3},
+            {'product_id': self.bom_1.bom_line_ids[0].product_id.id, 'qty_done': 0.6},
+            {'product_id': self.bom_1.bom_line_ids[1].product_id.id, 'qty_done': 1.2},
+        ])
+
+    def test_unbuild_update_forecasted_qty(self):
+        """
+        Test that the unbuild correctly updates the forecasted quantity of a product.
+        """
+        bom = self.bom_4
+        product = bom.product_id
+        # qty_available + incoming_qty - outgoing_qty  = virtual_available
+        # Currently: 0.0 + 0.0 - 0.0  = 0.0
+        self.assertRecordValues(product, [{"qty_available": 0.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 0.0}])
+        # Manufacture 20 unit
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product
+        mo_form.bom_id = bom
+        mo_form.product_qty = 20.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertRecordValues(product, [{"qty_available": 0.0, "incoming_qty": 20.0, "outgoing_qty": 0.0, "virtual_available": 20.0}])
+        mo.qty_producing = 20.0
+        mo.move_raw_ids.quantity_done = 20.0
+        mo.button_mark_done()
+        self.assertRecordValues(product, [{"qty_available": 20.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 20.0}])
+        # Unlock the MO and add 10 additional produced quantity
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 30.0
+        mo = mo_form.save()
+        self.assertRecordValues(product, [{"qty_available": 30.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 30.0}])
+        # Unbuild the 15 units
+        action = mo.button_unbuild()
+        unbuild_form = Form(self.env[action['res_model']].with_context(action['context']))
+        unbuild_form.product_qty = 15.0
+        wizard = unbuild_form.save()
+        wizard.action_validate()
+        self.assertRecordValues(product, [{"qty_available": 15.0, "incoming_qty": 0.0, "outgoing_qty": 0.0, "virtual_available": 15.0}])

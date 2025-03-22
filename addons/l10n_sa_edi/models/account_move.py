@@ -32,25 +32,32 @@ class AccountMove(models.Model):
         return self.partner_id.company_type == 'person'
 
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id',
-                 'company_id.vat', 'journal_id', 'journal_id.l10n_sa_production_csid_json',
-                 'l10n_sa_invoice_signature', 'l10n_sa_chain_index')
+                 'company_id.vat', 'journal_id', 'journal_id.l10n_sa_production_csid_json', 'edi_document_ids',
+                 'l10n_sa_invoice_signature', 'l10n_sa_chain_index', 'state')
     def _compute_qr_code_str(self):
         """ Override to update QR code generation in accordance with ZATCA Phase 2"""
+        phase_one_moves = self.env['account.move']
         for move in self:
-            move.l10n_sa_qr_code_str = ''
-            if move.country_code == 'SA' and move.move_type in ('out_invoice', 'out_refund') and move.l10n_sa_chain_index:
-                edi_format = self.env.ref('l10n_sa_edi.edi_sa_zatca')
-                zatca_document = move.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format)
+            zatca_document = move.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
+            if move.country_code == 'SA' and move.move_type in ('out_invoice', 'out_refund') and zatca_document and move.state != 'draft':
+                qr_code_str = ''
                 if move._l10n_sa_is_simplified():
-                    x509_cert = json.loads(move.journal_id.l10n_sa_production_csid_json)['binarySecurityToken']
+                    x509_cert = json.loads(move.journal_id.sudo().l10n_sa_production_csid_json)['binarySecurityToken']
                     xml_content = self.env.ref('l10n_sa_edi.edi_sa_zatca')._l10n_sa_generate_zatca_template(move)
-                    qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, b64decode(x509_cert), move.l10n_sa_invoice_signature, move._l10n_sa_is_simplified())
-                    move.l10n_sa_qr_code_str = b64encode(qr_code_str).decode()
-                elif zatca_document.state == 'sent' and zatca_document.attachment_id.datas:
+                    qr_code_str = move._l10n_sa_get_qr_code(move.journal_id, xml_content, b64decode(x509_cert),
+                                                            move.l10n_sa_invoice_signature, True)
+                    qr_code_str = b64encode(qr_code_str).decode()
+                elif zatca_document.state == 'sent' and zatca_document.sudo().attachment_id.datas:
                     document_xml = zatca_document.attachment_id.with_context(bin_size=False).datas.decode()
                     root = etree.fromstring(b64decode(document_xml))
                     qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
-                    move.l10n_sa_qr_code_str = qr_node.text
+                    qr_code_str = qr_node.text
+                move.l10n_sa_qr_code_str = qr_code_str
+            else:
+                # In the case where the Invoice is not a ZATCA invoice, or is Phase 1, or is not confirmed,
+                # we call super to trigger the initial QR code generation for Phase 1
+                phase_one_moves |= move
+        super(AccountMove, phase_one_moves)._compute_qr_code_str()
 
 
     def _l10n_sa_get_qr_code_encoding(self, tag, field, int_length=1):
@@ -66,7 +73,7 @@ class AccountMove(models.Model):
             Make sure credit/debit notes have a valid reason and reversal reference
         """
         self.ensure_one()
-        return self.reversed_entry_id and self.ref
+        return self.reversed_entry_id or self.ref
 
     @api.model
     def _l10n_sa_get_qr_code(self, journal_id, unsigned_xml, x509_cert, signature, is_b2c=False):
@@ -80,7 +87,7 @@ class AccountMove(models.Model):
         def xpath_ns(expr):
             return root.xpath(expr, namespaces=edi_format._l10n_sa_get_namespaces())[0].text.strip()
 
-        qr_code_str = ''
+        qr_code_str = b''
         root = etree.fromstring(unsigned_xml)
         edi_format = self.env['account.edi.xml.ubl_21.zatca']
 
@@ -91,7 +98,7 @@ class AccountMove(models.Model):
         invoice_time = xpath_ns('//cbc:IssueTime')
         invoice_datetime = datetime.strptime(invoice_date + ' ' + invoice_time, '%Y-%m-%d %H:%M:%S')
 
-        if invoice_datetime and journal_id.company_id.vat and x509_cert:
+        if invoice_datetime and journal_id.company_id.vat and x509_cert and signature:
             prehash_content = etree.tostring(root)
             invoice_hash = edi_format._l10n_sa_generate_invoice_xml_hash(prehash_content, 'digest')
 
@@ -203,9 +210,37 @@ class AccountMove(models.Model):
         zatca_doc_ids = self.edi_document_ids.filtered(lambda d: d.edi_format_id.code == 'sa_zatca')
         return len(zatca_doc_ids) > 0 and not any(zatca_doc_ids.filtered(lambda d: d.state == 'to_send'))
 
+    def _get_tax_lines_to_aggregate(self):
+        """
+        If the final invoice has downpayment lines, we skip the tax correction, as we need to recalculate tax amounts
+        without taking into account those lines
+        """
+        if self.country_code == 'SA' and not self._is_downpayment() and self.line_ids._get_downpayment_lines():
+            return self.env['account.move.line']
+        return super()._get_tax_lines_to_aggregate()
+
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        invoice_vals = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_vals(self)
+        return {
+            'total_amount': invoice_vals['vals']['legal_monetary_total_vals']['tax_inclusive_amount'],
+            'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
+        }
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
+
+    def _apply_retention_tax_filter(self, tax_values):
+        return not tax_values['tax_id'].l10n_sa_is_retention
+
+    def _is_global_discount_line(self):
+        """
+            Any line that has a negative amount and is not linked to a down-payment is considered as a
+            global discount line. These can be created either manually, or through a promotions program.
+        """
+        self.ensure_one()
+        return not self._get_downpayment_lines() and self.price_subtotal < 0
 
     @api.depends('price_subtotal', 'price_total')
     def _compute_tax_amount(self):

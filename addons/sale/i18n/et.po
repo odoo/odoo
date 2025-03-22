@@ -17,22 +17,25 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
+# Martin Trigaux, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # JanaAvalah, 2023
 # Piia Paurson <piia@avalah.ee>, 2023
-# Martin Trigaux, 2023
 # Mihkel avalah, 2023
 # Anna, 2023
 # Leaanika Randmets, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2024
+# Karin Eelma, 2024
+# Stevin Lilla, 2025
+# Katrin Kampura, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Katrin Kampura, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -417,6 +420,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Volitatud</b>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=„fa fa-fw fa-check“/> <b>Makstud</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -812,7 +820,7 @@ msgstr "Tegevused"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Tegevuse erandlik kohendus"
+msgstr "Tegevuse erandi tüüp"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -1747,7 +1755,7 @@ msgstr "Kehtib kuni"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr "Aegub %(date)s"
+msgstr "Kehtiv kuni %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2739,7 +2747,7 @@ msgstr "Telli müük"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr "Tellimuse allkirjastas %s"
+msgstr "%s kinnitas tellimuse"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
@@ -3168,7 +3176,7 @@ msgstr "Pakkumine saadetud"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Quotation viewed by customer %s"
-msgstr "Pakkumise avas klient %s"
+msgstr " %s avas pakkumise"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3893,14 +3901,14 @@ msgid "Tags"
 msgstr "Sildid"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Maksud 15% "
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Maksuriik"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "KMKR nr"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4049,13 +4057,13 @@ msgstr "Ettemaksuna arveldatav fikseeritud summa ilma maksudeta."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Järgmised tooted ei saa olla piiratud ettevõttele %s, kuna neid on juba teise ettevõtte pakkumistes või müügitellimustes kasutatud:\n"
-"%s\n"
-"Te võite need tooted arhiveerida ja taasluua need oma ettevõtte piiranguga või jätta need jagatud tooteks."
+" Neid tooteid ei saa piirata ettevõttele %(company)s, sest neid on juba kasutatud hinnapakkumistel või tellimustel teise ettevõtte poolt:\n"
+"%(used_products)s\n"
+"Saad need tooted arhiveerida ja taasluua sinu ettevõtte piiranguga või jätta need jagatud toodetena. "
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice

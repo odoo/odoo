@@ -10,6 +10,8 @@ export class StripeOptions {
      * @return {object}
      */
     _prepareStripeOptions(processingValues) {
-        return {};
+        return {
+            'apiVersion': '2019-05-16',  // The API version of Stripe implemented in this module.
+        };
     };
 }

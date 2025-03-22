@@ -15,9 +15,9 @@
                             class="form-control o_input bg-transparent fs-4"
                             t-attf-placeholder="{{ relatedFieldName }}..."
                             t-ref="autofocus"
-                            t-model.trim="state.columnTitle"
                             t-on-focus="() => state.hasInputFocused = true"
                             t-on-blur="() => state.hasInputFocused = false"
+                            t-on-keydown="onInputKeydown"
                         />
                         <span class="input-group-append">
                             <button class="btn btn-primary o_kanban_add" type="button" t-on-click="validate">

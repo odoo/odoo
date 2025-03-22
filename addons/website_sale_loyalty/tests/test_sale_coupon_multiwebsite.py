@@ -55,9 +55,16 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
 
         # make program specific
         self.p1.website_id = self.website.id
-        # 3. Backend - Specific
+        # 3. Backend - Specific - sale_ok disabled
+        self.p1.sale_ok = False
         with self.assertRaises(UserError):
-            _apply_code(self.p1.rule_ids.code)  # the order has no website_id so not possible to use a website specific code
+            _apply_code(self.p1.rule_ids.code)  # the program is not enabled for Sales (backend)
+
+        # 3.5. Backend - Specific - sale_ok enabled
+        self.p1.sale_ok = True
+        _apply_code(self.p1.rule_ids.code)
+        self.assertEqual(len(order.order_line.ids), 2, "Should get the discount line as it is enabled for Sales(backend)")
+        _remove_reward()
 
         # 4. Frontend - Specific - Correct website
         order.website_id = self.website.id
@@ -96,9 +103,16 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
 
         # make program specific
         self.discount_coupon_program.website_id = self.website.id
-        # 3. Backend - Specific
+        # 3. Backend - Specific - sale_ok disabled
+        self.discount_coupon_program.sale_ok = False
         with self.assertRaises(UserError):
-            _apply_code(coupons[2].code)  # the order has no website_id so not possible to use a website specific code
+            _apply_code(coupons[2].code)  # the program is not enabled for Sales (backend)
+
+        # 3.5. Backend - Specific - sale_ok enabled
+        self.discount_coupon_program.sale_ok = True
+        _apply_code(coupons[2].code)
+        self.assertEqual(len(order.order_line.ids), 2, "Should get the discount line as it is enabled for Sales(backend)")
+        _remove_reward()
 
         # 4. Frontend - Specific - Correct website
         order.website_id = self.website.id
@@ -136,8 +150,14 @@ class TestSaleCouponMultiwebsite(TestSaleCouponNumbersCommon):
         # make program specific
         self.p1.website_id = self.website.id
         # 3. Backend - Specific
+        self.p1.sale_ok = False
         self._auto_rewards(order, all_programs)
-        self.assertEqual(len(order.order_line.ids), 1, "The order has no website_id so not possible to use a website specific code")
+        self.assertEqual(len(order.order_line.ids), 1, "The program is not enabled for Sales (backend)")
+
+        # 3.5. Backend - Specific - sale_ok enabled
+        self.p1.sale_ok = True
+        self._auto_rewards(order, all_programs)
+        self.assertEqual(len(order.order_line.ids), 2, "Should get the discount line as it is a generic promo program")
 
         # 4. Frontend - Specific - Correct website
         order.website_id = self.website.id

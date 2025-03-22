@@ -6,7 +6,7 @@ import warnings
 from odoo import http
 from odoo.api import call_kw
 from odoo.http import request
-from odoo.models import check_method_name
+from odoo.service.model import get_public_method
 from .utils import clean_action
 
 
@@ -29,8 +29,9 @@ class DataSet(http.Controller):
         return {'value': value}
 
     def _call_kw(self, model, method, args, kwargs):
-        check_method_name(method)
-        return call_kw(request.env[model], method, args, kwargs)
+        Model = request.env[model]
+        get_public_method(Model, method)  # Don't use the result, call_kw will redo the getattr
+        return call_kw(Model, method, args, kwargs)
 
     @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):

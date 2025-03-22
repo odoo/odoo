@@ -39,25 +39,29 @@ class AccountJournal(models.Model):
         letters_data = {
             'issued': {
                 '1': ['A', 'B', 'E', 'M'],
-                '3': [],
                 '4': ['C'],
                 '5': [],
                 '6': ['C', 'E'],
+                '7': ['B', 'C', 'I'],
+                '8': ['B', 'C', 'I'],
                 '9': ['I'],
                 '10': [],
                 '13': ['C', 'E'],
-                '99': []
+                '15': [],
+                '16': [],
             },
             'received': {
                 '1': ['A', 'B', 'C', 'E', 'M', 'I'],
-                '3': ['B', 'C', 'I'],
                 '4': ['B', 'C', 'I'],
                 '5': ['B', 'C', 'I'],
-                '6': ['A', 'B', 'C', 'I'],
-                '9': ['E'],
-                '10': ['E'],
-                '13': ['A', 'B', 'C', 'I'],
-                '99': ['B', 'C', 'I']
+                '6': ['A', 'B', 'C', 'M', 'I'],
+                '7': ['B', 'C', 'I'],
+                '8': ['E', 'B', 'C'],
+                '9': ['E', 'B', 'C'],
+                '10': ['E', 'B', 'C'],
+                '13': ['A', 'B', 'C', 'M', 'I'],
+                '15': ['B', 'C', 'I'],
+                '16': ['A', 'C', 'M'],
             },
         }
         if not self.company_id.l10n_ar_afip_responsibility_type_id:
@@ -87,12 +91,15 @@ class AccountJournal(models.Model):
         receipt_m_code = ['54']
         receipt_codes = ['4', '9', '15']
         expo_codes = ['19', '20', '21']
+        zeta_codes = ['80', '83']
         if afip_pos_system == 'II_IM':
             # pre-printed invoice
             return usual_codes + receipt_codes + expo_codes + invoice_m_code + receipt_m_code
-        elif afip_pos_system in ['RAW_MAW', 'RLI_RLM']:
+        elif afip_pos_system == 'RAW_MAW':
             # electronic/online invoice
             return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes
+        elif afip_pos_system == 'RLI_RLM':
+            return usual_codes + receipt_codes + invoice_m_code + receipt_m_code + mipyme_codes + zeta_codes
         elif afip_pos_system in ['CPERCEL', 'CPEWS']:
             # invoice with detail
             return usual_codes + invoice_m_code

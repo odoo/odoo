@@ -14,18 +14,18 @@ odoo.define("point_of_sale.PartnerDetailsEdit", function (require) {
             this.intFields = ["country_id", "state_id", "property_product_pricelist"];
             const partner = this.props.partner;
             this.changes = useState({
-                name: partner.name || "",
-                street: partner.street || "",
-                city: partner.city || "",
-                zip: partner.zip || "",
+                name: partner.name || false,
+                street: partner.street || false,
+                city: partner.city || false,
+                zip: partner.zip || false,
                 state_id: partner.state_id && partner.state_id[0],
                 country_id: partner.country_id && partner.country_id[0],
-                lang: partner.lang || "",
-                email: partner.email || "",
-                phone: partner.phone || "",
-                mobile: partner.mobile || "",
-                barcode: partner.barcode || "",
-                vat: partner.vat || "",
+                lang: partner.lang || false,
+                email: partner.email || false,
+                phone: partner.phone || false,
+                mobile: partner.mobile || false,
+                barcode: partner.barcode || false,
+                vat: partner.vat || false,
                 property_product_pricelist: this.getDefaultPricelist(partner),
             });
 

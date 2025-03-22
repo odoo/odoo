@@ -6,7 +6,16 @@ from dateutil.relativedelta import relativedelta
 import os.path
 import pytz
 
-from odoo.tools import config, misc, date_utils, file_open, file_path, merge_sequences, remove_accents
+from odoo.tools import (
+    config,
+    date_utils,
+    file_open,
+    file_path,
+    merge_sequences,
+    misc,
+    remove_accents,
+    validate_url,
+)
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -259,7 +268,7 @@ class TestFormatLangDate(TransactionCase):
 
         # -- test `time`
         time_part = datetime.time(16, 30, 22)
-        time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('US/Eastern'))  # 4:30 PM timezoned
+        time_part_tz = datetime.time(16, 30, 22, tzinfo=pytz.timezone('America/New_York'))  # 4:30 PM timezoned
 
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='HH:mm:ss'), '16:30:22')
         self.assertEqual(misc.format_time(lang.with_context(lang='zh_CN').env, time_part, time_format="ah:m:ss"), '\u4e0b\u53484:30:22')
@@ -274,7 +283,7 @@ class TestFormatLangDate(TransactionCase):
 
         #Check timezone conversion in format_time
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'Europe/Brussels', time_format='HH:mm:ss Z'), '11:33:00 +0100')
-        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'US/Eastern', time_format='HH:mm:ss Z'), '05:33:00 -0500')
+        self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, datetime_str, 'America/New_York', time_format='HH:mm:ss Z'), '05:33:00 -0500')
 
         # Check given `lang_code` overwites context lang
         self.assertEqual(misc.format_time(lang.with_context(lang='fr_FR').env, time_part, time_format='ah:mm', lang_code='zh_CN'), '\u4e0b\u53484:30')
@@ -484,3 +493,27 @@ class TestDictTools(BaseCase):
             d.update({'baz': 'xyz'})
         with self.assertRaises(TypeError):
             dict.update(d, {'baz': 'xyz'})
+
+
+class TestUrlValidate(BaseCase):
+    def test_url_validate(self):
+        for case, truth in [
+            # full URLs should be preserved
+            ('http://example.com', 'http://example.com'),
+            ('http://example.com/index.html', 'http://example.com/index.html'),
+            ('http://example.com?debug=1', 'http://example.com?debug=1'),
+            ('http://example.com#h3', 'http://example.com#h3'),
+
+            # URLs with a domain should get a http scheme
+            ('example.com', 'http://example.com'),
+            ('example.com/index.html', 'http://example.com/index.html'),
+            ('example.com?debug=1', 'http://example.com?debug=1'),
+            ('example.com#h3', 'http://example.com#h3'),
+        ]:
+            with self.subTest(case=case):
+                self.assertEqual(validate_url(case), truth)
+
+        # broken cases, do we really want that?
+        self.assertEqual(validate_url('/index.html'), 'http:///index.html')
+        self.assertEqual(validate_url('?debug=1'), 'http://?debug=1')
+        self.assertEqual(validate_url('#model=project.task&id=3603607'), 'http://#model=project.task&id=3603607')

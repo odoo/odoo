@@ -8,6 +8,7 @@ from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
 from odoo.addons.purchase.models.purchase import PurchaseOrder as Purchase
+from odoo.tools.misc import OrderedSet
 
 
 class PurchaseOrder(models.Model):
@@ -112,6 +113,8 @@ class PurchaseOrder(models.Model):
         return result
 
     def button_cancel(self):
+        order_lines_ids = OrderedSet()
+        pickings_to_cancel_ids = OrderedSet()
         for order in self:
             for move in order.order_line.mapped('move_ids'):
                 if move.state == 'done':
@@ -119,20 +122,38 @@ class PurchaseOrder(models.Model):
             # If the product is MTO, change the procure_method of the closest move to purchase to MTS.
             # The purpose is to link the po that the user will manually generate to the existing moves's chain.
             if order.state in ('draft', 'sent', 'to approve', 'purchase'):
-                for order_line in order.order_line:
-                    order_line.move_ids._action_cancel()
-                    if order_line.move_dest_ids:
-                        move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
-                        if order_line.propagate_cancel:
-                            move_dest_ids._action_cancel()
-                        else:
-                            move_dest_ids.write({'procure_method': 'make_to_stock'})
-                            move_dest_ids._recompute_state()
+                order_lines_ids.update(order.order_line.ids)
 
-            for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
-                pick.action_cancel()
+            pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state != 'cancel').ids)
 
-            order.order_line.write({'move_dest_ids':[(5,0,0)]})
+        order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
+
+        moves_to_cancel_ids = OrderedSet()
+        moves_to_recompute_ids = OrderedSet()
+        for order_line in order_lines:
+            moves_to_cancel_ids.update(order_line.move_ids.ids)
+            if order_line.move_dest_ids:
+                move_dest_ids = order_line.move_dest_ids.filtered(lambda move: move.state != 'done' and not move.scrapped)
+                if order_line.propagate_cancel:
+                    moves_to_cancel_ids.update(move_dest_ids.ids)
+                else:
+                    moves_to_recompute_ids.update(move_dest_ids.ids)
+
+        if moves_to_cancel_ids:
+            moves_to_cancel = self.env['stock.move'].browse(moves_to_cancel_ids)
+            moves_to_cancel._action_cancel()
+
+        if moves_to_recompute_ids:
+            moves_to_recompute = self.env['stock.move'].browse(moves_to_recompute_ids)
+            moves_to_recompute.write({'procure_method': 'make_to_stock'})
+            moves_to_recompute._recompute_state()
+
+        if pickings_to_cancel_ids:
+            pikings_to_cancel = self.env['stock.picking'].browse(pickings_to_cancel_ids)
+            pikings_to_cancel.action_cancel()
+
+        if order_lines:
+            order_lines.write({'move_dest_ids': [(5, 0, 0)]})
 
         return super(PurchaseOrder, self).button_cancel()
 
@@ -323,6 +344,10 @@ class PurchaseOrderLine(models.Model):
             moves = moves.filtered(lambda r: fields.Date.context_today(r, r.date) <= self._context['accrual_entry_date'])
         return moves
 
+    def _get_po_line_invoice_lines_su(self):
+        #TODO remove in master: un-used
+        return self.sudo().invoice_lines
+
     @api.depends('move_ids.state', 'move_ids.product_uom_qty', 'move_ids.product_uom')
     def _compute_qty_received(self):
         from_stock_lines = self.filtered(lambda order_line: order_line.qty_received_method == 'stock_moves')
@@ -372,7 +397,8 @@ class PurchaseOrderLine(models.Model):
         if values.get('date_planned'):
             new_date = fields.Datetime.to_datetime(values['date_planned'])
             self.filtered(lambda l: not l.display_type)._update_move_date_deadline(new_date)
-        lines = self.filtered(lambda l: l.order_id.state == 'purchase')
+        lines = self.filtered(lambda l: l.order_id.state == 'purchase'
+                                        and not l.display_type)
 
         if 'product_packaging_id' in values:
             self.move_ids.filtered(
@@ -433,12 +459,13 @@ class PurchaseOrderLine(models.Model):
     def _create_or_update_picking(self):
         for line in self:
             if line.product_id and line.product_id.type in ('product', 'consu'):
+                rounding = line.product_uom.rounding
                 # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
+                if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
-                if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:
+                if float_compare(line.product_qty, line.qty_invoiced, precision_rounding=rounding) < 0 and line.invoice_lines:
                     # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
                     # inviting the user to create a refund.
                     line.invoice_lines[0].move_id.activity_schedule(
@@ -446,9 +473,16 @@ class PurchaseOrderLine(models.Model):
                         note=_('The quantities on your purchase order indicate less than billed. You should ask for a refund.'))
 
                 # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
-                picking = pickings and pickings[0] or False
+                # Give priority to the pickings related to the line
+                line_pickings = line.move_ids.picking_id.filtered(lambda p: p.state not in ('done', 'cancel') and p.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                if line_pickings:
+                    picking = line_pickings[0]
+                else:
+                    pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
+                    picking = pickings and pickings[0] or False
                 if not picking:
+                    if not line.product_qty > line.qty_received:
+                        continue
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)
 
@@ -458,7 +492,7 @@ class PurchaseOrderLine(models.Model):
     def _get_stock_move_price_unit(self):
         self.ensure_one()
         order = self.order_id
-        price_unit = self.price_unit
+        price_unit = self._convert_to_tax_base_line_dict()['price_unit']
         price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         if self.taxes_id:
             qty = self.product_qty or 1
@@ -538,7 +572,9 @@ class PurchaseOrderLine(models.Model):
             'date': date_planned,
             'date_deadline': date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
+            'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)
+                and (picking.location_dest_id.parent_path in self.orderpoint_id.location_id.parent_path))
+                and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,
             'partner_id': self.order_id.dest_address_id.id,
             'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],

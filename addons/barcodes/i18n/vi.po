@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2024\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
@@ -117,7 +118,7 @@ msgid "Barcode Scanned"
 msgstr "Mã vạch Được quét"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
@@ -219,7 +220,7 @@ msgstr ""
 "                                mã hoá thành mã vạch. Chúng được biểu thị bằng <code>{NNN}</code> trong đó\n"
 "                                các chữ N xác định nơi mà các chữ số của số được mã hoá. Các số thập phân cũng\n"
 "                                được hỗ trợ với phần thập phân được biểu thị bằng các chữ D, ví dụ như <code>{NNNDD}</code>. Trong những trường hợp này,\n"
-"                                trường mã vạch trên các tập dữ liệu liên kết <i>phải</i> hiển thị những chữ số này\n"
+"                                trường mã vạch trên các bản ghi liên kết <i>phải</i> hiển thị những chữ số này\n"
 "                                là các số 0."
 
 #. module: barcodes
@@ -248,6 +249,14 @@ msgid "The barcode matching pattern"
 msgstr "Mã vạch khớp với mẫu"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr "Mẫu mã vạch %(pattern)s không dẫn tới biểu thức chính quy hợp lệ."
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "Danh sách quy tắc mã vạch"
@@ -258,6 +267,7 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Mẫu phù hợp sẽ là bí danh cho mã vạch này"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -268,6 +278,7 @@ msgstr ""
 "một cặp dấu ngoặc nhọn."
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -278,6 +289,7 @@ msgstr ""
 "thể chứa các chữ N theo sau là các chữ D."
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -331,7 +343,7 @@ msgid "Unit Product"
 msgstr "Đơn vị Sản phẩm"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"

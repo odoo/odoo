@@ -9,14 +9,16 @@
 # Martin Trigaux, 2023
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
 # Hanna Kheradroosta, 2023
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Tiffany Chang, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Hanna Kheradroosta, 2023\n"
+"Last-Translator: Tiffany Chang, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
@@ -33,7 +35,7 @@ msgid "%d records successfully imported"
 msgstr "%d رکورد با موفقیت وارد شد"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
@@ -44,28 +46,28 @@ msgstr ""
 "نادرست است."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Additional Fields"
 msgstr "فیلدهای اضافی"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Advanced"
 msgstr "پیشرفته"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "اجازه دهید با زیربخش‌ها تطابق پیدا کند."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid ""
@@ -74,6 +76,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"یک مشکل ناشناخته در حین وارد کردن پیش آمد (احتمالاً قطع اتصال، تجاوز به حد "
+"داده یا تجاوز به محدودیت‌های حافظه). لطفاً در صورت موقتی بودن مشکل، دوباره "
+"تلاش کنید. اگر مشکل همچنان ادامه داشت، سعی کنید فایل را تقسیم کنید به جای "
+"اینکه آن را یکجا وارد کنید."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -88,47 +94,49 @@ msgstr "وارد کردن پایه"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "نگاشت واردات پایه"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
 msgstr "ورودی دسته ای"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "حد مجاز دسته"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
 msgstr "لغو"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
 msgstr ""
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
 msgstr "ستون %s حاوی مقادیر نادرست است (مقدار: %s)"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "ستون %s شامل مقادیر نادرست است. خطا در خط %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -136,30 +144,33 @@ msgid "Column Name"
 msgstr "نام ستون"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Comma"
-msgstr ""
+msgstr "کاما"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Comments"
 msgstr "نظرها"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"نمی‌توان URL را بازیابی کرد.: %(url)s [%(field_name)s: L%(line_number)d]: "
+"%(error)s"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
@@ -214,6 +225,7 @@ msgid "Currency"
 msgstr "ارز"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -221,21 +233,21 @@ msgid "Database ID"
 msgstr "شناسه پایگاه داده"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
 msgstr "قالب تاریخ:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
 msgstr "قالب تاریخ-زمان:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
@@ -263,14 +275,14 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Dot"
-msgstr ""
+msgstr "نقطه"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
@@ -280,7 +292,7 @@ msgid "Download"
 msgstr "دانلود"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download Template"
@@ -292,40 +304,63 @@ msgid "Dt"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Encoding:"
 msgstr "رمزگذاری"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Error Parsing Date [%s:L%d]: %s"
-msgstr ""
+msgstr "خطا در تجزیه تاریخ [%s:L%d]: %s"
 
 #. module: base_import
-#. openerp-web
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: Text Delimiter should be a single character."
+msgstr "خطا در حین وارد کردن سوابق: جداکننده متن باید یک کاراکتر باشد."
+
+#. module: base_import
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid ""
+"Error while importing records: all rows should be of the same size, but the "
+"title row has %d entries while the first row has %d. You may need to change "
+"the separator character."
+msgstr ""
+"خطا در حین وارد کردن سوابق: همه ردیف‌ها باید هم اندازه باشند، اما ردیف عنوان"
+" دارای %d eورودی است در حالی که ردیف اول دارای %d. است. شما ممکن است نیاز "
+"داشته باشید کاراکتر جداکننده را تغییر دهید."
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
 msgstr "زمان تخمینی باقی مانده:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
-msgstr ""
+msgstr "همه چیز به نظر معتبر می‌رسد."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
 msgstr "فایل های اکسل توصیه می شوند زیرا قالب بندی خودکار است."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
@@ -343,14 +378,14 @@ msgid "File"
 msgstr "پرونده"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
-msgstr ""
+msgstr "ستون فایل"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -363,62 +398,66 @@ msgid "File Type"
 msgstr "نوع فایل"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "اندازه فایل بیشتر از حداکثر پیکربندی شده است (%s bytes)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
+msgstr "فایل برای بررسی and/or وارد کردن، باینری خام (نه base64)"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "نهایی کردن دسته فعلی قبل از قطع..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "رای فایل‌های CSV، ممکن است لازم باشد جداکننده صحیح را انتخاب کنید."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "قالب بندی"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"داده‌های تصویر نامعتبر پیدا شده است، تصاویر باید به‌عنوان URL یا داده‌های "
+"کدگذاری شده با base64 وارد شوند."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "به سؤالات متداول import بروید"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Help"
 msgstr "راهنما"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
@@ -446,7 +485,7 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
@@ -455,96 +494,105 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"اگر فایل حاوی\n"
+"نام ستون ها، Odoo می تواند تشخیص خودکار فیلد مربوط به ستون را امتحان کند. این امر واردات را ساده تر می کند، به خصوص زمانی که فایل دارای ستون های زیادی باشد."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"اگر مدل از openchatter استفاده کند، ردیابی تاریخچه اشتراک‌ها را تنظیم می‌کند"
+" و اعلان‌ها را در حین واردات ارسال می‌کند، اما منجر به واردات کندتر می‌شود."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"اندازه تصویر بیش از حد است، تصاویر وارد شده باید کمتر از ۴۲ میلیون پیکسل "
+"باشند."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import"
 msgstr "ورود"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "وارد کردن سوال و جواب"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Import a File"
 msgstr "ورود از یک فایل"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "فایل وارداتی هیچ محتوایی ندارد یا خراب است."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/import_records/import_records.xml:0
 #, python-format
 msgid "Import records"
 msgstr "ورود رکورد"
 
 #. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/legacy/js/import_action.js:0
-#, python-format
-msgid ""
-"Import timed out. Please retry. If you still encounter this issue, the file "
-"may be too big for the system's configuration, try to split it (import less "
-"records per file)."
-msgstr ""
-
-#. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
 msgstr "فایل های وارد شده"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
 msgstr "وارد کردن"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgid ""
+"Invalid cell format at row %(row)s, column %(col)s: %(cell_value)s, with "
+"format: %(cell_format)s, as (%(format_type)s) formats are not supported."
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-python
+#: code:addons/base_import/models/base_import.py:0
+#: code:addons/base_import/models/base_import.py:0
+#, python-format
+msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
+msgstr "مقدار نامعتبر سلول در ردیف %(row)s, ستون %(col)s: %(cell_value)s"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Label"
@@ -614,21 +662,21 @@ msgid "Last Updated on"
 msgstr "آخرین بروز رسانی در"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
 msgstr "بارگزاری فایل"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
 msgstr "در حال بارگیری فایل..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 #, python-format
@@ -636,14 +684,14 @@ msgid "Model"
 msgstr "مدل"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "چندین خطا رخ داد."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
@@ -652,39 +700,39 @@ msgid "Name"
 msgstr "نام"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
 msgstr "به کمک نیاز دارید؟"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "بدون جداکننده"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Odoo Field"
-msgstr ""
+msgstr "فیلد اودو"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
@@ -697,21 +745,21 @@ msgid "Parent"
 msgstr "والد"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Prevent import"
-msgstr ""
+msgstr "جلوگیری از واردات"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Preview"
 msgstr "پیش‌نمایش"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Relation Fields"
@@ -720,92 +768,92 @@ msgstr "فیلدهای رابطه‌ای"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "مدل Res"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Resume"
 msgstr "ازسرگیری"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Search for a field..."
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "See possible values"
-msgstr ""
+msgstr "مقادیر ممکن را مشاهده کنید."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Selected Sheet:"
 msgstr "شیت‌های انتخاب شده:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Semicolon"
-msgstr ""
+msgstr "نقطه‌ویرگول"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Separator:"
 msgstr "جداکننده:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "تنظیم به: False"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "تنظیم به: True"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "تنظیم مقدار به خالی"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
 msgstr "شیت:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "رد کردن رکورد"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -813,56 +861,56 @@ msgid "Some Value"
 msgstr "یک مقدار"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Space"
 msgstr "فضا"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "فیلدهای استاندارد"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "از خط شروع کنید"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "متوقف کردن واردات"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Suggested Fields"
-msgstr ""
+msgstr "فیلدهای پیشنهادی"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Tab"
 msgstr "تب"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Test"
 msgstr "تست"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Testing"
@@ -944,122 +992,128 @@ msgid "Tests: Base Import Model Float"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
-msgstr ""
+msgstr "جداکننده متن:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "فایل شامل خطاهای مسدودکننده است (به پایین مراجعه کنید)."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
 msgstr ""
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
 msgstr "فایل به صورت دسته ای وارد می شود"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
 msgstr "این ستون در فیلد به هم متصل خواهد شد"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
 msgstr "این فایل تا خط %d با موفقیت وارد شد."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Thousands Separator:"
 msgstr "جداکننده هزارگان:"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
 msgstr "برای وارد کردن چندین مقدار، آنها را با کاما جدا کنید"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
 msgstr "برای وارد کردن، یک فیلد را انتخاب کنید..."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
 msgstr "ردیابی تاریخچه در هنگام ورود"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Type"
 msgstr "نوع"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
 msgstr ""
+"نمی‌توان فایل '{extension}' را بارگذاری کرد: نیاز به ماژول پایتون "
+"'{modname}' دارد."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
+"فرمت فایل \"{}\" پشتیبانی نمی‌شود، import فقط از فرمت‌های CSV، ODS، XLS و "
+"XLSX پشتیبانی می‌کند."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Untitled"
 msgstr "بدون عنوان"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload File"
 msgstr "آپلود فایل"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
 msgstr "یک فایل اکسل یا CSV را برای وارد کردن آپلود کنید"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Use first row as header"
-msgstr ""
+msgstr "از ردیف اول به عنوان سرصفحه استفاده کنید."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -1089,7 +1143,7 @@ msgid "Value2"
 msgstr "مقدار2"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid ""
@@ -1100,13 +1154,14 @@ msgstr ""
 "را نادیده می گیرد"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
 msgstr "وقتی یک مقدار قابل تطبیق نیست:"
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid ""
@@ -1117,7 +1172,7 @@ msgstr ""
 "پشتیبانی خود بررسی کنید."
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
@@ -1125,63 +1180,107 @@ msgstr ""
 "می‌توانید قبل از ازسرگیری ورودی، فایل خود را آزمایش یا بارگیری مجدد کنید."
 
 #. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
 msgstr "برای وارد کردن باید حداقل یک فیلد را پیکربندی کنید"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "در چندین ردیف"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "در ردیف"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
 msgstr "دسته"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "create"
+msgstr "ايجاد كردن"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "false"
+msgstr "نادرست‌"
+
+#. module: base_import
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "در فیلد"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "minutes"
 msgstr "دقیقه‌"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
 msgstr "بیشتر)"
 
 #. module: base_import
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "out of"
+msgstr "خارج از"
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "prevent"
 msgstr ""
 
 #. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "set_empty"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "skip_record"
+msgstr ""
+
+#. module: base_import
+#. odoo-javascript
+#: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
+#, python-format
+msgid "true"
+msgstr "درست‌"
+
+#. module: base_import
+#. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "کد خطای ناشناخته %s"

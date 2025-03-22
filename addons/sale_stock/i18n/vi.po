@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,7 +108,7 @@ msgstr ""
 "  - Dịch chuyển tồn kho: số lượng đến từ các phiếu giao hàng đã xác nhận\n"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -126,7 +126,7 @@ msgid "As soon as possible"
 msgstr "Càng sớm càng tốt"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.js:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -134,7 +134,7 @@ msgid "Availability"
 msgstr "Tình trạng còn hàng"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -142,7 +142,7 @@ msgid "Available"
 msgstr "Còn hàng"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -208,9 +208,9 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "Ngày giao hàng bạn có thể hẹn với khách hàng, được tính toán từ thời gian "
-"giao hàng tối thiểu của chi tiết đơn hàng trong trường hợp sản phẩm Dịch vụ."
-" Trong trường hợp vận chuyển, chính sách vận chuyển của đơn hàng sẽ được "
-"tính đến để sử dụng thời gian giao hàng tối thiểu hoặc tối đa của chi tiết "
+"hoàn thành tối thiểu của chi tiết đơn hàng trong trường hợp sản phẩm Dịch "
+"vụ. Trong trường hợp vận chuyển, chính sách vận chuyển của đơn hàng sẽ được "
+"tính đến để sử dụng thời gian hoàn thành tối thiểu hoặc tối đa của chi tiết "
 "đơn hàng. "
 
 #. module: sale_stock
@@ -229,6 +229,7 @@ msgid "Display incoterms on orders &amp; invoices"
 msgstr "Hiển thị Incoterm trên đơn bán hàng &amp; hoá đơn"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -267,7 +268,7 @@ msgid "Expected Date"
 msgstr "Ngày dự kiến"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -285,12 +286,12 @@ msgid "Forecast Expected Date"
 msgstr "Dự báo ngày dự kiến"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr "Tồn kho dự kiến"
+msgstr "Tồn kho được dự báo"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -320,7 +321,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr "(Các) điều chuyển bị ảnh hưởng:"
+msgstr "(Các) lệnh chuyển hàng bị ảnh hưởng:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -380,7 +381,7 @@ msgstr "Hạng mục bút toán"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "Thời gian giao hàng"
+msgstr "Thời gian hoàn thành"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
@@ -388,6 +389,7 @@ msgid "Lot/Serial"
 msgstr "Số lô/sê-ri"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Make To Order"
@@ -433,21 +435,21 @@ msgid "Move forward expected delivery dates by"
 msgstr "Tăng ngày giao hàng dự kiến thêm "
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No enough future availaibility"
 msgstr "Không đủ hàng trong tương lai"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
 msgstr "Không có hàng trong tương lai"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availaibility"
@@ -459,7 +461,7 @@ msgid "Not Delivered"
 msgstr "Chưa giao"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
@@ -474,7 +476,7 @@ msgstr ""
 "Số ngày kể từ khi xác nhận đơn hàng cho đến ngày giao hàng cho khách hàng"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -513,14 +515,14 @@ msgid "Qty To Deliver"
 msgstr "SL chờ giao"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
 #, python-format
 msgid "Quotations"
 msgstr "Báo giá"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -528,7 +530,7 @@ msgid "Remaining demand available at"
 msgstr "Nhu cầu còn lại hiện có ở"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -609,12 +611,12 @@ msgstr "Ngày theo kế hoạch"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Thời gian giao hàng an toàn"
+msgstr "Thời gian hoàn thành an toàn"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "Thời gian giao hàng an toàn cho bán hàng"
+msgstr "Thời gian hoàn thành an toàn cho bán hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
@@ -635,6 +637,11 @@ msgstr "Giao sản phẩm ngay khi có hàng, cùng với đơn hàng chậm tr�
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
 msgstr "Chính sách giao hàng"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
+msgid "Started"
+msgstr "Đã bắt đầu"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -668,13 +675,14 @@ msgid "Stock rule report"
 msgstr "Báo cáo quy tắc tồn kho"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
 msgstr "Hoạt động giao hàng"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -694,9 +702,11 @@ msgid ""
 "The ordered quantity of a sale order line cannot be decreased below the "
 "amount already delivered. Instead, create a return in your inventory."
 msgstr ""
+"Không thể giảm số lượng đã đặt của một dòng đơn bán hàng xuống dưới số lượng"
+" đã giao. Thay vào đó, hãy tạo một phiếu trả hàng trong phần tồn kho."
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -706,12 +716,12 @@ msgstr "Sản phẩm này được bổ sung theo yêu cầu. "
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "Điều chuyển"
+msgstr "Lệnh chuyển hàng"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -719,7 +729,7 @@ msgid "User"
 msgstr "Người dùng"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -739,6 +749,7 @@ msgid "Warehouse"
 msgstr "Kho hàng"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Warning!"
@@ -781,7 +792,7 @@ msgid "processed instead of"
 msgstr "đã xử lý thay vì"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."

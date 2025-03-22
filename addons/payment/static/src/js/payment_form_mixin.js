@@ -45,7 +45,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {boolean} showLoadingAnimation - Whether a spinning loader should be shown
          * @return {undefined}
          */
-        _disableButton: (showLoadingAnimation = true) => {
+        _disableButton: function (showLoadingAnimation = true) {
             const $submitButton = this.$('button[name="o_payment_submit_button"]');
             const iconClass = $submitButton.data('icon-class');
             $submitButton.attr('disabled', true);

@@ -4,7 +4,7 @@
 import base64
 import re
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools import float_round, float_repr
 
 FK_HEAD_LIST = ['FK', 'KD_JENIS_TRANSAKSI', 'FG_PENGGANTI', 'NOMOR_FAKTUR', 'MASA_PAJAK', 'TAHUN_PAJAK', 'TANGGAL_FAKTUR', 'NPWP', 'NAMA', 'ALAMAT_LENGKAP', 'JUMLAH_DPP', 'JUMLAH_PPN', 'JUMLAH_PPNBM', 'ID_KETERANGAN_TAMBAHAN', 'FG_UANG_MUKA', 'UANG_MUKA_DPP', 'UANG_MUKA_PPN', 'UANG_MUKA_PPNBM', 'REFERENSI', 'KODE_DOKUMEN_PENDUKUNG']
@@ -22,19 +22,19 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_id_tax_number = fields.Char(string="Tax Number", copy=False)
-    l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice",  domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False)
+    l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice", domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False, index='btree_not_null')
     l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
     l10n_id_csv_created = fields.Boolean('CSV Created', compute='_compute_csv_created', copy=False)
     l10n_id_kode_transaksi = fields.Selection([
-            ('01', '01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)'),
-            ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
-            ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
-            ('04', '04 DPP Nilai Lain (PPN 1%)'),
-            ('05', '05 Besaran Tertentu'),
-            ('06', '06 Penyerahan Lainnya (Turis Asing)'),
-            ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
-            ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
-            ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
+            ('01', '01 To the Parties that is not VAT Collector (Regular Customers)'),
+            ('02', '02 To the Treasurer'),
+            ('03', '03 To other VAT Collectors other than the Treasurer'),
+            ('04', '04 Other Value of VAT Imposition Base'),
+            ('05', '05 Specified Amount (Article 9A Paragraph (1) VAT Law)'),
+            ('06', '06 to individuals holding foreign passports'),
+            ('07', '07 Deliveries that the VAT is not Collected'),
+            ('08', '08 Deliveries that the VAT is Exempted'),
+            ('09', '09 Deliveries of Assets (Article 16D of VAT Law)'),
         ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
         readonly=False, states={'posted': [('readonly', True)], 'cancel': [('readonly', True)]}, copy=False,
         compute="_compute_kode_transaksi", store=True)
@@ -54,14 +54,14 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_kode_transaksi(self):
         for move in self:
-            move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
+            move.l10n_id_kode_transaksi = move.partner_id.commercial_partner_id.l10n_id_kode_transaksi
 
     @api.depends('partner_id', 'line_ids.tax_ids')
     def _compute_need_kode_transaksi(self):
         for move in self:
             # If there are no taxes at all on every line (0% taxes counts as having a tax) then we don't need a kode transaksi
             move.l10n_id_need_kode_transaksi = (
-                move.partner_id.l10n_id_pkp
+                move.partner_id.commercial_partner_id.l10n_id_pkp
                 and not move.l10n_id_tax_number
                 and move.move_type == 'out_invoice'
                 and move.country_code == 'ID'
@@ -135,8 +135,8 @@ class AccountMove(models.Model):
             if record.state == 'draft':
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
-            if record.partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
-                if not self.l10n_id_need_kode_transaksi:
+            if not record.l10n_id_tax_number:
+                if not record.l10n_id_need_kode_transaksi:
                     raise ValidationError(_('E-faktur is not available for invoices without any taxes.'))
                 raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 
@@ -158,21 +158,38 @@ class AccountMove(models.Model):
         for move in self.filtered(lambda m: m.state == 'posted'):
             eTax = move._prepare_etax()
 
-            nik = str(move.partner_id.l10n_id_nik) if not move.partner_id.vat else ''
+            commercial_partner = move.partner_id.commercial_partner_id
+            nik = str(commercial_partner.l10n_id_nik) if not commercial_partner.vat else ''
 
             if move.l10n_id_replace_invoice_id:
                 number_ref = str(move.l10n_id_replace_invoice_id.name) + " replaced by " + str(move.name) + " " + nik
-            else:
+            elif nik:
                 number_ref = str(move.name) + " " + nik
+            else:
+                number_ref = str(move.name)
 
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
-            invoice_npwp = '000000000000000'
-            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                invoice_npwp = move.partner_id.vat
-            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                invoice_npwp = move.partner_id.l10n_id_nik
+            invoice_npwp = ''
+            if commercial_partner.vat and len(commercial_partner.vat) >= 15:
+                invoice_npwp = commercial_partner.vat
+            elif commercial_partner.l10n_id_nik:
+                invoice_npwp = commercial_partner.l10n_id_nik
+            if not invoice_npwp:
+                action_error = {
+                    'view_mode': 'form',
+                    'res_model': 'res.partner',
+                    'type': 'ir.actions.act_window',
+                    'res_id': commercial_partner.id,
+                    'views': [[self.env.ref('base.view_partner_form').id, 'form']],
+                }
+                msg = _("Please make sure that you've input the appropriate NPWP or NIK for the following customer")
+                raise RedirectWarning(msg, action_error, _("Edit Customer Information"))
             invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
+
+            etax_name = commercial_partner.l10n_id_tax_name or move.partner_id.name
+            if invoice_npwp[:15] == '000000000000000' and commercial_partner.l10n_id_nik:
+                etax_name = "%s#NIK#NAMA#%s" % (commercial_partner.l10n_id_nik, etax_name)
 
             # Here all fields or columns based on eTax Invoice Third Party
             eTax['KD_JENIS_TRANSAKSI'] = move.l10n_id_tax_number[0:2] or 0
@@ -182,9 +199,9 @@ class AccountMove(models.Model):
             eTax['TAHUN_PAJAK'] = move.invoice_date.year
             eTax['TANGGAL_FAKTUR'] = '{0}/{1}/{2}'.format(move.invoice_date.day, move.invoice_date.month, move.invoice_date.year)
             eTax['NPWP'] = invoice_npwp
-            eTax['NAMA'] = move.partner_id.name if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_name or move.partner_id.name
-            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '') if eTax['NPWP'] == '000000000000000' else move.partner_id.l10n_id_tax_address or street
-            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0, rounding_method="DOWN"))  # currency rounded to the unit
+            eTax['NAMA'] = etax_name
+            eTax['ALAMAT_LENGKAP'] = move.partner_id.contact_address.replace('\n', '').strip() if eTax['NPWP'] == '000000000000000' else commercial_partner.l10n_id_tax_address or street
+            eTax['JUMLAH_DPP'] = int(float_round(move.amount_untaxed, 0))  # currency rounded to the unit
             eTax['JUMLAH_PPN'] = int(float_round(move.amount_tax, 0, rounding_method="DOWN"))  # tax amount ALWAYS rounded down
             eTax['ID_KETERANGAN_TAMBAHAN'] = '1' if move.l10n_id_kode_transaksi == '07' else ''
             eTax['REFERENSI'] = number_ref

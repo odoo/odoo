@@ -8,6 +8,7 @@
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # Anatolij, 2022
+# Arunas V. <arunas@devoro.com>, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2022
@@ -18,17 +19,20 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2022
 # Linas Versada <linaskrisiukenas@gmail.com>, 2022
-# Arunas V. <arunas@devoro.com>, 2023
 # Martin Trigaux, 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
+# Aurelija Vitkauskiene, 2024
+# Wil Odoo, 2025
+# Donatas <donatasvaliulis16@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2023\n"
+"Last-Translator: Donatas <donatasvaliulis16@gmail.com>, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -651,7 +655,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Portretas 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
@@ -696,6 +700,11 @@ msgstr "Pažymėjimo ID"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_id
 msgid "Bank Account Number"
 msgstr "Banko sąskaitos numeris"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Banko sąskaitos"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -832,7 +841,7 @@ msgstr "Įmonė"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__company_country_id
 msgid "Company Country"
-msgstr ""
+msgstr "Įmonės šalis"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.print_employee_badge
@@ -1242,7 +1251,7 @@ msgstr "Darbuotojo kategorija"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_count
 msgid "Employee Count"
-msgstr ""
+msgstr "Darbuotojų skaičius"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_employee_self_edit
@@ -1376,7 +1385,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.hr_contract_type_action
 #: model:ir.ui.menu,name:hr.menu_view_hr_contract_type
 msgid "Employment Types"
-msgstr ""
+msgstr "Įdarbinimo tipai"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -1972,7 +1981,7 @@ msgstr "Magistras"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__master_department_id
 msgid "Master Department"
-msgstr ""
+msgstr "Pagrindinis skyrius"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2189,7 +2198,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
@@ -2241,7 +2250,7 @@ msgstr ""
 #: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Operacija nepalaikoma"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__other
@@ -2586,15 +2595,11 @@ msgid "Register Departure"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
 msgstr ""
@@ -3259,7 +3264,7 @@ msgstr "Darbo adresas"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__work_contact_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__work_contact_id
 msgid "Work Contact"
-msgstr ""
+msgstr "Darbinis kontaktas"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_email
@@ -3422,4 +3427,9 @@ msgstr ""
 #: code:addons/hr/models/models.py:0
 #, python-format
 msgid "restricted to employees"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
 msgstr ""

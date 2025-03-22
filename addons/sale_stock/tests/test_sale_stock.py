@@ -6,6 +6,7 @@ from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_c
 from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
+from odoo import Command
 
 
 @tagged('post_install', '-at_install')
@@ -1266,6 +1267,29 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(len(sale_order.picking_ids), 2)
 
+    def test_update_so_line_qty_with_package(self):
+        """
+        Creates a sale order, then validates the delivery
+        modifying the sale order lines qty to 0
+        move line should be deleted.
+        """
+        self.product_a.type = 'product'
+        self.env['stock.quant']._update_available_quantity(
+            self.product_a, self.company_data['default_warehouse'].lot_stock_id, 10,
+            package_id=self.env['stock.quant.package'].create({'name': 'PacMan'}))
+
+        # Create sale order
+        sale_order = self._get_new_sale_order(product=self.product_a)
+        sale_order.action_confirm()
+
+        # Update the SO line
+        with Form(sale_order.with_context(import_file=True)) as so_form:
+            with so_form.order_line.edit(0) as line:
+                line.product_uom_qty = 0
+
+        self.assertFalse(sale_order.picking_ids.package_level_ids)
+        self.assertFalse(sale_order.picking_ids.move_line_ids)
+
     def test_multiple_returns(self):
         # Creates a sale order for 10 products.
         sale_order = self._get_new_sale_order()
@@ -1634,3 +1658,198 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
             {'product_id': self.product_a.id, 'product_uom_qty': 0, 'quantity_done': 0, 'state': 'cancel'},
             {'product_id': self.product_b.id, 'product_uom_qty': 1, 'quantity_done': 0, 'state': 'waiting'},
         ])
+
+    def test_2_steps_decrease_sol_qty_to_zero(self):
+        """
+        2 steps delivery, 'cancel next move' enabled
+        SO with one product
+        On the SO, cancel the qty of the product
+        On each picking, the SM should be canceled
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        warehouse.delivery_steps = 'pick_ship'
+        warehouse.delivery_route_id.rule_ids.propagate_cancel = True
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': self.product_a.list_price,
+            })],
+        })
+        so.action_confirm()
+
+        so.order_line.product_uom_qty = 0
+
+        self.assertEqual(so.picking_ids.move_ids.mapped('state'), ['cancel', 'cancel'])
+
+    def test_2_steps_fixed_procurement_propagation_with_backorder(self):
+        """
+        When validating a picking (partially coming from a backorder) linked to 2 destinations moves in a 2-steps delivery,
+        stock.move.line should be created for the 2 OUT moves.
+        Steps:
+        - Warehouse with Outgoing Shipments in 2 steps and propagation of rule set to Fixed
+        - Create a SO with 3 Product X
+        - on PICK_1 picking: set 1 unit in done, validate and create a backorder
+        - Create a SO with 1 Product X
+        - on PICK_2 picking: set 3 units in done and validate
+        """
+        warehouse = self.company_data.get('default_warehouse')
+        warehouse.delivery_steps = 'pick_ship'
+        rule = warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.procure_method == 'make_to_stock')[0]
+        rule.group_propagation_option = 'fixed'
+        fixedGroup = self.env['procurement.group'].create({})
+        rule.group_id = fixedGroup
+        self.env['stock.quant']._update_available_quantity(self.test_product_delivery, warehouse.lot_stock_id, 4)
+        # create a SO with 3 products
+        so1 = self._get_new_sale_order(product=self.test_product_delivery, amount=3)
+        so1.action_confirm()
+        pick1 = fixedGroup.stock_move_ids.filtered(lambda m: m.origin == so1.name)[0].picking_id
+        out1 = so1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+        # set 1 done on the PICK move
+        pick1.move_ids.quantity_done = 1
+        res_dict = pick1.button_validate()
+        # create a backorder for the 2 remaining products
+        backorder_wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
+        backorder_wizard.process()
+        pick2 = pick1.backorder_ids[0]
+        self.assertEqual(out1.move_line_ids.reserved_qty, 1)
+        # create another SO with 1 product
+        so2 = self._get_new_sale_order(product=self.test_product_delivery, amount=1)
+        so2.action_confirm()
+        # PICK move of this SO will increment the product quantity of the PICK backorder by 1
+        # PICK backorder is linked to out1 and out2
+        out2 = so2.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)
+        pick2.move_ids.quantity_done = 3
+        pick2.button_validate()
+        self.assertEqual(out1.state, 'assigned')
+        self.assertEqual(out1.move_line_ids.reserved_qty, 3)
+        self.assertEqual(out2.state, 'assigned')
+        self.assertEqual(out2.move_line_ids.reserved_qty, 1)
+
+    def test_delivery_on_negative_delivered_qty(self):
+        """
+            Tests that returns created from SO lines with negative quantities update the delivered
+            quantities negatively so that they appear on the corresponding invoice.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Super product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 100.0,
+            'detailed_type': 'product',
+            'invoice_policy': 'delivery',
+        })
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'state': 'draft',
+            'order_line':[Command.create({
+                'product_id': product.id,
+                'product_uom_qty': -1,
+            })],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
+        self.assertEqual(sale_order.order_line.qty_to_invoice, 0.0)
+        picking = self.env['stock.move'].browse(self.env['stock.move'].search([('sale_line_id', '=', sale_order.order_line.id)]).id).picking_id
+        picking.action_confirm()
+        picking.move_ids.move_line_ids.qty_done = 1
+        picking.button_validate()
+        self.assertEqual(sale_order.order_line.qty_delivered, -1.0)
+        self.assertEqual(sale_order.order_line.qty_to_invoice, -1.0)
+
+    def test_sol_reserved_qty_wizard_3_steps_delivery(self):
+        """
+        Check that the reserved qty wizard related to a sol is computed from
+        the pick move in 2+ step deliveries.
+        """
+        admin = self.env.ref('base.user_admin')
+        warehouse = self.env.ref('stock.warehouse0').with_user(admin)
+        warehouse.delivery_steps = 'pick_pack_ship'
+        product = self.product_a
+        product.type = 'product'
+        self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10.0)
+        sale_order = self.env['sale.order'].with_user(admin).create({
+            'company_id': warehouse.company_id.id,
+            'warehouse_id': warehouse.id,
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 7.0,
+                }),
+            ],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(len(sale_order.picking_ids), 3)
+        pick = sale_order.picking_ids.filtered(lambda p: p.location_id == warehouse.lot_stock_id)
+        ship = sale_order.picking_ids.filtered(lambda p: p.location_dest_id == self.env.ref('stock.stock_location_customers'))
+        pack = sale_order.picking_ids - pick - ship
+        self.assertEqual(pick.move_line_ids.reserved_qty, 7.0)
+        self.assertEqual(sale_order.order_line.qty_available_today, 7.0)
+        self.assertEqual(sum(pack.move_line_ids.mapped('reserved_qty')), 0)
+        pick.move_ids.quantity_done = 7.0
+        pick.button_validate()
+        self.assertEqual(sum(pack.move_line_ids.mapped('reserved_qty')), 7.0)
+        self.assertEqual(sale_order.order_line.qty_available_today, 7.0)
+        pack.move_ids.quantity_done = 2.0
+        backorder_wizard_dict = pack.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_user(admin).with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.with_user(admin).process()
+        backorder = pack.backorder_ids
+        self.assertEqual(sum(backorder.move_line_ids.mapped('reserved_qty')), 5.0)
+        self.assertEqual(sum(ship.move_line_ids.mapped('reserved_qty')), 2.0)
+        self.assertEqual(sale_order.order_line.qty_available_today, 7.0)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
+        backorder.move_ids.quantity_done = 5.0
+        backorder.button_validate()
+        self.assertEqual(sum(ship.move_line_ids.mapped('reserved_qty')), 7.0)
+        self.assertEqual(sale_order.order_line.qty_available_today, 7.0)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0.0)
+        ship.move_ids.quantity_done = 7.0
+        ship.button_validate()
+        self.assertEqual(sale_order.order_line.qty_available_today, 0.0)
+        self.assertEqual(sale_order.order_line.qty_delivered, 7.0)
+
+    def test_delivery_status(self):
+        """
+            Tests the delivery status of a sales order.
+            If nothing was done: pending
+            If some pickings were completed but nothing was actually delivery to the customer yet: started
+            If not everything was delivered: partial
+            If everything was delivered: full
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.delivery_steps = 'pick_ship'
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'My Partner'}).id,
+            'order_line': [
+                Command.create({
+                    'name': 'sol_p1',
+                    'product_id': self.env['product.product'].create({'name': 'p1'}).id,
+                    'product_uom_qty': 10,
+                    'product_uom': self.env.ref('uom.product_uom_unit').id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        self.assertEqual(so.delivery_status, 'pending')
+
+        pick01, ship01 = so.picking_ids
+
+        pick01.move_line_ids.qty_done = 10
+        pick01._action_done()
+        self.assertEqual(so.delivery_status, 'started')
+
+        ship01.move_line_ids[0].qty_done = 3
+        ship01._action_done()
+        self.assertEqual(so.delivery_status, 'partial')
+
+        ship02 = ship01.backorder_ids
+        ship02.move_line_ids[0].qty_done = 7
+        ship02._action_done()
+        self.assertEqual(so.delivery_status, 'full')

@@ -188,7 +188,10 @@ class LoyaltyProgram(models.Model):
     def _program_type_default_values(self):
         # All values to change when program_type changes
         # NOTE: any field used in `rule_ids`, `reward_ids` and `communication_plan_ids` MUST be present in the kanban view for it to work properly.
-        first_sale_product = self.env['product.product'].search([('sale_ok', '=', True)], limit=1)
+        first_sale_product = self.env['product.product'].search([
+            '|', ('company_id', '=', False), ('company_id', '=', self.company_id.id),
+            ('sale_ok', '=', True)
+        ], limit=1)
         return {
             'coupons': {
                 'applies_on': 'current',
@@ -577,3 +580,15 @@ class LoyaltyProgram(models.Model):
                 })]
             },
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        trigger_product_ids will overwrite product ids defined in a loyalty rule in certain instances. Thus, it should
+        be explicitly removed from an incoming vals dict unless, of course, it was actually a visible field.
+        """
+        for vals in vals_list:
+            if 'trigger_product_ids' in vals and vals.get('program_type') not in ['gift_card', 'ewallet']:
+                del vals['trigger_product_ids']
+
+        return super().create(vals_list)

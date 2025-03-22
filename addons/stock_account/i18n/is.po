@@ -5,15 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # Heiðar Sigurðsson, 2022
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Heiðar Sigurðsson, 2022\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -73,6 +75,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>Quantity</span>"
 msgstr ""
+"<span>Magn</span>\n"
+" "
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -99,7 +103,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_request_count__accounting_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__date
 msgid "Accounting Date"
-msgstr ""
+msgstr "Dagsetning bókunar"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
@@ -163,7 +167,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Eyða"
 
 #. module: stock_account
 #. odoo-python
@@ -202,12 +206,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__company_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__company_id
 msgid "Company"
-msgstr ""
+msgstr "Fyrirtæki"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Stillingarvalkostir"
 
 #. module: stock_account
 #. odoo-python
@@ -248,26 +252,26 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
 msgid "Country Code"
-msgstr ""
+msgstr "Landskóði"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "Gjaldmiðill"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
@@ -284,7 +288,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Date"
-msgstr ""
+msgstr "Dagsetning"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
@@ -301,7 +305,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
 msgid "Description"
-msgstr ""
+msgstr "Lýsing"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
@@ -312,7 +316,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
@@ -353,7 +357,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -367,7 +371,6 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
@@ -421,13 +424,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_date
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
@@ -504,13 +507,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product"
-msgstr ""
+msgstr "Vara"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_category
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 msgid "Product Category"
-msgstr ""
+msgstr "Vöruflokkur"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
@@ -528,12 +531,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__product_tmpl_id
 msgid "Product Template"
-msgstr ""
+msgstr "Vöru sniðmát"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Vöruafbrigði"
 
 #. module: stock_account
 #. odoo-python
@@ -545,7 +548,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
 msgid "Quantity"
-msgstr ""
+msgstr "Magn"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
@@ -560,7 +563,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason"
-msgstr ""
+msgstr "Ástæða"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -570,7 +573,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
 msgid "Reference"
-msgstr ""
+msgstr "Tilvísun"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
@@ -715,6 +718,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO landskóði í tveimur stöfum. \n"
+"Þú getur notað þennan reit fyrir skjóta leit."
 
 #. module: stock_account
 #. odoo-python
@@ -771,6 +776,15 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""
+
+#. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
 msgid ""
@@ -824,7 +838,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_uom_name
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mælieining"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
@@ -908,7 +922,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Aðvörun"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -977,6 +991,15 @@ msgstr ""
 msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
 msgstr ""
 
 #. module: stock_account

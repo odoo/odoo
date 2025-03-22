@@ -3,6 +3,7 @@
 
 from datetime import datetime, time
 import pytz
+import re
 
 from dateutil import rrule
 from dateutil.relativedelta import relativedelta
@@ -129,38 +130,70 @@ class RecurrenceRule(models.Model):
          "The day must be between 1 and 31"),
     ]
 
+    def _get_daily_recurrence_name(self):
+        if self.end_type == 'count':
+            return _("Every %(interval)s Days for %(count)s events", interval=self.interval, count=self.count)
+        if self.end_type == 'end_date':
+            return _("Every %(interval)s Days until %(until)s", interval=self.interval, until=self.until)
+        return _("Every %(interval)s Days", interval=self.interval)
+
+    def _get_weekly_recurrence_name(self):
+        weekday_selection = dict(self._fields['weekday']._description_selection(self.env))
+        weekdays = self._get_week_days()
+        # Convert Weekday object
+        weekdays = [str(w) for w in weekdays]
+        # We need to get the day full name from its three first letters.
+        week_map = {v: k for k, v in RRULE_WEEKDAYS.items()}
+        weekday_short = [week_map[w] for w in weekdays]
+        day_strings = [weekday_selection[day] for day in weekday_short]
+        days = ", ".join(day_strings)
+
+        if self.end_type == 'count':
+            return _("Every %(interval)s Weeks on %(days)s for %(count)s events", interval=self.interval, days=days, count=self.count)
+        if self.end_type == 'end_date':
+            return _("Every %(interval)s Weeks on %(days)s until %(until)s", interval=self.interval, days=days, until=self.until)
+        return _("Every %(interval)s Weeks on %(days)s", interval=self.interval, days=days)
+
+    def _get_monthly_recurrence_name(self):
+        if self.month_by == 'day':
+            weekday_selection = dict(self._fields['weekday']._description_selection(self.env))
+            byday_selection = dict(self._fields['byday']._description_selection(self.env))
+            position_label = byday_selection[self.byday]
+            weekday_label = weekday_selection[self.weekday]
+
+            if self.end_type == 'count':
+                return _("Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s events", interval=self.interval, position=position_label, weekday=weekday_label, count=self.count)
+            if self.end_type == 'end_date':
+                return _("Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s", interval=self.interval, position=position_label, weekday=weekday_label, until=self.until)
+            return _("Every %(interval)s Months on the %(position)s %(weekday)s", interval=self.interval, position=position_label, weekday=weekday_label)
+        else:
+            if self.end_type == 'count':
+                return _("Every %(interval)s Months day %(day)s for %(count)s events", interval=self.interval, day=self.day, count=self.count)
+            if self.end_type == 'end_date':
+                return _("Every %(interval)s Months day %(day)s until %(until)s", interval=self.interval, day=self.day, until=self.until)
+            return _("Every %(interval)s Months day %(day)s", interval=self.interval, day=self.day)
+
+    def _get_yearly_recurrence_name(self):
+        if self.end_type == 'count':
+            return _("Every %(interval)s Years for %(count)s events", interval=self.interval, count=self.count)
+        if self.end_type == 'end_date':
+            return _("Every %(interval)s Years until %(until)s", interval=self.interval, until=self.until)
+        return _("Every %(interval)s Years", interval=self.interval)
+
+    def get_recurrence_name(self):
+        if self.rrule_type == 'daily':
+            return self._get_daily_recurrence_name()
+        if self.rrule_type == 'weekly':
+            return self._get_weekly_recurrence_name()
+        if self.rrule_type == 'monthly':
+            return self._get_monthly_recurrence_name()
+        if self.rrule_type == 'yearly':
+            return self._get_yearly_recurrence_name()
+
     @api.depends('rrule')
     def _compute_name(self):
         for recurrence in self:
-            period = dict(RRULE_TYPE_SELECTION)[recurrence.rrule_type]
-            every = _("Every %(count)s %(period)s", count=recurrence.interval, period=period)
-
-            if recurrence.end_type == 'count':
-                end = _("for %s events", recurrence.count)
-            elif recurrence.end_type == 'end_date':
-                end = _("until %s", recurrence.until)
-            else:
-                end = ''
-
-            if recurrence.rrule_type == 'weekly':
-                weekdays = recurrence._get_week_days()
-                # Convert Weekday object
-                weekdays = [str(w) for w in weekdays]
-                # We need to get the day full name from its three first letters.
-                week_map = {v: k for k, v in RRULE_WEEKDAYS.items()}
-                weekday_short = [week_map[w] for w in weekdays]
-                day_strings = [d[1] for d in WEEKDAY_SELECTION if d[0] in weekday_short]
-                on = _("on %s") % ", ".join([day_name for day_name in day_strings])
-            elif recurrence.rrule_type == 'monthly':
-                if recurrence.month_by == 'day':
-                    position_label = dict(BYDAY_SELECTION)[recurrence.byday]
-                    weekday_label = dict(WEEKDAY_SELECTION)[recurrence.weekday]
-                    on = _("on the %(position)s %(weekday)s", position=position_label, weekday=weekday_label)
-                else:
-                    on = _("day %s", recurrence.day)
-            else:
-                on = ''
-            recurrence.name = ' '.join(filter(lambda s: s, [every, on, end]))
+            recurrence.name = recurrence.get_recurrence_name()
 
     @api.depends('calendar_event_ids.start')
     def _compute_dtstart(self):
@@ -329,6 +362,15 @@ class RecurrenceRule(models.Model):
         data = {}
         day_list = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
+        # Skip X-named RRULE extensions
+        # TODO Remove patch when dateutils contains the fix
+        # HACK https://github.com/dateutil/dateutil/pull/1374
+        # Optional parameters starts with X- and they can be placed anywhere in the RRULE string.
+        # RRULE:FREQ=MONTHLY;INTERVAL=3;X-RELATIVE=1
+        # RRULE;X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        # X-EVOLUTION-ENDDATE=20200120:FREQ=WEEKLY;COUNT=3;BYDAY=MO
+        rule_str = re.sub(r';?X-[-\w]+=[^;:]*', '', rule_str).replace(":;", ":").lstrip(":;")
+
         if 'Z' in rule_str and date_start and not date_start.tzinfo:
             date_start = pytz.utc.localize(date_start)
         rule = rrule.rrulestr(rule_str, dtstart=date_start)
@@ -463,14 +505,14 @@ class RecurrenceRule(models.Model):
         # Given the following recurrence:
         #   - monthly
         #   - 1st of each month
-        #   - timezone US/Eastern (UTC−05:00)
-        #   - at 6am US/Eastern = 11am UTC
+        #   - timezone America/New_York (UTC−05:00)
+        #   - at 6am America/New_York = 11am UTC
         #   - from 2019/02/01 to 2019/05/01.
         # The naive way would be to store:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 11:00 - 2019/05/01 11:00 (UTC)
         #
-        # But a DST change occurs on 2019/03/10 in US/Eastern timezone. US/Eastern is now UTC−04:00.
-        # From this point in time, 11am (UTC) is actually converted to 7am (US/Eastern) instead of the expected 6am!
+        # But a DST change occurs on 2019/03/10 in America/New_York timezone. America/New_York is now UTC−04:00.
+        # From this point in time, 11am (UTC) is actually converted to 7am (America/New_York) instead of the expected 6am!
         # What should be stored is:
         # 2019/02/01 11:00 - 2019/03/01 11:00 - 2019/04/01 10:00 - 2019/05/01 10:00 (UTC)
         #                                                  *****              *****

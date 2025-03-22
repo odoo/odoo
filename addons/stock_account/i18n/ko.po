@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Sarah Park, 2023
+# Sarah Park, 2024
+# Daye Jeong, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"Last-Translator: Daye Jeong, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -377,7 +378,6 @@ msgstr "재고 공간"
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
@@ -788,6 +788,15 @@ msgid ""
 msgstr "이동 명세가 일관된 상태가 아닙니다. 동일한 출발지 또는 목적지 회사를 공유하지 않습니다."
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr "주식 가치 평가값은 음수가 될 수 없습니다. 도입 원가를 사용하여 특정한 이전 항목을 수정해 보세요."
+
+#. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_report_action
 msgid ""
@@ -1005,6 +1014,15 @@ msgstr "품목 카테고리에 정의되어 있는 입고 재고 계정이 없�
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr "품목 카테고리에 정의되어 있는 출고 평가 계정이 없습니다. 이 작업을 처리하기 전 항목을 설정해야 합니다."
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -1045,10 +1063,3 @@ msgstr "for"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
 msgstr "위치"
-
-#. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-msgid ""
-"'The value of a stock valuation layer cannot be negative. Landed cost could "
-"be use to correct a specific transfer."
-msgstr "주식 가치 평가값은 음수가 될 수 없습니다. 도입 원가를 사용하여 특정한 이전 항목을 수정해 보세요."

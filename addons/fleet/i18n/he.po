@@ -7,7 +7,7 @@
 # david danilov, 2022
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
 # Lilach Gilliam <lilach@apprcase.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2022
+# Hed Shefer <hed@laylinetech.com>, 2022
 # ilan kl <ilan@qaroads.co.il>, 2022
 # שהאב חוסיין <shhab89@gmail.com>, 2022
 # ExcaliberX <excaliberx@gmail.com>, 2022
@@ -15,24 +15,26 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # NoaFarkash, 2022
-# Ha Ketem <haketem@gmail.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2024
+# yael terner, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
@@ -299,6 +301,11 @@ msgid "CO2 Emissions g/km"
 msgstr "פליטת פחמן דו-חמצני גרם לקילומטר g/Km"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+msgid "CO2 Standard"
+msgstr "סטנדרט פחמן דו-חמצני"
+
+#. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2
 msgid "CO2 emissions of the vehicle"
 msgstr "פליטת פחמן דו חמצני של הרכב"
@@ -316,7 +323,7 @@ msgstr "בטל"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
 msgid "Cancellation Date"
-msgstr ""
+msgstr "תאריך ביטול"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
@@ -411,7 +418,6 @@ msgid "Closed"
 msgstr "סגור"
 
 #. module: fleet
-#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
 msgid "Co2 Standard"
 msgstr "סטנדרט פחמן דו-חמצני"
@@ -656,7 +662,7 @@ msgstr "תאריך"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
 msgid "Date of vehicle registration"
-msgstr ""
+msgstr "תאריך רישום של הרכב"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
@@ -689,7 +695,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_2
 msgid "Depreciation and Interests"
-msgstr ""
+msgstr "פחת וריביות"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__description
@@ -887,7 +893,7 @@ msgstr "פג תוקף"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__expires_today
 msgid "Expires Today"
-msgstr ""
+msgstr "פג תוקף היום"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
@@ -897,7 +903,7 @@ msgstr "תאריך תחילת חוזה"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Fiscality"
-msgstr ""
+msgstr "יכולת"
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -977,7 +983,7 @@ msgstr "דלק"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_22
 msgid "Fuel Injector Replacement"
-msgstr ""
+msgstr "החלפת מזרק דלק"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_23
@@ -1452,6 +1458,13 @@ msgid "New Request"
 msgstr "בקשה חדשה"
 
 #. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "הפעילות הבאה ביומן"
+
+#. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_date_deadline
@@ -1541,7 +1554,7 @@ msgstr "מספר השגיאות"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__message_needaction_counter
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "מספר הודעות הדורשות פעולה"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_has_error_counter

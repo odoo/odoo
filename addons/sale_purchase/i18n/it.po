@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Marianna Ciofani, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,14 +50,14 @@ msgstr "<span class=\"o_stat_text\">Vendita</span>"
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
 msgid ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\" groups=\"purchase.group_purchase_user\">\n"
 "                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
 "                </span>\n"
 "            </span>"
 msgstr ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
-"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                    Sono presenti ordini di acquisto attivi collegati al presente ordine di vendita che non sono stati cancellati automaticamente! <br/>\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\" groups=\"purchase.group_purchase_user\">\n"
+"                    Sono presenti ordini di acquisto attivi collegati al presente ordine di vendita che non sono stati annullati automaticamente! <br/>\n"
 "                </span>\n"
 "            </span>"
 
@@ -117,6 +117,7 @@ msgid "Number of generated purchase items"
 msgstr "Numero di voci acquisto generate"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
@@ -128,6 +129,7 @@ msgid "Origin Sale Item"
 msgstr "Voce di vendita originaria"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid ""
@@ -142,6 +144,7 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/product_template.py:0
 #, python-format
 msgid "Product that is not a service can not create RFQ."
@@ -163,6 +166,7 @@ msgid "Purchase Order Line"
 msgstr "Riga ordine di acquisto"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
@@ -203,6 +207,7 @@ msgid "Sales Order Line"
 msgstr "Riga ordine di vendita"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
 msgid "Sources Sale Orders %s"
@@ -215,6 +220,7 @@ msgid "Subcontract Service"
 msgstr "Subappalto"
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -223,6 +229,7 @@ msgid ""
 msgstr "Nessun fornitore associato al prodotto %s, indicarne uno."
 
 #. module: sale_purchase
+#. odoo-python
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid ""

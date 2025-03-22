@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Bohdan Lisnenko, 2022
-# Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 06:06+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,6 +90,20 @@ msgstr ""
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%s знайдені товари для \"%s\"."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s untaxed"
+msgstr "%s неоподатковується"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s with %s"
+msgstr "%s з %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -953,13 +967,10 @@ msgstr "Буфер:"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__limited_partners_loading
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_limited_partners_loading
 msgid ""
-"By default, 100 partners are loaded.\n"
+"By default, 10000 partners are loaded.\n"
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"За замовчуванням, завантажено 100 партнерів.\n"
-"Коли сеанс відкритий, ми продовжуємо завантажувати всіх інших партнерів у фоновому режимі.\n"
-"Тим часом ви можете використовувати кнопку «Завантажити клієнтів», щоб завантажити партнерів із бази даних."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -1339,6 +1350,13 @@ msgstr "Закрити сесію та опублікувати проведен
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
 msgid "Close Session Wizard"
 msgstr "Помічник закриття сесії"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Close anyway"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1805,8 +1823,8 @@ msgid "Customer Screen Warning"
 msgstr "Попередження екрану клієнта"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2119,6 +2137,13 @@ msgstr "Відхилити"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Do not close"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2896,11 +2921,14 @@ msgid "Invoice payment for %s (%s) using %s"
 msgstr "Оплата рахунка для %s (%s) використовуючи %s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__invoiced
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Invoiced"
 msgstr "Виставлено рахунок"
 
@@ -3261,6 +3289,13 @@ msgstr "Назва партії"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "Партійний номер"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -3422,6 +3457,13 @@ msgid "More..."
 msgstr "Більше..."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Multiple Invoiced Orders Selected"
+msgstr "Вибрано виставлення рахунку за кілька замовлень"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Дедлайн моєї дії"
@@ -3504,6 +3546,11 @@ msgstr "Нова сесія"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Газетна стійка"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Наступна подія календаря дій"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3725,7 +3772,7 @@ msgstr "Помилка офлайну"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Offline Orders"
 msgstr "Замовлення не в мережі"
@@ -3773,6 +3820,13 @@ msgid ""
 msgstr ""
 "Для цього рядка відшкодування дозволяється лише від’ємна кількість. "
 "Натисніть +/-, щоб змінити кількість, яку потрібно відшкодувати."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr "Лише адміністратори можуть редагувати хедер та футер чеку"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4017,8 +4071,8 @@ msgstr ""
 "замовлення."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4174,8 +4228,8 @@ msgid "Pay Order"
 msgstr "Оплатити замовлення"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4576,6 +4630,13 @@ msgstr "Категорії товарів точки продажу"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
 msgstr "Категорія товару точки продажу"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "PoS order %s can not be processed"
+msgstr "Замовлення точки продажу %s неможливо обробити"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
@@ -5231,6 +5292,8 @@ msgstr "Оновити дисплей"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
@@ -5506,6 +5569,13 @@ msgstr "Підрахунок рядка продажу"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
 msgstr "Рядок продажу"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Sales"
+msgstr "Продажі"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -5949,7 +6019,7 @@ msgstr "Відсутні деякі Серійні/Партійні номери
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to configuration "
@@ -5962,7 +6032,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to internet connection "
@@ -6298,6 +6368,17 @@ msgstr ""
 "округлення\"."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"The Point of Sale order with the following reference %s was received by the "
+"Odoo server, but the order processing phase failed.<br/>The datas received "
+"from the point of sale has been saved in the attachments.<br/>Please contact"
+" your support service to assist you on restoring it"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -6313,11 +6394,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
-"The amount of your payment lines must be rounded to validate the "
-"transaction."
+"The amount of your payment lines must be rounded to validate the transaction.\n"
+"The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
-"Сума рядків вашого платежу повинні бути округлені для підтвердження "
-"тразакції."
+"Для підтвердження транзакції суму ваших платіжних рядків потрібно округлити.\n"
+"Точність округлення %s тож ви повинні встановити %s або %s як суму платежу замість %s."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6431,12 +6512,10 @@ msgstr "Журнал рахунків точки продажу %s має нал
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                        Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
-"Максимальна дозволена різниця - це %s.\n"
-"\n"
-"                       Будь ласка, зверніться до свого менеджера, щоб прийняти кінцеву різницю."
+"Максимально дозволена різниця %s.\n"
+"Будь ласка, зверніться до свого менеджера, щоб прийняти кінцеву різницю."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7573,6 +7652,17 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
+msgstr ""
+"Ви не маєте дозволу на відкриття POS-сесії. Спробуйте відкрити сесію з іншим"
+" користувачем"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
 "You don't have the access rights to get the point of sale closing control "
 "data."
 msgstr ""
@@ -7589,6 +7679,18 @@ msgid ""
 msgstr ""
 "Ви ввімкнули опцію «Ідентифікувати клієнта» для %s способу оплати, але "
 "замовлення %s не містить клієнта."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"You have selected orderlines from multiple invoiced orders. To proceed "
+"refund, please select orderlines from the same invoiced order."
+msgstr ""
+"Ви вибрали рядки замовлення з з виставлення рахунку по кільком замовленням. "
+"Щоби продовжити відшкодування, виберіть рядки замовлення з того самого "
+"замовлення, за яким виставлено рахунок."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7877,3 +7979,12 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "були дублікати існуючих замовлень"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""

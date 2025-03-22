@@ -1,4 +1,8 @@
 .odoo-editor-editable {
+    .btn {
+        user-select: auto;
+        cursor: text !important;
+    }
     ::selection {
         /* For color conversion over white background, use X = (Y-(1-P)*255)/P where
             X = converted color component (R, G, B) (0 <= X <= 255)
@@ -30,7 +34,8 @@
         background-color: transparent !important;
     }
     .o_selected_td {
-        background-color: rgba(117, 167, 249, 0.5) !important; /* #bad3fc equivalent when over white*/
+        box-shadow: 0 0 0 100vmax rgba(117, 167, 249, 0.5) inset; /* #bad3fc equivalent when over white, overlaying on the bg color*/
+        border-collapse: separate;
         cursor: pointer !important;
     }
 }
@@ -45,7 +50,6 @@
     position: absolute;
     z-index: 10;
     padding: 0;
-    border: $border-width solid var(--o-table-ui-bg, #{$border-color});
 
     &:hover {
         visibility: visible !important;
@@ -285,11 +289,11 @@
         width: 19px;
         height: 19px;
         padding: 0;
-        margin-right: 3px;
+        margin-inline-end: 3px;
         margin-bottom: 3px;
 
         &:last-of-type {
-            margin-right: 0;
+            margin-inline-end: 0;
         }
         &.active {
             background-color: var(--oeTablepicker-color-accent, $o-brand-primary);
@@ -332,6 +336,7 @@
     border-radius: 4px;
     overflow: hidden;
     display: flex;
+    min-width: max-content;
 
     ::-webkit-scrollbar {
         background: transparent;

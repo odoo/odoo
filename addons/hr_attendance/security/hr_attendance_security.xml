@@ -65,7 +65,7 @@
             <field name="model_id" ref="model_hr_attendance"/>
             <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
             <field name="perm_read" eval="1"/>
-            <field name="perm_write" eval="1"/>
+            <field name="perm_write" eval="0"/>
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="0"/>
             <field name="groups" eval="[(4,ref('hr_attendance.group_hr_attendance'))]"/>

@@ -12,13 +12,16 @@ from odoo.osv import expression
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    @api.model
-    def _get_favorite_project_id(self, employee_id=False):
+    def _get_favorite_project_id_domain(self, employee_id=False):
         employee_id = employee_id or self.env.user.employee_id.id
-        last_timesheet_ids = self.search([
+        return [
             ('employee_id', '=', employee_id),
             ('project_id', '!=', False),
-        ], limit=5)
+        ]
+
+    @api.model
+    def _get_favorite_project_id(self, employee_id=False):
+        last_timesheet_ids = self.search(self._get_favorite_project_id_domain(employee_id), limit=5)
         if len(last_timesheet_ids.project_id) == 1:
             return last_timesheet_ids.project_id.id
         return False
@@ -347,6 +350,9 @@ class AccountAnalyticLine(models.Model):
     def _is_timesheet_encode_uom_day(self):
         company_uom = self.env.company.timesheet_encode_uom_id
         return company_uom == self.env.ref('uom.product_uom_day')
+
+    def _is_updatable_timesheet(self):
+        return True
 
     @api.model
     def _convert_hours_to_days(self, time):

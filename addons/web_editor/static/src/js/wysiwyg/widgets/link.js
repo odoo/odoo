@@ -86,14 +86,19 @@ const Link = Widget.extend({
                 }
                 $node = $node.parent();
             }
-            const linkNode = this.$link[0] || this.data.range.cloneContents();
-            const linkText = linkNode.textContent;
+            const linkNode = this.linkEl || this.data.range.cloneContents();
+            const linkText = linkNode.innerText.replaceAll("\u200B", "");
             this.data.content = linkText.replace(/[ \t\r\n]+/g, ' ');
             this.data.originalText = this.data.content;
             if (linkNode instanceof DocumentFragment) {
                 this.data.originalHTML = $('<fakeEl>').append(linkNode).html();
             } else {
                 this.data.originalHTML = linkNode.innerHTML;
+            }
+            const imgEl = linkNode.querySelector('IMG');
+            if (imgEl) {
+                this.data.isImage = true;
+                this.needLabel = false;
             }
             this.data.url = this.$link.attr('href') || '';
         } else {
@@ -116,8 +121,8 @@ const Link = Widget.extend({
             'text-truncate',
         ];
         const keptClasses = this.data.iniClassName.split(' ').filter(className => classesToKeep.includes(className));
-        const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
-        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
+        const allBtnColorPrefixes = /(^|\s+)(bg|text|border)((-[a-z0-9_-]*)|\b)/gi;
+        const allBtnClassSuffixes = /(^|\s+)btn((-[a-z0-9_-]*)|\b)/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
             .replace(allBtnColorPrefixes, ' ')
@@ -491,7 +496,7 @@ const Link = Widget.extend({
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
         if (force || (this._setLinkContent && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
-            if (linkInfos.content === this.data.originalText) {
+            if (linkInfos.content === this.data.originalText || this.data.isImage) {
                 $link.html(this.data.originalHTML);
             } else if (linkInfos.content && linkInfos.content.length) {
                 $link.text(linkInfos.content);

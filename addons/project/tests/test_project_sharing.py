@@ -4,6 +4,7 @@
 from odoo import Command
 from odoo.osv import expression
 from odoo.exceptions import AccessError
+from odoo.tools import mute_logger
 from odoo.tests import tagged
 from odoo.tests.common import Form
 
@@ -42,6 +43,12 @@ class TestProjectSharingCommon(TestProjectCommon):
         })
         cls.project_portal.message_subscribe(partner_ids=[cls.partner_portal.id])
 
+        cls.project_no_collabo = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'No Collabo',
+            'privacy_visibility': 'followers',
+            'alias_name': 'project+nocollabo',
+        })
+
         cls.task_cow = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Cow UserTask',
             'user_ids': cls.user_projectuser,
@@ -52,6 +59,12 @@ class TestProjectSharingCommon(TestProjectCommon):
             'user_ids': cls.user_projectuser,
             'project_id': cls.project_portal.id,
         })
+        cls.task_no_collabo = cls.env['project.task'].with_context({'mail_create_nolog': True}).create({
+            'name': 'No Collabo Task',
+            'project_id': cls.project_no_collabo.id,
+        })
+
+        cls.task_tag = cls.env['project.tags'].create({'name': 'Foo'})
 
         cls.project_sharing_form_view_xml_id = 'project.project_sharing_project_task_view_form'
 
@@ -101,6 +114,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write({'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})]})
         self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user can access to project sharing feature of the portal project.')
 
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_create_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
 
@@ -111,9 +125,11 @@ class TestProjectSharing(TestProjectSharingCommon):
             3) Give the 'edit' access mode to a portal user in a project and try to create task with this user.
             3.1) Try to change the project of the new task with this user.
         """
+        self.project_portal.allow_subtasks = True
+        Task = self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]})
         # 1) Give the 'read' access mode to a portal user in a project and try to create task with this user.
         with self.assertRaises(AccessError, msg="Should not accept the portal user create a task in the project when he has not the edit access right."):
-            with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id}), self.user_portal) as form:
+            with self.get_project_sharing_form_view(Task, self.user_portal) as form:
                 form.name = 'Test'
                 task = form.save()
 
@@ -122,17 +138,78 @@ class TestProjectSharing(TestProjectSharingCommon):
                 Command.create({'partner_id': self.user_portal.partner_id.id}),
             ],
         })
-        with self.get_project_sharing_form_view(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_portal.id, 'default_user_ids': [(4, self.user_portal.id)]}), self.user_portal) as form:
+        with self.get_project_sharing_form_view(Task, self.user_portal) as form:
             form.name = 'Test'
+            with form.child_ids.new() as subtask_form:
+                subtask_form.name = 'Test Subtask'
             task = form.save()
             self.assertEqual(task.name, 'Test')
             self.assertEqual(task.project_id, self.project_portal)
             self.assertFalse(task.portal_user_names)
+
+            # Check creating a sub-task while creating the parent task works as expected.
+            self.assertEqual(task.child_ids.name, 'Test Subtask')
+            self.assertEqual(task.child_ids.project_id, self.project_portal)
+            self.assertFalse(task.child_ids.portal_user_names, 'by default no user should be assigned to a subtask created by the portal user.')
+            self.assertFalse(task.child_ids.user_ids, 'No user should be assigned to the new subtask.')
+
             # 3.1) Try to change the project of the new task with this user.
             with self.assertRaises(AssertionError, msg="Should not accept the portal user changes the project of the task."):
                 form.project_id = self.project_cows
                 task = form.save()
 
+        Task = Task.with_user(self.user_portal)
+        # Create/Update a forbidden task through child_ids
+        with self.assertRaisesRegex(AccessError, "You cannot write on description"):
+            Task.create({'name': 'foo', 'child_ids': [Command.create({'name': 'Foo', 'description': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.create({'name': 'foo', 'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Task'"):
+            Task.create({'name': 'foo', 'child_ids': [Command.delete(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.create({'name': 'foo', 'child_ids': [Command.unlink(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.create({'name': 'foo', 'child_ids': [Command.link(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.create({'name': 'foo', 'child_ids': [Command.set([self.task_no_collabo.id])]})
+
+        # Same thing but using context defaults
+        with self.assertRaisesRegex(AccessError, "You cannot write on description"):
+            Task.with_context(default_child_ids=[Command.create({'name': 'Foo', 'description': 'Foo'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.update(self.task_no_collabo.id, {'name': 'Foo'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Task'"):
+            Task.with_context(default_child_ids=[Command.delete(self.task_no_collabo.id)]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.unlink(self.task_no_collabo.id)]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.link(self.task_no_collabo.id)]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            Task.with_context(default_child_ids=[Command.set([self.task_no_collabo.id])]).create({'name': 'foo'})
+
+        # Create/update a tag through tag_ids
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+            Task.create({'name': 'foo', 'tag_ids': [Command.create({'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
+            Task.create({'name': 'foo', 'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
+            Task.create({'name': 'foo', 'tag_ids': [Command.delete(self.task_tag.id)]})
+
+        # Same thing but using context defaults
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+            Task.with_context(default_tag_ids=[Command.create({'name': 'Bar'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
+            Task.with_context(default_tag_ids=[Command.update(self.task_tag.id, {'name': 'Bar'})]).create({'name': 'foo'})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
+            Task.with_context(default_tag_ids=[Command.delete(self.task_tag.id)]).create({'name': 'foo'})
+
+        task = Task.create({'name': 'foo', 'tag_ids': [Command.link(self.task_tag.id)]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+        Task.create({'name': 'foo', 'tag_ids': [Command.set([self.task_tag.id])]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
     def test_edit_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
 
@@ -202,6 +279,42 @@ class TestProjectSharing(TestProjectSharingCommon):
             with form.child_ids.new() as subtask_form:
                 subtask_form.name = 'Test Subtask'
         self.assertEqual(len(task.child_ids), 2, 'Check 2 subtasks has correctly been created by the user portal.')
+
+        # Create/Update a forbidden task through child_ids
+        with self.assertRaisesRegex(AccessError, "You cannot write on description"):
+            task.write({'child_ids': [Command.create({'name': 'Foo', 'description': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            task.write({'child_ids': [Command.update(self.task_no_collabo.id, {'name': 'Foo'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Task'"):
+            task.write({'child_ids': [Command.delete(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            task.write({'child_ids': [Command.unlink(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            task.write({'child_ids': [Command.link(self.task_no_collabo.id)]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Task'"):
+            task.write({'child_ids': [Command.set([self.task_no_collabo.id])]})
+
+        # Create/update a tag through tag_ids
+        with self.assertRaisesRegex(AccessError, "not allowed to create 'Project Tags'"):
+            task.write({'tag_ids': [Command.create({'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to modify 'Project Tags'"):
+            task.write({'tag_ids': [Command.update(self.task_tag.id, {'name': 'Bar'})]})
+        with self.assertRaisesRegex(AccessError, "not allowed to delete 'Project Tags'"):
+            task.write({'tag_ids': [Command.delete(self.task_tag.id)]})
+
+        task.write({'tag_ids': [Command.link(self.task_tag.id)]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+
+        task.write({'tag_ids': [Command.unlink(self.task_tag.id)]})
+        self.assertFalse(task.tag_ids)
+
+        task.write({'tag_ids': [Command.link(self.task_tag.id)]})
+        task.write({'tag_ids': [Command.clear()]})
+        self.assertFalse(task.tag_ids, [])
+
+        task.write({'tag_ids': [Command.set([self.task_tag.id])]})
+        self.assertEqual(task.tag_ids, self.task_tag)
+
 
     def test_portal_user_cannot_see_all_assignees(self):
         """ Test when the portal sees a task he cannot see all the assignees.

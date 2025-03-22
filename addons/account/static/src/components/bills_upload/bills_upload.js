@@ -42,10 +42,18 @@ export class AccountFileUploader extends Component {
     }
 
     async onUploadComplete() {
-        const action = await this.orm.call("account.journal", "create_document_from_attachment", ["", this.attachmentIdsToProcess], {
-            context: { ...this.extraContext, ...this.env.searchModel.context },
-        });
-        this.attachmentIdsToProcess = [];
+        let action;
+        try {
+            action = await this.orm.call(
+                "account.journal",
+                "create_document_from_attachment",
+                ["", this.attachmentIdsToProcess],
+                { context: { ...this.extraContext, ...this.env.searchModel.context } },
+            );
+        } finally {
+            // ensures attachments are cleared on success as well as on error
+            this.attachmentIdsToProcess = [];
+        }
         if (action.context && action.context.notifications) {
             for (let [file, msg] of Object.entries(action.context.notifications)) {
                 this.notification.add(

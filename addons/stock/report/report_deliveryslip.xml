@@ -45,19 +45,19 @@
                     <h2>
                         <span t-field="o.name"/>
                     </h2>
-                    <div class="row mt32 mb32">
-                        <div t-if="o.origin" class="col-auto" name="div_origin">
+                    <div class="row mt-4 mb-4">
+                        <div t-if="o.origin" class="col-auto col-3 mw-100 mb-2" name="div_origin">
                             <strong>Order:</strong>
-                            <p t-field="o.origin"/>
+                            <p t-field="o.origin" class="m-0"/>
                         </div>
-                        <div t-if="o.state" class="col-auto" name="div_sched_date">
+                        <div t-if="o.state" class="col-auto col-3 mw-100 mb-2"  name="div_sched_date">
                             <strong>Shipping Date:</strong>
                             <t t-if="o.state == 'done'">
-                                <p t-field="o.date_done"/>
+                                <p t-field="o.date_done" class="m-0"/>
                             </t>
                             <t t-if="o.state != 'done'">
-                                <p t-field="o.scheduled_date"/>
-                           </t>
+                                <p t-field="o.scheduled_date" class="m-0"/>
+                            </t>
                         </div>
                     </div>
                     <table class="table table-sm" t-if="o.state!='done'" name="stock_move_table">
@@ -220,7 +220,10 @@
             <t t-if="not description and description != ''">
                 <t t-set="description" t-value="move_line.move_id.description_picking"/>
             </t>
-            <p t-if="description !='' and description != move_line.product_id.name">
+            <p t-if="description != '' and
+                     description != move_line.product_id.display_name and
+                     description != move_line.product_id.name"
+            >
                 <span t-esc="description"/>
             </p>
         </td>
@@ -237,7 +240,7 @@
             <td>
                 <span t-esc="aggregated_lines[line]['name']"/>
                 <p t-if="aggregated_lines[line]['description']">
-                    <span t-esc="aggregated_lines[line]['description']"/>
+                    <span t-esc="aggregated_lines[line]['description']"  t-options="{'widget': 'text'}"/>
                 </p>
             </td>
             <td class="text-center" name="move_line_aggregated_qty_ordered">

@@ -5,16 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # Lucia Pacheco, 2022
-# Fernanda Alvarez, 2023
-# Iran Villalobos López, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,9 +164,9 @@ msgid ""
 "propagated to every attendees.If not it will be asked for every attendee of "
 "a reservation."
 msgstr ""
-"Si es verdadera, esta pregunta se hará una sola vez y se repartirá su valor "
-"entre todos los asistentes; de no ser así, se hará la pregunta a todos los "
-"asistentes del evento."
+"Si está seleccionada, esta pregunta se hará solo una vez y su valor se "
+"compartirá entre todos los asistentes. Si no, se preguntará a todos los "
+"asistentes."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
@@ -240,20 +239,13 @@ msgid "Question Type"
 msgstr "Tipo de pregunta"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot be linked to both an Event and an Event Type."
 msgstr ""
-"La pregunta no se puede vincular a un Evento y a un Tipo de evento al mismo "
+"La pregunta no se puede vincular a un evento y a un tipo de evento al mismo "
 "tiempo."
-
-#. module: website_event_questions
-#: code:addons/website_event_questions/models/event_question.py:0
-#, python-format
-msgid "Question cannot belong to both the event category and itself."
-msgstr ""
-"La pregunta no puede pertenecer tanto a la categoría del evento como a sí "
-"misma."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -352,6 +344,7 @@ msgid "Yes"
 msgstr "Sí"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -361,6 +354,7 @@ msgstr ""
 "respuesta."
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -369,6 +363,7 @@ msgstr ""
 "No puede eliminar una pregunta que ya hayan respondido los asistentes."
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""

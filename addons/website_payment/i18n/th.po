@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +69,7 @@ msgstr "<b>วิธีการชำระเงิน:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">ประเทศ...</option>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
@@ -100,7 +100,7 @@ msgstr "ปีแห่งการตื่นตัวทางวัฒนธ
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Activate Payments"
-msgstr ""
+msgstr "เปิดใช้งานการชำระเงิน"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -161,7 +161,7 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #: code:addons/website_payment/models/res_config_settings.py:0
 #, python-format
 msgid "Configure %s"
-msgstr ""
+msgstr "การกำหนดค่า %s"
 
 #. module: website_payment
 #: model:ir.actions.server,name:website_payment.action_stripe_connect_account
@@ -299,7 +299,7 @@ msgstr "ช่อง '%s' เป็นช่องบังคับ"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__first_provider_label
 msgid "First Provider Label"
-msgstr ""
+msgstr "ป้ายกำกับผู้ให้บริการรายแรก"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -315,7 +315,7 @@ msgstr "บริจาค"
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__is_stripe_supported_country
 #: model:ir.model.fields,field_description:website_payment.field_res_country__is_stripe_supported_country
 msgid "Is Stripe Supported Country"
-msgstr ""
+msgstr "เป็นประเทศที่รองรับ Stripe"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
@@ -335,7 +335,7 @@ msgstr "สูงสุด"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
 msgid "Minimum"
-msgstr ""
+msgstr "ขั้นต่ำ"
 
 #. module: website_payment
 #. odoo-javascript
@@ -379,7 +379,7 @@ msgstr "หนึ่งปีในโรงเรียนมัธยม"
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__other_than_paypal
 msgid "Other than Paypal"
-msgstr ""
+msgstr "นอกเหนือจาก Paypal"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout
@@ -416,7 +416,7 @@ msgstr ""
 #. module: website_payment
 #: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
 msgid "Paypal Only"
-msgstr ""
+msgstr "Paypal เท่านั้น"
 
 #. module: website_payment
 #. odoo-javascript
@@ -433,7 +433,7 @@ msgstr "ตัวเลือกที่กรอกล่วงหน้า"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
 msgid "Providers State"
-msgstr ""
+msgstr "Providers State"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -450,7 +450,7 @@ msgstr "เซิร์ฟเวอร์ผิดพลาด"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "Shop - Payment"
-msgstr ""
+msgstr "ร้านค้า - ชำระเงิน"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
@@ -480,6 +480,8 @@ msgid ""
 "Stripe Connect is not available in your country, please use another payment "
 "provider."
 msgstr ""
+"Stripe Connect ไม่สามารถใช้งานได้ในประเทศของคุณ "
+"โปรดใช้ผู้ให้บริการชำระเงินรายอื่น"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -487,6 +489,8 @@ msgid ""
 "Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
 "Pay, etc. as well as recurring charges."
 msgstr ""
+"รองรับวิธีการชำระเงินส่วนใหญ่ Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay ฯลฯ รวมถึงการเรียกเก็บเงินที่เกิดขึ้นประจำ"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -515,12 +519,12 @@ msgstr "ข้อผิดพลาดในการตรวจสอบคว
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View Alternatives"
-msgstr ""
+msgstr "ดูทางเลือก"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
 msgid "View other providers"
-msgstr ""
+msgstr "ดูผู้ให้บริการรายอื่น"
 
 #. module: website_payment
 #. odoo-javascript
@@ -537,7 +541,7 @@ msgstr "เว็บไซต์"
 #. module: website_payment
 #: model:mail.template,name:website_payment.mail_template_donation
 msgid "Website: Donation"
-msgstr ""
+msgstr "เว็บไซต์: บริจาค"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.payment_checkout

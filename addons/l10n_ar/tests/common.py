@@ -92,7 +92,7 @@ class TestAr(AccountTestInvoicingCommon):
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
         })
         cls.partner_cf = cls.env['res.partner'].create({
-            "name": "Consumidor Final Anónimo",
+            "name": "Consumidor Final Anonimo",
             "l10n_latam_identification_type_id": cls.env.ref('l10n_ar.it_Sigd').id,
             "l10n_ar_afip_responsibility_type_id": cls.env.ref("l10n_ar.res_CF").id,
         })
@@ -111,57 +111,57 @@ class TestAr(AccountTestInvoicingCommon):
             'vat': "27320732811",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,
         })
-        cls.res_partner_cerrocastor = cls.env['res.partner'].create({
-            "name": "Cerro Castor (Tierra del Fuego)",
+        cls.res_partner_montana_sur = cls.env['res.partner'].create({
+            "name": "Montana Sur",
             "is_company": 1,
-            "city": "Ushuaia",
+            "city": "San Martin de los Andes",
             "state_id": cls.env.ref("base.state_ar_v").id,
             "country_id": cls.env.ref("base.ar").id,
             "street": "Ruta 3 km 26",
-            "email": "info@cerrocastor.com",
-            "phone": "(+00) (11) 4444 5556",
-            "website": "http://www.cerrocastor.com",
+            "email": "contacto@montanasur.com.ar.com",
+            "phone": "(+54) (297) 4876 123",
+            "website": "http://www.montanasur.com.ar/",
             'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "27333333339",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVA_LIB").id,
         })
-        cls.res_partner_cmr = cls.env['res.partner'].create({
-            "name": "Concejo Municipal de Rosario (IVA Sujeto Exento)",
+        cls.res_partner_servicios_globales = cls.env['res.partner'].create({
+            "name": "Servicios Globales SRL (IVA Sujeto Exento)",
             "is_company": 1,
             "city": "Rosario",
             "zip": "2000",
             "state_id": cls.env.ref("base.state_ar_s").id,
             "country_id": cls.env.ref("base.ar").id,
-            "street": "Cordoba 501",
-            "email": "info@example.com.ar",
-            "phone": "(+54) (341) 222 3333",
-            "website": "http://www.concejorosario.gov.ar/",
+            "street": "Bv. Oroño 789",
+            "email": "contacto@serviciosglobales.com.ar",
+            "phone": "(+54) (341) 333 4444",
+            "website": "http://www.serviciosglobales.com.ar/",
             'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30684679372",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVAE").id,
         })
-        cls.res_partner_expresso = cls.env['res.partner'].create({
-            "name": "Expresso",
+        cls.res_partner_barcelona_food = cls.env['res.partner'].create({
+            "name": "Barcelona Food",
             "is_company": 1,
             "city": "Barcelona",
             "zip": "11002",
             "country_id": cls.env.ref("base.es").id,
             "street": "La gran avenida 123",
-            "email": "info@expresso.com",
+            "email": "info@barcelonafoods.com",
             "phone": "(+00) (11) 222 3333",
-            "website": "http://www.expresso.com/",
+            "website": "http://www.barcelonafoods.com/",
             'l10n_latam_identification_type_id': cls.env.ref("l10n_latam_base.it_fid").id,
             'vat': "2222333344445555",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_EXT").id,
         })
         cls.partner_mipyme = cls.env['res.partner'].create({
-            "name": "Belgrano Cargas Y Logistica S (Mipyme)",
+            "name": "Trenes Argentinos (Mipyme)",
             "is_company": 1,
             "city": "Buenos Aires",
-            "zip": "1425",
+            "zip": "1524",
             "state_id": cls.env.ref("base.state_ar_c").id,
             "country_id": cls.env.ref("base.ar").id,
-            "street": "Av. Santa Fe 4636",
+            "street": "Santa Cruz 4636",
             "email": "mipyme@example.com",
             "phone": "(123)-456-7890",
             "website": "http://www.mypime-inc.com",
@@ -328,7 +328,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_1': {
                 "ref": "test_invoice_1: Invoice to gritti support service, vat 21",
                 "partner_id": self.res_partner_gritti_mono,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 "invoice_date": "2021-03-01",
@@ -338,9 +337,8 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_2': {
-                "ref": "test_invoice_2: Invoice to CMR with vat 21, 27 and 10,5",
-                "partner_id": self.res_partner_cmr,
-                "invoice_user_id": invoice_user_id,
+                "ref": "test_invoice_2: Invoice to Servicios Globales with vat 21, 27 and 10,5",
+                "partner_id": self.res_partner_servicios_globales,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": "out_invoice",
                 "invoice_date": "2021-03-05",
@@ -354,7 +352,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_3': {
                 "ref": "test_invoice_3: Invoice to ADHOC with vat cero and 21",
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-01",
@@ -367,20 +364,18 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_4': {
                 'ref': 'test_invoice_4: Invoice to ADHOC with vat exempt and 21',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-01",
                 "company_id": self.company_ri,
                 "invoice_line_ids": [
-                    {'product_id': self.product_iva_105, 'price_unit': 642.0, 'quantity': 5},
-                    {'product_id': self.product_iva_exento, 'price_unit': 100.0, 'quantity': 1},
+                    {'product_id': self.product_iva_105, 'price_unit': 642.1234, 'quantity': 5},
+                    {'product_id': self.product_iva_exento, 'price_unit': 100.5678, 'quantity': 1},
                 ],
             },
             'test_invoice_5': {
                 'ref': 'test_invoice_5: Invoice to ADHOC with all type of taxes',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -395,10 +390,9 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_6': {
-                'ref': 'test_invoice_6: Invoice to cerro castor, fiscal position changes taxes to exempt',
-                "partner_id": self.res_partner_cerrocastor,
+                'ref': 'test_invoice_6: Invoice to Montana Sur, fiscal position changes taxes to exempt',
+                "partner_id": self.res_partner_montana_sur,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-03",
@@ -414,10 +408,9 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_7': {
-                'ref': 'test_invoice_7: Export invoice to expresso, fiscal position changes tax to exempt (type 4 because it have services)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_7: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 4 because it have services)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-03",
@@ -435,7 +428,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_8': {
                 'ref': 'test_invoice_8: Invoice to consumidor final',
                 "partner_id": self.partner_cf,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -447,7 +439,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_10': {
                 'ref': 'test_invoice_10; Invoice to ADHOC in USD and vat 21',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -460,7 +451,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_11': {
                 'ref': 'test_invoice_11: Invoice to ADHOC with many lines in order to prove rounding error, with 4 decimals of precision for the currency and 2 decimals for the product the error apperar',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -475,7 +465,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_12': {
                 'ref': 'test_invoice_12: Invoice to ADHOC with many lines in order to test rounding error, it is required to use a 4 decimal precision in prodct in order to the error occur',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -490,7 +479,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_13': {
                 'ref': 'test_invoice_13: Invoice to ADHOC with many lines in order to test zero amount invoices y rounding error. it is required to set the product decimal precision to 4 and change 260.59 for 260.60 in order to reproduce the error',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -507,10 +495,9 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_14': {
-                'ref': 'test_invoice_14: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because only products)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_14: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because only products)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-20",
@@ -521,10 +508,9 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_15': {
-                'ref': 'test_invoice_15: Export invoice to expresso, fiscal position changes tax to exempt (type 2 because only service)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_15: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 2 because only service)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-20",
@@ -535,10 +521,9 @@ class TestAr(AccountTestInvoicingCommon):
                 ],
             },
             'test_invoice_16': {
-                'ref': 'test_invoice_16: Export invoice to expresso, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
-                "partner_id": self.res_partner_expresso,
+                'ref': 'test_invoice_16: Export invoice to Barcelona food, fiscal position changes tax to exempt (type 1 because it have products only, used to test refund of expo)',
+                "partner_id": self.res_partner_barcelona_food,
                 "journal_id": self.sale_expo_journal_ri,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-22",
@@ -551,7 +536,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_17': {
                 'ref': 'test_invoice_17: Invoice to ADHOC with 100%% of discount',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -563,7 +547,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_18': {
                 'ref': 'test_invoice_18: Invoice to ADHOC with 100%% of discount and with different VAT aliquots',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -577,7 +560,6 @@ class TestAr(AccountTestInvoicingCommon):
             'test_invoice_19': {
                 'ref': 'test_invoice_19: Invoice to ADHOC with multiple taxes and perceptions',
                 "partner_id": self.res_partner_adhoc,
-                "invoice_user_id": invoice_user_id,
                 "invoice_payment_term_id": payment_term_id,
                 "move_type": 'out_invoice',
                 "invoice_date": "2021-03-13",
@@ -594,7 +576,6 @@ class TestAr(AccountTestInvoicingCommon):
             with Form(self.env['account.move'].with_context(default_move_type=values['move_type'])) as invoice_form:
                 invoice_form.ref = values['ref']
                 invoice_form.partner_id = values['partner_id']
-                invoice_form.invoice_user_id = values['invoice_user_id']
                 invoice_form.invoice_payment_term_id = values['invoice_payment_term_id']
                 if not use_current_date:
                     invoice_form.invoice_date = values['invoice_date']
@@ -628,7 +609,7 @@ class TestAr(AccountTestInvoicingCommon):
             pos_number = data.get('l10n_ar_afip_pos_number')
         values = {'name': '%s %s' % (afip_ws.replace('WS', ''), pos_number),
                   'type': 'sale',
-                  'code': afip_ws,
+                  'code': pos_number,
                   'l10n_ar_afip_pos_system': self._get_afip_pos_system_real_name().get(afip_ws),
                   'l10n_ar_afip_pos_number': pos_number,
                   'l10n_latam_use_documents': True,

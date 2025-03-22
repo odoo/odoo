@@ -30,7 +30,7 @@ Here is how it works:
     - Printing the invoice will trigger the download of three files: the invoice, its ISR and its QR-bill
     - Clicking the 'Send by mail' button will attach three files to your draft mail : the invoice, the ISR and the QR-bill.
     """,
-    'version': '11.1',
+    'version': '11.2',
     'category': 'Accounting/Localizations/Account Charts',
 
     'depends': ['account', 'l10n_multilang', 'base_iban', 'l10n_din5008'],

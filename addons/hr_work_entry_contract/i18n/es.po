@@ -3,10 +3,10 @@
 # 	* hr_work_entry_contract
 # 
 # Translators:
-# marcescu, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +47,7 @@ msgstr ""
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid "%s does not have a contract from %s to %s."
-msgstr "%sno tiene contrato del%sal%s."
+msgstr "%s no tiene contrato del %s al %s."
 
 #. module: hr_work_entry_contract
 #. odoo-python
@@ -57,8 +57,8 @@ msgid ""
 "%s has multiple contracts from %s to %s. A work entry cannot overlap "
 "multiple contracts."
 msgstr ""
-"%stiene multiples contratos del %sal%s. Una entrada de trabajo no puede "
-"coincidir con múltiples contratos."
+"%s tiene varios contratos del %s al %s. Una entrada de trabajo no puede "
+"coincidir con varios contratos."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -88,8 +88,8 @@ msgstr ""
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
 msgstr ""
-"Permitir que el tipo de entrada de trabajo se vincule con los tipos de "
-"tiempo personal."
+"Permita que el tipo de entrada de trabajo se vincule con los tipos de "
+"ausencia."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -99,7 +99,7 @@ msgstr "Cancelar"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
 msgid "Compensatory Time Off"
-msgstr "Tiempo personal compensatorio"
+msgstr "Ausencias compensatorias"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__contract_id
@@ -157,7 +157,7 @@ msgstr "Entradas de trabajo de todos"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
 msgid "Extra Hours"
-msgstr "Horas extra"
+msgstr "Horas extras"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__date_from
@@ -183,17 +183,17 @@ msgstr "Generado hasta"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_leave
 msgid "Generic Time Off"
-msgstr "Tiempo personal genérico"
+msgstr "Ausencia genérica"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "Entrada de trabajo de RRHH"
+msgstr "Entrada de trabajo de RR. HH."
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "Tipo de entrada de trabajo de RRHH"
+msgstr "Tipo de entrada de trabajo de RR. HH."
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
@@ -215,10 +215,10 @@ msgid ""
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
-"Con el fin de regenerar las entradas de trabajo, necesitas proporcionar al "
-"asistente el employee_id, date_from y date_to. Además de eso, el intervalo "
-"de tiempo definido por date_from y date_to no debe contener ninguna entrada "
-"de trabajo validada."
+"El asistente necesita que proporcione el employee_id, date_from y date_to "
+"para poder volver a generar las entradas de trabajo. Además, el intervalo de"
+" tiempo definido por date_from y date_to no debe incluir ninguna entrada de "
+"trabajo validada."
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__last_generation_date
@@ -253,7 +253,7 @@ msgstr "Última fecha"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
-msgstr "Tiempo personal de largo plazo"
+msgstr "Ausencia de largo plazo"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
@@ -328,7 +328,7 @@ msgstr "Hasta"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_unpaid_leave
 msgid "Unpaid"
-msgstr "Impagada"
+msgstr "No pagado"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__valid
@@ -359,4 +359,4 @@ msgstr "Origen de entrada de trabajo"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr "Programa de trabajo"
+msgstr "Horario de trabajo"

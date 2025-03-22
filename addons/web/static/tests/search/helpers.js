@@ -8,6 +8,7 @@ import {
     mount,
     mouseEnter,
     triggerEvent,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
@@ -252,7 +253,7 @@ export async function editFavoriteName(el, name) {
         `.o_favorite_menu .o_add_favorite .dropdown-menu input[type="text"]`
     );
     input.value = name;
-    await triggerEvent(input, null, "input");
+    await triggerEvents(input, null, ["input", "change"]);
 }
 
 export async function saveFavorite(el) {

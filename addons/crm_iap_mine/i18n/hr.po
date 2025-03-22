@@ -12,14 +12,16 @@
 # Tina Milas, 2022
 # Matej Mijoč, 2022
 # Bole <bole@dajmi5.com>, 2023
+# Alen Komljen, 2024
+# Luka Carević <luka@uvid.hr>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2023\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2024\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +30,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "%d credits will be consumed to find %d companies."
@@ -43,8 +46,8 @@ msgstr "<b>Kontakti</b>"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p>Dear,</p>\n"
-"    <p>There are no more credits on your IAP Lead Generation account.<br/>\n"
-"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br/></p>\n"
+"    <p>There are no more credits on your IAP Lead Generation account.<br>\n"
+"    You can charge your IAP Lead Generation account in the settings of the CRM app.<br></p>\n"
 "    <p>Best regards,</p>\n"
 "    <p>Odoo S.A.</p>\n"
 "</div>"
@@ -175,6 +178,7 @@ msgid "Countries"
 msgstr "Države"
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Create a Lead Mining Request"
@@ -276,7 +280,8 @@ msgid "From"
 msgstr "Od"
 
 #. module: crm_iap_mine
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/static/src/views/generate_leads_views.xml:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_mine.crm_iap_lead_mining_request_view_form
@@ -285,11 +290,12 @@ msgid "Generate Leads"
 msgstr "Generiraj potencijale"
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Generate new leads based on their country, industry, size, etc."
 msgstr ""
-"Generiraj nove potencijale temeljene na državama, idustriji, veličini..."
+"Generiraj nove potencijale temeljene na državama, idustriji, veličini i sl."
 
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_mining_request__lead_ids
@@ -422,7 +428,7 @@ msgid "Leads"
 msgstr "Potencijali"
 
 #. module: crm_iap_mine
-#. openerp-web
+#. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid ""
@@ -451,6 +457,7 @@ msgid "Name already exists!"
 msgstr ""
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
@@ -465,7 +472,7 @@ msgid "No Result"
 msgstr ""
 
 #. module: crm_iap_mine
-#. openerp-web
+#. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid "Now, just let the magic happen!"
@@ -494,6 +501,7 @@ msgid "Opportunities"
 msgstr "Prilike"
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"
@@ -564,7 +572,7 @@ msgstr "Uloga"
 #. module: crm_iap_mine
 #: model:ir.model.fields,field_description:crm_iap_mine.field_crm_iap_lead_role__name
 msgid "Role Name"
-msgstr ""
+msgstr "Naziv uloge"
 
 #. module: crm_iap_mine
 #: model:ir.model.constraint,message:crm_iap_mine.constraint_crm_iap_lead_role_name_uniq
@@ -640,6 +648,7 @@ msgid "Telecommunication Services"
 msgstr ""
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "This makes a total of %d credits for this request."
@@ -657,6 +666,7 @@ msgid "Type"
 msgstr "Vrsta"
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid ""
@@ -670,7 +680,7 @@ msgid "What do you need ?"
 msgstr ""
 
 #. module: crm_iap_mine
-#. openerp-web
+#. odoo-javascript
 #: code:addons/crm_iap_mine/static/src/js/tours/crm_iap_lead.js:0
 #, python-format
 msgid "Which Industry do you want to target?"
@@ -682,6 +692,7 @@ msgid "You do not have enough credits to submit this request."
 msgstr ""
 
 #. module: crm_iap_mine
+#. odoo-python
 #: code:addons/crm_iap_mine/models/crm_iap_lead_mining_request.py:0
 #, python-format
 msgid "Your request could not be executed: %s"

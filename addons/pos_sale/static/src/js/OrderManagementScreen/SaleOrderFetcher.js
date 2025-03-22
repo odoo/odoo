@@ -31,6 +31,9 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
             const nItems = this.totalCount;
             return Math.trunc(nItems / (this.nPerPage + 1)) + 1;
         }
+        get orderFields(){
+          return ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id', 'amount_unpaid'] 
+        }
         /**
          * Calling this methods populates the `ordersToShow` then trigger `update` event.
          * @related get
@@ -82,7 +85,7 @@ odoo.define('pos_sale.SaleOrderFetcher', function (require) {
             const saleOrders = await this.rpc({
                 model: 'sale.order',
                 method: 'search_read',
-                args: [domain, ['name', 'partner_id', 'amount_total', 'date_order', 'state', 'user_id', 'amount_unpaid'], offset, limit],
+                args: [domain, this.orderFields, offset, limit],
                 context: this.comp.env.session.user_context,
             });
 

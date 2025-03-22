@@ -5,29 +5,30 @@
 # Translators:
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
 # Zsofia Biro <zsbiro1205@gmail.com>, 2022
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
+# f1b3a33e3b33fcf18004a5292e501f50_3500ca8 <373b677b151624c4521d9efc77b996fd_750224>, 2022
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2022
 # sixsix six, 2022
-# A . <tiboreu@protonmail.com>, 2022
+# A . <tibor@inventati.org>, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
 # Kovács Tibor <kovika@gmail.com>, 2022
 # Istvan <leki69@gmail.com>, 2022
-# Ákos Nagy <akos.nagy@oregional.hu>, 2022
 # Bognár István <f-b-i@freemail.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
-# Szabolcs Rádi, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
-# krnkris, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
-# Martin Trigaux, 2023
-# Tamás Dombos, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
+# Tamás Dombos, 2024
+# krnkris, 2025
+# Martin Trigaux, 2025
+# Ákos Nagy <akos.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Tamás Dombos, 2023\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,12 +50,20 @@ msgstr "\"riasztás a"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr ""
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr ""
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -122,6 +131,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "$9.00"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "%s List"
 msgstr ""
 
 #. module: website
@@ -231,17 +247,7 @@ msgstr "+ Új Weboldal"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 555-0111"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
-msgid ", .s_searchbar_input"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_website_form_options
-msgid ", .s_website_form"
+msgid "+1 555-555-5556"
 msgstr ""
 
 #. module: website
@@ -507,6 +513,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -820,8 +827,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
 
 #. module: website
@@ -1404,6 +1411,13 @@ msgid "About us"
 msgstr "Rólunk"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Hozzáférés megtagadva"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "Hozzáférési token"
@@ -1427,7 +1441,7 @@ msgstr "Kiegészítők"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Accordion"
-msgstr ""
+msgstr "Harmonika"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -2074,6 +2088,7 @@ msgstr "Háttér"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #, python-format
@@ -2204,7 +2219,7 @@ msgstr "Blokkolás"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Blockquote"
-msgstr ""
+msgstr "Idézet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -2381,7 +2396,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Call to Action"
-msgstr ""
+msgstr "Felhívás"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -2480,7 +2495,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Carousel"
-msgstr ""
+msgstr "Körhinta"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -2554,7 +2569,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Chart"
-msgstr ""
+msgstr "Grafikon"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_live_chat
@@ -2581,7 +2596,10 @@ msgid "Check your connection and try again"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Checkbox"
 msgstr "Jelölő négyzet"
 
@@ -2950,6 +2968,8 @@ msgid ""
 "Contact us about anything related to our company or services.<br/>\n"
 "                                    We'll do our best to get back to you as soon as possible."
 msgstr ""
+"Ha bármilyen kérdése lenne vállalatunkkal vagy a szolgáltatásainkkal kapcsolatban, itt felteheti.<br/>\n"
+"Próbálunk a lehető leghamarabb válaszolni."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -3236,6 +3256,14 @@ msgstr "Egyedi kód"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Custom Key"
 msgstr "Egyedi kulcs"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Custom Text"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -3750,6 +3778,15 @@ msgid "Display this website when users visit this domain"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -3771,6 +3808,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "Szeretné telepíteni a &quot; %s&quot; alkalmazást?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "Dokumentáció"
@@ -4185,6 +4223,13 @@ msgid "Examples"
 msgstr "Példák"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Existing fields"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Expert"
 msgstr "Szakértő"
@@ -4319,12 +4364,19 @@ msgstr "Jellemzők"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Features Grid"
-msgstr ""
+msgstr "Jellemzőrács"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched elements"
 msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Field"
+msgstr "Mező"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
@@ -4802,6 +4854,16 @@ msgid "Google Search Console"
 msgstr ""
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -4960,7 +5022,10 @@ msgid "Header Visible"
 msgstr "Fejléc látható"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Headings"
 msgstr ""
 
@@ -4970,27 +5035,42 @@ msgid "Headings 1"
 msgstr "Címsor 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Címsor 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Címsor 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Címsor 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Címsor 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Címsor 6"
 
@@ -5053,6 +5133,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Hide For"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
 msgstr ""
 
 #. module: website
@@ -5121,8 +5208,8 @@ msgid "Home page of the current website"
 msgstr ""
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5304,6 +5391,15 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/snippets/s_image_gallery/options.js:0
 #: model:ir.model.fields,field_description:website.field_website_visitor__partner_image
 #: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
@@ -5315,7 +5411,7 @@ msgstr "Kép"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image - Text"
-msgstr ""
+msgstr "Kép - Szöveg"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -5325,7 +5421,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Image Gallery"
-msgstr ""
+msgstr "Képgaléria"
 
 #. module: website
 #. odoo-javascript
@@ -5368,7 +5464,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Images Wall"
-msgstr ""
+msgstr "Képfal"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -6209,7 +6305,10 @@ msgid "Linkedin"
 msgstr "Linkedin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Hivatkozások"
 
@@ -6400,7 +6499,7 @@ msgstr "Média"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Media List"
-msgstr ""
+msgstr "Médialista"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -6441,6 +6540,7 @@ msgid "Men"
 msgstr "Férfi"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -7036,14 +7136,14 @@ msgstr "Nyelvek száma"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Numbers"
-msgstr ""
+msgstr "Számok"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "OR"
-msgstr ""
+msgstr "VAGY"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7221,6 +7321,13 @@ msgstr "SEO optimalizálása"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option"
+msgstr "Opció"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 1"
@@ -7360,7 +7467,10 @@ msgid "Page Layout"
 msgstr "Oldalelrendezés"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Oldal neve"
 
@@ -7616,7 +7726,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
-msgstr ""
+msgstr "Felugró ablak"
+
+#. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Portál felhasználó beállítás"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -7656,6 +7771,13 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Preset"
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full screen"
 msgstr ""
 
 #. module: website
@@ -7711,6 +7833,13 @@ msgstr "Árazás"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Elsődleges"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7900,9 +8029,21 @@ msgid "Qweb Field Contact"
 msgstr "Qweb mező kapcsolat"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "Qweb mező HTML"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Radar"
 msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Radio"
+msgstr "Rádió"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8421,6 +8562,13 @@ msgid "Secondary"
 msgstr "Másodlagos"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr ""
@@ -8692,6 +8840,13 @@ msgid "Show site map"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Desktop"
 msgstr ""
@@ -8704,7 +8859,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Showcase"
-msgstr ""
+msgstr "Bemutató"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9131,7 +9286,7 @@ msgstr "FORDÍTÁS"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Table of Content"
-msgstr ""
+msgstr "Tartalomjegyzék"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -9218,16 +9373,19 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Szöveg"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text - Image"
-msgstr ""
+msgstr "Szöveg - Kép"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9246,7 +9404,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Text Highlight"
-msgstr ""
+msgstr "Szövegkiemelés"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_options
@@ -9286,6 +9444,15 @@ msgstr "Köszönöm!"
 #, python-format
 msgid "The chosen name already exists"
 msgstr "A választott név már létezik."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -9535,7 +9702,7 @@ msgstr "Harmadik menü"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
 msgstr ""
 
 #. module: website
@@ -9588,6 +9755,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9657,16 +9825,16 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
-msgid ""
-"This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
-"To remove this message please set a domain in your website settings"
+msgid "This website does not have a domain configured."
 msgstr ""
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
 #, python-format
-msgid "This website does not have a domain configured."
+msgid ""
+"This website does not have a domain configured. To avoid unexpected behaviours during website edition, we recommend closing (or refreshing) other browser tabs.\n"
+"To remove this message please set a domain in your website settings"
 msgstr ""
 
 #. module: website
@@ -10490,6 +10658,13 @@ msgid "We are in good company."
 msgstr ""
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
@@ -10929,6 +11104,13 @@ msgstr "Év"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Igen"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
 #, python-format
 msgid ""
@@ -11016,6 +11198,22 @@ msgstr ""
 
 #. module: website
 #. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
+msgstr ""
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
 msgid "You do not have the rights to publish/unpublish"
@@ -11031,13 +11229,6 @@ msgid ""
 msgstr ""
 "Elrejtette ezt az oldalt a keresési eredményekből. A keresőmotorok nem "
 "indexelik."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11096,6 +11287,15 @@ msgstr "Az Ön e-mail címe"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Name"
@@ -11106,7 +11306,7 @@ msgstr "Az Ön neve"
 #: code:addons/website/static/src/js/form_editor_registry.js:0
 #, python-format
 msgid "Your Question"
-msgstr ""
+msgstr "Az Ön kérdése"
 
 #. module: website
 #. odoo-javascript

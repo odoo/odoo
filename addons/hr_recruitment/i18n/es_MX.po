@@ -4,11 +4,13 @@
 # 
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
 # Iran Villalobos López, 2023
 # Wil Odoo, 2023
-# Fernanda Alvarez, 2023
+# Lucia Pacheco, 2024
+# Martin Trigaux, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2024
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
@@ -16,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,7 +46,7 @@ msgstr "<b>Haga clic para ver</b> la postulación."
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
-"<b>¿Se postuló enviando un correo electrónico?</b> Verifique las "
+"<b>¿Se postuló mediante un correo electrónico?</b> Verifique las "
 "postulaciones entrantes."
 
 #. module: hr_recruitment
@@ -53,7 +55,7 @@ msgstr ""
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr ""
-"<b>Arrastre esta tarjeta</b>, para calificarlo para una primera entrevista."
+"<b>Arrastre esta tarjeta</b> para calificarle a una primera entrevista."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -63,7 +65,7 @@ msgid ""
 "<div><b>Try to send an email</b> to the applicant.</div><div><i>Tips: All "
 "emails sent or received are saved in the history here</i>"
 msgstr ""
-"<div><b>Intente mandarle un correo electrónico</b> al "
+"<div><b>Intente enviar un correo electrónico</b> al "
 "candidato.</div><div><i>Consejo: todos los correos electrónicos enviados o "
 "recibidos se guardan en este historial</i>"
 
@@ -129,7 +131,7 @@ msgstr ""
 "                            <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
 "                            </span>\n"
 "                            <span class=\"text-danger\">\n"
-"                                Todas las postulaciones perderán su fecha de contratación y el estado de contratado.\n"
+"                                Todas las postulaciones perderán su fecha y estado de contratación.\n"
 "                            </span>\n"
 "                        </span>"
 
@@ -699,7 +701,7 @@ msgstr "Actividades para hoy"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad de excepción"
+msgstr "Decoración de la actividad de excepción"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
@@ -828,7 +830,7 @@ msgstr "Candidato contratado<br/>"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
 msgid "Applicant's Name"
-msgstr "Nombre del candidato"
+msgstr "Nombre del postulante"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__applicant_without_email
@@ -854,9 +856,9 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-"Los candidatos y su CV adjunto se crean de forma automática cuando se envía un correo electrónico.\n"
-"                Si instala los módulos de gestión de documentos, todos los currículums se indexarán automáticamente\n"
-"                de modo que puede buscar fácilmente a través de su contenido."
+"Los postulantes y su currículum adjunto se crean en automático cuando envían un correo electrónico.\n"
+"                Todos los currículums se indexarán en automático si instala los módulos de gestión de documentos \n"
+"                 y podrá buscar con facilidad en su contenido."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -865,9 +867,9 @@ msgid ""
 "            If you install the document management modules, all resumes are indexed automatically,\n"
 "            so that you can easily search through their content."
 msgstr ""
-"Los candidatos y su CV adjunto se crean de forma automática cuando se envía un correo electrónico.\n"
-"            Si instala los módulos de gestión de documentos, todos los currículums se indexarán automáticamente,\n"
-"            de modo que puede buscar fácilmente a través de su contenido."
+"Los postulantes y su currículum adjunto se crean en automático cuando envían un correo electrónico.\n"
+"                Todos los currículums se indexarán en automático si instala los módulos de gestión de documentos \n"
+"                 y podrá buscar con facilidad en su contenido."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -881,7 +883,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application"
-msgstr "Aplicación"
+msgstr "Postulación"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
@@ -997,10 +999,10 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
-"Al establecer un seudónimo en un puesto de trabajo, los correos electrónicos"
-" enviados a esta dirección crearán postulaciones de forma automática. "
-"Incluso puede utilizar varios rastreadores para obtener estadísticas según "
-"el origen de la postulación: LinkedIn, Monster, Indeed, etc."
+"Si establece un seudónimo en un puesto de trabajo, los correos electrónicos "
+"que lleguen a esa dirección crearán postulaciones en automático. Incluso "
+"puede utilizar varios rastreadores para obtener estadísticas según el origen"
+" de la postulación: LinkedIn, Monster, Indeed, etc."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -1015,7 +1017,7 @@ msgstr "Pantalla de CV"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
 msgid "Calendar Event"
-msgstr "Calendario de eventos"
+msgstr "Evento del calendario"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
@@ -1127,8 +1129,8 @@ msgstr "Contrato firmado"
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
 msgstr ""
-"Copie esta dirección de correo electrónico, para pegarla en su redactor de "
-"correo electrónico, para postularse."
+"Para postularse copie esta dirección de correo y péguela en su redactor de "
+"correo electrónico."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1211,8 +1213,8 @@ msgid ""
 "empty, the default email address will be used which is in human resources "
 "settings"
 msgstr ""
-"Defina una dirección de contacto específica para este puesto. Si la deja en "
-"blanco, la dirección predeterminada a utilizar es la que se definió en los "
+"Defina una dirección de contacto específica para este puesto. Si la deja "
+"vacía, la dirección de correo predeterminada será la que se usa en los "
 "ajustes de recursos humanos."
 
 #. module: hr_recruitment
@@ -1313,7 +1315,7 @@ msgstr "Mostrar el CV en el formulario de la postulación"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__display_name
 msgid "Display Name"
-msgstr "Nombre en pantalla"
+msgstr "Mostrar nombre"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1353,7 +1355,7 @@ msgstr "Documentos"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_1
 msgid "Doesn't fit the job requirements"
-msgstr "No cumple los requisitos para el empleo"
+msgstr "No cumple con los requisitos para el empleo"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
@@ -1372,7 +1374,7 @@ msgstr "Menú desplegable"
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_6
 msgid "Duplicate"
-msgstr "Duplicar"
+msgstr "Duplicado"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1464,7 +1466,7 @@ msgstr "Empleados"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Employment Types"
-msgstr "Tipos de empleados"
+msgstr "Tipos de empleo"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
@@ -1658,7 +1660,7 @@ msgstr "Icono"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icono para indicar una actividad de excepción."
+msgstr "Icono que indica una actividad de excepción."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
@@ -1677,8 +1679,8 @@ msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
-"Si se encuentra seleccionado, esta etapa se utiliza para determinar la fecha"
-" de contratación del candidato"
+"Si está seleccionada, esta etapa se utiliza para determinar la fecha de "
+"contratación del candidato"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1695,8 +1697,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
-"Si se establece, este contenido se enviará automáticamente a usuarios no "
-"autorizados en lugar del mensaje predeterminado."
+"Si se establece, este contenido se enviará en automático a los usuarios no "
+"autorizados en vez del mensaje predeterminado."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__active
@@ -1816,12 +1818,12 @@ msgstr "Publicación de ofertas"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid "Job Specific"
-msgstr "Trabajo específico"
+msgstr "Específica de un puesto"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
-msgstr "Trabajos"
+msgstr "Empleos"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1932,7 +1934,7 @@ msgstr "Actividades atrasadas"
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
 msgid "Let's create a job position."
-msgstr "Vamos a crear un puesto de trabajo."
+msgstr "Creemos un puesto de trabajo."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1967,7 +1969,7 @@ msgstr "Echemos un vistazo al flujo de postulaciones."
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
-msgstr "Vamos a crear este nuevo empleado ahora mismo."
+msgstr "Creemos a este nuevo empleado ahora mismo."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2218,8 +2220,8 @@ msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
 msgstr ""
-"Número de aplicaciones que son nuevas en el flujo (generalmente en el primer"
-" paso del flujo)"
+"Número de postulaciones nuevas en el flujo (por lo general en el primer paso"
+" del flujo)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -2316,7 +2318,7 @@ msgstr "O hable en privado con sus compañeros sobre este candidato."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other applications"
-msgstr "Otras aplicaciones"
+msgstr "Otras postulaciones"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id
@@ -2466,7 +2468,7 @@ msgstr "Etapas de reclutamiento"
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr "Reclutamiento: reconocimiento de postulación"
+msgstr "Reclutamiento: confirmación de postulación"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
@@ -2604,12 +2606,12 @@ msgstr "El puesto ya ha sido cubierto"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr "Candidatos en ejecución"
+msgstr "Postulantes activos"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega de SMS"
+msgstr "Error en el envío del SMS"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected
@@ -2699,7 +2701,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr "Enviar correos a los candidatos"
+msgstr "Enviar correos a los postulantes"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2810,8 +2812,8 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
-"Etapa del candidato antes de estar en la etapa actual. Se utiliza para el "
-"análisis de los casos perdidos."
+"Etapa del postulante antes de estar en esta. Se utiliza para analizar los "
+"casos perdidos."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
@@ -2948,8 +2950,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Use el seudónimo del correo electrónico, por ejemplo, \"jobs\" si desea "
-"recibir correos electrónicos en <jobs@example.odoo.com>"
+"El nombre del seudónimo de correo electrónico. Por ejemplo, \"trabajos\" si "
+"desea recibir correos electrónicos en <trabajos@ejemplo.odoo.com>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_user_id
@@ -2996,8 +2998,8 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Esta etapa se pliega en la vista de kanban cuando no hay registros para "
-"mostrar en la misma."
+"Esta etapa está oculta en la vista de kanban cuando no tiene registros para "
+"mostrar."
 
 #. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3043,7 +3045,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Tipo de actividad de excepción registrada."
+msgstr "Tipo de la actividad de excepción registrada."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_utm_campaign
@@ -3080,8 +3082,7 @@ msgstr "Mensajes sin leer"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the CV or the file itself"
 msgstr ""
-"Utilice el OCR para completar los datos a partir de una foto del CV o del "
-"archivo"
+"Utilice OCR para completar los datos con una foto del CV o con el archivo"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3128,7 +3129,7 @@ msgstr "Mensajes del sitio web"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
+msgstr "Historial de comunicación del sitio web"
 
 #. module: hr_recruitment
 #. odoo-javascript

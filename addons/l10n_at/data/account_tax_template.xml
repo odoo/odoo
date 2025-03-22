@@ -227,6 +227,7 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">300</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
@@ -334,7 +335,11 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
-                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_8_tag'), ref('tax_report_line_l10n_at_tva_line_4_1_tag')],
+                  'plus_report_expression_ids': [
+                        ref('tax_report_line_l10n_at_tva_line_4_8_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_3_zm_igl_tag')
+                  ],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -344,7 +349,11 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
-                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_8_tag'), ref('tax_report_line_l10n_at_tva_line_4_1_tag')],
+                  'minus_report_expression_ids': [
+                        ref('tax_report_line_l10n_at_tva_line_4_8_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_3_zm_igl_tag')
+                  ],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -367,7 +376,11 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
-                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_9_tag'), ref('tax_report_line_l10n_at_tva_line_4_1_tag')],
+                  'plus_report_expression_ids': [
+                        ref('tax_report_line_l10n_at_tva_line_4_9_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_3_zm_igl_tag')
+                  ],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -377,7 +390,11 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
-                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_4_9_tag'), ref('tax_report_line_l10n_at_tva_line_4_1_tag')],
+                  'minus_report_expression_ids': [
+                        ref('tax_report_line_l10n_at_tva_line_4_9_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_4_1_tag'),
+                        ref('tax_report_line_l10n_at_tva_line_3_zm_igl_tag')
+                  ],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -490,6 +507,7 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">50</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
@@ -523,6 +541,7 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field eval="20" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
@@ -556,6 +575,7 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">100</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">consu</field>
             <field eval="10" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
@@ -924,6 +944,7 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">200</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
@@ -931,6 +952,7 @@
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
+                  'plus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_3_zm_dl_tag')],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -940,6 +962,7 @@
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{
                   'repartition_type': 'base',
+                  'minus_report_expression_ids': [ref('tax_report_line_l10n_at_tva_line_3_zm_dl_tag')],
                 }),
                 (0,0,{
                   'repartition_type': 'tax',
@@ -953,6 +976,7 @@
             <field name="chart_template_id" ref="l10n_at_chart_template"/>
             <field name="sequence">300</field>
             <field name="type_tax_use">sale</field>
+            <field name="tax_scope">service</field>
             <field eval="0" name="amount"/>
             <field name="amount_type">percent</field>
             <field name="price_include" eval="0"/>
@@ -1153,7 +1177,7 @@
             <field name="price_include" eval="0"/>
             <field name="active" eval="False"/>
             <field name="amount">19</field>
-            <field name="amount_type">group</field>
+            <field name="amount_type">percent</field>
             <field name="tax_group_id" ref="tax_group_0"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0,{

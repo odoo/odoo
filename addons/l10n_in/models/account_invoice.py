@@ -67,12 +67,20 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
+    def _get_name_invoice_report(self):
+        if self.country_code == 'IN':
+            # TODO: remove the view mode check in master, only for stable releases
+            in_invoice_view = self.env.ref('l10n_in.l10n_in_report_invoice_document_inherit', raise_if_not_found=False)
+            if (in_invoice_view and in_invoice_view.sudo().mode == "primary"):
+                return 'l10n_in.l10n_in_report_invoice_document_inherit'
+        return super()._get_name_invoice_report()
+
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
         posted = super()._post(soft)
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
-        for move in posted.filtered(lambda m: m.country_code == 'IN'):
+        for move in posted.filtered(lambda m: m.country_code == 'IN' and m.is_sale_document()):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if move.l10n_in_state_id and not move.l10n_in_state_id.l10n_in_tin:
@@ -110,6 +118,10 @@ class AccountMove(models.Model):
         # Prevent deleting entries once it's posted for Indian Company only
         if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
             raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
+
+    def _can_be_unlinked(self):
+        self.ensure_one()
+        return (self.country_code != 'IN' or not self.posted_before) and super()._can_be_unlinked()
 
     def unlink(self):
         # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount

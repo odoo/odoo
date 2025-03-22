@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
-# jabelchi, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
+# Josep Anton Belchi, 2022
 # Arnau Ros, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
-# AncesLatino2004, 2022
+# 7b9408628f00af852f513eb4f12c005b_f9c6891, 2022
 # Martin Trigaux, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Ivan Espinola, 2022
@@ -16,9 +16,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: jabiri7, 2022\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -29,6 +29,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
@@ -127,7 +128,7 @@ msgid "Barcode Scanned"
 msgstr "Codi de barres escanejat"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
@@ -254,6 +255,14 @@ msgid "The barcode matching pattern"
 msgstr "El patró de coincidència de codis de barres"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "La llista de regles de codis de barres"
@@ -264,6 +273,7 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "El patró coincident serà un sobrenom per aquest codi de barres"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -274,6 +284,7 @@ msgstr ""
 "només pot contenir un parell de claus."
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -284,6 +295,7 @@ msgstr ""
 "només poden contenir N seguides de D."
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -339,7 +351,7 @@ msgid "Unit Product"
 msgstr "Unitat de producte"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"

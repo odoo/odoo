@@ -62,10 +62,17 @@ def report_configuration():
     _logger.info('addons paths: %s', odoo.addons.__path__)
     if config.get('upgrade_path'):
         _logger.info('upgrade path: %s', config['upgrade_path'])
+    if config.get('pre_upgrade_scripts'):
+        _logger.info('extra upgrade scripts: %s', config['pre_upgrade_scripts'])
     host = config['db_host'] or os.environ.get('PGHOST', 'default')
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
+    if sys.version_info[:2] > odoo.MAX_PY_VERSION:
+        _logger.warning("Python %s is not officially supported, please use Python %s instead",
+            '.'.join(map(str, sys.version_info[:2])),
+            '.'.join(map(str, odoo.MAX_PY_VERSION))
+        )
 
 def rm_pid_file(main_pid):
     config = odoo.tools.config

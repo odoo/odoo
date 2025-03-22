@@ -18,12 +18,12 @@ websiteSaleTracking.include({
 
 tour.register('google_analytics_view_item', {
     test: true,
-    url: '/shop?search=Customizable Desk',
+    url: '/shop?search=Colored T-Shirt',
 },
 [
     {
-        content: "select customizable desk",
-        trigger: '.oe_product_cart a:contains("Customizable Desk")',
+        content: "select Colored T-Shirt",
+        trigger: '.oe_product_cart a:contains("Colored T-Shirt")',
     },
     {
         content: "wait until `_getCombinationInfo()` rpc is done",
@@ -51,12 +51,12 @@ tour.register('google_analytics_view_item', {
 
 tour.register('google_analytics_add_to_cart', {
     test: true,
-    url: '/shop?search=Acoustic Bloc Screens',
+    url: '/shop?search=Basic Shirt',
 },
 [
     {
-        content: "select Acoustic Bloc Screens",
-        trigger: '.oe_product_cart a:contains("Acoustic Bloc Screens")',
+        content: "select Basic Shirt",
+        trigger: '.oe_product_cart a:contains("Basic Shirt")',
     },
     {
         content: "click add to cart button on product page",

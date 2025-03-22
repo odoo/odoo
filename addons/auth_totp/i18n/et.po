@@ -10,14 +10,16 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Anna, 2023
+# Birgit Vijar, 2024
+# Stevin Lilla, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Stevin Lilla, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "%(browser)s on %(platform)s"
@@ -34,13 +37,14 @@ msgstr "%(browser)s selles %(platform)s"
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "2-Factor Setup Wizard"
-msgstr ""
+msgstr "2-astmelise sisse logimise ülesseadmise viisard"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "2-Factor authentication is now enabled."
-msgstr ""
+msgstr "2-astmeline autentimine on nüüd lubatud. "
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -84,6 +88,8 @@ msgid ""
 "<span class=\"d-md-none d-block\">Or install an authenticator app</span>\n"
 "                                        <span class=\"d-none d-md-block\">Install an authenticator app on your mobile device</span>"
 msgstr ""
+"<span class=\"d-md-none d-block\">Või paigalda autentikaator rakendus</span>\n"
+"<span class=\"d-none d-md-block\">Paigalda autentikaator rakendus oma telefoni</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -91,6 +97,8 @@ msgid ""
 "<span class=\"d-none d-md-block\">When requested to do so, scan the barcode below</span>\n"
 "                                    <span class=\"d-block d-md-none\">When requested to do so, copy the key below</span>"
 msgstr ""
+"<span class=\"d-none d-md-block\">Skanneerige allolevat triipkoodi </span>\n"
+"<span class=\"d-block d-md-none\">Kopeerige allolev kood</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -98,6 +106,8 @@ msgid ""
 "<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
 "or the Microsoft Authenticator.</span>"
 msgstr ""
+"<span class=\"text-muted\">Populaarsed autentikaator rakendused on näiteks "
+"Authy, Google Authenticator või Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -121,6 +131,8 @@ msgid ""
 "Are you sure? The user may be asked to enter two-factor codes again on those"
 " devices"
 msgstr ""
+"Oled kindel? Kasutajalt võidakse küsida kahe-astmelisi PIN-koode uuesti "
+"nende seadmete puhul"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -128,6 +140,8 @@ msgid ""
 "Are you sure? You may be asked to enter two-factor codes again on those "
 "devices"
 msgstr ""
+"Olete Te kindel? Teilt võidakse küsida kahe-astmelisi PIN-koode uuesti nende"
+" seadmete puhul"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -142,7 +156,7 @@ msgstr "Autentimisseade"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Authenticator App Setup"
-msgstr ""
+msgstr "Autentimise rakenduse paigaldamine"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -153,12 +167,12 @@ msgstr "Tühista"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Cannot scan it?"
-msgstr ""
+msgstr "Kas ei saa skannerida?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Click on this link to open your authenticator app"
-msgstr ""
+msgstr "Vajutage siia, et avada oma autentimise rakendus"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
@@ -190,7 +204,7 @@ msgstr "Seade"
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
 msgid "Disable 2FA"
-msgstr ""
+msgstr "Lülita kahe astmeline autentimine välja"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
@@ -217,7 +231,7 @@ msgstr "Luba 2FA"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter your six-digit code below"
-msgstr ""
+msgstr "Sisesta kuue kohaline kood all"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -231,6 +245,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "Invalid authentication code format."
@@ -267,7 +282,7 @@ msgstr "Sisene"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Look for an \"Add an account\" button"
-msgstr ""
+msgstr "Otsige \"Add an account\" nuppu"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -307,6 +322,7 @@ msgid "Secret"
 msgstr "Saladus"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
@@ -318,6 +334,8 @@ msgid ""
 "To login, enter below the six-digit authentication code provided by your Authenticator app.\n"
 "                        <br/>"
 msgstr ""
+"Sisse logimiseks sisesta kuue kohaline kood, mis on saadetud autentimise rakendusse.\n"
+"                        <br/>"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
@@ -332,10 +350,11 @@ msgid "Trusted Devices"
 msgstr "Usaldusväärsed seaded"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-Factor Authentication Activation"
-msgstr ""
+msgstr "Kahe astmelise autentimise aktiveerimine"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -351,6 +370,9 @@ msgid ""
 "                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Kahe astmeline Autentimine (\"2FA\") on süsteem milles kaks sammu sisselogimiseks.\n"
+"Esimene samm kasutab parooli ja teine kasutab koodi vastavast telefoni rakendusest.\n"
+"Populaarsed rakendused on näiteks Authy, Google Authenticator või Microsoft Authenticator."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -359,6 +381,9 @@ msgid ""
 "                        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "                        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator."
 msgstr ""
+"Kahe astmeline Autentimine (\"2FA\")  kasutab kahte sammu sisselogimiseks.\n"
+"Esimene samm kasutab parooli ja teine kasutab koodi vastavast telefoni rakendusest.\n"
+"Populaarsed rakendused on näiteks Authy, Google Authenticator või Microsoft Authenticator."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
@@ -373,25 +398,29 @@ msgstr "Kahe-etapiline tuvastamine ei ole lubatud"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.res_users_view_search
 msgid "Two-factor authentication Enabled"
-msgstr ""
+msgstr "Kahe-astmeline tuvastamine aktiveeritud"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
 msgstr "Kahe-etapiline tuvastamine on juba lubatud"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
 msgstr "Ainult sina saad määrata kahe-etapilise tuvastamise"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
 msgstr ""
+"Kaheastmeline autentimine on välja lülitatud järmiste kasutajate jaoks: %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -412,6 +441,7 @@ msgid "Verification Code"
 msgstr "Kinnituskood"
 
 #. module: auth_totp
+#. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #: code:addons/auth_totp/wizard/auth_totp_wizard.py:0
 #, python-format

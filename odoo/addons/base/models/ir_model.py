@@ -16,7 +16,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools, _, _lt, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
-from odoo.tools import pycompat, unique, OrderedSet
+from odoo.tools import pycompat, unique, OrderedSet, lazy_property
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
@@ -129,7 +129,14 @@ def upsert_en(model, fnames, rows, conflict):
     cols = ", ".join(quote(fname) for fname in fnames)
     values = ", ".join("%s" for row in rows)
     conf = ", ".join(conflict)
-    excluded = ", ".join(f"EXCLUDED.{quote(fname)}" for fname in fnames)
+    excluded = ", ".join(
+        (
+            f"COALESCE({table}.{quote(fname)}, '{{}}'::jsonb) || EXCLUDED.{quote(fname)}"
+            if model._fields[fname].translate is True
+            else f"EXCLUDED.{quote(fname)}"
+        )
+        for fname in fnames
+    )
     query = f"""
         INSERT INTO {table} ({cols}) VALUES {values}
         ON CONFLICT ({conf}) DO UPDATE SET ({cols}) = ({excluded})
@@ -176,6 +183,7 @@ class IrModel(models.Model):
     _description = "Models"
     _order = 'model'
     _rec_names_search = ['name', 'model']
+    _allow_sudo_commands = False
 
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
@@ -255,6 +263,14 @@ class IrModel(models.Model):
             stored_fields = set(
                 model.field_id.filtered('store').mapped('name') + models.MAGIC_COLUMNS
             )
+            if model.model in self.env:
+                # add fields inherited from models specified via code if they are already loaded
+                stored_fields.update(
+                    fname
+                    for fname, fval in self.env[model.model]._fields.items()
+                    if fval.inherited and fval.base_field.store
+                )
+
             order_fields = RE_ORDER_FIELDS.findall(model.order)
             for field in order_fields:
                 if field not in stored_fields:
@@ -371,7 +387,7 @@ class IrModel(models.Model):
             'model': model._name,
             'name': model._description,
             'order': model._order,
-            'info': next(cls.__doc__ for cls in type(model).mro() if cls.__doc__),
+            'info': next(cls.__doc__ for cls in self.env.registry[model._name].mro() if cls.__doc__),
             'state': 'manual' if model._custom else 'base',
             'transient': model._transient,
         }
@@ -418,6 +434,8 @@ class IrModel(models.Model):
     @api.model
     def _instanciate(self, model_data):
         """ Return a class for the custom model given by parameters ``model_data``. """
+        models.check_pg_name(model_data["model"].replace(".", "_"))
+
         class CustomModel(models.Model):
             _name = pycompat.to_text(model_data['model'])
             _description = model_data['name']
@@ -473,6 +491,7 @@ class IrModelFields(models.Model):
     _description = "Fields"
     _order = "name"
     _rec_name = 'field_description'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Field Name', default='x_', required=True, index=True)
     complete_name = fields.Char(index=True)
@@ -904,13 +923,12 @@ class IrModelFields(models.Model):
         for vals in vals_list:
             if 'model_id' in vals:
                 vals['model'] = IrModel.browse(vals['model_id']).model
-            assert vals.get('model'), f"missing model name for {vals}"
-            models.add(vals['model'])
 
         # for self._get_ids() in _update_selection()
         self.clear_caches()
 
         res = super(IrModelFields, self).create(vals_list)
+        models = set(res.mapped('model'))
 
         for vals in vals_list:
             if vals.get('state', 'manual') == 'manual':
@@ -1241,6 +1259,7 @@ class IrModelSelection(models.Model):
     _name = 'ir.model.fields.selection'
     _order = 'sequence, id'
     _description = "Fields Selection"
+    _allow_sudo_commands = False
 
     field_id = fields.Many2one("ir.model.fields",
         required=True, ondelete="cascade", index=True,
@@ -1490,12 +1509,14 @@ class IrModelSelection(models.Model):
                 records.invalidate_recordset([fname])
 
         for selection in self:
-            Model = self.env[selection.field_id.model]
             # The field may exist in database but not in registry. In this case
             # we allow the field to be skipped, but for production this should
             # be handled through a migration script. The ORM will take care of
             # the orphaned 'ir.model.fields' down the stack, and will log a
             # warning prompting the developer to write a migration script.
+            Model = self.env.get(selection.field_id.model)
+            if Model is None:
+                continue
             field = Model._fields.get(selection.field_id.name)
             if not field or not field.store or not Model._auto:
                 continue
@@ -1544,6 +1565,7 @@ class IrModelConstraint(models.Model):
     """
     _name = 'ir.model.constraint'
     _description = 'Model Constraint'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Constraint', required=True, index=True,
                        help="PostgreSQL constraint or foreign key name.")
@@ -1562,13 +1584,9 @@ class IrModelConstraint(models.Model):
          'Constraints with the same name are unique per module.'),
     ]
 
-    def _module_data_uninstall(self):
-        """
-        Delete PostgreSQL foreign keys and constraints tracked by this model.
-        """
-        if not self.env.is_system():
-            raise AccessError(_('Administrator access is required to uninstall a module'))
-
+    def unlink(self):
+        self.check_access_rights('unlink')
+        self.check_access_rule('unlink')
         ids_set = set(self.ids)
         for data in self.sorted(key='id', reverse=True):
             name = tools.ustr(data.name)
@@ -1612,7 +1630,7 @@ class IrModelConstraint(models.Model):
                         sql.Identifier(table), sql.Identifier(name[:63])))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
-        self.unlink()
+        return super().unlink()
 
     def copy(self, default=None):
         default = dict(default or {})
@@ -1672,7 +1690,7 @@ class IrModelConstraint(models.Model):
         # map each constraint on the name of the module where it is defined
         constraint_module = {
             constraint[0]: cls._module
-            for cls in reversed(type(model).mro())
+            for cls in reversed(self.env.registry[model._name].mro())
             if models.is_definition_class(cls)
             for constraint in getattr(cls, '_local_sql_constraints', ())
         }
@@ -1696,6 +1714,7 @@ class IrModelRelation(models.Model):
     """
     _name = 'ir.model.relation'
     _description = 'Relation Model'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='Relation Name', required=True, index=True,
                        help="PostgreSQL table name implementing a many2many relation.")
@@ -1758,6 +1777,7 @@ class IrModelAccess(models.Model):
     _name = 'ir.model.access'
     _description = 'Model Access'
     _order = 'model_id,group_id,name,id'
+    _allow_sudo_commands = False
 
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
@@ -1965,6 +1985,7 @@ class IrModelData(models.Model):
     _name = 'ir.model.data'
     _description = 'Model Data'
     _order = 'module, model, name'
+    _allow_sudo_commands = False
 
     name = fields.Char(string='External Identifier', required=True,
                        help="External Key/Identifier that can be used for "
@@ -2196,12 +2217,24 @@ class IrModelData(models.Model):
         # be executed on a stale registry, and if some of the data for executing the compute
         # methods is not in cache it will be fetched, and fields that exist in the registry but not
         # in the database will be prefetched, this will of course fail and prevent the uninstall.
+        has_shared_field = False
         for ir_field in self.env['ir.model.fields'].browse(field_ids):
             model = self.pool.get(ir_field.model)
             if model is not None:
                 field = model._fields.get(ir_field.name)
-                if field is not None:
-                    field.prefetch = False
+                if field is not None and field.prefetch:
+                    if field._toplevel:
+                        # the field is specific to this registry
+                        field.prefetch = False
+                    else:
+                        # the field is shared across registries; don't modify it
+                        Field = type(field)
+                        field_ = Field(_base_fields=[field, Field(prefetch=False)])
+                        self.env[ir_field.model]._add_field(ir_field.name, field_)
+                        field_.setup(model)
+                        has_shared_field = True
+        if has_shared_field:
+            lazy_property.reset_all(self.env.registry)
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
@@ -2264,8 +2297,6 @@ class IrModelData(models.Model):
         modules._remove_copied_views()
 
         # remove constraints
-        constraints = self.env['ir.model.constraint'].search([('module', 'in', modules.ids)])
-        constraints._module_data_uninstall()
         delete(self.env['ir.model.constraint'].browse(unique(constraint_ids)))
 
         # If we delete a selection field, and some of its values have ondelete='cascade',

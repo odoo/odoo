@@ -11,6 +11,8 @@ var utils = require('web.utils');
 var { Gui } = require('point_of_sale.Gui');
 const { batched, uuidv4 } = require("point_of_sale.utils");
 const { escape } = require("@web/core/utils/strings");
+const { rpcService } = require('@web/core/network/rpc_service');
+const { isIOS, isIosApp } = require('@web/core/browser/feature_detection');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -134,6 +136,7 @@ class PosGlobalState extends PosModel {
             },
         };
 
+        this.syncingOrders = new Set();
         this.tempScreenIsShown = false;
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
@@ -161,7 +164,30 @@ class PosGlobalState extends PosModel {
         this.uom_unit_id = uom_id[1];
     }
 
+    shouldInvoiceNewTab(actionRecord) {
+        return (
+            (isIOS() || isIosApp()) &&
+            actionRecord.type === "ir.actions.report" &&
+            actionRecord.report_type === "qweb-pdf"
+        );
+    }
+
+    async loadInvoiceReportAction() {
+        try {
+            const future_rpc = rpcService.start({ bus: this.env.posbus });
+            const action = await future_rpc("/web/action/load", {
+                action_id: this.invoiceReportAction,
+            });
+            this.invoiceActionRecord = action;
+        } catch {
+            console.warn(
+                "Error loading invoice report action. In an iOS environment, " +
+                "invoicing an order will replace the current page which will cause reload of the app.");
+        }
+    }
+
     async after_load_server_data(){
+        await this.loadInvoiceReportAction();
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
@@ -263,8 +289,20 @@ class PosGlobalState extends PosModel {
                     }
                 }
                 else {
-                    for (const correspondingProduct of products) {
-                        this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                    for (const correspondingProduct of modelProducts) {
+                        if (pricelistItem.categ_id) {
+                            let pricelistItem_categ_id = pricelistItem.categ_id[0];
+                            let product_categ_id = correspondingProduct.categ && correspondingProduct.categ.id; 
+                            let parent_categ_ids = correspondingProduct.parent_category_ids;
+                            if (product_categ_id && parent_categ_ids) {
+                                if (_.contains(parent_categ_ids.concat(product_categ_id), pricelistItem_categ_id)) {
+                                    this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                                }
+                            }
+                        } 
+                        else {
+                            this._assignApplicableItems(pricelist, correspondingProduct, pricelistItem);
+                        }
                     }
                 }
             }
@@ -680,8 +718,8 @@ class PosGlobalState extends PosModel {
 
             if (mapped_included_taxes.length > 0) {
                 if (new_included_taxes.length > 0) {
-                    const price_without_taxes = this.compute_all(mapped_included_taxes, price, 1, this.currency.rounding, true).total_excluded
-                    return this.compute_all(new_included_taxes, price_without_taxes, 1, this.currency.rounding, false).total_included
+                    //If previous tax and new tax where both included in price. The price including tax is the same
+                    return price;
                 }
                 else{
                     return this.compute_all(mapped_included_taxes, price, 1, this.currency.rounding, true).total_excluded;
@@ -962,20 +1000,31 @@ class PosGlobalState extends PosModel {
         if (!orders || !orders.length) {
             return Promise.resolve([]);
         }
-        this.set_synch('connecting', orders.length);
+
+        // Filter out orders that are already being synced
+        const ordersToSync = orders.filter(order => !this.syncingOrders.has(order.id));
+
+        if (!ordersToSync.length) {
+            return Promise.resolve([]);
+        }
+
+        // Add these order IDs to the syncing set
+        ordersToSync.forEach(order => this.syncingOrders.add(order.id));
+
+        this.set_synch('connecting', ordersToSync.length);
         options = options || {};
 
         var self = this;
-        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * orders.length;
+        var timeout = typeof options.timeout === 'number' ? options.timeout : 30000 * ordersToSync.length;
 
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
         // new orders may have been added to it.
-        var order_ids_to_sync = _.pluck(orders, 'id');
+        var order_ids_to_sync = _.pluck(ordersToSync, 'id');
 
         // we try to send the order. shadow prevents a spinner if it takes too long. (unless we are sending an invoice,
         // then we want to notify the user that we are waiting on something )
-        var args = [_.map(orders, function (order) {
+        var args = [_.map(ordersToSync, function (order) {
                 order.to_invoice = options.to_invoice || false;
                 return order;
             })];
@@ -992,12 +1041,14 @@ class PosGlobalState extends PosModel {
             .then(function (server_ids) {
                 _.each(order_ids_to_sync, function (order_id) {
                     self.db.remove_order(order_id);
+                    self.syncingOrders.delete(order_id)
                 });
                 self.failed = false;
                 self.set_synch('connected');
                 return server_ids;
             }).catch(function (error){
-                console.warn('Failed to send orders:', orders);
+                ordersToSync.forEach(order_id => self.syncingOrders.delete(order_id));
+                console.warn('Failed to send orders:', ordersToSync);
                 if(error.code === 200 ){    // Business Logic Error, not a connection problem
                     // Hide error if already shown before ...
                     if ((!self.failed || options.show_error) && !options.to_invoice) {
@@ -1194,15 +1245,46 @@ class PosGlobalState extends PosModel {
 
         // 2) Deal with the rounding methods
 
-        var round_tax = this.company.tax_calculation_rounding_method != 'round_globally';
+        const company = this.company;
+        var round_tax = company.tax_calculation_rounding_method != 'round_globally';
 
         var initial_currency_rounding = currency_rounding;
         if(!round_tax)
             currency_rounding = currency_rounding * 0.00001;
 
         // 3) Iterate the taxes in the reversed sequence order to retrieve the initial base of the computation.
-        var recompute_base = function(base_amount, fixed_amount, percent_amount, division_amount){
-             return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
+        var recompute_base = function(base_amount, incl_tax_amounts){
+            let fixed_amount = incl_tax_amounts.fixed_amount;
+            let division_amount = 0.0;
+            for(const [, tax_factor] of incl_tax_amounts.division_taxes){
+                division_amount += tax_factor;
+            }
+            let percent_amount = 0.0;
+            for(const [, tax_factor] of incl_tax_amounts.percent_taxes){
+                percent_amount += tax_factor;
+            }
+
+            if(company.country && company.country.code === "IN"){
+                let total_tax_amount = 0.0;
+                for(const [i, tax_factor] of incl_tax_amounts.percent_taxes){
+                    const tax_amount = round_pr(base_amount * tax_factor / (100 + percent_amount), currency_rounding);
+                    total_tax_amount += tax_amount;
+                    cached_tax_amounts[i] = tax_amount;
+                    fixed_amount += tax_amount;
+                }
+                for(const [i,] of incl_tax_amounts.percent_taxes){
+                    cached_base_amounts[i] = base - total_tax_amount;
+                }
+                percent_amount = 0.0;
+            }
+
+            Object.assign(incl_tax_amounts, {
+                percent_taxes: [],
+                division_taxes: [],
+                fixed_amount: 0.0,
+            });
+
+            return (base_amount - fixed_amount) / (1.0 + percent_amount / 100.0) * (100 - division_amount) / 100;
         }
 
         var base = round_pr(price_unit * quantity, initial_currency_rounding);
@@ -1217,30 +1299,31 @@ class PosGlobalState extends PosModel {
         var i = taxes.length - 1;
         var store_included_tax_total = true;
 
-        var incl_fixed_amount = 0.0;
-        var incl_percent_amount = 0.0;
-        var incl_division_amount = 0.0;
+        const incl_tax_amounts = {
+            percent_taxes: [],
+            division_taxes: [],
+            fixed_amount: 0.0,
+        }
 
         var cached_tax_amounts = {};
+        var cached_base_amounts = {};
+        let is_base_affected = true;
         if (handle_price_include){
             _(taxes.reverse()).each(function(tax){
-                if(tax.include_base_amount){
-                    base = recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount);
-                    incl_fixed_amount = 0.0;
-                    incl_percent_amount = 0.0;
-                    incl_division_amount = 0.0;
+                if(tax.include_base_amount && is_base_affected){
+                    base = recompute_base(base, incl_tax_amounts);
                     store_included_tax_total = true;
                 }
                 if(tax.price_include){
                     if(tax.amount_type === 'percent')
-                        incl_percent_amount += tax.amount;
+                        incl_tax_amounts.percent_taxes.push([i, tax.amount]);
                     else if(tax.amount_type === 'division')
-                        incl_division_amount += tax.amount;
+                        incl_tax_amounts.division_taxes.push([i, tax.amount]);
                     else if(tax.amount_type === 'fixed')
-                        incl_fixed_amount += Math.abs(quantity) * tax.amount
+                        incl_tax_amounts.fixed_amount += Math.abs(quantity) * tax.amount;
                     else{
                         var tax_amount = self._compute_all(tax, base, quantity);
-                        incl_fixed_amount += tax_amount;
+                        incl_tax_amounts.fixed_amount += tax_amount;
                         cached_tax_amounts[i] = tax_amount;
                     }
                     if(store_included_tax_total){
@@ -1249,10 +1332,11 @@ class PosGlobalState extends PosModel {
                     }
                 }
                 i -= 1;
+                is_base_affected = tax.is_base_affected;
             });
         }
 
-        var total_excluded = round_pr(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount), initial_currency_rounding);
+        var total_excluded = round_pr(recompute_base(base, incl_tax_amounts), initial_currency_rounding);
         var total_included = total_excluded;
 
         // 4) Iterate the taxes in the sequence order to fill missing base/amount values.
@@ -1265,12 +1349,16 @@ class PosGlobalState extends PosModel {
         i = 0;
         var cumulated_tax_included_amount = 0;
         _(taxes.reverse()).each(function(tax){
-            if(tax.price_include || tax.is_base_affected)
+            if(tax.price_include && i in cached_base_amounts)
+                var tax_base_amount = cached_base_amounts[i];
+            else if(tax.price_include || tax.is_base_affected)
                 var tax_base_amount = base;
             else
                 var tax_base_amount = total_excluded;
 
-            if(!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined){
+            if(tax.price_include && cached_tax_amounts.hasOwnProperty(i)){
+                var tax_amount = cached_tax_amounts[i];
+            }else if(!skip_checkpoint && tax.price_include && total_included_checkpoints[i] !== undefined){
                 var tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount);
                 cumulated_tax_included_amount = 0;
             }else
@@ -1438,12 +1526,19 @@ class PosGlobalState extends PosModel {
      */
     async _addProducts(ids, setAvailable=true){
         if(setAvailable){
-            await this.env.services.rpc({
-                model: 'product.product',
-                method: 'write',
-                args: [ids, {'available_in_pos': true}],
-                context: this.env.session.user_context,
-            });
+            try {
+                await this.env.services.rpc({
+                    model: 'product.product',
+                    method: 'write',
+                    args: [ids, {'available_in_pos': true}],
+                    context: this.env.session.user_context,
+                });
+            } catch (error) {
+                const ignoreError = this._isRPCError(error) && error.message.data && error.message.data.name === 'odoo.exceptions.AccessError';
+                if (!ignoreError) {
+                    throw error;
+                }
+            }
         }
         let product = await this.env.services.rpc({
             model: 'pos.session',
@@ -1455,6 +1550,10 @@ class PosGlobalState extends PosModel {
     }
     doNotAllowRefundAndSales() {
         return false;
+    }
+
+    get invoiceReportAction() {
+      return "account.account_invoices";
     }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
@@ -1504,7 +1603,6 @@ class Product extends PosModel {
     }
     isPricelistItemUsable(item, date) {
         return (
-            (!item.categ_id || _.contains(this.parent_category_ids.concat(this.categ.id), item.categ_id[0])) &&
             (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
             (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
         );
@@ -1591,17 +1689,22 @@ class Product extends PosModel {
         // pricelist that have base == 'pricelist'.
         return price;
     }
-    get_display_price(pricelist, quantity) {
+    _compute_display_price(pricelist, quantity, discount = 0) {
         const order = this.pos.get_order();
+        const unitPrice = this.get_price(pricelist, quantity) * (1.0 - (discount / 100.0));
         const taxes = this.pos.get_taxes_after_fp(this.taxes_id, order && order.fiscal_position);
         const currentTaxes = this.pos.getTaxesByIds(this.taxes_id);
-        const priceAfterFp = this.pos.computePriceAfterFp(this.get_price(pricelist, quantity), currentTaxes);
+        const priceAfterFp = this.pos.computePriceAfterFp(unitPrice, currentTaxes);
         const allPrices = this.pos.compute_all(taxes, priceAfterFp, 1, this.pos.currency.rounding);
-        if (this.pos.config.iface_tax_included === 'total') {
-            return allPrices.total_included;
-        } else {
-            return allPrices.total_excluded;
-        }
+        return this.pos.config.iface_tax_included === 'total' ? allPrices.total_included : allPrices.total_excluded;
+    }
+
+    get_display_price(pricelist, quantity) {
+        return this._compute_display_price(pricelist, quantity);
+    }
+
+    get_display_price_discount(pricelist, quantity, discount) {
+        return this._compute_display_price(pricelist, quantity, discount);
     }
 }
 Registries.Model.add(Product);
@@ -1650,7 +1753,6 @@ class Orderline extends PosModel {
         this.product = this.pos.db.get_product_by_id(json.product_id);
         this.set_product_lot(this.product);
         this.price = json.price_unit;
-        this.price_manually_set = json.price_manually_set;
         this.price_automatically_set = json.price_automatically_set;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
@@ -1669,6 +1771,9 @@ class Orderline extends PosModel {
         this.set_customer_note(json.customer_note);
         this.refunded_qty = json.refunded_qty;
         this.refunded_orderline_id = json.refunded_orderline_id;
+        this.price_manually_set = json.price_manually_set ||
+            this.get_display_price() !==
+            this.product.get_display_price_discount(this.order.pricelist, this.get_quantity(), this.get_discount()) * this.get_quantity();
     }
     clone(){
         var orderline = Orderline.create({},{
@@ -2689,7 +2794,7 @@ class Order extends PosModel {
                 logo:  this.pos.company_logo_base64,
             },
             currency: this.pos.currency,
-            pos_qr_code: this._get_qr_code_data(),
+            pos_qr_code: this.finalized && this._get_qr_code_data(),
         };
 
         if (is_html(this.pos.config.receipt_header)){
@@ -2801,13 +2906,14 @@ class Order extends PosModel {
     calculate_base_amount(tax_ids_array, lines) {
         // Consider price_include taxes use case
         let has_taxes_included_in_price = tax_ids_array.filter(tax_id =>
-            this.pos.taxes_by_id[tax_id].price_include
+            this.pos.taxes_by_id[tax_id].price_include ||
+            this.pos.taxes_by_id[tax_id].children_tax_ids.length > 0 &&
+            this.pos.taxes_by_id[tax_id].children_tax_ids.every(child_tax => child_tax.price_include)
         ).length;
 
         let base_amount = lines.reduce((sum, line) =>
                 sum +
-                line.get_price_without_tax() +
-                (has_taxes_included_in_price ? line.get_total_taxes_included_in_price() : 0),
+                (has_taxes_included_in_price ? line.get_price_with_tax() : line.get_price_without_tax()),
             0
         );
         return base_amount;
@@ -3122,7 +3228,7 @@ class Order extends PosModel {
         return round_pr(this.orderlines.reduce((sum, orderLine) => {
             if (!ignored_product_ids.includes(orderLine.product.id)) {
                 sum += (orderLine.getUnitDisplayPriceBeforeDiscount() * (orderLine.get_discount()/100) * orderLine.get_quantity());
-                if (orderLine.display_discount_policy() === 'without_discount'){
+                if (orderLine.display_discount_policy() === 'without_discount' && !orderLine.price_manually_set){
                     sum += ((orderLine.get_taxed_lst_unit_price() - orderLine.getUnitDisplayPriceBeforeDiscount()) * orderLine.get_quantity());
                 }
             }

@@ -6,7 +6,8 @@
 # Uros Kalajdzic <ukalajdzic@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2022
-# Milan Bojovic, 2023
+# Milan Bojovic <mbojovic@outlook.com>, 2023
+# コフスタジオ, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Milan Bojovic, 2023\n"
+"Last-Translator: コフスタジオ, 2024\n"
 "Language-Team: Serbian (https://app.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +28,7 @@ msgstr ""
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid " Please correct the number and try again."
-msgstr ""
+msgstr " Please correct the number and try again."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
@@ -43,7 +44,7 @@ msgstr "Aktivno"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Add a phone number in the blacklist"
-msgstr ""
+msgstr "Add a phone number in the blacklist"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -55,7 +56,7 @@ msgstr "Arhivirano"
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Are you sure you want to unblacklist this Phone Number?"
-msgstr ""
+msgstr "Are you sure you want to unblacklist this Phone Number?"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
@@ -71,7 +72,7 @@ msgstr "Crna lista"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Blacklist Date"
-msgstr ""
+msgstr "Blacklist Date"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -81,7 +82,7 @@ msgstr "Telefon na crnoj listi je mobilni"
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
 msgid "Blacklisted Phone Numbers"
-msgstr ""
+msgstr "Blacklisted Phone Numbers"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -91,7 +92,7 @@ msgstr "Telefon na crnoj listi je fiksni"
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Blacklisted phone numbers won't receive SMS Mailings anymore."
-msgstr ""
+msgstr "Blacklisted phone numbers won't receive SMS Mailings anymore."
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/res_users.py:0
@@ -100,6 +101,8 @@ msgid ""
 "Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
 "(#%(user_id)s)"
 msgstr ""
+"Blocked by deletion of portal account %(portal_user_name)s by %(user_name)s "
+"(#%(user_id)s)"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
@@ -140,6 +143,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Field used to store sanitized phone number. Helps speeding up searches and "
+"comparisons."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -183,12 +188,14 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Impossible number %s: probably invalid number of digits."
-msgstr ""
+msgstr "Impossible number %s: probably invalid number of digits."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
@@ -197,6 +204,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -205,19 +215,22 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr ""
+msgstr "Invalid number %s: probably incorrect prefix."
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Invalid primary phone field on model %s"
-msgstr ""
+msgstr "Invalid primary phone field on model %s"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
@@ -265,12 +278,12 @@ msgstr "Poruke"
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
 #, python-format
 msgid "Missing definition of phone fields."
-msgstr ""
+msgstr "Missing definition of phone fields."
 
 #. module: phone_validation
 #: model:ir.model.constraint,message:phone_validation.constraint_phone_blacklist_unique_number
 msgid "Number already exists"
-msgstr ""
+msgstr "Number already exists"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction_counter
@@ -299,12 +312,12 @@ msgstr "Broj poruka sa greškom u isporuci"
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
 msgid "Number should be E164 formatted"
-msgstr ""
+msgstr "Number should be E164 formatted"
 
 #. module: phone_validation
 #: model:ir.ui.menu,name:phone_validation.phone_menu_main
 msgid "Phone / SMS"
-msgstr ""
+msgstr "Phone / SMS"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist
@@ -312,12 +325,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Phone Blacklist"
-msgstr ""
+msgstr "Phone Blacklist"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Phone Blacklist Mixin"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -329,7 +342,7 @@ msgstr "Telefon je na crnoj listi"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__phone
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "Phone Number"
-msgstr ""
+msgstr "Phone Number"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_mobile_search
@@ -342,6 +355,7 @@ msgstr "Telefon/Mobilni"
 msgid ""
 "Please enter at least 3 characters when searching a Phone/Mobile number."
 msgstr ""
+"Please enter at least 3 characters when searching a Phone/Mobile number."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
@@ -352,23 +366,23 @@ msgstr "Razlog"
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_phone_blacklist_remove
 msgid "Remove phone from blacklist"
-msgstr ""
+msgstr "Remove phone from blacklist"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Sanitized Number"
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Unable to parse %(phone)s: %(error)s"
-msgstr ""
+msgstr "Unable to parse %(phone)s: %(error)s"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 msgid "Unblacklist"
-msgstr ""
+msgstr "Unblacklist"
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/phone_blacklist.py:0
@@ -384,4 +398,4 @@ msgstr "Korisnik"
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
 msgid "phone_blacklist_removal"
-msgstr ""
+msgstr "phone_blacklist_removal"

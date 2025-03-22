@@ -5,25 +5,26 @@
 # Translators:
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
-# jabelchi, 2022
+# Josep Anton Belchi, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # Jonatan Gk, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Martin Trigaux, 2022
-# marcescu, 2022
 # Arnau Ros, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # Ivan Espinola, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
+# marcescu, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -528,6 +529,20 @@ msgid "Estimated cost"
 msgstr "Cost estimat"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception occurred with respect to carrier on the transfer"
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Exception:"
+msgstr "Excepció:"
+
+#. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr "Empleni aquest camp si facturarà l'enviament basat en la recol·lecció"
@@ -689,6 +704,13 @@ msgid "Manage delivery zip prefixes"
 msgstr "Gestionar els prefixos d'entrega"
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid "Manual actions might be needed."
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
 msgid "Margin"
 msgstr "Marge"
@@ -841,6 +863,11 @@ msgstr "Imprimeix l'etiqueta de retorn"
 #: model:ir.model,name:delivery.model_product_template
 msgid "Product"
 msgstr "Producte"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_product_category
+msgid "Product Category"
+msgstr "Categoria del producte"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move_line
@@ -1016,11 +1043,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
 msgid ""
 "Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
+"moment, only used for FedEx and USPS shipping providers."
 msgstr ""
-"Codi estandarditzat per a la declaració internacional d'enviaments i "
-"mercaderies. En aquest moment, només s'utilitzava per al proveïdor de "
-"transport de FedEx."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -1290,6 +1314,25 @@ msgstr ""
 "\n"
 "Les següents línies de lliurament (producte, quantitat facturada i preu) ja s'han processat:\n"
 "\n"
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/product_category.py:0
+#, python-format
+msgid ""
+"You cannot delete the deliveries product category as it is used on the "
+"delivery carriers products."
+msgstr ""
+
+#. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/stock_picking.py:0
+#, python-format
+msgid ""
+"You cannot pack products into the same package when they have different "
+"carriers (i.e. check that all of their transfers have a carrier assigned and"
+" are using the same carrier)."
+msgstr ""
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form

@@ -292,6 +292,19 @@ class Meeting(models.Model):
             if event.allday:
                 event.stop -= timedelta(seconds=1)
 
+    @api.onchange('start_date', 'stop_date')
+    def _onchange_date(self):
+        """ This onchange is required for cases where the stop/start is False and we set an allday event.
+            The inverse method is not called in this case because start_date/stop_date are not used in any
+            compute/related, so we need an onchange to set the start/stop values in the form view
+        """
+        for event in self:
+            if event.stop_date and event.start_date:
+                event.with_context(is_calendar_event_new=True).write({
+                    'start': fields.Datetime.from_string(event.start_date).replace(hour=8),
+                    'stop': fields.Datetime.from_string(event.stop_date).replace(hour=18),
+                })
+
     def _inverse_dates(self):
         """ This method is used to set the start and stop values of all day events.
             The calendar view needs date_start and date_stop values to display correctly the allday events across
@@ -433,7 +446,16 @@ class Meeting(models.Model):
         model_ids = list(filter(None, {values.get('res_model_id', defaults.get('res_model_id')) for values in vals_list}))
         model_name = defaults.get('res_model')
         valid_activity_model_ids = model_name and self.env[model_name].sudo().browse(model_ids).filtered(lambda m: 'activity_ids' in m).ids or []
-        if meeting_activity_type and not defaults.get('activity_ids'):
+
+        # if user is creating an event for an activity that already has one, create a second activity
+        existing_event = False
+        orig_activity_ids = self._context.get('orig_activity_ids', self.env['mail.activity'])
+        if len(orig_activity_ids) == 1:
+            existing_event = orig_activity_ids.calendar_event_id
+            if existing_event and orig_activity_ids.activity_type_id.category == 'meeting':
+                meeting_activity_type = orig_activity_ids.activity_type_id
+
+        if meeting_activity_type and (not defaults.get('activity_ids') or existing_event):
             for values in vals_list:
                 # created from calendar: try to create an activity on the related record
                 if values.get('activity_ids'):
@@ -559,12 +581,12 @@ class Meeting(models.Model):
         previous_attendees = self.attendee_ids
 
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
+        future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
         if update_recurrence:
             if break_recurrence:
                 # Update this event
                 detached_events |= self._break_recurrence(future=recurrence_update_setting == 'future_events')
             else:
-                future_edge_case = recurrence_update_setting == 'future_events' and self == self.recurrence_id.base_event_id
                 time_values = {field: values.pop(field) for field in time_fields if field in values}
                 if 'access_token' in values:
                     values.pop('access_token')  # prevents copying access_token to other events in recurrency
@@ -580,7 +602,7 @@ class Meeting(models.Model):
             self._sync_activities(fields=values.keys())
 
         # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
-        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
+        if recurrence_update_setting not in ['self_only', 'all_events'] and not future_edge_case and not break_recurrence:
             detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
         (detached_events & self).active = False
@@ -613,22 +635,65 @@ class Meeting(models.Model):
                     self.env.ref('calendar.calendar_template_meeting_changedate', raise_if_not_found=False)
                 )
 
+        # Change base event when the main base event is archived. If it isn't done when trying to modify
+        # all events of the recurrence an error can be thrown or all the recurrence can be deleted.
+        if values.get("active") is False:
+            recurrences = self.env["calendar.recurrence"].search([
+                ('base_event_id', 'in', self.ids)
+            ])
+            recurrences._select_new_base_event()
+
         return True
+
+    def _check_private_event_conditions(self):
+        """ Checks if the event is private, returning True if the conditions match and False otherwise. """
+        self.ensure_one()
+        event_is_private = self.privacy == 'private'
+        user_is_not_partner = self.user_id.id != self.env.uid and self.env.user.partner_id not in self.partner_ids
+        return event_is_private and user_is_not_partner
 
     def name_get(self):
         """ Hide private events' name for events which don't belong to the current user
         """
-        hidden = self.filtered(
-            lambda evt:
-                evt.privacy == 'private' and
-                evt.user_id.id != self.env.uid and
-                self.env.user.partner_id not in evt.partner_ids
-        )
-
+        hidden = self.filtered(lambda evt: evt._check_private_event_conditions())
         shown = self - hidden
         shown_names = super(Meeting, shown).name_get()
         obfuscated_names = [(eid, _('Busy')) for eid in hidden.ids]
         return shown_names + obfuscated_names
+
+    def read(self, fields=None, load='_classic_read'):
+        """
+        Return the events information to be shown on calendar/tree/form views.
+        Private events will have their sensitive fields hidden by default.
+        """
+        records = super().read(fields=fields, load=load)
+        if fields:
+            # Define the private fields and filter the private events from self.
+            private_fields = ['name', 'location', 'attendee_ids', 'description', 'videocall_location', 'message_ids']
+            private_events = self.filtered(lambda ev: ev._check_private_event_conditions())
+
+            # Hide the private information of the event by changing their values to 'Busy' and False.
+            for event in records:
+                if event['id'] in private_events.ids:
+                    for field in private_fields:
+                        if self._fields[field].type in ('one2many', 'many2many'):
+                            event[field] = []
+                        else:
+                            event[field] = _('Busy') if field in ('name', 'display_name') else False
+
+            # Update the cache with the new hidden values.
+            for field_name in private_fields:
+                if field_name in self._fields:
+                    field = self._fields[field_name]
+                    value = False
+                    if field.type in ('one2many', 'many2many'):
+                        value = []
+                    elif field_name in ('name', 'display_name'):
+                        value = _('Busy')
+                    for private_event in private_events:
+                        replacement = field.convert_to_cache(value, private_event)
+                        self.env.cache.update(private_event, field, repeat(replacement))
+        return records
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

@@ -7,15 +7,15 @@
 # Duy BQ <duybq86@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
-# Thi Huong Nguyen, 2023
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +51,7 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "<span class=\"badge text-bg-warning float-end\">Canceled</span>"
-msgstr ""
+msgstr "<span class=\"badge text-bg-warning float-end\">Đã huỷ</span>"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -85,7 +85,7 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Python dictionary sẽ được biểu thị/đánh giá để cung cấp các giá trị mặc định"
-" khi tạo mới các tập dữ liệu cho bí danh này."
+" khi tạo mới các bản ghi cho bí danh này."
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
@@ -98,7 +98,7 @@ msgstr "Acer Laptop"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction
 msgid "Action Needed"
-msgstr "Hành động cần thiết"
+msgstr "Tác vụ cần thiết"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__active
@@ -145,7 +145,7 @@ msgstr "Thêm mới thiết bị"
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Add a new equipment category"
-msgstr "Thêm mới nhóm thiết bị"
+msgstr "Thêm mới danh mục thiết bị"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_request_action
@@ -468,8 +468,8 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
-"Email alias for this equipment category. New emails will automatically "
-"create a new equipment under this category."
+"Email bí danh cho danh mục thiết bị này. Email mới sẽ tự động tạo ra một "
+"thiết bị mới trong danh mục này."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
@@ -503,7 +503,7 @@ msgstr "Nhóm thiết bị"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__category_id
 msgid "Equipment Category"
-msgstr "Nhóm thiết bị"
+msgstr "Danh mục thiết bị"
 
 #. module: maintenance
 #: model:res.groups,name:maintenance.group_equipment_manager
@@ -617,8 +617,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID của tập dữ liệu cha mà chứa bí danh (ví dụ: dự án chứa bí danh để tạo "
-"nhiệm vụ)"
+"ID của bản ghi cha mà chứa bí danh (ví dụ: dự án chứa bí danh để tạo nhiệm "
+"vụ)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_exception_icon
@@ -641,11 +641,8 @@ msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạ
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
 
@@ -723,7 +720,7 @@ msgstr "Hoạt động trễ"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__location
 msgid "Location"
-msgstr "Địa điểm"
+msgstr "Vị trí"
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
@@ -782,7 +779,7 @@ msgstr "Thiết bị bảo trì"
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Maintenance Equipment Category"
-msgstr "Loại thiết bị"
+msgstr "Danh mục thiết bị"
 
 #. module: maintenance
 #: model:ir.model,name:maintenance.model_maintenance_request
@@ -861,7 +858,6 @@ msgstr "Kiểu bảo trì"
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
-#: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
 msgstr "Bảo trì: tạo yêu cầu bảo trì dự phòng"
 
@@ -966,7 +962,7 @@ msgstr "Ghi chú"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_needaction_counter
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_needaction_counter
 msgid "Number of Actions"
-msgstr "Số lượng hành động"
+msgstr "Số lượng tác vụ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_count
@@ -1021,9 +1017,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID tuỳ chọn của một chủ đề/tập dữ liệu (thread) mà tất cả các thông điệp gửi"
-" đến sẽ được gắn/đính vào, thậm chí khi không có người trả lời. Nếu được "
-"thiết lập, điều này sẽ vô hiệu hoàn toàn việc tạo mới tập dữ liệu."
+"ID tuỳ chọn của một chủ đề/bản ghi (thread) mà tất cả các thông điệp gửi đến"
+" sẽ được gắn/đính vào, thậm chí khi không có người trả lời. Nếu được thiết "
+"lập, điều này sẽ vô hiệu hoàn toàn việc tạo mới bản ghi."
 
 #. module: maintenance
 #: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
@@ -1084,6 +1080,7 @@ msgid "Preventive"
 msgstr "Phòng ngừa"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
@@ -1170,10 +1167,11 @@ msgid "Request Done"
 msgstr "Yêu cầu đã hoàn thành"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for %s"
-msgstr ""
+msgstr "Yêu cầu được lên kế hoạch cho %s"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
@@ -1204,13 +1202,6 @@ msgid "Responsible User"
 msgstr "Người phụ trách"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Lỗi gửi SMS"
-
-#. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_monitor1
 #: model:maintenance.equipment,name:maintenance.equipment_monitor4
 #: model:maintenance.equipment,name:maintenance.equipment_monitor6
@@ -1220,7 +1211,7 @@ msgstr "Màn hình Samsung 15\""
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Scheduled"
-msgstr "Đã ấn định"
+msgstr "Đã lên lịch"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__schedule_date
@@ -1230,7 +1221,7 @@ msgstr "Ngày dự kiến"
 #. module: maintenance
 #: model:maintenance.stage,name:maintenance.stage_4
 msgid "Scrap"
-msgstr "Phế liệu"
+msgstr "Loại bỏ"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__scrap_date
@@ -1309,7 +1300,7 @@ msgstr "Trạng thái bị thay đổi"
 #. module: maintenance
 #: model:maintenance.team,name:maintenance.equipment_team_subcontractor
 msgid "Subcontractor"
-msgstr "Nhà thầu phụ"
+msgstr "Đơn vị gia công"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__name
@@ -1353,9 +1344,8 @@ msgid ""
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Model (kiểu tài liệu Odoo) mà bí danh này ứng với nó. Bất kỳ tin nhắn email "
-"nào không phản hồi lại một tập dữ liệu có sẵn sẽ tự động tạo một tập dữ liệu"
-" mới cho model này (vd: tạo mới một nhiệm vụ dự án nếu model là "
-"project.task)"
+"nào không phản hồi lại một bản ghi có sẵn sẽ tự động tạo một bản ghi mới cho"
+" model này (vd: tạo mới một nhiệm vụ dự án nếu model là project.task)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_name
@@ -1374,8 +1364,8 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Chủ sở hữu của các tập dữ liệu được tạo khi nhận email trên bí danh này. Nếu"
-" trường nàykhông được đặt, hệ thống sẽ cố gắng tìm đúng chủ sở hữu dựa "
+"Chủ sở hữu của các bản ghi được tạo khi nhận email trên bí danh này. Nếu "
+"trường nàykhông được đặt, hệ thống sẽ cố gắng tìm đúng chủ sở hữu dựa "
 "trênđịa chỉ người gửi (Từ) hoặc sẽ sử dụng tài khoản quản trị viên nếu không"
 " cóngười dùng hệ thống nào được tìm thấy cho địa chỉ đó."
 
@@ -1388,7 +1378,7 @@ msgstr "Người dùng sẽ có thể quản lý các thiết bị."
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "To Do"
-msgstr "Cần làm"
+msgstr "Việc cần làm"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -1466,27 +1456,14 @@ msgid "Warranty Expiration Date"
 msgstr "Ngày hết hạn bảo hành"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
-msgid "Website Messages"
-msgstr "Thông báo Website"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
-msgid "Website communication history"
-msgstr "Lịch sử thông tin liên lạc website"
-
-#. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""
 "You cannot delete an equipment category containing equipments or maintenance"
 " requests."
 msgstr ""
-"Bạn không thể xoá một nhóm thiết bị mà có chứa thiết bị hoặc đề nghị bảo "
+"Bạn không thể xoá một danh mục thiết bị đang chứa thiết bị hoặc yêu cầu bảo "
 "trì."
 
 #. module: maintenance
@@ -1497,22 +1474,22 @@ msgstr "ngày"
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "e.g. Internal Maintenance"
-msgstr ""
+msgstr "VD: Bảo trì nội bộ"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "e.g. LED Monitor"
-msgstr ""
+msgstr "VD: Màn hình LED"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "e.g. Monitors"
-msgstr ""
+msgstr "VD: Màn hình"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "e.g. Screen not working"
-msgstr ""
+msgstr "VD: Màn hình không hoạt động"
 
 #. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_form

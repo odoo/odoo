@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from psycopg2 import IntegrityError
+from psycopg2 import IntegrityError, Error as Psycopg2Error
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase, HttpCase, tagged
@@ -276,6 +276,10 @@ class TestIrModel(TransactionCase):
                 'field_id': fields_value,
             })
 
+        # ensure we can order by a stored field via inherits
+        user_model = self.env['ir.model'].search([('model', '=', 'res.users')])
+        user_model._check_order()  # must not raise
+
     def test_model_order_search(self):
         """Check that custom orders are applied when querying a model."""
         ORDERS = {
@@ -336,6 +340,61 @@ class TestIrModel(TransactionCase):
             )
             form.related = 'id'
             self.assertEqual(form.ttype, 'integer')
+
+    def test_delete_manual_models_with_base_fields(self):
+        model = self.env["ir.model"].create({
+            "model": "x_test_base_delete",
+            "name": "test base delete",
+            "field_id": [
+                Command.create({
+                    "name": "x_my_field",
+                    "ttype": "char",
+                }),
+                Command.create({
+                  "name": "active",
+                  "ttype": "boolean",
+                  "state": "base",
+                })
+            ]
+        })
+        model2 = self.env["ir.model"].create({
+            "model": "x_test_base_delete2",
+            "name": "test base delete2",
+            "field_id": [
+                Command.create({
+                    "name": "x_my_field2",
+                    "ttype": "char",
+                }),
+                Command.create({
+                  "name": "active",
+                  "ttype": "boolean",
+                  "state": "base",
+                })
+            ]
+        })
+        self.assertTrue(model.exists())
+        self.assertTrue(model2.exists())
+
+        self.env["ir.model"].browse(model.ids + model2.ids).unlink()
+        self.assertFalse(model.exists())
+        self.assertFalse(model2.exists())
+
+    @mute_logger('odoo.sql_db')
+    def test_ir_model_fields_name_create(self):
+        NotNullViolationPgCode = '23502'
+        # Quick create an ir_model_field should not be possible
+        # It should be raise a ValidationError
+        with self.assertRaises(Psycopg2Error) as error:
+            self.env['ir.model.fields'].name_create("field_name")
+
+        self.assertEqual(error.exception.pgcode, NotNullViolationPgCode)
+
+        # But with default_ we should be able to name_create
+        self.env['ir.model.fields'].with_context(
+            default_model_id=self.bananas_model.id,
+            default_model=self.bananas_model.name,
+            default_ttype="char"
+        ).name_create("field_name")
 
 
 @tagged('test_eval_context')

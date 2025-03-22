@@ -3,7 +3,7 @@
 # 	* barcodes
 # 
 # Translators:
-# Piotr Strębski <strebski@gmail.com>, 2022
+# Piotr Strebski <strebski@gmail.com>, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
 # Martin Trigaux, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
@@ -13,14 +13,15 @@
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2022
 # Slawomir Adamus <melthalion@gmail.com>, 2022
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
@@ -125,7 +127,7 @@ msgid "Barcode Scanned"
 msgstr "Zeskanowany kod kreskowy"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
@@ -255,6 +257,16 @@ msgid "The barcode matching pattern"
 msgstr "Wzorzec dopasowania kodu kreskowego"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+"Wzór kodu kreskowego %(pattern)s nie prowadzi do ważnego wyrażenia "
+"regularnego."
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "Lista reguł kodów kreskowych"
@@ -265,6 +277,7 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Dopasowany wzorzec z odwołaniem do tego kodu kreskowego"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -275,6 +288,7 @@ msgstr ""
 "parę nawiasów"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -285,6 +299,7 @@ msgstr ""
 "następujące po nich D"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -337,7 +352,7 @@ msgid "Unit Product"
 msgstr "Produkt jednostkowy"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"

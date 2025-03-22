@@ -118,7 +118,7 @@ class Product(models.Model):
     @api.depends('stock_move_ids.product_qty', 'stock_move_ids.state')
     @api.depends_context(
         'lot_id', 'owner_id', 'package_id', 'from_date', 'to_date',
-        'location', 'warehouse',
+        'location', 'warehouse', 'allowed_company_ids'
     )
     def _compute_quantities(self):
         products = self.with_context(prefetch_fields=False).filtered(lambda p: p.type != 'service').with_context(prefetch_fields=True)
@@ -296,7 +296,9 @@ class Product(models.Model):
             if location:
                 location_ids = _search_ids('stock.location', location)
             else:
-                location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
+                location_ids = set(Warehouse.search(
+                    [('company_id', 'in', self.env.companies.ids)]
+                ).mapped('view_location_id').ids)
 
         return self._get_domain_locations_new(location_ids)
 
@@ -686,7 +688,7 @@ class ProductTemplate(models.Model):
         default=lambda self: self.env['stock.route'].search_count([('product_selectable', '=', True)]))
     route_ids = fields.Many2many(
         'stock.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
-        domain=[('product_selectable', '=', True)],
+        domain=[('product_selectable', '=', True)], depends_context=['company', 'allowed_companies'],
         help="Depending on the modules installed, this will allow you to define the route of the product: whether it will be bought, manufactured, replenished on order, etc.")
     nbr_moves_in = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of incoming stock moves in the past 12 months")
     nbr_moves_out = fields.Integer(compute='_compute_nbr_moves', compute_sudo=False, help="Number of outgoing stock moves in the past 12 months")
@@ -890,13 +892,13 @@ class ProductTemplate(models.Model):
             raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
         if any('type' in vals and vals['type'] != prod_tmpl.type for prod_tmpl in self):
             existing_done_move_lines = self.env['stock.move.line'].sudo().search([
-                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', '=', 'done'),
             ], limit=1)
             if existing_done_move_lines:
                 raise UserError(_("You can not change the type of a product that was already used."))
             existing_reserved_move_lines = self.env['stock.move.line'].search([
-                ('product_id', 'in', self.mapped('product_variant_ids').ids),
+                ('product_id', 'in', self.with_context(active_test=False).mapped('product_variant_ids').ids),
                 ('state', 'in', ['partially_available', 'assigned']),
             ])
             if existing_reserved_move_lines:

@@ -8,16 +8,16 @@
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
 # Martin Trigaux, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
-# Szabolcs Rádi, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Szabolcs Rádi, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +77,7 @@ msgid "Default visibility for custom messages."
 msgstr "Egyedi üzenetek alapértelmezett láthatósága"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Get notified when back in stock"
@@ -87,15 +87,18 @@ msgstr "Készlet értesítés kérés"
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "How to display products having low quantities (on hand - reserved)"
 msgstr ""
+"Hogyan kerüljenek megjelenítésre az alacsony készletű (készleten - foglalva)"
+" termékek"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/controllers/main.py:0
 #, python-format
 msgid "Invalid Email"
 msgstr "Érvénytelen Email"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Invalid email"
@@ -104,10 +107,10 @@ msgstr "Érvénytelen email"
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid "Inventory Defaults"
-msgstr ""
+msgstr "Készlet alapértelmezések"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Only"
@@ -119,7 +122,7 @@ msgid "Order Now"
 msgstr "Rendelje most"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Out of Stock"
@@ -138,6 +141,7 @@ msgid "Out-of-Stock Message"
 msgstr "Készlethiány üzenet"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #: model:ir.model,name:website_sale_stock.model_product_template
 #, python-format
@@ -152,9 +156,8 @@ msgstr "Termékváltozat"
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 #: model:ir.cron,cron_name:website_sale_stock.ir_cron_send_availability_email
-#: model:ir.cron,name:website_sale_stock.ir_cron_send_availability_email
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "Termék: email küldése termék elérhetősége kapcsán"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -192,6 +195,7 @@ msgid "Show availability Qty"
 msgstr "Elérhető mennyiség mutatása"
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -207,13 +211,14 @@ msgid "The following product is now available."
 msgstr "Az alábbi termék készletről elérhetővé vált."
 
 #. module: website_sale_stock
+#. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 #, python-format
 msgid "The product '%(product_name)s' is now available"
 msgstr "A '%(product_name)s' termék elérhetővé vált"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "This product is out of stock."
@@ -237,7 +242,7 @@ msgid "Warehouse"
 msgstr "Raktár"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "We'll notify you once the product is back in stock."
@@ -253,31 +258,42 @@ msgstr "Honlap"
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
 msgstr ""
+"Weboldal, ahol ez a rendelés leadásra került, eKereskedelmi rendelésekhez."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "Már hozzáadásra került az"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added all the available product in your cart."
 msgstr "Már minden elérhető termék a kosárba került"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "You already have %s Units in your cart."
 msgstr "Már van a termékből %s darab a Kosarában."
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:0
+#. odoo-python
 #: code:addons/website_sale_stock/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
+"available"
+msgstr ""
+"A kért %(desired_qty)s %(product_name)s helyett csak  %(new_qty)s elérhető"
+
+#. module: website_sale_stock
+#. odoo-python
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
@@ -285,7 +301,7 @@ msgstr ""
 "érhető el"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 #, python-format
@@ -293,14 +309,14 @@ msgid "You ask for %s Units but only %s are available."
 msgstr "Ön %s darabot szeretne a termékből, %s érhető csak el."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "a kosárba."
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "left in stock."
@@ -313,8 +329,8 @@ msgid "only if below"
 msgstr "csak ha kevesebb, mint"
 
 #. module: website_sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "youremail@gmail.com"
-msgstr ""
+msgstr "youremail@gmail.com"

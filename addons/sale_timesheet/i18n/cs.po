@@ -6,20 +6,22 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
-# Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# Jiří Podhorecký, 2023
+# Martin Trigaux, 2022
+# Jiří Podhorecký <jirka.p@volny.cz>, 2023
 # Jakub Smolka, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # Marek Záda, 2023
+# Katerina Horylova, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-15 10:57+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Marek Záda, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,6 +45,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Evidence časových výkazů\n"
+"                </p><p>\n"
+"                    Své pracovní hodiny můžete evidovat a sledovat podle jednotlivých projektů každý\n"
+"                    den. Každý čas strávený na projektu se stane nákladem a může být přefakturován \n"
+"                    zákazníkům, pokud je to nutné.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice___candidate_orders
@@ -55,6 +66,8 @@ msgid ""
 "% of timesheets that are billable compared to the total number of timesheets"
 " linked to the AA of the project, rounded to the unit."
 msgstr ""
+"% timesheetů, které jsou zúčtovatelné, v porovnání s celkovým počtem "
+"timesheetů spojených s AA projektem, zaokrouhleno na jednotky."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -66,12 +79,12 @@ msgstr "%(amount)s %(label)s bude přidána do nové zakázky odběratele."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", for a revenue of"
-msgstr ""
+msgstr ", při příjmech ve výši"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid ", leading to a"
-msgstr ""
+msgstr ", což vede k"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -96,17 +109,17 @@ msgstr "<span class=\"o_stat_text\">Nahráno</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoiced:</strong>"
-msgstr ""
+msgstr "<strong>Fakturováno:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Invoices:</strong>"
-msgstr ""
+msgstr "<strong>Faktury:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
 msgid "<strong>Sales Order:</strong>"
-msgstr ""
+msgstr "<strong>Prodejní objednávka:</strong>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_task_inherit
@@ -116,7 +129,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Ziskovost</u>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -146,9 +159,10 @@ msgstr ""
 "- Skladové pohyby: množství pochází z potvrzených vychystávání\n"
 
 #. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
-msgstr ""
+msgstr "Poprodejní servisní služby"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
@@ -205,7 +219,7 @@ msgstr "Nejméně jeden řádek by měl být vyplněn."
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid "Based on Timesheets"
-msgstr ""
+msgstr "Na základě časových výkazů"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
@@ -215,12 +229,12 @@ msgstr "Fakturovatelné"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__billable_time
 msgid "Billable Hours"
-msgstr ""
+msgstr "Fakturovatelné Hodiny"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__billable_percentage
 msgid "Billable Percentage"
-msgstr ""
+msgstr "Fakturovatelné procento"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -235,7 +249,7 @@ msgstr "Fakturovatelný typ"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed Manually"
-msgstr ""
+msgstr "Účtováno manuálně"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
@@ -255,7 +269,7 @@ msgstr "Účtováno za pevnou cenu"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_report_search_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Milestones"
-msgstr ""
+msgstr "Účtováno na základě milníků"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
@@ -299,7 +313,7 @@ msgstr "Podnikatelský subjekt"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__commercial_partner_id
 msgid "Commercial Partner"
-msgstr ""
+msgstr "Obchodní partner"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
@@ -349,8 +363,8 @@ msgid "Create SO from project"
 msgstr "Vytvořte SO z projektu"
 
 #. module: sale_timesheet
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -417,12 +431,12 @@ msgstr "Zákazník objednávky"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Ordered,"
-msgstr ""
+msgstr "Počet objednaných dnů,"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Days Remaining)"
-msgstr ""
+msgstr "Zbývající dny)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -450,7 +464,7 @@ msgstr "Koncept faktury"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Effective"
-msgstr ""
+msgstr "Evektivní"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__employee_id
@@ -481,7 +495,7 @@ msgstr "Služby s pevnou cenou"
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Furniture Delivery (Manual)"
-msgstr ""
+msgstr "Dodávka nábytku (ruční)"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -503,7 +517,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__has_displayed_warning_upsell
 msgid "Has Displayed Warning Upsell"
-msgstr ""
+msgstr "Zobrazilo se upozornění Upsell"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__has_multi_sol
@@ -514,6 +528,16 @@ msgstr "Má více možností"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_cost
 msgid "Hourly Cost"
 msgstr "Hodinová sazba"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Hours Ordered,"
+msgstr "Objednané hodiny,"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Hours Remaining)"
+msgstr "Zbývající hodiny)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
@@ -555,7 +579,7 @@ msgstr "Faktura"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Invoice Policy"
-msgstr ""
+msgstr "Zásady fakturace"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -633,7 +657,7 @@ msgstr "Pracovní výkaz fakturace povolen"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__is_cost_changed
 msgid "Is Cost Manually Changed"
-msgstr ""
+msgstr "Jsou náklady měněny ručně"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
@@ -643,7 +667,7 @@ msgstr "Je mapa projektu prázdná"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__is_so_line_edited
 msgid "Is Sales Order Item Manually Edited"
-msgstr ""
+msgstr "Je položka objednávky prodeje upravena ručně"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -659,6 +683,15 @@ msgstr "Položka deníku"
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
 msgstr "Junior Architect (faktura podle pracovního výkazu)"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+"Sledujte svou pracovní dobu podle projektu každý den a fakturujte za tuto "
+"dobu svým zákazníkům."
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
@@ -715,13 +748,9 @@ msgstr "Marže"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
 #, python-format
 msgid "Materials"
-msgstr "Materiály"
+msgstr "Zdroje"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -754,14 +783,14 @@ msgid "No activities found"
 msgstr "Nenalezeny žádné aktivity"
 
 #. module: sale_timesheet
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "No activities found. Let's start a new one!"
-msgstr "Nebyly nalezeny žádné aktivity. Začněme nový!"
-
-#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
 msgstr "Zatím žádná data!"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "No timesheets found. Let's create one!"
+msgstr "Nebyly nalezeny žádné časové rozvrhy. Pojďme si jeden vytvořit!"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -830,8 +859,15 @@ msgid "Order Reference"
 msgstr "Odkaz objednávky"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Ordered,"
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+msgid "Other costs"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Other revenues"
 msgstr ""
 
 #. module: sale_timesheet
@@ -965,18 +1001,18 @@ msgstr "Zbývá"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Days on SO"
-msgstr ""
+msgstr "Zbývající dny na SO"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Days on SO:"
-msgstr ""
+msgstr "Zbývající dny na SO:"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
 msgid "Remaining Hours Available"
-msgstr ""
+msgstr "Zbývající hodiny k dispozici"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
@@ -984,28 +1020,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 msgid "Remaining Hours on SO"
-msgstr ""
+msgstr "Zbývající hodiny na SO"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Hours on SO:"
-msgstr ""
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Remaining)"
-msgstr ""
+msgstr "Zbývající hodiny na SO:"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid ""
 "Review your timesheets by billing type and make sure your time is billable."
 msgstr ""
+"Prohlédněte si výkazy práce podle typu účtování a ujistěte se, že je váš čas"
+" zúčtovatelný."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__so_analytic_account_id
 msgid "Sale Order Analytic Account"
-msgstr ""
+msgstr "Analytický účet objednávek prodeje"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -1064,6 +1097,9 @@ msgid ""
 "If you would like to bill the same service at a different rate, you need to create two separate sales order items as each sales order item can only have a single unit price at a time.\n"
 "You can also define the hourly company cost of your employees for their timesheets on this project specifically. It will bypass the timesheet cost set on the employee."
 msgstr ""
+"Položka prodejní objednávky, která bude ve výchozím nastavení vybrána na časových výkazech příslušného zaměstnance. Obchází položku prodejní zakázky definovanou na projektu a úkolu a v případě potřeby ji lze upravit při každém zadání timesheetu. Jinými slovy definuje sazbu, podle které se účtuje čas zaměstnance, například na základě jeho odborných znalostí, dovedností nebo zkušeností.\n"
+"Pokud chcete stejnou službu účtovat v jiné sazbě, musíte vytvořit dvě samostatné položky prodejního příkazu, protože každá položka prodejního příkazu může mít vždy jen jednu jednotkovou cenu.\n"
+"Můžete také definovat hodinové firemní náklady svých zaměstnanců pro jejich časové výkazy konkrétně na tomto projektu. Překoná se tím cena timesheetu nastavená na zaměstnanci."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__so_line
@@ -1086,21 +1122,21 @@ msgstr "Zakázka odběratele, ke které je úkol propojen."
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
-msgstr ""
+msgstr "Hledat ve faktuře"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr ""
+msgstr "Hledat v objednávce prodeje"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
-msgstr ""
+msgstr "Hledat v položce prodejní objednávky"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
@@ -1127,13 +1163,13 @@ msgstr "Služba"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__service_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__service_revenues
 msgid "Service Revenues"
-msgstr ""
+msgstr "Příjmy ze služeb"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_upsell_threshold_ratio
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_upsell_threshold_ratio
 msgid "Service Upsell Threshold Ratio"
-msgstr ""
+msgstr "Prahový poměr prodeje služby Upsell"
 
 #. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.time_product_product_template
@@ -1148,6 +1184,9 @@ msgid ""
 "task. It can be modified on each task individually by selecting a specific "
 "sales order item."
 msgstr ""
+"Služba, která se ve výchozím nastavení použije při fakturaci času stráveného"
+" na úkolu. Lze ji upravit u každého úkolu zvlášť výběrem konkrétní položky "
+"prodejní objednávky."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -1178,7 +1217,7 @@ msgstr "Opakování úkolu"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
 msgid "Task rate"
-msgstr ""
+msgstr "Úkolová sazba"
 
 #. module: sale_timesheet
 #: model:project.project,label_tasks:sale_timesheet.so_template_project
@@ -1196,6 +1235,17 @@ msgid ""
 "The %s product is required by the Timesheets app and cannot be archived nor "
 "deleted."
 msgstr ""
+"Produkt %s je vyžadován aplikací Timesheets a nelze jej archivovat ani "
+"odstranit."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1211,7 +1261,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "The cost of the project is now at"
-msgstr ""
+msgstr "Náklady na projekt nyní činí"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1271,6 +1321,8 @@ msgid ""
 "This cost overrides the employee's default employee hourly wage in "
 "employee's HR Settings"
 msgstr ""
+"Tento náklad je nadřazen výchozí hodinové mzdě zaměstnance v nastavení HR "
+"zaměstnance"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1332,7 +1384,7 @@ msgstr "Produkt pracovního výkazu"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__timesheet_revenues
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__timesheet_revenues
 msgid "Timesheet Revenues"
-msgstr ""
+msgstr "Příjmy z časových výkazů"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_total_duration
@@ -1376,40 +1428,40 @@ msgstr "Pracovní výkazy"
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed Manually)"
-msgstr ""
+msgstr "Časové výkazy (účtované manuálně)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Milestones)"
-msgstr ""
+msgstr "Časové výkazy (Účtováno na základě milníků)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Timesheets)"
-msgstr ""
+msgstr "Pracovní výkazy (účtované na pracovních výkazech)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Fixed Price)"
-msgstr ""
+msgstr "Časové výkazy (pevná cena)"
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Non Billable)"
-msgstr ""
+msgstr "Časové výkazy (nezúčtovatelné)"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheets_analysis_report_pivot_invoice_type
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "Analýza časových výkazů"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_timesheets_analysis_report
@@ -1424,12 +1476,12 @@ msgstr "Období podle pracovních výkazů"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets by Billing Type"
-msgstr ""
+msgstr "Časové výkazy podle typu fakturace"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "Timesheets for the"
-msgstr ""
+msgstr "Časové výkazy pro"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1449,22 +1501,22 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets revenues"
-msgstr ""
+msgstr "Příjmy z časových výkazů"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
 msgid "Timesheets revenues minus the costs"
-msgstr ""
+msgstr "Výnosy z časových výkazů minus náklady"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Timesheets taken into account when invoicing your time"
-msgstr ""
+msgstr "Zohlednění časových výkazů při fakturaci vašeho času"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_res_config_settings__invoice_policy
 msgid "Timesheets taken when invoicing time spent"
-msgstr ""
+msgstr "Časové výkazy pořízené při fakturaci stráveného času"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1505,7 +1557,6 @@ msgstr "Trasovací služba"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
@@ -1529,7 +1580,7 @@ msgstr "Jednotková cena položky objednávky."
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
-msgstr ""
+msgstr "Hodnota v typu ceny neexistuje"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit
@@ -1541,6 +1592,7 @@ msgstr "Zobrazit pracovní výkazy"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "Warn the salesperson for an upsell when work done exceeds"
 msgstr ""
+"Upozorněte prodejce na zvýšení ceny, pokud provedená práce přesáhne hodnotu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__warning_employee_rate
@@ -1590,6 +1642,8 @@ msgid ""
 "You cannot link a billable project to a sales order item that comes from an "
 "expense or a vendor bill."
 msgstr ""
+"Nelze propojit zúčtovatelný projekt s položkou prodejní objednávky, která "
+"pochází z výdajového nebo dodavatelského účtu."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1599,13 +1653,15 @@ msgid ""
 "You cannot link a billable project to a sales order item that is not a "
 "service."
 msgstr ""
+"Nelze propojit zúčtovatelný projekt s položkou prodejní objednávky, která "
+"není službou."
 
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
-msgstr ""
+msgstr "Již vyfakturované pracovní výkazy nelze upravovat."
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1639,9 +1695,9 @@ msgstr "hodin"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "margin ("
-msgstr ""
+msgstr "marže ("
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_product_timesheet_form
 msgid "of hours sold."
-msgstr ""
+msgstr "prodaných hodin."

@@ -121,7 +121,11 @@
         <li class="nav-item dropdown me-2 my-1">
             <a href="#" role="button" class="btn dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="fa fa-map-marker"/>
-                <t t-if="current_country" t-out="current_country.name"/>
+                <t t-if="searches['country'] == 'online'">
+                    <t t-set="online_event_text">Online Events</t>
+                    <t t-out="online_event_text"/>
+                </t>
+                <t t-elif="current_country" t-esc="current_country.name"/>
                 <t t-else="">All countries</t>
             </a>
             <div class="dropdown-menu">
@@ -298,14 +302,14 @@
         <h6 class="o_wevent_sidebar_title">Photos</h6>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
-                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
-                <figcaption class="figure-caption">A past event</figcaption>
+                <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_past_0.jpg" alt=""/>
+                <figcaption class="figure-caption oe_unremovable">A past event</figcaption>
             </figure>
         </a>
         <a href="/event">
             <figure class="o_wevent_sidebar_block o_wevent_sidebar_figure figure">
-                <img class="figure-img img-fluid rounded" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
-                <figcaption class="figure-caption">Our Trainings</figcaption>
+                <img class="figure-img img-fluid rounded oe_unremovable" src="/website_event/static/src/img/event_training_0.jpg" alt=""/>
+                <figcaption class="figure-caption oe_unremovable">Our Trainings</figcaption>
             </figure>
         </a>
     </xpath>

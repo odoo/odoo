@@ -12,10 +12,6 @@ export class DateFilterValue extends Component {
         onWillUpdateProps(this._setStateFromProps);
     }
 
-    get yearPickerPlaceholder() {
-        return this.env._t("Select year...");
-    }
-
     _setStateFromProps(props) {
         this.period = props.period;
         /** @type {number|undefined} */

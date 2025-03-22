@@ -6,16 +6,16 @@
 # Martin Trigaux, 2022
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2024
+# Junko Augias, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Junko Augias, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -485,14 +485,6 @@ msgstr "閉じる"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
-#, python-format
-msgid "Close chat window"
-msgstr "チャットウィンドウを閉じる"
-
-#. module: im_livechat
-#. odoo-javascript
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Close conversation"
@@ -545,7 +537,7 @@ msgstr "%sとの会話"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__kpi_livechat_conversations
 msgid "Conversations handled"
-msgstr "会話が対応されました"
+msgstr "会話対応済"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -841,8 +833,9 @@ msgstr "セッション開始日の時間"
 
 #. module: im_livechat
 #. odoo-javascript
-#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#. odoo-python
 #: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "How may I help you?"
 msgstr "どのようなご用件でしょうか？"
@@ -1564,8 +1557,8 @@ msgid "Select an option above"
 msgstr "上記のオプションを選択"
 
 #. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/legacy/widgets/feedback.xml:0
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Send"
 msgstr "送信"
@@ -1786,7 +1779,7 @@ msgstr "対応されたセッション"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "Try again"
-msgstr "もう一度試す"
+msgstr "再試行"
 
 #. module: im_livechat
 #. odoo-python
@@ -1919,6 +1912,11 @@ msgstr "折り返しご連絡させていただきますので、メールアド
 #, python-format
 msgid "Yesterday"
 msgstr "昨日"
+
+#. module: im_livechat
+#: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
+msgid "You"
+msgstr "あなた"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.chatbot_script_action

@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
-# erpgo translator <jumshud@erpgo.az>, 2023
+# erpgo translator <jumshud@erpgo.az>, 2024
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2023\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +93,7 @@ msgstr "Hesab-faktura Tərtib edin"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Sifariş yaradın"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
@@ -151,7 +152,7 @@ msgstr "Qaimə hesabı"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Bu xidmət satılan kimi sifariş edilən miqdarları faktura göndərin."
 
 #. module: sale_project
 #. odoo-python
@@ -277,7 +278,7 @@ msgstr "Hesab-fakturalar"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.product_template_form_view_invoice_policy_inherit_sale_project
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Fakturalama Qaydası"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
@@ -309,6 +310,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Sifariş üzrə miqdarı əl ilə təyin edin: Analitik hesab yaratmadan əl ilə daxil edilmiş kəmiyyətə əsaslanan faktura.\n"
+"Müqavilə üzrə vaxt cədvəlləri: Müvafiq vaxt cədvəlində izlənilən saatlara əsaslanan faktura.\n"
+"Tapşırıq yaradın və saatları izləyin: Satış sifarişinin təsdiqi ilə bağlı tapşırıq yaradın və iş saatlarını izləyin."
 
 #. module: sale_project
 #. odoo-python
@@ -320,7 +324,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Çatdırılan miqdarı yeniləmək üsulu"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
@@ -477,6 +481,11 @@ msgid "Quantity"
 msgstr "Miqdar"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Təklif Şablonu Xətti"
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
 msgstr ""
@@ -490,7 +499,7 @@ msgstr "satış sifarişi"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Satış Sifarişi Sayı"
 
 #. module: sale_project
 #. odoo-javascript
@@ -513,6 +522,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order"
@@ -536,7 +546,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_task_project_user_search_inherited
 #, python-format
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Satış Sifarişi Məhsulu"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
@@ -570,7 +580,7 @@ msgstr "Satış Sifarişi Sətri"
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
-msgstr ""
+msgstr "Satış Sifarişləri"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -605,13 +615,6 @@ msgid "Search in Sales Order"
 msgstr ""
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#, python-format
-msgid "Search in Sales Order Item"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
@@ -627,7 +630,7 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Satıldı"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
@@ -706,7 +709,7 @@ msgstr "Fakturalanacaq"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_type
 msgid "Track Service"
-msgstr ""
+msgstr "İzləmə Xidməti"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__vendor_bill_count

@@ -5,16 +5,16 @@
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
 # Martin Trigaux, 2023
-# Tony Ng, 2023
-# Wil Odoo, 2023
+# Wil Odoo, 2025
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-15 09:36+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -648,6 +648,11 @@ msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">休假</span>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "<span class=\"text-muted\"> to </span>"
+msgstr "<span class=\"text-muted\"> 至 </span>"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"text-muted\">From</span>"
 msgstr ""
@@ -661,11 +666,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<span class=\"text-muted\">from </span>"
 msgstr "<span class=\"text-muted\">從 </span>"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
-msgid "<span class=\"text-muted\"> to </span>"
-msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -929,7 +929,7 @@ msgstr "所有休假"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
 msgid "Allocated (Days/Hours)"
-msgstr "Allocated (Days/Hours)"
+msgstr "已分配（天數/時數）"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1132,6 +1132,8 @@ msgid "Approve Allocations"
 msgstr "批准分配"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__current_leave_state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__current_leave_state__validate
@@ -1142,6 +1144,7 @@ msgstr "批准分配"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__state__validate
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report_calendar__state__validate
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
+#, python-format
 msgid "Approved"
 msgstr "已批准"
 
@@ -1222,7 +1225,7 @@ msgstr "附加檔案"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_attachment_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_attachment_count
 msgid "Attachment Count"
-msgstr "附件數"
+msgstr "附件數目"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__attachment_ids
@@ -1393,7 +1396,7 @@ msgstr "已取消"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Cancelled Time Off"
-msgstr ""
+msgstr "已取消休假"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__category_id
@@ -1479,9 +1482,19 @@ msgid "Confirmation"
 msgstr "確認"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_holidays_summary_employee__holiday_type__confirmed
+#, python-format
 msgid "Confirmed"
 msgstr "已確認"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/report/holidays_summary_report.py:0
+#, python-format
+msgid "Confirmed and Approved"
+msgstr "已確認及批准"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1701,7 +1714,7 @@ msgstr "具有有效性的描述"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Discard"
-msgstr "取消"
+msgstr "捨棄"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__display_name
@@ -1984,7 +1997,7 @@ msgstr "起始日期"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_activity
 msgid "From:"
-msgstr "從:"
+msgstr "從："
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2128,10 +2141,8 @@ msgstr "用於指示異常活動的圖示。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
-msgid ""
-"If Accrual Allocation: Number of days allocated in addition to the ones you "
-"will get via the accrual' system."
-msgstr "如為應計分配: 除了將通過應計計算獲得的天數之外分配的天數"
+msgid "If Accrual Allocation: Days given by the accrual system."
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -2339,7 +2350,7 @@ msgstr "休假類型"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Leave Validation"
-msgstr ""
+msgstr "休假驗證"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
@@ -2349,7 +2360,7 @@ msgstr "已休假"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_employee_type_report__holiday_status__left
 msgid "Left"
-msgstr "左"
+msgstr "尚餘"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2545,7 +2556,7 @@ msgstr "五月"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid "Meet the time off dashboard."
-msgstr "看看休假概覽."
+msgstr "看看休假Dashboard."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -2633,7 +2644,7 @@ msgstr "我的需求"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Team"
-msgstr "我的部屬"
+msgstr "我的團隊"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
@@ -2856,7 +2867,7 @@ msgstr "十月"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Off Till"
-msgstr "直到"
+msgstr "休假直至"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2900,21 +2911,21 @@ msgstr "只有休假經理可以批准/拒絕自己的請求。"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a refused leave."
-msgstr "只有休假經理可以重置被退回的休假。"
+msgstr "只限休假經理才可重設已被拒絕的休假。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset a started leave."
-msgstr "只有休假經理可以重置已開始的休假。"
+msgstr "只限休假經理才可重設已開始的休假。"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset other people leaves."
-msgstr "只有休假經理可以重置其他人的休假。"
+msgstr "只限休假經理才可重設其他人的休假。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2964,7 +2975,7 @@ msgstr "不在辦公室"
 #: code:addons/hr_holidays/static/src/models/partner.js:0
 #, python-format
 msgid "Out of office until %s"
-msgstr "不在辦公室直到%s"
+msgstr "休假直至 %s"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_dashboard
@@ -3209,7 +3220,7 @@ msgstr "規則"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Run until"
-msgstr "執行, 直到"
+msgstr "運行直至"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__sat
@@ -3357,6 +3368,15 @@ msgstr "顯示在今天之前的下一個行動日期的所有記錄"
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
 msgstr "病假"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
+#, python-format
+msgid ""
+"Some of the accrual plans you're trying to delete are linked to an existing "
+"allocation. Delete or cancel them first."
+msgstr "你嘗試刪除的累積計劃，有部份已連結至現有休假分配。請先刪除或取消它們。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3523,12 +3543,29 @@ msgid "Taken Leave"
 msgstr "請假"
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"The Start Date of the Validity Period must be anterior to the End Date."
+msgstr "有效期的開始日期須早於結束日期。"
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
 msgid ""
 "The accrual starts after a defined period from the allocation start date. "
 "This field defines the number of days, months or years after which accrual "
 "is used."
 msgstr "從分配開始日期後的定義時間段開始計算累計。此欄位定義累計的天數、月數或年數。"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_type.py:0
+#, python-format
+msgid ""
+"The allocation requirement of a time off type cannot be changed once leaves "
+"of that type have been taken. You should create a new time off type instead."
+msgstr "享用該類型的休假後，該類型休假的分配要求便不可再更改。你應該建立一個新的休假類型。"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__color
@@ -3811,6 +3848,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_dashboard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
+#, python-format
 msgid "Time Off Request"
 msgstr "休假申請"
 
@@ -4058,7 +4096,7 @@ msgstr "轉入下一年"
 msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
-msgstr ""
+msgstr "請嘗試新增一些記錄，或確保搜尋列沒有生效的篩選器。"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__tue
@@ -4120,6 +4158,13 @@ msgstr "無薪休假"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Unread Messages"
 msgstr "未讀消息"
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
+#, python-format
+msgid "Usable:"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -4480,6 +4525,15 @@ msgid "a new public holiday completely overrides this leave."
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#, python-format
+msgid ""
+"a public holiday that previously covered this leave has been cancelled or "
+"amended."
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "after allocation date"
 msgstr "分配日期後"
@@ -4643,6 +4697,11 @@ msgstr "已支取"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "to"
 msgstr "到"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
+msgid "to refuse"
+msgstr "待拒絕"
 
 #. module: hr_holidays
 #. odoo-javascript

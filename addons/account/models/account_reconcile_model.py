@@ -24,6 +24,7 @@ class AccountReconcileModelPartnerMapping(models.Model):
         for record in self:
             if not (record.narration_regex or record.payment_ref_regex):
                 raise ValidationError(_("Please set at least one of the match texts to create a partner mapping."))
+            current_regex = ''
             try:
                 if record.payment_ref_regex:
                     current_regex = record.payment_ref_regex
@@ -71,7 +72,7 @@ class AccountReconcileModelLine(models.Model):
     amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
     * Percentage: Percentage of the balance, between 0 and 100.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
-    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)""")
+    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\\d,]+)""")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict', check_company=True)
 
     @api.onchange('tax_ids')
@@ -92,7 +93,7 @@ class AccountReconcileModelLine(models.Model):
         if self.amount_type in ('percentage', 'percentage_st_line'):
             self.amount_string = '100'
         elif self.amount_type == 'regex':
-            self.amount_string = '([\d,]+)'
+            self.amount_string = r'([\d,]+)'
 
     @api.depends('amount_string')
     def _compute_float_amount(self):
@@ -186,7 +187,10 @@ class AccountReconcileModelLine(models.Model):
 
         amount_currency = None
         if self.amount_type == 'percentage_st_line':
-            amount_currency = currency.round(residual_amount_currency * (self.amount / 100.0))
+            _transaction_amount, _transaction_currency, journal_amount, journal_currency, _company_amount, _company_currency \
+                = st_line._get_accounting_amounts_and_currencies()
+            amount_currency = journal_currency.round(-journal_amount * (self.amount / 100.0))
+            currency = journal_currency
         elif self.amount_type == 'regex':
             match = re.search(self.amount_string, st_line.payment_ref)
             if match:
@@ -214,6 +218,21 @@ class AccountReconcileModelLine(models.Model):
             aml_vals['name'] = st_line.payment_ref
 
         return aml_vals
+
+    def _get_write_off_move_line_dict(self, balance, currency):
+        self.ensure_one()
+        return {
+            'name': self.label,
+            'balance': balance,
+            'debit': balance > 0 and balance or 0,
+            'credit': balance < 0 and -balance or 0,
+            'account_id': self.account_id.id,
+            'currency_id': currency.id,
+            'analytic_distribution': self.analytic_distribution,
+            'reconcile_model_id': self.model_id.id,
+            'journal_id': self.journal_id.id,
+            'tax_ids': [],
+        }
 
 
 class AccountReconcileModel(models.Model):
@@ -519,22 +538,13 @@ class AccountReconcileModel(models.Model):
                 balance = currency.round(residual_balance * (line.amount / 100.0))
             elif line.amount_type == 'fixed':
                 balance = currency.round(line.amount * (1 if residual_balance > 0.0 else -1))
+            else:
+                balance = 0.0
 
             if currency.is_zero(balance):
                 continue
 
-            writeoff_line = {
-                'name': line.label,
-                'balance': balance,
-                'debit': balance > 0 and balance or 0,
-                'credit': balance < 0 and -balance or 0,
-                'account_id': line.account_id.id,
-                'currency_id': currency.id,
-                'analytic_distribution': line.analytic_distribution,
-                'reconcile_model_id': self.id,
-                'journal_id': line.journal_id.id,
-                'tax_ids': [],
-            }
+            writeoff_line = line._get_write_off_move_line_dict(balance, currency)
             lines_vals_list.append(writeoff_line)
 
             residual_balance -= balance
@@ -730,14 +740,14 @@ class AccountReconcileModel(models.Model):
         :param st_line: A statement line.
         :param partner: The partner associated to the statement line.
         """
+        def get_order_by_clause(alias=None):
+            direction = 'DESC' if self.matching_order == 'new_first' else 'ASC'
+            dotted_alias = f'{alias}.' if alias else ''
+            return f'{dotted_alias}date_maturity {direction}, {dotted_alias}date {direction}, {dotted_alias}id {direction}'
+
         assert self.rule_type == 'invoice_matching'
         self.env['account.move'].flush_model()
         self.env['account.move.line'].flush_model()
-
-        if self.matching_order == 'new_first':
-            order_by = 'sub.date_maturity DESC, sub.date DESC, sub.id DESC'
-        else:
-            order_by = 'sub.date_maturity ASC, sub.date ASC, sub.id ASC'
 
         aml_domain = self._get_invoice_matching_amls_domain(st_line, partner)
         query = self.env['account.move.line']._where_calc(aml_domain)
@@ -745,7 +755,24 @@ class AccountReconcileModel(models.Model):
 
         sub_queries = []
         all_params = []
+        aml_cte = ''
         numerical_tokens, exact_tokens, _text_tokens = self._get_invoice_matching_st_line_tokens(st_line)
+        if numerical_tokens or exact_tokens:
+            aml_cte = rf'''
+                WITH aml_cte AS (
+                    SELECT
+                        account_move_line.id as account_move_line_id,
+                        account_move_line.date as account_move_line_date,
+                        account_move_line.date_maturity as account_move_line_date_maturity,
+                        account_move_line.name as account_move_line_name,
+                        account_move_line__move_id.name as account_move_line__move_id_name,
+                        account_move_line__move_id.ref as account_move_line__move_id_ref
+                    FROM {tables}
+                    JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
+                    WHERE {where_clause}
+                )
+            '''
+            all_params += where_params
         if numerical_tokens:
             for table_alias, field in (
                 ('account_move_line', 'name'),
@@ -754,23 +781,21 @@ class AccountReconcileModel(models.Model):
             ):
                 sub_queries.append(rf'''
                     SELECT
-                        account_move_line.id,
-                        account_move_line.date,
-                        account_move_line.date_maturity,
+                        account_move_line_id as id,
+                        account_move_line_date as date,
+                        account_move_line_date_maturity as date_maturity,
                         UNNEST(
                             REGEXP_SPLIT_TO_ARRAY(
                                 SUBSTRING(
-                                    REGEXP_REPLACE({table_alias}.{field}, '[^0-9\s]', '', 'g'),
+                                    REGEXP_REPLACE({table_alias}_{field}, '[^0-9\s]', '', 'g'),
                                     '\S(?:.*\S)*'
                                 ),
                                 '\s+'
                             )
                         ) AS token
-                    FROM {tables}
-                    JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
-                    WHERE {where_clause} AND {table_alias}.{field} IS NOT NULL
+                    FROM aml_cte
+                    WHERE {table_alias}_{field} IS NOT NULL
                 ''')
-                all_params += where_params
 
         if exact_tokens:
             for table_alias, field in (
@@ -780,18 +805,18 @@ class AccountReconcileModel(models.Model):
             ):
                 sub_queries.append(rf'''
                     SELECT
-                        account_move_line.id,
-                        account_move_line.date,
-                        account_move_line.date_maturity,
-                        {table_alias}.{field} AS token
-                    FROM {tables}
-                    JOIN account_move account_move_line__move_id ON account_move_line__move_id.id = account_move_line.move_id
-                    WHERE {where_clause} AND COALESCE({table_alias}.{field}, '') != ''
+                        account_move_line_id as id,
+                        account_move_line_date as date,
+                        account_move_line_date_maturity as date_maturity,
+                        {table_alias}_{field} AS token
+                    FROM aml_cte
+                    WHERE COALESCE({table_alias}_{field}, '') != ''
                 ''')
-                all_params += where_params
 
         if sub_queries:
+            order_by = get_order_by_clause(alias='sub')
             self._cr.execute(
+                aml_cte +
                 '''
                     SELECT
                         sub.id,
@@ -810,21 +835,45 @@ class AccountReconcileModel(models.Model):
                     'allow_auto_reconcile': True,
                     'amls': self.env['account.move.line'].browse(candidate_ids),
                 }
+            elif self.match_text_location_label or self.match_text_location_note or self.match_text_location_reference:
+                # In the case any of the Label, Note or Reference matching rule has been toggled, and the query didn't return
+                # any candidates, the model should not try to mount another aml instead.
+                return
 
-        # Search without any matching based on textual information.
-        if partner:
-
-            if self.matching_order == 'new_first':
-                order = 'date_maturity DESC, date DESC, id DESC'
+        if not partner:
+            st_line_currency = st_line.foreign_currency_id or st_line.journal_id.currency_id or st_line.company_currency_id
+            if st_line_currency == self.company_id.currency_id:
+                aml_amount_field = 'amount_residual'
             else:
-                order = 'date_maturity ASC, date ASC, id ASC'
+                aml_amount_field = 'amount_residual_currency'
 
-            amls = self.env['account.move.line'].search(aml_domain, order=order)
-            if amls:
-                return {
-                    'allow_auto_reconcile': False,
-                    'amls': amls,
-                }
+            order_by = get_order_by_clause(alias='account_move_line')
+            self._cr.execute(
+                f'''
+                    SELECT account_move_line.id
+                    FROM {tables}
+                    WHERE
+                        {where_clause}
+                        AND account_move_line.currency_id = %s
+                        AND ROUND(account_move_line.{aml_amount_field}, %s) = ROUND(%s, %s)
+                    ORDER BY {order_by}
+                ''',
+                where_params + [
+                    st_line_currency.id,
+                    st_line_currency.decimal_places,
+                    -st_line.amount_residual,
+                    st_line_currency.decimal_places,
+                ],
+            )
+            amls = self.env['account.move.line'].browse([row[0] for row in self._cr.fetchall()])
+        else:
+            amls = self.env['account.move.line'].search(aml_domain, order=get_order_by_clause())
+
+        if amls:
+            return {
+                'allow_auto_reconcile': False,
+                'amls': amls,
+            }
 
     def _get_invoice_matching_rules_map(self):
         """ Get a mapping <priority_order, rule> that could be overridden in others modules.
@@ -999,7 +1048,9 @@ class AccountReconcileModel(models.Model):
             for aml_values in amls_values_list
         )
         sign = 1 if st_line_amount_curr > 0.0 else -1
-        amount_curr_after_rec = sign * (amls_amount_curr + st_line_amount_curr)
+        amount_curr_after_rec = st_line_currency.round(
+            sign * (amls_amount_curr + st_line_amount_curr)
+        )
 
         # The statement line will be fully reconciled.
         if st_line_currency.is_zero(amount_curr_after_rec):
@@ -1016,12 +1067,12 @@ class AccountReconcileModel(models.Model):
 
         # If the tolerance is expressed as a fixed amount, check the residual payment amount doesn't exceed the
         # tolerance.
-        if self.payment_tolerance_type == 'fixed_amount' and -amount_curr_after_rec <= self.payment_tolerance_param:
+        if self.payment_tolerance_type == 'fixed_amount' and st_line_currency.compare_amounts(-amount_curr_after_rec, self.payment_tolerance_param) <= 0:
             return {'allow_write_off', 'allow_auto_reconcile'}
 
         # The tolerance is expressed as a percentage between 0 and 100.0.
         reconciled_percentage_left = (abs(amount_curr_after_rec / amls_amount_curr)) * 100.0
-        if self.payment_tolerance_type == 'percentage' and reconciled_percentage_left <= self.payment_tolerance_param:
+        if self.payment_tolerance_type == 'percentage' and st_line_currency.compare_amounts(reconciled_percentage_left, self.payment_tolerance_param) <= 0:
             return {'allow_write_off', 'allow_auto_reconcile'}
 
         return {'rejected'}

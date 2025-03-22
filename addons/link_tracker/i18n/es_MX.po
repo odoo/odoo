@@ -4,21 +4,31 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Fernanda Alvarez, 2023
+# Fernanda Alvarez, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2024\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+#: code:addons/link_tracker/models/link_tracker.py:0
+#, python-format
+msgid "%r is not a valid link, links cannot redirect to the current page."
+msgstr ""
+"%r no es un enlace válido. Los enlaces no pueden redirigir a la página "
+"actual."
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
@@ -87,6 +97,7 @@ msgid "Created on"
 msgstr "Creado en"
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
@@ -142,7 +153,7 @@ msgstr "Ultima actualización por"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__write_date
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__write_date
 msgid "Last Updated on"
-msgstr "Ultima actualización realizada"
+msgstr "Última actualización el"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__link_id
@@ -179,6 +190,7 @@ msgid "Link Tracker Code"
 msgstr "Código del rastreador de enlace "
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid ""
@@ -269,8 +281,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Este es un nombre que facilita el seguimiento de sus diferentes proyectos de"
-" campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
+"Este es un nombre que facilita el seguimiento de sus distintos proyectos de "
+"campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__medium_id
@@ -331,6 +343,7 @@ msgid "Visit Page"
 msgstr "Visitar página"
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage"

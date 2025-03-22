@@ -40,7 +40,7 @@ import markupsafe
 import passlib.utils
 import pytz
 import werkzeug.utils
-from lxml import etree
+from lxml import etree, objectify
 
 import odoo
 import odoo.addons
@@ -61,6 +61,9 @@ SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.Com
 
 # Configure default global parser
 etree.set_default_parser(etree.XMLParser(resolve_entities=False))
+default_parser = etree.XMLParser(resolve_entities=False, remove_blank_text=True)
+default_parser.set_element_class_lookup(objectify.ObjectifyElementClassLookup())
+objectify.set_default_parser(default_parser)
 
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
@@ -852,7 +855,7 @@ class lower_logging(logging.Handler):
             record.levelname = f'_{record.levelname}'
             record.levelno = self.to_level
             self.had_error_log = True
-            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if type(arg) is str else arg for arg in record.args)  # pylint: disable=unidiomatic-typecheck
+            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if isinstance(arg, str) else arg for arg in record.args)
 
         if logging.getLogger(record.name).isEnabledFor(record.levelno):
             for handler in self.old_handlers:
@@ -1686,7 +1689,7 @@ class DotDict(dict):
     """
     def __getattr__(self, attrib):
         val = self.get(attrib)
-        return DotDict(val) if type(val) is dict else val
+        return DotDict(val) if isinstance(val, dict) else val
 
 
 def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):

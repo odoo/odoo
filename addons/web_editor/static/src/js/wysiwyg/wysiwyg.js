@@ -32,14 +32,15 @@ const QWeb = core.qweb;
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
-const isBlock = OdooEditorLib.isBlock;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
+const closestBlock = OdooEditorLib.closestBlock;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
+const getSelectedNodes = OdooEditorLib.getSelectedNodes;
 
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
@@ -242,7 +243,22 @@ const Wysiwyg = Widget.extend({
             },
             filterMutationRecords: (records) => {
                 return records.filter((record) => {
+                    if (record.type === 'attributes'
+                            && record.attributeName === 'aria-describedby') {
+                        const value = (record.oldValue || record.target.getAttribute(record.attributeName));
+                        if (value && value.startsWith('popover')) {
+                            // TODO maybe we should just always return false at
+                            // this point: never considering the
+                            // aria-describedby attribute for any tooltip?
+                            const popoverData = Popover.getInstance(record.target);
+                            return !popoverData
+                                || popoverData.tip.id !== value
+                                || !popoverData.tip.classList.contains('o_edit_menu_popover');
+                        }
+                    }
                     return !(
+                        // TODO should probably not check o_header_standard
+                        // here, since it is a website class ?
                         (record.target.classList && record.target.classList.contains('o_header_standard')) ||
                         (record.type === 'attributes' && record.attributeName === 'data-last-history-steps')
                     );
@@ -254,13 +270,15 @@ const Wysiwyg = Widget.extend({
                     this.linkTools = undefined;
                 }
             },
+            beforeAnyCommand: this._beforeAnyCommand.bind(this),
             commands: powerboxOptions.commands,
             categories: powerboxOptions.categories,
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: this._getCollaborationClientAvatarUrl(),
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading', 'o_link_in_selection'],
             foldSnippets: !!options.foldSnippets,
+            autoActivateContentEditable: this.options.autoActivateContentEditable,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -420,7 +438,7 @@ const Wysiwyg = Widget.extend({
                     && !$target[0].closest('.o_extra_menu_items')
                     && $target[0].isContentEditable) {
                 if (ev.ctrlKey || ev.metaKey) {
-                    window.open(ev.target.href, '_blank')
+                    window.open($target[0].href, '_blank');
                 }
                 this.linkPopover = $target.data('popover-widget-initialized');
                 if (!this.linkPopover) {
@@ -740,6 +758,10 @@ const Wysiwyg = Widget.extend({
      * @returns {Boolean}
      */
     isDirty: function () {
+        // TODO review... o_dirty is not even a set up system in web_editor,
+        // only in website... although some other code checks that class in
+        // web_editor for no apparent reason either. Also, why comparing HTML
+        // values if already confirmed dirty with the first check?
         const isDocumentDirty = this.$editable[0].ownerDocument.defaultView.$(".o_dirty").length;
         return this._initialValue !== (this.getValue() || this.$editable.val()) && isDocumentDirty;
     },
@@ -761,8 +783,10 @@ const Wysiwyg = Widget.extend({
         $editable.find('[data-editor-message]').removeAttr('data-editor-message');
         $editable.find('a.o_image, span.fa, i.fa').html('');
         $editable.find('[aria-describedby]').removeAttr('aria-describedby').removeAttr('data-bs-original-title');
-        this.odooEditor && this.odooEditor.cleanForSave($editable[0]);
-        this._attachHistoryIds($editable[0]);
+        if (this.odooEditor) {
+            this.odooEditor.cleanForSave($editable[0]);
+            this._attachHistoryIds($editable[0]);
+        }
         return $editable.html();
     },
     /**
@@ -878,7 +902,7 @@ const Wysiwyg = Widget.extend({
                         res_model: resModel,
                         res_id: parseInt(resId),
                         data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
-                        mimetype: el.dataset.mimetype,
+                        mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
                         name: (el.dataset.fileName ? el.dataset.fileName : null),
                     },
                 });
@@ -1031,6 +1055,15 @@ const Wysiwyg = Widget.extend({
                             .filter('[data-oe-field="name"]'));
                     }
 
+                    // TODO adapt in master: remove this and only use the
+                    //  `_pauseOdooFieldObservers(field)` call.
+                    this.__odooFieldObserversToPause = this.odooFieldObservers.filter(
+                        // Exclude inner translation fields observers. They
+                        // still handle translation synchronization inside the
+                        // targeted field.
+                        observerData => !observerData.field.dataset.oeTranslationInitialSha ||
+                            !field.contains(observerData.field)
+                    );
                     this._pauseOdooFieldObservers();
                     // Tag the date fields to only replace the value
                     // with the original date value once (see mouseDown event)
@@ -1064,7 +1097,11 @@ const Wysiwyg = Widget.extend({
      * Stop the field changes mutation observers.
      */
     _pauseOdooFieldObservers: function () {
-        for (let observerData of this.odooFieldObservers) {
+        // TODO adapt in master: remove this and directly exclude observers with
+        // targets inside the current field (we use `this.odooFieldObservers`
+        // as fallback for compatibility here).
+        const fieldObserversData = this.__odooFieldObserversToPause || this.odooFieldObservers;
+        for (let observerData of fieldObserversData) {
             observerData.observer.disconnect();
         }
     },
@@ -1072,7 +1109,29 @@ const Wysiwyg = Widget.extend({
      * Open the link tools or the image link tool depending on the selection.
      */
     openLinkToolsFromSelection() {
-        const targetEl = this.odooEditor.document.getSelection().getRangeAt(0).startContainer;
+        const selection = this.odooEditor.document.getSelection();
+        const selectedNodes = getSelectedNodes(this.odooEditor.editable);
+        // If there is no selection return
+        if (!selection || selection.rangeCount == 0) {
+            return;
+        }
+        // If there is video in selection than return
+        for (const el of selectedNodes) {
+            const elClassList = el.classList;
+            if (
+                elClassList &&
+                (elClassList.contains("media_iframe_video") ||
+                    elClassList.contains("media_iframe_video_size"))
+            ) {
+                return;
+            }
+        }
+        const targetEl = selection.getRangeAt(0).startContainer;
+        // Avoid toggleLinkTools for video if targetEl is text
+        const closestEl = closestElement(targetEl, ".media_iframe_video");
+        if (closestEl) {
+            return;
+        }
         // Link tool is different if the selection is an image or a text.
         if (targetEl.nodeType === Node.ELEMENT_NODE
                 && (targetEl.tagName === 'IMG' || targetEl.querySelectorAll('img').length === 1)) {
@@ -1125,9 +1184,11 @@ const Wysiwyg = Widget.extend({
                 }
                 this.linkTools.noFocusUrl = options.noFocusUrl;
                 const _onClick = ev => {
+                    const selection = this.odooEditor.document.getSelection();
+                    const isFocusOnInput = closestElement(selection.anchorNode, '.o_url_input');
                     if (
                         !ev.target.closest('#create-link') &&
-                        (!ev.target.closest('.oe-toolbar') || !ev.target.closest('we-customizeblock-option')) &&
+                        (!ev.target.closest('.oe-toolbar') || (!ev.target.closest('we-customizeblock-option') && isFocusOnInput)) &&
                         !ev.target.closest('.ui-autocomplete') &&
                         (!this.linkTools || ![ev.target, ...wysiwygUtils.ancestors(ev.target)].includes(this.linkTools.$link[0]))
                     ) {
@@ -1242,10 +1303,14 @@ const Wysiwyg = Widget.extend({
                         anchorOffset = focusOffset = index;
                     }
                 } else {
-                    anchorNode = link;
-                    focusNode = link;
+                    const commonBlock = selection.rangeCount && closestBlock(selection.getRangeAt(0).commonAncestorContainer);
+                    if (commonBlock && link.contains(commonBlock)) {
+                        [anchorNode, focusNode] = [commonBlock, commonBlock];
+                    } else if (!this.$editable[0].contains(selection.anchorNode)) {
+                        [anchorNode, focusNode] = [link, link];
+                    }
                 }
-                if (!focusOffset) {
+                if (!focusOffset && focusNode) {
                     focusOffset = focusNode.childNodes.length || focusNode.length;
                 }
             }
@@ -1344,9 +1409,29 @@ const Wysiwyg = Widget.extend({
                 params.node.replaceWith(element);
             }
             this.odooEditor.unbreakableStepUnactive();
-            this.odooEditor.historyStep();
+
+            if (params.node.matches(".oe_unremovable")) {
+                // The "oe_unremovable" class prevents element deletion and must
+                // be removed during the "historyStep" to allow media
+                // replacement. If the class remains, the "sanitize" function in
+                // "historyStep" will block the replacement.
+                params.node.classList.remove("oe_unremovable");
+                element.classList.remove("oe_unremovable");
+                this.odooEditor.historyStep();
+                this.odooEditor.observerUnactive("unremovable");
+                element.classList.add("oe_unremovable");
+                this.odooEditor.observerActive("unremovable");
+            } else {
+                this.odooEditor.historyStep();
+            }
+
+            // Refocus again to save updates when calling `_onWysiwygBlur`
+            this.odooEditor.editable.focus();
         } else {
-            return this.odooEditor.execCommand('insert', element);
+            const result = this.odooEditor.execCommand('insert', element);
+            // Refocus again to save updates when calling `_onWysiwygBlur`
+            this.odooEditor.editable.focus();
+            return result;
         }
 
         if (this.snippetsMenu) {
@@ -1487,13 +1572,14 @@ const Wysiwyg = Widget.extend({
                 return;
             }
             const $image = $(this.lastMediaClicked);
+            const imgTransformBtn = this.toolbar.el.querySelector('#image-transform');
             if ($image.data('transfo-destroy')) {
                 $image.removeData('transfo-destroy');
                 return;
             }
             $image.transfo({document: this.odooEditor.document});
             const mouseup = () => {
-                $('#image-transform').toggleClass('active', $image.is('[style*="transform"]'));
+                imgTransformBtn.classList.toggle('active', $image[0].matches('[style*="transform"]'));
             };
             $(this.odooEditor.document).on('mouseup', mouseup);
             const mousedown = mousedownEvent => {
@@ -1503,6 +1589,7 @@ const Wysiwyg = Widget.extend({
                 }
                 if ($(mousedownEvent.target).closest('#image-transform').length) {
                     $image.data('transfo-destroy', true).attr('style', ($image.attr('style') || '').replace(/[^;]*transform[\w:]*;?/g, ''));
+                    imgTransformBtn.classList.remove('active');
                 }
                 $image.trigger('content_changed');
             };
@@ -1547,9 +1634,15 @@ const Wysiwyg = Widget.extend({
         const selection = this.odooEditor.document.getSelection();
         const range = selection.rangeCount && selection.getRangeAt(0);
         const targetNode = range && range.startContainer;
-        const targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
+        let targetElement;
+        const selectedTd = closestElement(targetNode, 'td.o_selected_td');
+        if (selectedTd && eventName === 'backColor') {
+            targetElement = selectedTd;
+        } else {
+            targetElement = targetNode && targetNode.nodeType === Node.ELEMENT_NODE
             ? targetNode
             : targetNode && targetNode.parentNode;
+        }
         const backgroundImage = $(targetElement).css('background-image');
         let backgroundGradient = false;
         if (weUtils.isColorGradient(backgroundImage)) {
@@ -1557,6 +1650,11 @@ const Wysiwyg = Widget.extend({
             if (eventName === "foreColor" && textGradient || eventName !== "foreColor" && !textGradient) {
                 backgroundGradient = backgroundImage;
             }
+        }
+        // If there is a cell selected then get background
+        // color of the cell from inline style.
+        if (selectedTd && eventName === 'backColor') {
+            return backgroundGradient || selectedTd.style.backgroundColor;
         }
         return backgroundGradient || $(targetElement).css(eventName === "foreColor" ? 'color' : 'backgroundColor');
     },
@@ -1579,6 +1677,7 @@ const Wysiwyg = Widget.extend({
             let manualOpening = false;
             // Prevent dropdown closing on colorpicker click
             $dropdown.on('hide.bs.dropdown', ev => {
+                $dropdown[0].classList.remove('dropup');
                 return !(ev.clickEvent && ev.clickEvent.__isColorpickerClick);
             });
             $dropdown.on('show.bs.dropdown', () => {
@@ -1618,11 +1717,13 @@ const Wysiwyg = Widget.extend({
                         // Deselect tables so the applied color can be seen
                         // without using `!important` (otherwise the selection
                         // hides it).
-                        if (this.odooEditor.deselectTable() && hasValidSelection(this.odooEditor.editable)) {
-                            this.odooEditor.document.getSelection().collapseToStart();
+                        if (hasValidSelection(this.odooEditor.editable)) {
+                            this.odooEditor.deselectTable();
                         }
                         this._updateEditorUI(this.lastMediaClicked && { target: this.lastMediaClicked });
-                        colorpicker.off('color_leave');
+                        if (ev.data.target.matches('.o_we_color_btn:not(.o_custom_gradient_btn)')) {
+                            colorpicker.off('color_leave');
+                        }
                     });
                     colorpicker.on('color_hover', null, ev => {
                         if (hadNonCollapsedSelection) {
@@ -1631,12 +1732,17 @@ const Wysiwyg = Widget.extend({
                         this.odooEditor.historyPauseSteps();
                         try {
                             this._processAndApplyColor(eventName, ev.data.color, true);
+                            this.odooEditor._computeHistorySelection();
                         } finally {
                             this.odooEditor.historyUnpauseSteps();
                         }
                     });
                     colorpicker.on('color_leave', null, ev => {
                         this.odooEditor.historyRevertCurrentStep();
+                        // Compute the selection to ensure it's preserved
+                        // between selectionchange events in case this gets
+                        // triggered multiple times quickly.
+                        this.odooEditor._computeHistorySelection();
                     });
                     const $childElement = $dropdown.children('.dropdown-toggle');
                     const dropdownToggle = new Dropdown($childElement);
@@ -1665,12 +1771,30 @@ const Wysiwyg = Widget.extend({
         if (color && (!ColorpickerWidget.isCSSColor(color) && !weUtils.isColorGradient(color))) {
             color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
         }
+        const selectedTds = this.odooEditor.document.querySelectorAll('td.o_selected_td');
+        const applyTransparency =
+            color.startsWith('#') && // Check for hex color.
+            !selectedTds.length && // Do not apply to table cells.
+            eventName === 'backColor' && // Only apply on bg color.
+            // Check if color is coming from theme-colors tab.
+            !this.colorpickers['backColor'].sections[
+                'theme-colors'
+            ].classList.contains('d-none');
+        // Apply default transparency to the selected common color to make
+        // text highlighting more usable between light and dark modes.
+        if (applyTransparency) {
+            const HEX_OPACITY = '99';
+            color = color.concat(HEX_OPACITY);
+        }
         let coloredElements = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
         // Some nodes returned by applyColor can be removed of the document by the sanitization in historyStep
         coloredElements = coloredElements.filter(element => this.odooEditor.document.contains(element));
 
         const coloredTds = coloredElements && coloredElements.length && coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
-        if (coloredTds.length) {
+        if (selectedTds.length === 1 && !previewMode) {
+            const sel = this.odooEditor.document.getSelection();
+            sel.collapseToEnd();
+        } else if (coloredTds.length) {
             const propName = eventName === 'foreColor' ? 'color' : 'background-color';
             for (const td of coloredTds) {
                 // Make it important so it has priority over selection color.
@@ -1687,7 +1811,7 @@ const Wysiwyg = Widget.extend({
             const range = new Range();
             range.setStart(first, 0);
             range.setEnd(...endPos(last));
-            sel.addRange(range);
+            sel.addRange(getDeepRange(this.odooEditor.editable, { range }));
         }
 
         const hexColor = this._colorToHex(color);
@@ -1798,20 +1922,11 @@ const Wysiwyg = Widget.extend({
             '#list',
             '#colorInputButtonGroup',
             '#table',
-            '#create-link',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
         ].join(',')).toggleClass('d-none', isInMedia);
         // Some icons are relevant for icons, that aren't for other media.
-        this.toolbar.$el.find('#colorInputButtonGroup, #create-link').toggleClass('d-none', isInMedia && !$target.is('.fa'));
+        this.toolbar.$el.find('#colorInputButtonGroup').toggleClass('d-none', isInMedia && !$target.is('.fa'));
         this.toolbar.$el.find('.only_fa').toggleClass('d-none', !$target.is('.fa'));
-        // Hide the create-link button if the selection spans several blocks.
-        selection = this.odooEditor.document.getSelection();
-        const range = selection && selection.rangeCount && selection.getRangeAt(0);
-        const $rangeContainer = range && $(range.commonAncestorContainer);
-        const spansBlocks = range && !!$rangeContainer.contents().filter((i, node) => isBlock(node)).length;
-        if (!range || spansBlocks) {
-            this.toolbar.$el.find('#create-link').toggleClass('d-none', true);
-        }
         // Toggle unlink button. Always hide it on media.
         const linkNode = getInSelection(this.odooEditor.document, 'a');
         const unlinkButton = this.toolbar.el.querySelector('#unlink');
@@ -1835,6 +1950,7 @@ const Wysiwyg = Widget.extend({
             for (const button of this.toolbar.$el.find('#image-width div')) {
                 button.classList.toggle('active', e.target.style.width === button.id);
             }
+            this.toolbar.el.querySelector('#image-transform').classList.toggle('active', e.target.matches('[style*="transform"]'));
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
@@ -2021,7 +2137,7 @@ const Wysiwyg = Widget.extend({
                     const res = await this._rpc({
                         model: 'res.users',
                         method: 'read',
-                        args: [this.getSession().uid, ['signature']],
+                        args: [this.getSession().user_id, ['signature']],
                     });
                     if (res && res[0] && res[0].signature) {
                         this.odooEditor.execCommand('insert', parseHTML(res[0].signature));
@@ -2261,6 +2377,9 @@ const Wysiwyg = Widget.extend({
                             placement: 'auto',
                         })
                         .popover('show');
+                    // Error has been handled by showing it near the element.
+                    // Do not display a traceback dialog about it.
+                    response.event.preventDefault();
                 });
             });
         });
@@ -2362,10 +2481,16 @@ const Wysiwyg = Widget.extend({
         }
     },
     _onSelectionChange() {
-        if (this.odooEditor.autohideToolbar && this.linkPopover) {
+        if (this.linkPopover && this.isSelectionInEditable()) {
             const selectionInLink = getInSelection(this.odooEditor.document, 'a') === this.linkPopover.target;
             const isVisible = this.linkPopover.el.offsetParent;
-            if (isVisible && !selectionInLink) {
+            if (
+                isVisible &&
+                (
+                    (this.options.autohideToolbar && !this.odooEditor.document.getSelection().isCollapsed) ||
+                    !selectionInLink
+                )
+            ) {
                 this.linkPopover.hide();
             }
         }
@@ -2376,7 +2501,9 @@ const Wysiwyg = Widget.extend({
         }
         const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
         if (
-            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_widget') ||
+            // TODO the autocomplete part is a website thing, move that as a
+            // website customization.
+            e.target.closest('.oe-toolbar,.oe-powerbox-wrapper,.o_we_crop_widget,.ui-autocomplete') ||
             (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))) {
             this._shouldDelayBlur = true;
         } else {
@@ -2992,7 +3119,22 @@ const Wysiwyg = Widget.extend({
     _bindOnBlur() {
         this.$editable.on('blur', this._onBlur);
     },
-
+    /**
+     * @private
+     */
+    _beforeAnyCommand: function () {
+        // Remove any marker of default text in the selection on which the
+        // command is being applied. Note that this needs to be done *before*
+        // the command and not after because some commands (e.g. font-size)
+        // rely on some elements not to have the class to fully work.
+        for (const node of OdooEditorLib.getTraversedNodes(this.$editable[0])) {
+            const el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+            const defaultTextEl = el.closest('.o_default_snippet_text');
+            if (defaultTextEl) {
+                defaultTextEl.classList.remove('o_default_snippet_text');
+            }
+        }
+    },
 });
 Wysiwyg.activeCollaborationChannelNames = new Set();
 Wysiwyg.activeWysiwygs = new Set();

@@ -16,10 +16,7 @@ export class SaleOrderLineProductField extends Many2OneField {
             super_update(recordlist);
         };
         if (this.props.canQuickCreate) {
-            this.quickCreate = (name, params = {}) => {
-                if (params.triggeredOnBlur) {
-                    return this.openConfirmationDialog(name);
-                }
+            this.quickCreate = (name) => {
                 isInternalUpdate = true;
                 return this.props.update([false, name]);
             };

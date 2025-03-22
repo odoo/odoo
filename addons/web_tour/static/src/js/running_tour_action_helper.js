@@ -233,7 +233,7 @@ var RunningTourActionHelper = core.Class.extend({
             }
             values.$element.trigger(Object.assign({ type: "keydown" }, eventOptions));
             if (insertedText) {
-                document.execCommand("insertText", 0, insertedText);
+                values.$element[0].ownerDocument.execCommand("insertText", 0, insertedText);
             }
             values.$element.trigger(Object.assign({ type: "keyup" }, eventOptions));
         }

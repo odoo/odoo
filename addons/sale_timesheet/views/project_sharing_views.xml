@@ -17,13 +17,14 @@
                     optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='remaining_hours']" position="after">
-                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"
+                    attrs="{'column_invisible': ['|', ('parent.allow_billable', '=', False), ('parent.allow_timesheets', '=', False)]}" />
             </xpath>
             <xpath expr="//field[@name='remaining_hours']" position="after">
                 <field name="allow_billable" invisible="1" />
                 <field name="remaining_hours_available" invisible="1"/>
                 <field name="sale_order_id" invisible="1"/>
-                <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" class="o_td_label float-start">
+                <span id="remaining_hours_so_label" attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('allow_timesheets', '=', False), ('remaining_hours_available', '=', False)]}" class="o_td_label float-start">
                     <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
                             attrs="{'invisible': ['|', ('encode_uom_in_days', '=', True), ('remaining_hours_so', '&lt;', 0)]}"/>
                     <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
@@ -33,7 +34,7 @@
                     <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
                             attrs="{'invisible': ['|', ('encode_uom_in_days', '=', False), ('remaining_hours_so', '&gt;=', 0)]}"/>
                 </span>
-                <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|', '|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('partner_id', '=', False), ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"></field>
+                <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" attrs="{'invisible': ['|', '|',('allow_billable', '=', False), ('allow_timesheets', '=', False), ('remaining_hours_available', '=', False)]}" decoration-danger="remaining_hours_so &lt; 0"></field>
             </xpath>
         </field>
     </record>
@@ -44,7 +45,10 @@
         <field name="inherit_id" ref="hr_timesheet.project_sharing_inherit_project_task_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='remaining_hours']" position="after">
-                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+                <field name="allow_billable" invisible="1" />
+                <field name="allow_timesheets" invisible="1"/>
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"
+                    attrs="{'column_invisible': ['|', ('allow_billable', '=', False), ('allow_timesheets', '=', False)]}" />
             </xpath>
         </field>
     </record>

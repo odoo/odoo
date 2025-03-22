@@ -5,19 +5,20 @@
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
 # Lucia Pacheco, 2022
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
+# Wil Odoo, 2024
+# Fernanda Alvarez, 2024
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,20 @@ msgstr "registros"
 #, python-format
 msgid "# Code editor"
 msgstr "# Editor de código"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is current state"
+msgstr "#{i.display_name} es el estado actual"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is not current state"
+msgstr "#{i.display_name} no es el estado actual"
 
 #. module: web
 #. odoo-javascript
@@ -321,10 +336,10 @@ msgstr "<span class=\"text-nowrap\">Impuesto del 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>Estados Unidos</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>Estados Unidos</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -557,7 +572,6 @@ msgstr "Activar solución de bugs de activos de prueba"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
@@ -894,7 +908,7 @@ msgstr "¿Está seguro de que desea archivar este registro?"
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #, python-format
 msgid "Are you sure that you want to remove this column ?"
-msgstr "¿Está seguro de que desea remover esta columna?"
+msgstr "¿Está seguro de que desea eliminar esta columna?"
 
 #. module: web
 #. odoo-javascript
@@ -975,6 +989,7 @@ msgstr "Como un texto predeterminado cuando no hay valores establecidos"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Ascending"
 msgstr "Ascendiente"
@@ -983,6 +998,7 @@ msgstr "Ascendiente"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
@@ -1057,6 +1073,7 @@ msgstr "Insignias"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Bar Chart"
@@ -1285,7 +1302,10 @@ msgstr "Elija un comando de solución de bugs..."
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
@@ -1298,6 +1318,13 @@ msgstr "Limpiar"
 #, python-format
 msgid "Clear Signature"
 msgstr "Limpiar firma"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Click to change current state to #{i.display_name}"
+msgstr "Haga clic para cambiar el estado actual a #{i.display_name}"
 
 #. module: web
 #. odoo-javascript
@@ -1534,6 +1561,13 @@ msgstr "Derechos reservados © 2004"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Correct issues to save, or discard changes"
+msgstr "Para guardar los cambios, corrija el problema o descártelos."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
@@ -1543,7 +1577,6 @@ msgstr "No se puede conectar con el servidor"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -1559,7 +1592,6 @@ msgstr "No se pudo mostrar el PDF seleccionado"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #, python-format
 msgid "Could not display the specified image url."
 msgstr "No se puede mostrar la URL de la imagen especifica."
@@ -1716,6 +1748,7 @@ msgstr "Usuario de creación:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
 msgstr "Acumulativo"
@@ -1723,7 +1756,6 @@ msgstr "Acumulativo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Current state"
 msgstr "Estado actual"
@@ -1931,6 +1963,7 @@ msgstr "Eliminar fila"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Descending"
 msgstr "Descendiente"
@@ -1947,7 +1980,7 @@ msgstr "Herramientas de desarrollador"
 #: code:addons/web/static/src/views/list/list_renderer.js:0
 #, python-format
 msgid "Different currencies cannot be aggregated"
-msgstr "No se pueden agregar distintas divisas"
+msgstr "No puede agregar distintas monedas"
 
 #. module: web
 #. odoo-javascript
@@ -1974,6 +2007,7 @@ msgstr "Descartar"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
@@ -2082,6 +2116,7 @@ msgstr "No se vaya aún, <br /> sigue cargando..."
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Download"
@@ -2097,6 +2132,7 @@ msgstr "Descargar vista previa del PDF"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Download xlsx"
 msgstr "Descargar xlsx"
@@ -2108,7 +2144,7 @@ msgstr "Descargar xlsx"
 #: code:addons/web/static/src/legacy/xml/name_and_signature.xml:0
 #, python-format
 msgid "Draw"
-msgstr "Dibujar"
+msgstr "Trazar"
 
 #. module: web
 #. odoo-javascript
@@ -2134,7 +2170,10 @@ msgstr "Duplicar"
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
@@ -2240,6 +2279,7 @@ msgstr "Empresa"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "Error"
@@ -2271,6 +2311,7 @@ msgstr "Todo"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Expand all"
 msgstr "Expandir todo"
@@ -2289,6 +2330,7 @@ msgstr "Exportar"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Export All"
@@ -2318,8 +2360,8 @@ msgid "Exporting grouped data to csv is not supported."
 msgstr "No se permite exportar datos agrupados a csv."
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
@@ -2408,7 +2450,6 @@ msgstr "Archivo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Subida de archivo"
@@ -2432,9 +2473,10 @@ msgstr "Filtros"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Flip axis"
-msgstr "Girar eje"
+msgstr "Invertir eje"
 
 #. module: web
 #. odoo-javascript
@@ -2574,6 +2616,7 @@ msgstr "Obtenga esta función y mucho más con Odoo Enterprise"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
 msgstr "Ir a la URL"
@@ -2622,17 +2665,30 @@ msgstr "Texto de encabezado en la parte superior de todos los reportes."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"Tome en cuenta que no es posible guardar automáticamente sus cambios "
+"recientes. Haga clic en el botón <i class=\"fa fa-cloud-upload fa-fw\"></i> "
+"ahora para guardar su trabajo antes de salir de esta pestaña."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hide in Kanban"
-msgstr "Ocultar en el kanban"
+msgstr "Ocultar en kanban"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr "Ocultar en el kanban"
+msgstr "Ocultar en kanban"
 
 #. module: web
 #. odoo-javascript
@@ -2741,6 +2797,8 @@ msgstr "Entero"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
@@ -2973,6 +3031,7 @@ msgstr "Azul claro"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Line Chart"
 msgstr "Gráfico de línea"
@@ -2999,6 +3058,13 @@ msgstr "Cargar"
 #, python-format
 msgid "Load demo data"
 msgstr "Cargar datos de prueba"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr "Cargar todo."
 
 #. module: web
 #. odoo-javascript
@@ -3410,6 +3476,7 @@ msgstr "Nuevo: %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
@@ -3595,7 +3662,6 @@ msgstr "Sin establecer"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state"
 msgstr "No en estado activo"
@@ -3603,10 +3669,16 @@ msgstr "No en estado activo"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "No en estado activo, haga clic para cambiarlo"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
+#, python-format
+msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
+msgstr "Número que usa {{ DECIMAL_POINT }} como separador decimal."
 
 #. module: web
 #. odoo-javascript
@@ -3988,6 +4060,7 @@ msgstr "Elija un color"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Pie Chart"
 msgstr "Gráfico circular"
@@ -4159,6 +4232,7 @@ msgstr "Vista previa del logo"
 #. odoo-javascript
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -4564,6 +4638,13 @@ msgid "Request timeout"
 msgstr "Tiempo de espera de la solicitud agotado"
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "Reestablecer dominio"
+
+#. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Reset to logo colors"
 msgstr "Restablecer a los colores del logo"
@@ -4693,6 +4774,7 @@ msgstr "Guardar predeterminado"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
 msgstr "Guardar de forma manual"
@@ -4707,6 +4789,7 @@ msgstr "Guardar registro"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
@@ -4754,7 +4837,7 @@ msgstr "Buscar un campo..."
 #: code:addons/web/static/src/core/commands/default_providers.js:0
 #, python-format
 msgid "Search for a command..."
-msgstr "Buscar un comando..."
+msgstr "Busque un comando..."
 
 #. module: web
 #. odoo-javascript
@@ -4880,6 +4963,13 @@ msgstr "Seleccionar todos"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr "Seleccione todos los registros que coincidan con la búsqueda"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
@@ -4921,6 +5011,7 @@ msgstr "Selección:"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #, python-format
 msgid "Send Email"
@@ -5077,6 +5168,8 @@ msgstr "Especial:"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Stacked"
 msgstr "Apilado"
@@ -5103,6 +5196,13 @@ msgstr "Información estadísitca"
 #, python-format
 msgid "Status"
 msgstr "Estado"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr "Barra de estado"
 
 #. module: web
 #. odoo-javascript
@@ -5161,7 +5261,7 @@ msgstr "Dom"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #, python-format
 msgid "Support"
-msgstr "Soporte técnico"
+msgstr "Soporte"
 
 #. module: web
 #. odoo-javascript
@@ -5172,10 +5272,19 @@ msgstr "Error de sintaxis"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
 msgstr "CONSEJO"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Tag color: #{colornames[color]}"
+msgstr "Color de la etiqueta: #{colornames[color]}"
 
 #. module: web
 #. odoo-javascript
@@ -5266,8 +5375,16 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr ""
+"El archivo seleccionado (%sB) excede el tamaño máximo de archivo permitido "
+"(%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "El archivo seleccionado excede el tamaño máximo de archivo de %s."
@@ -5282,6 +5399,17 @@ msgid ""
 msgstr ""
 "El tipo del campo \"%s\" debe ser un campo many2many con una relación a un "
 "modelo \"ir.attachment\"."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"Hay demasiada información. El gráfico solo incluirá una muestra. Use los "
+"filtros para mejorar el alcance."
 
 #. module: web
 #. odoo-python
@@ -5330,6 +5458,7 @@ msgstr "Esta fecha es en el futuro. Asegúrese de que esto es lo que quiere."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datepicker/datepicker.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
@@ -5468,7 +5597,7 @@ msgstr "Mañana"
 #: code:addons/web/models/models.py:0
 #, python-format
 msgid "Too many items to display."
-msgstr "Demasiados artículos que mostrar."
+msgstr "Demasiados elementos que mostrar."
 
 #. module: web
 #. odoo-javascript
@@ -5601,8 +5730,8 @@ msgid "Uncaught Promise"
 msgstr "Promesa no controlada"
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5899,6 +6028,7 @@ msgstr "Ver intercambiador"
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/control_panel.xml:0
 #: code:addons/web/static/src/search/favorite_menu/favorite_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
@@ -6197,9 +6327,11 @@ msgstr "hace una hora"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "todos"
@@ -6211,6 +6343,13 @@ msgstr "todos"
 #, python-format
 msgid "all records"
 msgstr "todos los registros"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "and"
+msgstr "y"
 
 #. module: web
 #. odoo-javascript
@@ -6263,7 +6402,7 @@ msgstr "pero la aplicación sí está cargando..."
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #, python-format
 msgid "child of"
-msgstr "hijo de"
+msgstr "secundario de"
 
 #. module: web
 #. odoo-javascript
@@ -6544,8 +6683,8 @@ msgstr "sigue cargando..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6625,6 +6764,14 @@ msgstr "ms"
 #, python-format
 msgid "new tab"
 msgstr "nueva pestaña "
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#, python-format
+msgid "new_template"
+msgstr "new_template"
 
 #. module: web
 #. odoo-javascript
@@ -6777,6 +6924,14 @@ msgstr "registros seleccionados,"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "self"
+msgstr "propio"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6807,7 +6962,35 @@ msgstr "escriba un texto predeterminado o presione ENTER"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
+#, python-format
+msgid "{{ progressBar.count }} {{ progressBar.string }}"
+msgstr "{{ progressBar.count }} {{ progressBar.string }}"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#, python-format
+msgid "{{ relatedFieldName }}..."
+msgstr "{{ relatedFieldName }}..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/kanban.xml:0
+#, python-format
+msgid "{{ widget.groupByFieldString }}..."
+msgstr "{{ widget.groupByFieldString }}..."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
 msgstr "— presione"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "— busque"

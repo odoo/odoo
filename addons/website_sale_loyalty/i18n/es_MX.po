@@ -3,17 +3,18 @@
 # 	* website_sale_loyalty
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2022
+# Lucia Pacheco, 2022
 # Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Fernanda Alvarez, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Fernanda Alvarez, 2025\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,12 +23,14 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "A coupon is needed for coupon programs."
 msgstr "Se necesita un cupón para los programas de cupones."
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
@@ -42,6 +45,15 @@ msgstr "Todos los sitios web"
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_loyalty_program__ecommerce_ok
 msgid "Available on Website"
 msgstr "Disponible en el sitio web"
+
+#. module: website_sale_loyalty
+#. odoo-python
+#: code:addons/website_sale_loyalty/controllers/main.py:0
+#, python-format
+msgid "Cannot process payment: applied reward was changed or has expired."
+msgstr ""
+"No se puede procesar el pago: La recompensa solicitada fue modificada o "
+"venció."
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
@@ -67,7 +79,7 @@ msgstr "Cupón"
 #: model:ir.model,name:website_sale_loyalty.model_coupon_share
 msgid "Create links that apply a coupon and redirect to a specific page"
 msgstr ""
-"Crear enlaces que apliquen un cupón y redireccionen a una página específica"
+"Cree enlaces que apliquen un cupón y redireccionen a una página específica"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__create_uid
@@ -82,12 +94,12 @@ msgstr "Creado el"
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_sale_order__disabled_auto_rewards
 msgid "Disabled Auto Rewards"
-msgstr "Recompensas automáticas deshabilitadas"
+msgstr "Recompensas automáticas desactivadas"
 
 #. module: website_sale_loyalty
 #: model:ir.ui.menu,name:website_sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
-msgstr "Descuento y fidelidad"
+msgstr "Descuento y lealtad"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.reduction_coupon_code
@@ -157,32 +169,32 @@ msgstr "Última actualización el"
 #. module: website_sale_loyalty
 #: model:ir.ui.menu,name:website_sale_loyalty.menu_loyalty
 msgid "Loyalty"
-msgstr "Fidelidad"
+msgstr "Lealtad"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr "Cupón de fidelidad"
+msgstr "Cupón de lealtad"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_program
 msgid "Loyalty Program"
-msgstr "Programa de fidelidad"
+msgstr "Programa de lealtad"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.res_config_settings_view_form_inherit_website_sale_loyalty
 msgid "Loyalty Programs"
-msgstr "Programas de fidelidad"
+msgstr "Programas de lealtad"
 
 #. module: website_sale_loyalty
 #: model:ir.model,name:website_sale_loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr "Regla de fidelidad"
+msgstr "Regla de lealtad"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.modify_code_form
 msgid "Pay with eWallet"
-msgstr "Pagar con cartera electrónica"
+msgstr "Pagar con monedero electrónico"
 
 #. module: website_sale_loyalty
 #: model:ir.model.fields,field_description:website_sale_loyalty.field_coupon_share__program_id
@@ -200,6 +212,7 @@ msgid "Promo Code"
 msgstr "Código promocional"
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "Provide either a coupon or a program."
@@ -228,6 +241,7 @@ msgid "Sales Order Line"
 msgstr "Línea de la orden de venta"
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.loyalty_card_view_tree_inherit_website_sale_loyalty
@@ -244,7 +258,7 @@ msgstr "Compartir enlace"
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.coupon_share_view_form
 msgid "Share Loyalty Card"
-msgstr "Compartir tarjeta de fidelidad"
+msgstr "Compartir tarjeta de lealtad"
 
 #. module: website_sale_loyalty
 #: model_terms:ir.ui.view,arch_db:website_sale_loyalty.snippet_options
@@ -252,6 +266,7 @@ msgid "Show Discount in Subtotal"
 msgstr "Mostrar descuento en el subtotal"
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/controllers/main.py:0
 #, python-format
 msgid ""
@@ -266,12 +281,14 @@ msgid "The following promo code was applied on your order:"
 msgstr "Se aplicó el siguiente código promocional en su orden:"
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "The promo code must be unique."
 msgstr "El código promocional debe ser único."
 
 #. module: website_sale_loyalty
+#. odoo-python
 #: code:addons/website_sale_loyalty/wizard/sale_coupon_share.py:0
 #, python-format
 msgid "The shared website should correspond to the website of the program."

@@ -3,20 +3,21 @@
 # 	* crm
 # 
 # Translators:
+# Cécile Collart <cco@odoo.com>, 2022
 # Alexandra Jubert, 2022
 # Thomas Charpentier, 2022
 # Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
 # Fabien Pinckaers <fp@openerp.com>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,9 +178,9 @@ msgid ""
 "attrs=\"{'invisible': [('partner_email_update', '=', False)]}\"/>"
 msgstr ""
 "<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
-"title=\"En enregistrant cette modification, l'email du client sera également"
-" mis à jour.\" attrs=\"{'invisible': [('partner_email_update', '=', "
-"False)]}\"/>"
+"title=\"En enregistrant cette modification, l'e-mail du client sera "
+"également mis à jour.\" attrs=\"{'invisible': [('partner_email_update', '=',"
+" False)]}\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -227,17 +228,17 @@ msgstr "<span class=\"o_stat_text\"> Pistes</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"oe_grey p-2 d-none d-sm-block\"> at </span>"
+msgstr "<span class=\"oe_grey p-2 d-none d-sm-block\"> à </span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> à </span>"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2\"> at </span>"
-msgstr "<span class=\"oe_grey p-2\"> à </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -391,7 +392,7 @@ msgstr ""
 "                            Cordialement,<br>\n"
 "                            <t t-if=\"object.user_id\">\n"
 "                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
-"                                <br>Adresse email : <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br>Adresse e-mail : <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
 "                                <br>Téléphone : <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                            </t>\n"
 "                            <t t-else=\"\">\n"
@@ -456,7 +457,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
-msgstr "Accepter les emails de"
+msgstr "Accepter les e-mails de"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction
@@ -1254,7 +1255,7 @@ msgstr "Client"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Customer Email"
-msgstr "Email du client"
+msgstr "E-mail du client"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1280,7 +1281,7 @@ msgstr "Jours pour assigner"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__day_close
 msgid "Days to Close"
-msgstr "Jours avant clôture"
+msgstr "Jours pour clôturer"
 
 #. module: crm
 #. odoo-python
@@ -1312,7 +1313,7 @@ msgstr "Description"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Did you know emails sent to"
-msgstr "Saviez-vous que les emails envoyés à"
+msgstr "Saviez-vous que les e-mails envoyés à"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -1320,7 +1321,7 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
-"Saviez-vous que les emails envoyés à l'alias d'une équipe commerciale "
+"Saviez-vous que les e-mails envoyés à l'alias d'une équipe commerciale "
 "génèrent des opportunités dans votre pipeline ?"
 
 #. module: crm
@@ -1374,7 +1375,7 @@ msgstr "Nom d'affichage"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Accès non disponible, ne pas tenir compte de cette donnée dans l'email "
+"Accès non disponible, ne pas tenir compte de cette donnée dans l'e-mail "
 "digest de l'utilisateur"
 
 #. module: crm
@@ -1432,7 +1433,7 @@ msgstr "Modifier"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1442,27 +1443,27 @@ msgstr "Alias de messagerie"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr "Qualité de l'email"
+msgstr "Qualité de l'e-mail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "E-mail cc"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email cc:"
-msgstr "Email cc:"
+msgstr "E-mail cc:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Email:"
-msgstr "Email :"
+msgstr "E-mail :"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
 msgid "Email: Welcome Demo"
-msgstr "Email : Démo de bienvenue"
+msgstr "E-mail : Démo de bienvenue"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
@@ -1486,14 +1487,14 @@ msgid ""
 "address."
 msgstr ""
 "Enrichir vos pistes automatiquement avec des données sur l'entreprise basées"
-" sur l'adresse email."
+" sur l'adresse e-mail."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Enrich your leads with company data based on their email addresses"
 msgstr ""
 "Enrichir vos pistes avec des données sur l'entreprise en fonction de leur "
-"adresse email."
+"adresse e-mail."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__requirements
@@ -1529,7 +1530,7 @@ msgstr "Date estimée:"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Expected MRR"
-msgstr "MRR espéré"
+msgstr "MRR attendu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__expected_revenue
@@ -1802,8 +1803,8 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si l'adresse email est sur liste noire, le contact ne recevra plus d'envois "
-"de masse d'aucune liste."
+"Si l'adresse e-mail est sur liste noire, le contact ne recevra plus d'envois"
+" de masse d'aucune liste."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
@@ -2267,7 +2268,7 @@ msgid ""
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Partenaire lié (optionnel). Généralement créé en convertissant la piste. "
-"Vous pouvez trouver un partenaire par son Nom, TIN, email ou Référence "
+"Vous pouvez trouver un partenaire par son Nom, TIN, e-mail ou Référence "
 "Interne."
 
 #. module: crm
@@ -2705,7 +2706,7 @@ msgstr "Aucun vendeur"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr "Email normalisé"
+msgstr "E-mail normalisé"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -2986,13 +2987,13 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
-"pas nécessairement le modèle donné par alias_model_id (exemple : project "
-"(parent_model) et task (model))"
+"pas nécessairement le modèle donné par alias_model_id (exemple : projet "
+"(parent_model) et tâche (model))"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr "L'email du partenaire sera mis à jour"
+msgstr "L'e-mail du partenaire sera mis à jour"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
@@ -3382,7 +3383,7 @@ msgstr "Sélectionner des pistes/opportunités"
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send email"
-msgstr "Envoyer un email"
+msgstr "Envoyer un e-mail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__sequence
@@ -3639,7 +3640,7 @@ msgid ""
 "The email address associated with this channel. New emails received will "
 "automatically create new leads assigned to the channel."
 msgstr ""
-"L'adresse email associée a cette équipe commerciale. Les nouveaux emails "
+"L'adresse e-mail associée a cette équipe commerciale. Les nouveaux e-mails "
 "reçus vont automatiquement générer de nouvelles opportunités affiliés à "
 "l'équipe commerciale."
 
@@ -3650,9 +3651,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque email"
-" entrant ne correspondant pas à un enregistrement existant entraînera la "
-"création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
+"Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque "
+"e-mail entrant ne correspondant pas à un enregistrement existant entraînera "
+"la création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
 "projet)"
 
 #. module: crm
@@ -3662,7 +3663,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Le nom de l'alias de messagerie, par exemple 'carrières' pour relever les "
-"emails de <carrières@example.odoo.com>"
+"e-mails de <carrières@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3686,8 +3687,8 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Le propriétaire d'enregistrements créés lors de la réception de l'email sur "
-"cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
+"Le propriétaire d'enregistrements créés lors de la réception de l'e-mail sur"
+" cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
 "le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou "
 "utilisera le compte Administrateur si aucun utilisateur du système n'est "
 "trouvé pour cette adresse."
@@ -3745,8 +3746,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Cette adresse email est sur la liste noire pour les envois de masse. Cliquez"
-" pour la retirer de la liste noire."
+"Cette adresse e-mail est sur la liste noire pour les envois de masse. "
+"Cliquez pour la retirer de la liste noire."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -3754,8 +3755,8 @@ msgid ""
 "This field is used to search on email address as the primary email field can"
 " contain more than strictly an email address."
 msgstr ""
-"Ce champ est utilisé pour rechercher un email étant donné que le champ email"
-" primaire peut contenir plus que strictement un email. "
+"Ce champ est utilisé pour rechercher un e-mail étant donné que le champ "
+"e-mail primaire peut contenir plus que strictement un e-mail. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__lang_code
@@ -3775,7 +3776,7 @@ msgstr ""
 #: model:ir.model.fields,help:crm.field_crm_lead__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Le mode de livraison, par ex. carte postale, email ou bannière publicitaire"
+"Le mode de livraison, par ex. carte postale, e-mail ou bannière publicitaire"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__source_id
@@ -3784,7 +3785,7 @@ msgid ""
 "of email list"
 msgstr ""
 "La source du lien, par ex. moteur de recherche, domaine externe ou nom de la"
-" liste d'adresses email"
+" liste d'adresses e-mail"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3813,7 +3814,7 @@ msgstr ""
 #: model:digest.tip,name:crm.digest_tip_crm_0
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Tip: Convert incoming emails into opportunities"
-msgstr "Astuce : Convertissez les emails entrants en opportunités"
+msgstr "Astuce : Convertissez les e-mails entrants en opportunités"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_1
@@ -3889,7 +3890,7 @@ msgstr "12 derniers mois"
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Try sending an email"
-msgstr "Essayez d'envoyer un email"
+msgstr "Essayez d'envoyer un e-mail"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -4005,25 +4006,8 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr ""
-"Utilisez le bouton en haut à gauche <i>Créer</i>, ou envoyez un email à"
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
 msgstr "Utilisez le bouton <i>Nouveau</i> ou envoyez un mail à"
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-#, python-format
-msgid ""
-"Use the top left <i>Create</i> button, or send an email to %s to test the "
-"email gateway."
-msgstr ""
-"Utilisez le bouton <i>Créer</i> en haut à gauche ou envoyez un email à  %s "
-"pour tester la passerelle de messagerie."
 
 #. module: crm
 #. odoo-python
@@ -4034,15 +4018,6 @@ msgid ""
 msgstr ""
 "Utilisez le bouton <i>Nouveau</i> ou envoyez un mail à %s pour tester la "
 "passerelle de messagerie."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid ""
-"Use the top left Create button, or configure an email alias to test the "
-"email gateway."
-msgstr ""
-"Utilisez le bouton Créer situé en haut à gauche, ou configurez un alias pour"
-" tester la passerelle de messagerie."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4275,7 +4250,7 @@ msgstr "pour tester la passerelle de messagerie."
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
 msgstr ""
-"à votre CRM. Cette adresse email est configurable par membre d'équipe "
+"à votre CRM. Cette adresse e-mail est configurable par membre d'équipe "
 "commerciale."
 
 #. module: crm

@@ -48,6 +48,9 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooLists();
                 break;
+            case "UPDATE_ODOO_LIST_DOMAIN":
+                this._addDomain(cmd.listId);
+                break;
             case "ADD_GLOBAL_FILTER":
             case "EDIT_GLOBAL_FILTER":
             case "REMOVE_GLOBAL_FILTER":
@@ -63,6 +66,7 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
                             "ADD_GLOBAL_FILTER",
                             "EDIT_GLOBAL_FILTER",
                             "REMOVE_GLOBAL_FILTER",
+                            "UPDATE_ODOO_LIST_DOMAIN",
                         ].includes(command.type)
                     )
                 ) {

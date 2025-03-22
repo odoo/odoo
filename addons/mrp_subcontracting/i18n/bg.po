@@ -3,7 +3,7 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Nikola Iliev, 2023
+# KeyVillage, 2023
 # Anton Vassilev, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
 # Martin Trigaux, 2023
@@ -11,15 +11,17 @@
 # Igor Sheludko <igor.sheludko@gmail.com>, 2023
 # Ivan Goychev <igoychev.projects@gmail.com>, 2023
 # aleksandar ivanov, 2023
-# Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Petko Karamotchev, 2024
+# Venelin Stoykov, 2024
+# Maria Boyadjieva <marabo2000@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +109,7 @@ msgstr "Продължи"
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
 msgid "Deadline Date"
-msgstr ""
+msgstr "Дата на краен срок"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -160,7 +162,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
 msgid "Hide"
-msgstr ""
+msgstr "Скрийте"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -168,7 +170,7 @@ msgstr ""
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
+"Internal, linked to the appropriate company."
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -199,6 +201,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
@@ -223,7 +232,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Задължително"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -266,7 +275,7 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/stock_quant.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Операцията не се поддържа"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -594,6 +603,11 @@ msgid "Transfer"
 msgstr "Прехвърлете"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_stock_move_line_tree_view
+msgid "Unit of Measure"
+msgstr "Мерна единица"
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr ""
@@ -628,18 +642,16 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_location.py:0
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
-msgid ""
-"You cannot change the subcontracting location as it is still linked to a "
-"subcontractor partner"
+msgid "You cannot write on fields %s in mrp.production."
 msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
-msgid "You cannot write on fields %s in mrp.production."
+msgid "You might want to update the locations of this transfer's operations"
 msgstr ""
 
 #. module: mrp_subcontracting

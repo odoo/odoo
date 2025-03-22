@@ -64,4 +64,4 @@ class WebsocketController(Controller):
         stream = request.env['ir.binary']._get_stream_from(asset.js(
             is_minified="assets" not in request.session.debug
         ))
-        return stream.get_response()
+        return stream.get_response(content_security_policy=None)

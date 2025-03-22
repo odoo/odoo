@@ -208,7 +208,26 @@ class TestChartTemplate(TransactionCase):
 
         tax = self.env['account.tax'].search([
             ('company_id', '=', self.company.id),
-            ('name', '=', self.tax_template_1.name),
+            ('name', 'like', f'%{self.tax_template_1.name}'),
+        ])
+        # Check that tax was not recreated
+        self.assertEqual(len(tax), 1)
+        # Check that tags have been updated
+        self.assertEqual(tax.invoice_repartition_line_ids.tag_ids.name, self.tax_template_1.invoice_repartition_line_ids.tag_ids.name)
+
+    def test_update_taxes_existing_template_rounding_error(self):
+        """
+        When a template is close enough from the corresponding existing tax but has a minor rounding error,
+        we still want to update that tax with the template values and not recreate it.
+        """
+        # We compare up to the precision of the field, which is 4 decimals
+        self.tax_template_1.amount += 0.00001
+        self.tax_template_1.invoice_repartition_line_ids.tag_ids.name += " [DUP]"
+        update_taxes_from_templates(self.env.cr, self.chart_template_xmlid)
+
+        tax = self.env['account.tax'].search([
+            ('company_id', '=', self.company.id),
+            ('name', 'like', f'%{self.tax_template_1.name}'),
         ])
         # Check that tax was not recreated
         self.assertEqual(len(tax), 1)

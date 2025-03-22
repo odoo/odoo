@@ -234,6 +234,7 @@
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <search string="Bank Reconciliation Move preset">
+                    <field name="name"/>
                     <filter string="Matching rules" name="matching_rules" domain="[('rule_type', '=', 'invoice_matching')]"/>
                     <filter string="Counterpart rules" name="counterpart_rules" domain="[('rule_type', '=', 'writeoff_suggestion')]"/>
                     <filter string="Counterpart buttons" name="counterpart_buttons" domain="[('rule_type', '=', 'writeoff_button')]"/>

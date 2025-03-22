@@ -2144,6 +2144,40 @@ QUnit.module('Legacy fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('sorting one2many char field with falsy values', async function (assert) {
+            assert.expect(3);
+
+            this.data.partner.fields.foo.sortable = true;
+            this.data.partner.records.push({ id: 23, foo: "abc" });
+            this.data.partner.records.push({ id: 24, foo: false });
+            this.data.partner.records.push({ id: 25, foo: "def" });
+            this.data.partner.records[0].p = [23, 24, 25];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                debug: 1,
+            });
+
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["abc", "", "def"]);
+            await testUtils.dom.click(form.$('table thead th:contains(Foo)'));
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["", "abc", "def"]);
+            await testUtils.dom.click(form.$('table thead th:contains(Foo)'));
+            assert.deepEqual([...form.el.querySelectorAll(".o_list_char")].map((el) => el.innerText), ["def", "abc", ""]);
+
+            form.destroy();
+        });
+
         QUnit.test('one2many list field edition', async function (assert) {
             assert.expect(6);
 
@@ -10231,6 +10265,55 @@ QUnit.module('Legacy fields', {}, function () {
             await testUtils.nextTick();
             assert.containsOnce(form, ".o_data_row");
             assert.verifySteps(["write"]);
+
+            form.destroy();
+        });
+
+        QUnit.test('add a row to an x2many and ask canBeRemoved twice (new record)', async function (assert) {
+            // This test simulates that the view is asked twice to save its changes because the user
+            // is leaving. Before the corresponding fix, the changes in the x2many field weren't
+            // removed after the save, and as a consequence they were saved twice (i.e. the row was
+            // created twice).
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                async mockRPC(route, args) {
+                    if (args.method === "create") {
+                        assert.step("create");
+                        assert.deepEqual(args.args[0], {
+                            p: [[0, args.args[0].p[0][1], { display_name: "a name" }]],
+                        });
+                    }
+                    if (args.method === "write") {
+                        assert.step("write"); // should not be called
+                    }
+                    return this._super(route, args);
+                },
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            // click add food
+            await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('.o_input[name="display_name"]'), 'a name');
+            assert.containsOnce(form, ".o_data_row");
+
+            form.canBeRemoved();
+            form.canBeRemoved();
+            await testUtils.nextTick();
+            assert.containsOnce(form, ".o_data_row");
+            assert.verifySteps(["create"]);
 
             form.destroy();
         });

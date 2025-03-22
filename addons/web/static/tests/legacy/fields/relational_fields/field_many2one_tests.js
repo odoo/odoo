@@ -1444,6 +1444,65 @@ QUnit.module('Legacy fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one inside one2many form view, with domain', async function (assert) {
+            assert.expect(4);
+
+            this.data.partner.fields.trululu.domain = "[['id', '<', 1000]]";
+            this.data.partner.records = [
+                { id: 1, display_name: "a1", p: [1] },
+                { id: 2, display_name: "a2" },
+                { id: 3, display_name: "a3" },
+                { id: 4, display_name: "a4" },
+                { id: 5, display_name: "a5" },
+                { id: 6, display_name: "a6" },
+                { id: 7, display_name: "a7" },
+                { id: 8, display_name: "a8" },
+                { id: 9, display_name: "a9" },
+            ];
+
+            var form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <sheet>
+                            <field name="p">
+                                <tree>
+                                    <field name="display_name"/>
+                                    <field name="trululu" domain="[]"/>
+                                </tree>
+                                <form>
+                                    <field name="trululu" domain="[['id', '>', 1]]"/>
+                                </form>
+                            </field>
+                        </sheet>
+                    </form>`,
+                res_id: 1,
+                archs: {
+                    'partner,false,list': '<list><field name="display_name"/></list>',
+                    'partner,false,search': '<search></search>',
+                },
+                mockRPC: function (route, args) {
+                    if (args.method === "name_search") {
+                        assert.deepEqual(args.kwargs.args, [["id", ">", 1]]);
+                    }
+                    if (route === "/web/dataset/search_read") {
+                        assert.deepEqual(args.domain, [["id", ">", 1]]);
+                    }
+                    return this._super.apply(this, arguments);
+                },
+            });
+
+            await testUtils.dom.click(form.$(".o_data_row"));
+            await testUtils.fields.many2one.searchAndClickItem("trululu", { search: "", item: "Search More" });
+
+            assert.containsOnce(document.body, ".modal .o_legacy_list_view");
+            assert.containsN(document.body, ".modal .o_data_row", 8);
+
+            form.destroy();
+        });
+
         QUnit.test('list in form: quick create then add a new line directly', async function (assert) {
             // required many2one inside a one2many list: directly after quick creating
             // a new many2one value (before the name_create returns), click on add an item:

@@ -96,17 +96,16 @@
                     </FacturaRectificativa>
                     <FacturasRectificadasSustituidas>
                         <IDFacturaRectificadaSustituida>
-                            <!-- NOTE: could support issuing a single credit note for multiple invoices (optional) -->
                             <t t-set="seq_and_num" t-value="credit_note_invoice._get_l10n_es_tbai_sequence_and_number()"/>
                             <SerieFactura t-out="seq_and_num[0]"/>
                             <NumFactura t-out="seq_and_num[1]"/>
-                            <FechaExpedicionFactura t-out="format_date(credit_note_invoice._get_l10n_es_tbai_signature_and_date()[1])"/>
+                            <FechaExpedicionFactura t-out="format_date(credit_note_invoice.l10n_es_tbai_post_xml and credit_note_invoice._get_l10n_es_tbai_signature_and_date()[1] or credit_note_invoice.invoice_date)"/>
                         </IDFacturaRectificadaSustituida>
                     </FacturasRectificadasSustituidas>
                 </t>
             </CabeceraFactura>
             <DatosFactura t-if="is_emission">
-                <DescripcionFactura t-out="invoice.invoice_origin or 'manual'"/>
+                <DescripcionFactura t-out="invoice.invoice_origin and invoice.invoice_origin[:250] or 'manual'"/>
                 <DetallesFactura>
                     <IDDetalleFactura t-foreach="invoice_lines" t-as="line_values">
                         <t t-set="line" t-value="line_values['line']"/>
@@ -118,7 +117,7 @@
                     </IDDetalleFactura>
                 </DetallesFactura>
                 <ImporteTotalFactura t-out="format_float(amount_total)"/>
-                <!-- <RetencionSoportada/> NOTE (potentially has to be computed/decided manually) -->
+                <RetencionSoportada t-if="amount_retention != 0.0" t-out="format_float(amount_retention)"/>
                 <!-- <BaseImponibleACoste/> NOTE (only applicable with ClaveRegimenIvaOpTrascendencia 06, not supported yet) -->
                 <Claves>
                     <IDClave t-foreach="regime_key" t-as="key">
@@ -184,7 +183,7 @@
             <NoSujeta t-if="desglose.get('NoSujeta')">
                 <t t-set="no_sujeta" t-value="desglose['NoSujeta']"/>
                 <DetalleNoSujeta>
-                    <Causa>RL</Causa>
+                    <Causa t-out="nosujeto_causa"/>
                     <!-- NOTE: Causa should be 
                         'OT' if 'the' ClaveRegimenIvaOpTrascendencia == 10
                         'RL' if 'some' ClaveRegimenIvaOpTrascendencia == 08

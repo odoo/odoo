@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { patchUiSize, SIZES } from '@mail/../tests/helpers/patch_ui_size';
 import {
     click,
     contains,
@@ -50,6 +51,60 @@ QUnit.test("no conflicts between file uploaders", async function () {
     await contains(".o_Chatter .o_AttachmentCard");
     await contains(".o_ChatWindow .o_Message .o_AttachmentCard");
 });
+
+QUnit.test('Chatter main attachment: can change from non-viewable to viewable', async function (assert) {
+    const pyEnv = await startServer();
+    const resPartnerId = pyEnv['res.partner'].create({});
+    const irAttachmentId = pyEnv['ir.attachment'].create({
+        mimetype: 'text/plain',
+        res_id: resPartnerId,
+        res_model: 'res.partner',
+    });
+    pyEnv['mail.message'].create({
+        attachment_ids: [irAttachmentId],
+        model: 'res.partner',
+        res_id: resPartnerId,
+    });
+    pyEnv['res.partner'].write([resPartnerId], {message_main_attachment_id : irAttachmentId})
+    const views = {
+        'res.partner,false,form':
+            '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="name"/>' +
+                '</sheet>' +
+                '<div class="o_attachment_preview"/>' +
+                '<div class="oe_chatter">' +
+                    '<field name="message_ids"/>' +
+                '</div>' +
+            '</form>',
+    };
+    patchUiSize({ size: SIZES.XXL });
+    const { openFormView } = await start({
+        mockRPC(route, args) {
+            if (_.str.contains(route, '/web/static/lib/pdfjs/web/viewer.html')) {
+                var canvas = document.createElement('canvas');
+                return canvas.toDataURL();
+            }
+        },
+        serverData: { views },
+    });
+    await openFormView({
+        res_id: resPartnerId,
+        res_model: 'res.partner',
+    });
+
+    // Add a PDF file
+    await click(".o_ChatterTopbar_buttonSendMessage");
+    const pdfFile = await createFile({ name: "invoice.pdf", contentType: "application/pdf" });
+    await dragenterFiles(".o_Chatter", [pdfFile]);
+    await dropFiles(".o_Chatter_dropZone", [pdfFile]);
+    await contains(".o_attachment_preview_container > iframe", { count: 0 }); // The viewer tries to display the text file not the PDF
+
+    // Switch to the PDF file in the viewer
+    await click(".o_move_next");
+    await contains(".o_attachment_preview_container > iframe"); // There should be iframe for PDF viewer
+});
+
 });
 });
 });

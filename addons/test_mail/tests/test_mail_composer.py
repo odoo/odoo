@@ -316,6 +316,37 @@ class TestComposerForm(TestMailComposer):
                          'MailComposer: mass mode should have template raw subject if template')
         self.assertEqual(composer_form.subtype_id, self.env.ref('mail.mt_comment'))
 
+    @users('employee')
+    def test_mail_composer_template_switching(self):
+        """ Ensure that the current user's identity serves as the sender,
+        particularly when transitioning from a template with a designated sender to one lacking such specifications.
+        Moreover, we verify that switching to a template lacking any subject maintains the existing subject intact. """
+        # Setup: Prepare Templates
+        template_complete = self.template.copy({
+            "email_from": "not_current_user@template_complete.com",
+            "subject": "subject: template_complete",
+        })
+        template_no_sender = template_complete.copy({"email_from": ""})
+        template_no_subject = template_no_sender.copy({"subject": ""})
+        forms = {
+            'comment': Form(self.env['mail.compose.message'].with_context(default_composition_mode='comment')),
+            'mass_mail': Form(self.env['mail.compose.message'].with_context(default_composition_mode='mass_mail')),
+        }
+        for composition_mode, form in forms.items():
+            with self.subTest(composition_mode=composition_mode):
+                # Use Template with Sender and Subject
+                form.template_id = template_complete
+                self.assertEqual(form.email_from, template_complete.email_from, "email_from not set correctly to form this test")
+                self.assertEqual(form.subject, template_complete.subject, "subject not set correctly to form this test")
+
+                # Switch to Template without Sender
+                form.template_id = template_no_sender
+                self.assertEqual(form.email_from, self.env.user.email_formatted, "email_from not updated to current user")
+
+                # Switch to Template without Subject
+                form.template_id = template_no_subject
+                self.assertEqual(form.subject, template_complete.subject, "subject should be kept unchanged")
+
 
 @tagged('mail_composer')
 class TestComposerInternals(TestMailComposer):
@@ -443,17 +474,17 @@ class TestComposerInternals(TestMailComposer):
                 self.assertEqual(composer.author_id, self.env.user.partner_id)
                 self.assertEqual(composer.email_from, self.test_from)
 
-                # update with template with void values: void value is not forced in
+                # Update with template with void email_from field, should result in reseting email_from to a default value
                 # rendering mode as well as when copying template values
                 composer.write({'template_id': template_void.id})
                 # currently onchange necessary
                 composer._onchange_template_id_wrapper()
                 if composition_mode == 'comment':
                     self.assertEqual(composer.author_id, self.env.user.partner_id)
-                    self.assertEqual(composer.email_from, self.test_from)
+                    self.assertEqual(composer.email_from, self.env.user.email_formatted)
                 else:
                     self.assertEqual(composer.author_id, self.env.user.partner_id)
-                    self.assertEqual(composer.email_from, self.test_from)
+                    self.assertEqual(composer.email_from, self.env.user.email_formatted)
 
                 # reset template: values are reset due to call to default_get
                 composer.write({'template_id': False})
@@ -1334,13 +1365,16 @@ class TestComposerResultsComment(TestMailComposer):
         email fields: multi email, formatted emails, ... on template, used to
         post a message using the composer."""
         existing_partners = self.env['res.partner'].search([])
-        partner_format_tofind, partner_multi_tofind = self.env['res.partner'].create([
+        partner_format_tofind, partner_multi_tofind, partner_at_tofind = self.env['res.partner'].create([
             {
                 'email': '"FindMe Format" <find.me.format@test.example.com>',
                 'name': 'FindMe Format',
             }, {
                 'email': 'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
                 'name': 'FindMe Multi',
+            }, {
+                'email': '"Bike@Home" <find.me.at@test.example.com>',
+                'name': 'NotBike@Home',
             }
         ])
         email_ccs = ['"Raoul" <test.cc.1@example.com>', '"Raoulette" <test.cc.2@example.com>', 'test.cc.2.2@example.com>', 'invalid', '  ']
@@ -1349,16 +1383,16 @@ class TestComposerResultsComment(TestMailComposer):
         self.template.write({
             'email_cc': ', '.join(email_ccs),
             'email_from': '{{ user.email_formatted }}',
-            'email_to':', '.join(email_tos + (partner_format_tofind + partner_multi_tofind).mapped('email')),
+            'email_to': ', '.join(email_tos + (partner_format_tofind + partner_multi_tofind + partner_at_tofind).mapped('email')),
             'partner_to': f'{self.partner_1.id},{self.partner_2.id},0,test',
         })
-        self.user_employee.write({'email': 'email.from.1@test.example.com, email.from.2@test.example.com'})
+        self.user_employee.write({'email': 'email.from.1@test.mycompany.com, email.from.2@test.mycompany.com'})
         self.partner_1.write({'email': '"Valid Formatted" <valid.lelitre@agrolait.com>'})
         self.partner_2.write({'email': 'valid.other.1@agrolait.com, valid.other.cc@agrolait.com'})
         # ensure values used afterwards for testing
         self.assertEqual(
             self.partner_employee.email_formatted,
-            '"Ernest Employee" <email.from.1@test.example.com,email.from.2@test.example.com>',
+            '"Ernest Employee" <email.from.1@test.mycompany.com,email.from.2@test.mycompany.com>',
             'Formatting: wrong formatting due to multi-email')
         self.assertEqual(
             self.partner_1.email_formatted,
@@ -1385,22 +1419,29 @@ class TestComposerResultsComment(TestMailComposer):
         # FIXME: currently email finding based on formatted / multi emails does
         # not work
         new_partners = self.env['res.partner'].search([]).search([('id', 'not in', existing_partners.ids)])
-        self.assertEqual(len(new_partners), 8,
-                         'Mail (FIXME): multiple partner creation due to formatted / multi emails: 1 extra partners')
+        self.assertEqual(len(new_partners), 9,
+                         'Mail (FIXME): multiple partner creation due to formatted / multi emails: 1 extra partner')
         self.assertIn(partner_format_tofind, new_partners)
         self.assertIn(partner_multi_tofind, new_partners)
+        self.assertIn(partner_at_tofind, new_partners)
+        self.assertEqual(new_partners[0:3].ids, (partner_format_tofind + partner_multi_tofind + partner_at_tofind).ids)
         self.assertEqual(
             sorted(new_partners.mapped('email')),
-            sorted(['"FindMe Format" <find.me.format@test.example.com>',
+            sorted(['"Bike@Home" <find.me.at@test.example.com>',
+                    '"FindMe Format" <find.me.format@test.example.com>',
                     'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
                     'find.me.multi.2@test.example.com',
-                    'test.cc.1@example.com', 'test.cc.2@example.com', 'test.cc.2.2@example.com',
-                    'test.to.1@example.com', 'test.to.2@example.com']),
+                    'test.cc.1@example.com',
+                    'test.cc.2@example.com',
+                    'test.cc.2.2@example.com',
+                    'test.to.1@example.com',
+                    'test.to.2@example.com']),
             'Mail: created partners for valid emails (wrong / invalid not taken into account) + did not find corner cases (FIXME)'
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
-            sorted(['"FindMe Format" <find.me.format@test.example.com>',
+            sorted(['"NotBike@Home" <find.me.at@test.example.com>',
+                    '"FindMe Format" <find.me.format@test.example.com>',
                     '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
                     '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
                     '"test.cc.1@example.com" <test.cc.1@example.com>',
@@ -1411,11 +1452,15 @@ class TestComposerResultsComment(TestMailComposer):
         )
         self.assertEqual(
             sorted(new_partners.mapped('name')),
-            sorted(['FindMe Format',
+            sorted(['NotBike@Home',
+                    'FindMe Format',
                     'FindMe Multi',
                     'find.me.multi.2@test.example.com',
-                    'test.cc.1@example.com', 'test.to.1@example.com', 'test.to.2@example.com',
-                    'test.cc.2@example.com', 'test.cc.2.2@example.com']),
+                    'test.cc.1@example.com',
+                    'test.to.1@example.com',
+                    'test.to.2@example.com',
+                    'test.cc.2@example.com',
+                    'test.cc.2.2@example.com']),
             'Mail: currently setting name = email, not taking into account formatted emails'
         )
 
@@ -1436,17 +1481,19 @@ class TestComposerResultsComment(TestMailComposer):
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # single email event if email field is multi-email
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com')),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
                 # currently holding multi-email 'email_from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com,email.from.2@test.mycompany.com')),
             },
             mail_message=self.test_record.message_ids[0],
         )
+        recipients = self.partner_1 + self.partner_2 + new_partners
         self.assertMailMail(
-            self.partner_1 + self.partner_2 + new_partners, 'sent',
+            recipients,
+            'sent',
             author=self.partner_employee,
             email_to_recipients=[
                 [self.partner_1.email_formatted],
@@ -1457,15 +1504,49 @@ class TestComposerResultsComment(TestMailComposer):
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # single email event if email field is multi-email
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com')),
                 'subject': f'TemplateSubject {self.test_record.name}',
             },
             fields_values={
                 # currently holding multi-email 'email_from'
-                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com,email.from.2@test.example.com')),
+                'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com,email.from.2@test.mycompany.com')),
             },
             mail_message=self.test_record.message_ids[0],
         )
+        # actual emails sent through smtp
+        for recipient in recipients:
+            # multi emails -> send multiple emails (smart)
+            if recipient == self.partner_2:
+                smtp_to_list = ['valid.other.1@agrolait.com', 'valid.other.cc@agrolait.com']
+            # find.me.format
+            elif recipient == new_partners[0]:
+                self.assertEqual(recipient, partner_format_tofind)
+                smtp_to_list = ['find.me.format@test.example.com']
+            # find.me.multi was split into two partners
+            elif recipient == new_partners[1]:
+                self.assertEqual(recipient, partner_multi_tofind)
+                smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
+            elif recipient == new_partners[3]:
+                smtp_to_list = ['find.me.multi.2@test.example.com']
+            # bike@home: name is not recognized as email anymore
+            elif recipient == new_partners[2]:
+                self.assertEqual(recipient, partner_at_tofind)
+                smtp_to_list = ['find.me.at@test.example.com']
+            else:
+                smtp_to_list = [recipient.email_normalized]
+            self.assert_email_sent_smtp(
+                smtp_from=f'{self.alias_bounce}@{self.alias_domain}',
+                smtp_to_list=smtp_to_list,
+                mail_server=self.mail_server_domain,
+                # msg_from takes only first found normalized email to make a valid email_from
+                message_from=formataddr(
+                    (self.user_employee.name,
+                    'email.from.1@test.mycompany.com',
+                )),
+                # similar envelope, assert_email_sent_smtp cannot distinguish
+                # records (would have to dive into content, too complicated)
+                emails_count=1,
+            )
 
 
 @tagged('mail_composer', 'mail_blacklist')
@@ -1784,6 +1865,8 @@ class TestComposerResultsMass(TestMailComposer):
                                             ],
                                             'body_content': exp_body,
                                             'email_from': self.partner_employee_2.email_formatted,
+                                            # profit from this test to check references are set to message_id in mailing emails
+                                            'references_message_id_check': True,
                                             'subject': exp_subject,
                                         },
                                         fields_values={
@@ -1902,13 +1985,16 @@ class TestComposerResultsMass(TestMailComposer):
         """ Test various combinations of corner case / not standard filling of
         email fields: multi email, formatted emails, ... """
         existing_partners = self.env['res.partner'].search([])
-        partner_format_tofind, partner_multi_tofind = self.env['res.partner'].create([
+        partner_format_tofind, partner_multi_tofind, partner_at_tofind = self.env['res.partner'].create([
             {
                 'email': '"FindMe Format" <find.me.format@test.example.com>',
                 'name': 'FindMe Format',
             }, {
                 'email': 'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
                 'name': 'FindMe Multi',
+            }, {
+                'email': '"Bike@Home" <find.me.at@test.example.com>',
+                'name': 'NotBike@Home',
             }
         ])
         email_ccs = ['"Raoul" <test.cc.1@example.com>', '"Raoulette" <test.cc.2@example.com>', 'test.cc.2.2@example.com>', 'invalid', '  ']
@@ -1917,16 +2003,16 @@ class TestComposerResultsMass(TestMailComposer):
         self.template.write({
             'email_cc': ', '.join(email_ccs),
             'email_from': '{{ user.email_formatted }}',
-            'email_to':', '.join(email_tos + (partner_format_tofind + partner_multi_tofind).mapped('email')),
+            'email_to': ', '.join(email_tos + (partner_format_tofind + partner_multi_tofind + partner_at_tofind).mapped('email')),
             'partner_to': f'{self.partner_1.id},{self.partner_2.id},0,test',
         })
-        self.user_employee.write({'email': 'email.from.1@test.example.com, email.from.2@test.example.com'})
+        self.user_employee.write({'email': 'email.from.1@test.mycompany.com, email.from.2@test.mycompany.com'})
         self.partner_1.write({'email': '"Valid Formatted" <valid.lelitre@agrolait.com>'})
         self.partner_2.write({'email': 'valid.other.1@agrolait.com, valid.other.cc@agrolait.com'})
         # ensure values used afterwards for testing
         self.assertEqual(
             self.partner_employee.email_formatted,
-            '"Ernest Employee" <email.from.1@test.example.com,email.from.2@test.example.com>',
+            '"Ernest Employee" <email.from.1@test.mycompany.com,email.from.2@test.mycompany.com>',
             'Formatting: wrong formatting due to multi-email')
         self.assertEqual(
             self.partner_1.email_formatted,
@@ -1947,19 +2033,23 @@ class TestComposerResultsMass(TestMailComposer):
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():
-            composer.action_send_mail()
+            # don't want to test duplicates, more email management
+            composer.with_context(mailing_document_based=True).action_send_mail()
 
         # find partners created during sending (as emails are transformed into partners)
         # FIXME: currently email finding based on formatted / multi emails does
         # not work
         new_partners = self.env['res.partner'].search([]).search([('id', 'not in', existing_partners.ids)])
-        self.assertEqual(len(new_partners), 8,
-                         'Mail (FIXME): did not find existing partners for formatted / multi emails: 1 extra partners')
+        self.assertEqual(len(new_partners), 9,
+                         'Mail (FIXME): did not find existing partners for formatted / multi emails: 1 extra partner')
         self.assertIn(partner_format_tofind, new_partners)
         self.assertIn(partner_multi_tofind, new_partners)
+        self.assertIn(partner_at_tofind, new_partners)
+        self.assertEqual(new_partners[0:3].ids, (partner_format_tofind + partner_multi_tofind + partner_at_tofind).ids)
         self.assertEqual(
             sorted(new_partners.mapped('email')),
-            sorted(['"FindMe Format" <find.me.format@test.example.com>',
+            sorted(['"Bike@Home" <find.me.at@test.example.com>',
+                    '"FindMe Format" <find.me.format@test.example.com>',
                     'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
                     'find.me.multi.2@test.example.com',
                     'test.cc.1@example.com', 'test.cc.2@example.com', 'test.cc.2.2@example.com',
@@ -1968,7 +2058,8 @@ class TestComposerResultsMass(TestMailComposer):
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
-            sorted(['"FindMe Format" <find.me.format@test.example.com>',
+            sorted(['"NotBike@Home" <find.me.at@test.example.com>',
+                    '"FindMe Format" <find.me.format@test.example.com>',
                     '"FindMe Multi" <find.me.multi.1@test.example.com,find.me.multi.2@test.example.com>',
                     '"find.me.multi.2@test.example.com" <find.me.multi.2@test.example.com>',
                     '"test.cc.1@example.com" <test.cc.1@example.com>',
@@ -1979,12 +2070,16 @@ class TestComposerResultsMass(TestMailComposer):
         )
         self.assertEqual(
             sorted(new_partners.mapped('name')),
-            sorted(['FindMe Format',
+            sorted(['NotBike@Home',
+                    'FindMe Format',
                     'FindMe Multi',
                     'find.me.multi.2@test.example.com',
-                    'test.cc.1@example.com', 'test.to.1@example.com', 'test.to.2@example.com',
-                    'test.cc.2@example.com', 'test.cc.2.2@example.com']),
-            'Mail: currently setting name = email, not taking into account formatted emails'
+                    'test.cc.1@example.com',
+                    'test.to.1@example.com',
+                    'test.to.2@example.com',
+                    'test.cc.2@example.com',
+                    'test.cc.2.2@example.com']),
+            'Mail: when possible, find name in formatted emails, otherwise fallback on email'
         )
 
         # global outgoing: one mail.mail (all customer recipients), * 2 records
@@ -2000,8 +2095,9 @@ class TestComposerResultsMass(TestMailComposer):
             len(self._mails), (len(new_partners) + 2) * 2,
             f'Should have sent {(len(new_partners) + 2) * 2} emails, one / recipient ({len(new_partners)} mailed partners + partner_1 + partner_2) * 2 records')
         for record in self.test_records:
+            recipients = self.partner_1 + self.partner_2 + new_partners
             self.assertMailMail(
-                self.partner_1 + self.partner_2 + new_partners,
+                recipients,
                 'sent',
                 author=self.partner_employee,
                 email_to_recipients=[
@@ -2013,7 +2109,7 @@ class TestComposerResultsMass(TestMailComposer):
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
                     # single email event if email field is multi-email
-                    'email_from': formataddr((self.user_employee.name, 'email.from.1@test.example.com')),
+                    'email_from': formataddr((self.user_employee.name, 'email.from.1@test.mycompany.com')),
                     'reply_to': formataddr((
                         f'{self.env.user.company_id.name} {record.name}',
                         f'{self.alias_catchall}@{self.alias_domain}'
@@ -2030,6 +2126,41 @@ class TestComposerResultsMass(TestMailComposer):
                 },
                 mail_message=record.message_ids[0],  # message copy is kept
             )
+
+            # actual emails sent through smtp
+            for recipient in recipients:
+                # multi emails -> send multiple emails (smart)
+                if recipient == self.partner_2:
+                    smtp_to_list = ['valid.other.1@agrolait.com', 'valid.other.cc@agrolait.com']
+                # find.me.format
+                elif recipient == new_partners[0]:
+                    self.assertEqual(recipient, partner_format_tofind)
+                    smtp_to_list = ['find.me.format@test.example.com']
+                # find.me.multi was split into two partners
+                elif recipient == new_partners[1]:
+                    self.assertEqual(recipient, partner_multi_tofind)
+                    smtp_to_list = ['find.me.multi.1@test.example.com', 'find.me.multi.2@test.example.com']
+                elif recipient == new_partners[3]:
+                    smtp_to_list = ['find.me.multi.2@test.example.com']
+                # bike@home: name is not recognized as email anymore
+                elif recipient == new_partners[2]:
+                    self.assertEqual(recipient, partner_at_tofind)
+                    smtp_to_list = ['find.me.at@test.example.com']
+                else:
+                    smtp_to_list = [recipient.email_normalized]
+                self.assert_email_sent_smtp(
+                    smtp_from=f'{self.alias_bounce}@{self.alias_domain}',
+                    smtp_to_list=smtp_to_list,
+                    mail_server=self.mail_server_domain,
+                    # msg_from takes only first found normalized email to make a valid email_from
+                    message_from=formataddr(
+                        (self.user_employee.name,
+                        'email.from.1@test.mycompany.com',
+                    )),
+                    # similar envelope, assert_email_sent_smtp cannot distinguish
+                    # records (would have to dive into content, too complicated)
+                    emails_count=2,
+                )
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')

@@ -50,7 +50,7 @@ tour.register('hr_expense_tour' , {
 ),
 {
     trigger: '.breadcrumb > li.breadcrumb-item:first',
-    extra_triggger: ".o_expense_form",
+    extra_trigger: ".o_expense_form",
     content: _t("Let's go back to your expenses."),
     position: 'bottom',
     mobile: false,

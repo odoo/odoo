@@ -7,25 +7,26 @@
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
 # sixsix six, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# A . <tiboreu@protonmail.com>, 2022
+# A . <tibor@inventati.org>, 2022
 # Zsofia Biro <zsbiro1205@gmail.com>, 2022
-# Tamás Dombos, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# krnkris, 2022
 # Istvan <leki69@gmail.com>, 2022
-# Szabolcs Rádi, 2023
+# 5768b353f27900ae76ad88cc42dfd5b8_3bb349f, 2023
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2023
-# gezza <geza.nagy@oregional.hu>, 2023
 # Martin Trigaux, 2023
-# Tamás Németh <ntomasz81@gmail.com>, 2023
+# Tamás Németh <ntomasz81@gmail.com>, 2024
+# gezza <geza.nagy@oregional.hu>, 2024
+# Larissa Manderfeld, 2024
+# Tamás Dombos, 2024
+# krnkris, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
+"Last-Translator: krnkris, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +61,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "&amp; Shipping"
 msgstr "&amp; szállítás"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -140,6 +146,8 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"30 napos pénzvisszafizetési garancia\n"
+"Szállítás: 2-3 munkanapon belül"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -264,7 +272,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
-msgstr ""
+msgstr "<small class=\"d-none d-lg-inline text-muted\">Rendezés:</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -419,6 +427,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
+msgid "<span>Quantity</span>"
+msgstr "<span>Mennyiség</span>"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Sign In</span>\n"
@@ -442,11 +455,6 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "<strong class=\"align-top\">URL: </strong>"
 msgstr ""
 
 #. module: website_sale
@@ -528,7 +536,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
-msgstr ""
+msgstr "Vásárlási feltételek"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
@@ -567,8 +575,8 @@ msgid "Abandoned Cart"
 msgstr "Elhagyott kosár"
 
 #. module: website_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
@@ -647,7 +655,7 @@ msgstr "Kosárba tesz"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
-msgstr ""
+msgstr "Kosárba rakás akció"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
@@ -982,20 +990,6 @@ msgid "Can Publish"
 msgstr "Publikálhat"
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence a video at first position."
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid "Can not resequence embedded image/video with a non compatible image."
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
@@ -1011,7 +1005,7 @@ msgstr "Kártyák"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Carousel"
-msgstr ""
+msgstr "Körhinta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1115,18 +1109,6 @@ msgstr ""
 "A cégnév módosítása az önkiszolgáló portálon keresztül nem lehetséges, "
 "amennyiben már rendelt tőlünk. Változtatáshoz kérjük vegye fel velünk a "
 "kapcsolatot."
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"Changing your name is not allowed once invoices have been issued for your "
-"account. Please contact us directly for this operation."
-msgstr ""
-"Nevének megváltoztatása nem megengedett számla létrehozás történt a főkönyvi"
-" számlán. Kérem vegye fel velünk közvetlenül a kapcsolatot ehhez a "
-"művelethez."
 
 #. module: website_sale
 #. odoo-python
@@ -1468,6 +1450,11 @@ msgid "DHL Express Connector"
 msgstr "DHL Express összekötő"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Default"
 msgstr "Alapértelmezett"
@@ -1712,11 +1699,6 @@ msgid "Edit"
 msgstr "Szerkesztés"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
-msgid "Edit in Website Builder"
-msgstr ""
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
@@ -1940,6 +1922,16 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"If you are ordering for an external person, please place your order via the "
+"backend. If you wish to change your name or email address, please do so in "
+"the account settings or contact your administrator."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -2002,15 +1994,6 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/controllers/main.py:0
-#, python-format
-msgid ""
-"If you are ordering for an external person, please place your order via the "
-"backend. If you wish to change your name or email address, please do so in "
-"the account settings or contact your administrator."
-msgstr ""
-
-#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
@@ -2360,7 +2343,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "No product defined in category \""
+msgid "No product defined in this category."
 msgstr ""
 
 #. module: website_sale
@@ -2626,6 +2609,13 @@ msgid "Payment Transactions"
 msgstr "Fizetési tranzakciók"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "Payment is already being processed."
+msgstr ""
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
@@ -2736,7 +2726,7 @@ msgstr ""
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - Low to High"
-msgstr ""
+msgstr "Ár - növekvő"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3006,7 +2996,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Promo Code"
-msgstr ""
+msgstr "Promóciós kód"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3064,7 +3054,6 @@ msgstr "Menny.:"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
-#: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
@@ -3674,11 +3663,6 @@ msgid "Suggested accessories in the eCommerce cart"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "VAT"
-msgstr "Adószám"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
 msgstr "Címke"
@@ -3730,6 +3714,13 @@ msgstr "Érvénytelen hozzáférési token"
 #: model:ir.model.fields,help:website_sale.field_product_template__compare_list_price
 msgid ""
 "The amount will be displayed strikethroughed on the eCommerce product page"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The cart has already been paid. Please refresh the page."
 msgstr ""
 
 #. module: website_sale
@@ -4013,6 +4004,11 @@ msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "VAT"
+msgstr "Adószám"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
 msgid "Variant"
 msgstr "Változat"
@@ -4279,6 +4275,13 @@ msgstr ""
 "                                            Ha szeretne szállítási címet hozzáadni vagy módosítani, kattintson az"
 
 #. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "You can't use a video as the product's main image."
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
@@ -4350,11 +4353,6 @@ msgstr "Az előző kosara már elkészült."
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Zip Code"
 msgstr "Irányítószám"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
-msgid "border-primary"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

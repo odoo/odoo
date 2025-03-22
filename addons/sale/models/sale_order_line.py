@@ -212,6 +212,7 @@ class SaleOrderLine(models.Model):
     qty_delivered = fields.Float(
         string="Delivery Quantity",
         compute='_compute_qty_delivered',
+        default=0.0,
         digits='Product Unit of Measure',
         store=True, readonly=False, copy=False)
 
@@ -345,7 +346,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not self.product_no_variant_attribute_value_ids:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         no_variant_ptavs = self.product_no_variant_attribute_value_ids._origin
@@ -427,7 +428,7 @@ class SaleOrderLine(models.Model):
                     line.product_id,
                     line.product_uom_qty or 1.0,
                     uom=line.product_uom,
-                    date=line.order_id.date_order,
+                    date=line._get_order_date(),
                 )
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
@@ -435,21 +436,25 @@ class SaleOrderLine(models.Model):
         for line in self:
             # check if there is already invoiced amount. if so, the price shouldn't change as it might have been
             # manually edited
-            if line.qty_invoiced > 0:
+            if line.qty_invoiced > 0 or (line.product_id.expense_policy == 'cost' and line.is_expense):
                 continue
             if not line.product_uom or not line.product_id:
                 line.price_unit = 0.0
             else:
-                price = line.with_company(line.company_id)._get_display_price()
-                line.price_unit = line.product_id._get_tax_included_unit_price(
-                    line.company_id,
-                    line.order_id.currency_id,
-                    line.order_id.date_order,
-                    'sale',
+                line = line.with_company(line.company_id)
+                price = line._get_display_price()
+                line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
+                    price,
+                    line.currency_id or line.order_id.currency_id,
+                    product_taxes=line.product_id.taxes_id.filtered(
+                        lambda tax: tax.company_id == line.env.company
+                    ),
                     fiscal_position=line.order_id.fiscal_position_id,
-                    product_price_unit=price,
-                    product_currency=line.currency_id
                 )
+
+    def _get_order_date(self):
+        self.ensure_one()
+        return self.order_id.date_order
 
     def _get_display_price(self):
         """Compute the displayed unit price for a given line.
@@ -486,7 +491,7 @@ class SaleOrderLine(models.Model):
         self.product_id.ensure_one()
 
         pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
+        order_date = self._get_order_date() or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
         uom = self.product_uom or self.product_id.uom_id
@@ -530,7 +535,7 @@ class SaleOrderLine(models.Model):
         self.product_id.ensure_one()
 
         pricelist_rule = self.pricelist_item_id
-        order_date = self.order_id.date_order or fields.Date.today()
+        order_date = self._get_order_date() or fields.Date.today()
         product = self.product_id.with_context(**self._get_product_price_context())
         qty = self.product_uom_qty or 1.0
         uom = self.product_uom
@@ -618,7 +623,9 @@ class SaleOrderLine(models.Model):
         Compute the amounts of the SO line.
         """
         for line in self:
-            tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
+            tax_results = self.env['account.tax'].with_company(line.company_id)._compute_taxes(
+                [line._convert_to_tax_base_line_dict()]
+            )
             totals = list(tax_results['totals'].values())[0]
             amount_untaxed = totals['amount_untaxed']
             amount_tax = totals['amount_tax']
@@ -711,6 +718,8 @@ class SaleOrderLine(models.Model):
             return ''
 
         invoice_lines = self._get_invoice_lines()
+        if self.invoice_status == 'invoiced' and not invoice_lines:
+            return ''
         if all(line.parent_state == 'draft' for line in invoice_lines):
             return 'draft'
         if all(line.parent_state == 'cancel' for line in invoice_lines):
@@ -847,7 +856,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             amount_invoiced = 0.0
             for invoice_line in line._get_invoice_lines():
-                if invoice_line.move_id.state == 'posted':
+                if invoice_line.move_id.state == 'posted' or invoice_line.move_id.payment_state == 'invoicing_legacy':
                     invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
                     if invoice_line.move_id.move_type == 'out_invoice':
                         amount_invoiced += invoice_line.currency_id._convert(invoice_line.price_subtotal, line.currency_id, line.company_id, invoice_date)
@@ -1162,6 +1171,13 @@ class SaleOrderLine(models.Model):
                 'company_id': line.company_id.id,
             })
 
+    def _get_downpayment_line_price_unit(self, invoices):
+        return sum(
+            l.price_unit if l.move_id.move_type == 'out_invoice' else -l.price_unit
+            for l in self.invoice_lines
+            if l.move_id.state == 'posted' and l.move_id not in invoices  # don't recompute with the final invoice
+        )
+
     #=== CORE METHODS OVERRIDES ===#
 
     def name_get(self):
@@ -1182,3 +1198,6 @@ class SaleOrderLine(models.Model):
     def _is_not_sellable_line(self):
         # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
         return False
+
+    def _sellable_lines_domain(self):
+        return [('is_downpayment', '=', False)]

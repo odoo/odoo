@@ -52,11 +52,13 @@ class HolidaysAllocation(models.Model):
         res = super().write(vals)
         if 'number_of_days' not in vals:
             return res
-        for allocation in self.filtered('overtime_id'):
+        if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(allocation.state not in ('draft', 'confirm') for allocation in self):
+            raise ValidationError(_('Only an Officer or Administrator is allowed to edit the allocation duration in this status.'))
+        for allocation in self.sudo().filtered('overtime_id'):
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
             overtime_duration = allocation.overtime_id.sudo().duration
-            if overtime_duration != duration:
+            if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
                 allocation.overtime_id.sudo().duration = -1 * duration

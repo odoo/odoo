@@ -232,13 +232,19 @@ class ProductProduct(models.Model):
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
+        read_access = self.env['ir.model.access'].check('product.supplierinfo', 'read', False)
         for product in self:
             product.code = product.default_code
-            if self.env['ir.model.access'].check('product.supplierinfo', 'read', False):
+            if read_access:
                 for supplier_info in product.seller_ids:
                     if supplier_info.partner_id.id == product._context.get('partner_id'):
+                        if supplier_info.product_id and supplier_info.product_id != product:
+                            # Supplier info specific for another variant.
+                            continue
                         product.code = supplier_info.product_code or product.default_code
-                        break
+                        if product == supplier_info.product_id:
+                            # Supplier info specific for this variant.
+                            break
 
     @api.depends_context('partner_id')
     def _compute_partner_ref(self):
@@ -517,7 +523,7 @@ class ProductProduct(models.Model):
                 domain = expression.AND([args, domain])
                 product_ids = list(self._search(domain, limit=limit, access_rights_uid=name_get_uid))
             if not product_ids and operator in positive_operators:
-                ptrn = re.compile('(\[(.*?)\])')
+                ptrn = re.compile(r'(\[(.*?)\])')
                 res = ptrn.search(name)
                 if res:
                     product_ids = list(self._search([('default_code', '=', res.group(2))] + args, limit=limit, access_rights_uid=name_get_uid))
@@ -556,7 +562,7 @@ class ProductProduct(models.Model):
         return {
             'name': _('Price Rules'),
             'view_mode': 'tree,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree'), (False, 'form')],
+            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'tree')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
             'target': 'current',

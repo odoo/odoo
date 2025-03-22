@@ -168,7 +168,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                     method: 'create_from_ui',
                     args: [event.detail.processedChanges],
                 });
-                await this.env.pos.load_new_partners();
+                await this.env.pos._loadPartners([partnerId]);
                 this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
                 this.confirm();
             } catch (error) {
@@ -201,7 +201,14 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             let domain = [];
             const limit = 30;
             if(this.state.query) {
-                const search_fields = ["name", "parent_name", "phone_mobile_search", "email"];
+                const search_fields = [
+                    "name",
+                    "parent_name",
+                    "phone",
+                    "mobile",
+                    "email",
+                    "vat",
+                ];
                 domain = [
                     ...Array(search_fields.length - 1).fill('|'),
                     ...search_fields.map(field => [field, "ilike", this.state.query + "%"])

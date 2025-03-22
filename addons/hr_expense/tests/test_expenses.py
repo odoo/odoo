@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+
 from freezegun import freeze_time
 
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
-from odoo.tools.misc import formatLang
+from odoo.tools.misc import formatLang, format_date
 from odoo import fields, Command
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('-at_install', 'post_install')
@@ -1179,3 +1181,393 @@ class TestExpenses(TestExpenseCommon):
         self.env['hr.expense'].create_expense_from_attachments(attachment.id)
         expense = self.env['hr.expense'].search([], order='id desc', limit=1)
         self.assertEqual(expense.account_id, product.property_account_expense_id, "The expense account should be the default one of the product")
+
+    def test_expense_sheet_attachments_sync(self):
+        """
+        Test that the hr.expense.sheet attachments stay in sync with the attachments associated with the expense lines
+        Syncing should happen when:
+        - When adding/removing expense_line_ids on a hr.expense.sheet <-> changing sheet_id on an expense
+        - When deleting an expense that is associated with an hr.expense.sheet
+        - When adding/removing an attachment of an expense that is associated with an hr.expense.sheet
+        """
+        def assert_attachments_are_synced(sheet, attachments_on_sheet, sheet_has_attachment):
+            if sheet_has_attachment:
+                self.assertTrue(bool(attachments_on_sheet), "Attachment that belongs to the hr.expense.sheet only was removed unexpectedly")
+            self.assertSetEqual(
+                set(sheet.expense_line_ids.attachment_ids.mapped('checksum')),
+                set((sheet.attachment_ids - attachments_on_sheet).mapped('checksum')),
+                "Attachments between expenses and their sheet is not in sync.",
+            )
+
+        for sheet_has_attachment in (False, True):
+            expense_1, expense_2, expense_3 = self.env['hr.expense'].create([{
+                'name': 'expense_1',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 1000,
+            }, {
+                'name': 'expense_2',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 999,
+            }, {
+                'name': 'expense_3',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_c.id,
+                'total_amount': 998,
+            }])
+            self.env['ir.attachment'].create([{
+                'name': "test_file_1.txt",
+                'datas': base64.b64encode(b'content'),
+                'res_id': expense_1.id,
+                'res_model': 'hr.expense',
+            }, {
+                'name': "test_file_2.txt",
+                'datas': base64.b64encode(b'other content'),
+                'res_id': expense_2.id,
+                'res_model': 'hr.expense',
+            }, {
+                'name': "test_file_3.txt",
+                'datas': base64.b64encode(b'different content'),
+                'res_id': expense_3.id,
+                'res_model': 'hr.expense',
+            }])
+
+            sheet = self.env['hr.expense.sheet'].create({
+                'company_id': self.env.company.id,
+                'employee_id': self.expense_employee.id,
+                'name': 'test sheet',
+                'expense_line_ids': [Command.set([expense_1.id, expense_2.id, expense_3.id])],
+            })
+
+            sheet_attachment = self.env['ir.attachment'].create({
+                'name': "test_file_4.txt",
+                'datas': base64.b64encode(b'yet another different content'),
+                'res_id': sheet.id,
+                'res_model': 'hr.expense.sheet',
+            }) if sheet_has_attachment else self.env['ir.attachment']
+
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_1.attachment_ids.unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            self.env['ir.attachment'].create({
+                'name': "test_file_1.txt",
+                'datas': base64.b64encode(b'content'),
+                'res_id': expense_1.id,
+                'res_model': 'hr.expense',
+            })
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_2.sheet_id = False
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_2.sheet_id = sheet
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            sheet.expense_line_ids = [Command.set([expense_1.id, expense_3.id])]
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            expense_3.unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+            sheet.attachment_ids.filtered(
+                lambda att: att.checksum in sheet.expense_line_ids.attachment_ids.mapped('checksum')
+            ).unlink()
+            assert_attachments_are_synced(sheet, sheet_attachment, sheet_has_attachment)
+
+    def test_create_report_name(self):
+        """
+            When an expense sheet is created from one or more expense, the report name is generated through the expense name or date.
+            As the expense sheet is created directly from the hr.expense._get_default_expense_sheet_values method,
+            we only need to test the method.
+        """
+        expense_with_date_1, expense_with_date_2, expense_without_date = self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'date': '2021-01-01',
+            'quantity': i + 1,
+        } for i in range(3)])
+        expense_without_date.date = False
+
+        # CASE 1: only one expense with or without date -> expense name
+        sheet_name = expense_with_date_1._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(expense_with_date_1.name, sheet_name, "The report name should be the same as the expense name")
+        sheet_name = expense_without_date._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(expense_without_date.name, sheet_name, "The report name should be the same as the expense name")
+
+        # CASE 2: two expenses with the same date -> expense date
+        expenses = expense_with_date_1 | expense_with_date_2
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(format_date(self.env, expense_with_date_1.date), sheet_name, "The report name should be the same as the expense date")
+
+        # CASE 3: two expenses with different dates -> date range
+        expense_with_date_2.date = '2021-01-02'
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertEqual(
+            f"{format_date(self.env, expense_with_date_1.date)} - {format_date(self.env, expense_with_date_2.date)}",
+            sheet_name,
+            "The report name should be the date range of the expenses",
+        )
+
+        # CASE 4: One or more expense doesn't have a date (single sheet) -> No fallback name
+        expenses |= expense_without_date
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertFalse(
+            sheet_name,
+            "The report (with the empty expense date) name should be empty as a fallback when several reports are created",
+        )
+        expenses.date = False
+        sheet_name = expenses._get_default_expense_sheet_values()[0]['name']
+        self.assertFalse(sheet_name, "The report name should be empty as a fallback")
+
+        # CASE 5: One or more expense doesn't have a date (multiple sheets) -> Fallback name
+        expenses |= self.env['hr.expense'].create([{
+            'company_id': self.company_data['company'].id,
+            'name': f'test expense by company {i}',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'unit_amount': self.product_a.standard_price,
+            'payment_mode': 'company_account',
+            'date': '2021-01-01',
+            'quantity': i + 1,
+        } for i in range(3)])
+        sheet_names = [sheet['name'] for sheet in expenses._get_default_expense_sheet_values()]
+        self.assertSequenceEqual(
+            ("New Expense Report, paid by employee", format_date(self.env, expenses[-1].date)),
+            sheet_names,
+            "The report name should be 'New Expense Report, paid by (employee|company)' as a fallback",
+        )
+
+    def test_expense_product_update(self):
+        """ Test that the expense line is correctly updated or not when its product price is updated."""
+        #pylint: disable=bad-whitespace
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'lst_price': 100.0,
+            'standard_price': 0.0,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+            'property_account_expense_id': self.company_data['default_account_expense'].id,
+            'supplier_taxes_id': False,
+        })
+
+        sheet_no_update, sheet_update = sheets = self.env['hr.expense.sheet'].create([{
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': name,
+            'expense_line_ids': [
+                Command.create({
+                    'name': name,
+                    'date': '2016-01-01',
+                    'product_id': product.id,
+                    'total_amount': 100.0,
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        } for name in ('test sheet no update', 'test sheet update')])
+
+        sheet_no_update.action_submit_sheet()  # No update when sheet is submitted
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+        ])
+        product.standard_price = 50.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount':  50.0, 'quantity': 1, 'total_amount':  50.0},  # unit_amount is updated
+        ])
+        sheet_update.expense_line_ids.quantity = 5
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount':  50.0, 'quantity': 5, 'total_amount': 250.0},  # quantity & total are updated
+        ])
+        product.standard_price = 0.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # quantity & unit_amount only are updated
+        ])
+
+        sheet_update.action_submit_sheet()  # This sheet should not be updated any more
+        product.standard_price = 300.0
+        self.assertRecordValues(sheets.expense_line_ids.sorted('name'), [
+            {'name': 'test sheet no update', 'unit_amount': 100.0, 'quantity': 1, 'total_amount': 100.0},
+            {'name':    'test sheet update', 'unit_amount': 250.0, 'quantity': 1, 'total_amount': 250.0},  # no update
+        ])
+
+    def test_expense_mandatory_analytic_plan_product_category(self):
+        """
+        Check that when an analytic plan has a mandatory applicability matching
+        product category this is correctly triggered
+        """
+        self.env['account.analytic.applicability'].create({
+            'business_domain': 'expense',
+            'analytic_plan_id': self.analytic_plan.id,
+            'applicability': 'mandatory',
+            'product_categ_id': self.product_a.categ_id.id,
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'unit_amount': 350.00,
+                'payment_mode': 'company_account',
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        with self.assertRaises(ValidationError, msg="One or more lines require a 100% analytic distribution."):
+            expense_sheet.with_context(validate_analytic=True).approve_expense_sheets()
+
+        expense_sheet.expense_line_ids.analytic_distribution = {self.analytic_account_1.id: 100.00}
+        expense_sheet.with_context(validate_analytic=True).approve_expense_sheets()
+
+    def test_expense_no_stealing_from_employees(self):
+        """
+        Test to check that the company doesn't steal their employee when the commercial_partner_id of the employee partner
+        is the company
+        """
+        self.expense_employee.user_partner_id.parent_id = self.env.company.partner_id
+        self.assertEqual(self.env.company.partner_id, self.expense_employee.user_partner_id.commercial_partner_id)
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Company Cash Basis Expense Report',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Company Cash Basis Expense',
+                'product_id': self.product_c.id,
+                'payment_mode': 'own_account',
+                'total_amount': 20.0,
+                'employee_id': self.expense_employee.id,
+            })]
+        })
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        move = expense_sheet.account_move_id
+
+        self.assertNotEqual(move.commercial_partner_id, self.env.company.partner_id)
+        self.assertEqual(move.partner_id, self.expense_employee.user_partner_id)
+        self.assertEqual(move.commercial_partner_id, self.expense_employee.user_partner_id)
+
+    def test_expense_bank_account_of_employee_on_entry_and_register_payment(self):
+        """
+        Test that the bank account defined on the employee form is correctly set on the entry and on the register payment
+        when having multiple bank accounts defined on the partner
+        """
+
+        self.partner_bank_account_1 = self.env['res.partner.bank'].create({
+            'acc_number': "987654321",
+            'partner_id': self.expense_employee.user_partner_id.id,
+            'acc_type': 'bank',
+        })
+        self.partner_bank_account_2 = self.env['res.partner.bank'].create({
+            'acc_number': "123456789",
+            'partner_id': self.expense_employee.user_partner_id.id,
+            'acc_type': 'bank',
+        })
+        # Set the second bank account for the employee
+        self.expense_employee.bank_account_id = self.partner_bank_account_2
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'own_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'payment_mode': 'own_account',
+                'unit_amount': 350.00,
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        move_bank_acc = expense_sheet.account_move_id.partner_bank_id
+        self.assertEqual(move_bank_acc, self.partner_bank_account_2)
+        action_data = expense_sheet.action_register_payment()
+        with Form(self.env['account.payment.register'].with_context(action_data['context'])) as pay_form:
+            self.assertEqual(pay_form.partner_bank_id, self.partner_bank_account_2)
+
+    def test_expense_by_company_with_caba_tax(self):
+        """When using cash basis tax in an expense paid by the company, the transition account should not be used."""
+
+        caba_tag = self.env['account.account.tag'].create({
+            'name': 'Cash Basis Tag Final Account',
+            'applicability': 'taxes',
+        })
+        caba_transition_account = self.env['account.account'].create({
+            'name': 'Cash Basis Tax Transition Account',
+            'account_type': 'asset_current',
+            'code': '131001',
+        })
+        caba_tax = self.env['account.tax'].create({
+            'name': 'Cash Basis Tax',
+            'tax_exigibility': 'on_payment',
+            'amount': 15,
+            'cash_basis_transition_account_id': caba_transition_account.id,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': caba_tag.ids,
+                }),
+            ]
+        })
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Company Cash Basis Expense Report',
+            'employee_id': self.expense_employee.id,
+            'payment_mode': 'company_account',
+            'state': 'approve',
+            'expense_line_ids': [Command.create({
+                'name': 'Company Cash Basis Expense',
+                'product_id': self.product_c.id,
+                'payment_mode': 'company_account',
+                'total_amount': 20.0,
+                'employee_id': self.expense_employee.id,
+                'tax_ids': [Command.set(caba_tax.ids)],
+            })]
+        })
+
+        moves = expense_sheet.action_sheet_move_create()
+        tax_lines = moves.line_ids.filtered(lambda line: line.tax_line_id == caba_tax)
+        self.assertNotEqual(tax_lines.account_id, caba_transition_account, "The tax should not be on the transition account")
+        self.assertEqual(tax_lines.tax_tag_ids, caba_tag, "The tax should still retrieve its tags")
+
+    def test_expense_set_total_amount_to_0(self):
+        """Checks that amount fields are correctly updating when setting total_amount to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount': 100.0,
+            'tax_ids': self.tax_purchase_a.ids,
+        })
+        expense.total_amount = 0.0
+        self.assertTrue(expense.currency_id.is_zero(expense.amount_tax))
+        self.assertTrue(expense.company_currency_id.is_zero(expense.total_amount_company))
+
+    def test_expense_set_quantity_to_0(self):
+        """Checks that amount fields except for unit_amount are correctly updating when setting quantity to 0"""
+        expense = self.env['hr.expense'].create({
+            'name': 'Expense with amount',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_b.id,
+            'quantity': 10
+        })
+        expense.quantity = 0
+        self.assertTrue(expense.currency_id.is_zero(expense.total_amount))
+        self.assertEqual(expense.company_currency_id.compare_amounts(expense.unit_amount, self.product_b.standard_price), 0)

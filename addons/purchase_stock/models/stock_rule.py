@@ -245,7 +245,7 @@ class StockRule(models.Model):
             date=line.order_id.date_order and line.order_id.date_order.date(),
             uom_id=product_id.uom_po_id)
 
-        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, company_id) if seller else 0.0
+        price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.sudo().taxes_id, company_id) if seller else 0.0
         if price_unit and seller and line.order_id.currency_id and seller.currency_id != line.order_id.currency_id:
             price_unit = seller.currency_id._convert(
                 price_unit, line.order_id.currency_id, line.order_id.company_id, fields.Date.today())

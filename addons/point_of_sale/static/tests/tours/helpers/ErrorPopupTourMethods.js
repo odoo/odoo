@@ -24,6 +24,15 @@ odoo.define('point_of_sale.tour.ErrorPopupTourMethods', function (require) {
                 },
             ];
         }
+
+        messageBodyContains(text) {
+            return [
+                {
+                    content: `check '${text}' is in the body of the popup`,
+                    trigger: `.modal-dialog .popup-error .body:contains(${text})`,
+                }
+            ];
+        }
     }
 
     return createTourMethods('ErrorPopup', Do, Check);

@@ -49,6 +49,9 @@ export function useInputField(params) {
         if (component.props.setDirty) {
             component.props.setDirty(isDirty);
         }
+        if (component.props.record && !component.props.record.isValid) {
+            component.props.record.resetFieldValidity(component.props.name);
+        }
     }
 
     /**
@@ -164,6 +167,8 @@ export function useInputField(params) {
                 if (component.props.setDirty) {
                     component.props.setDirty(isDirty);
                 }
+            } else {
+                inputRef.el.value = params.getValue();
             }
         }
     }

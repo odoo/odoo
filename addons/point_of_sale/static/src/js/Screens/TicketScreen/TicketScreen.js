@@ -212,6 +212,25 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 return;
             }
 
+            const invoicedOrderIds = new Set(
+                allToRefundDetails
+                    .filter(
+                        (detail) =>
+                            this._state.syncedOrders.cache[detail.orderline.orderBackendId] &&
+                            this._state.syncedOrders.cache[detail.orderline.orderBackendId].state ===
+                            "invoiced"
+                    )
+                    .map((detail) => detail.orderline.orderBackendId)
+            );
+
+            if (invoicedOrderIds.size > 1) {
+                this.showPopup('ErrorPopup', {
+                    title: this.env._t('Multiple Invoiced Orders Selected'),
+                    body: this.env._t('You have selected orderlines from multiple invoiced orders. To proceed refund, please select orderlines from the same invoiced order.')
+                });
+                return;
+            }
+
             // The order that will contain the refund orderlines.
             // Use the destinationOrder from props if the order to refund has the same
             // partner as the destinationOrder.
@@ -320,7 +339,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         }
         getStatus(order) {
             if (order.locked) {
-                return this.env._t('Paid');
+                return order.state === 'invoiced' ? this.env._t('Invoiced') : this.env._t('Paid');
             } else {
                 const screen = order.get_screen_data();
                 return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name]).text;
@@ -620,7 +639,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             const domain = this._computeSyncedOrdersDomain();
             const limit = this._state.syncedOrders.nPerPage;
             const offset = (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
-            const { ids, totalCount } = await this.rpc({
+            let { ids, totalCount } = await this.rpc({
                 model: 'pos.order',
                 method: 'search_paid_order_ids',
                 kwargs: { config_id: this.env.pos.config.id, domain, limit, offset },
@@ -634,6 +653,11 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                     args: [idsNotInCache],
                     context: this.env.session.user_context,
                 });
+                // Remove not loaded Order IDs
+                const fetchedOrderIdsSet = new Set(fetchedOrders.map(order => order.id));
+                const notLoadedIds = idsNotInCache.filter(id => !fetchedOrderIdsSet.has(id));
+                ids = ids.filter(id => !notLoadedIds.includes(id));
+
                 // Check for missing products and partners and load them in the PoS
                 await this.env.pos._loadMissingProducts(fetchedOrders);
                 await this.env.pos._loadMissingPartners(fetchedOrders);

@@ -11,14 +11,17 @@
 # Claudia Baisan, 2023
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023
+# Larisa_nexterp, 2024
+# Lyall Kindmurr, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-31 14:10+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2023-09-25 06:59+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +56,14 @@ msgstr "Livrare"
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
 msgid "Enable Apple Pay"
-msgstr ""
+msgstr "Activați Apple Pay"
+
+#. module: payment_stripe
+#. odoo-javascript
+#: code:addons/payment_stripe/static/src/js/express_checkout_form.js:0
+#, python-format
+msgid "Free Shipping"
+msgstr "Livrare gratuită"
 
 #. module: payment_stripe
 #: model_terms:ir.ui.view,arch_db:payment_stripe.payment_provider_form
@@ -107,7 +117,7 @@ msgstr "Tranzacție plată"
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Please use live credentials to enable Apple Pay."
-msgstr ""
+msgstr "Pentru a permite Apple Pay, vă rugăm să folosiți credențiale live."
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -195,7 +205,7 @@ msgstr ""
 #: code:addons/payment_stripe/models/payment_transaction.py:0
 #, python-format
 msgid "The customer left the payment page."
-msgstr ""
+msgstr "Clientul a ieșit de pe pagina de plată."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__stripe_publishable_key
@@ -210,11 +220,14 @@ msgid ""
 "The refund did not go through. Please log into your Stripe Dashboard to get "
 "more information on that matter, and address any accounting discrepancies."
 msgstr ""
+"Returul nu a fost procesat. Vă rugăm să accesați pagina principală Stripe "
+"pentru a afla mai multe informații, și corectați orice neconcordanță "
+"contabilă."
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Cod tehnic al acestui procesator de plată"
 
 #. module: payment_stripe
 #. odoo-python
@@ -259,6 +272,8 @@ msgid ""
 "You cannot set the provider state to Enabled until your onboarding to Stripe"
 " is completed."
 msgstr ""
+"Nu se poate seta starea providerului drept valabil până nu terminați setup-"
+"ul Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -268,6 +283,8 @@ msgid ""
 "You cannot set the provider to Test Mode while it is linked with your Stripe"
 " account."
 msgstr ""
+"Nu puteți seta providerul în modul test cât timp este conectat cu contul "
+"dumneavoastra Stripe."
 
 #. module: payment_stripe
 #. odoo-python
@@ -288,4 +305,4 @@ msgstr "Comandă dvs."
 #: code:addons/payment_stripe/models/payment_provider.py:0
 #, python-format
 msgid "Your web domain was successfully verified."
-msgstr ""
+msgstr "Domeniul dumneavoastrâ web a fost verificat cu succes."

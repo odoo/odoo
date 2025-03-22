@@ -7,6 +7,7 @@ import {
     triggerEvent,
     clickSave,
     editInput,
+    patchDate,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { pagerNext } from "@web/../tests/search/helpers";
@@ -698,10 +699,9 @@ QUnit.module("Fields", (hooks) => {
             </form>`,
         });
 
-        const list = new DataTransfer();
-        list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
-
         async function setFiles() {
+            const list = new DataTransfer();
+            list.items.add(new File([imageData], "fake_file.png", { type: "png" }));
             const fileInput = target.querySelector("input[type=file]");
             fileInput.files = list.files;
             fileInput.dispatchEvent(new Event("change"));
@@ -712,31 +712,33 @@ QUnit.module("Fields", (hooks) => {
         }
 
         assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            0,
-            "there shouldn't be any file"
+            target.querySelector("img[data-alt='Binary file']").dataset.src,
+            "/web/static/img/placeholder.png",
+            "image field should not be set"
         );
 
         await setFiles();
-        assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            1,
-            "there should be a single file"
+        assert.ok(
+            target
+                .querySelector("img[data-alt='Binary file']")
+                .dataset.src.includes("data:image/png;base64"),
+            "image field should be set"
         );
 
         await clickSave(target);
         await click(target, ".o_form_button_create");
         assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            0,
-            "there shouldn't be any file"
+            target.querySelector("img[data-alt='Binary file']").dataset.src,
+            "/web/static/img/placeholder.png",
+            "image field should be reset"
         );
 
         await setFiles();
-        assert.strictEqual(
-            target.querySelector("input[type=file]").files.length,
-            1,
-            "there should be a single file"
+        assert.ok(
+            target
+                .querySelector("img[data-alt='Binary file']")
+                .dataset.src.includes("data:image/png;base64"),
+            "image field should be set"
         );
     });
 
@@ -856,6 +858,102 @@ QUnit.module("Fields", (hooks) => {
             assert.strictEqual(
                 getUnique(target.querySelector(".o_field_image img")),
                 "1659688620000"
+            );
+        }
+    );
+
+    QUnit.test(
+        "url should not use the record last updated date when the field is related",
+        async function (assert) {
+            serverData.models.partner.fields.related = {
+                name: "Binary",
+                type: "binary",
+                related: "user.image",
+            };
+
+            serverData.models.partner.fields.user = {
+                name: "User",
+                type: "many2one",
+                relation: "user",
+                default: 1,
+            };
+
+            serverData.models.user = {
+                fields: {
+                    image: {
+                        name: "Image",
+                        type: "binary",
+                    },
+                },
+                records: [
+                    {
+                        id: 1,
+                        image: "3 kb",
+                    },
+                ],
+            };
+
+            serverData.models.partner.records[0].__last_update = "2017-02-08 10:00:00";
+
+            patchDate(2017, 1, 6, 11, 0, 0);
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="foo" />
+                            <field name="user"/>
+                            <field name="related" widget="image"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                async mockRPC(route, { args }, performRpc) {
+                    if (route === "/web/dataset/call_kw/partner/read") {
+                        const res = await performRpc(...arguments);
+                        // The mockRPC doesn't implement related fields
+                        res[0].related = "3 kb";
+                        return res;
+                    }
+                },
+            });
+
+            const initialUnique = Number(getUnique(target.querySelector(".o_field_image img")));
+            assert.ok(initialUnique - 1486375200000 < 100);
+
+            await editInput(target, ".o_field_widget[name='foo'] input", "grrr");
+
+            // the unique should be the same
+            assert.strictEqual(
+                initialUnique,
+                Number(getUnique(target.querySelector(".o_field_image img")))
+            );
+
+            patchDate(2017, 1, 9, 11, 0, 0);
+            await editInput(
+                target,
+                "input[type=file]",
+                new File(
+                    [Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)))],
+                    "fake_file.png",
+                    { type: "png" }
+                )
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_image img").dataset.src,
+                `data:image/png;base64,${MY_IMAGE}`
+            );
+
+            patchDate(2017, 1, 9, 12, 0, 0);
+
+            await clickSave(target);
+
+            assert.ok(
+                Number(getUnique(target.querySelector(".o_field_image img"))) - 1486638000000 < 100
             );
         }
     );

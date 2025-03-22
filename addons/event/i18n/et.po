@@ -12,21 +12,21 @@
 # Piia Paurson <piia@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Anna, 2023
 # JanaAvalah, 2023
 # Mihkel avalah, 2023
 # Leaanika Randmets, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2024\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -837,7 +837,7 @@ msgstr "Tegevus"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Tegevuse erandlik kohendus"
+msgstr "Tegevuse erandi tüüp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
@@ -1417,6 +1417,11 @@ msgstr "Näidatav nimi"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Näidake oma sündmuste lehtedel sponsoreid ja eksponente"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2124,6 +2129,13 @@ msgstr "Oluline pileti informatsioon"
 #, python-format
 msgid "In Progress"
 msgstr "Töös"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3352,7 +3364,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr "Pileteid saab skaneerida otse telefonist või prinditult paberilt."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Ajavöönd"
@@ -3568,6 +3579,14 @@ msgstr "Nädalad"
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr "Mis uut?"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

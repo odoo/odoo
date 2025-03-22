@@ -12,9 +12,9 @@
 # Sandra Franch <sandra.franch@upc.edu>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # Jonatan Gk, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # eriiikgt, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
@@ -23,17 +23,18 @@
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # Josep Anton Belchi, 2022
 # jabiri7, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
+# Óscar Fonseca <tecnico@pyming.com>, 2023
 # martioodo hola, 2023
 # Albert Parera, 2023
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Albert Parera, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +93,13 @@ msgstr "% completat"
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (còpia)"
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
+msgstr ""
 
 #. module: survey
 #. odoo-python
@@ -1315,7 +1323,6 @@ msgid "Cliff Burton"
 msgstr "Cliff Burton"
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1467,8 +1474,8 @@ msgid "Corner Desk Right Sit"
 msgstr "Sigueu a la cantonada desk cap a la dreta"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -2346,8 +2353,8 @@ msgstr ""
 "Requereix tenir en compte una puntuació de resposta i resposta."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3307,8 +3314,8 @@ msgid "Partial"
 msgstr "Parcial"
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3497,6 +3504,11 @@ msgstr "Imprimir"
 #: model:survey.question,title:survey.vendor_certification_page_1
 msgid "Products"
 msgstr "Productes"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
@@ -4564,8 +4576,8 @@ msgid "This is a Test Survey."
 msgstr "Aquesta és una enquesta de proves."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4787,8 +4799,8 @@ msgstr ""
 "correu del remitent."
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4842,6 +4854,11 @@ msgstr "Utilitza un suport visual divertit, com una presentació en directe"
 #, python-format
 msgid "Use humor and make jokes"
 msgstr "Utilitza l'humor i fes acudits"
+
+#. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr "Utilitzar plantilla"
 
 #. module: survey
 #. odoo-javascript
@@ -5262,6 +5279,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5364,13 +5382,6 @@ msgstr "intents"
 #, python-format
 msgid "close"
 msgstr "tanca"
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
-"desplegable-element d-flex alineat-elements-centre just-contingut-entre-"
-"entre-entre-ho"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

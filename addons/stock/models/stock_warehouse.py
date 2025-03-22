@@ -258,15 +258,16 @@ class Warehouse(models.Model):
                 to_add = new_resupply_whs - old_resupply_whs[warehouse.id]
                 to_remove = old_resupply_whs[warehouse.id] - new_resupply_whs
                 if to_add:
-                    existing_route = Route.search([
+                    existing_routes = Route.search([
                         ('supplied_wh_id', '=', warehouse.id),
-                        ('supplier_wh_id', 'in', to_remove.ids),
+                        ('supplier_wh_id', 'in', to_add.ids),
                         ('active', '=', False)
                     ])
-                    if existing_route:
-                        existing_route.toggle_active()
-                    else:
-                        warehouse.create_resupply_routes(to_add)
+                    if existing_routes:
+                        existing_routes.toggle_active()
+                    remaining_to_add = to_add - existing_routes.supplier_wh_id
+                    if remaining_to_add:
+                        warehouse.create_resupply_routes(remaining_to_add)
                 if to_remove:
                     to_disable_route_ids = Route.search([
                         ('supplied_wh_id', '=', warehouse.id),
@@ -375,12 +376,20 @@ class Warehouse(models.Model):
         return True
 
     def _find_global_route(self, xml_id, route_name):
+        return self._find_or_create_global_route(xml_id, route_name, create=False)
+
+    def _find_or_create_global_route(self, xml_id, route_name, create=True):
         """ return a route record set from an xml_id or its name. """
-        route = self.env.ref(xml_id, raise_if_not_found=False)
+        data_route = route = self.env.ref(xml_id, raise_if_not_found=False)
+        company = self.company_id[:1] or self.env.company
+        if not route or (route.company_id and route.company_id != company):
+            route = self.env['stock.route'].with_context(active_test=False).search([
+                ('name', 'like', route_name), ('company_id', 'in', [False, company.id])
+            ], order='company_id', limit=1)
         if not route:
-            route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
-        if not route:
-            raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            if not data_route or not create:
+                raise UserError(_('Can\'t find any generic route %s.') % (route_name))
+            route = data_route.copy({'name': data_route.name, 'company_id': company.id, 'rule_ids': False})
         return route
 
     def _get_global_route_rules_values(self):
@@ -412,7 +421,7 @@ class Warehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'propagate_carrier': True,
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
+                    'route_id': self._find_or_create_global_route('stock.route_warehouse0_mto', _('Make To Order')).id
                 },
                 'update_values': {
                     'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
@@ -645,6 +654,26 @@ class Warehouse(models.Model):
         }
         return sub_locations
 
+    @api.model
+    def _get_warehouse_id_from_context(self):
+        """
+        Helper method used to extract a single id from the context.
+
+        The `warehouse_id` dummy field of the `product.template` model is meant to
+        to be used in the `product_template_search_form_view_stock` search view in
+        order to add a `warehouse` context key. That key can therefore be any of
+        the following types: Int, String, List(Int?, String?).
+        """
+        context_warehouse = self.env.context.get('warehouse', False)
+        if context_warehouse:
+            if isinstance(context_warehouse, int):
+                return context_warehouse
+            elif isinstance(context_warehouse, list):
+                relevant_context = list(filter(lambda key: isinstance(key, int), context_warehouse))
+                if relevant_context:
+                    return relevant_context[0]
+        return False
+
     def _valid_barcode(self, barcode, company_id):
         location = self.env['stock.location'].with_context(active_test=False).search([
             ('barcode', '=', barcode),
@@ -783,7 +812,7 @@ class Warehouse(models.Model):
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
             'supplier_wh_id': supplier_warehouse.id,
-            'company_id': self.company_id.id,
+            'company_id': (self.company_id & supplier_warehouse.company_id).id,
         }
 
     # Pull / Push tools
@@ -1013,7 +1042,7 @@ class Warehouse(models.Model):
                 'default_location_src_id': False,
                 'sequence': max_sequence + 6,
                 'show_reserved': True,
-                'sequence_code': 'IN',
+                'sequence_code': 'RET',
                 'company_id': self.company_id.id,
             },
         }, max_sequence + 6
@@ -1027,32 +1056,32 @@ class Warehouse(models.Model):
         return {
             'in_type_id': {
                 'name': name + ' ' + _('Sequence in'),
-                'prefix': code + '/IN/', 'padding': 5,
+                'prefix': code + '/' + (self.in_type_id.sequence_code or 'IN') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'out_type_id': {
                 'name': name + ' ' + _('Sequence out'),
-                'prefix': code + '/OUT/', 'padding': 5,
+                'prefix': code + '/' + (self.out_type_id.sequence_code or 'OUT') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pack_type_id': {
                 'name': name + ' ' + _('Sequence packing'),
-                'prefix': code + '/PACK/', 'padding': 5,
+                'prefix': code + '/' + (self.pack_type_id.sequence_code or 'PACK') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'pick_type_id': {
                 'name': name + ' ' + _('Sequence picking'),
-                'prefix': code + '/PICK/', 'padding': 5,
+                'prefix': code + '/' + (self.pick_type_id.sequence_code or 'PICK') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'int_type_id': {
                 'name': name + ' ' + _('Sequence internal'),
-                'prefix': code + '/INT/', 'padding': 5,
+                'prefix': code + '/' + (self.int_type_id.sequence_code or 'INT') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
             'return_type_id': {
                 'name': name + ' ' + _('Sequence return'),
-                'prefix': code + '/RET/', 'padding': 5,
+                'prefix': code + '/' + (self.return_type_id.sequence_code or 'RET') + '/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }
@@ -1073,7 +1102,7 @@ class Warehouse(models.Model):
     @api.returns('self')
     def _get_all_routes(self):
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
-        routes |= self.env["stock.route"].search([('supplied_wh_id', 'in', self.ids)])
+        routes |= self.env["stock.route"].with_context(active_test=False).search([('supplied_wh_id', 'in', self.ids)])
         return routes
 
     def action_view_all_routes(self):

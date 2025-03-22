@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux, 2022
 # ILMIR <karamov@it-projects.info>, 2022
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: ILMIR <karamov@it-projects.info>, 2022\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
@@ -36,12 +38,14 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
-msgstr ""
+msgstr "Дата блокировки для бухгалтеров необратима и не может быть снята."
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
@@ -50,12 +54,14 @@ msgstr ""
 "предыдущей блокировки"
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
 msgstr "Дата налоговой блокировки необратима и не может быть удалена."
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
@@ -67,6 +73,7 @@ msgstr ""
 "равной) последнему дню предыдущего месяца."
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
@@ -78,6 +85,7 @@ msgstr ""
 "дню предыдущего месяца."
 
 #. module: account_lock
+#. odoo-python
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
@@ -85,3 +93,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"Для бухгалтеров нельзя устанавливать более строгие ограничения, чем для "
+"пользователей. Поэтому дата блокировки всех пользователей должна быть раньше"
+" (или равна) даты блокировки счетов/фактур."

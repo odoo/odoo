@@ -5,15 +5,16 @@
 # Translators:
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Martin Trigaux, 2023
-# Larissa Manderfeld, 2023
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,6 +119,20 @@ msgstr ""
 "oder der MwSt.-Nummer ist nicht mehr möglich, sobald Dokumente für Ihr Konto"
 " ausgestellt wurden. <br/>Bitte wenden Sie sich für diesen Vorgang direkt an"
 " uns.</small>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -246,7 +261,7 @@ msgstr ""
 "                        Hallo <t t-out=\"object.user_id.name or ''\">Marc Demo</t>,<br><br>\n"
 "                        willkommen im Portal von <t t-out=\"object.user_id.company_id.name\">YourCompany</t>!<br><br>\n"
 "                        Für Sie wurde ein Konto mit dem folgenden Login erstellt: <t t-out=\"object.user_id.login\">Demo</t><br><br>\n"
-"                        Mit Klick auf den untenstehenden Link können Sie ein Passwort erstellen und Ihr Konto aktivieren.\n"
+"                        Mit Klick auf den unten stehenden Link können Sie ein Passwort erstellen und Ihr Konto aktivieren.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.user_id.signup_url\" style=\"display: inline-block; padding: 10px; text-decoration: none; font-size: 12px; background-color: #875A7B; color: #fff; border-radius: 5px;\">\n"
 "                                <strong>Konto aktivieren</strong>\n"
@@ -363,13 +378,6 @@ msgstr "Hinzugefügt am"
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr "Bereits registriert"
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "Für jeden Anhang muss ein Zugriffstoken angegeben werden."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -801,6 +809,13 @@ msgstr ""
 "                und vollständig ist,"
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr "Schlüsselbeschreibung"
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
@@ -895,7 +910,6 @@ msgstr "Neues Passwort:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Weiter"
@@ -1003,11 +1017,6 @@ msgid "Powered by"
 msgstr "Powered by"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Zurück"
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -1084,6 +1093,7 @@ msgstr "Sicherheit"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Sicherheitskontrolle"
@@ -1184,14 +1194,6 @@ msgstr ""
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "Der Anhang %s kann nicht entfernt werden, da er nicht ausstehend ist."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "Der Anhang %s existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
 #. odoo-python

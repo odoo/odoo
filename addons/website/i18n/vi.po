@@ -8,18 +8,19 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
 # Vo Thanh Thuy, 2022
-# Duy BQ <duybq86@gmail.com>, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2022
-# Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Thi Huong Nguyen, 2023
+# Duy BQ <duybq86@gmail.com>, 2022
+# Martin Trigaux, 2024
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,12 +42,20 @@ msgstr "\" kèm với"
 
 #. module: website
 #. odoo-python
+#: code:addons/website/controllers/form.py:0
+#, python-format
+msgid "\"%s form submission\" <%s>"
+msgstr "\"%s gửi biểu mẫu\" <%s>"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL from\" can not be empty."
 msgstr "\"URL từ\" không thể trống."
 
 #. module: website
+#. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
@@ -115,6 +124,13 @@ msgstr "175,000đ"
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "$9.00"
 msgstr "200,000đ"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "%s List"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -225,18 +241,8 @@ msgstr "+ Website mới"
 #: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "+1 (650) 555-0111"
-msgstr "+1 (650) 555-0111"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.searchbar_input_snippet_options
-msgid ", .s_searchbar_input"
-msgstr ", .s_searchbar_input"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_website_form_options
-msgid ", .s_website_form"
-msgstr ", .s_website_form"
+msgid "+1 555-555-5556"
+msgstr "+1 555-555-5556"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -510,6 +516,7 @@ msgstr "<b>Thêm</b> ảnh đã chọn."
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
 msgstr "<b>Bấm Sửa</b> để bắt đầu việc thiết kế trang chủ của bạn."
@@ -540,7 +547,7 @@ msgstr "<b>Bấm</b> vào cột này để truy cập các tùy chọn của nó
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click</b> on this header to configure it."
-msgstr "<b>Bấm</b> vào tiêu đề này để định cấu hình nó."
+msgstr "<b>Bấm</b> vào header này để định cấu hình nó."
 
 #. module: website
 #. odoo-javascript
@@ -574,12 +581,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 msgid "<b>Designed</b> <br/>for Companies"
-msgstr "<b>Đã thiệt kế</b> <br/>cho công ty"
+msgstr "<b>Được thiết kế</b> <br/>cho công ty"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "<b>Designed</b> for companies"
-msgstr "<b>Đã thiệt kế</b> cho công ty"
+msgstr "<b>Được thiết kế</b> cho công ty"
 
 #. module: website
 #. odoo-javascript
@@ -605,8 +612,8 @@ msgid ""
 "<b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San "
 "Francisco CA 94134 <br/>United States"
 msgstr ""
-"<b>My Company</b><br/>Nhà 8 Công viên phần mềm Quang Trung <br/> Thành phố "
-"Hồ Chí Minh HCM 70000 <br/>Việt Nam"
+"<b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San "
+"Francisco CA 94134 <br/>Hoa Kỳ"
 
 #. module: website
 #. odoo-javascript
@@ -718,7 +725,8 @@ msgid ""
 "<i class=\"fa fa-1x fa-fw fa-envelope "
 "me-2\"/><span>info@yourcompany.example.com</span>"
 msgstr ""
-"<i class=\"fa fa-1x fa-fw fa-envelope me-2\"/><span>info@bizapps.vn</span>"
+"<i class=\"fa fa-1x fa-fw fa-envelope "
+"me-2\"/><span>info@yourcompany.example.com</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_call_to_action
@@ -851,11 +859,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.contactus
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 (650) "
-"555-0111</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 msgstr ""
-"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+84 (0) 869"
-" 233 290</span>"
+"<i class=\"fa fa-phone fa-fw me-2\"/><span class=\"o_force_ltr\">+1 "
+"555-555-5556</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_add_language
@@ -1170,7 +1178,7 @@ msgstr "<span class=\"o_form_label\">Email Marketing</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Livechat</span>"
-msgstr "<span class=\"o_form_label\">Trò chuyện Trực tiếp</span>"
+msgstr "<span class=\"o_form_label\">Trò chuyện trực tiếp</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1378,9 +1386,9 @@ msgid ""
 "for headers and footers, a wide variety of content, contextual background "
 "colors, and powerful display options."
 msgstr ""
-"Thẻ là một thùng chứa nội dung linh hoạt và có thể mở rộng. Nó bao gồm các "
-"tùy chọn cho các tiêu đề và chân trang, nhiều nội dung, màu nền theo ngữ "
-"cảnh và các tùy chọn hiển thị mạnh mẽ."
+"Thẻ là một container nội dung linh hoạt và có thể mở rộng. Nó bao gồm các "
+"tùy chọn cho header and footer, nhiều nội dung, màu nền theo ngữ cảnh và các"
+" tùy chọn hiển thị mạnh mẽ."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_base_automation__website_published
@@ -1392,10 +1400,10 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
-"Một hành động máy chủ mã có thể được thực hiện từ trang web, sử dụng một bộ "
+"Một tác vụ máy chủ mã có thể được thực hiện từ trang web, sử dụng một bộ "
 "điều khiển chuyên dụng. Địa chỉ là <base>/ website / action /<website_path>."
 " Đặt trường này là \"Đúng\" để cho phép người dùng chạy tác vụ này. Nếu nó "
-"được đặt thành \"Sai\" thì hành động không thể chạy qua trang web."
+"được đặt thành \"Sai\" thì tác vụ không thể chạy qua trang web."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -1485,6 +1493,13 @@ msgid "About us"
 msgstr "Về chúng tôi"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Truy cập bị từ chối"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "Token truy cập"
@@ -1545,7 +1560,7 @@ msgid ""
 msgstr ""
 "Điều chỉnh ba cột này để phù hợp với nhu cầu thiết kế của bạn. Để sao chép, "
 "xóa hoặc di chuyển cột, hãy chọn cột và sử dụng các biểu tượng trên cùng để "
-"thực hiện hành động của bạn."
+"thực hiện tác vụ của bạn."
 
 #. module: website
 #. odoo-javascript
@@ -1599,7 +1614,7 @@ msgstr "Thêm sản phẩm"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Add Row"
-msgstr "Thêm dòng"
+msgstr "Thêm hàng"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2159,6 +2174,7 @@ msgstr "Backdrop"
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #, python-format
@@ -2466,7 +2482,7 @@ msgstr "CTA"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Call to Action"
-msgstr "Nút hành động"
+msgstr "Kêu gọi hành động"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
@@ -2476,7 +2492,7 @@ msgstr "Gọi chúng tôi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Call-to-action"
-msgstr "Call-to-action"
+msgstr "Kêu-gọi-hành-động"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -2676,7 +2692,10 @@ msgid "Check your connection and try again"
 msgstr "Kiểm tra kết nối và thử lại"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
+#, python-format
 msgid "Checkbox"
 msgstr "Hộp kiểm"
 
@@ -3008,7 +3027,7 @@ msgstr "Đã kết nối"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
 msgid "Connector"
-msgstr "Kết nối"
+msgstr "Liên kết"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
@@ -3354,6 +3373,14 @@ msgstr "Custom Key"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Custom Text"
+msgstr "Văn bản tuỳ chỉnh"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "Custom Url"
@@ -3426,7 +3453,7 @@ msgstr "THẢ KHỐI TẠI ĐÂY"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 msgid "Danger"
-msgstr "Nguy hiểm"
+msgstr "Cảnh báo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
@@ -3867,6 +3894,17 @@ msgid "Display this website when users visit this domain"
 msgstr "Hiện trang web này khi khách hàng ghé thăm tên miền này"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Do not copy/paste code you do not understand, this could put your data at "
+"risk."
+msgstr ""
+"Không sao chép/dán mã mà bạn không hiểu, điều này có thể khiến dữ liệu của "
+"bạn gặp rủi ro."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid ""
 "Do you need specific information? Our specialists will help you with "
@@ -3889,6 +3927,7 @@ msgid "Do you want to install the \"%s\" App?"
 msgstr "Bạn có muốn cài đặt ứng dụng \"%s\" không?"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Documentation"
 msgstr "Tài liệu"
@@ -4308,6 +4347,13 @@ msgid "Examples"
 msgstr "Ví dụ"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Existing fields"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Expert"
 msgstr "Chuyên gia"
@@ -4342,7 +4388,7 @@ msgstr "Giao diện Mở rộng"
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
 msgid "External ID"
-msgstr "External ID"
+msgstr "ID ngoài"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -4450,6 +4496,13 @@ msgstr "Lưới yêu thích"
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
 msgid "Fetched elements"
 msgstr "Các phần tử đã tìm nạp"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Field"
+msgstr "Trường"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__field_names
@@ -4673,7 +4726,7 @@ msgstr "Cỡ chữ"
 #: model:ir.model.fields,field_description:website.field_theme_website_page__footer_visible
 #: model:ir.model.fields,field_description:website.field_website_page__footer_visible
 msgid "Footer Visible"
-msgstr "Chân trang hiển thị"
+msgstr "Footer hiển thị"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -4942,6 +4995,17 @@ msgid "Google Search Console"
 msgstr "Google Search Console"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+"Không cần ping Google nữa. Nó sẽ tự động tìm nạp /sitemap.xml của bạn."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -5083,33 +5147,36 @@ msgstr "Có hình ảnh mặc định trên mạng xã hội"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Header"
-msgstr "Đầu trang"
+msgstr "Header"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_color
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
-msgstr "Màu tiêu đề"
+msgstr "Màu header"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_overlay
 #: model:ir.model.fields,field_description:website.field_website_page__header_overlay
 msgid "Header Overlay"
-msgstr "Lớp phủ tiêu đề"
+msgstr "Lớp phủ header"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Header Position"
-msgstr "Vị trí tiêu đề"
+msgstr "Vị trí header"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_page__header_visible
 #: model:ir.model.fields,field_description:website.field_website_page__header_visible
 msgid "Header Visible"
-msgstr "Tiêu đề Hiển thị"
+msgstr "Header Hiển thị"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Headings"
 msgstr "Tiêu đề"
 
@@ -5119,27 +5186,42 @@ msgid "Headings 1"
 msgstr "Tiêu đề 1"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 2"
 msgstr "Tiêu đề 2"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 3"
 msgstr "Tiêu đề 3"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 4"
 msgstr "Tiêu đề 4"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 5"
 msgstr "Tiêu đề 5"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#, python-format
 msgid "Headings 6"
 msgstr "Tiêu đề 6"
 
@@ -5203,6 +5285,13 @@ msgstr "Ẩn"
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Hide For"
 msgstr "Ẩn Đối với"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Hide the cookies bar"
+msgstr "Ẩn thanh cookie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
@@ -5271,8 +5360,8 @@ msgid "Home page of the current website"
 msgstr "Trang chủ của trang web hiện tại"
 
 #. module: website
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5371,7 +5460,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr "ID của hành động nếu được xác định trong tệp XML"
+msgstr "ID của tác vụ nếu được xác định trong tệp XML"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__xml_id
@@ -5455,6 +5544,15 @@ msgid ""
 msgstr ""
 "Nếu bạn hủy các chỉnh sửa hiện tại, tất cả các thay đổi chưa được lưu sẽ bị "
 "mất. Bạn có thể hủy để quay lại chế độ chỉnh sửa."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/options.js:0
+#, python-format
+msgid ""
+"If you need to add analytics or marketing tags, inject code in your <head> "
+"or <body> instead. The option is in the \"Theme\" tab."
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -6095,7 +6193,7 @@ msgstr "7 ngày trước"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Last Action"
-msgstr "Hành động cuối cùng"
+msgstr "Tác vụ cuối cùng"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_connection_datetime
@@ -6203,7 +6301,7 @@ msgstr "Năm ngoái"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__time_since_last_action
 msgid "Last action"
-msgstr "Hành động cuối cùng"
+msgstr "Tác vụ cuối cùng"
 
 #. module: website
 #. odoo-python
@@ -6373,7 +6471,10 @@ msgid "Linkedin"
 msgstr "Linkedin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#, python-format
 msgid "Links"
 msgstr "Liên kết"
 
@@ -6395,7 +6496,7 @@ msgstr "Icon nhỏ"
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_live_chat
 msgid "Live Chat"
-msgstr "Trò chuyện Trực tiếp"
+msgstr "Trò chuyện trực tiếp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -6407,7 +6508,7 @@ msgstr "Xem trước trực tiếp"
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Livechat Widget"
-msgstr "Livechat Widget"
+msgstr "Tiện ích Trò chuyện trực tiếp"
 
 #. module: website
 #. odoo-javascript
@@ -6471,7 +6572,7 @@ msgstr "Trình đơn chính"
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 #, python-format
 msgid "Main actions"
-msgstr "Hành động chính"
+msgstr "Tác vụ chính"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6607,6 +6708,7 @@ msgid "Men"
 msgstr "Nam"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_ui_menu
 #: model:ir.model.fields,field_description:website.field_website_menu__name
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Menu"
@@ -6672,9 +6774,9 @@ msgid ""
 "Commercial Director in the software industry, Mich has helped the company to"
 " get where it is today. Mich is among the best minds."
 msgstr ""
-"Mịch rất thích thử thách. Với kinh nghiệm nhiều năm làm Giám đốc Thương mại "
-"trong ngành phần mềm, ông Mịch đã giúp công ty có được vị trí như ngày hôm "
-"nay. Mịch nằm trong số những người tâm đầu ý hợp."
+"Mich rất thích thử thách. Với kinh nghiệm nhiều năm làm Giám đốc Thương mại "
+"trong ngành phần mềm, Mich đã giúp công ty có được vị trí như ngày hôm nay. "
+"Mich là một trong số những người tài giỏi nhất."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -6787,7 +6889,7 @@ msgstr "Module Tiếp thị Tự động"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_livechat
 msgid "Module Website Livechat"
-msgstr "Module Trang web Livechat"
+msgstr "Phân hệ Trang web Trò chuyện trực tiếp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -7405,6 +7507,13 @@ msgstr "Tối ưu hoá SEO"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option"
+msgstr "Tùy chọn"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Option 1"
@@ -7456,7 +7565,7 @@ msgstr "Công ty của chúng tôi"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
 msgid "Our References"
-msgstr "Thành tựu của chúng tôi"
+msgstr "Đối tác của chúng tôi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -7544,7 +7653,10 @@ msgid "Page Layout"
 msgstr "Bố cục trang"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
+#, python-format
 msgid "Page Name"
 msgstr "Tên trang"
 
@@ -7809,6 +7921,11 @@ msgid "Popup"
 msgstr "Popup"
 
 #. module: website
+#: model:ir.model,name:website.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Cấu hình Người dùng Portal"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "Portfolio"
 msgstr "Hồ sơ công ty"
@@ -7847,6 +7964,13 @@ msgstr "Prepend"
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "Preset"
 msgstr "Kiểu định trước"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/fullscreen_indication/fullscreen_indication.js:0
+#, python-format
+msgid "Press %(key)s to exit full screen"
+msgstr "Nhấn %(key)s để thoát chế độ toàn màn hình"
 
 #. module: website
 #. odoo-javascript
@@ -7901,6 +8025,13 @@ msgstr "Chi tiết giá"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary"
 msgstr "Chủ đạo"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Primary Buttons"
+msgstr "Nút chính"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7968,22 +8099,22 @@ msgstr "Hồ sơ"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Progress Bar"
-msgstr "Thanh tiến trình"
+msgstr "Thanh tiến độ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Progress Bar Color"
-msgstr "Màu thanh tiến trình"
+msgstr "Màu thanh tiến độ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Progress Bar Style"
-msgstr "Kiểu thanh tiến trình"
+msgstr "Kiểu thanh tiến độ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Progress Bar Weight"
-msgstr "Độ rộng thanh tiến trình"
+msgstr "Độ rộng thanh tiến độ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -8090,9 +8221,21 @@ msgid "Qweb Field Contact"
 msgstr "Liên hệ lĩnh vực Qweb"
 
 #. module: website
+#: model:ir.model,name:website.model_ir_qweb_field_html
+msgid "Qweb Field HTML"
+msgstr "Qweb Field HTML"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Radar"
 msgstr "Radar"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Radio"
+msgstr "Radio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8221,7 +8364,7 @@ msgstr "Gỡ"
 #: code:addons/website/static/src/snippets/s_chart/options.js:0
 #, python-format
 msgid "Remove Row"
-msgstr "Gỡ dòng"
+msgstr "Gỡ hàng"
 
 #. module: website
 #. odoo-javascript
@@ -8278,7 +8421,7 @@ msgstr "Cài lại về phiên bản ban đầu (khôi phục cài đặt gốc)
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Resources"
-msgstr "Nguồn lực"
+msgstr "Tài nguyên"
 
 #. module: website
 #. odoo-javascript
@@ -8618,6 +8761,13 @@ msgid "Secondary"
 msgstr "Thứ hai"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Secondary Buttons"
+msgstr "Nút phụ"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "Kiểu phụ"
@@ -8727,7 +8877,7 @@ msgstr "Cung cấp phông chữ từ máy chủ của Google"
 #: model:ir.model,name:website.model_ir_actions_server
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__action_server_id
 msgid "Server Action"
-msgstr "Hành động phía Máy chủ"
+msgstr "Tác vụ phía Máy chủ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -8836,7 +8986,7 @@ msgstr "Hiển thị như Kế thừa tùy chọn"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show Header"
-msgstr "Hiển thị tiêu đề"
+msgstr "Hiển thị header"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -8887,6 +9037,13 @@ msgstr "Hiện chính sách reCaptcha"
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
 msgstr "Hiển thị bản đồ trang web"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_popup/000.js:0
+#, python-format
+msgid "Show the cookies bar"
+msgstr "Hiện thanh cookie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9015,7 +9172,7 @@ msgstr "Nhỏ"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
-msgstr "Tiêu đề nhỏ"
+msgstr "Header nhỏ"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -9425,9 +9582,12 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Kiểm tra tệp robots.txt của bạn bằng Google Search Console"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.snippets
+#, python-format
 msgid "Text"
 msgstr "Văn bản"
 
@@ -9493,6 +9653,17 @@ msgstr "Cảm ơn bạn!"
 #, python-format
 msgid "The chosen name already exists"
 msgstr "Tên được chọn đã tồn tại"
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/res_company.py:0
+#, python-format
+msgid ""
+"The company %(company_name)r cannot be archived because it has a linked website %(website_name)r.\n"
+"Change that website's company first."
+msgstr ""
+"Không thể lưu trữ công ty %(company_name)r vì có trang web %(website_name)r được liên kết với công ty này.\n"
+"Trước tiên hãy thay đổi công ty của trang web đó."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -9561,7 +9732,7 @@ msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
-msgstr "URL đầy đủ để truy cập hành động máy chủ thông qua trang web."
+msgstr "URL đầy đủ để truy cập tác vụ máy chủ thông qua trang web."
 
 #. module: website
 #. odoo-python
@@ -9755,8 +9926,8 @@ msgstr "Third Menu"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
-msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr "URL này được chứa trong '%s' của '%s' sau đây"
+msgid "This URL is contained in the “%(field)s” of the following “%(model)s”"
+msgstr "URL này được chứa trong “%(field)s” của “%(model)s” sau đây"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -9812,6 +9983,7 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
@@ -9878,12 +10050,19 @@ msgid ""
 "in url. Keep it empty to use the default name of the record."
 msgstr ""
 "Giá trị này sẽ được thoát để phù hợp với tất cả các trình duyệt chính và "
-"được sử dụng trong url. Giữ trống để sử dụng tên mặc định của tập dữ liệu."
+"được sử dụng trong url. Giữ trống để sử dụng tên mặc định của bản ghi."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.report_viewhierarchy_children
 msgid "This view arch has been modified"
 msgstr "Dạng xem kiến trúc này đã được sửa đổi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/systray_items/website_switcher.js:0
+#, python-format
+msgid "This website does not have a domain configured."
+msgstr "Trang web này không có miền nào được cấu hình."
 
 #. module: website
 #. odoo-javascript
@@ -9895,13 +10074,6 @@ msgid ""
 msgstr ""
 "Trang web này không có cấu hình miền. Để tránh những hành vi không mong muốn trong quá trình chỉnh sửa trang web, chúng tôi khuyên bạn nên đóng (hoặc làm mới) các tab trình duyệt khác.\n"
 "Để xóa thông báo này, vui lòng thiết lập miền trong cài đặt trang web của bạn"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/systray_items/website_switcher.xml:0
-#, python-format
-msgid "This website does not have a domain configured."
-msgstr "Trang web này không có miền nào được cấu hình."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -10017,7 +10189,7 @@ msgid ""
 msgstr ""
 "Để gửi lời mời trong chế độ B2B, hãy mở một số liên lạc hoặc chọn một số "
 "người trong chế độ xem danh sách và nhấp vào tùy chọn 'Quản lý truy cập cổng"
-" thông tin' trong menu thả xuống * Hành động *."
+" thông tin' trong menu thả xuống * Tác vụ *."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -10090,7 +10262,7 @@ msgstr "Theo dõi lượt truy cập bằng Google Analytics"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Tracked"
-msgstr "Đã theo"
+msgstr "Được theo dõi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -10116,7 +10288,7 @@ msgstr "Tùy chọn lựa chọn dịch"
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
 msgid "Translate header in the text. Menu is generated automatically."
-msgstr "Dịch lề trên trong văn bản. Menu được tạo tự động."
+msgstr "Dịch header trong văn bản. Menu được tạo tự động."
 
 #. module: website
 #. odoo-javascript
@@ -10735,8 +10907,8 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.\n"
 "                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance."
 msgstr ""
-"Chúng tôi là một nhóm những người đam mê với mục tiêu cải thiện cuộc sống của mọi người thông qua các sản phẩm đột phá. Chúng tôi xây dựng các sản phẩm tuyệt vời để giải quyết các vấn đề kinh doanh của bạn.\n"
-"                            <br/><br/>Sản phẩm của chúng tôi được thiết kế cho các công ty vừa và nhỏ sẵn sàng để tối ưu hóa hiệu suất của họ."
+"Chúng tôi là một đội ngũ gồm những cá nhân đam mê với mục tiêu cải thiện cuộc sống của mọi người thông qua các sản phẩm đột phá. Chúng tôi tạo ra những sản phẩm tuyệt vời để giải quyết các vấn đề kinh doanh của bạn.\n"
+"                            <br/><br/>Sản phẩm của chúng tôi được thiết kế cho các công ty vừa và nhỏ sẵn sàng tối ưu hóa hiệu suất làm việc của họ."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
@@ -10746,11 +10918,11 @@ msgid ""
 "problems. Our products are designed for small to medium size companies "
 "willing to optimize their performance."
 msgstr ""
-"Chúng tôi là một nhóm những người đam mê với mục tiêu cải thiện cuộc sống "
-"của mọi người thông qua các sản phẩm đột phá. Chúng tôi xây dựng các sản "
-"phẩm tuyệt vời để giải quyết các vấn đề kinh doanh của bạn. Sản phẩm của "
-"chúng tôi được thiết kế cho các công ty vừa và nhỏ sẵn sàng tối ưu hóa hiệu "
-"suất của họ."
+"Chúng tôi là một đội ngũ gồm những cá nhân đam mê với mục tiêu cải thiện "
+"cuộc sống của mọi người thông qua các sản phẩm đột phá. Chúng tôi tạo ra "
+"những sản phẩm tuyệt vời để giải quyết các vấn đề kinh doanh của bạn. Sản "
+"phẩm của chúng tôi được thiết kế cho các công ty vừa và nhỏ sẵn sàng tối ưu "
+"hóa hiệu suất làm việc của họ."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -10758,9 +10930,9 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's "
 "life.<br/>Our services are designed for small to medium size companies."
 msgstr ""
-"Chúng tôi là một đội gồm những người đầy nhiệt huyết với mục tiêu là cải "
-"thiện cuộc sống của mọi người.<br/>Dịch vụ của chúng tôi được thiết kế cho "
-"các công ty vừa và nhỏ."
+"Chúng tôi là một đội ngũ gồm những cá nhân đam mê với mục tiêu cải thiện "
+"cuộc sống của mọi người thông qua các sản phẩm đột phá. <br/>Chúng tôi tạo "
+"ra những dịch vụ tuyệt vời để giải quyết các vấn đề kinh doanh của bạn."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
@@ -10770,7 +10942,14 @@ msgstr "Chúng ta đang gần hoàn tất!"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references
 msgid "We are in good company."
-msgstr "Chúng tôi đang ở trong một công ty tốt."
+msgstr "Đây là một đơn vị uy tín."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "We couldn't find the Facebook page"
+msgstr "Chúng tôi không thể tìm thấy trang Facebook này"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11188,8 +11367,8 @@ msgid ""
 "Write a quote here from one of your customers. Quotes are a great way to "
 "build confidence in your products or services."
 msgstr ""
-"Viết một trích dẫn ở đây từ một trong những khách hàng của bạn. Báo giá là "
-"một cách tuyệt vời để xây dựng niềm tin vào sản phẩm hoặc dịch vụ của bạn."
+"Trích dẫn nhận xét của khách hàng tại đây. Dùng trích dẫn là một cách tuyệt "
+"vời để xây dựng niềm tin vào sản phẩm hoặc dịch vụ của bạn."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -11229,6 +11408,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Year"
 msgstr "Năm"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Yes"
+msgstr "Có"
 
 #. module: website
 #. odoo-javascript
@@ -11325,6 +11511,24 @@ msgstr ""
 
 #. module: website
 #. odoo-python
+#: code:addons/website/models/website_menu.py:0
+#, python-format
+msgid ""
+"You cannot delete this website menu as this serves as the default parent "
+"menu for new websites (e.g., /shop, /event, ...)."
+msgstr ""
+"Bạn không thể xóa menu trang web này vì menu này đóng vai trò là menu chính "
+"mặc định cho các trang web mới (ví dụ: /shop, /event, ...)."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_facebook_page/options.js:0
+#, python-format
+msgid "You didn't provide a valid Facebook link"
+msgstr "Bạn chưa cung cấp liên kết Facebook hợp lệ"
+
+#. module: website
+#. odoo-python
 #: code:addons/website/models/mixins.py:0
 #, python-format
 msgid "You do not have the rights to publish/unpublish"
@@ -11340,13 +11544,6 @@ msgid ""
 msgstr ""
 "Bạn đã ẩn trang này khỏi kết quả tìm kiếm. Nó sẽ không được lập chỉ mục bởi "
 "các công cụ tìm kiếm."
-
-#. module: website
-#. odoo-python
-#: code:addons/website/models/res_config_settings.py:0
-#, python-format
-msgid "You haven't defined your domain"
-msgstr "Bạn chưa xác định tên miền của mình"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -11406,6 +11603,17 @@ msgstr ""
 #, python-format
 msgid "Your Email"
 msgstr "Email"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/snippets/s_embed_code/000.js:0
+#, python-format
+msgid ""
+"Your Embed Code snippet doesn't have anything to display. Click on Edit to "
+"modify it."
+msgstr ""
+"Snippet mã nhúng của bạn không có gì để hiển thị. Hãy nhấp Chỉnh sửa để sửa "
+"đổi."
 
 #. module: website
 #. odoo-javascript
@@ -11672,7 +11880,7 @@ msgstr "ví dụ. Trang chủ"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
 msgid "eCommerce"
-msgstr "thương mại điện tử"
+msgstr "Thương mại điện tử"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_module_elearning
@@ -11760,7 +11968,7 @@ msgstr "heading, h1"
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "hello@mycompany.com"
-msgstr "support@openerp.vn"
+msgstr "hello@mycompany.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -11812,7 +12020,7 @@ msgstr "ở góc trên cùng bên phải để bắt đầu thiết kế."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "info@yourcompany.com"
-msgstr "support@openerp.vn"
+msgstr "info@yourcompany.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -11926,7 +12134,7 @@ msgstr "kết quả"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "rows"
-msgstr "dòng"
+msgstr "hàng"
 
 #. module: website
 #. odoo-javascript

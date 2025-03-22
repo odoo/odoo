@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 from odoo.tools import float_round
@@ -1514,3 +1515,210 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(quantA.package_id.id, False, "There should be no package for product A as it was removed in the move.")
         self.assertEqual(quantB.quantity, 4, "All 4 units of product B should be in location B")
         self.assertEqual(quantB.package_id.id, pack.id, "Product B should still be in the initial package.")
+
+    def test_expected_package_move_lines(self):
+        """ Test direct calling of `_package_move_lines` since it doesn't handle all multi-record cases
+        It's unlikely this situations will occur, but in case it is for customizations/future features,
+        ensure that we don't have unexpected behavior """
+
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0)
+
+        internal_picking_1 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': internal_picking_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+
+        internal_picking_2 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.int_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'immediate_transfer': True
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': internal_picking_2.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+
+        # can't mix immediate transfers + not-immediate transfers
+        with self.assertRaises(UserError):
+            move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+
+        in_picking_1 = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+            'state': 'draft',
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'quantity_done': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': in_picking_1.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.stock_location.id,
+        })
+
+        # can't mix operation types
+        with self.assertRaises(UserError):
+            move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+
+        internal_picking_2.immediate_transfer = False
+        move_lines_to_pack = (internal_picking_1 | internal_picking_2)._package_move_lines()
+        self.assertEqual(len(move_lines_to_pack), 2, "all move lines in pickings should have been selected to pack")
+
+    def test_pick_another_pack(self):
+        """ Do a receipt and split the products in three different packages.
+        Enable move entire package for the delivery picking type
+        Create a delivery that require the quantities in the first two packages.
+        Remove the second package and use the third instead. Pick both package.
+        Check availability on the picking.
+        Ensure it results with the two first package reserved. The first and the third package
+        should be picked.
+        """
+        self.warehouse.write({'delivery_steps': 'ship_only'})
+
+        pack1, pack2, pack3 = self.env['stock.quant.package'].create([
+            {'name': 'pack1'},
+            {'name': 'pack2'},
+            {'name': 'pack3'}
+        ])
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack1)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack2)
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack3)
+
+        # Enable move entire package for the delivery picking type
+        self.warehouse.out_type_id.show_entire_packs = True
+
+        # Create a delivery that require the quantities in the first two packages
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2.0,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        delivery.action_confirm()
+        self.assertEqual(delivery.package_level_ids.package_id, pack1 | pack2, 'The two first packages should be picked')
+        delivery.package_level_ids[-1].unlink()
+        self.env['stock.package_level'].create({
+            'package_id': pack3.id,
+            'picking_id': delivery.id,
+            'company_id': delivery.company_id.id,
+            'location_dest_id': delivery.location_dest_id.id,
+        })
+        delivery.package_level_ids.is_done = True
+        delivery.action_assign()
+        delivery.package_level_ids.invalidate_recordset()
+        self.assertRecordValues(delivery.package_level_ids, [
+            {'package_id': pack1.id, 'state': 'assigned', 'is_done': True},
+            {'package_id': pack3.id, 'state': 'confirmed', 'is_done': True},
+            {'package_id': pack2.id, 'state': 'assigned', 'is_done': False},
+        ])
+
+    def test_should_print_delivery_address_with_package(self):
+        """Test that should_print_delivery_address in stock_picking returns true if a delivery contains only a package."""
+        pack = self.env['stock.quant.package'].create({'name': 'New Package'})
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 5, package_id=pack)
+
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'partner_id': self.env['res.partner'].create({'name': 'Test Partner'}).id,
+        })
+
+        package_level = self.env['stock.package_level'].create({
+            'package_id': pack.id,
+            'picking_id': picking.id,
+            'location_dest_id': picking.location_dest_id.id,
+            'company_id': picking.company_id.id,
+        })
+
+        picking.action_confirm()
+        package_level.is_done = True
+        picking.button_validate()
+
+        self.assertTrue(picking.should_print_delivery_address())
+
+
+@odoo.tests.tagged('post_install', '-at_install')
+class TestPackagePropagation(TestPackingCommon):
+
+    def test_reusable_package_propagation(self):
+        """ Test a reusable package should not be propagated to the next picking
+        of a mto chain """
+        reusable_package = self.env['stock.quant.package'].create({
+            'name': 'Reusable Package',
+            'package_use': 'reusable',
+        })
+        disposable_package = self.env['stock.quant.package'].create({
+            'name': 'disposable Package',
+            'package_use': 'disposable',
+        })
+        self.productA = self.env['product.product'].create({
+            'name': 'productA',
+            'type': 'product',
+            'tracking': 'none',
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 2)
+        pg = self.env['procurement.group'].create({'name': 'propagation_test'})
+        self.env['procurement.group'].run([
+            pg.Procurement(
+                self.productA,
+                2.0,
+                self.productA.uom_id,
+                self.customer_location,
+                'propagation_test',
+                'propagation_test',
+                self.warehouse.company_id,
+                {
+                    'warehouse_id': self.warehouse,
+                    'group_id': pg
+                }
+            )
+        ])
+        picking = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.stock_location.id),
+        ])
+        picking.action_assign()
+        picking.move_ids.move_line_ids.result_package_id = reusable_package
+        picking.move_ids.move_line_ids.copy({'result_package_id': disposable_package.id})
+        picking.move_ids.move_line_ids.qty_done = 1
+        picking.button_validate()
+        self.assertEqual(picking.state, 'done')
+        pack_lines = self.env['stock.picking'].search([
+            ('group_id', '=', pg.id),
+            ('location_id', '=', self.pack_location.id),
+        ]).move_line_ids
+
+        self.assertEqual(len(pack_lines), 2, 'Should have only 2 stock move line')
+        self.assertFalse(pack_lines[0].result_package_id, 'Should not have the reusable package')
+        self.assertEqual(pack_lines[1].result_package_id, disposable_package, 'Should have only the disposable package')
+

@@ -4,6 +4,25 @@
         <xpath expr="//th[hasclass('td-qty')]/span[hasclass('label')]" position="attributes">
             <attribute name='t-if'>not request.is_frontend or (request.is_frontend and is_view_active('website_sale.product_quantity'))</attribute>
         </xpath>
+        <xpath expr="//td[hasclass('td-price')]//span[hasclass('oe_price')]" position="before">
+            <div
+                t-if="combination_info.get('compare_list_price')
+                    and combination_info['compare_list_price'] &gt; combination_info['price']"
+                class="text-danger oe_striked_price"
+                t-out="combination_info['compare_list_price']"
+                groups="website_sale.group_product_price_comparison"
+                t-options='{
+                    "widget": "monetary",
+                    "display_currency": (pricelist or product).currency_id,
+                }'
+            />
+        </xpath>
+        <xpath
+            expr="//td[hasclass('td-price')]//div[contains(@t-attf-class,'oe_striked_price')]"
+            position="attributes"
+        >
+            <attribute name="t-if">not combination_info.get('compare_list_price')</attribute>
+        </xpath>
     </template>
     <template id="product_quantity_config_website" inherit_id="sale_product_configurator.product_quantity_config" priority="18">
         <xpath expr="//div[hasclass('css_quantity')]" position="attributes">
@@ -16,6 +35,25 @@
     <template id="optional_product_items_website" inherit_id="sale_product_configurator.optional_product_items">
         <xpath expr="//tr[hasclass('js_product')]" position="attributes">
             <attribute name="t-if">not combination_info.get('prevent_zero_price_sale', False)</attribute>
+        </xpath>
+        <xpath expr="//td[hasclass('td-price')]//div[hasclass('oe_price')]" position="before">
+            <div
+                t-if="combination_info.get('compare_list_price')
+                    and combination_info['compare_list_price'] &gt; combination_info['price']"
+                class="text-danger oe_striked_price"
+                t-out="combination_info['compare_list_price']"
+                groups="website_sale.group_product_price_comparison"
+                t-options='{
+                    "widget": "monetary",
+                    "display_currency": (pricelist or product).currency_id
+                }'
+            />
+        </xpath>
+        <xpath
+            expr="//td[hasclass('td-price')]//div[contains(@t-attf-class,'oe_striked_price')]"
+            position="attributes"
+        >
+            <attribute name="t-if">not combination_info.get('compare_list_price')</attribute>
         </xpath>
     </template>
 </odoo>

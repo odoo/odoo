@@ -2,7 +2,6 @@
 
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
-import { Domain } from "@web/core/domain";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
@@ -14,7 +13,7 @@ import { useSortable } from "@web/core/utils/sortable";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
-import { getClassNameFromDecoration } from "@web/views/utils";
+import { evalDomain, getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -241,9 +240,6 @@ export class ListRenderer extends Component {
 
         if (!this.columnWidths || !this.columnWidths.length) {
             // no column widths to restore
-
-            table.style.tableLayout = "fixed";
-            const allowedWidth = table.parentNode.getBoundingClientRect().width;
             // Set table layout auto and remove inline style to make sure that css
             // rules apply (e.g. fixed width of record selector)
             table.style.tableLayout = "auto";
@@ -256,7 +252,7 @@ export class ListRenderer extends Component {
 
             // Squeeze the table by applying a max-width on largest columns to
             // ensure that it doesn't overflow
-            this.columnWidths = this.computeColumnWidthsFromContent(allowedWidth);
+            this.columnWidths = this.computeColumnWidthsFromContent();
             table.style.tableLayout = "fixed";
         }
         headers.forEach((th, index) => {
@@ -289,7 +285,7 @@ export class ListRenderer extends Component {
         });
     }
 
-    computeColumnWidthsFromContent(allowedWidth) {
+    computeColumnWidthsFromContent() {
         const table = this.tableRef.el;
 
         // Toggle a className used to remove style that could interfere with the ideal width
@@ -320,6 +316,7 @@ export class ListRenderer extends Component {
         const sortedThs = [...table.querySelectorAll("thead th:not(.o_list_button)")].sort(
             (a, b) => getWidth(b) - getWidth(a)
         );
+        const allowedWidth = table.parentNode.getBoundingClientRect().width;
 
         let totalWidth = getTotalWidth();
         for (let index = 1; totalWidth > allowedWidth; index++) {
@@ -540,6 +537,11 @@ export class ListRenderer extends Component {
                 continue;
             }
             const { rawAttrs, widget } = this.props.list.activeFields[fieldName];
+            const func =
+                (rawAttrs.sum && "sum") ||
+                (rawAttrs.avg && "avg") ||
+                (rawAttrs.max && "max") ||
+                (rawAttrs.min && "min");
             let currencyId;
             if (type === "monetary" || widget === "monetary") {
                 const currencyField =
@@ -550,7 +552,7 @@ export class ListRenderer extends Component {
                     currencyField in this.props.list.activeFields &&
                     values[0][currencyField] &&
                     values[0][currencyField][0];
-                if (currencyId) {
+                if (currencyId && func) {
                     const sameCurrency = values.every(
                         (value) => currencyId === value[currencyField][0]
                     );
@@ -563,11 +565,6 @@ export class ListRenderer extends Component {
                     }
                 }
             }
-            const func =
-                (rawAttrs.sum && "sum") ||
-                (rawAttrs.avg && "avg") ||
-                (rawAttrs.max && "max") ||
-                (rawAttrs.min && "min");
             if (func) {
                 let aggregateValue = 0;
                 if (func === "max") {
@@ -786,7 +783,7 @@ export class ListRenderer extends Component {
     }
 
     evalModifier(modifier, record) {
-        return !!(modifier && new Domain(modifier).contains(record.evalContext));
+        return evalDomain(modifier, record.evalContext);
     }
 
     getGroupDisplayName(group) {
@@ -897,7 +894,7 @@ export class ListRenderer extends Component {
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
-        } else {
+        } else if (optionalActiveFields !== "") {
             this.allColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             });
@@ -1190,14 +1187,10 @@ export class ListRenderer extends Component {
         const isDirty = record.isDirty || this.lastIsDirty;
         const isEnterBehavior = hotkey === "enter" && (!record.canBeAbandoned || isDirty);
         const isTabBehavior = hotkey === "tab" && !record.canBeAbandoned && isDirty;
-        if (isEnterBehavior && !record.checkValidity()) {
-            return true;
-        }
         if (
             isLastOfGroup &&
             this.canCreate &&
             editable === "bottom" &&
-            record.checkValidity() &&
             (isEnterBehavior || isTabBehavior)
         ) {
             this.add({ group });
@@ -1262,17 +1255,15 @@ export class ListRenderer extends Component {
             case "tab": {
                 const index = list.records.indexOf(record);
                 const lastIndex = topReCreate ? 0 : list.records.length - 1;
-                if (index === lastIndex) {
+                if (index === lastIndex || index === list.records.length - 1) {
                     if (this.displayRowCreates) {
                         if (record.isNew && !record.isDirty) {
                             list.unselectRecord(true);
                             return false;
                         }
                         // add a line
-                        if (record.checkValidity()) {
-                            const { context } = this.creates[0];
-                            this.add({ context });
-                        }
+                        const { context } = this.creates[0];
+                        this.add({ context });
                     } else if (
                         this.canCreate &&
                         !record.canBeAbandoned &&
@@ -1626,7 +1617,7 @@ export class ListRenderer extends Component {
             return;
         }
         // Legacy DatePicker
-        if (target.closest(".daterangepicker")) {
+        if (target.closest(".daterangepicker") || ev.isFromDateRangePicker) {
             return;
         }
         // Legacy autocomplete
@@ -1819,11 +1810,14 @@ export class ListRenderer extends Component {
         }
         element.classList.remove("o_row_draggable");
         const refId = previous ? previous.dataset.id : null;
-        this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
-            handleField: this.props.archInfo.handleField,
-        });
-        await this.resequencePromise;
-        element.classList.add("o_row_draggable");
+        try {
+            this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
+                handleField: this.props.archInfo.handleField,
+            });
+            await this.resequencePromise;
+        } finally {
+            element.classList.add("o_row_draggable");
+        }
     }
 
     /**

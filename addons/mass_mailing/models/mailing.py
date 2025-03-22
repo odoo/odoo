@@ -87,7 +87,7 @@ class MassMailing(models.Model):
     email_from = fields.Char(
         string='Send From',
         compute='_compute_email_from', readonly=False, required=True, store=True,
-        default=lambda self: self.env.user.email_formatted)
+        precompute=True)
     favorite = fields.Boolean('Favorite', copy=False, tracking=True)
     favorite_date = fields.Datetime(
         'Favorite Date',
@@ -238,12 +238,12 @@ class MassMailing(models.Model):
                     _("The saved filter targets different recipients and is incompatible with this mailing.")
                 )
 
-    @api.depends('mail_server_id')
+    @api.depends('mail_server_id', 'create_uid')
     def _compute_email_from(self):
-        user_email = self.env.user.email_formatted
         notification_email = self.env['ir.mail_server']._get_default_from_address()
 
         for mailing in self:
+            user_email = mailing.create_uid.email_formatted or self.env.user.email_formatted
             server = mailing.mail_server_id
             if not server:
                 mailing.email_from = mailing.email_from or user_email
@@ -275,6 +275,7 @@ class MassMailing(models.Model):
             FROM mailing_trace AS stats
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
+            AND stats.trace_status != 'cancel'
             GROUP BY stats.mass_mailing_id
         """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
@@ -467,8 +468,6 @@ class MassMailing(models.Model):
     def create(self, vals_list):
         ab_testing_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
         for values in vals_list:
-            if values.get('body_html'):
-                values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
             if values.get('ab_testing_schedule_datetime'):
                 at = fields.Datetime.from_string(values['ab_testing_schedule_datetime'])
                 ab_testing_cron._trigger(at=at)
@@ -476,9 +475,16 @@ class MassMailing(models.Model):
         mailings._create_ab_testing_utm_campaigns()
         mailings._fix_attachment_ownership()
 
+        for values, mailing in zip(vals_list, mailings):
+            if values.get('body_arch'):
+                mailing.body_arch = mailing._convert_inline_images_to_urls(mailing.body_arch)
+            if values.get('body_html'):
+                mailing.body_html = mailing._convert_inline_images_to_urls(mailing.body_html)
         return mailings
 
     def write(self, values):
+        if values.get('body_arch'):
+            values['body_arch'] = self._convert_inline_images_to_urls(values['body_arch'])
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
         # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
@@ -521,7 +527,7 @@ class MassMailing(models.Model):
         return super(MassMailing, self).copy(default=default)
 
     def _group_expand_states(self, states, domain, order):
-        return [key for key, val in type(self).state.selection]
+        return [key for key, val in self._fields['state'].selection]
 
     # ------------------------------------------------------
     # ACTIONS
@@ -996,9 +1002,22 @@ class MassMailing(models.Model):
         done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 
+    def _get_unsubscribe_oneclick_url(self, email_to, res_id):
+        url = werkzeug.urls.url_join(
+            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+            self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'res_id': res_id,
@@ -1257,17 +1276,17 @@ class MassMailing(models.Model):
     # TOOLS
     # ------------------------------------------------------
 
-    def _convert_inline_images_to_urls(self, body_html):
+    def _convert_inline_images_to_urls(self, html_content):
         """
         Find inline base64 encoded images, make an attachement out of
         them and replace the inline image with an url to the attachement.
         Find VML v:image elements, crop their source images, make an attachement
         out of them and replace their source with an url to the attachement.
         """
-        root = lxml.html.fromstring(body_html)
+        root = lxml.html.fromstring(html_content)
         did_modify_body = False
 
-        conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None))
+        conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None, original_id))
         with requests.Session() as session:
             for node in root.iter(lxml.etree.Element, lxml.etree.Comment):
                 if node.tag == 'img':
@@ -1275,12 +1294,12 @@ class MassMailing(models.Model):
                     match = image_re.match(node.attrib.get('src', ''))
                     if match:
                         image = match.group(2).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, None))
+                        conversion_info.append((image, node, None, int(node.attrib.get('data-original-id') or "0")))
                 elif 'base64' in (node.attrib.get('style') or ''):
                     # Convert base64 images in inline styles to attachments.
                     for match in re.findall(r'data:image/[A-Za-z]+;base64,.+?(?=&\#34;|\"|\'|&quot;|\))', node.attrib.get('style')):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, match))
+                        conversion_info.append((image, node, match, int(node.attrib.get('data-original-id') or "0")))
                 elif mso_re.match(node.text or ''):
                     # Convert base64 images (in img tags or inline styles) in mso comments to attachments.
                     base64_in_element_regex = re.compile(r"""
@@ -1288,7 +1307,7 @@ class MassMailing(models.Model):
                     """, re.VERBOSE)
                     for match in re.findall(base64_in_element_regex, node.text):
                         image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
-                        conversion_info.append((image, node, match))
+                        conversion_info.append((image, node, match, int(node.attrib.get('data-original-id') or "0")))
                     # Crop VML images.
                     for match in re.findall(r'<v:image[^>]*>', node.text):
                         url = re.search(r'src=\s*\"([^\"]+)\"', match)[1]
@@ -1310,11 +1329,11 @@ class MassMailing(models.Model):
                             else:
                                 image_processor = tools.ImageProcess(image)
                                 image = image_processor.crop_resize(target_width, target_height, 0, 0)
-                                conversion_info.append((base64.b64encode(image.source), node, url))
+                                conversion_info.append((base64.b64encode(image.source), node, url, int(node.attrib.get('data-original-id') or "0")))
 
         # Apply the changes.
-        urls = self._create_attachments_from_inline_images([image for (image, _, _) in conversion_info])
-        for ((image, node, old_url), new_url) in zip(conversion_info, urls):
+        urls = self._create_attachments_from_inline_images([(image, original_id) for (image, _, _, original_id) in conversion_info])
+        for ((image, node, old_url, original_id), new_url) in zip(conversion_info, urls):
             did_modify_body = True
             if node.tag == 'img':
                 node.attrib['src'] = new_url
@@ -1325,16 +1344,60 @@ class MassMailing(models.Model):
 
         if did_modify_body:
             return lxml.html.tostring(root, encoding='unicode')
-        return body_html
+        return html_content
 
     def _create_attachments_from_inline_images(self, b64images):
         if not b64images:
             return []
 
-        attachments = self.env['ir.attachment'].create([{
-            'datas': b64image,
-            'name': f"cropped_image_mailing_{self.id}_{i}",
-            'type': 'binary',} for i, b64image in enumerate(b64images)])
+        IrAttachment = self.env['ir.attachment']
+        existing_attachments = dict(IrAttachment.search([
+            ('res_model', '=', 'mailing.mailing'),
+            ('res_id', '=', self.id),
+        ]).mapped(lambda record: (record.checksum, record)))
+
+        attachments, vals_for_attachs, checksums = [], [], []
+        checksums_set, checksum_original_id, new_attachment_by_checksum = set(), {}, {}
+        next_img_id = len(existing_attachments)
+        for (b64image, original_id) in b64images:
+            checksum = IrAttachment._compute_checksum(base64.b64decode(b64image))
+            checksums.append(checksum)
+            existing_attach = existing_attachments.get(checksum)
+            # Existing_attach can be None, in which case it acts as placeholder
+            # for attachment to be created.
+            attachments.append(existing_attach)
+            if original_id:
+                checksum_original_id[checksum] = original_id
+            if not existing_attach and not checksum in checksums_set:
+                # We create only one attachment per checksum
+                vals_for_attachs.append({
+                    'datas': b64image,
+                    'name': f"image_mailing_{self.id}_{next_img_id}",
+                    'type': 'binary',
+                    'res_id': self.id,
+                    'res_model': 'mailing.mailing',
+                    'checksum': checksum,
+                })
+                checksums_set.add(checksum)
+                next_img_id += 1
+        for vals in vals_for_attachs:
+            if vals['checksum'] in checksum_original_id:
+                vals['original_id'] = checksum_original_id[vals['checksum']]
+            del vals['checksum']
+
+        new_attachments = iter(IrAttachment.create(vals_for_attachs))
+        checksum_iter = iter(checksums)
+        # Replace None entries by newly created attachments.
+        for i in range(len(attachments)):
+            checksum = next(checksum_iter)
+            if attachments[i]:
+                continue
+            if checksum in new_attachment_by_checksum:
+                attachments[i] = new_attachment_by_checksum[checksum]
+            else:
+                attachments[i] = next(new_attachments)
+                new_attachment_by_checksum[checksum] = attachments[i]
+
         urls = []
         for attachment in attachments:
             attachment.generate_access_token()
@@ -1380,6 +1443,9 @@ class MassMailing(models.Model):
                 )
 
             return content
+        except UnidentifiedImageError:
+            _logger.warning('This file could not be decoded as an image file.', exc_info=True)
+            raise
         except Exception as e:
             _logger.exception(e)
             raise ImportValidationError(_("Could not retrieve URL: %s", url)) from e

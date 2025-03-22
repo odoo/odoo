@@ -8,3 +8,4 @@ from . import test_event_mail
 from . import test_event_security
 from . import test_performance
 from . import test_wevent_register
+from . import test_event_discount

@@ -2,11 +2,24 @@
 import math
 import calendar
 from datetime import date, datetime, time
+from typing import Tuple
+
+import babel
 import pytz
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta, weekdays
 
 from .func import lazy
 from odoo.loglevels import ustr
+
+
+def date_type(value):
+    ''' Return either the datetime.datetime class or datetime.date type whether `value` is a datetime or a date.
+
+    :param value: A datetime.datetime or datetime.date object.
+    :return: datetime.datetime or datetime.date
+    '''
+    return datetime if isinstance(value, datetime) else date
+
 
 def get_month(date):
     ''' Compute the month dates range on which the 'date' parameter belongs to.
@@ -14,8 +27,8 @@ def get_month(date):
     :param date: A datetime.datetime or datetime.date object.
     :return: A tuple (date_from, date_to) having the same object type as the 'date' parameter.
     '''
-    date_from = type(date)(date.year, date.month, 1)
-    date_to = type(date)(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
+    date_from = date_type(date)(date.year, date.month, 1)
+    date_to = date_type(date)(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
     return date_from, date_to
 
 
@@ -36,7 +49,7 @@ def get_quarter(date):
     '''
     quarter_number = get_quarter_number(date)
     month_from = ((quarter_number - 1) * 3) + 1
-    date_from = type(date)(date.year, month_from, 1)
+    date_from = date_type(date)(date.year, month_from, 1)
     date_to = (date_from + relativedelta(months=2))
     date_to = date_to.replace(day=calendar.monthrange(date_to.year, date_to.month)[1])
     return date_from, date_to
@@ -55,23 +68,23 @@ def get_fiscal_year(date, day=31, month=12):
 
     def fix_day(year, month, day):
         max_day = calendar.monthrange(year, month)[1]
-        if (month == 2 and day in (28, max_day)) or (month != 2 and day in (30, max_day)):
+        if month == 2 and day in (28, max_day):
             return max_day
         return min(day, max_day)
 
     day = fix_day(date.year, month, day)
-    date_to = type(date)(date.year, month, day)
+    date_to = date_type(date)(date.year, month, day)
 
     if date <= date_to:
         date_from = date_to - relativedelta(years=1)
         day = fix_day(date_from.year, date_from.month, date_from.day)
-        date_from = type(date)(date_from.year, date_from.month, day)
+        date_from = date_type(date)(date_from.year, date_from.month, day)
         date_from += relativedelta(days=1)
     else:
         date_from = date_to + relativedelta(days=1)
         date_to = date_to + relativedelta(years=1)
         day = fix_day(date_to.year, date_to.month, date_to.day)
-        date_to = type(date)(date_to.year, date_to.month, day)
+        date_to = date_type(date)(date_to.year, date_to.month, day)
     return date_from, date_to
 
 
@@ -246,3 +259,43 @@ def date_range(start, end, step=relativedelta(months=1)):
     while dt <= end:
         yield localize(dt)
         dt = dt + step
+
+
+def weeknumber(locale: babel.Locale, date: date) -> Tuple[int, int]:
+    """Computes the year and weeknumber of `date`. The week number is 1-indexed
+    (so the first week is week number 1).
+
+    For ISO locales (first day of week = monday, min week days = 4) the concept
+    is clear and the Python stdlib implements it directly.
+
+    For other locales, it's basically nonsensical as there is no actual
+    definition. For now we will implement non-split first-day-of-year, that is
+    the first week of the year is the one which contains the first day of the
+    year (taking first day of week in account), and the days of the previous
+    year which are part of that week are considered to be in the next year for
+    calendaring purposes.
+
+    That is December 27, 2015 is in the first week of 2016.
+
+    An alternative is to split the week in two, so the week from December 27,
+    2015 to January 2, 2016 would be *both* W53/2015 and W01/2016.
+    """
+    if locale.first_week_day == 0 and locale.min_week_days == 4:
+        # woohoo nothing to do
+        return date.isocalendar()[:2]
+
+    # first find the first day of the first week of the next year, if the
+    # reference date is after that then it must be in the first week of the next
+    # year, remove this if we decide to implement split weeks instead
+    fdny = date.replace(year=date.year + 1, month=1, day=1) \
+       - relativedelta(weekday=weekdays[locale.first_week_day](-1))
+    if date >= fdny:
+        return date.year + 1, 1
+
+    # otherwise get the number of periods of 7 days between the first day of the
+    # first week and the reference
+    fdow = date.replace(month=1, day=1) \
+       - relativedelta(weekday=weekdays[locale.first_week_day](-1))
+    doy = (date - fdow).days
+
+    return date.year, (doy // 7 + 1)

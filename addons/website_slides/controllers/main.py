@@ -739,7 +739,12 @@ class WebsiteSlides(WebsiteProfile):
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
     def slide_channel_subscribe(self, channel_id):
-        return request.env['slide.channel'].browse(channel_id).message_subscribe(partner_ids=[request.env.user.partner_id.id])
+        # Presentation Published subtype
+        subtype = request.env.ref("website_slides.mt_channel_slide_published", raise_if_not_found=False)
+        if subtype:
+            return request.env['slide.channel'].browse(channel_id).message_subscribe(
+                partner_ids=[request.env.user.partner_id.id], subtype_ids=subtype.ids)
+        return True
 
     @http.route(['/slides/channel/unsubscribe'], type='json', auth='user', website=True)
     def slide_channel_unsubscribe(self, channel_id):

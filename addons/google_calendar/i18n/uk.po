@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -21,30 +21,35 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "%(id)s and %(length)s following"
 msgstr "%(id)s та %(length)s наступні"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Days"
 msgstr "%(reminder_type)s - %(duration)s днів"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Hours"
 msgstr "%(reminder_type)s - %(duration)s годин"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Minutes"
 msgstr "%(reminder_type)s - %(duration)s хвилин"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
@@ -58,7 +63,7 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
@@ -69,6 +74,7 @@ msgstr ""
 "користуватися нею!"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid ""
@@ -129,7 +135,7 @@ msgid "Config Settings"
 msgstr "Налаштування"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
@@ -175,6 +181,7 @@ msgid "Display Name"
 msgstr "Назва для відображення"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "Email"
@@ -186,7 +193,7 @@ msgid "Event Recurrence Rule"
 msgstr "Правило повторюваної події"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.xml:0
 #, python-format
@@ -228,7 +235,6 @@ msgstr "Id Google Календаря"
 #. module: google_calendar
 #: model:ir.actions.server,name:google_calendar.ir_cron_sync_all_cals_ir_actions_server
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
-#: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
 msgstr "Google Calendar: синхронізація"
 
@@ -239,6 +245,7 @@ msgid "Google Synchronization stopped"
 msgstr "Google синхронізація призупинена"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid "Google gave the following explanation: %s"
@@ -311,6 +318,7 @@ msgid "Next Synchronization"
 msgstr "Наступна синхронізація"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/calendar.py:0
 #, python-format
 msgid "Notification"
@@ -333,7 +341,7 @@ msgid "Reset Google Calendar Account"
 msgstr "Скинути обліковий запис Google Календаря"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "Success"
@@ -355,7 +363,7 @@ msgid "Synchronize only new events"
 msgstr "Синхронізувати лише нові події"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
@@ -366,12 +374,14 @@ msgstr ""
 "хочете ви це зробити зараз?"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_credentials.py:0
 #, python-format
 msgid "The account for the Google Calendar service is not configured."
 msgstr "Послуга облікового запису Google календаря не налаштована."
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""
@@ -382,7 +392,7 @@ msgstr ""
 "синхронізований, поки він не оновлюється.</br>%(reason)s"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Google calendar was successfully stopped."
@@ -423,7 +433,7 @@ msgid "User's Existing Events"
 msgstr "Існуючі події користувача"
 
 #. module: google_calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/google_calendar/static/src/views/google_calendar/google_calendar_controller.js:0
 #, python-format
 msgid ""
@@ -434,6 +444,7 @@ msgstr ""
 " що хочете продовжити?"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
@@ -441,6 +452,7 @@ msgid "undefined time"
 msgstr "невизначений час"
 
 #. module: google_calendar
+#. odoo-python
 #: code:addons/google_calendar/models/google_sync.py:0
 #, python-format
 msgid ""

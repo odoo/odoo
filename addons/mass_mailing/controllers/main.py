@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import urllib.parse
 
 from odoo import _, exceptions, http, tools
 from odoo.http import request, Response
 from odoo.tools import consteq
+from lxml import etree
 from werkzeug.exceptions import BadRequest, NotFound
 
 
@@ -26,6 +28,68 @@ class MassMailController(http.Controller):
     # SUBSCRIPTION MANAGEMENT
     # ------------------------------------------------------------
 
+    # csrf is disabled here because it will be called by the MUA with unpredictable session at that time
+    @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe_oneclick'], type='http', website=True, auth='public',
+                methods=["POST"], csrf=False)
+    def mailing_unsubscribe_oneclick(self, mailing_id, email=None, res_id=None, token="", **post):
+        self.mailing(mailing_id, email=email, res_id=res_id, token=token, **post)
+        return Response(status=200)
+
+    @http.route('/mailing/<int:mailing_id>/confirm_unsubscribe', type='http', website=True, auth='public')
+    def mailing_confirm_unsubscribe(self, mailing_id, email=None, res_id=None, token="", **post):
+        mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)
+        # Check access (note that this will also raise AccessDenied if the mailing does not exist)
+        if not self._valid_unsubscribe_token(mailing_id, res_id, email, str(token)):
+            raise exceptions.AccessDenied()
+
+        unsubscribed_str = _("Are you sure you want to unsubscribe from our mailing list?")
+        # Display list name if list is public
+        if mailing.mailing_model_real == 'mailing.contact':
+            unsubscribed_lists = ', '.join(mailing_list.name for mailing_list in mailing.contact_list_ids if mailing_list.is_public)
+            if unsubscribed_lists:
+                unsubscribed_str = _(
+                    'Are you sure you want to unsubscribe from the mailing list "%(unsubscribed_lists)s"?',
+                    unsubscribed_lists=unsubscribed_lists
+                )
+        unsubscribe_btn = _("Unsubscribe")
+
+        template = etree.fromstring("""
+            <t t-call="mass_mailing.layout">
+                <div class="container o_unsubscribe_form">
+                    <form action="/mailing/confirm_unsubscribe" method="POST" class="col-lg-6 offset-lg-3 mt-4">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <input type="hidden" name="email" t-att-value="email"/>
+                        <input type="hidden" name="mailing_id" t-att-value="mailing_id"/>
+                        <input type="hidden" name="res_id" t-att-value="res_id"/>
+                        <input type="hidden" name="token" t-att-value="token"/>
+                        <div id="info_state"  class="alert alert-success">
+                            <div class="text-center">
+                                <p t-out="unsubscribed_str"/>
+                                <button type="submit" class="btn btn-primary" t-out="unsubscribe_btn"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </t>
+        """)
+        return request.env['ir.qweb']._render(template, {
+            'main_object': mailing,
+            'token': token,
+            'email': email,
+            'mailing_id': mailing_id,
+            'unsubscribed_str': unsubscribed_str,
+            'res_id': res_id,
+            'unsubscribe_btn': unsubscribe_btn,
+        })
+
+    # kept for backwards compatibility, must eventually be merged with mailing/<mailing_id>/unsubscribe
+    @http.route('/mailing/confirm_unsubscribe', type='http', website=True, auth='public', methods=['POST'])
+    def mailing_confirm_unsubscribe_post(self, mailing_id, email=None, res_id=None, token="", **post):
+        url_params = urllib.parse.urlencode({'email': email, 'res_id': res_id, 'token': token})
+        url = f'/mail/mailing/{int(mailing_id)}/unsubscribe?{url_params}'
+        return request.redirect(url)
+
+    # todo: merge this route with /mail/mailing/confirm_unsubscribe on next minor version
     @http.route(['/mail/mailing/<int:mailing_id>/unsubscribe'], type='http', website=True, auth='public')
     def mailing(self, mailing_id, email=None, res_id=None, token="", **post):
         mailing = request.env['mailing.mailing'].sudo().browse(mailing_id)

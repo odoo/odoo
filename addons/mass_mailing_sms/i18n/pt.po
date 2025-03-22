@@ -11,20 +11,43 @@
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # Pedro Filipe <pedro2.10@hotmail.com>, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
+# Rita Bastos, 2024
+# Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022\n"
+"Last-Translator: Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pt\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers and opt-out link) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including opt-out link) "
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -34,6 +57,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
@@ -132,6 +156,7 @@ msgid "A/B Test Mailings SMS #"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "A/B Test: %s"
@@ -160,6 +185,7 @@ msgid "Average of Clicked"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "BOUNCED (%i)"
@@ -171,6 +197,7 @@ msgid "Bioutifoul SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
 msgid ""
@@ -204,6 +231,7 @@ msgid "Bounced (%)"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "CLICKED (%i)"
@@ -296,6 +324,7 @@ msgid "Duplicate"
 msgstr "Duplicar"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 #, python-format
 msgid "Email Marketing"
@@ -309,7 +338,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Tipo de falha"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -449,7 +478,7 @@ msgstr "Rastrear Ligações"
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_sms_composer__mailing_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_trace_view_form_sms
 msgid "Mailing"
-msgstr ""
+msgstr "Mailing"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_mailing_contact
@@ -561,6 +590,7 @@ msgid "Number"
 msgstr "Número"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
 msgid "Number %s not found"
@@ -584,7 +614,7 @@ msgstr "Número de erros"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Número de mensagens que requerem ação"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error_counter
@@ -632,6 +662,7 @@ msgid "Please enter your phone number"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "RECEIVED (%i)"
@@ -644,6 +675,7 @@ msgid "Recipients"
 msgstr "Destinatários"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Report for %(expected)i %(mailing_type)s Sent"
@@ -661,7 +693,7 @@ msgstr "Relatórios"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_kanban
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__body_plaintext
@@ -695,6 +727,7 @@ msgid "SMS ID (tech)"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_mailing_action_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_mass_sms
@@ -718,9 +751,10 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "Modelo de SMS"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "SMS Text Message"
@@ -743,9 +777,10 @@ msgid "SMS Winner Selection"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS : %s"
+msgid "STOP SMS : %(unsubscribe_url)s"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -817,24 +852,28 @@ msgid "Test SMS Marketing"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "Test SMS could not be sent to %s:<br>%s"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Test SMS marketing"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "Test SMS successfully sent to %s"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/utm.py:0
 #, python-format
 msgid ""
@@ -843,6 +882,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "The following numbers are not correctly encoded: %s"
@@ -920,6 +960,7 @@ msgid "Unsubscribe me"
 msgstr "Cancelar a subscrição"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Unsupported %s for mass SMS"

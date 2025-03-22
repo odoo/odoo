@@ -43,13 +43,14 @@
                     </table>
                 </div>
 
+                <t t-set="layout_background_url"
+                    t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''" />
                 <div t-attf-class="din_page invoice_note article o_company_#{company.id}_layout {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  ''}} #{'din_page_pdf' if report_type == 'pdf' else ''}"
-                     t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+                     t-attf-style="{{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id"
-                     t-att-data-oe-lang="o and o.env.context.get('lang')"
-                     t-if="not skip_headers">
-                    <table class="table-borderless">
+                     t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <table class="table-borderless" t-if="not skip_headers">
                         <tr>
                             <td>
                                 <div class="address">
@@ -106,7 +107,7 @@
                             </tr>
                         </div>
                     </table>
-                    <h2>
+                    <h2 t-if="not skip_headers">
                         <span t-if="not o and not docs"><t t-esc="company.l10n_din5008_document_title"/></span>
                         <span t-else="">
                             <t t-set="o" t-value="docs[0]" t-if="not o" />

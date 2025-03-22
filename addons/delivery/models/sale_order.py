@@ -54,6 +54,7 @@ class SaleOrder(models.Model):
                 + '\n'.join(['- %s: %s x %s' % (line.product_id.with_context(display_default_code=False).display_name, line.qty_invoiced, line.price_unit) for line in delivery_lines])
             )
         to_delete.unlink()
+        self.carrier_id = self.env['delivery.carrier']  # reset carrier
 
     def set_delivery_line(self, carrier, amount):
         self._remove_delivery_line()
@@ -122,7 +123,7 @@ class SaleOrder(models.Model):
         }
         if carrier.invoice_policy == 'real':
             values['price_unit'] = 0
-            values['name'] += _(' (Estimated Cost: %s )', self._format_currency_amount(price_unit))
+            values['name'] += _(' (Estimated Cost: %s )', self.currency_id.format(price_unit))
         else:
             values['price_unit'] = price_unit
         if carrier.free_over and self.currency_id.is_zero(price_unit) :
@@ -136,6 +137,7 @@ class SaleOrder(models.Model):
         values = self._prepare_delivery_line_vals(carrier, price_unit)
         return self.env['sale.order.line'].sudo().create(values)
 
+    # to remove in master
     def _format_currency_amount(self, amount):
         pre = post = u''
         if self.currency_id.position == 'before':
@@ -210,3 +212,8 @@ class SaleOrderLine(models.Model):
 
         undeletable_lines = super()._check_line_unlink()
         return undeletable_lines.filtered(lambda line: not line.is_delivery)
+
+    def _compute_pricelist_item_id(self):
+        delivery_lines = self.filtered('is_delivery')
+        super(SaleOrderLine, self - delivery_lines)._compute_pricelist_item_id()
+        delivery_lines.pricelist_item_id = False

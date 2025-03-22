@@ -110,6 +110,7 @@ class Message(models.Model):
         ('email', 'Email'),
         ('comment', 'Comment'),
         ('notification', 'System notification'),
+        ('auto_comment', 'Automated Targeted Notification'),
         ('user_notification', 'User Specific Notification')],
         'Type', required=True, default='email',
         help="Message type: email for email message, notification for system "
@@ -857,11 +858,7 @@ class Message(models.Model):
                 'name': message_sudo.author_guest_id.name,
             } if message_sudo.author_guest_id else [('clear',)]
             if message_sudo.model and message_sudo.res_id:
-                record_name = self.env[message_sudo.model] \
-                    .browse(message_sudo.res_id) \
-                    .sudo() \
-                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
-                    .display_name
+                record_name = self.env[message_sudo.model].browse(message_sudo.res_id).sudo().with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
             else:
                 record_name = False
             reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
@@ -1083,7 +1080,7 @@ class Message(models.Model):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
-        return records._notify_get_reply_to(default=email_from)[res_id]
+        return records.sudo()._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):

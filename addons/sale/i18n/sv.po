@@ -12,27 +12,29 @@
 # Robin Chatfield <robin.chatfield@gmail.com>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
 # Zou Haojun <haojunzou84@gmail.com>, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Egils Verkstad <egils@riseup.net>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Kristoffer Grundström <lovaren@gmail.com>, 2022
 # Simon S, 2022
 # lynnliuying <lynn.liu1971@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Robin Calvin, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Daniel Osser <danielosser@gmail.com>, 2023
 # Lasse L, 2023
 # Mohamed Sallam, 2023
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Natalie Jacques, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -632,6 +634,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Betald</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/><b>Inväntar betalning</b>"
 
@@ -924,6 +931,9 @@ msgid ""
 "invoicing,according to their invoicing policy (based on ordered or delivered"
 " quantity)."
 msgstr ""
+"En standardfaktura utfärdas med alla orderrader klara för fakturering, "
+"enligt deras faktureringspolicy (baserat på beställd eller levererad "
+"kvantitet)."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_type
@@ -947,6 +957,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Möjlighet att välja en förpackningstyp i försäljningsorder och att tvinga "
+"fram en kvantitet som är en multipel av antalet enheter per förpackning."
 
 #. module: sale
 #. odoo-python
@@ -3291,7 +3303,7 @@ msgstr "Antal"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Antal till faktura"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
@@ -4106,14 +4118,14 @@ msgid "Tags"
 msgstr "Etiketter"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Skatt 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Skatte-land"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "Moms-ID"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4262,13 +4274,13 @@ msgstr "Det fasta beloppet som ska faktureras i förväg, exklusive skatter."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Följande produkter kan inte begränsas till företaget %s eftersom de redan har använts i offerter eller försäljningsorder i ett annat företag:\n"
-"%s\n"
-"Du kan arkivera dessa produkter och återskapa dem med din företagsbegränsning istället, eller lämna dem som delad produkt."
+"Följande produkter kan inte begränsas till företaget %(company)s eftersom de redan har använts i offerter eller försäljningsorder i ett annat företag:\n"
+"%(used_products)s\n"
+"Du kan arkivera dessa produkter och återskapa dem med din företagsbegränsning istället, eller låta dem vara delade produkter."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4741,7 +4753,7 @@ msgstr "Granska order"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Variant Grid Entry"
 
 #. module: sale
 #. odoo-python
@@ -4975,6 +4987,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
+" }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4983,6 +4998,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -4990,3 +5008,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Annullerad (Ref {{ "
+"object.name or 'n/a' }})"

@@ -9,14 +9,15 @@
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Emily Jia <eji@odoo.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -477,9 +478,12 @@ msgstr "订货点"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months; the number of products received on time divided by "
-"the number of ordered products."
-msgstr "在过去12个月里；按时收到的产品数量除以订购的产品数量。"
+"Over the past x days; the number of products received on time divided by the"
+" number of ordered products.x is either the System Parameter "
+"purchase_stock.on_time_delivery_days or the default 365"
+msgstr ""
+"在过去的 X 天里，按时收到的产品数量除以订购的产品数量。其中 X "
+"可以是系统参数purchase_stock.on_time_delivery_days值，也可以是默认值365。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__purchase_order_line_ids
@@ -499,6 +503,7 @@ msgid "Process all the receipt quantities."
 msgstr "处理所有的收货数量。"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "补货组"

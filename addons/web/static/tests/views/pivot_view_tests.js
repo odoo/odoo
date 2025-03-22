@@ -1947,14 +1947,16 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             assert.expect(2);
 
-            mockDownload(({ url, data }) => {
-                data = JSON.parse(data.data);
+            const downloadDef = makeDeferred();
+            mockDownload(async ({ url, data }) => {
+                data = JSON.parse(await data.data.text());
                 assert.strictEqual(url, "/web/pivot/export_xlsx");
                 assert.strictEqual(
                     data.measure_headers.length,
                     4,
                     "should have measure_headers in data"
                 );
+                downloadDef.resolve();
                 return Promise.resolve();
             });
 
@@ -1970,6 +1972,7 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(target.querySelector(".o_pivot_download"));
+            await downloadDef;
         }
     );
 
@@ -3616,8 +3619,9 @@ QUnit.module("Views", (hooks) => {
 
         patchDate(2016, 11, 20, 1, 0, 0);
 
-        mockDownload(({ url, data }) => {
-            data = JSON.parse(data.data);
+        const downloadDef = makeDeferred();
+        mockDownload(async ({ url, data }) => {
+            data = JSON.parse(await data.data.text());
             for (const l of data.col_group_headers) {
                 const titles = l.map((o) => o.title);
                 assert.step(JSON.stringify(titles));
@@ -3635,6 +3639,7 @@ QUnit.module("Views", (hooks) => {
                 "/web/pivot/export_xlsx",
                 "should call get_file with correct parameters"
             );
+            downloadDef.resolve();
             return Promise.resolve();
         });
 
@@ -3674,6 +3679,7 @@ QUnit.module("Views", (hooks) => {
         // With the data above, the time ranges contain some records.
         // export data. Should execute 'get_file'
         await click(target.querySelector(".o_control_panel button.o_pivot_download"));
+        await downloadDef;
 
         assert.verifySteps([
             // col group headers

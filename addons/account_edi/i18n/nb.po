@@ -8,14 +8,17 @@
 # Marius Stedjan <marius@stedjan.com>, 2022
 # Martin Trigaux, 2022
 # Henning Fyllingsnes, 2023
+# cecilieflyt, 2024
+# Rune Restad, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Henning Fyllingsnes, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,21 +31,21 @@ msgstr ""
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
-msgstr ""
+msgstr "Feil i elektronisk faktura"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
-msgstr ""
+msgstr "Elektronisk fakturainfo"
 
 #. module: account_edi
 #. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
-msgstr ""
+msgstr "Elektronisk faktura advarsler"
 
 #. module: account_edi
 #. odoo-python
@@ -166,7 +169,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_blocking_level
 msgid "Edi Blocking Level"
-msgstr ""
+msgstr "EDI blokkeringsnivå"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
@@ -192,7 +195,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "EDI feilmelding"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -223,7 +226,7 @@ msgstr ""
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
 msgid "Electronic Data Interchange"
-msgstr ""
+msgstr "Electronic Data Interchange"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_edi_document
@@ -238,7 +241,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_state
 msgid "Electronic invoicing"
-msgstr ""
+msgstr "Digital fakturering"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
@@ -362,6 +365,11 @@ msgid "Product Unit of Measure"
 msgstr "Produktenhet"
 
 #. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "Lag sekvensen av journalposter på nytt."
+
+#. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_actions_report
 msgid "Report Action"
 msgstr "Rapporthandling"
@@ -417,6 +425,14 @@ msgid ""
 msgstr ""
 
 #. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/wizard/account_resequence.py:0
+#, python-format
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr ""
+
+#. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 msgid ""
 "The invoice will be processed asynchronously by the following E-invoicing "
@@ -459,7 +475,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
 #: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
 msgid "To Send"
-msgstr ""
+msgstr "Å sende"
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning

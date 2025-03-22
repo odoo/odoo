@@ -7,18 +7,18 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2023
 # Andy Yiu, 2023
 # Tatsuki Kanda, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2023
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
-# Wil Odoo, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -402,6 +402,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>支払済</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>支払待ち</b>"
 
@@ -675,7 +680,7 @@ msgstr "<strong>この見積は取り消されました。</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>お客様参照:</strong>"
+msgstr "<strong>参照番号:</strong>"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
@@ -915,7 +920,7 @@ msgstr "承認されたトランザクションを無効にしますか?この�
 msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "            to sell extra hours when all ordered hours have been consumed."
-msgstr "例えば、プリペイドのサービス時間を販売する場合、オーダされた時間がすべて消費された時点で追加時間を販売することをOdooは推奨しています。"
+msgstr "例えば、サービス時間を前払いで販売する場合、オーダされた時間がすべて消費された時点で追加時間を販売することをOdooは推奨しています。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1159,7 +1164,7 @@ msgstr "確認"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Connectors"
-msgstr "コネクター"
+msgstr "コネクタ"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_partner
@@ -1187,7 +1192,7 @@ msgstr "国コード"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr "クーポン＆ロイヤルティ"
+msgstr "クーポン＆ロイヤリティ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -1686,7 +1691,7 @@ msgstr "経費と仕入先請求書は顧客に再請求できます。このオ
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
 msgid "Expiration"
-msgstr "有効期限日"
+msgstr "有効期限"
 
 #. module: sale
 #. odoo-python
@@ -2725,17 +2730,17 @@ msgstr "見積送状"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_id
 msgid "Packaging"
-msgstr "梱包"
+msgstr "パッケージング"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "梱包数量"
+msgstr "パッケージング数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
 msgid "Partner Credit Warning"
-msgstr "取引先与信限度警告"
+msgstr "取引先信用限度警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2859,7 +2864,7 @@ msgstr "見積送状"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Pro-Forma Invoice #"
-msgstr "見積送状数"
+msgstr "見積送状番号"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -3804,14 +3809,14 @@ msgid "Tags"
 msgstr "タグ"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "税率 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "税金の国"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "適格請求書発行事業者番号"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -3950,13 +3955,13 @@ msgstr "事前に請求される定額(税抜き)。"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"次の製品は、別の会社の見積または受注ですでに使用されているため、会社%sに制限することはできません。\n"
-"%s\n"
-"これらの製品をアーカイブして、代わりに会社の制限付きで再作成するか、共有製品のままにすることができます。"
+"次の製品は、別の会社の見積または販売オーダですでに使用されているため、会社%(company)sに制限することはできません。\n"
+"%(used_products)s\n"
+"これらのプロダクトをアーカイブして、代わりに会社の制限付きで再作成するか、共有プロダクトのままにすることができます。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice

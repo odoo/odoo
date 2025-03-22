@@ -33,7 +33,7 @@ class GoalDefinition(models.Model):
         ('progress', "Progressive (using numerical values)"),
         ('boolean', "Exclusive (done or not-done)"),
     ], default='progress', string="Displayed as", required=True)
-    model_id = fields.Many2one('ir.model', string='Model')
+    model_id = fields.Many2one('ir.model', string='Model', ondelete='cascade')
     model_inherited_ids = fields.Many2many('ir.model', related='model_id.inherited_model_ids')
     field_id = fields.Many2one(
         'ir.model.fields', string='Field to Sum',

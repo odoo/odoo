@@ -6,15 +6,16 @@
 # Martin Trigaux, 2022
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Wichanon Jamwutthipreecha, 2023
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-15 10:57+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -153,6 +154,7 @@ msgstr ""
 "- การย้ายสต๊อก: จำนวนมาจากแพ็กเกจที่ยืนยันแล้ว\n"
 
 #. module: sale_timesheet
+#: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
 #: model:project.project,name:sale_timesheet.project_support
 msgid "After-Sales Services"
 msgstr "บริการหลังการขาย"
@@ -356,8 +358,8 @@ msgid "Create SO from project"
 msgstr "สร้าง SO จากโปรเจกต์"
 
 #. module: sale_timesheet
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -523,6 +525,16 @@ msgid "Hourly Cost"
 msgstr "ค่าใช้จ่ายรายชั่วโมง"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Hours Ordered,"
+msgstr "ชั่วโมงที่สั่ง"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Hours Remaining)"
+msgstr "ชั่วโมงที่เหลืออยู่)"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__id
@@ -671,6 +683,14 @@ msgid "Junior Architect (Invoice on Timesheets)"
 msgstr "สถาปนิกรุ่นเยาว์ (แจ้งหนี้ในใบบันทึกเวลา)"
 
 #. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid ""
+"Keep track of your working hours by project every day and bill your "
+"customers for that time."
+msgstr ""
+"ติดตามชั่วโมงการทำงานของคุณตามโครงการได้ทุกวันและเรียกเก็บเงินจากลูกค้าของคุณสำหรับช่วงเวลานั้น"
+
+#. module: sale_timesheet
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr "การประกอบครัว (เหตุการณ์สำคัญ)"
@@ -724,10 +744,6 @@ msgstr "อัตราส่วน"
 #. module: sale_timesheet
 #. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
 #, python-format
 msgid "Materials"
 msgstr "วัสดุ"
@@ -763,14 +779,14 @@ msgid "No activities found"
 msgstr "ไม่พบกิจกรรม"
 
 #. module: sale_timesheet
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
-msgid "No activities found. Let's start a new one!"
-msgstr "ไม่พบกิจกรรม มาเริ่มกันใหม่!"
-
-#. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
 msgstr "ยังไม่มีข้อมูล!"
+
+#. module: sale_timesheet
+#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
+msgid "No timesheets found. Let's create one!"
+msgstr "ไม่พบตารางเวลาการทำงาน มาสร้างกันเลย!"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -839,9 +855,16 @@ msgid "Order Reference"
 msgstr "อ้างอิงคำสั่ง"
 
 #. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Ordered,"
-msgstr "สั่งแล้ว,"
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+msgid "Other costs"
+msgstr "ค่าใช้จ่ายอื่นๆ"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Other revenues"
+msgstr "รายได้อื่น ๆ"
 
 #. module: sale_timesheet
 #: model_terms:sale.order,website_description:sale_timesheet.sale_order_1
@@ -1000,11 +1023,6 @@ msgstr "ชั่วโมงคงเหลือบน SO"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_timesheet_table_inherit
 msgid "Remaining Hours on SO:"
 msgstr "ชั่วโมงคงเหลือบน SO:"
-
-#. module: sale_timesheet
-#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
-msgid "Remaining)"
-msgstr "คงเหลือ)"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
@@ -1213,6 +1231,16 @@ msgid ""
 "deleted."
 msgstr ""
 "%s สินค้าที่จำเป็นสำหรับแอประบบบันทึกเวลาและไม่สามารถเก็บถาวรหรือลบได้"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid ""
+"The %s product is required by the Timesheets app and cannot be linked to a "
+"company."
+msgstr ""
+"ผลิตภัณฑ์ %s จำเป็นสำหรับแอประบบบันทึกเวลาและไม่สามารถเชื่อมโยงกับบริษัทได้"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -1518,7 +1546,6 @@ msgstr "ติดตามบริการ"
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.action_timesheet_from_invoice
-#: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_from_sales_order_item
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."

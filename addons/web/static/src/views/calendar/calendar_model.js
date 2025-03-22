@@ -442,7 +442,11 @@ export class CalendarModel extends Model {
         return this.orm.call(this.meta.resModel, "get_unusual_days", [
             serializeDateTime(data.range.start),
             serializeDateTime(data.range.end),
-        ]);
+        ],{
+            context: {
+                'employee_id': this.employeeId,
+            }
+        });
     }
     /**
      * @protected
@@ -655,7 +659,8 @@ export class CalendarModel extends Model {
         const { colorFieldName } = filterInfo;
         const shouldFetchColor =
             colorFieldName &&
-            `${fieldName}.${colorFieldName}` !== fields[fieldMapping.color].related;
+            (!fieldMapping.color ||
+                `${fieldName}.${colorFieldName}` !== fields[fieldMapping.color].related);
         let rawColors = [];
         if (shouldFetchColor) {
             const relatedIds = rawFilters.map(({ id }) => id);

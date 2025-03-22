@@ -4,20 +4,19 @@
 
        <!-- hr.expense and hr.expense.sheet -->
         <xpath expr="//button[hasclass('o_list_button_add')]" position="after">
-            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
+            <button type="button" class="d-inline d-md-none o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
                 Scan
+            </button>
+            <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
+                Upload
+            </button>
+            <button t-if="displayCreateReport()" class="btn btn-secondary o_button_create_report" t-on-click="onCreateReportClick">
+                Create Report
             </button>
         </xpath>
 
         <xpath expr="//div" position="inside">
             <input type="file" name="ufile" class="d-none" t-ref="fileInput" multiple="1" accept="*" t-on-change="onChangeFileInput"/>
-        </xpath>
-
-        <!-- hr.expense -->
-        <xpath expr="//button[hasclass('o_button_upload_expense')]" position="after">
-            <button t-if="displayCreateReport()" class="d-none d-md-block btn btn-secondary" t-on-click="onCreateReportClick">
-                Create Report
-            </button>
         </xpath>
 
         <!-- hr.expense.sheet -->

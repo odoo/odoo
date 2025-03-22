@@ -7,7 +7,6 @@
 # Ofir Blum <ofir.blum@gmail.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
 # ExcaliberX <excaliberx@gmail.com>, 2022
-# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
 # yoav sc <yoav19991@gmail.com>, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2022
@@ -17,21 +16,24 @@
 # NoaFarkash, 2022
 # Roy Sayag, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2023
+# yael terner, 2024
+# Hed Shefer <hed@laylinetech.com>, 2024
+# or balmas, 2025
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: hed shefer <hed@laylinetech.com>, 2023\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -109,7 +111,7 @@ msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "<option value=\"\">Country...</option>"
-msgstr ""
+msgstr "<option value=\"\">מדינה...</option>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -128,19 +130,31 @@ msgstr ""
 "פעולה זו.</small>"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Filter By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">סינון לפי:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Group By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">קיבוץ לפי:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "<span class=\"small me-1 navbar-text\">Sort By:</span>"
-msgstr ""
+msgstr "<span class=\"small me-1 navbar-text\">מיון לפי:</span>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -295,13 +309,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
 msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
-msgstr "יש לספק אסימון גישה לכל קובץ מצורף."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -470,6 +477,7 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"כרגע מוגבל לעובדים פנימיים, לחץ כדי להפוך אותו לזמין לכל מי שצופה במסמך זה."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_res_config_settings__portal_allow_api_keys
@@ -548,7 +556,7 @@ msgstr "מסמכים"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "בתוקף עוד %1d ימים"
 
 #. module: portal
 #. odoo-javascript
@@ -670,7 +678,7 @@ msgstr "לא תקין"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Invalid Email Address"
-msgstr ""
+msgstr "כתובת אימייל לא חוקית"
 
 #. module: portal
 #. odoo-python
@@ -713,6 +721,13 @@ msgstr ""
 msgid ""
 "It is very important that this description be clear\n"
 "                and complete,"
+msgstr ""
+
+#. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
 msgstr ""
 
 #. module: portal
@@ -808,7 +823,6 @@ msgstr "סיסמא חדשה:"
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "הבא"
@@ -913,11 +927,6 @@ msgid "Powered by"
 msgstr "מופעל ע\"י"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "הקודם"
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -992,6 +1001,7 @@ msgstr "אבטחה"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "בקרת אבטחה"
@@ -1088,14 +1098,6 @@ msgstr "לא ניתן להסיר את הקובץ המצורף %s מכיוון ש
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr "הקובץ המצורף %s לא ניתן להסרה מכיוון שהוא לא נמצא בהמתנה."
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr "הקובץ המצורף %s לא קיים או שאין לך הרשאות אליו."
 
 #. module: portal
 #. odoo-python
@@ -1237,7 +1239,7 @@ msgstr "תקף"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Valid Email Address"
-msgstr ""
+msgstr "כתובת אימייל חוקית"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security

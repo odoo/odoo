@@ -70,6 +70,11 @@ export default class ListCorePlugin extends CorePlugin {
                     return CommandResult.EmptyName;
                 }
                 break;
+            case "UPDATE_ODOO_LIST_DOMAIN":
+                if (!(cmd.listId in this.lists)) {
+                    return CommandResult.ListIdNotFound;
+                }
+                break;
             case "ADD_GLOBAL_FILTER":
             case "EDIT_GLOBAL_FILTER":
                 if (cmd.list) {
@@ -100,7 +105,7 @@ export default class ListCorePlugin extends CorePlugin {
                 const anchor = [col, row];
                 this._addList(id, definition, dataSourceId, linesNumber);
                 this._insertList(sheetId, anchor, id, linesNumber, columns);
-                this.history.update("nextId", parseInt(id, 10) + 1)
+                this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {

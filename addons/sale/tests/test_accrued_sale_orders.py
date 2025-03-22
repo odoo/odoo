@@ -101,6 +101,7 @@ class TestAccruedSaleOrders(AccountTestInvoicingCommon):
         # delivered products invoiced, nothing to invoice left
         self.sale_order.with_context(default_invoice_date=self.wizard.date)._create_invoices().action_post()
         with self.assertRaises(UserError):
+            self.env['account.move.line']._invalidate_cache()
             self.wizard.create_entries()
         self.assertTrue(self.wizard.display_amount)
 

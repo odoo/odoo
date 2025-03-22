@@ -8,25 +8,27 @@
 # Netta Waizer, 2022
 # שהאב חוסיין <shhab89@gmail.com>, 2022
 # Martin Trigaux, 2022
-# hed shefer <hed@laylinetech.com>, 2022
+# Hed Shefer <hed@laylinetech.com>, 2022
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
-# ExcaliberX <excaliberx@gmail.com>, 2022
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # דודי מלכה <Dudimalka6@gmail.com>, 2022
+# tomerlayline, 2024
+# or balmas, 2025
+# ExcaliberX <excaliberx@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2022\n"
+"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: mrp_subcontracting
 #. odoo-python
@@ -38,7 +40,7 @@ msgstr "הכל"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr ""
+msgstr "דו\"ח סקירה כללית של עץ מוצר"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
@@ -169,7 +171,7 @@ msgstr "הסתר"
 #, python-format
 msgid ""
 "In order to manage stock accurately, subcontracting locations must be type "
-"Internal, linked to the appropriate company and not specific to a warehouse."
+"Internal, linked to the appropriate company."
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -200,6 +202,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
+#, python-format
+msgid "Locations to update"
+msgstr ""
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__production_ids
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__production_ids
 msgid "MRP Productions for which the Partner is the subcontractor"
@@ -224,7 +233,7 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "חובה"
 
 #. module: mrp_subcontracting
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
@@ -596,6 +605,11 @@ msgid "Transfer"
 msgstr "העברה"
 
 #. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_stock_move_line_tree_view
+msgid "Unit of Measure"
+msgstr "יחידת מידה"
+
+#. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
 msgid "Used to restrict access to the portal user through Record Rules"
 msgstr ""
@@ -630,18 +644,16 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_location.py:0
+#: code:addons/mrp_subcontracting/models/mrp_production.py:0
 #, python-format
-msgid ""
-"You cannot change the subcontracting location as it is still linked to a "
-"subcontractor partner"
+msgid "You cannot write on fields %s in mrp.production."
 msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
+#: code:addons/mrp_subcontracting/models/stock_picking.py:0
 #, python-format
-msgid "You cannot write on fields %s in mrp.production."
+msgid "You might want to update the locations of this transfer's operations"
 msgstr ""
 
 #. module: mrp_subcontracting

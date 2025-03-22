@@ -29,25 +29,27 @@
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2022
 # Maksym <ms@myodoo.pl>, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
+# Piotr Strebski <strebski@gmail.com>, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2023
-# Paweł Wodyński <pw@myodoo.pl>, 2023
 # Tadeusz Karpiński <tadeusz.karpinski@braintec.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Janusz Harkot <jh@trilab.pl>, 2023
-# Jolien De Paepe, 2023
-# Wil Odoo, 2023
+# Larissa Manderfeld, 2024
+# Damian Ratus, 2024
+# Paweł Wodyński <pw@myodoo.pl>, 2024
+# Marta Wacławek, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -535,7 +537,7 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\"><div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"'oferta' if object.state in ('draft', 'sent') else 'zamówienie'\"></t>\n"
 "        Dzień dobry,\n"
@@ -546,14 +548,14 @@ msgstr ""
 "            <t t-if=\"object.origin\">\n"
 "                (z referencją: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
-"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> jest dostępna.\n"
+"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> jest dostępna.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"doc_name or ''\">oferta</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (z referencją: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> jest gotowa do sprawdzenia.\n"
+"            na kwotę <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> jest gotowa do sprawdzenia.\n"
 "        </t>\n"
 "        <br><br>\n"
 "        W razie pytań, skontaktuj się z nami.\n"
@@ -588,6 +590,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"       Drogi <t t-out=\"object.partner_id.name or ''\">użytkowniku</t>,\n"
+"        <br><br>\n"
+"       Uprzejmie informujemy, że\n"
+"        <t t-out=\"doc_name or ''\">oferta</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (z odniesieniem : <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        została anulowana. W związku z tym nie powinieneś być obciążany dalszymi opłatami za to zamówienie.\n"
+"        Jeśli konieczny będzie zwrot pieniędzy, zostanie on dokonany w dogodnym terminie.\n"
+"        <br><br>\n"
+"        W razie jakichkolwiek pytań prosimy o kontakt.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -626,6 +646,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/><b>Autoryzowane</b>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Zapłacono</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -4120,14 +4145,14 @@ msgid "Tags"
 msgstr "Tagi"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Podatek 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Kraj podatku"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "NIP"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4276,12 +4301,12 @@ msgstr "Ilość do zafakturowania z góry, wyłączając podatki"
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Następujące produkty nie mogą być zastrzeżone dla firmy %sz powodu wcześniejszego użycia w ofertach lub zamówieniach sprzedaży dla innej firmy.\n"
-"%s Możesz zarchiwizować te produkty i odtworzyć je z ograniczeniem firmowym lub pozostawić je jako produkt współdzielony."
+"Następujące produkty nie mogą być zastrzeżone dla firmy %(company)sz powodu wcześniejszego użycia w ofertach lub zamówieniach sprzedaży dla innej firmy.\n"
+"%(used_products)s Możesz zarchiwizować te produkty i odtworzyć je z ograniczeniem firmowym lub pozostawić je jako produkt współdzielony."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -4423,7 +4448,7 @@ msgid ""
 msgstr ""
 "Jest to data dostawy obiecana klientowi. Jeśli zostanie ustawiona, "
 "zamówienie dostawy zostanie zaplanowane na podstawie tej daty, a nie czasu "
-"realizacji sygnału produktu."
+"realizacji leadu produktu."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__medium_id
@@ -4981,6 +5006,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Zamówienie oczekujące' or 'Zamówienia' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4999,3 +5027,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Anulowane (Ref {{ "
+"object.name or 'n/a' }})"

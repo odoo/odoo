@@ -171,7 +171,16 @@ wTourUtils.registerWebsitePreviewTour('snippet_social_media', {
     {
         content: 'Save',
         trigger: 'button[data-action=save]',
-        run: 'click',
+        run: function () {
+            // We need this 'setTimeout' to ensure that the 'change' event of
+            // the input has enough time to be executed. Without it, the click
+            // on the save button takes priority, and the 'change' event is not
+            // executed (see the '_onListItemChange' function of the 'we-list'
+            // widget)."
+            setTimeout(() => {
+                this.$anchor[0].click();
+            }, 500);
+        },
     },
     {
         content: "Wait until save's calls are finished",

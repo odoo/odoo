@@ -12,15 +12,15 @@
 # Martin Trigaux, 2022
 # Tamás Dombos, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
-# gezza <geza.nagy@oregional.hu>, 2023
+# gezza <geza.nagy@oregional.hu>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -465,6 +465,12 @@ msgstr "Mégse"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Cancelled"
 msgstr "Törölve"
+
+#. module: lunch
+#: code:addons/lunch/models/lunch_supplier.py:0
+#, python-format
+msgid "Cannot send an email to this supplier!"
+msgstr ""
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -1195,32 +1201,32 @@ msgid "Lunch: Supplier Order"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_235
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_236
 msgid "Lunch: alert chat notification (Alert for Office 3)"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_236
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
 msgid "Lunch: send automatic email to Coin gourmand"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
 msgid "Lunch: send automatic email to Lunch Supplier"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_237
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
 msgid "Lunch: send automatic email to Pizza Inn"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_240
 msgid "Lunch: send automatic email to Sushi Shop"
 msgstr ""
 
 #. module: lunch
-#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_238
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_239
 msgid "Lunch: send automatic email to The Corner"
 msgstr ""
 
@@ -1384,6 +1390,20 @@ msgid "No cash move yet"
 msgstr "Még nincs pénzmozgás"
 
 #. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "No location found"
+msgstr ""
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#, python-format
+msgid "No lunch location available."
+msgstr ""
+
+#. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
 msgstr "Még nincs ebédrendelés"
@@ -1453,7 +1473,7 @@ msgstr "Hibák száma"
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Üzenetek száma, melyek akciót igényelnek"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
@@ -1587,6 +1607,13 @@ msgstr ""
 #. module: lunch
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
+msgstr ""
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+#, python-format
+msgid "Please create a location to start ordering."
 msgstr ""
 
 #. module: lunch

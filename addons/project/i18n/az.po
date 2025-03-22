@@ -5,14 +5,15 @@
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2023
 # erpgo translator <jumshud@erpgo.az>, 2023
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2023\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2024\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,10 +68,22 @@ msgid "# of Tasks"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
 "#{record.milestone_count.value}"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
 msgstr ""
 
 #. module: project
@@ -106,13 +119,6 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "%(name)s's Timesheets"
 msgstr ""
 
 #. module: project
@@ -1004,8 +1010,6 @@ msgid "Assigned to"
 msgstr "Təyin olunub"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__user_ids
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
@@ -1015,7 +1019,6 @@ msgstr "Təyin olunub"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
-#, python-format
 msgid "Assignees"
 msgstr ""
 
@@ -1099,7 +1102,7 @@ msgstr "avatar"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Ortalam Reytinq"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
@@ -1993,8 +1996,8 @@ msgstr ""
 "buraxın"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2511,8 +2514,8 @@ msgid ""
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2929,16 +2932,16 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
+#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid "Let's create your first <b>stage</b>."
+msgid "Let's create your first <b>project</b>."
 msgstr ""
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid "Let's create your first <b>project</b>."
+msgid "Let's create your first <b>stage</b>."
 msgstr ""
 
 #. module: project
@@ -3103,8 +3106,8 @@ msgid "Messages"
 msgstr "Mesajlar"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3267,8 +3270,8 @@ msgid "Neutral face"
 msgstr "Neytral üz"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3909,8 +3912,8 @@ msgid "Progress Percentage"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4181,7 +4184,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Ortalama Reytinq Yazısı"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_template_id
@@ -4227,7 +4230,7 @@ msgstr "Qiymətləndirmə Məmnunluğu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Reytinq Yazısı"
 
 #. module: project
 #. odoo-javascript
@@ -4827,8 +4830,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5164,6 +5167,7 @@ msgstr ""
 
 #. module: project
 #. odoo-python
+#: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task

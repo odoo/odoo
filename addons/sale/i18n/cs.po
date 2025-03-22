@@ -6,24 +6,25 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
+# Jiří Podhorecký <jirka.p@volny.cz>, 2022
 # Petr Hemza, 2023
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2023
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2023
 # SlavekB <slavek.banko@axis.cz>, 2023
 # Ivana Bartonkova, 2023
-# Jakub Smolka, 2023
 # Tomáš Píšek, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
-# Wil Odoo, 2023
+# Larissa Manderfeld, 2024
+# Jakub Smolka, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,8 +82,8 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('návrh', 'odesláno') and 'Nabídka- %s' % (object.name)) or"
-" 'Objednávka - %s' % (object.name)"
+"(object.state in ('draft', 'sent') and 'Nabídka- %s' % (object.name)) or "
+"'Objednávka - %s' % (object.name)"
 
 #. module: sale
 #. odoo-javascript
@@ -625,6 +626,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Zaplaceno</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr "<i class=\"fa fa-fw fa-check\"/><b>Rezervováno</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Waiting Payment</b>"
 msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Čekání na platbu</b>"
 
@@ -660,7 +666,7 @@ msgstr "<i class=\"fa fa-times\"/> Odmítnout"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
-msgstr "<small><b class=\"text-muted\">Tato nabídka vyprší v</b></small>"
+msgstr "<small><b class=\"text-muted\">Tato nabídka vyprší</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -745,7 +751,7 @@ msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Množství</span>\n"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Celkem</span>\n"
 "                            <span groups=\"account.group_show_line_subtotals_tax_included\">Cena celkem</span>"
 
 #. module: sale
@@ -1726,7 +1732,7 @@ msgstr "Vklad"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__deposit_default_product_id
 msgid "Deposit Product"
-msgstr "Vkladový produkt"
+msgstr "Zálohový produkt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
@@ -4104,14 +4110,14 @@ msgid "Tags"
 msgstr "Štítky"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Daň 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Daň země"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "DIČ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4259,12 +4265,12 @@ msgstr "Pevná částka, která má být fakturována předem, bez daní."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Následující produkty nelze omezit na společnost %s, protože již byly použity v nabídkách nebo prodejních objednávkách v jiné společnosti:\n"
-"%s\n"
+"Následující produkty nelze omezit na společnost %(company)s, protože již byly použity v nabídkách nebo prodejních objednávkách v jiné společnosti:\n"
+"%(used_products)s\n"
 "Tyto produkty můžete archivovat a znovu je vytvořit s omezením vaší společnosti, nebo je ponechat jako sdílený produkt."
 
 #. module: sale
@@ -4331,9 +4337,9 @@ msgid ""
 "to \"Ordered quantities\". Please update your deposit product to be able to "
 "create a deposit invoice."
 msgstr ""
-"Produkt používaný k fakturaci akontace by měl mít zásadu faktury nastavenou "
-"na \"Objednané množství\". Aktualizujte svůj vkladový produkt, abyste mohli "
-"vytvořit vkladovou fakturu."
+"Produkt používaný k vystavení zálohové faktury by měl mít fakturační "
+"politiku nastavenou na \"Objednané množství\". Aktualizujte svůj zálohový "
+"produkt, abyste mohli vytvořit zálohovou fakturu."
 
 #. module: sale
 #. odoo-python

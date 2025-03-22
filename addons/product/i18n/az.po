@@ -5,14 +5,15 @@
 # Translators:
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
 # erpgo translator <jumshud@erpgo.az>, 2023
+# Nurlan Farajov <coolinuxoid@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: erpgo translator <jumshud@erpgo.az>, 2023\n"
+"Last-Translator: Nurlan Farajov <coolinuxoid@gmail.com>, 2025\n"
 "Language-Team: Azerbaijani (https://app.transifex.com/odoo/teams/41243/az/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,6 +212,8 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"Müştərilərinizə çatdırmaq istədiyiniz məhsulun təsviri. Bu təsvir hər bir "
+"Satış Sifarişinə, Çatdırılma Sifarişinə və Müştəri Fakturasına köçürüləcək."
 
 #. module: product
 #. odoo-python
@@ -336,7 +339,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #, python-format
 msgid "All Products"
-msgstr ""
+msgstr "Bütün Məhsullar"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
@@ -435,7 +438,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr ""
+msgstr "Atribut Dəyərləri"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -505,13 +508,13 @@ msgstr "Qara"
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr ""
+msgstr "Qapılı kabinet"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "1024 ölçüsündəki şəkil zoom edilə bilərmi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -628,7 +631,7 @@ msgstr "Şərtlər"
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "Konfrans sədri"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
@@ -737,7 +740,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr ""
+msgstr "Yeni məhsul yaradın"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -818,7 +821,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "Fərdiləşdirilə bilən masa"
 
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
@@ -920,7 +923,7 @@ msgstr ""
 #. module: product
 #: model:res.groups,name:product.group_discount_per_so_line
 msgid "Discount on lines"
-msgstr ""
+msgstr "Xətlərdə endirim"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_discount_per_so_line
@@ -969,7 +972,7 @@ msgstr "Sənədləşmə"
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
-msgstr ""
+msgstr "Tərtib edici"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
@@ -1232,9 +1235,7 @@ msgstr "İşarələnibsə, yeni mesajlara baxmalısınız."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
-#: model:ir.model.fields,help:product.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
-#: model:ir.model.fields,help:product.field_product_template__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Yoxlanılıbsa, bəzi mesajların çatdırılmasında xəta var."
 
@@ -1343,7 +1344,7 @@ msgstr "Daxili Qeydlər"
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
 #: model:ir.model.fields,field_description:product.field_product_template__default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "Daxili Referans"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
@@ -1760,7 +1761,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "Dərmanlar"
 
 #. module: product
 #. odoo-javascript
@@ -1969,12 +1970,12 @@ msgstr "Məhsul"
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr ""
+msgstr "Məhsul Atributu"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Məhsul Atributunun Fərdi Dəyəri"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
@@ -2028,7 +2029,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr ""
+msgstr "Məhsul Adı"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__packaging_ids
@@ -2064,7 +2065,7 @@ msgstr ""
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "Məhsul Etiketi"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
@@ -2093,12 +2094,12 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Məhsul Şablon Atribut Sətri"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "Məhsul Şablon Atribut Dəyəri"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -2108,7 +2109,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "Məhsul Şablonu"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
@@ -2262,7 +2263,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr ""
+msgstr "Radio"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
@@ -2323,12 +2324,6 @@ msgid "Rule Tip"
 msgstr ""
 
 #. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__message_has_sms_error
-#: model:ir.model.fields,field_description:product.field_product_template__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS-in Çatdırılmasında xəta"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Sales"
 msgstr "Satışlar"
@@ -2343,7 +2338,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_sale_product_matrix
 msgid "Sales Grid Entry"
-msgstr ""
+msgstr "Satış şəbəkəsinə giriş"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -2726,7 +2721,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Three-Seat Sofa"
-msgstr ""
+msgstr "Üç Oturacaqlı Divan"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -2831,7 +2826,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Variant"
-msgstr ""
+msgstr "Çeşid"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
@@ -2898,7 +2893,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr ""
+msgstr "Çeşidlər"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
@@ -2992,18 +2987,6 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
-
-#. module: product
-#: model:ir.model.fields,field_description:product.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:product.field_product_template__website_message_ids
-msgid "Website Messages"
-msgstr "Veb sayt Mesajları"
-
-#. module: product
-#: model:ir.model.fields,help:product.field_product_product__website_message_ids
-#: model:ir.model.fields,help:product.field_product_template__website_message_ids
-msgid "Website communication history"
-msgstr "Veb saytın kommunikasiya tarixçəsi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3237,7 +3220,7 @@ msgstr "Gün"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "məsələn, Cheese Burger"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view

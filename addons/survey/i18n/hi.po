@@ -4,14 +4,19 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Gautam Hingrajiya, 2024
+# Wil Odoo, 2024
+# Hideki Akiyoshi, 2025
+# Ronald Kung, 2025
+# Manav Shah, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Manav Shah, 2025\n"
 "Language-Team: Hindi (https://app.transifex.com/odoo/teams/41243/hi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +74,13 @@ msgstr ""
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: survey
+#. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid "%s Votes"
 msgstr ""
 
 #. module: survey
@@ -208,7 +220,7 @@ msgid ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
 "            </td></tr>\n"
@@ -223,7 +235,7 @@ msgid ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    certification\n"
 "                </p>\n"
-"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"/>% !</p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>% !</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -236,7 +248,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
@@ -254,7 +266,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -679,13 +691,13 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__active
 msgid "Active"
-msgstr ""
+msgstr "सक्रिय"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "गतिविधियाँ"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_decoration
@@ -1218,7 +1230,6 @@ msgid "Cliff Burton"
 msgstr ""
 
 #. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Close"
@@ -1325,7 +1336,7 @@ msgstr ""
 #: model:ir.model,name:survey.model_res_partner
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__partner_id
 msgid "Contact"
-msgstr ""
+msgstr "संपर्क"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__has_conditional_questions
@@ -1370,8 +1381,8 @@ msgid "Corner Desk Right Sit"
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__is_correct
@@ -1439,7 +1450,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__create_uid
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "द्वारा निर्मित"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_date
@@ -1525,7 +1536,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__date
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__date
 msgid "Date"
-msgstr ""
+msgstr "तिथि"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_date
@@ -1561,7 +1572,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 msgid "Delete"
-msgstr ""
+msgstr "हटाएं"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__description
@@ -1569,7 +1580,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Description"
-msgstr ""
+msgstr "विवरण"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_2
@@ -1796,7 +1807,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__email_from
 msgid "From"
-msgstr ""
+msgstr "के द्वारा"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q4
@@ -1847,7 +1858,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug1
 msgid "Good"
-msgstr ""
+msgstr "अच्छा"
 
 #. module: survey
 #. odoo-python
@@ -1933,7 +1944,7 @@ msgstr ""
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p1_q1_sug2
 msgid "History"
-msgstr ""
+msgstr "इतिहास"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q3
@@ -2197,7 +2208,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__in_progress
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "In Progress"
-msgstr ""
+msgstr "प्रगति में है"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q5
@@ -2217,8 +2228,8 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -2644,7 +2655,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "संदेश"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -2934,7 +2945,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
 #: model:ir.model.fields,help:survey.field_survey_user_input__message_needaction_counter
-msgid "Number of messages which requires an action"
+msgid "Number of messages requiring action"
 msgstr ""
 
 #. module: survey
@@ -3164,8 +3175,8 @@ msgid "Partial"
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -3197,7 +3208,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Partner"
-msgstr ""
+msgstr "साथी"
 
 #. module: survey
 #. odoo-python
@@ -3352,6 +3363,11 @@ msgid "Products"
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Public share URL"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_answer_view_search
@@ -3458,7 +3474,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__session_state__ready
 msgid "Ready"
-msgstr ""
+msgstr "तैयार"
 
 #. module: survey
 #. odoo-javascript
@@ -3535,7 +3551,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_survey__user_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Responsible"
-msgstr ""
+msgstr "जिम्मेदार"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
@@ -3738,7 +3754,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question__sequence
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__question_sequence
 msgid "Sequence"
-msgstr ""
+msgstr "अनुक्रम"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_code
@@ -3886,7 +3902,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1
 msgid "Start"
-msgstr ""
+msgstr "प्रारंभ"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -3911,7 +3927,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__state
 msgid "Status"
-msgstr ""
+msgstr "स्थिति"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_state
@@ -3931,7 +3947,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__subject
 msgid "Subject"
-msgstr ""
+msgstr "विषय"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -4390,8 +4406,8 @@ msgid "This is a Test Survey."
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 #: code:addons/survey/static/src/js/survey_form.js:0
 #: code:addons/survey/tests/test_survey.py:0
@@ -4571,7 +4587,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Type"
-msgstr ""
+msgstr "प्रकार"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
@@ -4597,8 +4613,8 @@ msgid "Unable to post message, please configure the sender's email address."
 msgstr ""
 
 #. module: survey
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 #: code:addons/survey/static/src/js/survey_result.js:0
 #, python-format
@@ -4654,6 +4670,11 @@ msgid "Use humor and make jokes"
 msgstr ""
 
 #. module: survey
+#: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
+msgid "Use template"
+msgstr ""
+
+#. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
@@ -4682,7 +4703,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_user
 msgid "User"
-msgstr ""
+msgstr "उपयोगकर्ता"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -5035,6 +5056,15 @@ msgstr ""
 
 #. module: survey
 #. odoo-python
+#: code:addons/survey/models/survey_question.py:0
+#, python-format
+msgid ""
+"You cannot delete questions from surveys \"%(survey_names)s\" while live "
+"sessions are in progress."
+msgstr ""
+
+#. module: survey
+#. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 #, python-format
 msgid ""
@@ -5130,11 +5160,6 @@ msgstr ""
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 #, python-format
 msgid "close"
-msgstr ""
-
-#. module: survey
-#: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
-msgid "dropdown-item d-flex align-items-center justify-content-between"
 msgstr ""
 
 #. module: survey

@@ -6,6 +6,10 @@
     --ListRenderer-thead-bg-color: #{$gray-200};
     --ListRenderer-thead-border-end-color: #{$border-color};
 
+    @include media-breakpoint-up(md) {
+        height: 100%;
+    }
+
     .o_list_view &  {
         --ListRenderer-table-padding-h: #{$o-horizontal-padding};
     }
@@ -256,6 +260,7 @@
         .o_list_actions_header {
             width: 32px;
             background-color: var(--ListRenderer-thead-bg-color);
+            z-index: 100;
         }
 
         .o_data_row.o_list_no_open {

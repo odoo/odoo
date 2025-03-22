@@ -12,7 +12,15 @@ class NewLeadNotification(TestCrmCommon):
     @users('user_sales_manager')
     def test_lead_message_get_suggested_recipient(self):
         """ Test '_message_get_suggested_recipients' and its override in lead. """
-        lead_format, lead_multi, lead_from, lead_partner = self.env['crm.lead'].create([
+        partner_no_email = self.env['res.partner'].create({'name': 'Test Partner', 'email': False})
+        (
+            lead_format,
+            lead_multi,
+            lead_from,
+            lead_partner,
+            lead_partner_no_email,
+            lead_partner_no_email_with_cc
+        ) = self.env['crm.lead'].create([
             {
                 'email_from': '"New Customer" <new.customer.format@test.example.com>',
                 'name': 'Test Suggestion (email_from with format)',
@@ -32,20 +40,33 @@ class NewLeadNotification(TestCrmCommon):
                 'name': 'Test Suggestion (partner_id)',
                 'partner_id': self.contact_1.id,
                 'user_id': self.user_sales_leads.id,
+            }, {
+              'name': 'Test Suggestion (partner no email)',
+              'partner_id': partner_no_email.id
+            }, {
+              'name': 'Test Suggestion (partner no email with cc email)',
+              'partner_id': partner_no_email.id,
+              'email_cc': 'test_cc@odoo.com'
             }
         ])
         for lead, expected_suggested in zip(
-            lead_format + lead_multi + lead_from + lead_partner,
-            [(False, '"New Customer" <new.customer.format@test.example.com>', None, 'Customer Email'),
-             (False, '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>', None, 'Customer Email'),
-             (False, '"Std Name" <new.customer.simple@test.example.com>', None, 'Customer Email'),
-             (self.contact_1.id, '"Philip J Fry" <philip.j.fry@test.example.com>', self.contact_1.lang, 'Customer'),
+            lead_format + lead_multi + lead_from + lead_partner + lead_partner_no_email + lead_partner_no_email_with_cc,
+            [
+                [(False, '"New Customer" <new.customer.format@test.example.com>', None, 'Customer Email')],
+                [(False, '"Multi Name" <new.customer.multi.1@test.example.com,new.customer.2@test.example.com>', None, 'Customer Email')],
+                [(False, '"Std Name" <new.customer.simple@test.example.com>', None, 'Customer Email')],
+                [(self.contact_1.id, '"Philip J Fry" <philip.j.fry@test.example.com>', self.contact_1.lang, 'Customer')],
+                [(partner_no_email.id, 'Test Partner', partner_no_email.lang, 'Customer')],
+                [
+                    (False, 'test_cc@odoo.com', None, 'CC Email'),
+                    (partner_no_email.id, 'Test Partner', partner_no_email.lang, 'Customer')
+                ]
             ]
         ):
             with self.subTest(lead=lead, email_from=lead.email_from):
                 res = lead._message_get_suggested_recipients()[lead.id]
-                self.assertEqual(len(res), 1)
-                self.assertEqual(res[0], expected_suggested)
+                self.assertEqual(len(res), len(expected_suggested))
+                self.assertEqual(res, expected_suggested)
 
     def test_new_lead_notification(self):
         """ Test newly create leads like from the website. People and channels

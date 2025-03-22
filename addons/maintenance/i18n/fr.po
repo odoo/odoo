@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
+# Manon Rondou, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -466,14 +467,14 @@ msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create a new equipment under this category."
 msgstr ""
-"Alias de messagerie pour cette catégorie d'équipement. Les nouveaux emails "
+"Alias de messagerie pour cette catégorie d'équipement. Les nouveaux e-mails "
 "vont automatiquement créer un nouvel équipement sous cette catégorie."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__email_cc
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Email cc"
-msgstr "Email cc"
+msgstr "E-mail cc"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__equipment_count
@@ -640,11 +641,8 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si coché, certains messages ont une erreur de livraison."
 
@@ -860,7 +858,6 @@ msgstr "Type de maintenance"
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
-#: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
 msgstr "Maintenance : générez des demandes de maintenance préventive"
 
@@ -1056,8 +1053,8 @@ msgid ""
 "(parent_model) and task (model))"
 msgstr ""
 "Modèle parent de l'alias. Le modèle possédant la référence de l'alias n'est "
-"pas nécessairement le modèle donné par alias_model_id (Ex. : project "
-"(parent_model) et task (model))"
+"pas nécessairement le modèle donné par alias_model_id (Ex. : projet "
+"(parent_model) et tâche (model))"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -1083,6 +1080,7 @@ msgid "Preventive"
 msgstr "Préventive"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
@@ -1169,6 +1167,7 @@ msgid "Request Done"
 msgstr "Demande terminée"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for %s"
@@ -1201,13 +1200,6 @@ msgstr "Responsable"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
 msgstr "Utilisateur responsable"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Erreur d'envoi SMS"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_monitor1
@@ -1355,9 +1347,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque email"
-" entrant ne correspondant pas à un enregistrement existant entraînera la "
-"création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
+"Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque "
+"e-mail entrant ne correspondant pas à un enregistrement existant entraînera "
+"la création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
 "projet)"
 
 #. module: maintenance
@@ -1367,7 +1359,7 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "Le nom de l'alias de messagerie, par exemple 'carrières' pour récupérer les "
-"emails de <carrières@example.odoo.com>"
+"e-mails de <carrières@example.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__alias_user_id
@@ -1377,7 +1369,7 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Le propriétaire d'enregistrements créés lors de la réception d'emails sur "
+"Le propriétaire d'enregistrements créés lors de la réception d'e-mails sur "
 "cet alias. Si ce champ n'est pas renseigné, le système essaiera de trouver "
 "le propriétaire approprié à partir de l'adresse de l'expéditeur (De) ou "
 "utilisera le compte Administrateur si aucun utilisateur du système n'est "
@@ -1470,20 +1462,7 @@ msgid "Warranty Expiration Date"
 msgstr "Date d'expiration de garantie"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
-
-#. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""

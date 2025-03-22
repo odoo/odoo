@@ -10,15 +10,16 @@
 # Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2022
-# Wil Odoo, 2023
+# Tomáš Píšek, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Wil Odoo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +38,7 @@ msgid "# Contracts using it"
 msgstr ""
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
@@ -127,6 +129,7 @@ msgid "Administrator"
 msgstr "Správca"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -189,6 +192,7 @@ msgid "Contract"
 msgstr "Kontakt"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -378,6 +382,7 @@ msgid "Departure Wizard"
 msgstr "Sprievodca odchodom"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -525,7 +530,6 @@ msgstr "Zoskupiť podľa"
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr "Pracovná zmluva: zmena stavu"
 
@@ -569,7 +573,6 @@ msgstr "Ak označené, potom nové správy vyžadujú vašu pozornosť."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Ak označené, potom majú niektoré správy chybu dodania."
 
@@ -652,7 +655,7 @@ msgid "New"
 msgstr "Nové"
 
 #. module: hr_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
 #, python-format
 msgid "New Employee"
@@ -717,7 +720,7 @@ msgstr "Počet chýb"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Počet správ, ktoré vyžadujú akciu"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
@@ -756,6 +759,11 @@ msgid "Related User"
 msgstr "Súvisiaci používateľ"
 
 #. module: hr_contract
+#: model:ir.model,name:hr_contract.model_resource_calendar_leaves
+msgid "Resource Time Off Detail"
+msgstr "Detaily zdroja voľných dní"
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
 msgstr "Pracovný čas zdroja"
@@ -781,11 +789,6 @@ msgstr "Aktuálne"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Running Contracts"
 msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Chyba doručenia SMS"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -873,6 +876,7 @@ msgstr ""
 "Môžete použiť toto pole pre rýchle vyhľadanie."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -925,16 +929,6 @@ msgid "Wage"
 msgstr "Mzda"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Správy webstránok"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "História komunikácie webstránok"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
 msgstr "Pracovné povolenie č."
@@ -945,3 +939,10 @@ msgstr "Pracovné povolenie č."
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
 msgstr "Pracovný rozvrh"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_employee.py:0
+#, python-format
+msgid "You cannot delete an employee with a running contract."
+msgstr ""

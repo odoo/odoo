@@ -14,17 +14,20 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
 # Martin Trigaux, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
-# Bole <bole@dajmi5.com>, 2023
 # Vladimir Vrgoč, 2023
 # Antonijo Kovacevic, 2023
+# Matija Gudlin, 2024
+# Servisi RAM d.o.o. <support@servisiram.hr>, 2024
+# Bole <bole@dajmi5.com>, 2025
+# Luka Carević <luka@uvid.hr>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:28+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Antonijo Kovacevic, 2023\n"
+"Last-Translator: Luka Carević <luka@uvid.hr>, 2025\n"
 "Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +104,7 @@ msgstr "<i class=\"fa fa-pencil\"/> Uredi"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
-msgstr ""
+msgstr "<i title=\"Documentation\" class=\"fa fa-fw o_button_icon fa-info-circle\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -119,6 +122,18 @@ msgid ""
 "<small class=\"form-text text-muted\">Changing company name or VAT number is"
 " not allowed once document(s) have been issued for your account. <br/>Please"
 " contact us directly for this operation.</small>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid ""
+"<span class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
+msgstr ""
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.pager
+msgid "<span class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 msgstr ""
 
 #. module: portal
@@ -288,13 +303,6 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields.selection,name:portal.selection__portal_wizard_user__email_state__exist
 msgid "Already Registered"
-msgstr ""
-
-#. module: portal
-#. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid "An access token must be provided for each attachment."
 msgstr ""
 
 #. module: portal
@@ -536,7 +544,7 @@ msgstr "Dokumenti"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %1d days"
-msgstr ""
+msgstr "Dospijeva za %1d dana"
 
 #. module: portal
 #. odoo-javascript
@@ -585,18 +593,18 @@ msgstr "Zaboravljena lozinka?"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Access"
-msgstr "Dodjeli pristup"
+msgstr "Dodijeli pristup"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 msgid "Grant Portal Access"
-msgstr "Dodjeli pristup portalu"
+msgstr "Dodijeli pristup portalu"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 #: model:ir.actions.server,name:portal.partner_wizard_action_create_and_open
 msgid "Grant portal access"
-msgstr "Dodjeli pristup portalu"
+msgstr "Dodijeli pristup portalu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -704,6 +712,13 @@ msgid ""
 msgstr ""
 
 #. module: portal
+#. odoo-javascript
+#: code:addons/portal/static/src/xml/portal_security.xml:0
+#, python-format
+msgid "Key Description"
+msgstr ""
+
+#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
@@ -727,7 +742,7 @@ msgstr "Vrijeme promjene"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__login_date
 msgid "Latest Authentication"
-msgstr ""
+msgstr "Posljednje povezivanje"
 
 #. module: portal
 #. odoo-javascript
@@ -796,7 +811,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
 msgstr "Sljedeći"
@@ -868,7 +882,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Portal Access Management"
-msgstr "Upravljanje pristupm portalu"
+msgstr "Upravljanje pristupom portalu"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -901,11 +915,6 @@ msgid "Powered by"
 msgstr "Podržano od "
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.pager
-msgid "Prev"
-msgstr "Prethodna"
-
-#. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
@@ -930,12 +939,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_ir_qweb
 msgid "Qweb"
-msgstr ""
+msgstr "Qweb"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Re-Invite"
-msgstr ""
+msgstr "Ponovno pozovi"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__partner_ids
@@ -960,7 +969,7 @@ msgstr "Povezani model dokumenta"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr ""
+msgstr "Oduzmi pristup"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -980,6 +989,7 @@ msgstr "Sigurnost"
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/js/portal.js:0
+#: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Security Control"
 msgstr "Sigurnosna kontrola"
@@ -998,7 +1008,7 @@ msgid ""
 msgstr ""
 "Na donjoj listi odaberite kontakte koji bi trebali pripadati portalu.\n"
 "                        E-mail adresa svakog odabranog kontakta mora biti ispravna i jedinstvena.\n"
-"                        Ako je potrebno možete popraviti e-mail adresu izravno na listi."
+"                        Ako je potrebno možete ažurirati e-mail adresu izravno na listi."
 
 #. module: portal
 #. odoo-javascript
@@ -1079,14 +1089,6 @@ msgstr ""
 
 #. module: portal
 #. odoo-python
-#: code:addons/portal/controllers/mail.py:0
-#, python-format
-msgid ""
-"The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
-
-#. module: portal
-#. odoo-python
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
@@ -1142,14 +1144,14 @@ msgstr "Trenutna zaporka nije točno upisana. Zaporka nije promijenjena."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr ""
+msgstr "Kontakt \"%s\" već ima pristup portalu."
 
 #. module: portal
 #. odoo-python
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" has no portal access or is internal."
-msgstr ""
+msgstr "Kontakt \"%s\" već ima pristup portalu ili je interni kontakt."
 
 #. module: portal
 #. odoo-python
@@ -1165,7 +1167,7 @@ msgstr ""
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "There are no comments for now."
-msgstr ""
+msgstr "Za sada nema komentara."
 
 #. module: portal
 #. odoo-python
@@ -1185,12 +1187,15 @@ msgid ""
 "This partner is linked to an internal User and already has access to the "
 "Portal."
 msgstr ""
+"Ovaj kontakt povezan je s internim korisnikom i već ima pristup portalu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid ""
 "This text is included at the end of the email sent to new portal users."
 msgstr ""
+"Ovaj tekst uključen je na kraju e-maila koji se šalje novim korisnicima "
+"portala."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1385,7 +1390,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr ""
+msgstr "Prvo trebate dodijeliti pristup portalu kontaktu \"%s\"."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome
@@ -1407,7 +1412,7 @@ msgstr "Zip / Poštanski broj"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. odoo-javascript

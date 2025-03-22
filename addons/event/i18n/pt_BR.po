@@ -9,17 +9,17 @@
 # Martin Trigaux, 2022
 # Kevilyn Rosa, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
-# Layna Nascimento, 2023
-# Maitê Dietze, 2023
+# a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2023
 # Adriano Prado <adrianojprado@gmail.com>, 2023
+# Maitê Dietze, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Adriano Prado <adrianojprado@gmail.com>, 2023\n"
+"Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1200,7 +1200,7 @@ msgstr "Frequência"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Attended"
-msgstr "Frequentou"
+msgstr "Compareceu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__date_closed
@@ -1634,6 +1634,11 @@ msgstr "Nome exibido"
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "Exibir patrocinadores e palestrantes nas suas páginas de evento"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "Exibir fuso horário"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -2350,6 +2355,15 @@ msgstr "Informações importantes do ingresso"
 #, python-format
 msgid "In Progress"
 msgstr "Em Andamento"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3125,7 +3139,7 @@ msgstr "Escanear os crachás para confirmar presença"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr "Programação & Faixas"
+msgstr "Programação e Sessões"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
@@ -3593,7 +3607,6 @@ msgstr ""
 "Os ingressos podem ser impressos ou escaneados diretamente do seu celular."
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "Fuso horário"
@@ -3810,6 +3823,16 @@ msgstr "Semanas"
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr "O que há de novo?"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

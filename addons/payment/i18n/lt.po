@@ -14,19 +14,21 @@
 # grupoda2 <dmitrijus.ivanovas@gmail.com>, 2022
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Jonas Zinkevicius <jozi@odoo.com>, 2024
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
+# Martin Trigaux, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Greta Šeštokė, 2024
+# Aurelija Vitkauskiene, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-07 12:37+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2023\n"
+"Last-Translator: Aurelija Vitkauskiene, 2025\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,7 +128,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> The currency is missing or incorrect."
-msgstr ""
+msgstr "<strong>Įspėjimas</strong> Trūksta valiutos arba ji yra neteisinga."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -318,6 +320,11 @@ msgid "Bank"
 msgstr "Bankas"
 
 #. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Bank Account"
+msgstr "Banko sąskaita"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Banko pavadinimas"
@@ -438,6 +445,11 @@ msgid "Color"
 msgstr "Spalva"
 
 #. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Communication"
+msgstr "Komunikacija"
+
+#. module: payment
 #: model:ir.model,name:payment.model_res_company
 msgid "Companies"
 msgstr "Įmonės"
@@ -555,6 +567,7 @@ msgstr "Keditinė ir Debitinė Kortelė, UPI (Naudojant Razorpay)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
 msgstr ""
 
@@ -597,6 +610,7 @@ msgstr "Valiuta"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
 msgstr "Nestandartinio mokėjimo instrukcija"
 
@@ -685,8 +699,8 @@ msgid "Error"
 msgstr "Klaida"
 
 #. module: payment
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -748,10 +762,14 @@ msgid "Full Only"
 msgstr ""
 
 #. module: payment
-#: model:ir.model,name:payment.model_payment_link_wizard
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
 msgstr "Generuoti nuorodą apmokėjimui"
+
+#. module: payment
+#: model:ir.model,name:payment.model_payment_link_wizard
+msgid "Generate Sales Payment Link"
+msgstr "Sukurkite pardavimų apmokėjimo nuorodą"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -782,11 +800,13 @@ msgstr "Pagalbos pranešimas"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__new_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
 msgstr ""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__existing_user
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
 msgstr ""
 
@@ -1119,7 +1139,7 @@ msgstr "Operacija"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Operations in progress"
-msgstr ""
+msgstr "Vykdomos operacijos"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1157,6 +1177,7 @@ msgstr "Apmokėti"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__paypal
+#: model:ir.model.fields.selection,name:payment.selection__sale_payment_provider_onboarding_wizard__payment_method__paypal
 #: model:payment.provider,name:payment.payment_provider_paypal
 msgid "PayPal"
 msgstr "PayPal"
@@ -1164,7 +1185,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
 msgid "Payment Details"
-msgstr ""
+msgstr "Mokėjimo detalės"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1205,13 +1226,13 @@ msgstr "Mokėjimo būdas"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr ""
+msgstr "Mokėjimo paslaugos tiekėjas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
@@ -1327,6 +1348,16 @@ msgid "Please set an amount smaller than %s."
 msgstr ""
 
 #. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please use the following transfer details"
+msgstr ""
+
+#. module: payment
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
+msgid "Please use the order name as communication reference."
+msgstr ""
+
+#. module: payment
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
@@ -1376,6 +1407,7 @@ msgstr ""
 
 #. module: payment
 #. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Reason:"
@@ -1917,7 +1949,7 @@ msgstr "Anuliuoti operaciją"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for operations to process"
-msgstr ""
+msgstr "Laukiama operacijų apdorojimo"
 
 #. module: payment
 #. odoo-python
@@ -1974,7 +2006,7 @@ msgstr "Palaukite, kol apdorojame Jūsų mokėjimus..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
-msgstr ""
+msgstr "Laukiame, kol mokėjimo paslaugų teikėjas patvirtins mokėjimą."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2120,7 +2152,6 @@ msgstr "Jūsų mokėjimas gautas, tačiau turi būti patvirtintas rankiniu būdu
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sepa_direct_debit
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_sips
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_stripe
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
 #, python-format
 msgid ""
 "Your payment has been successfully processed but is waiting for approval."
@@ -2158,7 +2189,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is being processed, please wait..."
-msgstr ""
+msgstr "Jūsų mokėjimas apdorojamas, prašome palaukti..."
 
 #. module: payment
 #. odoo-javascript
@@ -2185,16 +2216,6 @@ msgid "Zip"
 msgstr "Pašto kodas"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "danger"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "info"
-msgstr ""
-
-#. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
@@ -2214,14 +2235,4 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "success"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
 msgstr ""

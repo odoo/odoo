@@ -33,14 +33,15 @@
 # Maksym <ms@myodoo.pl>, 2023
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Interactive AV-IT, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Last-Translator: Interactive AV-IT, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,6 +102,12 @@ msgid "# of Tasks"
 msgstr "# zadań"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
@@ -108,6 +115,12 @@ msgid ""
 msgstr ""
 "#{record.milestone_count_reached.value} osiągniętych kamieni milowych z "
 "#{record.milestone_count.value}"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -143,13 +156,6 @@ msgstr "Oceny %(name)s"
 #, python-format
 msgid "%(name)s's Tasks Analysis"
 msgstr "Analizy zadań %(name)s"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "%(name)s's Timesheets"
-msgstr "Karty pracy %(name)s"
 
 #. module: project
 #. odoo-python
@@ -2193,8 +2199,8 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr "Nie masz dostępu, pomiń te dane dla wiadomości e-mail użytkownika"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2554,7 +2560,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Handoff"
-msgstr ""
+msgstr "Przekazanie"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2742,8 +2748,8 @@ msgstr ""
 "będziesz musiał go usuwać)."
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3181,8 +3187,22 @@ msgstr "Stwórzmy pierwszy <b>projekt</b>."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr "Stwórzmy Twój pierwszy <b>etat</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Utwórzmy pierwsze <b>zadanie</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr "Stwórzmy Twój drugi <b>etap</b>."
 
 #. module: project
 #. odoo-javascript
@@ -3336,8 +3356,8 @@ msgid "Messages"
 msgstr "Wiadomości"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3504,8 +3524,8 @@ msgid "Neutral face"
 msgstr "Neutralna twarz"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3613,6 +3633,11 @@ msgstr "Data następnego nawrotu"
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
 msgstr "Następne nawroty"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
+msgstr "Brakuje Klienta"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -4160,8 +4185,8 @@ msgid "Progress Percentage"
 msgstr "Procent postępu"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -5092,8 +5117,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint w toku"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0

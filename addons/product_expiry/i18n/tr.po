@@ -16,9 +16,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Kaan Özdemir, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -76,11 +76,6 @@ msgid "Best before Date"
 msgstr "Tavsiye Edilen Tüketim Tarihi"
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
-msgid "Best before:"
-msgstr "Son kullanma tarihi:"
-
-#. module: product_expiry
 #: model:ir.model,name:product_expiry.model_res_config_settings
 msgid "Config Settings"
 msgstr "Yapılandırma Ayarları"
@@ -96,6 +91,7 @@ msgid "Confirm Expiry"
 msgstr "Sona Ermeyi Onayla"
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 #, python-format
@@ -328,6 +324,7 @@ msgid "The Expiration Date has been reached."
 msgstr "Süresi Dolma Tarihine ulaşıldı."
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
@@ -390,11 +387,6 @@ msgid "Use Expiration Date"
 msgstr "Son Kullanma Tarihini Kullan"
 
 #. module: product_expiry
-#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
-msgid "Use by:"
-msgstr "Kullanan:"
-
-#. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__use_expiration_date
@@ -411,6 +403,7 @@ msgstr ""
 "sahipsiniz."
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""
@@ -421,6 +414,7 @@ msgstr ""
 "Devam etmek istediğinizi onaylıyor musunuz?"
 
 #. module: product_expiry
+#. odoo-python
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""

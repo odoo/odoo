@@ -2,13 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* sms
 # 
+# Translators:
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,18 +31,23 @@ msgid "# Valid recipients"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_template.py:0
 #, python-format
 msgid "%s (copy)"
 msgstr ""
+"%s (afrit)\n"
+" "
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid ""
@@ -80,9 +90,10 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Aðgerða þörf"
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_base_automation__state
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
 #: model:ir.model.fields,field_description:sms.field_ir_cron__state
 msgid "Action To Do"
@@ -96,7 +107,7 @@ msgid ""
 msgstr ""
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an SMS."
@@ -118,7 +129,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Fjöldi viðhengja"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
@@ -148,6 +159,7 @@ msgid "Buy credits"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "Buy credits."
@@ -168,12 +180,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "Eyða"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
 msgid "Canceled"
-msgstr ""
+msgstr "Hætt við"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -186,6 +198,7 @@ msgid "Choose an example"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_base_automation__sms_method
 #: model:ir.model.fields,help:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,help:sms.field_ir_cron__sms_method
 msgid ""
@@ -199,7 +212,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
-msgstr ""
+msgstr "Loka"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -210,12 +223,12 @@ msgstr ""
 #: model:ir.model,name:sms.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Contact"
-msgstr ""
+msgstr "Hafa samband"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Content"
-msgstr ""
+msgstr "Innihald"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_uid
@@ -226,7 +239,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__create_date
@@ -237,12 +250,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__create_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Búið til þann"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
 msgid "Customer"
-msgstr ""
+msgstr "Viðskiptavinur"
 
 #. module: sms
 #: model:sms.template,name:sms.sms_template_demo_0
@@ -257,7 +270,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Discard"
-msgstr ""
+msgstr "Hætta við"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__display_name
@@ -268,7 +281,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
@@ -313,7 +326,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
 msgid "Error"
-msgstr ""
+msgstr "Villa"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
@@ -346,14 +359,15 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Fylgjendur"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Fylgjendur (samstarfsaðilar)"
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Following numbers are not correctly encoded: %s"
@@ -367,7 +381,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Hefur skilaboð"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
@@ -389,23 +403,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__id
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ef hakað er við krefjast ný skilaboð athygli þinnar."
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team_member__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_fleet_vehicle_log_contract__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_fleet_vehicle_log_services__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_gamification_badge__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_gamification_challenge__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_contract__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_department__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_employee__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_job__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_hr_leave_allocation__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_loyalty_card__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_lunch_supplier__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_channel__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_maintenance_equipment__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_maintenance_equipment_category__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_maintenance_request__message_has_sms_error
+#: model:ir.model.fields,help:sms.field_note_note__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_phone_blacklist__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_product_template__message_has_sms_error
@@ -413,7 +445,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ef hakað er við hafa sum skilaboð sendingarvillu."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
@@ -460,6 +492,7 @@ msgid "Insufficient Credit"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid recipient number. Please update it."
@@ -468,7 +501,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "Er fylgjandi"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
@@ -505,7 +538,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_uid
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__write_date
@@ -516,7 +549,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__write_date
 #: model:ir.model.fields,field_description:sms.field_sms_template_reset__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -531,7 +564,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Aðal viðhengi"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_message
@@ -539,12 +572,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend__mail_message_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Message"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Villa við afhendingu skilaboða"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -562,7 +595,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
@@ -578,7 +611,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__name
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
@@ -608,22 +641,22 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Fjöldi aðgerða"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Fjöldi villna"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
-msgid "Number of messages which requires an action"
-msgstr ""
+msgid "Number of messages requiring action"
+msgstr "Fjöldi skeyta sem krefjast aðgerða"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Fjöldi skeyta með sendingarvillu"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
@@ -654,7 +687,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Félagi"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
@@ -669,7 +702,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
 msgid "Phone Number"
-msgstr ""
+msgstr "Símanúmer"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
@@ -721,7 +754,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Reason"
-msgstr ""
+msgstr "Ástæða"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -798,10 +831,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Retry"
-msgstr ""
+msgstr "Reyna"
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/sms_button/sms_button.xml:0
 #: code:addons/sms/static/src/models/message_view.js:0
 #: code:addons/sms/static/src/models/message_view.js:0
@@ -817,7 +850,7 @@ msgid "SMS"
 msgstr ""
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "SMS ("
@@ -829,25 +862,43 @@ msgid "SMS API"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_crm_team_member__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_fleet_vehicle__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_contract__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_fleet_vehicle_log_services__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_gamification_badge__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_gamification_challenge__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_contract__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_department__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_employee__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_job__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_leave__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_hr_leave_allocation__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_loyalty_card__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_lunch_supplier__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_channel__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_cc__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_thread_phone__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_maintenance_equipment__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_maintenance_equipment_category__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_maintenance_request__message_has_sms_error
+#: model:ir.model.fields,field_description:sms.field_note_note__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_phone_blacklist__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_product_product__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_product_template__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS sendingarvilla"
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/models/notification_group.js:0
 #, python-format
 msgid "SMS Failures"
@@ -864,7 +915,7 @@ msgid "SMS Preview"
 msgstr ""
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
@@ -882,6 +933,7 @@ msgid "SMS Status"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_base_automation__sms_template_id
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -908,6 +960,7 @@ msgid "SMS Templates"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/wizard/sms_template_reset.py:0
 #, python-format
 msgid "SMS Templates have been reset"
@@ -921,7 +974,6 @@ msgstr ""
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:sms.ir_cron_sms_scheduler_action
-#: model:ir.cron,name:sms.ir_cron_sms_scheduler_action
 msgid "SMS: SMS Queue Manager"
 msgstr ""
 
@@ -955,13 +1007,14 @@ msgid "Send SMS"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_template.py:0
 #, python-format
 msgid "Send SMS (%s)"
 msgstr ""
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/sms_button/sms_button.js:0
 #: code:addons/sms/static/src/js/fields_phone_widget.js:0
 #: code:addons/sms/static/src/js/fields_phone_widget.js:0
@@ -994,6 +1047,7 @@ msgid "Send as"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,field_description:sms.field_base_automation__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
@@ -1015,15 +1069,16 @@ msgid "Sending Failures"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/ir_actions_server.py:0
 #, python-format
-msgid "Sending SMS can only be done on a mail.thread or a transient model"
+msgid "Sending SMS can only be done on a not transient mail.thread model"
 msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
 msgid "Sent"
-msgstr ""
+msgstr "Sent"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_actions_server
@@ -1074,6 +1129,7 @@ msgid "Stored Recipient Number"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "Success"
@@ -1105,12 +1161,14 @@ msgid "Templates"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "The SMS Text Messages could not be resent."
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "The number you're trying to reach is not correctly formatted."
@@ -1123,6 +1181,7 @@ msgid "The type of document this template can be used with"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
@@ -1146,6 +1205,7 @@ msgid "Type"
 msgstr ""
 
 #. module: sms
+#: model:ir.model.fields,help:sms.field_base_automation__state
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
 #: model:ir.model.fields,help:sms.field_ir_cron__state
 msgid ""
@@ -1182,20 +1242,21 @@ msgid "Visible records count"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Aðvörun"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Skilaboð á vefsíðu"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Samskiptasaga vefsíðu"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1209,25 +1270,28 @@ msgid "Wrong Number Format"
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/wizard/sms_resend.py:0
 #, python-format
 msgid "You do not have access to the message and/or related document."
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have an eligible IAP account."
 msgstr ""
 
 #. module: sms
+#. odoo-python
 #: code:addons/sms/models/sms_api.py:0
 #, python-format
 msgid "You don't have enough credits on your IAP account."
 msgstr ""
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
 #, python-format
 msgid ""
@@ -1235,7 +1299,7 @@ msgid ""
 msgstr ""
 
 #. module: sms
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "characters, fits in"

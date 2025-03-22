@@ -76,7 +76,6 @@ class AccountChartTemplate(models.Model):
             f'{cid}_demo_invoice_5': {
                 'move_type': 'in_invoice',
                 'partner_id': ref('base.res_partner_12').id,
-                'invoice_user_id': ref('base.user_demo').id,
                 'invoice_payment_term_id': ref('account.account_payment_term_end_following_month').id,
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'invoice_line_ids': [
@@ -86,7 +85,6 @@ class AccountChartTemplate(models.Model):
             },
             f'{cid}_demo_invoice_extract': {
                 'move_type': 'in_invoice',
-                'invoice_user_id': ref('base.user_demo').id,
             },
             f'{cid}_demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',

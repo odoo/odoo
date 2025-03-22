@@ -4,15 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,14 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);\n"
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "(left:"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "(tax incl.)"
@@ -49,35 +51,42 @@ msgid "<span style=\"margin: 0px 5px;\">:</span>"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "A new order has been created."
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Apply a down payment"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "Back"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/MobileSaleOrderManagementScreen.xml:0
 #, python-format
 msgid "Back to list"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #, python-format
 msgid "Cancelled"
-msgstr ""
+msgstr "Eytt"
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/SetSaleOrderButton.js:0
 #, python-format
 msgid "Cannot access order management screen if offline."
@@ -86,35 +95,37 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Stillingarvalkostir"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
 msgid "Currency Rate"
 msgstr ""
+"Gengi\n"
+" "
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Viðskiptavinur"
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Customer loading error"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "Date"
-msgstr ""
+msgstr "Dagsetning"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.message_body
@@ -122,14 +133,13 @@ msgid "Delivered from"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Do you want to load the SN/Lots linked to the Sales Order?"
 msgstr ""
 
 #. module: pos_sale
-#: model:product.product,name:pos_sale.default_downpayment_product
 #: model:product.template,name:pos_sale.default_downpayment_product_product_template
 msgid "Down Payment (POS)"
 msgstr ""
@@ -146,14 +156,21 @@ msgid "Down Payment Product"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/ReceiptScreen/OrderReceipt.xml:0
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
 #, python-format
@@ -166,7 +183,7 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid ""
@@ -175,6 +192,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_sale
+#. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
 #, python-format
 msgid "Linked POS Orders"
@@ -186,20 +204,21 @@ msgid "Linked Sale Order"
 msgstr ""
 
 #. module: pos_sale
+#. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #, python-format
 msgid "Linked Sale Orders"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #, python-format
 msgid "Locked"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js:0
 #: code:addons/pos_sale/static/src/js/SetSaleOrderButton.js:0
 #, python-format
@@ -209,10 +228,10 @@ msgstr ""
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_draft
 msgid "New"
-msgstr ""
+msgstr "Nýtt"
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
@@ -220,7 +239,7 @@ msgid "Next Order List"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
@@ -228,7 +247,7 @@ msgid "No"
 msgstr "No"
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "No down payment product"
@@ -245,7 +264,7 @@ msgid "Open Sessions"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
@@ -264,7 +283,7 @@ msgid "Paid"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Percentage of %s"
@@ -306,7 +325,7 @@ msgid "Posted"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
@@ -314,42 +333,42 @@ msgid "Previous Order List"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Products not available in POS"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #, python-format
 msgid "Quotation"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #, python-format
 msgid "Quotation Sent"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "SN/Lots Loading"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
@@ -364,25 +383,25 @@ msgstr ""
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales"
-msgstr ""
+msgstr "Sala"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Sölugreiningarskýrsla"
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js:0
 #: model:ir.model,name:pos_sale.model_sale_order
 #, python-format
 msgid "Sales Order"
-msgstr ""
+msgstr "Sölupöntun"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Sölupöntunarlína"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -390,7 +409,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
 #: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
 msgid "Sales Team"
-msgstr ""
+msgstr "Söluteymi"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
@@ -403,18 +422,18 @@ msgid "Sales are reported to the following sales team"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "Salesman"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #, python-format
 msgid "Salesperson"
-msgstr ""
+msgstr "Sölufulltrúa"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
@@ -432,7 +451,7 @@ msgid "Sessions Running"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
@@ -440,14 +459,14 @@ msgid "Set Sale Order"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Settle the order"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid ""
@@ -461,17 +480,17 @@ msgid "Source Sale Order Line"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "State"
-msgstr ""
+msgstr "Fylki"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
 msgid "Status"
-msgstr ""
+msgstr "Staða"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
@@ -486,7 +505,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "There was a problem in loading the %s customer."
@@ -511,11 +530,16 @@ msgid "This product will be used as down payment on a sale order."
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderList.xml:0
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "Total"
+msgstr "Samtals"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
 msgstr ""
 
 #. module: pos_sale
@@ -533,16 +557,10 @@ msgid ""
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderFetcher.js:0
 #, python-format
 msgid "Unable to fetch orders if offline."
-msgstr ""
-
-#. module: pos_sale
-#: model:product.product,uom_name:pos_sale.default_downpayment_product
-#: model:product.template,uom_name:pos_sale.default_downpayment_product_product_template
-msgid "Units"
 msgstr ""
 
 #. module: pos_sale
@@ -551,16 +569,25 @@ msgid "Unpaid Amount"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "What do you want to do?"
 msgstr ""
 
 #. module: pos_sale
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
 #, python-format
 msgid "Yes"
 msgstr "Yes"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""

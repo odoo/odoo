@@ -2,7 +2,7 @@ import logging
 import json
 
 from odoo import api
-from odoo.tests import tagged, get_db_name, loaded_demo_data
+from odoo.tests import tagged, get_db_name
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
@@ -23,10 +23,6 @@ class TestAPIKeys(HttpCaseWithUserDemo):
             del self.registry['ir.logging'].send_key
 
     def test_addremove(self):
-        # TODO: Make this work if no demo data + hr installed
-        if not loaded_demo_data(self.env):
-            _logger.warning("This test relies on demo data. To be rewritten independently of demo data for accurate and reliable results.")
-            return
         db = get_db_name()
         self.start_tour('/web', 'apikeys_tour_setup', login='demo')
         demo_user = self.env['res.users'].search([('login', '=', 'demo')])

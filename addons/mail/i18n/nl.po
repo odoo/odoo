@@ -6,15 +6,16 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1462,8 +1463,8 @@ msgid "Animals & Nature"
 msgstr "Dieren & natuur"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1713,9 +1714,22 @@ msgid "Auto subscription"
 msgstr "Automatische inschrijving"
 
 #. module: mail
+#: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
+#: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__auto_comment
+msgid "Automated Targeted Notification"
+msgstr "Geautomatiseerde gerichte meldingen"
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
 msgstr "Geautomatiseerde activiteit"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message.js:0
+#, python-format
+msgid "Automated message"
+msgstr "Geautomatiseerd bericht"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__triggered_next_type_id
@@ -2433,9 +2447,11 @@ msgstr "Bedrijven"
 
 #. module: mail
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/wizard/mail_compose_message.py:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -3723,8 +3739,14 @@ msgstr "Mislukt"
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
-msgid "Failed to render QWeb template : %s)"
-msgstr "Kon QWeb-sjabloon niet weergeven: %s)"
+msgid ""
+"Failed to render QWeb template : %s\n"
+"\n"
+"%s)"
+msgstr ""
+"Kon QWeb-sjabloon niet weergeven: %s\n"
+"\n"
+"%s)"
 
 #. module: mail
 #. odoo-python
@@ -4286,6 +4308,7 @@ msgstr "Verborgen sjabloon"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Hide Call Settings"
@@ -4293,7 +4316,6 @@ msgstr "Oproepinstellingen verbergen"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
@@ -5575,10 +5597,10 @@ msgstr "Log notitie"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
+#: code:addons/mail/static/src/components/welcome_view/welcome_view.js:0
 #, python-format
-msgid "Logged as"
-msgstr "Aangemeld als"
+msgid "Logged in as %s"
+msgstr "Ingelogd als %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -6952,6 +6974,14 @@ msgstr "Openen"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Open Document"
 msgstr "Document openen"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#: code:addons/mail/static/src/components/attachment_card/attachment_card.xml:0
+#, python-format
+msgid "Open Link"
+msgstr "Link openen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -8589,6 +8619,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Show Call Settings"
@@ -8603,7 +8634,6 @@ msgstr "Volgers weergeven"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
@@ -9330,6 +9360,13 @@ msgstr ""
 "De gevraagde bewerking kan niet worden voltooid vanwege beveiligingsbeperkingen. Neem contact op met je systeembeheerder.\n"
 "\n"
 "(Document type: %s, Bewerking: %s)"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/blur_manager.js:0
+#, python-format
+msgid "The selfie segmentation library was not loaded"
+msgstr "De selfie-segmentatiebibliotheek is niet geladen"
 
 #. module: mail
 #. odoo-python
@@ -10138,16 +10175,6 @@ msgstr ""
 " profiteren van een kant-en-klare e-mailserver (@ mijnbedrijf.odoo.com)."
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:0
-#, python-format
-msgid ""
-"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
-"It should be a comma separated list of domains e.g. example.com,example.org."
-msgstr ""
-"De waarde voor `mail.catchall.domain.allowed` kan niet worden gevalideerd.\n"
-"Het moet een door komma's gescheiden lijst van domeinen zijn, bijv. example.com,example.org."
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -10168,6 +10195,17 @@ msgstr "VS"
 #, python-format
 msgid "VS button"
 msgstr "VS-knop"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Value for `mail.catchall.domain.allowed` cannot be validated.\n"
+"It should be a comma separated list of domains e.g. example.com,example.org."
+msgstr ""
+"De waarde voor `mail.catchall.domain.allowed` kan niet worden gevalideerd.\n"
+"Het moet een door komma's gescheiden lijst van domeinen zijn, bijv. example.com,example.org."
 
 #. module: mail
 #. odoo-javascript
@@ -16472,8 +16510,8 @@ msgid "doctor"
 msgstr "dokter"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0

@@ -10,14 +10,17 @@
 # Dorin Hongu <dhongu@gmail.com>, 2023
 # Claudia Baisan, 2023
 # Cozmin Candea <office@terrabit.ro>, 2023
+# Maria Muntean, 2024
+# Corina Calin, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 08:56+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2023\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +41,7 @@ msgstr "'. Afișare rezultate pentru '"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "(Ref:"
-msgstr ""
+msgstr "(Ref:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -57,12 +60,12 @@ msgstr ""
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "<b>Drag and Drop</b> this snippet below the event title."
-msgstr ""
+msgstr "<b>Trageți și Plasați</b> acest fragment sub titlul evenimentului."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<b>End</b>"
-msgstr ""
+msgstr "<b>Sfârșit</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -90,7 +93,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<i class=\"fa fa-ban me-2\"/>Sold Out"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>Vândut"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -101,7 +104,7 @@ msgstr "<i class=\"fa fa-ban me-2\"/>Nepublicat"
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check me-2\"/>Registered"
-msgstr ""
+msgstr "<i class=\"fa fa-check me-2\"/>Înregistrat"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -128,6 +131,8 @@ msgid ""
 "<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
 "title=\"Configure event tickets\"/><em>Configure Tickets</em>"
 msgstr ""
+"<i class=\"fa fa-gear me-1\" role=\"img\" aria-label=\"Configure\" "
+"title=\"Configure event tickets\"/><em>Configurați biletele</em>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -195,6 +200,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary text-uppercase "
 "o_wevent_badge\">Speaker</span>"
 msgstr ""
+"<span class=\"badge text-bg-secondary text-uppercase "
+"o_wevent_badge\">Vorbitor</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -207,6 +214,8 @@ msgid ""
 "<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
 "class=\"o_countdown_metric pe-1\">days</span>"
 msgstr ""
+"<span class=\"o_countdown_remaining o_timer_days pe-1\">0</span><span "
+"class=\"o_countdown_metric pe-1\">zile</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_widget
@@ -314,6 +323,8 @@ msgstr "Toate țările"
 #: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid "Allows to display and manage event-specific menus on website."
 msgstr ""
+"Permite afișarea și gestionarea meniurilor specifice evenimentului de pe "
+"site"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
@@ -348,7 +359,7 @@ msgstr "Autor"
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Business Workshops"
-msgstr ""
+msgstr "Ateliere de afaceri"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
@@ -398,7 +409,7 @@ msgstr "Companie"
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Conference For Architects"
-msgstr ""
+msgstr "Conferință pentru Arhitecți"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -464,7 +475,7 @@ msgstr "Afișați un meniu dedicat pe site-ul web"
 #: model:ir.model.fields,help:website_event.field_event_event__community_menu
 #: model:ir.model.fields,help:website_event.field_event_type__community_menu
 msgid "Display community tab on website"
-msgstr ""
+msgstr "Afișați tab-ul de comunitate pe site"
 
 #. module: website_event
 #. odoo-javascript
@@ -484,6 +495,13 @@ msgid "End -"
 msgstr "Sfârșit -"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "Eroare"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__event_id
 msgid "Event"
@@ -492,7 +510,7 @@ msgstr "Eveniment"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__community_menu_ids
 msgid "Event Community Menus"
-msgstr ""
+msgstr "Meniuri eveniment comunitate"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
@@ -517,12 +535,12 @@ msgstr "Nume eveniment"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "Pagină eveniment"
 
 #. module: website_event
 #: model:ir.actions.act_window,name:website_event.action_event_pages_list
 msgid "Event Pages"
-msgstr ""
+msgstr "Pagini eveniment"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
@@ -548,7 +566,7 @@ msgstr "Categorie Etichetă Eveniment"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_dynamic_snippet_options_template
 msgid "Event Tags"
-msgstr ""
+msgstr "Etichete eveniment"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
@@ -583,6 +601,7 @@ msgstr "Eveniment nepublicat"
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
 #: model_terms:ir.ui.view,arch_db:website_event.event_searchbar_input_snippet_options
+#: model_terms:ir.ui.view,arch_db:website_event.snippets
 #, python-format
 msgid "Events"
 msgstr "Evenimente"
@@ -590,7 +609,7 @@ msgstr "Evenimente"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Events Page"
-msgstr ""
+msgstr "Pagină evenimente"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -602,7 +621,7 @@ msgstr "Expirat"
 #: model:ir.model.fields,field_description:website_event.field_event_type__menu_register_cta
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 msgid "Extra Register Button"
-msgstr ""
+msgstr "Buton pentru înregistrare suplimentară"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -616,7 +635,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Fold Tickets Details"
-msgstr ""
+msgstr "Îndoiți detaliile biletelor"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -674,12 +693,12 @@ msgstr "Introducere"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu
 msgid "Introduction Menu"
-msgstr ""
+msgstr "Meniu Introducere"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__introduction_menu_ids
 msgid "Introduction Menus"
-msgstr ""
+msgstr "Meniuri Introducere"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__is_done
@@ -751,12 +770,12 @@ msgstr "Locație"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__location_menu
 msgid "Location Menu"
-msgstr ""
+msgstr "Meniu locații"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__location_menu_ids
 msgid "Location Menus"
-msgstr ""
+msgstr "Meniuri locație"
 
 #. module: website_event
 #. odoo-javascript
@@ -809,7 +828,7 @@ msgstr "Evenimentele urmatoare"
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
 msgid "No Website Menu Items yet!"
-msgstr ""
+msgstr "Încă nu există articole în meniul site-ului!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -830,6 +849,11 @@ msgstr "Nu sunt rezultate pentru '"
 #: model_terms:ir.ui.view,arch_db:website_event.event_pages_kanban_view
 msgid "Not Published"
 msgstr "Nepublicat"
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Online Events"
+msgstr "Evenimente online"
 
 #. module: website_event
 #. odoo-python
@@ -887,16 +911,16 @@ msgstr "Întrebări"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Quotes"
-msgstr ""
+msgstr "Cotații"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Ref:"
-msgstr ""
+msgstr "Ref:"
 
 #. module: website_event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
@@ -914,12 +938,12 @@ msgstr "Buton înregistrare"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu
 msgid "Register Menu"
-msgstr ""
+msgstr "Meniu înregistrare"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__register_menu_ids
 msgid "Register Menus"
-msgstr ""
+msgstr "Meniuri înregistrare"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registered_ids
@@ -965,12 +989,12 @@ msgstr "Înregistrările nu sunt încă deschise"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__start_remaining
 msgid "Remaining before start"
-msgstr ""
+msgstr "Rămas înainte de începere"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_remaining
 msgid "Remaining time before event starts (minutes)"
-msgstr ""
+msgstr "Timpul rămas până la începerea evenimentului (minute)"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_id
@@ -1022,7 +1046,7 @@ msgstr "Nume SEO"
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_tag_category_view_tree
 msgid "Show on Website"
-msgstr ""
+msgstr "Afișați pe site"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1053,17 +1077,24 @@ msgstr "Începeți azi"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "Start → End"
-msgstr ""
+msgstr "Început → Sfârșit"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.display_timer_alert_widget
 msgid "Starts <span/>"
-msgstr ""
+msgstr "Începe <span/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Sub-menu (Specific)"
-msgstr ""
+msgstr "Sub-meniu (Specific)"
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Activitate suspectă detectată de Google reCaptcha."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -1076,6 +1107,13 @@ msgstr "Șabloane"
 msgid "The full URL to access the document through the website."
 msgstr ""
 "URL-ul complet pentru accesarea documentului prin intermediul site-ului web."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_event.py:0
+#, python-format
+msgid "The website must be from the same company as the event."
+msgstr "Site-ul trebuie să fie al aceleiași companii ca și evenimentul."
 
 #. module: website_event
 #. odoo-python
@@ -1095,13 +1133,14 @@ msgstr "Această comandă rapidă vă va aduce înapoi la formularul de evenimen
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
 msgid "This technical menu displays all event sub-menu items."
 msgstr ""
+"Acest meniu tehnic afișează toate elementele submeniului evenimentului."
 
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "This ticket is not available for sale for this event"
-msgstr ""
+msgstr "Acest bilet nu este disponibil pentru vânzare pentru acest eveniment"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -1133,7 +1172,7 @@ msgstr "Comutare navigare"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Top Bar Filter"
-msgstr ""
+msgstr "Filtru pentru bara de sus"
 
 #. module: website_event
 #. odoo-python
@@ -1162,11 +1201,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragraph to write a short text about your events or company."
 msgstr ""
+"Utilizați acest paragraf pentru a scrie un text scurt despre evenimentele "
+"sau compania dumneavoastră."
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
 msgid "Used when not being an url based menu"
-msgstr ""
+msgstr "Utilizat atunci când nu este un meniu bazat pe url"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__view_id
@@ -1200,12 +1241,12 @@ msgstr "Meniul evenimentului site-ului web"
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_search
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_tree
 msgid "Website Event Menus"
-msgstr ""
+msgstr "Meniuri ale evenimentului de pe site"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
-msgstr ""
+msgstr "Pagina de pornire a site-ului"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_menu
@@ -1216,7 +1257,7 @@ msgstr "Meniu website"
 #. module: website_event
 #: model:ir.ui.menu,name:website_event.menu_website_event_menu
 msgid "Website Menus"
-msgstr ""
+msgstr "Meniuri site"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_snippet_filter
@@ -1227,7 +1268,7 @@ msgstr "Filtru fragment de site"
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Website Submenu"
-msgstr ""
+msgstr "Submeniu site"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_url
@@ -1278,6 +1319,8 @@ msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registering."
 msgstr ""
+"Cu ajutorul butonului Editare, puteți <b>personaliza </b> pagina web pe care"
+" vizitatorii o vor vedea la înregistrare."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -1287,7 +1330,7 @@ msgstr "disponibil)"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "e.g. \"Conference for Architects\""
-msgstr ""
+msgstr "de exemplu, \"Conferință pentru arhitecți\""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full

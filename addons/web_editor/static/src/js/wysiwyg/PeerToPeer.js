@@ -1,4 +1,6 @@
 /** @odoo-module */
+import { browser } from "@web/core/browser/browser";
+const localStorage = browser.localStorage;
 
 const urlParams = new URLSearchParams(window.location.search);
 const collaborationDebug = urlParams.get('collaborationDebug');
@@ -129,17 +131,26 @@ const baseNotificationMethods = {
         }
         if (debugShowLog) console.log(`%cisOfferRacing: ${isOfferRacing}`, 'background: red;');
 
-        if (isOfferRacing) {
-            if (debugShowLog)
-                console.log(`%c SETREMOTEDESCRIPTION 1`, 'background: navy; color:white;');
-            await Promise.all([
-                pc.setLocalDescription({ type: 'rollback' }),
-                pc.setRemoteDescription(description),
-            ]);
-        } else {
-            if (debugShowLog)
-                console.log(`%c SETREMOTEDESCRIPTION 2`, 'background: navy; color:white;');
-            await pc.setRemoteDescription(description);
+        try {
+            if (isOfferRacing) {
+                if (debugShowLog)
+                    console.log(`%c SETREMOTEDESCRIPTION 1`, 'background: navy; color:white;');
+                await Promise.all([
+                    pc.setLocalDescription({ type: 'rollback' }),
+                    pc.setRemoteDescription(description),
+                ]);
+            } else {
+                if (debugShowLog)
+                    console.log(`%c SETREMOTEDESCRIPTION 2`, 'background: navy; color:white;');
+                await pc.setRemoteDescription(description);
+            }
+        } catch (e) {
+            if (e instanceof DOMException && e.name === 'InvalidStateError') {
+                console.error(e);
+                return;
+            } else {
+                throw e;
+            }
         }
         if (clientInfos.iceCandidateBuffer.length) {
             for (const candidate of clientInfos.iceCandidateBuffer) {
@@ -149,7 +160,16 @@ const baseNotificationMethods = {
         }
         if (description.type === 'offer') {
             const answerDescription = await pc.createAnswer();
-            await pc.setLocalDescription(answerDescription);
+            try {
+                await pc.setLocalDescription(answerDescription);
+            } catch (e) {
+                if (e instanceof DOMException && e.name === 'InvalidStateError') {
+                    console.error(e);
+                    return;
+                } else {
+                    throw e;
+                }
+            }
             this.notifyClient(
                 notification.fromClientId,
                 'rtc_signal_description',

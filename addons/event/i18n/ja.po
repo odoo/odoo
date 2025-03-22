@@ -9,15 +9,15 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2023
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1367,6 +1367,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr "イベントページへのスポンサー・出展者の表示"
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr "タイムゾーンを表示"
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "注文を表示する"
@@ -1861,7 +1866,7 @@ msgstr "主なアプリケーションの機能フロー。"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: event
 #: model:event.event.ticket,name:event.event_4_ticket_0
@@ -2050,6 +2055,13 @@ msgstr "重要なチケット情報"
 #, python-format
 msgid "In Progress"
 msgstr "進行中"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr "イベントの日付/時間がウェブサイトに表示されるタイムゾーンを示します。"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -2998,10 +3010,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づく状態\n"
-"延滞：期限は既に過ぎました\n"
-"当日：活動日は本日です\n"
-"予定：将来の活動。"
+"活動に基づくステータス\n"
+"遅延: 期日が過ぎています\n"
+"今日: 活動日は今日です\n"
+"予定: 今後の活動。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_tag__color
@@ -3241,7 +3253,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr "チケットは印刷するか、携帯電話から直接スキャンすることができます。"
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "タイムゾーン"
@@ -3447,6 +3458,14 @@ msgstr "週"
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr "新着情報"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
+msgstr "イベント予定日時 (フォームビューに表示されている現地時間)"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing

@@ -55,7 +55,7 @@ class Project(models.Model):
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)
     partner_id = fields.Many2one(
         compute='_compute_partner_id', store=True, readonly=False)
-    allocated_hours = fields.Float(compute='_compute_allocated_hours', store=True, readonly=False, copy=False)
+    allocated_hours = fields.Float(compute='_compute_allocated_hours', store=True, readonly=False)
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
@@ -213,7 +213,7 @@ class Project(models.Model):
 
     def _update_timesheets_sale_line_id(self):
         for project in self.filtered(lambda p: p.allow_billable and p.allow_timesheets):
-            timesheet_ids = project.sudo(False).mapped('timesheet_ids').filtered(lambda t: not t.is_so_line_edited and t._is_not_billed())
+            timesheet_ids = project.mapped('timesheet_ids').filtered(lambda t: not t.is_so_line_edited and t._is_updatable_timesheet())
             if not timesheet_ids:
                 continue
             for employee_id in project.sale_line_employee_ids.filtered(lambda l: l.project_id == project).employee_id:

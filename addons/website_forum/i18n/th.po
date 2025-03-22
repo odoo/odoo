@@ -6,7 +6,7 @@
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
 # Martin Trigaux, 2022
 # Wichanon Jamwutthipreecha, 2022
-# Rasareeyar Lappiam, 2023
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:45+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Rasareeyar Lappiam, 2023\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flag"
-msgstr ""
+msgstr "ธง"
 
 #. module: website_forum
 #. odoo-javascript
@@ -35,7 +35,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid " Flagged"
-msgstr ""
+msgstr "ปักธงแล้ว"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
@@ -296,6 +296,7 @@ msgid ""
 "<b>Answers should not add or expand questions</b>. Instead, either edit the "
 "question or add a comment."
 msgstr ""
+"<b>คำตอบไม่ควรเพิ่มหรือขยายคำถาม</b> ให้แก้ไขคำถามหรือเพิ่มความคิดเห็นแทน"
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -476,7 +477,7 @@ msgstr "<i class=\"fa fa-bug\"/> เครื่องมือตัวกร�
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-check fa-fw me-1\"/>Accept"
-msgstr ""
+msgstr "<i class=\"fa fa-check fa-fw me-1\"/>ยอมรับ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -517,12 +518,12 @@ msgstr "<i class=\"fa fa-chevron-left small\"/> กลับ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments-o me-1\" title=\"ฟอรั่ม\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-eye me-1\" title=\"Views\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-eye me-1\" title=\"จำนวนการดู\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -544,7 +545,7 @@ msgstr "<i class=\"fa fa-flag\"/> ประเทศ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"เว็บไซต์\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
@@ -563,7 +564,7 @@ msgstr "<i class=\"fa fa-question-circle-o fa-fw\"/> โพสต์ของฉ
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-reply me-1\"/>Answer"
-msgstr ""
+msgstr "<i class=\"fa fa-reply me-1\"/>คำตอบ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -595,6 +596,8 @@ msgid ""
 "<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"img\" aria-"
 "label=\"Negative votes\" title=\"Negative votes\"/>"
 msgstr ""
+"<i class=\"fa fa-thumbs-down text-danger ms-3\" role=\"รูปภาพ\" aria-"
+"label=\"คะแนนเสียงเชิงลบ\" title=\"คะแนนเสียงเชิงลบ\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -608,7 +611,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<i class=\"fa fa-times fa-fw me-1\"/>Reject"
-msgstr ""
+msgstr "<i class=\"fa fa-times fa-fw me-1\"/>ปฏิเสธ"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
@@ -628,7 +631,7 @@ msgstr "<i class=\"fa fa-user\"/> ผู้ใช้"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<small class=\"fw-bold\">Votes</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">โหวต</small>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_display_post_answer
@@ -1173,7 +1176,7 @@ msgstr "สามารถโหวตเห็นด้วย"
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_use_full_editor
 msgid "Can Use Full Editor"
-msgstr ""
+msgstr "สามารถใช้โปรแกรมแก้ไขแบบเต็มได้"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__can_view
@@ -1761,6 +1764,12 @@ msgid ""
 "accumulated for a question or answer per day. The table given at the end "
 "explains reputation point requirements for each type of moderation task."
 msgstr ""
+"ตัวอย่างเช่น หากคุณถามคำถามที่น่าสนใจหรือให้คำตอบที่เป็นประโยชน์ "
+"ข้อมูลของคุณจะถูกโหวตเห็นด้วย ในทางกลับกัน หากคำตอบนั้นทำให้เข้าใจผิด "
+"คำตอบนั้นจะถูกลบคะแนน การลงคะแนนเสียงเห็นด้วยแต่ละครั้งจะได้ 10 คะแนน "
+"การลงคะแนนเสียงที่ไม่เห็นด้วยแต่ละครั้งจะถูกลบ 2 คะแนน "
+"มีการจำกัดคะแนนที่สามารถสะสมได้ 200 คะแนนสำหรับคำถามหรือคำตอบต่อวัน "
+"ตารางที่ให้ไว้ตอนท้ายจะอธิบายข้อกำหนดคะแนนความน่าเชื่อถือสำหรับงานตรวจสอบแต่ละประเภท"
 
 #. module: website_forum
 #. odoo-python
@@ -1794,7 +1803,7 @@ msgstr "ชื่อฟอรั่ม"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Forum Page"
-msgstr ""
+msgstr "หน้าฟอรั่ม"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
@@ -1805,7 +1814,7 @@ msgstr "โพสต์ฟอรั่ม"
 #. module: website_forum
 #: model:ir.actions.act_window,name:website_forum.action_forum_post
 msgid "Forum Post Pages"
-msgstr ""
+msgstr "หน้าโพสต์ฟอรั่ม"
 
 #. module: website_forum
 #: model:ir.ui.menu,name:website_forum.menu_forum_post_pages
@@ -2226,7 +2235,7 @@ msgstr "ทำเครื่องหมายว่าเป็นคำตอ
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Mark as Offensive"
-msgstr ""
+msgstr "ทำเครื่องหมายว่าไม่เหมาะสม"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
@@ -2642,7 +2651,7 @@ msgstr "โพสต์ความคิดเห็น"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "Post Count"
-msgstr ""
+msgstr "จำนวนโพสต์"
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post_vote
@@ -3405,7 +3414,7 @@ msgstr "คำตอบทั้งหมด"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Total Posts"
-msgstr ""
+msgstr "โพสต์ทั้งหมด"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
@@ -3751,7 +3760,7 @@ msgstr "วันที่กิจกรรม"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "and join this Forum"
-msgstr ""
+msgstr "และเข้าร่วมฟอรั่มนี้"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3796,12 +3805,12 @@ msgstr "เช่น ช่วยเหลือ"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form_add
 msgid "e.g. Technical Assistance"
-msgstr ""
+msgstr "เช่น ความช่วยเหลือด้านเทคนิค"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
 msgid "e.g. When should I plant my tomatoes?"
-msgstr ""
+msgstr "เช่น ฉันควรปลูกมะเขือเทศตอนช่วงไหน?"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma

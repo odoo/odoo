@@ -159,9 +159,9 @@ export class FillTemporalPeriod {
      */
     _getFormattedServerDate(bound) {
         if (bound.isUTC() || this.field.type === "date") {
-            return bound.format(FIELD_TYPE_TABLE[this.field.type].format);
+            return bound.clone().locale("en").format(FIELD_TYPE_TABLE[this.field.type].format);
         } else {
-            return moment.utc(bound).format(FIELD_TYPE_TABLE[this.field.type].format);
+            return moment.utc(bound).locale("en").format(FIELD_TYPE_TABLE[this.field.type].format);
         }
     }
     /**

@@ -14,26 +14,47 @@ const { DateTime } = luxon;
  * Convert pivot period to the related filter value
  *
  * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
- * @param {string} value
+ * @param {string|number} value
  * @returns {object}
  */
 function pivotPeriodToFilterValue(timeRange, value) {
     // reuse the same logic as in `parseAccountingDate`?
-    const yearOffset = (value.split("/").pop() | 0) - DateTime.now().year;
+    if (typeof value === "number") {
+        value = value.toString(10);
+    }
+    if (
+        value === "false" || // the value "false" is the default value when there is no data for a group header
+        typeof value !== "string"
+    ) {
+        // anything else then a string at this point is incorrect, so no filtering
+        return undefined;
+    }
+
+    const yearValue = value.split("/").at(-1);
+    if (!yearValue) {
+        return undefined;
+    }
+    const yearOffset = yearValue - DateTime.now().year;
     switch (timeRange) {
         case "year":
             return {
                 yearOffset,
             };
         case "month": {
-            const month = value.split("/")[0] | 0;
+            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            if (!(month in monthsOptions)) {
+                return { yearOffset, period: undefined };
+            }
             return {
                 yearOffset,
                 period: monthsOptions[month - 1].id,
             };
         }
         case "quarter": {
-            const quarter = value.split("/")[0] | 0;
+            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            if (!(quarter in FILTER_DATE_OPTION.quarter)) {
+                return { yearOffset, period: undefined };
+            }
             return {
                 yearOffset,
                 period: FILTER_DATE_OPTION.quarter[quarter - 1],
@@ -100,6 +121,9 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooPivots();
                 break;
+            case "UPDATE_ODOO_PIVOT_DOMAIN":
+                this._addDomain(cmd.pivotId);
+                break;
             case "ADD_GLOBAL_FILTER":
             case "EDIT_GLOBAL_FILTER":
             case "REMOVE_GLOBAL_FILTER":
@@ -115,6 +139,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
                             "ADD_GLOBAL_FILTER",
                             "EDIT_GLOBAL_FILTER",
                             "REMOVE_GLOBAL_FILTER",
+                            "UPDATE_ODOO_PIVOT_DOMAIN",
                         ].includes(command.type)
                     )
                 ) {
@@ -154,7 +179,7 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         const cell = this.getters.getCell(sheetId, col, row);
         if (cell && cell.isFormula()) {
             const pivotFunction = getFirstPivotFunction(cell.content);
-            if (pivotFunction) {
+            if (pivotFunction && pivotFunction.args[0]) {
                 const content = astToFormula(pivotFunction.args[0]);
                 return this.getters.evaluateFormula(content).toString();
             }
@@ -270,9 +295,12 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
                                 break;
                             }
                         }
+                        // A group by value of "none"
+                        if (value === false) break;
                         if (JSON.stringify(currentValue) !== `[${value}]`) {
                             transformedValue = [value];
                         }
+
                         break;
                     case "text":
                         if (currentValue !== value) {

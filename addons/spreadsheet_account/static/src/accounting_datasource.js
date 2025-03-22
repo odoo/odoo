@@ -2,6 +2,7 @@
 import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
+import { deepCopy } from "@web/core/utils/objects";
 
 import { ServerData } from "@spreadsheet/data_sources/server_data";
 
@@ -81,6 +82,7 @@ export class AccountingDataSource {
      * @returns {{ debit: number, credit: number }}
      */
     _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
+        dateRange = deepCopy(dateRange);
         dateRange.year += offset;
         // Excel dates start at 1899-12-30, we should not support date ranges
         // that do not cover dates prior to it.

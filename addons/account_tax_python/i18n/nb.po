@@ -5,14 +5,15 @@
 # Translators:
 # Marius Stedjan <marius@stedjan.com>, 2022
 # Martin Trigaux, 2022
+# Rune Restad, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Rune Restad, 2024\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +35,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Skattegruppe: Skatten er et sett med delskatter.\n"
+"- Fast: Skattebeløpet forblir det samme uansett pris.\n"
+"- Prosent av pris: Skattebeløpet er en % av prisen:\n"
+"f.eks. 100 * (1 + 10 %) = 110 (ikke inkludert i prisen)\n"
+"f.eks. 110 / (1 + 10 %) = 100 (inkludert i prisen)\n"
+"- Prosent av pris inkludert skatt: Skattebeløpet er en deling av prisen:\n"
+"f.eks. 180 / (1 - 10 %) = 200 (ikke inkludert i prisen)\n"
+"f.eks. 200 * (1 - 10 %) = 180 (inkludert i prisen)"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -106,9 +116,20 @@ msgstr "Avgift"
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
-msgstr ""
+msgstr "Mva beregning"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template
 msgid "Templates for Taxes"
 msgstr "Maler for skatter og avgifter"
+
+#. module: account_tax_python
+#. odoo-python
+#: code:addons/account_tax_python/models/account_tax.py:0
+#: code:addons/account_tax_python/models/account_tax.py:0
+#, python-format
+msgid ""
+"You entered invalid code %r in %r taxes\n"
+"\n"
+"Error : %s"
+msgstr ""

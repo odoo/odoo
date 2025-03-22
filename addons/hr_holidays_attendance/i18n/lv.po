@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-# ievaputnina <ievai.putninai@gmail.com>, 2023
+# ievaputnina <ievai.putninai@gmail.com>, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2025-02-03 09:16+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: ievaputnina <ievai.putninai@gmail.com>, 2023\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,13 +23,19 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_type.py:0
 #, python-format
 msgid "%s hours available"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#: model:ir.model,name:hr_holidays_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Apmeklējums"
+
+#. module: hr_holidays_attendance
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Available"
@@ -46,7 +52,7 @@ msgid "Count Extra Hours"
 msgstr "Skaitīt papildus stundas"
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Days"
@@ -78,7 +84,7 @@ msgid "Extra Hours Available"
 msgstr ""
 
 #. module: hr_holidays_attendance
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_holidays_attendance/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "Hours"
@@ -93,13 +99,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_action
 #: model:ir.actions.act_window,name:hr_holidays_attendance.hr_leave_allocation_overtime_manager_action
 msgid "New Allocation Request"
-msgstr ""
+msgstr "Jauns prombūtnes pieprasījums"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,help:hr_holidays_attendance.field_hr_leave_type__overtime_deductible
 msgid ""
 "Once a time off of this type is approved, extra hours in attendances will be"
 " deducted."
+msgstr ""
+
+#. module: hr_holidays_attendance
+#. odoo-python
+#: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
+#, python-format
+msgid ""
+"Only an Officer or Administrator is allowed to edit the allocation duration "
+"in this status."
 msgstr ""
 
 #. module: hr_holidays_attendance
@@ -119,6 +134,7 @@ msgid "Save"
 msgstr "Saglabāt"
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -126,12 +142,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to extend this leave."
 msgstr ""
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -139,13 +157,14 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays_attendance
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "The employee does not have enough extra hours to request this leave."
 msgstr ""
 
 #. module: hr_holidays_attendance
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave_allocation.py:0
 #, python-format
 msgid ""
@@ -165,7 +184,7 @@ msgstr ""
 #. module: hr_holidays_attendance
 #: model:ir.model,name:hr_holidays_attendance.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "Prombūtnes veids"
 
 #. module: hr_holidays_attendance
 #: model:ir.model.fields,field_description:hr_holidays_attendance.field_hr_leave__employee_overtime
@@ -179,7 +198,7 @@ msgid "User"
 msgstr "Lietotājs"
 
 #. module: hr_holidays_attendance
-#: code:addons/hr_holidays_attendance/models/hr_leave.py:0
+#. odoo-python
 #: code:addons/hr_holidays_attendance/models/hr_leave.py:0
 #, python-format
 msgid "You do not have enough extra hours to request this leave"

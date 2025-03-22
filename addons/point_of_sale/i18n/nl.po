@@ -5,17 +5,19 @@
 # Translators:
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Martin Trigaux, 2023
-# Wil Odoo, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
+# Jolien De Paepe, 2024
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-10 06:06+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,6 +94,20 @@ msgstr ""
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%s product(en) gevonden voor \"%s\"."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s untaxed"
+msgstr "%s excl. BTW"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "%s with %s"
+msgstr "%s met %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -954,11 +970,11 @@ msgstr "Buffer:"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__limited_partners_loading
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_limited_partners_loading
 msgid ""
-"By default, 100 partners are loaded.\n"
+"By default, 10000 partners are loaded.\n"
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"Standaard worden 100 relaties geladen.\n"
+"Standaard worden 10000 relaties geladen.\n"
 "Wanneer de sessie open is, blijven we alle resterende relaties op de achtergrond laden.\n"
 "In de tussentijd kun je de knop 'Klanten laden' gebruiken om relaties uit de database te laden."
 
@@ -1339,6 +1355,13 @@ msgstr "Sessie afsluiten en boekingen maken"
 #: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
 msgid "Close Session Wizard"
 msgstr "Wizard sessie sluiten"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Close anyway"
+msgstr "Toch sluiten"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1805,8 +1828,8 @@ msgid "Customer Screen Warning"
 msgstr "Klantscherm waarschuwing"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #, python-format
@@ -2119,6 +2142,13 @@ msgstr "Afwijzen"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Do not close"
+msgstr "Niet sluiten"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2893,11 +2923,14 @@ msgid "Invoice payment for %s (%s) using %s"
 msgstr "Factuurbetaling voor %s (%s) met %s"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__invoiced
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__invoiced
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__invoiced
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
+#, python-format
 msgid "Invoiced"
 msgstr "Gefactureerd"
 
@@ -3257,6 +3290,13 @@ msgstr "Partij naam"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Lot Number"
+msgstr "Partijnummer"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/OrderWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -3419,6 +3459,13 @@ msgid "More..."
 msgstr "Meer..."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Multiple Invoiced Orders Selected"
+msgstr "Meerdere gefactureerde orders geselecteerd"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Mijn activiteit deadline"
@@ -3501,6 +3548,11 @@ msgstr "Nieuwe sessie"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Nieuwsbrief rek"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3722,7 +3774,7 @@ msgstr "Offline fout"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Offline Orders"
 msgstr "Offline orders"
@@ -3770,6 +3822,14 @@ msgid ""
 msgstr ""
 "Voor deze retourregel is alleen een negatieve hoeveelheid toegestaan. Klik "
 "op +/- om de retour te nemen hoeveelheid te wijzigen."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "Only administrators can edit receipt headers and footers"
+msgstr ""
+"Enkel beheerders kunnen de kopteksten en voetnota's van bonnen wijzigen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
@@ -4016,8 +4076,8 @@ msgstr ""
 "teruggenomen."
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4173,8 +4233,8 @@ msgid "Pay Order"
 msgstr "Betaal order"
 
 #. module: point_of_sale
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
@@ -4574,6 +4634,13 @@ msgid "PoS Product Category"
 msgstr "Kassa productcategorie"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "PoS order %s can not be processed"
+msgstr "De Kassa-bestelling %s kan niet worden verwerkt"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_property_form
 msgid "Point Of Sale"
 msgstr "Kassa"
@@ -4847,7 +4914,7 @@ msgstr "Prijzenbeheer"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Price Unit"
-msgstr "Prijs"
+msgstr "Eenheidsprijs"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5230,6 +5297,8 @@ msgstr "Ververs scherm"
 
 #. module: point_of_sale
 #. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
@@ -5505,6 +5574,13 @@ msgstr "Verkooporderregel teller"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
 msgstr "Orderregel"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Sales"
+msgstr "Verkoop"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
@@ -5949,7 +6025,7 @@ msgstr "Sommige serie-/partijnummers ontbreken"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to configuration "
@@ -5962,7 +6038,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid ""
 "Some orders could not be submitted to the server due to internet connection "
@@ -6299,6 +6375,21 @@ msgstr ""
 "afrondingsregel toe\"."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"The Point of Sale order with the following reference %s was received by the "
+"Odoo server, but the order processing phase failed.<br/>The datas received "
+"from the point of sale has been saved in the attachments.<br/>Please contact"
+" your support service to assist you on restoring it"
+msgstr ""
+"De Kassa-bestelling met referentie %s is ontvangen door de Odoo-server, maar"
+" de verwerking van de besteling is mislukt.<br/>De gegevens die zijn "
+"ontvangen van het kassasysteem zijn opgeslagen in de bijlagen.<br/>Neem "
+"contact op met je supportafdeling om je te helpen bij het herstellen"
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -6314,11 +6405,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid ""
-"The amount of your payment lines must be rounded to validate the "
-"transaction."
+"The amount of your payment lines must be rounded to validate the transaction.\n"
+"The rounding precision is %s so you should set %s or %s as payment amount instead of %s."
 msgstr ""
-"Het bedrag van je betalingsregels moet worden afgerond om de transactie te "
-"bevestigen."
+"Het bedrag van je betalingsregels moet worden afgerond om de transactie te valideren.\n"
+"De afrondingsprecisie is %s dus je moet %s of %s instellen als betalingsbedrag in plaats van %s."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6434,12 +6525,10 @@ msgstr "Het factuurdagboek van het kassa %s moet van hetzelfde bedrijf zijn."
 #, python-format
 msgid ""
 "The maximum difference allowed is %s.\n"
-"\n"
-"                        Please contact your manager to accept the closing difference."
+"Please contact your manager to accept the closing difference."
 msgstr ""
 "Het maximaal toegestane verschil is %s.\n"
-"\n"
-"                        Neem contact op met je manager om het sluitingsverschil te accepteren."
+"Neem contact op met je manager om het slotverschil te accepteren."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7203,7 +7292,7 @@ msgstr "Kan order niet synchroniseren"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_unit
 msgid "Unit Price"
-msgstr "Prijs"
+msgstr "Eenheidsprijs"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7587,6 +7676,17 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
+"You do not have permission to open a POS session. Please try opening a "
+"session with a different user"
+msgstr ""
+"Je kunt geen POS-sessie openen. Probeer een sessie te openen met een andere "
+"gebruiker"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
 "You don't have the access rights to get the point of sale closing control "
 "data."
 msgstr ""
@@ -7603,6 +7703,18 @@ msgid ""
 msgstr ""
 "Je hebt de optie \"Klant identificeren\" ingeschakeld voor %s betaalmethode,"
 " maar de bestelling %s bevat geen klant."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid ""
+"You have selected orderlines from multiple invoiced orders. To proceed "
+"refund, please select orderlines from the same invoiced order."
+msgstr ""
+"Je hebt orderregels geselecteerd uit meerdere gefactureerde orders. Om tot "
+"terugbetaling over te gaan, selecteer je orderregels van dezelfde "
+"gefactureerde bestelling."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7891,3 +8003,14 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "waren duplicaten van bestaande orders"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_journal.py:0
+#, python-format
+msgid ""
+"This journal is associated with payment method %s that is being used by "
+"order %s in the active pos session %s"
+msgstr ""
+"Dit dagboek is gekoppeld aan betaalmethode %s die wordt gebruikt door "
+"bestelling %s in de actieve Kassa-sessie %s."

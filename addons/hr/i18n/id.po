@@ -3,20 +3,20 @@
 # 	* hr
 # 
 # Translators:
-# Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Febrasari Almania <febrasari.almania@gmail.com>, 2022
 # Martin Trigaux, 2023
-# Abe Manyo, 2023
+# Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Abe Manyo, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -191,7 +191,7 @@ msgstr ""
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "<small><b>READ</b></small>"
-msgstr "<small><b>BACA</small>"
+msgstr "<small><b>BACA</b></small>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_kanban
@@ -313,7 +313,7 @@ msgstr "<span class=\"o_stat_text\">Terhubung sejak</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
 msgid "<span class=\"o_stat_text\">Contacts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kontak</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -329,7 +329,7 @@ msgstr ""
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
-msgstr "<span class=\"text-muted small\">Hari untuk mendapatkan Offer</span>"
+msgstr "<span class=\"text-muted small\">Hari untuk mendapatkan Tawaran</span>"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -737,6 +737,11 @@ msgid "Bank Account Number"
 msgstr "Nomor Rekening Bank"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Rekening Bank"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "Base"
@@ -991,12 +996,12 @@ msgstr "Buat departemen baru"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "Buat tipe karyawan baru"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "Buat lokasi kerja baru"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1581,7 +1586,8 @@ msgstr "Lulusan"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Great team of smart people, in a friendly and open culture"
-msgstr "Tim hebat dari orang-orang pintar dalam budaya yang ramah dan terbuka"
+msgstr ""
+"Tim hebat penuh orang-orang pintar, di dalam budaya yang ramah dan terbuka"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -1659,7 +1665,7 @@ msgstr "Status Kehadiran HR"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
-msgstr "Personalia"
+msgstr "Sumber Daya Manusia"
 
 #. module: hr
 #: model:hr.job,name:hr.job_hrm
@@ -1729,7 +1735,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Jika kolom aktif diatur ke Salah, itu akan memungkinkan Anda untuk "
+"Jika kolom aktif diatur ke False, itu akan memungkinkan Anda untuk "
 "menyembunyikan data sumber daya tanpa menghapusnya."
 
 #. module: hr
@@ -2153,7 +2159,7 @@ msgstr "Tipe Aktivitas Berikutnya"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Nice to have"
-msgstr "Baik untuk memiliki"
+msgstr "Baik untuk dimiliki"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2650,18 +2656,14 @@ msgid "Register Departure"
 msgstr "Daftarkan Resign"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
-msgstr ""
+msgstr "Kontak Terkait"
 
 #. module: hr
 #. odoo-python
@@ -3187,7 +3189,7 @@ msgstr "Peserta pelatihan"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Trainings"
-msgstr "Trainings"
+msgstr "Training"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
@@ -3243,13 +3245,13 @@ msgstr "IP address valid"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Valid work permit for Belgium"
-msgstr "Ijin kerja yang sah untuk Belgium"
+msgstr "Ijin kerja yang sah untuk Belgia"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "Tanggal Kadaluwarsa Visa"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3285,7 +3287,7 @@ msgstr "Apa yang Kami Tawarkan"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "What's great in the job?"
-msgstr "Apa yang luar biasa di pekerjaan ini?"
+msgstr "Apa yang hebat di pekerjaan ini?"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__member_of_department
@@ -3502,3 +3504,8 @@ msgstr "rencana"
 #, python-format
 msgid "restricted to employees"
 msgstr "dibatasi untuk karyawan-karyawan"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

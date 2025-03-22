@@ -6,16 +6,21 @@
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2024
+# Maria Muntean, 2024
+# Betty Keresztesi, 2024
+# Simonel Criste <info@erpsystems.solutions>, 2024
+# Corina Calin, 2024
+# Lyall Kindmurr, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Lyall Kindmurr, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +81,12 @@ msgid "# of Tasks"
 msgstr "Nr. de Sarcini"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.commercial_partner_id.value}"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "#{record.milestone_count_reached.value} Milestones reached out of "
@@ -83,6 +94,12 @@ msgid ""
 msgstr ""
 "#{record.milestone_count_reached.value} Milestone-uri atinse din "
 "#{record.milestone_count.value}"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "#{record.partner_id.value}"
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -118,13 +135,6 @@ msgstr "Evaluarea %(name)s"
 #, python-format
 msgid "%(name)s's Tasks Analysis"
 msgstr "Analiza sarcinilor %(name)s"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "%(name)s's Timesheets"
-msgstr "Foaia de pontaj a %(name)s"
 
 #. module: project
 #. odoo-python
@@ -2090,8 +2100,8 @@ msgstr ""
 "utilizatorului"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2628,8 +2638,8 @@ msgstr ""
 "fara sa il stergeti."
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2708,7 +2718,7 @@ msgstr ""
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Internal notes are only displayed to internal users."
-msgstr ""
+msgstr "Notele interne sunt afișate numai utilizatorilor interni."
 
 #. module: project
 #. odoo-python
@@ -2970,7 +2980,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_status
 msgid "Last Update Status"
-msgstr ""
+msgstr "Starea ultimei actualizări"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -3058,8 +3068,22 @@ msgstr "Să creăm primul dvs. <b>proiect</b>."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
+msgid "Let's create your first <b>stage</b>."
+msgstr ""
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
 msgid "Let's create your first <b>task</b>."
 msgstr "Să creăm prima ta <b>sarcină</b>."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/tours/project.js:0
+#, python-format
+msgid "Let's create your second <b>stage</b>."
+msgstr ""
 
 #. module: project
 #. odoo-javascript
@@ -3209,8 +3233,8 @@ msgid "Messages"
 msgstr "Mesaje"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3224,12 +3248,12 @@ msgstr "Mesaje"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Milestone"
-msgstr ""
+msgstr "Etapa de referință"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Numărătoarea etapelor"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_count_reached
@@ -3251,7 +3275,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Etape importante"
 
 #. module: project
 #. odoo-javascript
@@ -3373,8 +3397,8 @@ msgid "Neutral face"
 msgstr "Față neutră"
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3394,7 +3418,7 @@ msgstr ""
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
 #, python-format
 msgid "New Milestone"
-msgstr ""
+msgstr "O etapă de referință nouă"
 
 #. module: project
 #. odoo-javascript
@@ -3481,6 +3505,11 @@ msgstr "Data recurenței următoare"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_message
 msgid "Next Recurrencies"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+msgid "No Customer"
 msgstr ""
 
 #. module: project
@@ -3642,7 +3671,7 @@ msgstr "Numărul de erori"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Numărul de mesaje care necesită acțiune"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -4013,8 +4042,8 @@ msgid "Progress Percentage"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4079,7 +4108,7 @@ msgstr "Managerul de proiect"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Etapa de referință a proiectului"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
@@ -4468,7 +4497,7 @@ msgstr "Respins"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__resource_ref
 msgid "Related Document"
-msgstr ""
+msgstr "Document Related"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
@@ -4545,7 +4574,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr ""
+msgstr "Unitate de repetare"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
@@ -4883,7 +4912,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Since"
-msgstr ""
+msgstr "De când"
 
 #. module: project
 #. odoo-javascript
@@ -4934,8 +4963,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5860,7 +5889,7 @@ msgstr "Folosiți subsarcini"
 #. module: project
 #: model:res.groups,name:project.group_project_task_dependencies
 msgid "Use Task Dependencies"
-msgstr ""
+msgstr "Folosește dependențele sarcinii"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -5877,7 +5906,7 @@ msgstr "Folosiți acest lucru pentru proiectul meu"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Use tags to categorize your tasks."
-msgstr ""
+msgstr "Folosiți etichetele pentru a vă clasifica sarcinile."
 
 #. module: project
 #. odoo-javascript
@@ -5892,7 +5921,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
-msgstr ""
+msgstr "Folosește"
 
 #. module: project
 #. odoo-javascript
@@ -5928,12 +5957,12 @@ msgstr "Afișare"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "View Task"
-msgstr ""
+msgstr "Vezi task"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 msgid "View Tasks"
-msgstr ""
+msgstr "Sarcini"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -6008,13 +6037,13 @@ msgstr "Săptămâni"
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "Working Days to Assign"
-msgstr ""
+msgstr "Zile lucrătoare de atribuit"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "Working Days to Close"
-msgstr ""
+msgstr "Zile lucrătoare până la închidere"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
@@ -6048,7 +6077,7 @@ msgstr "Timpul de lucru pentru închidere"
 msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
-msgstr ""
+msgstr "Doriți să dezarhivați și toate tichetele conținute în aceste etape?"
 
 #. module: project
 #. odoo-javascript
@@ -6091,7 +6120,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You can only set a personal stage on a private task."
-msgstr ""
+msgstr "Puteți seta o etapă personală doar pe sarcini private."
 
 #. module: project
 #. odoo-python
@@ -6134,14 +6163,14 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "Nu puteți citi câmpurile %s din task"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
-msgstr ""
+msgstr "Nu puteți scrie în câmpurile %s din sarcină."
 
 #. module: project
 #. odoo-python

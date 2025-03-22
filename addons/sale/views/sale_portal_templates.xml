@@ -180,7 +180,7 @@
                                 <div class="row flex-nowrap">
                                     <div class="col flex-grow-0 pe-2">
                                         <img class="rounded-circle mr4 float-start o_portal_contact_img"
-                                            t-att-src="image_data_uri(sale_order.user_id.avatar_1024)"
+                                            t-att-src="image_data_uri(sale_order.user_id.avatar_128)"
                                             alt="Contact"/>
                                     </div>
                                     <div class="col ps-0" style="min-width: 150px">
@@ -396,7 +396,7 @@
                       </t>
                       <span t-field="sale_order.date_order" t-options='{"widget": "date"}'/>
                     </div>
-                    <div class="mb-3 col-6" t-if="sale_order.validity_date">
+                    <div class="mb-3 col-6" t-if="sale_order.validity_date and sale_order.state in ['draft', 'sent']">
                         <strong>Expiration Date:</strong> <span t-field="sale_order.validity_date" t-options='{"widget": "date"}'/>
                     </div>
                 </div>
@@ -441,6 +441,9 @@
                                     </div>
                                     <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge text-bg-success orders_label_text_align">
                                         <i class="fa fa-fw fa-check"/> <b>Paid</b>
+                                    </span>
+                                    <span t-elif="i.payment_state == 'reversed'" class="small badge text-bg-success orders_label_text_align">
+                                        <i class="fa fa-fw fa-check"/> <b>Reversed</b>
                                     </span>
                                     <span t-elif="authorized_tx_ids" class="small badge text-bg-success orders_label_text_align">
                                         <i class="fa fa-fw fa-check"/> <b>Authorized</b>
@@ -586,7 +589,7 @@
             <section t-if="sale_order.payment_term_id" class="mt-5">
                 <h3 class="">Payment terms</h3>
                 <hr class="mt-0 mb-1"/>
-                <span t-field="sale_order.payment_term_id"/>
+                <span t-field="sale_order.payment_term_id.note"/>
             </section>
         </div>
     </template>

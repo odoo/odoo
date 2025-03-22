@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.tools.misc import unquote
 
 TIMESHEET_INVOICE_TYPES = [
     ('billable_time', 'Billed on Timesheets'),
@@ -14,8 +15,8 @@ TIMESHEET_INVOICE_TYPES = [
     ('non_billable', 'Non Billable Tasks'),
     ('timesheet_revenues', 'Timesheet Revenues'),
     ('service_revenues', 'Service Revenues'),
-    ('other_revenues', 'Materials'),
-    ('other_costs', 'Materials'),
+    ('other_revenues', 'Other revenues'),
+    ('other_costs', 'Other costs'),
 ]
 
 class AccountAnalyticLine(models.Model):
@@ -25,12 +26,27 @@ class AccountAnalyticLine(models.Model):
         domain = super(AccountAnalyticLine, self)._default_sale_line_domain()
         return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
 
+    def _get_sellable_line_domain(self, domain):
+        return self.env['project.task']._get_sellable_line_domain(domain)
+
+    def _domain_so_line(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', 'in', ['sale', 'done']),
+                ('order_partner_id', 'child_of', unquote('commercial_partner_id')),
+            ],
+        ])
+        return str(domain)
+
     timesheet_invoice_type = fields.Selection(TIMESHEET_INVOICE_TYPES, string="Billable Type",
             compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', compute="_compute_commercial_partner")
-    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
+    timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet", index='btree_not_null')
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False,
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', 'child_of', commercial_partner_id)]",
+        domain=_domain_so_line,
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
     order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
@@ -80,7 +96,7 @@ class AccountAnalyticLine(models.Model):
 
     def _is_not_billed(self):
         self.ensure_one()
-        return not self.timesheet_invoice_id or self.timesheet_invoice_id.state == 'cancel'
+        return not self.timesheet_invoice_id or (self.timesheet_invoice_id.state == 'cancel' and self.timesheet_invoice_id.payment_state != 'invoicing_legacy')
 
     def _check_timesheet_can_be_billed(self):
         return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
@@ -93,7 +109,7 @@ class AccountAnalyticLine(models.Model):
 
     def _check_can_write(self, values):
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
-            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
+            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'date']):
                 raise UserError(_('You cannot modify timesheets that are already invoiced.'))
 
     def _timesheet_determine_sale_line(self):
@@ -146,7 +162,9 @@ class AccountAnalyticLine(models.Model):
             ('timesheet_invoice_type', 'in', ['billable_time', 'non_billable']),
             '&',
             ('timesheet_invoice_type', '=', 'billable_fixed'),
-            ('so_line', 'in', order_lines_ids.ids)
+                '&',
+                ('so_line', 'in', order_lines_ids.ids),
+                ('timesheet_invoice_id', '=', False),
         ]
 
     def _get_timesheets_to_merge(self):
@@ -168,3 +186,10 @@ class AccountAnalyticLine(models.Model):
             if mapping_entry:
                 return mapping_entry.cost
         return super()._hourly_cost()
+
+    def _timesheet_convert_sol_uom(self, sol, to_unit):
+        to_uom = self.env.ref(to_unit)
+        return round(sol.product_uom._compute_quantity(sol.product_uom_qty, to_uom, raise_if_failure=False), 2)
+
+    def _is_updatable_timesheet(self):
+        return super()._is_updatable_timesheet and self._is_not_billed()

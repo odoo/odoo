@@ -9,18 +9,20 @@
 # Zahed Alfak <tamass4116@gmail.com>, 2023
 # Hamid Darabi, 2023
 # F Hariri <fhari1234@gmail.com>, 2023
-# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
-# Hanna Kheradroosta, 2023
 # Martin Trigaux, 2023
+# Abbas Ebadian, 2024
+# Hanna Kheradroosta, 2024
+# Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2024
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -758,7 +760,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type_ticket__description
 msgid ""
 "A description of the ticket that you want to communicate to your customers."
-msgstr ""
+msgstr "مشخصات بلیطی که می‌خواهید به مشتریانتان بدهید."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction
@@ -1021,7 +1023,7 @@ msgstr ""
 #. module: event
 #: model:event.stage,name:event.event_stage_booked
 msgid "Booked"
-msgstr ""
+msgstr "رزرو شده"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -1032,7 +1034,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "Booked by"
-msgstr ""
+msgstr "رزرو شده توسط"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
@@ -1348,6 +1350,11 @@ msgid "Display Sponsors and Exhibitors on your event pages"
 msgstr ""
 
 #. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__date_tz
+msgid "Display Timezone"
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
 msgid "Display order"
 msgstr "ترتیب نمایش"
@@ -1413,7 +1420,7 @@ msgstr "رویداد"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "ارسال خودکار رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__event_type_id
@@ -1541,13 +1548,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
 msgid "Event Template"
-msgstr ""
+msgstr "الگوی رویداد"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type_ticket
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
 msgid "Event Template Ticket"
-msgstr ""
+msgstr "قالب بلیط رویداد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
@@ -1574,7 +1581,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
 msgid "Event Ticket"
-msgstr ""
+msgstr "بلیط رویداد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -1589,7 +1596,7 @@ msgstr "نوع رویداد"
 #. module: event
 #: model:ir.actions.act_window,name:event.event_registration_action_tree
 msgid "Event registrations"
-msgstr ""
+msgstr "ثبت‌نام رویدادها"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_stage_action
@@ -1622,7 +1629,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,name:event.event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "رویداد: یادآوری"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -2016,6 +2023,13 @@ msgid "In Progress"
 msgstr "در جریان"
 
 #. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_tz
+msgid ""
+"Indicates the timezone in which the event dates/times will be displayed on "
+"the website."
+msgstr ""
+
+#. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
@@ -2036,12 +2050,12 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__sale_available
 msgid "Is Available"
-msgstr ""
+msgstr "موجود است"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
 msgid "Is Expired"
-msgstr ""
+msgstr "منقضی شده"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_finished
@@ -2216,7 +2230,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:event.selection__event_mail__notification_type__mail
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__notification_type__mail
 msgid "Mail"
-msgstr ""
+msgstr "ایمیل"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
@@ -2242,7 +2256,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "برنامه‌ریزی ارسال در دسته‌بندی رویداد"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -2273,7 +2287,7 @@ msgstr "بازاریابی"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum"
-msgstr ""
+msgstr "حداکثر"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
@@ -2451,7 +2465,7 @@ msgstr "تعداد خطاها"
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "تعداد پیام هایی که نیاز به اقدام دارند"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -2520,7 +2534,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
-msgstr ""
+msgstr "عملیات پشتیبانی نمی‌شود."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -2649,7 +2663,7 @@ msgstr "ثبت"
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Registration Date"
-msgstr ""
+msgstr "تاریخ ثبت"
 
 #. module: event
 #: model:res.groups,name:event.group_event_registration_desk
@@ -2669,7 +2683,7 @@ msgstr "شناسه ثبت نام"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr ""
+msgstr "برنامه‌ریز ارسال ایمیل‌های ثبت‌نام"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_mail_form
@@ -2711,7 +2725,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
 msgid "Registrations"
-msgstr ""
+msgstr "موارد ثبت شده"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_open
@@ -2774,7 +2788,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__scheduled_date
 msgid "Schedule Date"
-msgstr ""
+msgstr "تاریخ برنامه‌ریزی"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -3150,7 +3164,7 @@ msgstr ""
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "This operator is not supported"
-msgstr ""
+msgstr "از این اپراتور پشتیبانی نمی‌شود"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -3201,7 +3215,6 @@ msgid "Tickets can be printed or scanned directly from your phone."
 msgstr ""
 
 #. module: event
-#: model:ir.model.fields,field_description:event.field_event_event__date_tz
 #: model:ir.model.fields,field_description:event.field_event_type__default_timezone
 msgid "Timezone"
 msgstr "منطقه‌ زمانی"
@@ -3300,12 +3313,12 @@ msgstr "عدد"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming events from today"
-msgstr ""
+msgstr "رویدادهای آتی از امرزو به بعد"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "آتی/جاری"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
@@ -3348,7 +3361,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 msgid "Venue"
-msgstr ""
+msgstr "مکان"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
@@ -3406,6 +3419,14 @@ msgstr "هفته"
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
+msgstr ""
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__date_begin
+#: model:ir.model.fields,help:event.field_event_registration__event_begin_date
+msgid ""
+"When the event is scheduled to take place (expressed in your local timezone "
+"on the form view)."
 msgstr ""
 
 #. module: event
@@ -3520,7 +3541,7 @@ msgstr ""
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
-msgstr ""
+msgstr "در %(date)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_registrations_started

@@ -23,3 +23,4 @@ from . import test_website_editor
 from . import test_website_sale_reorder_from_portal
 from . import test_website_sale_snippets
 from . import test_website_sale_fiscal_position
+from . import test_website_sale_invoice

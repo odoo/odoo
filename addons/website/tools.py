@@ -17,7 +17,7 @@ from odoo.tools.misc import hmac, DotDict, frozendict
 def MockRequest(
         env, *, path='/mockrequest', routing=True, multilang=True,
         context=frozendict(), cookies=frozendict(), country_code=None,
-        website=None, remote_addr=HOST, environ_base=None,
+        website=None, remote_addr=HOST, environ_base=None, url_root=None,
         # website_sale
         sale_order_id=None, website_sale_current_pl=None,
 ):
@@ -41,6 +41,8 @@ def MockRequest(
             cookies=cookies,
             referrer='',
             remote_addr=remote_addr,
+            url_root=url_root,
+            args=[],
         ),
         type='http',
         future_response=odoo.http.FutureResponse(),
@@ -51,6 +53,7 @@ def MockRequest(
             geoip={'country_code': country_code},
             sale_order_id=sale_order_id,
             website_sale_current_pl=website_sale_current_pl,
+            context={'lang': ''},
         ),
         geoip={},
         db=env.registry.db_name,
@@ -86,7 +89,8 @@ def MockRequest(
         match.side_effect = NotFound
 
     def update_context(**overrides):
-        request.context = dict(request.context, **overrides)
+        request.env = request.env(context=dict(request.context, **overrides))
+        request.context = request.env.context
 
     request.update_context = update_context
 
@@ -165,6 +169,18 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     """
     # lxml requires one single root element
     tree = etree.fromstring('<p>%s</p>' % html_fragment, etree.XMLParser(recover=True))
+
+    # Remove scripts or other technical elements that should not be converted
+    # into text.
+    xpath_filters = [
+        '//script',
+        '//style',
+        '//svg',
+        '//*[@class="css_non_editable_mode_hidden"]',
+    ]
+    for xpath_filter in xpath_filters:
+        for element in tree.xpath(xpath_filter): element.getparent().remove(element)
+
     content = ' '.join(tree.itertext())
     if collapse_whitespace:
         content = re.sub('\\s+', ' ', content).strip()

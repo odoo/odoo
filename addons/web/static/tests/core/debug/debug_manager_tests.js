@@ -2,7 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { DebugMenu } from "@web/core/debug/debug_menu";
-import { regenerateAssets } from "@web/core/debug/debug_menu_items";
+import { regenerateAssets, becomeSuperuser } from "@web/core/debug/debug_menu_items";
 import { registry } from "@web/core/registry";
 import { useDebugCategory, useOwnDebugContext } from "@web/core/debug/debug_context";
 import { ormService } from "@web/core/orm_service";
@@ -283,6 +283,23 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(item.textContent, "Regenerate Assets Bundles");
         await click(item);
         assert.verifySteps(["ir.attachment/regenerate_assets_bundles", "reloadPage"]);
+    });
+
+    QUnit.test("cannot acess the Become superuser menu if not admin", async (assert) => {
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+        };
+        debugRegistry.category("default").add("becomeSuperuser", becomeSuperuser);
+
+        testConfig = { mockRPC };
+        const env = await makeTestEnv(testConfig);
+        env.services.user.isAdmin = false;
+        await mount(DebugMenuParent, target, { env });
+
+        await click(target.querySelector("button.dropdown-toggle"));
+        assert.containsNone(target, ".dropdown-menu .dropdown-item");
     });
 
     QUnit.test("can open a view", async (assert) => {
@@ -719,5 +736,81 @@ QUnit.module("DebugMenu", (hooks) => {
                 "01/26/2023 15:13:31",
             ]
         );
+    });
+
+    QUnit.test("set defaults: setting default value for datetime field", async (assert) => {
+        assert.expect(7);
+
+        prepareRegistriesWithCleanup();
+        patchWithCleanup(odoo, {
+            debug: true,
+        });
+
+        registry.category("services").add("user", makeFakeUserService());
+        registry.category("debug").category("form").add("setDefaults", setDefaults);
+
+        const serverData = getActionManagerServerData();
+        serverData.actions[1234] = {
+            id: 1234,
+            xml_id: "action_1234",
+            name: "Partners",
+            res_model: "partner",
+            res_id: 1,
+            type: "ir.actions.act_window",
+            views: [[18, "form"]],
+        };
+        serverData.models.partner.fields.datetime = {string: 'Datetime', type: 'datetime'}
+        serverData.models.partner.fields.reference = {string: 'Reference', type: 'reference', selection: [["pony", "Pony"]]}
+        serverData.views["partner,18,form"] = `
+            <form>
+                <field name="datetime"/>
+                <field name="reference"/>
+                <field name="m2o"/>
+            </form>`;
+        serverData.models["ir.ui.view"] = {
+            fields: {},
+            records: [{ id: 18 }],
+        };
+        serverData.models.pony.records = [{
+            id: 1,
+            name: "Test"
+        }];
+        serverData.models.partner.records = [{
+            id: 1,
+            display_name: "p1",
+            datetime: "2024-01-24 16:46:16",
+            reference: 'pony,1',
+            m2o: 1
+        }];
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "check_access_rights") {
+                return Promise.resolve(true);
+            }
+            if (args.method === "set" && args.model === "ir.default") {
+                arg_steps.push(args.args)
+                return true;
+            }
+        };
+        const webClient = await createWebClient({serverData, mockRPC});
+        let arg_steps = [];
+        for (const field_name of ['datetime', 'reference', 'm2o']) {
+            await doAction(webClient, 1234);
+            await click(target.querySelector(".o_debug_manager button"));
+            await click(target.querySelector(".o_debug_manager .dropdown-item"));
+            assert.containsOnce(target, ".modal");
+
+            const select = target.querySelector(".modal #formview_default_fields");
+            select.value = field_name;
+            select.dispatchEvent(new Event("change"));
+            await nextTick();
+            await click(target.querySelectorAll(".modal .modal-footer button")[1]);
+            assert.containsNone(target, ".modal");
+        }
+        assert.deepEqual(arg_steps, [
+            ["partner", "datetime", "2024-01-24 16:46:16", true, true, false],
+            ["partner", "reference", {"displayName": "Test", "resId": 1, "resModel": "pony"}, true, true, false],
+            ["partner", "m2o", 1, true, true, false],
+        ]);
     });
 });

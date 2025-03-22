@@ -62,6 +62,7 @@ PKGS_TO_INSTALL="
     python3-jinja2 \
     python3-ldap \
     python3-libsass \
+    python3-libcamera \
     python3-lxml \
     python3-mako \
     python3-mock \
@@ -119,7 +120,8 @@ PIP_TO_INSTALL="
     PyKCS11 \
     vcgencmd \
     RPi.GPIO \
-    rjsmin==1.1.0"
+    rjsmin==1.1.0 \
+    schedule==1.2.1"
 
 mkdir venv
 python3 -m venv venv

@@ -3,6 +3,11 @@
 import KanbanRecord from 'web.KanbanRecord';
 
 var ActivityRecord = KanbanRecord.extend({
+    custom_events: Object.assign({}, KanbanRecord.prototype.custom_events, {
+        open_record: (ev) => {
+            ev.data.mode = "edit";
+        },
+    }),
     /**
      * @override
      */

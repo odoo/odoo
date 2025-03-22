@@ -22,5 +22,5 @@
     'auto_install': True,
     'installable': True,
     'website': 'https://www.odoo.com/app/accounting',
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
 }

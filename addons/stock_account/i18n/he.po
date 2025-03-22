@@ -15,22 +15,23 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Roy Sayag, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2023
+# Hed Shefer <hed@laylinetech.com>, 2023
 # yael terner, 2023
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: yael terner, 2023\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: stock_account
 #. odoo-python
@@ -394,7 +395,6 @@ msgstr "איתורי מלאי"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/__init__.py:0
-#: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
@@ -689,7 +689,7 @@ msgstr "היסטורית כמות מלאי "
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "דוח חידוש מלאי"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
@@ -805,6 +805,15 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr "שורות התנועה אין במצב עקבי: הן אינן חולקות את אותו מקור או יעד חברה."
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid ""
+"The value of a stock valuation layer cannot be negative. Landed cost could "
+"be use to correct a specific transfer."
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -1020,6 +1029,15 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
+"You don't have any output valuation account defined on your product "
+"category. You must define one before processing this operation."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+#, python-format
+msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
@@ -1069,11 +1087,4 @@ msgstr "ל"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
-
-#. module: stock_account
-#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
-msgid ""
-"'The value of a stock valuation layer cannot be negative. Landed cost could "
-"be use to correct a specific transfer."
 msgstr ""

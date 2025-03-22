@@ -16,8 +16,8 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
-# Levent Karakaş <levent@mektup.at>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
+# Levent Karakaş <levent@mektup.at>, 2022
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
@@ -30,9 +30,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Melih Melik Sonmez, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -659,11 +659,8 @@ msgstr "İşaretliyse, yeni mesajlar dikkatinize sunulacak."
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__message_has_sms_error
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_error
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "İşaretliyse, bazı mesajlar gönderi hatası içermektedir."
 
@@ -879,7 +876,6 @@ msgstr "Bakım Tipi"
 #. module: maintenance
 #: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
 #: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
-#: model:ir.cron,name:maintenance.maintenance_requests_cron
 msgid "Maintenance: generate preventive maintenance requests"
 msgstr "Bakım: önleyici bakım talepleri oluşturun"
 
@@ -1102,6 +1098,7 @@ msgid "Preventive"
 msgstr "Önleyici"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Preventive Maintenance - %s"
@@ -1188,6 +1185,7 @@ msgid "Request Done"
 msgstr "Talep Yapıldı"
 
 #. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid "Request planned for %s"
@@ -1220,13 +1218,6 @@ msgstr "Sorumlu"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_user_id
 msgid "Responsible User"
 msgstr "Sorumlu Kullanıcı"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__message_has_sms_error
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS İleti hatası"
 
 #. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_monitor1
@@ -1483,20 +1474,7 @@ msgid "Warranty Expiration Date"
 msgstr "Garanti Bitiş Tarihi"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__website_message_ids
-msgid "Website Messages"
-msgstr "Websitesi Mesajları"
-
-#. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category__website_message_ids
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__website_message_ids
-msgid "Website communication history"
-msgstr "Websitesi iletişim geçmişi"
-
-#. module: maintenance
+#. odoo-python
 #: code:addons/maintenance/models/maintenance.py:0
 #, python-format
 msgid ""

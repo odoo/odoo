@@ -2,9 +2,8 @@
 <templates>
     <t t-name="spreadsheet_edition.FilterValue"
         owl="1">
-        <div class="o-filter-value d-flex align-items-start w-100">
-            <t t-set="filter"
-                t-value="props.filter"/>
+        <t t-set="filter" t-value="props.filter"/>
+        <div class="o-filter-value d-flex align-items-start w-100" t-att-title="props.showTitle and filter.label">
             <t t-set="filterValue"
                 t-value="getters.getGlobalFilterValue(filter.id)"/>
             <div t-if="filter.type === 'text'" class="w-100">

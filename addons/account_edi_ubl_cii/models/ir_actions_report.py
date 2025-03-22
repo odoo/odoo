@@ -14,6 +14,13 @@ import io
 class IrActionsReport(models.Model):
     _inherit = 'ir.actions.report'
 
+    def _is_invoice_report(self, report_ref):
+        # EXTENDS account
+        # allows to add factur-x.xml to custom PDF templates (comma separated list of template names)
+        custom_templates = self.env['ir.config_parameter'].sudo().get_param('account.custom_templates_facturx_list', '')
+        custom_templates = [report.strip() for report in custom_templates.split(',')]
+        return super()._is_invoice_report(report_ref) or self._get_report(report_ref).report_name in custom_templates
+
     def _add_pdf_into_invoice_xml(self, invoice, stream_data):
         format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1', 'efff_1']
         edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).sudo().attachment_id
@@ -59,7 +66,7 @@ class IrActionsReport(models.Model):
 
         if collected_streams \
                 and res_ids \
-                and self._get_report(report_ref).report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
+                and self._is_invoice_report(report_ref):
             for res_id, stream_data in collected_streams.items():
                 invoice = self.env['account.move'].browse(res_id)
                 self._add_pdf_into_invoice_xml(invoice, stream_data)

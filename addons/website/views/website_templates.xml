@@ -103,7 +103,7 @@
             <t t-if="not additional_title and main_object and 'name' in main_object">
                 <t t-set="additional_title" t-value="main_object.name"/>
             </t>
-            <t t-set="default_title" t-translation="off"> <t t-if="additional_title"><t t-out="additional_title"/> | </t><t t-out="(website or res_company).name"/> </t>
+            <t t-set="default_title" t-translation="off" t-value="(additional_title + ' | ' if additional_title else '') + (website or res_company).name"/>
             <t t-set="seo_object" t-value="seo_object or main_object"/>
             <t t-if="seo_object and 'website_meta_title' in seo_object and seo_object.website_meta_title">
                 <t t-set="title" t-value="seo_object.website_meta_title"/>
@@ -173,7 +173,7 @@
         <!-- website.is_public_user() is needed for menus having a page with
         restricted visibility (only shown to logged in user): public users and
         logged in users can't share the menu cache. -->
-        <attribute name="t-cache">xmlid,website,website.is_public_user()</attribute>
+        <attribute name="t-cache">None if website.is_menu_cache_disabled() else (xmlid,website,website.is_public_user())</attribute>
     </xpath>
 
     <xpath expr="//header" position="before">
@@ -201,13 +201,37 @@
     </xpath>
 
     <xpath expr="//div[@id='wrapwrap']" position="after">
-        <t t-if="website and website.google_analytics_key and request.env['ir.http']._is_allowed_cookie('optional') and not editable">
+        <t t-if="website and website.google_analytics_key and not editable">
             <script id="tracking_code" async="1" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}"></script>
-            <script>
+            <script id="tracking_code_config">
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
+                gtag('consent', 'default', {
+                    'ad_storage': 'denied',
+                    'ad_user_data': 'denied',
+                    'ad_personalization': 'denied',
+                    'analytics_storage': 'denied',
+                });
                 gtag('js', new Date());
                 gtag('config', '<t t-esc="website.google_analytics_key"/>');
+                function allConsentsGranted() {
+                    gtag('consent', 'update', {
+                        'ad_storage': 'granted',
+                        'ad_user_data': 'granted',
+                        'ad_personalization': 'granted',
+                        'analytics_storage': 'granted',
+                    });
+                }
+                <t t-if="website._allConsentsGranted()">
+                    allConsentsGranted();
+                </t>
+                <t t-else="">
+                    document.addEventListener(
+                        "optionalCookiesAccepted",
+                        allConsentsGranted,
+                        {once: true}
+                    );
+                </t>
             </script>
         </t>
         <t t-if="website and website.plausible_shared_key and not editable">
@@ -492,7 +516,7 @@
                             <i class="fa fa-1x fa-fw fa-envelope me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                         </div>
                         <div class="col-lg-2 text-lg-end pb16">
-                            <i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
+                            <i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span>
                         </div>
                     </div>
                 </div>
@@ -619,7 +643,7 @@
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_vertical_2">
             <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <small><i class="fa fa-1x fa-fw fa-phone me-2"/><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></small>
+                    <small><i class="fa fa-1x fa-fw fa-phone me-2"/><a href="tel:+1 555-555-5556">+1 555-555-5556</a></small>
                 </div>
             </section>
         </div>
@@ -740,7 +764,7 @@
                     </div>
                     <!-- Contact -->
                     <small><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></small><br/>
-                    <small><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></small>
+                    <small><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></small>
                     <!-- Separator -->
                     <div class="s_hr text-start pt16 pb16" data-name="Separator">
                         <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-top-color: var(--400);"/>
@@ -909,7 +933,7 @@
                     <div class="row align-items-center">
                         <div class="col-lg-8">
                             <small>
-                                <i class="fa fa-1x fa-fw fa-phone me-2"/><span class="me-3"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span>
+                                <i class="fa fa-1x fa-fw fa-phone me-2"/><span class="me-3"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span>
                                 <i class="fa fa-1x fa-fw fa-envelope me-2 d-inline"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span>
                             </small>
                         </div>
@@ -1506,7 +1530,7 @@
                             <ul class="list-unstyled">
                                 <li><i class="fa fa-comment fa-fw me-2"/><span><a href="/contactus">Contact us</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                             </ul>
                             <div class="s_social_media text-start o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
                                 <h5 class="s_social_media_title d-none" contenteditable="true">Follow us</h5>
@@ -1550,7 +1574,7 @@
                         </div>
                         <div class="col-lg-3">
                             <ul class="list-unstyled mb-2">
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
                             </ul>
                             <div class="s_social_media text-start no_icon_color o_not_editable" data-snippet="s_social_media" data-name="Social Media" contenteditable="false">
@@ -1595,7 +1619,7 @@
                     </div>
                     <p class="text-center mb-1">250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
                     <ul class="list-inline text-center">
-                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                         <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                     </ul>
                 </div>
@@ -1656,7 +1680,7 @@
                             <h5>Get in touch</h5>
                             <ul class="list-unstyled">
                                 <li class="py-1"><i class="fa fa-1x fa-fw fa-envelope me-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
-                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                             </ul>
                         </div>
                         <div class="col-lg-3 pb16">
@@ -1729,7 +1753,7 @@
                         </div>
                         <div class="col-lg-3 pt16 pb16">
                             <p class="mb-2">Call us</p>
-                            <h5><span class="o_force_ltr"><a href="tel:1 (650) 555-0111">+1 (650) 555-0111</a></span></h5>
+                            <h5><span class="o_force_ltr"><a href="tel:1 555-555-5556">+1 555-555-5556</a></span></h5>
                         </div>
                         <div class="col-lg-3 pt16 pb16">
                             <p class="mb-2">Send us a message</p>
@@ -1861,7 +1885,7 @@
                         </div>
                         <div class="col-lg-6 pb24">
                             <ul class="list-unstyled mb-0">
-                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 (650) 555-0111">+1 (650) 555-0111</a></span></li>
+                                <li><i class="fa fa-phone fa-fw me-2"/><span class="o_force_ltr"><a href="tel:+1 555-555-5556">+1 555-555-5556</a></span></li>
                                 <li><i class="fa fa-envelope fa-fw me-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                             </ul>
                         </div>
@@ -2542,7 +2566,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="one_hybrid" name="Single any Search Results">
     <a t-att-href="result.get('website_url')" class="dropdown-item p-2 text-wrap">
-        <div class="d-flex align-items-center o_search_result_item">
+        <div class="d-flex align-items-center flex-wrap o_search_result_item">
             <img t-if="result.get('image_url')" t-att-src="result.get('image_url')" class="flex-shrink-0 o_image_64_contain"/>
             <i t-else="" t-att-class="'o_image_64_contain text-center pt16 fa %s' % result.get('_fa')" style="font-size: 34px;"/>
             <div class="o_search_result_item_detail px-3">
@@ -2555,7 +2579,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                     t-attf-onclick="location.href='#{result.get('extra_link_url')}';return false;"/>
                 <t t-if="extra_link_html" t-out="extra_link_html"/>
             </div>
-            <div class="flex-shrink-0">
+            <div class="flex-shrink-0 ms-auto">
                 <t t-if="result.get('detail_strike')">
                     <span class="text-danger text-nowrap" style="text-decoration: line-through;">
                         <t t-out="result.get('detail_strike')"/>

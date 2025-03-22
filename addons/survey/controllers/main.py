@@ -109,8 +109,8 @@ class Survey(http.Controller):
             survey_sudo, answer_sudo = self._fetch_from_access_token(survey_token, answer_token)
             try:
                 survey_user = survey_sudo.with_user(request.env.user)
-                survey_user.check_access_rights(self, 'read', raise_exception=True)
-                survey_user.check_access_rule(self, 'read')
+                survey_user.check_access_rights('read', raise_exception=True)
+                survey_user.check_access_rule('read')
             except:
                 pass
             else:
@@ -602,7 +602,7 @@ class Survey(http.Controller):
         access_data = self._get_access_data(survey_token, answer_token, ensure_token=False, check_partner=False)
         if access_data['validity_code'] is not True and (
                 access_data['has_survey_access'] or
-                access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void']):
+                access_data['validity_code'] not in ['token_required', 'survey_closed', 'survey_void', 'answer_deadline']):
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']

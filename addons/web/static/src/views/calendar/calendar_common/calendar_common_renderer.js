@@ -100,6 +100,7 @@ export class CalendarCommonRenderer extends Component {
             slotLabelFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             snapDuration: { minutes: 15 },
             timeZone: luxon.Settings.defaultZone.name,
+            timeGridEventMinHeight : 15,
             unselectAuto: false,
             weekLabel:
                 this.props.model.scale === "month" && this.env.isSmall ? "" : this.env._t("Week"),
@@ -171,13 +172,6 @@ export class CalendarCommonRenderer extends Component {
         this.highlightEvent(info.event, "o_cw_custom_highlight");
     }
     onDateClick(info) {
-        if (this.env.isSmall && this.props.model.scale === "month") {
-            this.props.model.load({
-                date: luxon.DateTime.fromISO(info.dateStr),
-                scale: "day",
-            });
-            return;
-        }
         this.props.createRecord(this.fcEventToRecord(info));
     }
     onDayRender(info) {

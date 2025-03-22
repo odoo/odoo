@@ -18,24 +18,25 @@
 # Umur Akın <umura@projetgrup.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
 # Martin Trigaux, 2022
-# Murat Durmuş <muratd@projetgrup.com>, 2022
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2022
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # abc Def <hdogan1974@gmail.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2023
-# Ediz Duman <neps1192@gmail.com>, 2023
-# Melih Melik Sonmez, 2023
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
+# Tugay Hatıl <tugayh@projetgrup.com>, 2023
+# Melih Melik Sonmez, 2023
+# Ediz Duman <neps1192@gmail.com>, 2024
+# Wil Odoo, 2025
+# Murat Durmuş <muratd@projetgrup.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -405,6 +406,11 @@ msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Yetkili</b>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/><b>Ödendi</b>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1738,7 +1744,7 @@ msgstr "Geçerlilik Tarihi"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Expires on %(date)s"
-msgstr ""
+msgstr "Sona eriyor %(date)s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -3897,14 +3903,14 @@ msgid "Tags"
 msgstr "Etiketler"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Tax 15%"
+msgstr "Vergi 15%"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
 msgid "Tax Country"
 msgstr "Vergi Ülkesi"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Tax ID"
-msgstr "VKN/TCKN"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
@@ -4053,12 +4059,12 @@ msgstr "Önceden faturalandırılacak sabit tutar, vergiler hariçtir."
 #: code:addons/sale/models/product_template.py:0
 #, python-format
 msgid ""
-"The following products cannot be restricted to the company %s because they have already been used in quotations or sales orders in another company:\n"
-"%s\n"
+"The following products cannot be restricted to the company %(company)s because they have already been used in quotations or sales orders in another company:\n"
+"%(used_products)s\n"
 "You can archive these products and recreate them with your company restriction instead, or leave them as shared product."
 msgstr ""
-"Aşağıdaki ürünler, başka bir şirketteki tekliflerde veya satış siparişlerinde zaten kullanıldığından %s şirketiyle sınırlandırılamaz:\n"
-"%s\n"
+"Aşağıdaki ürünler, başka bir şirketteki tekliflerde veya satış siparişlerinde zaten kullanıldığından %(company)s şirketiyle sınırlandırılamaz:\n"
+"%(used_products)s\n"
 "Bu ürünleri arşivleyebilir ve bunun yerine şirket kısıtlamanızla yeniden oluşturabilir veya paylaşılan ürün olarak bırakabilirsiniz."
 
 #. module: sale

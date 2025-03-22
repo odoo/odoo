@@ -34,7 +34,7 @@ class StockMove(models.Model):
 
     def _get_source_document(self):
         res = super()._get_source_document()
-        return self.sale_line_id.order_id or res
+        return self.sudo().sale_line_id.order_id or res
 
     def _assign_picking_post_process(self, new=False):
         super(StockMove, self)._assign_picking_post_process(new=new)
@@ -61,7 +61,7 @@ class StockRule(models.Model):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
-        fields += ['sale_line_id', 'partner_id', 'sequence']
+        fields += ['sale_line_id', 'partner_id', 'sequence', 'to_refund']
         return fields
 
 

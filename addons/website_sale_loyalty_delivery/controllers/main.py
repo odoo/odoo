@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale_delivery.controllers.main import WebsiteSaleDelivery
 from odoo.http import request
 
@@ -20,14 +21,21 @@ class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
 
         if free_shipping_lines:
             currency = order.currency_id
-            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
+            if request.env.user.has_group('account.group_show_line_subtotals_tax_excluded'):
+                amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
+            else:
+                amount_free_shipping = sum(free_shipping_lines.mapped('price_total'))
             result.update({
-                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
+                'new_amount_delivery_discounted': Monetary.value_to_html(order.amount_delivery + amount_free_shipping, {'display_currency': currency}),
+                'new_amount_delivery_discount': Monetary.value_to_html(amount_free_shipping, {'display_currency': currency}),
                 'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
                 'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
                 'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
                 'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
                 'new_amount_total_raw': order.amount_total,
+                'delivery_discount_minor_amount': payment_utils.to_minor_currency_units(
+                    amount_free_shipping, currency
+                ),
             })
         return result
 

@@ -3,7 +3,7 @@
 # 	* sale_project
 # 
 # Translators:
-# Nikola Iliev, 2023
+# KeyVillage, 2023
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
 # aleksandar ivanov, 2023
 # Boris Stefanov <borkata@gmail.com>, 2023
@@ -11,14 +11,19 @@
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Martin Trigaux, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
+# Elena Varbanova, 2024
+# Petko Karamotchev, 2024
+# Veselina Slavkova, 2025
+# Martin Dinovski, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Martin Dinovski, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +103,7 @@ msgstr "Създайте фактура"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Създаване при поръчка"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
@@ -150,7 +155,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Брой фактури"
 
 #. module: sale_project
 #. odoo-python
@@ -321,7 +326,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
-msgstr ""
+msgstr "Материaли"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -382,6 +387,13 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Операцията не се поддържа"
 
 #. module: sale_project
 #. odoo-python
@@ -449,7 +461,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr ""
+msgstr "Проектен шаблон"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
@@ -476,6 +488,11 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
 msgstr ""
@@ -489,7 +506,7 @@ msgstr "Поръчка"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Брой поръчки за продажба"
 
 #. module: sale_project
 #. odoo-javascript
@@ -512,6 +529,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 #, python-format
 msgid "Sales Order"
@@ -604,13 +622,6 @@ msgid "Search in Sales Order"
 msgstr ""
 
 #. module: sale_project
-#. odoo-python
-#: code:addons/sale_project/controllers/portal.py:0
-#, python-format
-msgid "Search in Sales Order Item"
-msgstr ""
-
-#. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
@@ -626,7 +637,7 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sold"
-msgstr ""
+msgstr "Продаден"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task

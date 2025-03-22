@@ -1167,7 +1167,11 @@ const UnitUserValueWidget = UserValueWidget.extend({
         if (!params.unit) {
             return isSuperActive;
         }
-        return isSuperActive && this._floatToStr(parseFloat(this._value)) !== '0';
+        return isSuperActive && (
+            this._floatToStr(parseFloat(this._value)) !== '0'
+            // Or is a composite value.
+            || !!this._value.match(/\d+\s+\d+/)
+        );
     },
     /**
      * @override
@@ -1309,16 +1313,26 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
             case $.ui.keyCode.UP:
             case $.ui.keyCode.DOWN: {
                 const input = ev.currentTarget;
-                let value = parseFloat(input.value || input.placeholder);
-                if (isNaN(value)) {
-                    value = 0.0;
+                let parts = (input.value || input.placeholder).match(/-?\d+\.\d+|-?\d+/g);
+                if (!parts) {
+                    parts = [input.value || input.placeholder];
                 }
-                let step = parseFloat(params.step);
-                if (isNaN(step)) {
-                    step = 1.0;
-                }
-                value += (ev.which === $.ui.keyCode.UP ? step : -step);
-                input.value = this._floatToStr(value);
+                input.value = parts.map(part => {
+                    let value = parseFloat(part);
+                    if (isNaN(value)) {
+                        value = 0.0;
+                    }
+                    let step = parseFloat(params.step);
+                    if (isNaN(step)) {
+                        step = 1.0;
+                    }
+                    value += (ev.which === $.ui.keyCode.UP ? step : -step);
+                    if (parts.length > 1 && value < 0) {
+                        // No negative for composite values.
+                        value = 0.0;
+                    }
+                    return this._floatToStr(value);
+                }).join(" ");
                 // We need to know if the change event will be triggered or not.
                 // Change is triggered if there has been a "natural" input event
                 // from the user. Since we are triggering a "fake" input event,
@@ -1745,8 +1759,8 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             noIcons: true,
             noDocuments: true,
             isForBgVideo: true,
-            vimeoPreviewIds: ['299225971', '414790269', '420192073', '368484050', '334729960', '417478345',
-                '312451183', '415226028', '367762632', '340475898', '374265101', '370467553'],
+            vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
+                '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
             save,
@@ -1982,6 +1996,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         'click we-select.o_we_user_value_widget.o_we_add_list_item': '_onAddItemSelectClick',
         'click we-button.o_we_checkbox_wrapper': '_onAddItemCheckboxClick',
         'change table input': '_onListItemChange',
+        'mousedown': '_onWeListMousedown',
     },
 
     /**
@@ -2210,22 +2225,21 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _notifyCurrentState() {
+        const isIdModeName = this.el.dataset.idMode === "name" || !this.isCustom;
+        const trimmed = (str) => str.trim().replace(/\s+/g, " ");
         const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
-            let id = this.isCustom ? el.value : el.name;
-            if (this.el.dataset.idMode && this.el.dataset.idMode === "name") {
-                id = el.name;
-            }
+            const id = trimmed(isIdModeName ? el.name : el.value);
             return Object.assign({
                 id: /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id,
-                name: el.value,
-                display_name: el.value,
+                name: trimmed(el.value),
+                display_name: trimmed(el.value),
             }, el.dataset);
         });
         if (this.hasDefault) {
             const checkboxes = [...this.listTable.querySelectorAll('we-button.o_we_checkbox_wrapper.active')];
             this.selected = checkboxes.map(el => {
                 const input = el.parentElement.previousSibling.firstChild;
-                const id = input.name || input.value;
+                const id = trimmed(isIdModeName ? input.name : input.value);
                 return /^-?[0-9]{1,15}$/.test(id) ? parseInt(id) : id;
             });
             values.forEach(v => {
@@ -2312,8 +2326,24 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      */
-    _onListItemChange() {
-        this._notifyCurrentState();
+    _onListItemChange(ev) {
+        const timeSinceMousedown = ev.timeStamp - this.mousedownTime;
+        if (timeSinceMousedown < 500) {
+            // Without this "setTimeOut", "click" events are not triggered when
+            // clicking directly on a "we-button" of the "we-list" without first
+            // focusing out the input.
+            setTimeout(() => {
+                this._notifyCurrentState();
+            }, 500);
+        } else {
+            this._notifyCurrentState();
+        }
+    },
+    /**
+     * @private
+     */
+    _onWeListMousedown(ev) {
+        this.mousedownTime = ev.timeStamp;
     },
     /**
      * @private
@@ -3421,10 +3451,14 @@ const SnippetOptionWidget = Widget.extend({
         }
 
         let hasUserValue = false;
-        for (let i = cssProps.length - 1; i > 0; i--) {
-            hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
+        const applyAllCSS = (values) => {
+            for (let i = cssProps.length - 1; i > 0; i--) {
+                hasUserValue = applyCSS.call(this, cssProps[i], values.pop(), styles) || hasUserValue;
+            }
+            hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
         }
-        hasUserValue = applyCSS.call(this, cssProps[0], values.join(' '), styles) || hasUserValue;
+
+        applyAllCSS([...values]);
 
         function applyCSS(cssProp, cssValue, styles) {
             if (typeof params.forceStyle !== 'undefined') {
@@ -3432,34 +3466,11 @@ const SnippetOptionWidget = Widget.extend({
                 return true;
             }
 
-            // This condition requires extraClass to NOT be set.
             if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                // Property must be set => extraClass will be enabled.
-                if (params.extraClass) {
-                    // The extraClass is temporarily removed during selectStyle
-                    // because it is enabled only if the element style is set
-                    // by the option. (E.g. add the bootstrap border class only
-                    // if there is a border width.) Unfortunately the
-                    // extraClass might specify default !important properties,
-                    // therefore determining whether !important is needed
-                    // requires the class to be applied.
-                    this.$target[0].classList.add(params.extraClass);
-                    // Set inline style only if different from value defined
-                    // with extraClass.
-                    if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
-                        this.$target[0].style.setProperty(cssProp, cssValue);
-                    }
-                } else {
-                    // Inline style required.
-                    this.$target[0].style.setProperty(cssProp, cssValue);
-                }
+                this.$target[0].style.setProperty(cssProp, cssValue);
                 // If change had no effect then make it important.
-                // This condition requires extraClass to be set.
                 if (!weUtils.areCssValuesEqual(styles.getPropertyValue(cssProp), cssValue, cssProp, this.$target[0])) {
                     this.$target[0].style.setProperty(cssProp, cssValue, 'important');
-                }
-                if (params.extraClass) {
-                    this.$target[0].classList.remove(params.extraClass);
                 }
                 return true;
             }
@@ -3468,6 +3479,13 @@ const SnippetOptionWidget = Widget.extend({
 
         if (params.extraClass) {
             this.$target.toggleClass(params.extraClass, hasUserValue);
+            if (hasUserValue) {
+                // Might have changed because of the class.
+                for (const cssProp of cssProps) {
+                    this.$target[0].style.removeProperty(cssProp);
+                }
+                applyAllCSS(values);
+            }
         }
 
         _restoreTransitions();
@@ -4246,8 +4264,10 @@ const SnippetOptionWidget = Widget.extend({
                 return;
             }
 
+            this.__willReload = requiresReload;
             // Call widget option methods and update $target
             await this._select(previewMode, widget);
+            this.__willReload = false;
 
             // If it is not preview mode, the user selected the option for good
             // (so record the action)
@@ -4425,7 +4445,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 _.each(resize[0], function (val, key) {
                     if (self.$target.hasClass(val)) {
                         current = key;
-                    } else if (resize[1][key] === cssPropertyValue) {
+                    } else if (parseInt(resize[1][key]) === cssPropertyValue) {
                         current = key;
                     }
                 });
@@ -4445,8 +4465,8 @@ registry.sizing = SnippetOptionWidget.extend({
             self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
 
             const cursor = $handle.css('cursor') + '-important';
-            const $body = $(this.ownerDocument.body);
-            $body.addClass(cursor);
+            const $iframeWindow = $(this.ownerDocument.defaultView);
+            $iframeWindow[0].document.body.classList.add(cursor);
 
             const bodyMouseMove = function (ev) {
                 ev.preventDefault();
@@ -4491,9 +4511,9 @@ registry.sizing = SnippetOptionWidget.extend({
                 }
             };
             const bodyMouseUp = function () {
-                $body.off('mousemove', bodyMouseMove);
-                $body.off('mouseup', bodyMouseUp);
-                $body.removeClass(cursor);
+                $iframeWindow.off("mousemove", bodyMouseMove);
+                $iframeWindow.off("mouseup", bodyMouseUp);
+                $iframeWindow[0].document.body.classList.remove(cursor);
                 $handle.removeClass('o_active');
 
                 // If we are in grid mode, removes the background grid.
@@ -4527,8 +4547,8 @@ registry.sizing = SnippetOptionWidget.extend({
                     self.options.wysiwyg.odooEditor.historyStep();
                 }, 0);
             };
-            $body.on('mousemove', bodyMouseMove);
-            $body.on('mouseup', bodyMouseUp);
+            $iframeWindow.on("mousemove", bodyMouseMove);
+            $iframeWindow.on("mouseup", bodyMouseUp);
         });
 
         _.each(resizeValues, (value, key) => {
@@ -4761,7 +4781,7 @@ registry['sizing_x'] = registry.sizing.extend({
 
             if (compass === 'w') {
                 // don't change the right border position when we change the offset (replace col size)
-                var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
+                var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 12);
                 var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
                 if (offset < 0) {
                     offset = 0;
@@ -5170,6 +5190,16 @@ registry.layout_column = SnippetOptionWidget.extend({
         // Add the new column and update the grid height.
         rowEl.appendChild(newColumnEl);
         gridUtils._resizeGrid(rowEl);
+
+        // Scroll to the new column if more than half of it is hidden (= out of
+        // the viewport or hidden by an other element).
+        const newColumnPosition = newColumnEl.getBoundingClientRect();
+        const middleX = (newColumnPosition.left + newColumnPosition.right) / 2;
+        const middleY = (newColumnPosition.top + newColumnPosition.bottom) / 2;
+        const sameCoordinatesEl = this.ownerDocument.elementFromPoint(middleX, middleY);
+        if (!sameCoordinatesEl || !newColumnEl.contains(sameCoordinatesEl)) {
+            newColumnEl.scrollIntoView({behavior: "smooth", block: "center"});
+        }
         this.trigger_up('activate_snippet', {$snippet: $(newColumnEl)});
     },
     /**
@@ -5464,7 +5494,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setLink(previewMode, widgetValue, params) {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName !== 'A') {
             const wrapperEl = document.createElement('a');
             this.$target[0].after(wrapperEl);
@@ -5489,7 +5519,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setNewWindow(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         if (widgetValue) {
             linkEl.setAttribute('target', '_blank');
         } else {
@@ -5502,7 +5532,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setUrl(previewMode, widgetValue, params) {
-        const linkEl = this.$target[0].parentElement;
+        const linkEl = this._searchSupportedParentLinkEl();
         let url = widgetValue;
         if (!url) {
             // As long as there is no URL, the image is not considered a link.
@@ -5540,7 +5570,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @private
      */
     _activateLinkTool() {
-        if (this.$target[0].parentElement.tagName === 'A') {
+        const parentEl = this._searchSupportedParentLinkEl();
+        if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_url_opt')[0].focus();
         } else {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
@@ -5550,7 +5581,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @private
      */
     _deactivateLinkTool() {
-        const parentEl = this.$target[0].parentNode;
+        const parentEl = this._searchSupportedParentLinkEl();
         if (parentEl.tagName === 'A') {
             this._requestUserValueWidgets('media_link_opt')[0].enable();
         }
@@ -5559,7 +5590,7 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState(methodName, params) {
-        const parentEl = this.$target[0].parentElement;
+        const parentEl = this._searchSupportedParentLinkEl();
         const linkEl = parentEl.tagName === 'A' ? parentEl : null;
         switch (methodName) {
             case 'setLink': {
@@ -5582,11 +5613,20 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
     async _computeWidgetVisibility(widgetName, params) {
         if (widgetName === 'media_link_opt') {
             if (this.$target[0].matches('img')) {
-                return isImageSupportedForStyle(this.$target[0]);
+                return isImageSupportedForStyle(this.$target[0])
+                    && !this._searchSupportedParentLinkEl().matches("a[data-oe-xpath]");
             }
             return !this.$target[0].classList.contains('media_iframe_video');
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {Element} The "closest" element that can be supported as a <a>.
+     */
+    _searchSupportedParentLinkEl() {
+        const parentEl = this.$target[0].parentElement;
+        return parentEl.matches("figure") ? parentEl.parentElement : parentEl;
     },
 });
 
@@ -5974,7 +6014,6 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @see this.selectClass for parameters
      */
     async crop() {
-        this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
         new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.$el[0].ownerDocument.body);
@@ -6058,10 +6097,6 @@ registry.ImageTools = ImageHandlerOption.extend({
                 // If the preview mode === false we want to save the colors
                 // as the user chose their shape
                 await this._applyShapeAndColors(saveData);
-                if (saveData && img.dataset.mimetype !== 'image/svg+xml') {
-                    img.dataset.originalMimetype = img.dataset.mimetype;
-                    img.dataset.mimetype = 'image/svg+xml';
-                }
             }
         } else {
             // Re-applying the modifications and deleting the shapes
@@ -6177,6 +6212,18 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async _writeShape(svgText) {
         const img = this._getImg();
+        const dataURL = await this.computeShape(svgText, img);
+        return loadImage(dataURL, img);
+    },
+    /**
+     * Sets the image in the supplied SVG and replace the src with a dataURL
+     *
+     * @param {string} svgText svg text file
+     * @param img JQuery image
+     * @returns {Promise} resolved once the svg is properly loaded
+     * in the document
+     */
+    async computeShape(svgText, img) {
         const initialImageWidth = img.naturalWidth;
 
         const svg = new DOMParser().parseFromString(svgText, 'image/svg+xml').documentElement;
@@ -6215,7 +6262,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const dataURL = await createDataURL(blob);
         const imgFilename = (img.dataset.originalSrc.split('/').pop()).split('.')[0];
         img.dataset.fileName = `${imgFilename}.svg`;
-        return loadImage(dataURL, img);
+        return dataURL;
     },
     /**
      * @override
@@ -6873,10 +6920,15 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             delete parts.url;
-            this.$target.removeClass('oe_img_bg o_bg_img_center');
+            this.$target[0].classList.remove(
+                "oe_img_bg",
+                "o_bg_img_center",
+                "o_modified_image_to_save",
+            );
         }
         const combined = backgroundImagePartsToCss(parts);
         this.$target.css('background-image', combined);
+        this.options.wysiwyg.odooEditor.editable.focus();
     },
 });
 
@@ -7935,11 +7987,35 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 onSuccess: async () => {
                                     const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);
+                                    targetCopyEl.classList.add('s_custom_snippet');
+                                    // when cloning the snippets which has o_snippet_invisible, o_snippet_mobile_invisible or
+                                    // o_snippet_desktop_invisible class will be hidden because of d-none class added on it,
+                                    // so we needs to remove `d-none` explicity in such case from the target.
+                                    const isTargetHidden = [
+                                        "o_snippet_invisible",
+                                        "o_snippet_mobile_invisible",
+                                        "o_snippet_desktop_invisible"
+                                    ].some(className => this.$target[0].classList.contains(className));
+                                    if (isTargetHidden) {
+                                        targetCopyEl.classList.remove("d-none");
+                                    }
                                     delete targetCopyEl.dataset.name;
                                     // By the time onSuccess is called after request_save, the
                                     // current widget has been destroyed and is orphaned, so this._rpc
                                     // will not work as it can't trigger_up. For this reason, we need
                                     // to bypass the service provider and use the global RPC directly
+
+                                    // Get editable parent TODO find proper method to get it directly
+                                    let editableParentEl;
+                                    for (parent of this.options.getContentEditableAreas()) {
+                                        if (parent.contains(this.$target[0])) {
+                                            editableParentEl = parent;
+                                            break;
+                                        }
+                                    }
+                                    context['model'] = editableParentEl.dataset.oeModel;
+                                    context['field'] = editableParentEl.dataset.oeField;
+                                    context['resId'] = editableParentEl.dataset.oeId;
                                     await rpc.query({
                                         model: 'ir.ui.view',
                                         method: 'save_snippet',

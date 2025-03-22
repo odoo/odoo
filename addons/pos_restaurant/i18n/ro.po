@@ -8,14 +8,15 @@
 # Cozmin Candea <office@terrabit.ro>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Martin Trigaux, 2022
+# Betty Keresztesi, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-10-10 06:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Betty Keresztesi, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +97,7 @@ msgstr "Adăugare Buton"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "Adăugați note interne pe liniile de comandă pentru bucătărie"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -123,7 +124,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Permiteți defalcarea facturilor"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -133,7 +134,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Permiteți imprimarea bonului fiscal înainte de plată"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -234,7 +235,7 @@ msgstr "Divizare Nota de plată"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "Acțiune blocată"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -252,6 +253,13 @@ msgstr "Albastru"
 #, python-format
 msgid "CANCELLED"
 msgstr "ANULAT"
+
+#. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash %s"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-python
@@ -373,7 +381,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Tipărirea rapidă a bonurilor fiscale"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -431,7 +439,7 @@ msgstr "Etaje și mese"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Harta etajelor & meselor"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -528,7 +536,7 @@ msgstr "Nota interna"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Internal Note added by the waiter."
-msgstr ""
+msgstr "Notă internă adăugată de către ospătar."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -806,17 +814,17 @@ msgstr "Sesiune Punct de vânzare"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "Pos Iface note linie de comandă"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "Pos Iface Factură tipărită"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Pos Iface Factură defalcată"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
@@ -831,7 +839,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "Pos setați bacșișul după plată"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -870,7 +878,7 @@ msgstr "Imprimante"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
 #, python-format
 msgid "Printing failed"
-msgstr ""
+msgstr "Imprimare eșuată"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1037,7 +1045,7 @@ msgstr "Trimite bacșiș după plată"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Settle"
-msgstr ""
+msgstr "Stabiliți"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -1149,7 +1157,7 @@ msgstr "Valoare nr. clienți care au fost prestați prin această comandă."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Culoarea de fundal a etajului într-un format compatibil html"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1222,6 +1230,8 @@ msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
 "again."
 msgstr ""
+"Această comandă nu este încă sincronizată cu serverul. Asigurați-vă că este "
+"sincronizată, apoi încercați din nou."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1324,7 +1334,7 @@ msgstr "Eroare necunoscută"
 #: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
 #, python-format
 msgid "Unsynced order"
-msgstr ""
+msgstr "Comandă nesincronizată"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
@@ -1380,7 +1390,7 @@ msgstr "Galben"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "Nu puteți introduce un număr care depășește %s "
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1390,6 +1400,8 @@ msgid ""
 "You cannot remove a floor that is used in a PoS session, close the "
 "session(s) first: \n"
 msgstr ""
+"Nu puteți elimina un etaj care este utilizată într-o sesiune PoS, închideți "
+"mai întâi sesiunea (sesiunile): \n"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1399,6 +1411,8 @@ msgid ""
 "You cannot remove a table that is used in a PoS session, close the "
 "session(s) first."
 msgstr ""
+"Nu puteți elimina o masă care este utilizată într-o sesiune PoS, închideți "
+"mai întâi sesiunea (sesiunile)."
 
 #. module: pos_restaurant
 #. odoo-javascript

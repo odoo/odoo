@@ -3,7 +3,7 @@
 # 	* mass_mailing_sms
 # 
 # Translators:
-# Nikola Iliev, 2023
+# KeyVillage, 2023
 # Александра Николова <alexandra1nikolova@gmail.com>, 2023
 # Ivan Goychev <igoychev.projects@gmail.com>, 2023
 # Ивайло Малинов <iv.malinov@gmail.com>, 2023
@@ -12,20 +12,49 @@
 # Martin Trigaux, 2023
 # aleksandar ivanov, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
+# Rumena Georgieva <rumena.georgieva@gmail.com>, 2024
+# Elena Varbanova, 2024
+# Petko Karamotchev, 2024
+# Venelin Stoykov, 2024
+# Emil Krastev, 2024
+# Veselina Slavkova, 2025
+# Martin Dinovski, 2025
+# Milena Georgieva, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
+"Last-Translator: Milena Georgieva, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: bg\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers and opt-out link) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including link trackers) "
+msgstr ""
+
+#. module: mass_mailing_sms
+#. odoo-javascript
+#: code:addons/mass_mailing_sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid " (including opt-out link) "
+msgstr ""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_sms_test_view_form
@@ -35,6 +64,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "24H Stats of %(mailing_type)s \"%(mailing_name)s\""
@@ -133,6 +163,7 @@ msgid "A/B Test Mailings SMS #"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "A/B Test: %s"
@@ -161,6 +192,7 @@ msgid "Average of Clicked"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "BOUNCED (%i)"
@@ -172,6 +204,7 @@ msgid "Bioutifoul SMS"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
 msgid ""
@@ -186,7 +219,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Телефонът в черния списък е мобилен"
 
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.phone_blacklist_menu
@@ -196,7 +229,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Телефонът в черния списък е стационарен"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
@@ -205,6 +238,7 @@ msgid "Bounced (%)"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "CLICKED (%i)"
@@ -297,6 +331,7 @@ msgid "Duplicate"
 msgstr "Дублирайте"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 #, python-format
 msgid "Email Marketing"
@@ -310,7 +345,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__failure_type
 msgid "Failure type"
-msgstr ""
+msgstr "Тип на грешката"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -318,6 +353,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Поле, използвано за съхранение на стандартизиран телефонен номер. Спомага за"
+" ускоряване на търсенията и сравненията."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_follower_ids
@@ -346,7 +383,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Има съобщение"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__utm_campaign__ab_testing_sms_winner_selection__clicks_ratio
@@ -375,6 +412,9 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"Ако стандартизираният телефонен номер е в черния списък, то контактът няма "
+"да получава повече SMS от масови разпращания, независимо от списъка, от "
+"който са изпратени."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
@@ -396,6 +436,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Показва дали стандартизираният телефонен номер от черния списък е мобилен "
+"номер. Помага да се разграничи кой номер е в черния списък             "
+"Когато моделът има и двете полета за мобилен номер и телефон."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__phone_blacklisted
@@ -404,6 +447,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Показва дали стандартизираният телефонен номер от черния списък е телефонен "
+"номер. Помага да се разграничи кой номер е в черния списък        Когато "
+"моделът има и двете полета за мобилен номер и телефон."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_credit
@@ -546,7 +592,7 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_trace_report_action_sms
 msgid "No data yet!"
-msgstr ""
+msgstr "Все още няма данни!"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.actions.act_window,help:mass_mailing_sms.mailing_list_action_sms
@@ -562,6 +608,7 @@ msgid "Number"
 msgstr "Номер"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/controllers/main.py:0
 #, python-format
 msgid "Number %s not found"
@@ -585,7 +632,7 @@ msgstr "Брой грешки"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Брой съобщения, изискващи действие"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_has_error_counter
@@ -620,12 +667,12 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Телефонът е в черния списък"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "Телефон/Мобилен"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -633,6 +680,7 @@ msgid "Please enter your phone number"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "RECEIVED (%i)"
@@ -645,6 +693,7 @@ msgid "Recipients"
 msgstr "Получатели"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Report for %(expected)i %(mailing_type)s Sent"
@@ -696,6 +745,7 @@ msgid "SMS ID (tech)"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/res_users.py:0
 #: model:ir.actions.act_window,name:mass_mailing_sms.mailing_mailing_action_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_mass_sms
@@ -719,9 +769,10 @@ msgstr ""
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS шаблон"
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "SMS Text Message"
@@ -744,9 +795,10 @@ msgid "SMS Winner Selection"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
-msgid "STOP SMS : %s"
+msgid "STOP SMS : %(unsubscribe_url)s"
 msgstr ""
 
 #. module: mass_mailing_sms
@@ -818,24 +870,28 @@ msgid "Test SMS Marketing"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "Test SMS could not be sent to %s:<br>%s"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Test SMS marketing"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "Test SMS successfully sent to %s"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/utm.py:0
 #, python-format
 msgid ""
@@ -844,6 +900,7 @@ msgid ""
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/wizard/mailing_sms_test.py:0
 #, python-format
 msgid "The following numbers are not correctly encoded: %s"
@@ -859,6 +916,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"Този телефонен номер е включен в черния списък за SMS маркетинг. Кликнете, "
+"за да го премахнете от черния списък."
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -883,7 +942,7 @@ msgstr "Заглавие"
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_tree_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.utm_campaign_view_form
 msgid "Total Sent"
-msgstr ""
+msgstr "Общо изпратени"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__trace_type
@@ -893,12 +952,12 @@ msgstr "Вид"
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_utm_campaign
 msgid "UTM Campaign"
-msgstr ""
+msgstr "UTM кампания"
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_utm_medium
 msgid "UTM Medium"
-msgstr ""
+msgstr "UTM среда"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
@@ -921,6 +980,7 @@ msgid "Unsubscribe me"
 msgstr ""
 
 #. module: mass_mailing_sms
+#. odoo-python
 #: code:addons/mass_mailing_sms/models/mailing_mailing.py:0
 #, python-format
 msgid "Unsupported %s for mass SMS"

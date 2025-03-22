@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2022
 # Pak Wai Ho, 2023
-# Wil Odoo, 2023
-# Tony Ng, 2023
+# Wil Odoo, 2024
+# Tony Ng, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 08:56+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr ""
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "<b>Drag and Drop</b> this snippet below the event title."
-msgstr "<b>將此代碼段拖曳</b>到活動標題下。"
+msgstr "將此小摘要<b>拖放</b>至活動標題下方。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
@@ -487,6 +487,13 @@ msgid "End -"
 msgstr "結束 -"
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/js/website_event.js:0
+#, python-format
+msgid "Error"
+msgstr "錯誤"
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__event_id
 msgid "Event"
@@ -832,11 +839,16 @@ msgid "Not Published"
 msgstr "未發佈"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_location
+msgid "Online Events"
+msgstr "網上活動"
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "OpenWood Collection Online Reveal"
-msgstr "OpenWood 系列線上展示"
+msgstr "OpenWood 系列網上發佈會"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -895,8 +907,8 @@ msgid "Ref:"
 msgstr "參考編號："
 
 #. module: website_event
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
@@ -1066,6 +1078,13 @@ msgid "Sub-menu (Specific)"
 msgstr "子選單（特定）"
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
+msgstr "Google reCaptcha 檢測到的可疑活動."
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Templates"
 msgstr "模板"
@@ -1186,7 +1205,7 @@ msgstr "在當前網站可見"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_registration__visitor_id
 msgid "Visitor"
-msgstr "訪問者"
+msgstr "訪客"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_website
@@ -1225,7 +1244,7 @@ msgstr "網站選單"
 #. module: website_event
 #: model:ir.model,name:website_event.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr "網站片段過濾器"
+msgstr "網站小摘要篩選器"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form

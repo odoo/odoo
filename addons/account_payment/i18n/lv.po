@@ -8,16 +8,16 @@
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Martin Trigaux, 2023
-# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-# Will Sensors, 2023
+# Will Sensors, 2024
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Will Sensors, 2023\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2025\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -136,7 +136,7 @@ msgstr ""
 #: code:addons/account_payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Maksājums darījums ar atsauci %s jau pastāv."
 
 #. module: account_payment
 #. odoo-python
@@ -148,7 +148,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Summa pieejama atmaksai"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__amount_paid
@@ -163,6 +163,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Vai esat pārliecināts, ka vēlaties anulēt autorizēto darījumu? Šo darbību "
+"nevar atsaukt."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -174,7 +176,7 @@ msgstr "Autorizētie darījumi"
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Saistīt darījumus"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -213,16 +215,18 @@ msgid ""
 "Done, your online payment has been successfully processed. Thank you for "
 "your order."
 msgstr ""
+"Pabeigts, Jūsu tiešsaistes maksājums tika veiksmīgi apstrādāts. Paldies Jums"
+" par Jūsu pasūtījumu."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Izveidot pārdošanas maksājumu saiti"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Maksājuma saites izveide"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__has_pending_refund
@@ -364,7 +368,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_token_menu
 msgid "Payment Tokens"
-msgstr ""
+msgstr "Maksājumu žetoni"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_transaction
@@ -404,12 +408,12 @@ msgstr "Atmaksa"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Atmaksāt summu"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Atmaksātā summa"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.view_account_payment_form_inherit_payment
@@ -419,7 +423,7 @@ msgstr "Kredītrēķini"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Atgriezto maksājumu skaits"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_register
@@ -434,17 +438,17 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Saglabāts maksājuma atslēgkods"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Saglabāts maksājuma atslēgkods"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Attiecīgais maksājums"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -492,17 +496,17 @@ msgstr ""
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "Sniegtie parametri ir nederīgi."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Atgrieztā maksājuma attiecīgais maksājums."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
-msgstr ""
+msgstr "Radās kļūda apstrādājot Jūsu maksājumu: nederīgs rēķins."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -510,15 +514,25 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Radās kļūda apstrādājot Jūsu maksājumu: kļūda ar kredītkartes ID validāciju."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
-msgstr ""
+msgstr "Radās kļūda apstrādājot Jūsu maksājumu: darījums neizdevās.<br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
+msgstr "Radās kļūda apstrādājot Jūsu maksājumu: nederīgs kredītkartes ID."
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/payment_provider.py:0
+#, python-format
+msgid ""
+"To uninstall this module, please remove first the corresponding payment "
+"method line in the incoming payments tab defined on the bank journal."
 msgstr ""
 
 #. module: account_payment
@@ -537,20 +551,20 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Izmantot elektronisko maksājumu metodi"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.account_invoice_view_form_inherit_payment
 msgid "Void Transaction"
-msgstr ""
+msgstr "Darījuma anulēšana"
 
 #. module: account_payment
 #. odoo-python
-#: code:addons/account_payment/models/account_journal.py:0
+#: code:addons/account_payment/models/account_payment_method_line.py:0
 #, python-format
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
-"Linked provider(s): %s"
+"Linked providers(s): %s"
 msgstr ""
 
 #. module: account_payment

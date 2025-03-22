@@ -10,10 +10,10 @@
 # Mohamed Sallam, 2022
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # Jonatan Gk, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # CristianCruzParra, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # M Palau <mpalau@tda.ad>, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
@@ -26,18 +26,20 @@
 # Cristian Cruz, 2022
 # Josep Anton Belchi, 2022
 # jabiri7, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # martioodo hola, 2023
 # Albert Parera, 2023
 # Ivan Espinola, 2023
+# Larissa Manderfeld, 2024
+# Óscar Fonseca <tecnico@pyming.com>, 2024
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -810,19 +812,13 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
+"<span id=\"zoomout\" class=\"d-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-minus\"/>\n"
 "                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
+"                                        <span id=\"zoomin\" class=\"d-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
 "                                            <i class=\"fa fa-search-plus\"/>\n"
 "                                        </span>"
 msgstr ""
-"<span id=\"zoomout\" class=\"d-none d-sm-inline ms-2 me-2\" title=\"Zoom out\" aria-label=\"Zoom out\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-minus\"/>\n"
-"                                        </span>\n"
-"                                        <span id=\"zoomin\" class=\"d-none d-sm-inline\" title=\"Zoom in\" aria-label=\"Zoom in\" role=\"button\">\n"
-"                                            <i class=\"fa fa-search-plus\"/>\n"
-"                                        </span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_kanban
@@ -1456,6 +1452,11 @@ msgid "Average Review"
 msgstr "Revisió mitjana"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
+msgid "BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/slides_category_add.js:0
 #: code:addons/website_slides/static/src/js/slides_course_tag_add.js:0
@@ -1936,7 +1937,7 @@ msgstr "Configuració"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_channel_completed
 msgid "Congratulations! You completed {{ object.channel_id.name }}"
-msgstr "Felicitats! Heu completat {{ object.channelid.name }}"
+msgstr "Felicitats! Heu completat {{ object.channel_id.name }}"
 
 #. module: website_slides
 #. odoo-javascript
@@ -2818,8 +2819,8 @@ msgid "File Name"
 msgstr "Nom del fitxer"
 
 #. module: website_slides
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/website_slides/controllers/main.py:0
 #: code:addons/website_slides/static/src/js/slides_upload.js:0
 #, python-format
@@ -4030,7 +4031,8 @@ msgstr "Nou curs"
 #: model:mail.template,subject:website_slides.slide_template_published
 msgid ""
 "New {{ object.slide_category }} published on {{ object.channel_id.name }}"
-msgstr "{{ object.slidecategory }} nou publicat a {{ object.channelid.name }}"
+msgstr ""
+"{{ object.slide_category }} nou publicat a {{ object.channel_id.name }}"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_cards
@@ -4313,6 +4315,13 @@ msgid "Once you're done, don't forget to <b>Publish</b> your course."
 msgstr "Un cop hàgiu acabat, no oblideu <b>Publicar</b> el vostre curs."
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/controllers/mail.py:0
+#, python-format
+msgid "Only a single review can be posted per course."
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields.selection,name:website_slides.selection__slide_channel__visibility__public
 msgid "Open To All"
 msgstr "Obre a tot"
@@ -4492,14 +4501,6 @@ msgstr "Presentació publicada"
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Preview"
 msgstr "Vista prèvia"
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid "Private"
-msgstr "Privat"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
@@ -5646,11 +5647,9 @@ msgstr "La diapositiva es pot marcar com a no completada i la progressió"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"The video link to input here can be obtained by using the 'share' button in "
-"the Vimeo interface."
+"The video link to input here can be obtained by using the 'Share link' "
+"button in the Vimeo interface."
 msgstr ""
-"L'enllaç de vídeo a l'entrada aquí es pot obtenir utilitzant el botó "
-"'compartir' a la interfície Vimeo."
 
 #. module: website_slides
 #: model:ir.model.constraint,message:website_slides.constraint_slide_slide_partner_check_vote
@@ -5659,15 +5658,6 @@ msgstr "La votació ha de ser 1, 0 o -1."
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
-"The video link to input here can be obtained by using the 'Share link' "
-"button in the Vimeo interface."
-msgstr ""
-
-#. module: website_slides
-#. openerp-web
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Then, go into the file permissions and set it as \"Anyone with the link\"."
@@ -5932,14 +5922,14 @@ msgid "Unknown error, try again."
 msgstr "Error desconegut, torneu-ho a provar."
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted"
 msgstr "No llistat"
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid "Unlisted (paid account)"
@@ -6007,6 +5997,11 @@ msgstr "Utilitzeu les etiquetes de contingut per classificar el contingut."
 msgid "Use Course Groups to classify and organize your Courses."
 msgstr ""
 "Utilitzeu grups de cursos per classificar i organitzar els vostres cursos."
+
+#. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_invite_view_form
+msgid "Use template"
+msgstr "Utilitzar plantilla"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__tag_ids
@@ -6513,7 +6508,7 @@ msgstr "Ja us heu unit a aquest canal"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join {{ object.channel_id.name }}"
-msgstr "Heu estat convidat a unir-vos a {{ object.channelid.name }}"
+msgstr "Heu estat convidat a unir-vos a {{ object.channel_id.name }}"
 
 #. module: website_slides
 #. odoo-python
@@ -6723,6 +6718,13 @@ msgid "e.g. \"Which animal cannot fly?\""
 msgstr "Per exemple, \"Quin animal no pot volar?\""
 
 #. module: website_slides
+#. odoo-javascript
+#: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
+#, python-format
+msgid "e.g. \"{{placeholder || \"another animal\"}}\""
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
 msgstr "P. ex. Informàtica per a infants"
@@ -6826,23 +6828,12 @@ msgstr "iniciar sessió"
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
-"mean? The Vimeo \"Private\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
-"                                    Your video will never come up in the search results nor on your channel."
-msgstr ""
-"Vols dir? La configuració de privacitat \"Privada\" de Vimeo significa que és un vídeo que només poden veure els usuaris amb l'enllaç.\n"
-"                                    El vostre vídeo mai apareixerà als resultats de cerca ni al canal."
-
-#. module: website_slides
-#. odoo-javascript
-#: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
-#, python-format
-msgid ""
 "mean? The Vimeo \"Unlisted\" privacy setting means it is a video which can be viewed only by the users with the link to it.\n"
 "                                    Your video will never come up in the search results nor on your channel."
 msgstr ""
 
 #. module: website_slides
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_slides/static/src/xml/website_slides_upload.xml:0
 #, python-format
 msgid ""
@@ -6932,9 +6923,9 @@ msgstr "{{ user.name }} ha compartit un curs"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "{{ user.name }} shared a {{ object.slide_category }} with you!"
-msgstr "{{ user.name }} us ha compartit {{ object.slidecategory }}!"
+msgstr "{{ user.name }} us ha compartit {{ object.slide_category }}!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
-msgstr "<span class=\"ms-1\">Sense categoria</span>"
+msgstr "└<span class=\"ms-1\">Sense categoria</span>"

@@ -145,6 +145,7 @@ class StockPackageLevel(models.Model):
                         'location_dest_id': package_level.location_dest_id.id,
                         'package_level_id': package_level.id,
                         'company_id': package_level.company_id.id,
+                        'partner_id': package_level.picking_id.partner_id.id,
                     })
 
     @api.model_create_multi

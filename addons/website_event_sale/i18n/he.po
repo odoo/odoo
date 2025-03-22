@@ -4,21 +4,23 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2024
+# tomerlayline, 2024
+# or balmas, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022\n"
+"Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: he\n"
-"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+"Plural-Forms: nplurals=3; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: 2;\n"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
@@ -37,6 +39,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -45,6 +48,7 @@ msgid ""
 msgstr "לא ניתן להחיל פריט מחירון עם כמות מינימום חיובית על כרטיסי אירוע זה."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid ""
@@ -55,7 +59,7 @@ msgstr "לא יחול פריט מחירון עם מינימום חיובי על 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_event_sale_report
 msgid "Event Sales Report"
-msgstr ""
+msgstr "דו\"ח מכירת אירועים"
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
@@ -83,6 +87,11 @@ msgid "Pricelist Rule"
 msgstr "כלל מחירון"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_template
+msgid "Product"
+msgstr "מוצר"
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product Variant"
 msgstr "וריאנט מוצר"
@@ -91,13 +100,7 @@ msgstr "וריאנט מוצר"
 #: model:ir.model.fields,field_description:website_event_sale.field_event_sale_report__is_published
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_sale_report_view_search
 msgid "Published Events"
-msgstr ""
-
-#. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:0
-#, python-format
-msgid "Registration"
-msgstr "הרשמה"
+msgstr "אירועים מפורסמים"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
@@ -110,12 +113,14 @@ msgid "Sales Order Line"
 msgstr "שורת הזמנת לקוח"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr "מצטערים, ה %(ticket)s כרטיסים ל %(event)s אירוע כבר נמכרו."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -126,18 +131,21 @@ msgstr ""
 "%(event)s לאירוע."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The provided ticket doesn't exist"
-msgstr ""
+msgstr "הכרטיס שסופק אינו קיים"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr "הכרטיס אינו תואם למוצר זה."
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/product_pricelist.py:0
 #, python-format
 msgid "Warning"
@@ -154,6 +162,7 @@ msgid "Website"
 msgstr "אתר אינטרנט"
 
 #. module: website_event_sale
+#. odoo-python
 #: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "You cannot raise manually the event ticket quantity in your cart"
@@ -162,12 +171,12 @@ msgstr ""
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "event"
-msgstr ""
+msgstr "אירוע"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.event_confirmation
 msgid "events"
-msgstr ""
+msgstr "אירועים"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template

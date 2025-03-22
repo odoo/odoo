@@ -171,6 +171,7 @@ export class CommandPalette extends Component {
 
         const { namespace, searchValue } = this.processSearchValue(config.searchValue || "");
         this.switchNamespace(namespace);
+        this.state.searchValue = searchValue;
         await this.race.add(this.search(searchValue));
     }
 
@@ -293,7 +294,6 @@ export class CommandPalette extends Component {
     }
 
     async search(searchValue) {
-        this.state.searchValue = searchValue;
         await this.setCommands(this.state.namespace, {
             searchValue,
             activeElement: this.activeElement,
@@ -309,7 +309,7 @@ export class CommandPalette extends Component {
         if (namespace !== "default" && this.state.namespace !== namespace) {
             this.switchNamespace(namespace);
         }
-        this.inputRef.el.value = searchValue;
+        this.state.searchValue = searchValue;
         this.searchValuePromise = this.lastDebounceSearch(searchValue).catch(() => {
             this.searchValuePromise = null;
         });
@@ -322,6 +322,7 @@ export class CommandPalette extends Component {
     onKeyDown(ev) {
         if (ev.key.toLowerCase() === "backspace" && !ev.target.value.length && !ev.repeat) {
             this.switchNamespace("default");
+            this.state.searchValue = "";
             this.searchValuePromise = this.lastDebounceSearch("").catch(() => {
                 this.searchValuePromise = null;
             });

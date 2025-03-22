@@ -79,7 +79,7 @@ class HolidaysAllocation(models.Model):
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
-        help="If Accrual Allocation: Number of days allocated in addition to the ones you will get via the accrual' system.")
+        help="If Accrual Allocation: Days given by the accrual system.")
     number_of_hours_display = fields.Float(
         'Duration (hours)', compute='_compute_number_of_hours_display',
         help="If Accrual Allocation: Number of hours allocated in addition to the ones you will get via the accrual' system.")
@@ -146,6 +146,11 @@ class HolidaysAllocation(models.Model):
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('duration_check', "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))", "The duration must be greater than 0."),
     ]
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_from_date_to(self):
+        if any(allocation.date_to and allocation.date_from > allocation.date_to for allocation in self):
+            raise UserError(_("The Start Date of the Validity Period must be anterior to the End Date."))
 
     # The compute does not get triggered without a depends on record creation
     # aka keep the 'useless' depends
@@ -346,6 +351,8 @@ class HolidaysAllocation(models.Model):
             nextcall = current_level._get_next_date(last_day_last_year)
             if current_level.action_with_unused_accruals == 'lost':
                 # Allocations are lost but number_of_days should not be lower than leaves_taken
+                # `lastcall` and `nextcall` must be those of the last period in order
+                # to receive the full period allocation during the next call of the current year.
                 allocation.write({'number_of_days': allocation.leaves_taken, 'lastcall': lastcall, 'nextcall': nextcall})
             elif current_level.action_with_unused_accruals == 'postponed' and current_level.postpone_max_days:
                 # Make sure the period was ran until the last day of last year
@@ -353,8 +360,6 @@ class HolidaysAllocation(models.Model):
                     allocation.nextcall = first_day_this_year
                 # date_to should be first day of this year so the prorata amount is computed correctly
                 allocation._process_accrual_plans(first_day_this_year, True)
-                number_of_days = min(allocation.number_of_days - allocation.leaves_taken, current_level.postpone_max_days) + allocation.leaves_taken
-                allocation.write({'number_of_days': number_of_days, 'lastcall': lastcall, 'nextcall': nextcall})
 
     def _get_current_accrual_plan_level_id(self, date, level_ids=False):
         """

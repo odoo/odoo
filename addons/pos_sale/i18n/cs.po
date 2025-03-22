@@ -6,17 +6,18 @@
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
 # Martin Trigaux, 2022
-# Jiří Podhorecký, 2022
+# Jiří Podhorecký <jirka.p@volny.cz>, 2022
 # SlavekB <slavek.banko@axis.cz>, 2023
-# Aleš Fiala <f.ales1@seznam.cz>, 2023
+# Wil Odoo, 2024
+# Aleš Fiala <f.ales1@seznam.cz>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,6 +163,13 @@ msgstr "Produkt záloha "
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
 msgstr "Např. zákazník: Steward, datum: 2020-05-09"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/js/OrderManagementScreen/SaleOrderManagementScreen.js:0
+#, python-format
+msgid "Error amount too high"
+msgstr "Chyba částka je příliš vysoká"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -535,6 +543,11 @@ msgstr "Tento produkt bude použit jako záloha na prodejní objednávku."
 #, python-format
 msgid "Total"
 msgstr "Celkem"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Převod"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale

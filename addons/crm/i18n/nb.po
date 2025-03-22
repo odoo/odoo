@@ -9,14 +9,15 @@
 # Martin Trigaux, 2022
 # Lars Aam <lars.aam@vikenfiber.no>, 2022
 # Henning Fyllingsnes, 2023
+# Rune Restad, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Henning Fyllingsnes, 2023\n"
+"Last-Translator: Rune Restad, 2025\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +96,7 @@ msgstr ""
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "%s and %s"
-msgstr ""
+msgstr "%s og %s"
 
 #. module: crm
 #. odoo-python
@@ -208,14 +209,14 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
-"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
+msgid "<span class=\"oe_grey p-2 d-none d-sm-block\"> at </span>"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid "<span class=\"oe_grey p-2\"> at </span>"
+msgid ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -436,7 +437,7 @@ msgstr "Aktivitetstyper"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Activity by"
-msgstr ""
+msgstr "Aktivitet av"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -470,7 +471,7 @@ msgstr "Adresse"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Address:"
-msgstr ""
+msgstr "Adresse:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_id
@@ -481,7 +482,7 @@ msgstr "Alias"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "Alias kontaktsikkerhet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
@@ -496,7 +497,7 @@ msgstr "Aliasdomene"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "Modell med alias"
 
 #. module: crm
 #. odoo-javascript
@@ -652,7 +653,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr ""
+msgstr "Svarteliste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
@@ -674,7 +675,7 @@ msgstr "Pang! Ny team-rekord for siste 30 dager."
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_bounce
 msgid "Bounce"
-msgstr ""
+msgstr "Returnere"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_menu_root
@@ -829,7 +830,7 @@ msgstr "Firmanavn"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Company Name:"
-msgstr ""
+msgstr "Selskapsnavn:"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -983,7 +984,7 @@ msgstr "Antall"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr ""
+msgstr "Teller for antall returnerte e-poster for denne kontakten."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__country_id
@@ -1018,7 +1019,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
 msgid "Create a Recurring Plan"
-msgstr ""
+msgstr "Lag en gjentakende plan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
@@ -1117,7 +1118,7 @@ msgstr "Valuta"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Tilpasset returmelding"
 
 #. module: crm
 #. odoo-python
@@ -1171,7 +1172,7 @@ msgstr "Dager til lukking."
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Deadline: %s"
-msgstr ""
+msgstr "Frist: %s"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_defaults
@@ -1315,7 +1316,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email cc"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1503,7 +1504,7 @@ msgstr "Prognoseanalyse"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s"
-msgstr ""
+msgstr "Fra %(source_name)s"
 
 #. module: crm
 #. odoo-python
@@ -1628,6 +1629,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
+"Hvis satt, vil dette salgsteamet bli brukt for salg og oppgaver relatert til"
+" denne parten."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
@@ -1742,7 +1745,7 @@ msgstr "Stilling"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
-msgstr ""
+msgstr "Jobb stilling:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -2493,7 +2496,7 @@ msgstr "Ingen selger"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_normalized
 msgid "Normalized Email"
-msgstr ""
+msgstr "Normalisert epost"
 
 #. module: crm
 #: model:crm.lost.reason,name:crm.lost_reason_3
@@ -2542,7 +2545,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Antall beskjeder som trenger oppfølging"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
@@ -2749,7 +2752,7 @@ msgstr "Overordnede modell"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "Hovedposterings tråd ID"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_parent_model_id
@@ -2828,7 +2831,7 @@ msgstr "Salgstraktanalyse"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__name
 msgid "Plan Name"
-msgstr ""
+msgstr "Navn på plan"
 
 #. module: crm
 #. odoo-python
@@ -2953,13 +2956,13 @@ msgstr "Post-id på Tråd"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
 msgid "Recurring Plan"
-msgstr ""
+msgstr "Gjentakende plan"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
 #: model:ir.ui.menu,name:crm.crm_recurring_plan_menu_config
 msgid "Recurring Plans"
-msgstr ""
+msgstr "Gjentakende planer"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
@@ -2992,7 +2995,7 @@ msgstr "Tilknyttet kunde"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_number
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Repeat every"
-msgstr ""
+msgstr "Gjente hver"
 
 #. module: crm
 #. odoo-python
@@ -3020,7 +3023,7 @@ msgstr "Krav"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Reschedule"
-msgstr ""
+msgstr "Re-planlegg"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
@@ -3073,7 +3076,7 @@ msgstr "Salgsteam"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_team_member
 msgid "Sales Team Member"
-msgstr ""
+msgstr "Salgsteam medlem"
 
 #. module: crm
 #. odoo-python
@@ -3145,7 +3148,7 @@ msgstr "Velg leads/salgsmuligheter"
 #: model:ir.actions.act_window,name:crm.action_lead_mail_compose
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 msgid "Send email"
-msgstr ""
+msgstr "Send epost"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__sequence
@@ -3354,7 +3357,7 @@ msgstr "Undertype"
 #. module: crm
 #: model:ir.model,name:crm.model_ir_config_parameter
 msgid "System Parameter"
-msgstr ""
+msgstr "System parameter"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3413,6 +3416,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Navnet på e-postaliaset, f.eks. 'jobber' hvis du vil fange e-poster for "
+"<jobs@example.odoo.com>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__partner_name
@@ -3720,11 +3725,6 @@ msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
 msgstr ""
 
@@ -3733,23 +3733,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid ""
-"Use the top left <i>Create</i> button, or send an email to %s to test the "
-"email gateway."
-msgstr ""
-
-#. module: crm
-#. odoo-python
-#: code:addons/crm/models/crm_lead.py:0
-#, python-format
-msgid ""
 "Use the <i>New</i> button, or send an email to %s to test the email gateway."
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
-msgid ""
-"Use the top left Create button, or configure an email alias to test the "
-"email gateway."
 msgstr ""
 
 #. module: crm
@@ -3776,7 +3760,7 @@ msgstr "Bruker"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__user_company_ids
 msgid "User Company"
-msgstr ""
+msgstr "Brukers firma"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__value

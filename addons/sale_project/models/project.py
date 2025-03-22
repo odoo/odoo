@@ -7,6 +7,7 @@ from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import Query
+from odoo.tools.misc import unquote
 
 from datetime import date
 from functools import reduce
@@ -14,11 +15,24 @@ from functools import reduce
 class Project(models.Model):
     _inherit = 'project.project'
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('is_service', '=', True),
+                ('is_expense', '=', False),
+                ('state', 'in', ['sale', 'done']),
+                ('order_partner_id', '=?', unquote("partner_id")),
+                '|', ('company_id', '=', False), ('company_id', '=', unquote("company_id")),
+            ],
+        ])
+        return domain
+
     allow_billable = fields.Boolean("Billable")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
         compute="_compute_sale_line_id", store=True, readonly=False, index='btree_not_null',
-        domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', '=?', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain=lambda self: str(self._domain_sale_line_id()),
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
             " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
             "It can be modified on each task and timesheet entry individually if necessary.")
@@ -87,7 +101,7 @@ class Project(models.Model):
 
     def _compute_invoice_count(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
-        query.add_where('analytic_distribution ?| %s', [[str(project.analytic_account_id.id) for project in self]])
+        query.add_where('account_move_line.analytic_distribution ?| %s', [[str(project.analytic_account_id.id) for project in self]])
         query.order = None
         query_string, query_param = query.select(
             'jsonb_object_keys(account_move_line.analytic_distribution) as account_id',
@@ -170,7 +184,7 @@ class Project(models.Model):
 
     def action_open_project_invoices(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
-        query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         query.order = None
         query_string, query_param = query.select('DISTINCT move_id')
         self._cr.execute(query_string, query_param)
@@ -300,9 +314,9 @@ class Project(models.Model):
         } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
-        sale_items = self._get_sale_order_items()
+        sale_items = self.sudo()._get_sale_order_items()
         domain = [
-            ('order_id', 'in', sale_items.order_id.ids),
+            ('order_id', 'in', sale_items.sudo().order_id.ids),
             ('is_downpayment', '=', False),
             ('state', 'in', ['sale', 'done']),
             ('display_type', '=', False),
@@ -317,7 +331,7 @@ class Project(models.Model):
         return domain
 
     def _get_sale_items(self, with_action=True):
-        domain = self.sudo()._get_sale_items_domain()
+        domain = self._get_sale_items_domain()
         return {
             'total': self.env['sale.order.line'].sudo().search_count(domain),
             'data': self.get_sale_items_data(domain, limit=5, with_action=with_action),
@@ -443,12 +457,14 @@ class Project(models.Model):
     def _get_revenues_items_from_invoices_domain(self, domain=None):
         if domain is None:
             domain = []
+        included_invoice_line_ids = self._get_already_included_profitability_invoice_line_ids()
         return expression.AND([
             domain,
             [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
             ('parent_state', 'in', ['draft', 'posted']),
             ('price_subtotal', '!=', 0),
-            ('is_downpayment', '=', False)],
+            ('is_downpayment', '=', False),
+            ('id', 'not in', included_invoice_line_ids)],
         ])
 
     def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
@@ -584,7 +600,7 @@ class Project(models.Model):
 
     def action_open_project_vendor_bills(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['in_invoice', 'in_refund'])])
-        query.add_where('analytic_distribution ? %s', [str(self.analytic_account_id.id)])
+        query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         query.order = None
         query_string, query_param = query.select('DISTINCT move_id')
         self._cr.execute(query_string, query_param)
@@ -607,17 +623,24 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
+    def _domain_sale_line_id(self):
+        domain = expression.AND([
+            self.env['sale.order.line']._sellable_lines_domain(),
+            [
+                ('company_id', '=', unquote('company_id')),
+                '|', ('order_partner_id', 'child_of', unquote('commercial_partner_id if commercial_partner_id else []')),
+                    ('order_partner_id', '=?', unquote('partner_id')),
+                ('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']),
+            ],
+        ])
+        return domain
+
     sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item',
         copy=True, tracking=True, index='btree_not_null', recursive=True,
         compute='_compute_sale_line', store=True, readonly=False,
-        domain="""[
-            ('company_id', '=', company_id),
-            '|', ('order_partner_id', 'child_of', commercial_partner_id if commercial_partner_id else []),
-                 ('order_partner_id', '=?', partner_id),
-            ('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])
-        ]""",
+        domain=lambda self: str(self._domain_sale_line_id()),
         help="Sales Order Item to which the time spent on this task will be added in order to be invoiced to your customer.\n"
              "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
              "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually.")

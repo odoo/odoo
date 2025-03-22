@@ -1162,3 +1162,44 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         with self.assertRaisesRegex(UserError, 'not balanced'), self.env.cr.savepoint():
             stealer_move.write({'line_ids': [Command.link(honest_move.line_ids[0].id)]})
+
+    def test_validate_move_wizard_with_auto_post_entry(self):
+        """ Test that the wizard to validate a move with auto_post is working fine. """
+        self.test_move.date = fields.Date.today() + relativedelta(months=3)
+        self.test_move.auto_post = 'at_date'
+        wizard = self.env['validate.account.move'].with_context(active_model='account.move', active_ids=self.test_move.ids).create({})
+        wizard.force_post = True
+        wizard.validate_move()
+        self.assertTrue(self.test_move.state == 'posted')
+
+    def test_balance_modification_auto_balancing(self):
+        """ Test that amount currency is correctly recomputed when, without multicurrency enabled,
+        the balance is changed """
+        account = self.company_data['default_account_revenue']
+        move = self.env['account.move'].create({
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'balance': 20,
+                }), Command.create({
+                    'account_id': account.id,
+                    'balance': -20,
+                })]
+        })
+        line = move.line_ids.filtered(lambda l: l.account_id == account)
+        move.write({
+            'line_ids': [
+                Command.update(line.id, {
+                    'debit': 10,
+                    'credit': 0,
+                    'balance': 10
+                }),
+                Command.create({
+                    'account_id': account.id,
+                    'balance': -30,
+                })]
+        })
+
+        self.assertRecordValues(line, [
+            {'amount_currency': 10.00, 'balance': 10.00},
+        ])

@@ -60,6 +60,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             )
         vals = self._get_alternative_values()
         alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(vals)
+        alt_po.order_line._compute_tax_id()
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -84,6 +85,6 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                 'product_qty': line.product_qty,
                 'product_uom': line.product_uom.id,
                 'display_type': line.display_type,
-                'name': line.name,
+                **({'name': line.name} if line.display_type in ('line_section', 'line_note') else {}),
             }) for line in self.origin_po_id.order_line]
         return vals

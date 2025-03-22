@@ -34,31 +34,31 @@
     <record id="product_comp_rule" model="ir.rule">
         <field name="name" >Product multi-company</field>
         <field name="model_id" ref="model_product_template"/>
-        <field name="domain_force"> ['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="product_pricelist_comp_rule">
         <field name="name">product pricelist company rule</field>
         <field name="model_id" ref="model_product_pricelist"/>
-        <field name="domain_force"> ['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="product_pricelist_item_comp_rule">
         <field name="name">product pricelist item company rule</field>
         <field name="model_id" ref="model_product_pricelist_item"/>
-        <field name="domain_force"> ['|', ('company_id', 'in', company_ids), ('company_id', '=', False)]</field>
+        <field name="domain_force"> [('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="product_supplierinfo_comp_rule">
         <field name="name">product supplierinfo company rule</field>
         <field name="model_id" ref="model_product_supplierinfo"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="product_packaging_comp_rule">
         <field name="name">product packaging company rule</field>
         <field name="model_id" ref="model_product_packaging"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
 </data>

@@ -79,14 +79,8 @@ class StockPutawayRule(models.Model):
 
     @api.onchange('location_in_id')
     def _onchange_location_in(self):
-        child_location_count = 0
-        if self.location_out_id:
-            child_location_count = self.env['stock.location'].search_count([
-                ('id', '=', self.location_out_id.id),
-                ('id', 'child_of', self.location_in_id.id),
-                ('id', '!=', self.location_in_id.id),
-            ])
-        if not child_location_count or not self.location_out_id:
+        loc_in, loc_out = self.location_in_id, self.location_out_id
+        if not loc_out or (loc_in and not loc_out._child_of(loc_in)):
             self.location_out_id = self.location_in_id
 
     @api.model_create_multi
@@ -107,7 +101,7 @@ class StockPutawayRule(models.Model):
         out_locations = self.location_out_id
         if out_locations:
             self.env['stock.picking.type'].with_context(active_test=False)\
-                .search([('default_location_dest_id', 'in', out_locations.ids)])\
+                .search([('default_location_dest_id', 'in', out_locations.ids), ('show_reserved', '=', False)])\
                 .write({'show_reserved': True})
 
     def _get_putaway_location(self, product, quantity=0, package=None, packaging=None, qty_by_location=None):

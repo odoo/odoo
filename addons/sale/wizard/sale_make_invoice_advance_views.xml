@@ -30,7 +30,8 @@
                     attrs="{'invisible': [('advance_payment_method', 'not in', ('fixed', 'percentage'))]}">
                     <field name="company_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
-                    <label for="amount"/>
+                    <label for="fixed_amount" attrs="{'invisible': [('advance_payment_method', '!=', 'fixed')]}"/>
+                    <label for="amount" attrs="{'invisible': [('advance_payment_method', '!=', 'percentage')]}"/>
                     <div id="payment_method_details">
                         <field name="currency_id" invisible="1"/>
                         <field name="fixed_amount"

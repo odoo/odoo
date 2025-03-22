@@ -852,7 +852,7 @@ class Channel(models.Model):
             additional_domain=[('request_partner_id', '=', partner.id)]
         ).mapped('res_id')
         for channel in self:
-            if channel.id not in requested_cids:
+            if channel.id not in requested_cids and channel.user_id:
                 activities += channel.activity_schedule(
                     'website_slides.mail_activity_data_access_request',
                     note=_('<b>%s</b> is requesting access to this course.') % partner.name,
@@ -995,3 +995,9 @@ class Channel(models.Model):
             'mapping': mapping,
             'icon': 'fa-graduation-cap',
         }
+
+    def open_website_url(self):
+        """ Overridden to use a relative URL instead of an absolute when website_id is False. """
+        if self.website_id:
+            return super().open_website_url()
+        return self.env['website'].get_client_action(f'/slides/{slug(self)}')

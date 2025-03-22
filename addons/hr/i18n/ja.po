@@ -3,22 +3,21 @@
 # 	* hr
 # 
 # Translators:
-# Noma Yuki, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2022
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
-# Shigekazu N. <shigekazu.noka@gmail.com>, 2022
 # Andy Yiu, 2023
 # Martin Trigaux, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2024
+# Junko Augias, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +64,7 @@ msgstr "'バッジ印刷 - %s' % (object.name).replace('/', '')"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "1 Onsite Interview"
-msgstr "1 オンサイトインタビュー"
+msgstr "1 オンサイト面接"
 
 #. module: hr
 #: model_terms:hr.job,job_details:hr.job_ceo
@@ -304,7 +303,7 @@ msgstr "<span class=\"o_stat_text\">接続中</span>"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form_smartbutton
 msgid "<span class=\"o_stat_text\">Contacts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">連絡先</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -342,7 +341,7 @@ msgstr "<span class=\"text-muted small\">プロセス</span>"
 #: model_terms:hr.job,job_details:hr.job_marketing
 #: model_terms:hr.job,job_details:hr.job_trainee
 msgid "<span class=\"text-muted small\">Time to Answer</span>"
-msgstr "<span class=\"text-muted small\">回答時間</span>"
+msgstr "<span class=\"text-muted small\">回答までの時間</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -363,7 +362,7 @@ msgstr "<span>新規従業員</span>"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "A full-time position <br>Attractive salary package."
-msgstr "フルタイム雇用 <br>高給パッケージ"
+msgstr "フルタイム雇用 <br>高待遇"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_user_uniq
@@ -721,6 +720,11 @@ msgid "Bank Account Number"
 msgstr "銀行口座番号"
 
 #. module: hr
+#: model:ir.model,name:hr.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "銀行口座"
+
+#. module: hr
 #: model:ir.model,name:hr.model_base
 msgid "Base"
 msgstr "ベース"
@@ -975,12 +979,12 @@ msgstr "新しい部署を登録する"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_contract_type_action
 msgid "Create a new employment type"
-msgstr ""
+msgstr "新しい従業員タイプを作成"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_work_location_action
 msgid "Create a new work location"
-msgstr ""
+msgstr "新しい作業区を作成"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -1466,7 +1470,7 @@ msgstr "女"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__study_field
 #: model:ir.model.fields,field_description:hr.field_res_users__study_field
 msgid "Field of Study"
-msgstr "科目"
+msgstr "専攻分野"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
@@ -1523,7 +1527,7 @@ msgstr "フルーツ、コーヒー、<br>スナックが提供されます。"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__gender
@@ -2070,7 +2074,7 @@ msgstr "自分の部門"
 #: code:addons/hr/static/src/user_menu/my_profile.js:0
 #, python-format
 msgid "My Profile"
-msgstr "個人設定"
+msgstr "マイプロフィール"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -2296,7 +2300,7 @@ msgstr "他の担当者"
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
 msgid "Our Product"
-msgstr "当社プロダクト"
+msgstr "当社製品"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__pin
@@ -2551,22 +2555,22 @@ msgstr "個人電話番号"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_state_id
 msgid "Private State"
-msgstr "プライベート都道府県"
+msgstr "個人都道府県"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street
 msgid "Private Street"
-msgstr "プライベート通り"
+msgstr "個人町名番地"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_street2
 msgid "Private Street2"
-msgstr "プライベート通り2"
+msgstr "個人町名番地2"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__private_zip
 msgid "Private Zip"
-msgstr "プライベート郵便番号"
+msgstr "個人郵便番号"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
@@ -2620,18 +2624,14 @@ msgid "Register Departure"
 msgstr "退職届け"
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee_base.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_employee__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__related_contact_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__related_contact_ids
-msgid "Related Contact"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_employee_base.py:0
 #, python-format
 msgid "Related Contacts"
-msgstr ""
+msgstr "関連連絡先"
 
 #. module: hr
 #. odoo-python
@@ -2852,10 +2852,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"活動に基づく状態\n"
-"延滞：期限は既に過ぎました\n"
-"当日：活動日は本日です\n"
-"予定：将来の活動。"
+"活動に基づくステータス\n"
+"遅延: 期日が過ぎています\n"
+"今日: 活動日は今日です\n"
+"予定: 今後の活動。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan__steps_count
@@ -3207,7 +3207,7 @@ msgstr "ベルギーの有効なワークパーミット"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
 #: model:ir.model.fields,field_description:hr.field_res_users__visa_expire
 msgid "Visa Expiration Date"
-msgstr ""
+msgstr "ビザの有効期限"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_no
@@ -3462,3 +3462,8 @@ msgstr "プラン"
 #, python-format
 msgid "restricted to employees"
 msgstr "従業員への制限"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name
+msgid "work_permit_name"
+msgstr "work_permit_name"

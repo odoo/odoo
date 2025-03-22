@@ -9,15 +9,16 @@
 # Trần Hà <tranthuha13590@gmail.com>, 2022
 # Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Martin Trigaux, 2023
-# Thi Huong Nguyen, 2023
+# Wil Odoo, 2025
+# Thi Huong Nguyen, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:35+0000\n"
+"POT-Creation-Date: 2025-02-10 08:27+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +40,20 @@ msgstr " dữ liệu"
 #, python-format
 msgid "# Code editor"
 msgstr "# Chỉnh sửa mã"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is current state"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "#{i.display_name} is not current state"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -321,8 +336,10 @@ msgstr "<span class=\"text-nowrap\">Thuế 15%</span>"
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid ""
 "<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
-"                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>United States</span>"
 msgstr ""
+"<span class=\"w-100 o_force_ltr\" itemprop=\"streetAddress\">77 Santa Barbara\n"
+"                                       Rd<br/>Pleasant Hill CA 94523<br/>Hoa Kỳ</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -514,7 +531,7 @@ msgstr "Truy cập đến tất cả các ứng dụng Enterprise"
 #: code:addons/web/static/src/views/fields/ace/ace_field.js:0
 #, python-format
 msgid "Ace Editor"
-msgstr "Át chủ biên"
+msgstr "Trình chỉnh sửa Ace"
 
 #. module: web
 #. odoo-javascript
@@ -555,7 +572,6 @@ msgstr "Kích hoạt chạy Tests"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/debug/debug_providers.js:0
-#: code:addons/web/static/src/core/debug/debug_providers.js:0
 #, python-format
 msgid "Activate debug mode (with assets)"
 msgstr "Kích hoạt chế độ gỡ lỗi (có assets)"
@@ -565,21 +581,21 @@ msgstr "Kích hoạt chế độ gỡ lỗi (có assets)"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode"
-msgstr "Kích hoạt chế độ phát triển"
+msgstr "Kích hoạt chế độ lập trình"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with assets)"
-msgstr "Kích hoạt chế độ phát triển (có assets)"
+msgstr "Kích hoạt chế độ lập trình (có assets)"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 #, python-format
 msgid "Activate the developer mode (with tests assets)"
-msgstr "Kích hoạt chế độ nhà phát triển (với tests assets)"
+msgstr "Kích hoạt chế độ lập trình (có kiểm thử assets)"
 
 #. module: web
 #. odoo-javascript
@@ -729,7 +745,7 @@ msgstr "Thêm: %s"
 #: code:addons/web/static/src/legacy/js/components/action_menus.js:0
 #, python-format
 msgid "Additionnal actions"
-msgstr "Các hành động bổ sung"
+msgstr "Các tác vụ bổ sung"
 
 #. module: web
 #. odoo-javascript
@@ -937,7 +953,7 @@ msgstr ""
 #: code:addons/web/static/src/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record ?"
-msgstr "Bạn có chắc muốn xoá tập dữ liệu này?"
+msgstr "Bạn có chắc muốn xoá bản ghi này?"
 
 #. module: web
 #. odoo-javascript
@@ -970,6 +986,7 @@ msgstr "Là văn bản mặc định khi không có giá trị nào được đ�
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Ascending"
 msgstr "Tăng dần"
@@ -978,6 +995,7 @@ msgstr "Tăng dần"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Attach"
@@ -1052,6 +1070,7 @@ msgstr "Huy chương"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Bar Chart"
@@ -1280,7 +1299,10 @@ msgstr "Chọn một lệnh gỡ lỗi..."
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
@@ -1293,6 +1315,13 @@ msgstr "Làm sạch"
 #, python-format
 msgid "Clear Signature"
 msgstr "Xóa chữ ký"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Click to change current state to #{i.display_name}"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -1529,6 +1558,13 @@ msgstr "Copyright © 2004"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#, python-format
+msgid "Correct issues to save, or discard changes"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/core/ajax.js:0
 #, python-format
 msgid "Could not connect to the server"
@@ -1538,7 +1574,6 @@ msgstr "Không thể kết nối đến máy chủ"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/legacy/js/fields/signature.js:0
-#: code:addons/web/static/src/views/fields/image/image_field.js:0
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Could not display the selected image"
@@ -1554,7 +1589,6 @@ msgstr "Không thể hiển thị pdf đã chọn"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/image_url/image_url_field.js:0
 #, python-format
 msgid "Could not display the specified image url."
 msgstr "Không thể hiển thị url hình ảnh được chỉ định."
@@ -1675,7 +1709,7 @@ msgstr "Tạo và sửa..."
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.xml:0
 #, python-format
 msgid "Create record"
-msgstr "Tạo tập dữ liệu"
+msgstr "Tạo bản ghi"
 
 #. module: web
 #. odoo-javascript
@@ -1711,6 +1745,7 @@ msgstr "Người tạo:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Cumulative"
 msgstr "Tích lũy"
@@ -1718,7 +1753,6 @@ msgstr "Tích lũy"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Current state"
 msgstr "Giai đoạn hiện tại"
@@ -1792,7 +1826,7 @@ msgstr "Tắt chế độ gỡ lỗi"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_dev_tool.xml:0
 #, python-format
 msgid "Deactivate the developer mode"
-msgstr "Vô hiệu chế độ phát triển"
+msgstr "Vô hiệu chế độ lập trình"
 
 #. module: web
 #. odoo-javascript
@@ -1926,6 +1960,7 @@ msgstr "Xóa hàng "
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Descending"
 msgstr "Giảm dần"
@@ -1970,6 +2005,7 @@ msgstr "Huỷ bỏ"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
 msgstr "Loại bỏ những thay đổi"
@@ -1980,7 +2016,7 @@ msgstr "Loại bỏ những thay đổi"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Discard record"
-msgstr "Hủy tập dữ liệu"
+msgstr "Hủy bản ghi"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__display_name
@@ -2077,6 +2113,7 @@ msgstr "Đừng thoát, <br /> hệ thống vẫn đang tải..."
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/many2many_binary/many2many_binary_field.xml:0
 #, python-format
 msgid "Download"
@@ -2091,6 +2128,7 @@ msgstr "Tải xuống bản xem trước"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Download xlsx"
@@ -2129,7 +2167,10 @@ msgstr "Nhân bản"
 #: code:addons/web/static/src/views/calendar/calendar_common/calendar_common_popover.xml:0
 #: code:addons/web/static/src/views/calendar/quick_create/calendar_quick_create.xml:0
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
+#: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/image/image_field.xml:0
+#: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
@@ -2141,7 +2182,7 @@ msgstr "Sửa"
 #: code:addons/web/static/src/webclient/actions/debug_items.js:0
 #, python-format
 msgid "Edit Action"
-msgstr "Sửa hành động"
+msgstr "Sửa tác vụ"
 
 #. module: web
 #. odoo-javascript
@@ -2235,6 +2276,7 @@ msgstr "Doanh nghiệp"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
+#: code:addons/web/static/src/views/relational_model.js:0
 #, python-format
 msgid "Error"
 msgstr "Lỗi"
@@ -2266,6 +2308,7 @@ msgstr "Tất cả"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Expand all"
 msgstr "Mở tất cả"
@@ -2284,6 +2327,7 @@ msgstr "Xuất"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/list/list_controller.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Export All"
@@ -2313,15 +2357,15 @@ msgid "Exporting grouped data to csv is not supported."
 msgstr "Đang xuất nhóm dữ liệu qua csv chưa được hỗ trợ."
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/legacy/js/widgets/data_export.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "External ID"
-msgstr "External ID"
+msgstr "ID ngoài"
 
 #. module: web
 #. odoo-javascript
@@ -2390,7 +2434,7 @@ msgstr "Trường:"
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Fields to export"
-msgstr "Các trường để trích xuất"
+msgstr "Trường cần xuất"
 
 #. module: web
 #. odoo-javascript
@@ -2403,7 +2447,6 @@ msgstr "Tệp"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
 msgstr "Tải tập tin lên"
@@ -2426,6 +2469,7 @@ msgstr "Bộ lọc"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Flip axis"
@@ -2477,12 +2521,12 @@ msgstr "Lựa chọn phông chữ"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "Footer"
-msgstr "Chân"
+msgstr "Footer"
 
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__report_footer
 msgid "Footer text displayed at the bottom of all reports."
-msgstr "Nội dung lề dưới sẽ hiển thị ở tất cả các báo cáo."
+msgstr "Nội dung footer sẽ hiển thị ở tất cả các báo cáo."
 
 #. module: web
 #. odoo-javascript
@@ -2567,6 +2611,7 @@ msgstr "Nhận được tính năng này và nhiều hơn nữa với phiên b�
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
+#: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
 msgstr "Chuyển đến URL"
@@ -2611,7 +2656,20 @@ msgstr "Xử lý"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
-msgstr "Văn bản tiêu đề hiển thị ở đầu tất cả các báo cáo."
+msgstr "Văn bản header hiển thị ở đầu tất cả các báo cáo."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/basic_relational_model.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"Chú ý! Những thay đổi gần đây của bạn quá lớn nên không thể lưu tự động. Bây"
+" giờ, hãy nhấp vào nút <i class=\"fa fa-cloud-upload fa-fw\"></i> để đảm bảo"
+" thao tác của bạn được lưu trước khi thoát tab này."
 
 #. module: web
 #. odoo-javascript
@@ -2676,7 +2734,7 @@ msgstr "Tôi chắc chắn về điều này."
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "I want to update data (import-compatible export)"
-msgstr "Tôi muốn cập nhật dữ liệu (xuất tương ứng nhập)"
+msgstr "Tôi muốn cập nhật dữ liệu (xuất tương thích nhập)"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__id
@@ -2734,6 +2792,8 @@ msgstr "Integer"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
+#: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
@@ -2966,6 +3026,7 @@ msgstr "Xanh dương nhạt"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Line Chart"
 msgstr "Đồ thị đường"
@@ -2992,6 +3053,13 @@ msgstr "Nạp"
 #, python-format
 msgid "Load demo data"
 msgstr "Nạp dữ liệu mô phỏng"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid "Load everything anyway."
+msgstr "Tải mọi thứ."
 
 #. module: web
 #. odoo-javascript
@@ -3094,7 +3162,7 @@ msgstr "MailDeliveryException"
 #: code:addons/web/static/src/views/pivot/pivot_controller.xml:0
 #, python-format
 msgid "Main actions"
-msgstr "Hành động chính"
+msgstr "Tác vụ chính"
 
 #. module: web
 #. odoo-javascript
@@ -3154,7 +3222,7 @@ msgstr "Khớp"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match records with"
-msgstr "Kết hợp các tập dữ liệu với"
+msgstr "Kết hợp các bản ghi với"
 
 #. module: web
 #. odoo-javascript
@@ -3162,7 +3230,7 @@ msgstr "Kết hợp các tập dữ liệu với"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Match records with the following rule:"
-msgstr "Kết hợp các tập dữ liệu với quy tắc sau:"
+msgstr "Kết hợp các bản ghi với quy tắc sau:"
 
 #. module: web
 #. odoo-javascript
@@ -3403,6 +3471,7 @@ msgstr "Mới: %s"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/pager/pager.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #: code:addons/web/static/src/views/calendar/calendar_controller.xml:0
 #, python-format
@@ -3558,7 +3627,7 @@ msgstr "Không đúng dữ liệu để lưu"
 #: code:addons/web/static/src/webclient/actions/action_service.js:0
 #, python-format
 msgid "No view of type '%s' could be found in the current action."
-msgstr "Không có dạng xem nào '%s' được tìm thấy trong hành động hiện tại."
+msgstr "Không có dạng xem nào '%s' được tìm thấy trong tác vụ hiện tại."
 
 #. module: web
 #. odoo-javascript
@@ -3588,7 +3657,6 @@ msgstr "Chưa chọn"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state"
 msgstr "Không kích hoạt trạng thái"
@@ -3596,10 +3664,16 @@ msgstr "Không kích hoạt trạng thái"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
 #, python-format
 msgid "Not active state, click to change it"
 msgstr "Không kích hoạt trạng thái, bấm để thay đổi"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.xml:0
+#, python-format
+msgid "Number using {{ DECIMAL_POINT }} as decimal separator."
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -3754,7 +3828,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #, python-format
 msgid "Only the first %d records have been deleted (out of %d selected)"
-msgstr "Chỉ có dữ liệu %d đầu tiên được phép xóa (ngoài %d đã chọn)"
+msgstr "Chỉ có dữ liệu %d đầu tiên được phép xóa (trong số %d đã chọn)"
 
 #. module: web
 #. odoo-javascript
@@ -3978,9 +4052,10 @@ msgstr "Chọn một màu sắc"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Pie Chart"
-msgstr "Biểu đồ bánh"
+msgstr "Biểu đồ tròn"
 
 #. module: web
 #. odoo-javascript
@@ -4116,7 +4191,7 @@ msgstr "Cung cấp bởi %s%s"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr "Được hỗ trợ bởi <span>Hệ thống</span>"
+msgstr "Cung cấp bởi <span>Odoo</span>"
 
 #. module: web
 #. odoo-javascript
@@ -4149,6 +4224,7 @@ msgstr "Xem trước logo"
 #. odoo-javascript
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
+#: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/core/pager/pager.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
@@ -4233,7 +4309,7 @@ msgstr "Đang xử lý..."
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 #, python-format
 msgid "Progress Bar"
-msgstr "Thanh tiến trình"
+msgstr "Thanh tiến độ"
 
 #. module: web
 #. odoo-javascript
@@ -4533,7 +4609,7 @@ msgstr "Báo cáo"
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_footer
 msgid "Report Footer"
-msgstr "Lề dưới báo cáo"
+msgstr "Footer báo cáo"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__report_layout_id
@@ -4552,6 +4628,13 @@ msgstr "Xem trước bố cục báo cáo"
 #, python-format
 msgid "Request timeout"
 msgstr "Hết thời gian yêu cầu"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/domain_selector/domain_selector.xml:0
+#, python-format
+msgid "Reset domain"
+msgstr "Đặt lại miền"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -4683,6 +4766,7 @@ msgstr "Lưu mặc định"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
+#: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
 msgstr "Lưu thủ công"
@@ -4693,10 +4777,11 @@ msgstr "Lưu thủ công"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Save record"
-msgstr "Lưu tập dữ liệu"
+msgstr "Lưu bản ghi"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.xml:0
 #, python-format
@@ -4758,7 +4843,7 @@ msgstr "Tìm kiếm menu..."
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search for records"
-msgstr "Tìm kiếm tập dữ liệu"
+msgstr "Tìm kiếm bản ghi"
 
 #. module: web
 #. odoo-javascript
@@ -4870,6 +4955,13 @@ msgstr "Chọn tất cả"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/list/list_controller.xml:0
+#, python-format
+msgid "Select all records matching the search"
+msgstr "Chọn tất cả bản ghi khớp với tìm kiếm"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
@@ -4881,7 +4973,7 @@ msgstr "Chọn trường"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Select records"
-msgstr "Chọn tập dữ liệu"
+msgstr "Chọn bản ghi"
 
 #. module: web
 #. odoo-javascript
@@ -4890,7 +4982,7 @@ msgstr "Chọn tập dữ liệu"
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "Selected records"
-msgstr "Các tập dữ liệu được chọn"
+msgstr "Các bản ghi được chọn"
 
 #. module: web
 #. odoo-javascript
@@ -4911,6 +5003,7 @@ msgstr "Lựa chọn:"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #: code:addons/web/static/src/views/fields/email/email_field.xml:0
 #, python-format
 msgid "Send Email"
@@ -5067,6 +5160,8 @@ msgstr "Đặc biệt:"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
 #, python-format
 msgid "Stacked"
 msgstr "Chồng"
@@ -5093,6 +5188,13 @@ msgstr "Thông tin thống kê"
 #, python-format
 msgid "Status"
 msgstr "Trạng thái"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.xml:0
+#, python-format
+msgid "Statusbar"
+msgstr "Thanh trạng thái"
 
 #. module: web
 #. odoo-javascript
@@ -5162,10 +5264,19 @@ msgstr "Lỗi cú pháp"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
 msgstr "LỜI KHUYÊN"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Tag color: #{colornames[color]}"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -5255,8 +5366,14 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/files.js:0
+#, python-format
+msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
+msgstr "Tệp đã chọn (%sB) vượt quá kích thước tệp tối đa cho phép (%sB)."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
-#: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
 msgstr "Tập tin được chọn chạm giới hạn dung lượng tối đa %s."
@@ -5273,6 +5390,17 @@ msgstr ""
 "'ir.attachment'."
 
 #. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/graph/graph_controller.xml:0
+#, python-format
+msgid ""
+"There are too many data. The graph only shows a sample. Use the filters to "
+"refine the scope."
+msgstr ""
+"Có quá nhiều dữ liệu. Biểu đồ chỉ hiển thị một mẫu. Sử dụng bộ lọc để tinh "
+"chỉnh phạm vi."
+
+#. module: web
 #. odoo-python
 #: code:addons/web/controllers/export.py:0
 #, python-format
@@ -5280,7 +5408,7 @@ msgid ""
 "There are too many rows (%s rows, limit: %s) to export as Excel 2007-2013 "
 "(.xlsx) format. Consider splitting the export."
 msgstr ""
-"Có quá nhiều dòng (%s dòng, giới hạn: %s) để xuất dưới định dạng Excel "
+"Có quá nhiều hàng (%s hàng, giới hạn: %s) để xuất dưới định dạng Excel "
 "2007-2013 (.xlsx). Xem xét chia việc xuất ra nhiều lần."
 
 #. module: web
@@ -5321,6 +5449,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/datepicker/datepicker.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "This date is on the future. Make sure it is what you expected."
@@ -5390,7 +5519,7 @@ msgstr "Thẻ này đã có sẵn"
 #: code:addons/web/static/src/views/list/list_confirmation_dialog.xml:0
 #, python-format
 msgid "This update will only consider the records of the current page."
-msgstr "Bản cập nhật này sẽ chỉ xem xét các tập dữ liệu của trang hiện tại."
+msgstr "Bản cập nhật này sẽ chỉ xem xét các bản ghi của trang hiện tại."
 
 #. module: web
 #. odoo-javascript
@@ -5494,7 +5623,7 @@ msgid ""
 "Try to add some records, or make sure that there is no\n"
 "                    active filter in the search bar."
 msgstr ""
-"Cố gắng thêm một số tập dữ liệu hoặc đảm bảo rằng không có tập dữ liệu nào\n"
+"Cố gắng thêm một số bản ghi hoặc đảm bảo rằng không có bản ghi nào\n"
 "                    không có bộ lọc đang hoạt động nào trong thanh tìm kiếm."
 
 #. module: web
@@ -5592,8 +5721,8 @@ msgid "Uncaught Promise"
 msgstr "Không thể bắt lỗi dự kiến"
 
 #. module: web
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/web/controllers/export.py:0
 #: code:addons/web/static/src/views/calendar/calendar_model.js:0
 #: code:addons/web/static/src/views/graph/graph_model.js:0
@@ -5641,7 +5770,7 @@ msgstr "Không biết kiểu nonliteral "
 #: code:addons/web/static/src/legacy/js/views/list/list_editable_renderer.js:0
 #, python-format
 msgid "Unlink row "
-msgstr "Bỏ liên kết dòng "
+msgstr "Bỏ liên kết hàng "
 
 #. module: web
 #. odoo-javascript
@@ -5890,6 +6019,7 @@ msgstr "Xem bộ chuyển đổi"
 #: code:addons/web/static/src/legacy/js/views/list/list_controller.js:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/control_panel.xml:0
 #: code:addons/web/static/src/search/favorite_menu/favorite_menu.js:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
 #: code:addons/web/static/src/views/fields/domain/domain_field.xml:0
@@ -6112,8 +6242,8 @@ msgid ""
 "table-breaking between pages."
 msgstr ""
 "Bạn nên nâng cấp phiên bản của Wkhtmltopdf lên ít nhất 0.12.0 để hiển thị "
-"chính xác các đầu trang và chân trang cũng như hỗ trợ cho việc liên kết bảng"
-" giữa các trang."
+"chính xác các header và footer cũng như hỗ trợ cho việc liên kết bảng giữa "
+"các trang."
 
 #. module: web
 #. odoo-javascript
@@ -6183,9 +6313,11 @@ msgstr "khoảng một giờ trước"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
 #: code:addons/web/static/src/core/domain_selector/domain_selector_branch_operator.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "all"
 msgstr "tất cả"
@@ -6197,6 +6329,13 @@ msgstr "tất cả"
 #, python-format
 msgid "all records"
 msgstr "tất cả hồ sơ"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "and"
+msgstr "và"
 
 #. module: web
 #. odoo-javascript
@@ -6530,8 +6669,8 @@ msgstr "nó vẫn đang tải..."
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/utils/numbers.js:0
 #: code:addons/web/static/src/legacy/js/core/utils.js:0
-#: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "kMGTPE"
 msgstr "kMGTPE"
@@ -6611,6 +6750,14 @@ msgstr "ms"
 #, python-format
 msgid "new tab"
 msgstr "new tab"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
+#, python-format
+msgid "new_template"
+msgstr "new_template"
 
 #. module: web
 #. odoo-javascript
@@ -6716,7 +6863,7 @@ msgstr "query"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "record(s)"
-msgstr "tập dữ liệu"
+msgstr "bản ghi"
 
 #. module: web
 #. odoo-javascript
@@ -6763,6 +6910,14 @@ msgstr "dữ liệu đã chọn,"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "self"
+msgstr "self"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_leaf_node.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
@@ -6793,7 +6948,35 @@ msgstr "nhập văn bản mặc định hoặc nhấn ENTER"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_renderer.xml:0
+#, python-format
+msgid "{{ progressBar.count }} {{ progressBar.string }}"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
+#, python-format
+msgid "{{ relatedFieldName }}..."
+msgstr "{{ relatedFieldName }}..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/legacy/xml/kanban.xml:0
+#, python-format
+msgid "{{ widget.groupByFieldString }}..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "— press"
 msgstr "— bấm"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/commands/command_items.xml:0
+#, python-format
+msgid "— search for"
+msgstr "— tìm kiếm"

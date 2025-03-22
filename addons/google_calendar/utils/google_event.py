@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
 
 from odoo.tools import email_normalize, ReadonlyDict
 import logging
@@ -53,7 +54,9 @@ class GoogleEvent(abc.Set):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
         event_id = list(self._events.keys())[0]
-        return self._events[event_id].get(name)
+        value = self._events[event_id].get(name)
+        json.dumps(value)
+        return value
 
     def __repr__(self):
         return '%s%s' % (self.__class__.__name__, self.ids)
@@ -65,8 +68,7 @@ class GoogleEvent(abc.Set):
     @property
     def rrule(self):
         if self.recurrence and any('RRULE' in item for item in self.recurrence):
-            rrule = next(item for item in self.recurrence if 'RRULE' in item)
-            return rrule[6:]  # skip "RRULE:" in the rrule string
+            return next(item for item in self.recurrence if 'RRULE' in item)
 
     def odoo_id(self, env):
         self.odoo_ids(env)  # load ids
@@ -225,8 +227,8 @@ class GoogleEvent(abc.Set):
     def get_meeting_url(self):
         if not self.conferenceData:
             return False
-        video_meeting = list(filter(lambda entryPoints: entryPoints['entryPointType'] == 'video', self.conferenceData['entryPoints']))
-        return video_meeting[0]['uri'] if video_meeting else False
+        video_meeting = list(filter(lambda entryPoints: entryPoints.get('entryPointType') == 'video', self.conferenceData.get('entryPoints', [])))
+        return video_meeting[0].get('uri') if video_meeting else False
 
     def is_available(self):
         return self.transparency == 'transparent'

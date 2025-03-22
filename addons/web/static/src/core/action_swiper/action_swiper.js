@@ -99,6 +99,10 @@ export class ActionSwiper extends Component {
      */
     _onTouchMoveSwipe(ev) {
         if (this.state.isSwiping) {
+            if (this.props.swipeInvalid && this.props.swipeInvalid()) {
+                this.state.isSwiping = false;
+                return;
+            }
             const { onLeftSwipe, onRightSwipe } = this.localizedProps;
             this.swipedDistance = clamp(
                 ev.touches[0].clientX - this.startX,
@@ -163,14 +167,14 @@ export class ActionSwiper extends Component {
     handleSwipe(action) {
         if (this.props.animationType === "bounce") {
             this.state.containerStyle = `transform: translateX(${this.swipedDistance}px)`;
-            this.actionTimeoutId = browser.setTimeout(() => {
-                action();
+            this.actionTimeoutId = browser.setTimeout(async () => {
+                await action();
                 this._reset();
             }, 500);
         } else if (this.props.animationType === "forwards") {
             this.state.containerStyle = `transform: translateX(${this.swipedDistance}px)`;
-            this.actionTimeoutId = browser.setTimeout(() => {
-                action();
+            this.actionTimeoutId = browser.setTimeout(async () => {
+                await action();
                 this.state.isSwiping = true;
                 this.state.containerStyle = `transform: translateX(${-this.swipedDistance}px)`;
                 this.resetTimeoutId = browser.setTimeout(() => {
@@ -206,6 +210,7 @@ ActionSwiper.props = {
     animationOnMove: { type: Boolean, optional: true },
     animationType: { type: String, optional: true },
     swipeDistanceRatio: { type: Number, optional: true },
+    swipeInvalid: { type: Function, optional: true },
 };
 
 ActionSwiper.defaultProps = {

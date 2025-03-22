@@ -3,17 +3,18 @@
 # 	* spreadsheet_dashboard
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2023
+# Martin Trigaux, 2024
+# Alin Miclea, 2024
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Last-Translator: Alin Miclea, 2024\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,25 +23,32 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (copie)"
+
+#. module: spreadsheet_dashboard
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "An error occured while loading the dashboard"
-msgstr ""
+msgstr "A apărut o eroare la încărcarea tabloului de bord"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.xml:0
 #, python-format
 msgid "BACK"
 msgstr "INAPOI"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 #, python-format
 msgid "Choose a dashboard...."
-msgstr ""
+msgstr "Alegeți un tablou de bord...."
 
 #. module: spreadsheet_dashboard
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration
@@ -67,7 +75,7 @@ msgstr "Tablou de bord"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__dashboard_group_id
 msgid "Dashboard Group"
-msgstr ""
+msgstr "Grup tablou de bord"
 
 #. module: spreadsheet_dashboard
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_action_configuration_dashboards
@@ -98,13 +106,20 @@ msgstr "Grup"
 #. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_group
 msgid "Group of dashboards"
-msgstr ""
+msgstr "Grup de tablouri de bord"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__id
 msgid "ID"
 msgstr "ID"
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#, python-format
+msgid "Invalid JSON Data"
+msgstr "Date JSON nevalide"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard____last_update
@@ -125,7 +140,7 @@ msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "Loading..."
@@ -138,20 +153,22 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "No available dashboard"
-msgstr ""
+msgstr "Nu există tablou de bord disponibil"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 #, python-format
 msgid ""
 "Only chart figures are displayed in small screens but this dashboard doesn't"
 " contain any"
 msgstr ""
+"Numai graficele sunt afișate pe ecrane mici, dar acest tablou de bord nu "
+"conține niciunul"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__raw
@@ -165,20 +182,21 @@ msgid "Sequence"
 msgstr "Secvență"
 
 #. module: spreadsheet_dashboard
+#. odoo-python
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 #, python-format
 msgid "Sheet1"
-msgstr ""
+msgstr "Foaia 1"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard
 msgid "Spreadsheet Dashboard"
-msgstr ""
+msgstr "Tablou de bord foaie de calcul"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_container_view_form
 msgid "Spreadsheets"
-msgstr ""
+msgstr "Foi de calcul"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
@@ -190,4 +208,4 @@ msgstr "Miniatură"
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
 #, python-format
 msgid "You cannot delete %s as it is used in another module."
-msgstr ""
+msgstr "Nu puteți șterge %s deoarece este utilizat în alt modul."

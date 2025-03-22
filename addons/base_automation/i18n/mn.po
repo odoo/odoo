@@ -7,16 +7,15 @@
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2022
 # Bayarkhuu Bataa, 2022
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2022
-# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2022
-# Батмөнх Ганбат <batmunkh2522@gmail.com>, 2022
+# Batmunkh Ganbat <batmunkh2522@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Minj P <pminj322@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Minj P <pminj322@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://app.transifex.com/odoo/teams/41243/mn/)\n"
@@ -27,26 +26,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Зориулагдсан хянагчийг ашиглан кодын сервер үйлдлийг вэбсайтаас гүйцэтгэх "
-"боломжтой. Хаяг нь <base>/website/action/<website_path>. Энэ үйлдлийг "
-"хэрэглэгчид хийхийг зөвшөөрөхийн тулд энэ талбарыг True болгоорой. Хэрэв "
-"False байвал энэ үйлдлийг вэбсайтаас хийх боломжгүй болно."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -116,14 +102,8 @@ msgid "Automation"
 msgstr "Автоматжуулалт"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Вебсайт дээр бэлэн байгаа"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Үндсэн ажилбарын дүрэм: шалгаад хэрэгжүүл"
 
@@ -172,15 +152,6 @@ msgstr ""
 "бүгдэд хэрэглэгдэх ерөнхий буцах утга болж хэрэглэгдэнэ."
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
-msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
 msgid ""
 "Choose method for email sending:\n"
@@ -223,14 +194,14 @@ msgid "Delay type"
 msgstr "Саатлын төрөл"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -256,7 +227,7 @@ msgid "Due type"
 msgstr "Төлбөрийн төрөл"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -268,6 +239,7 @@ msgid "Email Template"
 msgstr "Имэйл загвар"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -286,6 +258,7 @@ msgid "Fields that trigger the onchange."
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -398,6 +371,7 @@ msgid "Note"
 msgstr "Тэмдэглэл"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -456,18 +430,8 @@ msgid "Responsible"
 msgstr "Хариуцагч"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
-msgstr "Загвар МСЖ"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
-msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
 msgstr ""
 
 #. module: base_automation
@@ -520,6 +484,7 @@ msgid "Target Model Name"
 msgstr "Хүрэх моделийн нэр"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -537,18 +502,13 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "Вебсайтан дамжин хандах сервер үйлдлийн бүтэн URL."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -630,21 +590,12 @@ msgid "Value Mapping"
 msgstr "Утга харгалзуулалт"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "Анхааруулга"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Вебсайтын зам"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Вебсайтын Url"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -687,7 +638,7 @@ msgstr ""
 " байгаа."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -695,13 +646,14 @@ msgid ""
 msgstr ""
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""

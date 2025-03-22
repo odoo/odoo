@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
@@ -20,6 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid " '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"
@@ -114,7 +115,7 @@ msgid "Barcode Scanned"
 msgstr "Scannet stregkode"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Barcode: "
@@ -245,6 +246,14 @@ msgid "The barcode matching pattern"
 msgstr "Stregkode matchende mønster"
 
 #. module: barcodes
+#. odoo-python
+#: code:addons/barcodes/models/barcode_rule.py:0
+#, python-format
+msgid ""
+"The barcode pattern %(pattern)s does not lead to a valid regular expression."
+msgstr ""
+
+#. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
 msgstr "Listen over stregkoderegler"
@@ -255,6 +264,7 @@ msgid "The matched pattern will alias to this barcode"
 msgstr "Det matchede mønster vil passe til denne stregkode"
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -265,6 +275,7 @@ msgstr ""
 "indeholde et par klammer."
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -275,6 +286,7 @@ msgstr ""
 "indeholde N'er efterfulgt af D'er."
 
 #. module: barcodes
+#. odoo-python
 #: code:addons/barcodes/models/barcode_rule.py:0
 #, python-format
 msgid ""
@@ -328,7 +340,7 @@ msgid "Unit Product"
 msgstr "Stk. produkt"
 
 #. module: barcodes
-#. openerp-web
+#. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 #, python-format
 msgid "Unknown barcode command"

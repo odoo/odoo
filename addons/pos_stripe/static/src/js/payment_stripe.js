@@ -125,13 +125,14 @@ let PaymentStripe = PaymentInterface.extend({
 
         const intentCharge = charges.data[0];
         const processPaymentDetails = intentCharge.payment_method_details;
-        const cardPresentBrand = processPaymentDetails.card_present.brand;
 
         if (processPaymentDetails.type === 'interac_present') {
             // Canadian interac payments should not be captured:
             // https://stripe.com/docs/terminal/payments/regional?integration-country=CA#create-a-paymentintent
             return ['interac', intentCharge.id];
-        } else if (cardPresentBrand.includes('eftpos')) {
+        }
+        const cardPresentBrand = this.getCardBrandFromPaymentMethodDetails(processPaymentDetails);
+        if (cardPresentBrand.includes('eftpos')) {
             // Australian eftpos should not be captured:
             // https://stripe.com/docs/terminal/payments/regional?integration-country=AU
             return [cardPresentBrand, intentCharge.id];
@@ -193,10 +194,24 @@ let PaymentStripe = PaymentInterface.extend({
         }
     },
 
+    getCardBrandFromPaymentMethodDetails(paymentMethodDetails) {
+        // Both `card_present` and `interac_present` are "nullable" so we need to check for their existence, see:
+        // https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-card_present
+        // https://docs.stripe.com/api/charges/object#charge_object-payment_method_details-interac_present
+        // In Canada `card_present` might not be present, but `interac_present` will be 
+        if (paymentMethodDetails.card_present) {
+            return paymentMethodDetails.card_present.brand;
+        } 
+        if (paymentMethodDetails.interac_present) {
+            return paymentMethodDetails.interac_present.brand;
+        }
+        return "";
+    },
+
     captureAfterPayment: async function (processPayment, line) {
         let capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
         if (capturePayment.charges)
-            line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;
+            line.card_type = this.getCardBrandFromPaymentMethodDetails(capturePayment.charges.data[0].payment_method_details);
         line.transaction_id = capturePayment.id;
     },
 
@@ -236,7 +251,7 @@ let PaymentStripe = PaymentInterface.extend({
             }
             return data.client_secret;
         } catch (error) {
-            const message = error.message.code === 200 ? error.message.data.message : error.message.message;
+            const message = error.message.code === 200 ? error.message.data.message : error.message.message || error.message;
             this._showError(message, 'Fetch Secret');
             return false;
         };

@@ -47,8 +47,8 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                 await this.showPopup('ConfirmPopup', {
                     title: this.env._t('Payments Difference'),
                     body: _.str.sprintf(
-                        this.env._t('The maximum difference allowed is %s.\n\
-                        Please contact your manager to accept the closing difference.'),
+                        this.env._t('The maximum difference allowed is %s.\n' +
+                                    'Please contact your manager to accept the closing difference.'),
                         this.env.pos.format_currency(this.amountAuthorizedDiff)
                     ),
                     confirmText: this.env._t('OK'),

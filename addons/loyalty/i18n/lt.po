@@ -12,17 +12,18 @@
 # Naglis Jonaitis, 2022
 # Rolandas <info@paninfo.lt>, 2022
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2022
-# Linas Versada <linaskrisiukenas@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
+# Linas Versada <linaskrisiukenas@gmail.com>, 2024
+# Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2024
+# Gailius Kazlauskas <gailius@vialaurea.lt>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023\n"
+"Last-Translator: Gailius Kazlauskas <gailius@vialaurea.lt>, 2024\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,7 +116,7 @@ msgstr ""
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
 msgid "10% Discount Coupons"
-msgstr ""
+msgstr "10% nuolaidų kuponas"
 
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
@@ -125,7 +126,6 @@ msgstr ""
 
 #. module: loyalty
 #. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "2+1 Free"
@@ -230,6 +230,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">Among:</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">tarp:</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -372,7 +374,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "A coupon with the same code was found."
-msgstr ""
+msgstr "Rastas kuponas su tokiu pačiu kodu"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
@@ -422,7 +424,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Add a rule"
-msgstr ""
+msgstr "Pridėti taisyklę"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__all_discount_product_ids
@@ -433,12 +435,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Among"
-msgstr ""
+msgstr "tarp"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
 msgid "Anonymous Customers"
-msgstr ""
+msgstr "Anoniminis klientas"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__mode
@@ -448,7 +450,7 @@ msgstr "Paraiška"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
 msgid "Applies On"
-msgstr ""
+msgstr "Taikyti "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -507,7 +509,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__buy_x_get_y
 #, python-format
 msgid "Buy X Get Y"
-msgstr ""
+msgstr "Pirkite X, gaukite Y"
 
 #. module: loyalty
 #. odoo-python
@@ -534,7 +536,7 @@ msgstr "Kategorijos"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__cheapest
 msgid "Cheapest Product"
-msgstr ""
+msgstr "Pigiausiam produktui"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__clear_wallet
@@ -624,22 +626,22 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Coupon point(s)"
-msgstr ""
+msgstr "Kupono taškas(-ai)"
 
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
 msgid "Coupon points"
-msgstr ""
+msgstr "Kupono taškai"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Coupon value"
-msgstr ""
+msgstr "Kupono vertė"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
 msgid "Coupon: Coupon Information"
-msgstr ""
+msgstr "Kuponas: kupono informacija"
 
 #. module: loyalty
 #. odoo-python
@@ -763,7 +765,7 @@ msgstr "Nuolaida"
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "Nuolaidos ir Lojalumo programos"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -776,7 +778,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
 #, python-format
 msgid "Discount Code"
-msgstr ""
+msgstr "Nuolaidos kodas"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
@@ -787,6 +789,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_mode
 msgid "Discount Mode"
 msgstr ""
+
+#. module: loyalty
+#: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
+msgid "Discount Product"
+msgstr "Nuolaidinis produktas"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
@@ -800,7 +807,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 #, python-format
 msgid "Discount code"
-msgstr ""
+msgstr "Nuolaidos kodas"
 
 #. module: loyalty
 #. odoo-python
@@ -808,7 +815,12 @@ msgstr ""
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_with_code
 #, python-format
 msgid "Discount point(s)"
-msgstr ""
+msgstr "Nuolaidos kodas(-ai)"
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+msgid "Discount product"
+msgstr "Nuolaidos produktas"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_category_id
@@ -883,6 +895,13 @@ msgstr "Galiojimo datos pabaiga"
 
 #. module: loyalty
 #. odoo-python
+#: code:addons/loyalty/models/loyalty_card.py:0
+#, python-format
+msgid "Expiration date cannot be set on a loyalty card."
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
@@ -895,6 +914,7 @@ msgstr ""
 #, python-format
 msgid "Fill in your eWallet, and use it to pay future orders."
 msgstr ""
+"Papildykite el. piniginę ir naudokite ją būsimiems užsakymams apmokėti."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -941,12 +961,12 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
 msgid "Free product"
-msgstr ""
+msgstr "Nemokamas produktas"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__future
 msgid "Future orders"
-msgstr ""
+msgstr "Ateities užsakymams"
 
 #. module: loyalty
 #. odoo-javascript
@@ -974,18 +994,18 @@ msgstr "Sugeneruoti kuponus"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Generate Gift Cards"
-msgstr ""
-
-#. module: loyalty
-#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
-msgid "Generate eWallet"
-msgstr ""
+msgstr "Sukurti dovanų korteles"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Generate and share unique coupons with your customers."
+msgstr ""
+
+#. module: loyalty
+#: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+msgid "Generate eWallet"
 msgstr ""
 
 #. module: loyalty
@@ -1010,17 +1030,17 @@ msgstr "Dovanų kortelė"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Gift Card Products"
-msgstr ""
+msgstr "Dovanų kortelės produktas"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Gift Card value"
-msgstr ""
+msgstr "Dovanų kortelės vertė"
 
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_gift_card
 msgid "Gift Card: Gift Card Information"
-msgstr ""
+msgstr "Dovanų kortelė: dovanų kortelės informacija"
 
 #. module: loyalty
 #. odoo-python
@@ -1041,7 +1061,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "Dovanų kortelės ir e-piniginė"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -1116,7 +1136,7 @@ msgstr ""
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
 #, python-format
 msgid "Invalid quantity."
-msgstr ""
+msgstr "neteisingas kiekis."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_is_follower
@@ -1182,7 +1202,7 @@ msgstr "Riba"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
 msgid "Limit Usage"
-msgstr ""
+msgstr "Apriboti naudojimą"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1197,7 +1217,7 @@ msgstr "Logotipas"
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
 #, python-format
 msgid "Loyalty Cards"
-msgstr ""
+msgstr "Lojalumo kortelė"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
@@ -1207,7 +1227,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "Lojalumo programos kuponas"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
@@ -1217,19 +1237,19 @@ msgstr "Lojalumo programa"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_reward
 msgid "Loyalty Reward"
-msgstr ""
+msgstr "Lojalumo programos premija"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
 msgid "Loyalty Rule"
-msgstr ""
+msgstr "Lojalumo programos taisyklės"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Loyalty point(s)"
-msgstr ""
+msgstr "Lojalumo programos taškas(-ai)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_main_attachment_id
@@ -1244,7 +1264,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__max_usage
 msgid "Max Usage"
-msgstr ""
+msgstr "Maksimalus panaudojimas"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_program_check_max_usage
@@ -1269,7 +1289,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount
 msgid "Minimum Purchase"
-msgstr ""
+msgstr "Minimali pirkinio suma"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
@@ -1288,22 +1308,22 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__next_order_coupons
 #, python-format
 msgid "Next Order Coupons"
-msgstr ""
+msgstr "Kuponas kitam užsakymui"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
 msgid "No Coupons Found."
-msgstr ""
+msgstr "Nėra rasta kuponų"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
 msgid "No loyalty program found."
-msgstr ""
+msgstr "Nėra rasta jokių lojalumo programų"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "No program found."
-msgstr ""
+msgstr "Nerasta jokių programų"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction_counter
@@ -1318,7 +1338,7 @@ msgstr "Klaidų kiekis"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų, kuriems reikia imtis veiksmų, skaičius"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
@@ -1345,14 +1365,14 @@ msgstr "Partneris"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 msgid "Point(s)"
-msgstr ""
+msgstr "Taškas(-ai)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__points
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Points"
-msgstr ""
+msgstr "Taškai"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
@@ -1362,7 +1382,7 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Points Unit"
-msgstr ""
+msgstr "Taškų vienetai"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__required_points
@@ -1398,7 +1418,7 @@ msgstr "Produkto domenas"
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_tag_id
 msgid "Product Tag"
-msgstr ""
+msgstr "Produkto žyma"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
@@ -1406,7 +1426,7 @@ msgid "Product Variant"
 msgstr "Produkto variantas"
 
 #. module: loyalty
-#: model:ir.model.fields,help:loyalty.field_loyalty_program__discount_product_id
+#: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
 msgid "Product used in the sales order to apply the discount."
 msgstr "Produktas, naudojamas pardavimo užsakyme nuolaidai pritaikyti"
 
@@ -1456,13 +1476,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
-msgid "Promotion Program"
-msgstr ""
-
-#. module: loyalty
-#. odoo-python
-#: code:addons/loyalty/models/loyalty_program.py:0
-#, python-format
 msgid "Promo point(s)"
 msgstr ""
 
@@ -1473,6 +1486,13 @@ msgstr ""
 #, python-format
 msgid "Promos"
 msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_program.py:0
+#, python-format
+msgid "Promotion Program"
+msgstr "Skatinimo programa"
 
 #. module: loyalty
 #. odoo-python
@@ -1530,7 +1550,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
 msgid "Reward Products"
-msgstr ""
+msgstr "Atlygio produktas"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_type
@@ -1559,12 +1579,12 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Rules & Rewards"
-msgstr ""
+msgstr "Taisyklės ir atlygis"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
 msgid "Selected Customers"
-msgstr ""
+msgstr "Parinkite klientą"
 
 #. module: loyalty
 #. odoo-python
@@ -1586,7 +1606,7 @@ msgstr ""
 #. module: loyalty
 #: model:mail.template,description:loyalty.mail_template_loyalty_card
 msgid "Sent to customer with coupon information"
-msgstr ""
+msgstr "Siųsti klientui kupono informaciją"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
@@ -1616,7 +1636,7 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__specific
 msgid "Specific Products"
-msgstr ""
+msgstr "Specialūs produktai"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
@@ -1643,7 +1663,7 @@ msgstr "Dėkojame, "
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_discount_positive
 msgid "The discount must be strictly positive."
-msgstr ""
+msgstr "Nuolaida privalo būti teigiama"
 
 #. module: loyalty
 #. odoo-python
@@ -1690,7 +1710,7 @@ msgstr ""
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
 msgid "Top-up eWallet"
-msgstr ""
+msgstr "Papildykite e-piniginę"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__total_order_count
@@ -1746,7 +1766,7 @@ msgstr "Kada"
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
 msgid "When Reaching"
-msgstr ""
+msgstr "Kai pasiekiama"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1791,6 +1811,13 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "You can not delete a program in an active state"
+msgstr ""
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/loyalty_reward.py:0
+#, python-format
+msgid "The reward description field cannot be empty."
 msgstr ""
 
 #. module: loyalty
@@ -1847,7 +1874,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__ewallet
 #, python-format
 msgid "eWallet"
-msgstr ""
+msgstr "e-piniginė"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1864,7 +1891,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "eWallets"
-msgstr ""
+msgstr "e - piniginės"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1897,6 +1924,8 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
+"Jūsų užsakymui\n"
+"                                        <br/>"
 
 #. module: loyalty
 #. odoo-python
@@ -1910,7 +1939,7 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_rule.py:0
 #, python-format
 msgid "per order"
-msgstr ""
+msgstr "užsakymui"
 
 #. module: loyalty
 #. odoo-python
@@ -1924,19 +1953,19 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "specific products"
-msgstr ""
+msgstr "konkretus produktas"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr ""
+msgstr "išleista"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
 #, python-format
 msgid "the cheapest product"
-msgstr ""
+msgstr "pigiausiam produktui"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form

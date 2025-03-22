@@ -3,8 +3,10 @@
 
 import json
 from collections import defaultdict
+from datetime import date
+from markupsafe import Markup
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.tools.sql import column_exists, create_column
 
@@ -130,7 +132,10 @@ class StockPicking(models.Model):
     def _compute_shipping_weight(self):
         for picking in self:
             # if shipping weight is not assigned => default to calculated product weight
-            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight or pack.weight for pack in picking.package_ids])
+            picking.shipping_weight = (
+                picking.weight_bulk +
+                sum(pack.shipping_weight or pack.weight for pack in picking.package_ids.sudo())
+            )
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -181,27 +186,61 @@ class StockPicking(models.Model):
         except (ValueError, TypeError):
             return False
 
-    @api.depends('move_ids')
+    @api.depends('move_ids.weight')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_ids if move.state != 'cancel')
 
+    def _carrier_exception_note(self, exception):
+        self.ensure_one()
+        line_1 = _("Exception occurred with respect to carrier on the transfer")
+        line_2 = _("Manual actions might be needed.")
+        line_3 = _("Exception:")
+        return Markup('<div> {line_1} <a href="#" data-oe-model="stock.picking" data-oe-id="{picking_id}"> {picking_name}</a>. {line_2}<div class="mt16"><p>{line_3} {exception}</p></div></div>').format(line_1=line_1, line_2=line_2, line_3=line_3, picking_id=self.id, picking_name=self.name, exception=exception)
+
     def _send_confirmation_email(self):
+        # The carrier's API processes validity checks and parcels generation one picking at a time.
+        # However, since a UserError of any of the picking will cause a rollback of the entire batch
+        # on Odoo's side and since pickings that were already processed on the carrier's side must
+        # stay validated, UserErrors might need to be replaced by activity warnings.
+
+        processed_carrier_picking = False
+
         for pick in self:
-            if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
-                pick.sudo().send_to_shipper()
-            pick._check_carrier_details_compliance()
+            try:
+                if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
+                    pick.sudo().send_to_shipper()
+                pick._check_carrier_details_compliance()
+                if pick.carrier_id:
+                    processed_carrier_picking = True
+            except (UserError) as e:
+                if processed_carrier_picking:
+                    # We can not raise a UserError at this point
+                    exception_message = str(e)
+                    pick.message_post(body=exception_message, message_type='notification')
+                    pick.sudo().activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        date.today(),
+                        note=pick._carrier_exception_note(exception_message),
+                        user_id=pick.user_id.id or self.env.user.id or SUPERUSER_ID,
+                        )
+                else:
+                    raise e
+
         return super(StockPicking, self)._send_confirmation_email()
 
     def _pre_put_in_pack_hook(self, move_line_ids):
         res = super(StockPicking, self)._pre_put_in_pack_hook(move_line_ids)
         if not res:
-            if self.carrier_id:
-                return self._set_delivery_package_type()
+            if move_line_ids.carrier_id:
+                if len(move_line_ids.carrier_id) > 1 or any(not ml.carrier_id for ml in move_line_ids):
+                    # avoid (duplicate) costs for products
+                    raise UserError(_("You cannot pack products into the same package when they have different carriers (i.e. check that all of their transfers have a carrier assigned and are using the same carrier)."))
+                return self._set_delivery_package_type(batch_pack=len(move_line_ids.picking_id) > 1)
         else:
             return res
 
-    def _set_delivery_package_type(self):
+    def _set_delivery_package_type(self, batch_pack=False):
         """ This method returns an action allowing to set the package type and the shipping weight
         on the stock.quant.package.
         """
@@ -210,7 +249,8 @@ class StockPicking(models.Model):
         context = dict(
             self.env.context,
             current_package_carrier_type=self.carrier_id.delivery_type,
-            default_picking_id=self.id
+            default_picking_id=self.id,
+            batch_pack=batch_pack,
         )
         # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key who
         # correspond to the `package_carrier_type` ('none' to default), we make a conversion.

@@ -197,6 +197,7 @@
                             </del>
                         </t>
                         <span class="h6 mb-0" t-if="template_price_vals['price_reduce'] or not website.prevent_zero_price_sale" t-esc="template_price_vals['price_reduce']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                        <span class="h6 mb-0" t-elif="any(ptav.price_extra for ptav in product.attribute_line_ids.product_template_value_ids)">&amp;nbsp;</span>
                         <span class="h6 mb-0" t-else="" t-field="website.prevent_zero_price_sale_text"/>
                         <span itemprop="price" style="display:none;" t-esc="template_price_vals['price_reduce']" />
                         <span itemprop="priceCurrency" style="display:none;" t-esc="website.currency_id.name" />
@@ -293,7 +294,7 @@
                 <div class="container oe_website_sale pt-2">
                     <div class="row o_wsale_products_main_row align-items-start flex-nowrap">
                         <aside t-if="hasLeftColumn" id="products_grid_before" class="d-none d-lg-block position-sticky col-3 px-3 clearfix">
-                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-auto">
+                            <div class="o_wsale_products_grid_before_rail vh-100 pe-lg-2 pb-lg-5 overflow-y-scroll">
                                 <div t-if="opt_wsale_categories" class="products_categories mb-3">
                                     <t t-call="website_sale.products_categories_list"/>
                                 </div>
@@ -936,7 +937,9 @@
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
                         <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
-                            <t t-set="base_url" t-value="product.get_base_url()"/>
+                            <t t-set="base_url" t-value="website.get_base_url()"/>
+                            <!-- TODO: remove next line in master. Stable fix not to break custos. -->
+                            <t t-if="False" t-set="base_url" t-value="product.get_base_url()"/>
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
                             <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
                             <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
@@ -1051,7 +1054,7 @@
         </div>
     </template>
 
-    <template id="product_custom_text" inherit_id="website_sale.product" active="True" name="Terms and Conditions" priority="21">
+    <template id="product_custom_text" inherit_id="website_sale.product" customize_show="True" active="True" name="Terms and Conditions" priority="21">
         <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
             <p class="text-muted mb-0">
                 <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
@@ -1804,9 +1807,9 @@
                                     <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
-                                    <div class="alert alert-warning" role="alert" t-if="not only_services">
+                                    <div class="alert alert-warning" role="alert" t-if="not only_services" groups="account.group_delivery_invoice_address">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p  groups="account.group_delivery_invoice_address">
+                                        <p>
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
@@ -1993,10 +1996,12 @@
                             <t t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                                 <div t-if="providers or tokens" id="payment_method" class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
-                                    <t t-call="payment.checkout">
-                                        <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
-                                        <t t-set="submit_button_label">Pay Now</t>
-                                    </t>
+                                    <div class="o_not_editable">
+                                        <t t-call="payment.checkout">
+                                            <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
+                                            <t t-set="submit_button_label">Pay Now</t>
+                                        </t>
+                                    </div>
                                 </div>
                                 <div t-else="" class="alert alert-warning">
                                     <strong>No suitable payment option could be found.</strong><br/>

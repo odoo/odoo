@@ -2,13 +2,18 @@
 # This file contains the translation of the following modules:
 # 	* rating
 # 
+# Translators:
+# jonasyngvi, 2024
+# Kristófer Arnþórsson, 2024
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2024-02-06 13:32+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Language-Team: Icelandic (https://www.transifex.com/odoo/teams/41243/is/)\n"
+"Last-Translator: Kristófer Arnþórsson, 2024\n"
+"Language-Team: Icelandic (https://app.transifex.com/odoo/teams/41243/is/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -39,7 +44,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
 msgid "Average Rating"
-msgstr ""
+msgstr "Meðaleinkunn"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
@@ -54,15 +59,16 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Búið til af"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Customer"
-msgstr ""
+msgstr "Viðskiptavinur"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "Customer rated %r."
@@ -71,17 +77,22 @@ msgstr ""
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Date"
-msgstr ""
+msgstr "Dagsetning"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Birtingarnafn"
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ko
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ko
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ko
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Dissatisfied"
@@ -121,7 +132,7 @@ msgstr ""
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
-msgstr ""
+msgstr "Hópað eftir"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
@@ -137,12 +148,12 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
-msgstr ""
+msgstr "Auðkenni (ID)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
 msgid "Image"
-msgstr ""
+msgstr "Mynd"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image_url
@@ -150,6 +161,7 @@ msgid "Image URL"
 msgstr ""
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
 #: code:addons/rating/controllers/main.py:0
 #, python-format
@@ -174,18 +186,18 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Síðast uppfært af"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Síðast uppfært þann"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
 #: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
-msgstr ""
+msgstr "Skilaboð"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -195,11 +207,15 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_name
 msgid "Name"
-msgstr ""
+msgstr "Nafn"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__none
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__none
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__none
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__none
 msgid "No Rating yet"
 msgstr ""
 
@@ -209,9 +225,14 @@ msgid "No rating yet"
 msgstr ""
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__ok
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__ok
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__ok
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Okay"
@@ -253,6 +274,7 @@ msgid "Percentage of happy ratings"
 msgstr ""
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Posting a rating should be done using message post API."
@@ -271,27 +293,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form_text
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rating"
-msgstr ""
+msgstr "Einkunn"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
 msgid "Rating Avg Text"
-msgstr ""
+msgstr "Einkunn Meðal texti"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Einkunn Síðasta viðbrögð"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Einkunn síðasta mynd"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Einkunn síðasta gildi"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
@@ -307,12 +329,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Einkunn Ánægja"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
 msgid "Rating Text"
-msgstr ""
+msgstr "Einkunnartexti"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
@@ -330,7 +352,7 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr ""
+msgstr "Einkunnafjöldi"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
@@ -338,7 +360,7 @@ msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
-#. openerp-web
+#. odoo-javascript
 #: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
 #: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #, python-format
@@ -356,7 +378,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
-msgstr ""
+msgstr "Stjörnugjöf"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
@@ -385,9 +407,14 @@ msgid "Resource name"
 msgstr ""
 
 #. module: rating
+#. odoo-python
 #: code:addons/rating/controllers/main.py:0
+#: model:ir.model.fields.selection,name:rating.selection__mail_channel__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__product_template__rating_avg_text__top
+#: model:ir.model.fields.selection,name:rating.selection__project_task__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_mixin__rating_avg_text__top
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__top
+#: model:ir.model.fields.selection,name:rating.selection__slide_channel__rating_avg_text__top
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Satisfied"

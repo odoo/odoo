@@ -135,7 +135,10 @@ tour.register('hr_skills_tour', {
         in_modal: true,
         run: "click",
     },
-    ...tour.stepUtils.saveForm(),
+    ...tour.stepUtils.saveForm({
+        content: "save Form",
+        extra_trigger: 'td:containsExact("Oh Mary")',
+    }),
     {
         content: "Go back to employees",
         trigger: 'a[data-menu-xmlid="hr.menu_hr_root"]',

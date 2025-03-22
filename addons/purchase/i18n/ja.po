@@ -8,15 +8,16 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
-# Junko Augias, 2023
+# Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-23 08:22+0000\n"
+"POT-Creation-Date: 2025-02-10 08:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Junko Augias, 2023\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,7 +119,7 @@ msgid ""
 "        </t>\n"
 "        is expected for \n"
 "        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.get_localized_date_planned()) or ''\">05/05/2021</span>.\n"
 "        </t>\n"
 "         <t t-else=\"\">\n"
 "            <span style=\"font-weight:bold;\">undefined</span>.\n"
@@ -132,32 +133,6 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br><br>\n"
-"        購買オーダ<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>の配送\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
-"        </t>\n"
-"        は\n"
-"        <t t-if=\"object.date_planned\">\n"
-"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>の予定です。\n"
-"        </t>\n"
-"         <t t-else=\"\">\n"
-"            <span style=\"font-weight:bold;\">定義されていません</span>。\n"
-"        </t>\n"
-"        予定通りに配送されるかご確認をお願いいたします。\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br><br>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -177,7 +152,7 @@ msgid ""
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br><br>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.get_localized_date_planned()) or ''\">05/05/2021</span>.\n"
 "            <br><br>\n"
 "            Could you please acknowledge the receipt of this order?\n"
 "        </t>\n"
@@ -189,32 +164,6 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"         <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>様\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
-"        </t>\n"
-"        <br><br>\n"
-"        購買オーダ<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
-"        <t t-if=\"object.partner_ref\">\n"
-"            参照： <t t-out=\"object.partner_ref or ''\">REF_XXX</t>を添付します。\n"
-"        </t>\n"
-"        金額は以下です：<span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
-"        <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
-"        <br><br>\n"
-"        <t t-if=\"object.date_planned\">\n"
-"            入荷は<span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>を予定しています。\n"
-"            <br><br>\n"
-"            このオーダの受領をご確認頂きますようお願いいたします。\n"
-"        </t>\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
-"            <br><br>\n"
-"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br><br>\n"
-"    </p>\n"
-"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -288,6 +237,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Paid</b>"
 msgstr "<i class=\"fa fa-fw fa-check\"/> <b>支払済</b>"
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+msgid "<i class=\"fa fa-fw fa-check\"/> <b>Reversed</b>"
+msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -541,7 +495,7 @@ msgstr "<strong>ここで更新する</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Your Order Reference:</strong>"
-msgstr "<strong>ご注文のリファレンス:</strong>"
+msgstr "<strong>オーダ参照番号:</strong>"
 
 #. module: purchase
 #. odoo-python
@@ -677,7 +631,7 @@ msgstr "全てのドラフト見積依頼書"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
-msgstr "すべての遅延RFQ"
+msgstr "全ての期限超過の見積依頼"
 
 #. module: purchase
 #. odoo-javascript
@@ -691,7 +645,7 @@ msgstr "全ての見積依頼書"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
-msgstr "すべての待機中のRFQ"
+msgstr "全ての待機中の見積依頼"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -807,7 +761,6 @@ msgid "Automatically remind the receipt date to your vendors"
 msgstr "受領日をベンダーに自動的に通知します"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,help:purchase.field_res_users__receipt_reminder_email
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -824,7 +777,7 @@ msgstr "平均原価"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
 msgid "Average Days to Purchase"
-msgstr "平均購入日数"
+msgstr "平均購買所要日数"
 
 #. module: purchase
 #. odoo-javascript
@@ -1469,18 +1422,18 @@ msgstr "最終更新日"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
-msgstr "遅延"
+msgstr "期限超過"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late RFQs"
-msgstr "後期見積依頼"
+msgstr "期限超過の見積依頼"
 
 #. module: purchase
 #. odoo-javascript
@@ -1633,14 +1586,14 @@ msgstr "活動の締切"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
-msgstr "自分のドラフトRFQ"
+msgstr "自分のドラフト見積依頼"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
-msgstr "自分の遅いRFQ"
+msgstr "自分の期限超過の見積依頼"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1657,14 +1610,14 @@ msgstr "自分の購買"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
-msgstr "自分のRFQ"
+msgstr "自分の見積依頼"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
-msgstr "自分の待機中のRFQ"
+msgstr "自分が対応待ちの見積依頼"
 
 #. module: purchase
 #. odoo-python
@@ -1768,7 +1721,6 @@ msgid "Number of Actions"
 msgstr "アクションの数"
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_order__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_partner__reminder_date_before_receipt
 #: model:ir.model.fields,help:purchase.field_res_users__reminder_date_before_receipt
 msgid "Number of days to send reminder email before the promised receipt date"
@@ -1887,12 +1839,12 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_id
 msgid "Packaging"
-msgstr "梱包"
+msgstr "パッケージング"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "梱包数量"
+msgstr "パッケージング数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -2077,8 +2029,6 @@ msgstr "購買リードタイム"
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__purchase_order_id
 #: model:ir.model.fields,field_description:purchase.field_account_payment__purchase_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__purchase_order_id
-#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
-#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
 #: model:ir.model.fields.selection,name:purchase.selection__account_analytic_applicability__business_domain__purchase_order
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__purchase
@@ -2097,7 +2047,7 @@ msgstr "購買オーダ"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr "注文書 ＃"
+msgstr "購買注文番号 ＃"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
@@ -2152,6 +2102,12 @@ msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
 msgstr "確認後に編集可能な注文書を購入する場合に使用される注文書の変更"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn
+#: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn
+msgid "Purchase Order Warning"
+msgstr "購買オーダ警告"
 
 #. module: purchase
 #. odoo-python
@@ -2735,6 +2691,11 @@ msgid "Tax"
 msgstr "税"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+msgid "Tax 15%"
+msgstr "税率 15%"
+
+#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
 msgid "Tax Country"
 msgstr "税金の国"
@@ -2892,7 +2853,7 @@ msgstr "ヒント:注文書を見逃すことはありません"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__to_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "To Approve"
-msgstr "未承認"
+msgstr "承認待ち"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
@@ -3100,7 +3061,7 @@ msgstr "仕入先価格表"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
 msgid "Vendor Reference"
-msgstr "仕入先参照"
+msgstr "仕入先登録番号"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_supplier_name
@@ -3122,7 +3083,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "View"
-msgstr "ビュー"
+msgstr "照会"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -3145,7 +3106,7 @@ msgstr "請求書待ち"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Waiting RFQs"
-msgstr "待機中のRFQ"
+msgstr "対応待ちの見積依頼"
 
 #. module: purchase
 #. odoo-python

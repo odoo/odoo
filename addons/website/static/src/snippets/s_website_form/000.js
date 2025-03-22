@@ -147,7 +147,7 @@ odoo.define('website.s_website_form', function (require) {
                 // the values to submit() for these fields but this could break
                 // customizations that use the current behavior as a feature.
                 for (const name of fieldNames) {
-                    const fieldEl = this.$target[0].querySelector(`[name="${name}"]`);
+                    const fieldEl = this.$target[0].querySelector(`[name="${CSS.escape(name)}"]`);
 
                     // In general, we want the data-for and prefill values to
                     // take priority over set default values. The 'email_to'
@@ -714,10 +714,13 @@ odoo.define('website.s_website_form', function (require) {
         _updateFieldVisibility(fieldEl, haveToBeVisible) {
             const fieldContainerEl = fieldEl.closest('.s_website_form_field');
             fieldContainerEl.classList.toggle('d-none', !haveToBeVisible);
-            for (const inputEl of fieldContainerEl.querySelectorAll('.s_website_form_input')) {
-                // Hidden inputs should also be disabled so that their data are
-                // not sent on form submit.
-                inputEl.disabled = !haveToBeVisible;
+            // Do not disable inputs that are required for the model.
+            if (!fieldContainerEl.matches(".s_website_form_model_required")) {
+                for (const inputEl of fieldContainerEl.querySelectorAll(".s_website_form_input")) {
+                    // Hidden inputs should also be disabled so that their data are
+                    // not sent on form submit.
+                    inputEl.disabled = !haveToBeVisible;
+                }
             }
         },
 

@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2024-02-06 13:31+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -32,20 +32,6 @@ msgid ""
 msgstr ""
 "\"\n"
 "                (ID:"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-"Een code server actie kan worden uitgevoerd vanaf de website, met behulp van"
-" een speciale controller. Het adres is <base>/website/action/<website_path>."
-" Stel dit veld in als Waar om gebruikers in staat te stellen om deze actie "
-"uit te voeren. Als deze is ingesteld op Onwaar kan de de actie niet worden "
-"uitgevoerd via de website."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -115,14 +101,8 @@ msgid "Automation"
 msgstr "Automatisering"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
-msgid "Available on the Website"
-msgstr "Beschikbaar op de website"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
-#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
 msgstr "Basis actie regel: controleer en voer uit"
 
@@ -169,19 +149,6 @@ msgid ""
 msgstr ""
 "Onderliggende server acties welke worden uitgevoerd. Let op dat de laatste "
 "geretourneerde actie waarde wordt gebruikt als globale return waarde."
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
-msgid ""
-"Choose method for SMS sending:\n"
-"SMS: mass SMS\n"
-"Post as Message: log on document\n"
-"Post as Note: mass SMS with archives"
-msgstr ""
-"Kies methode voor sms-verzending:\n"
-"SMS: massa-sms\n"
-"Post als bericht: log in document\n"
-"Post als Opmerking: massa-sms met archieven"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -233,14 +200,14 @@ msgid "Delay type"
 msgstr "Soort vertraging"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
 msgstr "Actie uitschakelen"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -270,7 +237,7 @@ msgid "Due type"
 msgstr "Vervalsoort"
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
@@ -282,6 +249,7 @@ msgid "Email Template"
 msgstr "E-mailsjabloon"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -302,6 +270,7 @@ msgid "Fields that trigger the onchange."
 msgstr "Velden die de onchange doen afgaan."
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -418,6 +387,7 @@ msgid "Note"
 msgstr "Notitie"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -480,19 +450,9 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
-msgid "SMS Template"
-msgstr "SMS-sjabloon"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
 msgid "Send as"
 msgstr "Verzenden als"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
-msgid "Send as (SMS)"
-msgstr "Verzenden als (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -544,6 +504,7 @@ msgid "Target Model Name"
 msgstr "Doel model naam"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""
@@ -563,7 +524,7 @@ msgstr ""
 "bijgewerkt. Indien leeg, worden alle velden bekeken."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -572,11 +533,6 @@ msgid ""
 msgstr ""
 "De fout is opgetreden tijdens de uitvoering van de geautomatiseerde actie\n"
 "\""
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
-msgid "The full URL to access the server action through the website."
-msgstr "De volledige URL om toegang tot de server te krijgen via de website."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -667,21 +623,12 @@ msgid "Value Mapping"
 msgstr "Waarde verdeling"
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
-msgid "Website Path"
-msgstr "Website pad"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
-msgid "Website Url"
-msgstr "Website url"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
@@ -729,7 +676,7 @@ msgstr ""
 " tabblad."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid ""
@@ -739,7 +686,7 @@ msgstr ""
 " of te corrigeren."
 
 #. module: base_automation
-#. openerp-web
+#. odoo-javascript
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
@@ -748,6 +695,7 @@ msgstr ""
 " op te lossen."
 
 #. module: base_automation
+#. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid ""

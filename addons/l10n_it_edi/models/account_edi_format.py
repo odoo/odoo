@@ -251,6 +251,25 @@ class AccountEdiFormat(models.Model):
             'TD19': dict(move_types=['in_invoice', 'in_refund'], import_type='in_invoice', simplified=False, self_invoice=True, services_or_goods="consu", goods_in_italy=True),
         }
 
+    @api.model
+    def _l10n_it_buyer_seller_info(self):
+        return {
+            'buyer': {
+                'role': 'buyer',
+                'section_xpath': './/CessionarioCommittente',
+                'vat_xpath': '//CessionarioCommittente//IdCodice',
+                'codice_fiscale_xpath': '//CessionarioCommittente//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'purchase')],
+            },
+            'seller': {
+                'role': 'seller',
+                'section_xpath': './/CedentePrestatore',
+                'vat_xpath': '//CedentePrestatore//IdCodice',
+                'codice_fiscale_xpath': '//CedentePrestatore//CodiceFiscale',
+                'type_tax_use_domain': [('type_tax_use', '=', 'sale')],
+            },
+        }
+
     def _l10n_it_get_invoice_features_for_document_type_selection(self, invoice):
         """ Returns a dictionary of features to be compared with the TDxx FatturaPA
             document type requirements. """
@@ -350,14 +369,20 @@ class AccountEdiFormat(models.Model):
         '''
 
         company = proxy_user.company_id
-        if self.env['ir.attachment'].search([('name', '=', filename), ('res_model', '=', 'account.move')], limit=1):
+        # Name should be unique per company, the invoice already exists
+        Attachment = self.env['ir.attachment'].sudo().with_company(company)
+        if Attachment.search_count([
+            ('name', '=', filename),
+            ('res_model', '=', 'account.move'),
+            ('company_id', '=', proxy_user.company_id.id),
+        ], limit=1):
             # name should be unique, the invoice already exists
             _logger.info('E-invoice already exists: %s', filename)
             return True
 
         raw_content = proxy_user._decrypt_data(content, key)
         invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
-        attachment = self.env['ir.attachment'].create({
+        attachment = Attachment.create({
             'name': filename,
             'raw': raw_content,
             'type': 'binary',
@@ -375,7 +400,7 @@ class AccountEdiFormat(models.Model):
         invoice.unlink()
 
         # Import the invoice from the attachment and reattach.
-        invoice = self._create_document_from_attachment(attachment)
+        invoice = self.with_company(company)._create_document_from_attachment(attachment)
         attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
         self.env.cr.commit()
 
@@ -406,19 +431,20 @@ class AccountEdiFormat(models.Model):
         return super()._update_invoice_from_xml_tree(filename, tree, invoice)
 
     def _decode_p7m_to_xml(self, filename, content):
-        decoded_content = remove_signature(content)
-        if not decoded_content:
-            return None
+        def parse_xml(parser, filename, content):
+            try:
+                return etree.fromstring(content, parser)
+            except (etree.ParseError, ValueError) as e:
+                _logger.info("XML parsing of %s failed: %s", filename, e)
 
-        try:
-            # Some malformed XML are accepted by FatturaPA, this expends compatibility
-            parser = etree.XMLParser(recover=True)
-            xml_tree = etree.fromstring(decoded_content, parser)
-        except Exception as e:
-            _logger.exception("Error when converting the xml content to etree: %s", e)
-            return None
-        if xml_tree is None or len(xml_tree) == 0:
-            return None
+        parser = etree.XMLParser(recover=True, resolve_entities=False)
+        xml_tree = parse_xml(parser, filename, content)
+        if xml_tree is None:
+            # The file may have a Cades signature, trying to remove it
+            xml_tree = parse_xml(parser, filename, remove_signature(content))
+            if xml_tree is None:
+                _logger.info("Italian EDI invoice file %s cannot be decoded.", filename)
+                return None
 
         return xml_tree
 
@@ -438,14 +464,15 @@ class AccountEdiFormat(models.Model):
                 return self._import_fattura_pa(decoded_content, invoice)
         return super()._update_invoice_from_binary(filename, content, extension, invoice)
 
-    def _l10n_it_get_partner_invoice(self, tree, company):
-        # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
-        elements = tree.xpath('//CedentePrestatore//IdCodice')
+    def _l10n_it_get_partner_invoice(self, tree, company, partner_info=None):
+        if partner_info is None:
+            partner_info = self._l10n_it_buyer_seller_info()['seller']
+        elements = tree.xpath(partner_info['vat_xpath'])
         partner = elements and self.env['res.partner'].search(
             ['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)],
             limit=1)
         if not partner:
-            elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
+            elements = tree.xpath(partner_info['codice_fiscale_xpath'])
             if elements:
                 codice = elements[0].text
                 domains = [[('l10n_it_codice_fiscale', '=', codice)]]
@@ -456,7 +483,7 @@ class AccountEdiFormat(models.Model):
                                      self.env['res.partner']._l10n_it_normalize_codice_fiscale(codice))])
                 partner = elements and self.env['res.partner'].search(
                     AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
-        if not partner:
+        if not partner and partner_info['role'] == 'seller':
             elements = tree.xpath('//DatiTrasmissione//Email')
             partner = elements and self.env['res.partner'].search(
                 ['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|',
@@ -482,7 +509,6 @@ class AccountEdiFormat(models.Model):
             ('company_id', '=', company.id),
             ('amount', '=', percentage),
             ('amount_type', '=', 'percent'),
-            ('type_tax_use', '=', 'purchase'),
         ] + (extra_domain or [])
 
         # As we're importing vendor bills, we're excluding Reverse Charge Taxes
@@ -493,10 +519,13 @@ class AccountEdiFormat(models.Model):
 
         return taxes[0] if taxes else taxes
 
-    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
+    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree, incoming=True):
         """ This function is meant to collect other information that has to be inserted on the invoice lines by submodules.
             :return extra_info, messages_to_log"""
-        return {'simplified': self._l10n_it_is_simplified_document_type(document_type)}, []
+        return {
+            'simplified': self._l10n_it_is_simplified_document_type(document_type),
+            'type_tax_use_domain': [('type_tax_use', '=', 'purchase' if incoming else 'sale')],
+        }, []
 
     def _import_fattura_pa(self, tree, invoice):
         """ Decodes a fattura_pa invoice into an invoice.
@@ -508,6 +537,8 @@ class AccountEdiFormat(models.Model):
         invoices = self.env['account.move']
         first_run = True
 
+        buyer_seller_info = self._l10n_it_buyer_seller_info()
+
         # possible to have multiple invoices in the case of an invoice batch, the batch itself is repeated for every invoice of the batch
         for body_tree in tree.xpath('//FatturaElettronicaBody'):
             if not first_run or not invoice:
@@ -515,17 +546,48 @@ class AccountEdiFormat(models.Model):
                 invoice = self.env['account.move']
             first_run = False
 
-            # Type must be present in the context to get the right behavior of the _default_journal method (account.move).
-            # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
-            elements = tree.xpath('//CessionarioCommittente//IdCodice')
-            company = elements and self.env['res.company'].search([('vat', 'ilike', elements[0].text)], limit=1)
-            if not company:
-                elements = tree.xpath('//CessionarioCommittente//CodiceFiscale')
-                company = elements and self.env['res.company'].search([('l10n_it_codice_fiscale', 'ilike', elements[0].text)], limit=1)
+            # There are 2 cases:
+            # - cron:
+            #     * Move direction (incoming / outgoing) flexible (no 'default_move_type')
+            #     * All companies are possible (no 'allowed_company_ids')
+            #     * I.e. used for import from tax agency
+            # - "Upload" button (invoices / bills view)
+            #     * Fixed move direction; the button sets the 'default_move_type'
+            #     * Companies are restricted to 'allowed_company_ids'.
+
+            default_move_type = self.env.context.get('default_move_type')
+            if default_move_type is None:
+                incoming_possibilities = [True, False]
+            elif default_move_type in invoice.get_purchase_types(include_receipts=True):
+                incoming_possibilities = [True]
+            elif default_move_type in invoice.get_sale_types(include_receipts=True):
+                incoming_possibilities = [False]
+            else:
+                _logger.warning("Cannot handle default_move_type '%s'.", default_move_type)
+                continue
+
+            allowed_company_ids = self.env.context.get('allowed_company_ids')
+            allowed_company_domain = [('id', 'in', allowed_company_ids)] if allowed_company_ids else []
+
+            for incoming in incoming_possibilities:
+                company_role, partner_role = ('buyer', 'seller') if incoming else ('seller', 'buyer')
+                company_info = buyer_seller_info[company_role]
+                elements = tree.xpath(company_info['vat_xpath'])
+                company = elements and self.env['res.company'].search([
+                    ('vat', 'ilike', elements[0].text),
+                    *allowed_company_domain
+                ], limit=1)
                 if not company:
-                    # Only invoices with a correct VAT or Codice Fiscale can be imported
-                    _logger.warning('No company found with VAT or Codice Fiscale like %r.', elements[0].text)
-                    continue
+                    elements = tree.xpath(company_info['codice_fiscale_xpath'])
+                    company = elements and self.env['res.company'].search([
+                        ('l10n_it_codice_fiscale', 'ilike', elements[0].text),
+                        *allowed_company_domain
+                    ], limit=1)
+                if company:
+                    break
+            else:
+                _logger.warning('Could not determine company (by looking at the VAT and codice fiscale in the buyer and/or seller section).')
+                continue
 
             # Refund type.
             # TD01 == invoice
@@ -544,8 +606,9 @@ class AccountEdiFormat(models.Model):
             if not move_type:
                 move_type = "in_invoice"
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
+            if not incoming and move_type.startswith('in_'):
+                move_type = 'out' + move_type[2:]
 
-            # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
                                  .with_context(
                                     default_move_type=move_type,
@@ -557,16 +620,17 @@ class AccountEdiFormat(models.Model):
             with invoice_ctx._get_edi_creation() as invoice_form:
 
                 # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
-                extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree)
+                extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree, incoming=incoming)
 
-                partner = self._l10n_it_get_partner_invoice(tree, company)
+                partner_info = buyer_seller_info[partner_role]
+                partner = self._l10n_it_get_partner_invoice(tree, company, partner_info)
                 if partner:
                     invoice_form.partner_id = partner
                 else:
                     message_to_log.append("%s<br/>%s" % (
-                        _("Vendor not found, useful informations from XML file:"),
+                        _("Partner not found, useful informations from XML file:"),
                         invoice._compose_info_message(
-                            tree, './/CedentePrestatore')))
+                            tree, partner_info['section_xpath'])))
 
                 # Numbering attributed by the transmitter. <1.1.2>
                 elements = tree.xpath('//ProgressivoInvio')
@@ -831,11 +895,12 @@ class AccountEdiFormat(models.Model):
         natura_element = element.xpath('.//Natura')
         invoice_line_form.tax_ids = ()
         if percentage is not None:
+            type_tax_use_domain = extra_info.get('type_tax_use_domain', [('type_tax_use', '=', 'purchase')])
             l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
             conditions = (
                 l10n_it_kind_exoneration and [('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration)]
                 or [('l10n_it_has_exoneration', '=', False)]
-            )
+            ) + type_tax_use_domain
             tax = self._l10n_it_edi_search_tax_for_import(company, percentage, conditions)
             if tax:
                 invoice_line_form.tax_ids += tax
@@ -903,6 +968,7 @@ class AccountEdiFormat(models.Model):
             return {
                 'post': self._post_fattura_pa,
                 'post_batching': lambda move: (move.move_type, bool(move.l10n_it_edi_transaction)),
+                'batching_limit': 50,
             }
 
     def _l10n_it_edi_export_invoice_as_xml(self, invoice):
