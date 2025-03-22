@@ -5,16 +5,16 @@
 # Translators:
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
-# Larissa Manderfeld, 2025
 # Felix Schubert <felix.schubert@go-erp.com>, 2025
+# Larissa Manderfeld, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2025\n"
+"Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,8 +35,6 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
-#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Lieferantenrechnungen"
 
@@ -326,7 +324,7 @@ msgid ""
 "title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Cancelled</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-remove\" role=\"img\" aria-label=\"Cancelled\" "
-"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Abgebrochen</span>"
+"title=\"Cancelled\"/><span class=\"d-none d-md-inline\"> Storniert</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -533,7 +531,7 @@ msgstr "<strong>Die erhaltene Menge wurde aktualisiert.</strong> "
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>This purchase has been cancelled.</strong>"
-msgstr "<strong>Die Bestellung wurde abgebrochen.</strong>"
+msgstr "<strong>Die Bestellung wurde storniert.</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -797,7 +795,7 @@ msgstr "Auftrag genehmigen"
 msgid "Are you sure you want to cancel the selected RFQs/Orders?"
 msgstr ""
 "Sind Sie sicher, dass Sie die ausgewählten Angebotsanfragen/Bestellungen "
-"abbrechen möchten?"
+"stornieren möchten?"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
@@ -970,7 +968,7 @@ msgstr "Kalenderansicht"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Cancel"
-msgstr "Abbrechen"
+msgstr "Stornieren"
 
 #. module: purchase
 #. odoo-python
@@ -978,12 +976,12 @@ msgstr "Abbrechen"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__cancel
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
 msgid "Cancelled"
-msgstr "Abgebrochen"
+msgstr "Storniert"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Cancelled Purchase Order #"
-msgstr "Abgebrochene Bestellungen #"
+msgstr "Stornierte Bestellungen #"
 
 #. module: purchase
 #. odoo-python
@@ -1508,7 +1506,7 @@ msgstr "Hat eine Nachricht"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Hide cancelled lines"
-msgstr "Abgebrochene Positionen ausblenden"
+msgstr "Stornierte Positionen ausblenden"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__id
@@ -3226,7 +3224,7 @@ msgid ""
 " this PO"
 msgstr ""
 "Der Lieferant bittet um Ablehnung dieser bestätigten Angebotsanfrage. Wenn "
-"Sie einverstanden sind, brechen Sie diese Bestellung ab."
+"Sie einverstanden sind, stornieren Sie diese Bestellung"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3585,7 +3583,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "Lieferantenrechnungen"

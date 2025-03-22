@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -5163,11 +5163,6 @@ msgid "Untaxed Total"
 msgstr "Не облагаемые налогом Итого"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
 msgstr "UoM"
@@ -5381,6 +5376,12 @@ msgid ""
 msgstr ""
 "Вы не можете изменить тип строки заказа на продажу. Вместо этого следует "
 "удалить текущую строку и создать новую строку соответствующего типа."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "You cannot modify the product of this order line."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
