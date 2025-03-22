@@ -15,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-03-19 11:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -7412,6 +7412,15 @@ msgstr "当会话打开时，不可在POS中删除可销售产品。"
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/res_partner.py:0
 #, python-format
 msgid ""
@@ -7742,4 +7751,4 @@ msgstr "与当前订单重复"
 msgid ""
 "This journal is associated with payment method %s that is being used by "
 "order %s in the active pos session %s"
-msgstr ""
+msgstr "此日记账已与付款方式 %s 相关联，该付款方式由订单 %s 所使用，相关的生效销售点操作时段：%s"

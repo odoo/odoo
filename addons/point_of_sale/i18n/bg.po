@@ -23,16 +23,16 @@
 # Elena Varbanova, 2024
 # Venelin Stoykov, 2024
 # Petko Karamotchev, 2024
-# Martin Dinovski, 2025
 # Margarita Katzeva, 2025
 # Milena Georgieva, 2025
+# Martin Dinovski, 2025
 # Veselina Slavkova, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 08:26+0000\n"
+"POT-Creation-Date: 2025-03-19 11:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Veselina Slavkova, 2025\n"
 "Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
@@ -1908,7 +1908,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "Единица по подразбиране за всички складови операции."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -5406,7 +5406,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Reversal of: %s"
-msgstr ""
+msgstr "Анулиране на: %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7458,6 +7458,15 @@ msgid ""
 msgstr ""
 "Не можете да изтриете продукт, продаван в центъра за продажби, докато "
 "сесията е все още отворена."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/account_cash_rounding.py:0
+#, python-format
+msgid ""
+"You cannot delete a rounding method that is used in a Point of Sale "
+"configuration."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

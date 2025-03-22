@@ -5,9 +5,9 @@
 # Translators:
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
 # ericrolo, 2022
-# AncesLatino2004, 2022
+# 7b9408628f00af852f513eb4f12c005b_f9c6891, 2022
 # Susanna Pujol, 2022
-# Harcogourmet, 2022
+# Xavier, 2022
 # Mohamed Sallam, 2022
 # José Cabrera Lozano <jose.cabrera@edukative.es>, 2022
 # M Palau <mpalau@tda.ad>, 2022
@@ -19,7 +19,7 @@
 # Martin Trigaux, 2022
 # Arnau Ros, 2022
 # marcescu, 2022
-# Quim - eccit <quim@eccit.com>, 2022
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2022
 # Cristian Cruz, 2022
 # Ivan Espinola, 2022
 # martioodo hola, 2023
@@ -27,6 +27,7 @@
 # Albert Parera, 2023
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2023
 # Óscar Fonseca <tecnico@pyming.com>, 2024
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
@@ -34,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@pyming.com>, 2024\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,6 +294,73 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Hola:\n"
+"                <br><br>\n"
+"                Et comuniquem que hem rebut correctament la seva sol·licitud per al lloc de treball\n"
+"                «<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Experienced Developer</strong></a>» a <strong t-out=\"object.company_id.name or ''\">Lasevaempresa</strong>.\n"
+"                <br><br>\n"
+"                Ens posarem en contacte amb vostè aviat.\n"
+"\n"
+"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Descripció del lloc de treball</a>\n"
+"                </div>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
+"                <t t-if=\"object.user_id\">\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>El seu contacte:</strong></h3>\n"
+"                    <p>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br>\n"
+"                        <span>Correu electrònic: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br>\n"
+"                        <span>Telèfon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"                    </p>\n"
+"                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\">\n"
+"                </t>\n"
+"\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Quin és el següent pas?</strong></h3>\n"
+"                En general, <strong>responem a les sol·licituds en pocs dies.</strong><br><br>\n"
+"                Contacti amb <strong>nosaltres si desitja obtindre més informació\n"
+"                aviat</strong> o, si no té cap notícia de nosaltres en uns dies,\n"
+"                només ha de respondre a aquest correu electrònic.\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\">\n"
+"                <t t-set=\"location\" t-value=\"''\"></t>\n"
+"                <t t-if=\"object.job_id.address_id.name\">\n"
+"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street\">\n"
+"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br>\n"
+"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"></t>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street2\">\n"
+"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"></t>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.city\">\n"
+"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"></t>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"></t>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.zip\">\n"
+"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"></t>\n"
+"                </t>\n"
+"                <br>\n"
+"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Argentina</t><br>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"></t>\n"
+"                </t>\n"
+"                <br>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
