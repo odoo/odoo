@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Quang Trinh <trinhvanquangf1@gmail.com>, 2025
-# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3159,6 +3159,12 @@ msgid "Archived"
 msgstr "Đã lưu trữ"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+msgid "Are you sure you want to delete these records?"
+msgstr "Bạn có chắc muốn xoá các bản ghi này?"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
@@ -4171,7 +4177,7 @@ msgstr "Tài khoản tiền mặt"
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_53
 msgid "Cash Bakery"
-msgstr "Tiền mặt Tiệm bánh"
+msgstr "Tiền mặt Tiệm bánh mì"
 
 #. module: account
 #: model:account.account,name:account.1_cash_journal_default_account_55
@@ -4745,6 +4751,11 @@ msgstr "Bố cục chứng từ của công ty"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
 msgstr "Mã tài chính quốc gia của công ty"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
+msgid "Company Registry Placeholder"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -7146,6 +7157,8 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Lỗi khi tải bản địa hóa: thiếu thẻ thuế %(tag_name)s cho quốc gia "
+"%(country_name)s. Bạn nên cập nhật ứng dụng bản địa hóa trước."
 
 #. module: account
 #. odoo-python
@@ -11919,6 +11932,12 @@ msgid "Partner"
 msgstr "Đối tác"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
+#: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
+msgid "Partner Company Registry Placeholder"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
@@ -16437,13 +16456,6 @@ msgid "This Quarter"
 msgstr "Quý này"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "This specific error occurred during the import:"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "Kỳ thuế này"
@@ -16740,6 +16752,12 @@ msgstr "Bút toán định kỳ này sẽ được vào sổ cho đến và bao 
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
 msgstr "Không thể thay đổi cài đặt này sau khi hóa đơn được tạo."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This specific error occurred during the import:"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

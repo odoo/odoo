@@ -6,13 +6,14 @@
 # Iván Infantes Castarnado, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
+# Noemi Pla, 2025
 # Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -3078,6 +3079,12 @@ msgid "Archived"
 msgstr "Arxivat"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+msgid "Are you sure you want to delete these records?"
+msgstr "Esteu segur que voleu esborrar aquests registres?"
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Are you sure? This will perform the following operations:\n"
@@ -4656,6 +4663,11 @@ msgstr "Disposició del document de l'empresa"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
 msgstr "Codi fiscal del país de l'empresa"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
+msgid "Company Registry Placeholder"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -11845,6 +11857,12 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
+#: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
+msgid "Partner Company Registry Placeholder"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
 #: model:ir.model.fields,field_description:account.field_res_users__contract_ids
 msgid "Partner Contracts"
@@ -13114,7 +13132,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Refeu la seqüència d'assentaments."
+msgstr "Refés la seqüència d'assentaments."
 
 #. module: account
 #. odoo-python
@@ -14329,7 +14347,7 @@ msgstr "Correu postal"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Some documents are being sent by another process already."
-msgstr "Alguns documents ja s'estan enviant per un altre procés."
+msgstr "Alguns documents ja s'estan enviant per mitjà d'un altre procés."
 
 #. module: account
 #. odoo-python
@@ -16345,13 +16363,6 @@ msgid "This Quarter"
 msgstr "Aquest trimestre"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "This specific error occurred during the import:"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "Aquest període fiscal"
@@ -16648,6 +16659,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This specific error occurred during the import:"
 msgstr ""
 
 #. module: account

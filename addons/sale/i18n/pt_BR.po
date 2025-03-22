@@ -1472,7 +1472,7 @@ msgstr "Criar faturas"
 #. module: sale
 #: model:ir.model,website_form_label:sale.model_res_partner
 msgid "Create a Customer"
-msgstr "Create a Customer"
+msgstr "Criar um cliente"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
@@ -2635,7 +2635,7 @@ msgstr "Este é um produto configurável?"
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
-"É verdadeiro se a linha do pedido de venda vem de uma despesa ou fatura de "
+"É verdadeiro se a linha do pedido de venda vem de uma despesa ou conta de "
 "fornecedor"
 
 #. module: sale
@@ -4100,7 +4100,7 @@ msgid ""
 "entry to be non-billable."
 msgstr ""
 "Item do pedido de venda ao qual o tempo gasto será adicionado para que seja "
-"faturado ao cliente. Remova o item do pedido de venda para que a entrada na "
+"cobrado ao cliente. Remova o item do pedido de venda para que a entrada na "
 "planilha de horas seja não faturável."
 
 #. module: sale
@@ -5301,6 +5301,12 @@ msgid ""
 msgstr ""
 "Não é possível mudar o tipo de linha do pedido de venda. É necessário "
 "excluir a linha atual e criar uma nova linha do tipo adequado."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "You cannot modify the product of this order line."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

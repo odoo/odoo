@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 20:36+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -108,7 +108,7 @@ msgstr "Nº de linhas de extrato reconciliadas"
 #: model:ir.model.fields,field_description:account.field_res_partner__supplier_invoice_count
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
-msgstr "Nº de faturas de fornecedor"
+msgstr "Nº de contas de fornecedor"
 
 #. module: account
 #. odoo-python
@@ -2107,7 +2107,8 @@ msgstr "Documentos financeiros"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
-msgstr "O modo de firma de contabilidade mudará a codificação da fatura:"
+msgstr ""
+"O modo de firma de contabilidade mudará a codificação da fatura/conta:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2485,8 +2486,8 @@ msgid ""
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
-"Após importar três faturas para um fornecedor sem fazer alterações, o Odoo "
-"sugerirá a validação automática de faturas futuras. Você pode alternar esse "
+"Após importar três contas de um fornecedor sem fazer alterações, o Odoo "
+"sugerirá a validação automática de contas futuras. Você pode alternar esse "
 "recurso a qualquer momento no perfil do fornecedor."
 
 #. module: account
@@ -3068,6 +3069,12 @@ msgstr "Abril"
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_search
 msgid "Archived"
 msgstr "Arquivado"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/views/account_move_list/account_move_list_controller.js:0
+msgid "Are you sure you want to delete these records?"
+msgstr "Tem certeza de que deseja excluir estes registros?"
 
 #. module: account
 #. odoo-python
@@ -4658,6 +4665,11 @@ msgid "Company Fiscal Country Code"
 msgstr "Código do país fiscal da empresa"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
+msgid "Company Registry Placeholder"
+msgstr "Espaço reservado para registro da empresa"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
 msgid "Company Storno Accounting"
 msgstr "Contabilidade de estorno da empresa"
@@ -4965,7 +4977,7 @@ msgstr "Criar pagamentos"
 #. module: account
 #: model:ir.model,website_form_label:account.model_res_partner
 msgid "Create a Customer"
-msgstr "Create a Customer"
+msgstr "Criar um cliente"
 
 #. module: account
 #. odoo-python
@@ -7600,7 +7612,7 @@ msgstr "Para porcentagem, insira uma proporção entre 0 e 100."
 msgid "For this entry to be automatically posted, it required a bill date."
 msgstr ""
 "Para que esse lançamento seja feito automaticamente, é necessário uma data "
-"de faturamento."
+"de cobrança."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -8573,7 +8585,7 @@ msgstr "Para que seja admissível,"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "In order to validate this bill, you must"
-msgstr "Para validar esta fatura de fornecedor, é necessário"
+msgstr "Para validar esta conta, é necessário"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -11419,7 +11431,7 @@ msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
 "Somente um pagamento será criado por usuário (banco) ao invés de um por "
-"fatura de fornecedor."
+"conta de fornecedor."
 
 #. module: account
 #. odoo-python
@@ -11873,6 +11885,12 @@ msgstr "Parcialmente pago"
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 msgid "Partner"
 msgstr "Parceiro"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
+#: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
+msgid "Partner Company Registry Placeholder"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -12999,7 +13017,7 @@ msgstr "Registro"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
 msgid "Record a new vendor bill"
-msgstr "Registrar uma nova fatura de fornecedor"
+msgstr "Registrar uma nova conta de fornecedor"
 
 #. module: account
 #. odoo-javascript
@@ -13941,7 +13959,7 @@ msgstr "Enviar dinheiro"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Send a bill to"
-msgstr "Enviar fatura para"
+msgstr "Enviar conta para"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15643,9 +15661,9 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
-"A despesa é contabilizada quando uma fatura de fornecedor é validada, exceto"
-" em contabilidade anglo-saxônica com validação de inventário perpétua. Nesse"
-" caso, a despesa (conta de custo das mercadorias vendidas) é reconhecida na "
+"A despesa é contabilizada quando uma conta de fornecedor é validada, exceto "
+"em contabilidade anglo-saxônica com validação de inventário perpétua. Nesse "
+"caso, a despesa (conta de custo das mercadorias vendidas) é reconhecida na "
 "validação da fatura do cliente."
 
 #. module: account
@@ -16427,13 +16445,6 @@ msgid "This Quarter"
 msgstr "Este trimestre"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "This specific error occurred during the import:"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "Este período fiscal"
@@ -16735,6 +16746,12 @@ msgstr "Esta movimentação recorrente será lançada até e incluindo sua data.
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
 msgstr "Essa configuração não pode ser alterada após a criação de uma fatura."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This specific error occurred during the import:"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17446,7 +17463,7 @@ msgstr "Carregar faturas"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Use Bill Reference"
-msgstr "Usar referência da fatura"
+msgstr "Usar referência da conta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__cta
@@ -17817,8 +17834,8 @@ msgid ""
 "                you receive from your vendor according to the draft\n"
 "                document in Odoo."
 msgstr ""
-"Faturas de fornecedores podem ser previamente geradas com base no pedido\n"
-"                    de compra ou em recibos. Isto possibilita controlar faturas\n"
+"Contas de fornecedores podem ser previamente geradas com base no pedido\n"
+"                    de compra ou em recibos. Isto possibilita controlar contas\n"
 "                    recebidas do seu fornecedor de acordo com o documento\n"
 "                    em rascunho no Odoo."
 
