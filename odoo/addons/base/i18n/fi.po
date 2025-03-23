@@ -9654,32 +9654,32 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Tämä on perusmoduuli Belgian kirjanpitokaavion hallintaan Odoossa.\n"
+"Tämä on perusmoduuli Belgian tilikartan hallintaan Odoossa.\n"
 "==============================================================================\n"
 "\n"
-"Kun tämä moduuli on asennettu, kirjanpidon konfigurointiohjattu konfigurointi käynnistyy.\n"
+"Kun tämä moduuli on asennettu, kirjanpidon ohjattu konfigurointi käynnistyy.\n"
 "    * Meillä on tilimalleja, joista voi olla apua tilikarttojen luomisessa.\n"
 "    * Kyseisessä ohjatussa toiminnossa sinua pyydetään antamaan yrityksen nimi,\n"
-"      seurattava tilikarttamalli, luotavien numeroiden määrä, tilikarttasi koodi\n"
-"      tili ja pankkitili, valuutta, jolla päiväkirjat luodaan.\n"
+"      seurattava tilikarttamalli, luotavien numeroiden määrä, tilikarttasi koodi,\n"
+"      tili ja pankkitili, valuutta, jossa päiväkirjat luodaan.\n"
 "\n"
-"Näin luodaan puhdas kopio Chart Template -kaaviointimallista.\n"
+"Näin luodaan siisti kopio Tilikarttamalli -kaaviointimallista.\n"
 "\n"
 "Tämän moduulin tarjoamat ohjatut toiminnot:\n"
 "--------------------------------\n"
-"    * Partner VAT Intra: Luetteloi kumppanit ja niihin liittyvät alv:t ja laskut\n"
+"    * Kumppanin ALV-intra: Listaa kumppanit ja niihin liittyvät ALV:it ja laskujen\n"
 "      määrät. Valmistelee XML-tiedostomuodon.\n"
 "\n"
-"        **Polku, josta pääsee käsiksi:** Laskutus/Raportointi/Lainsäädäntöraportit/Belgium Statements/Kumppanin alv Intra\n"
-"    * Säännöllinen alv-ilmoitus: Valmistelee XML-tiedoston alv-ilmoitusta varten\n"
-"      parhaillaan kirjautuneen käyttäjän pääyhtiön.\n"
+"        **Käyntipolku:** Laskutus/Raportointi/Lainsäädäntöraportit/Belgian ilmoitukset/Kumppanin ALV-Intra\n"
+"    * Säännöllinen ALV-ilmoitus: Valmistelee XML-tiedoston kirjautuneen käyttäjän pääyhtiön\n"
+"      ALV-ilmoitusta varten.\n"
 "\n"
-"        **Polku, johon pääsee:** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration (Laskutus/Raportointi/Lainsäädäntöraportit/Belgium Statements/Periodical VAT Declaration)\n"
-"    * Arvonlisäverovelvollisten asiakkaiden vuosittainen luettelointi: Valmistelee XML-tiedoston arvonlisäverotusta varten\n"
-"      Sisäänkirjautuneen käyttäjän pääyrityksen ilmoitus Perustuu seuraavaan\n"
-"      Verovuosi.\n"
+"        **Käyntipolku:** Laskutus/Raportointi/Viralliset ilmoitukset/Belgian ilmoitukset/Jaksollinen ALV-ilmoitus (Laskutus/Raportointi/Oikeudelliset raportit/Belgian ilmoitukset/Jaksollinen ALV-ilmoitus)\n"
+"    * Arvonlisäverovelvollisten asiakkaiden vuosittainen listaus: Valmistelee XML-tiedoston sisäänkirjautuneen käyttäjän pääyrityksen arvonlisäverotusilmoitustata varten\n"
+"      arvonlisäverotusilmoitustata varten tilikauden\n"
+"      perusteella.\n"
 "\n"
-"        **Polku, johon pääsee:** Laskutus/Raportointi/Lainmukaiset raportit/Belgium-ilmoitukset/Annual Listing Of VAT-Subjected Customers\n"
+"        **Käyntipolku:** Laskutus/Raportointi/Oikeudelliset raportit/Belgian ilmoitukset/Vuosittainen listaus arvonlisäverovelvollisista asiakkaista\n"
 "\n"
 
 #. module: base
@@ -11244,11 +11244,11 @@ msgstr ""
 "pain.008.001.02-määrityksen mukainen), joka lähetetään pankkiin, jotta voidaan\n"
 "kerätä joukko maksuja.\n"
 "\n"
-"Jotta asiakas voi käyttää tätä maksutapaa, hänen on ensin täytynyt\n"
+"Jotta asiakas voi käyttää tätä maksutapaa, hänen on ensin\n"
 "palautettava yritykselle valtuutus, jossa annetaan suostumus suoraveloituksen käyttöön.\n"
 "Tämän suostumuksen on oltava koodattu Odoossa \"asiakkaan mandaatiksi\".\n"
 "\n"
-"Sinun on myös täytettävä seuraavat vaatimukset, jotta voit asianmukaisesti noudattaa seuraavia vaatimuksia\n"
+"Sinun on myös täytettävä seuraavat vaatimukset, jotta voit asianmukaisesti\n"
 "luoda SDD-tiedosto:\n"
 "- Yritystililläsi on oltava voimassa oleva IBAN-numero\n"
 "- Yrityksellesi on annettava velkojatunnus (tämä voidaan tehdä kohdassa Asetukset - Yleiset asetukset - Kirjanpito)\n"
@@ -11259,7 +11259,7 @@ msgstr ""
 "\n"
 "Jos haluat rekisteröidä maksun avoimille laskuille, voit käyttää erityistä\n"
 "\"SEPA Direct Debit\" -vaihtoehtoa valitsemalla pankkitili \"Register\" -kohdassa\n"
-"Maksun kirjaaminen' -ohjattu toiminto. Näyttöön tulee virheilmoitus, jos voimassa olevaa valtakirjaa ei ole annettu\n"
+"'Maksun kirjaaminen' -ohjattu toiminto. Näyttöön tulee virheilmoitus, jos voimassa olevaa valtakirjaa ei ole annettu\n"
 "käytettävissä valitun laskun maksun luomista varten.\n"
 
 #. module: base
@@ -19908,7 +19908,7 @@ msgstr "Vaihda salasana"
 #. module: base
 #: model:ir.model,name:base.model_change_password_wizard
 msgid "Change Password Wizard"
-msgstr "Salasanan vaihto -avustaja"
+msgstr "Ohjattu salasanan vaihto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -20701,7 +20701,7 @@ msgstr "Asetukset"
 #: model:ir.model,name:base.model_ir_actions_todo
 #: model:ir.ui.menu,name:base.menu_ir_actions_todo_form
 msgid "Configuration Wizards"
-msgstr "Määritä ohjattuja toimintoja"
+msgstr "Kokoonpanon ohjatut toiminnot"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
@@ -22251,7 +22251,7 @@ msgstr "Demodata"
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure_wizard
 msgid "Demo Failure wizard"
-msgstr "Epäonnistumisen ohjatun toiminnon demo"
+msgstr "Demo-epäonnistumisen ohjattu toiminto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
@@ -25443,7 +25443,7 @@ msgid ""
 "re-open the wizard several times if needed."
 msgstr ""
 "Turvallisuussyistä voit yhdistää max. 3 yhteystietoa. Voit kuitenkin "
-"tarvittaessa avata wizardin useampaan kertaan."
+"tarvittaessa avata ohjatun toiminnon useampaan kertaan."
 
 #. module: base
 #. odoo-python
@@ -28593,15 +28593,15 @@ msgid ""
 "                    mainly by governmental and international agencies as well\n"
 "                    as industries."
 msgstr ""
-"Toteuttaa ja edistää nesteiden alan tutkimusta\n"
-"                     dynamiikka. Organisaatiolla on noin viisikymmentä erilaista tuulitunnelia,\n"
-"                     turbokoneet ja muut erikoistuneet testauslaitokset, jotkut\n"
-"                     joista ovat ainutlaatuisia tai maailman suurimpia. Laaja\n"
+"Toteuttaa ja edistää virtausdynamiikan\n"
+"                     tutkimusta. Organisaatiolla on noin viisikymmentä erilaista tuulitunnelia,\n"
+"                     turbokonetta ja muuta erikoistunutta testauslaitosta, joista\n"
+"                     osa on ainutlaatuisia tai maailman suurimpia. Laaja\n"
 "                     kokeellisen, laskennallisen ja teoreettisen tutkimuksen\n"
 "                     kaasu- ja nestevirtojen näkökohdat suoritetaan\n"
-"                     tiedekunnan ja tutkimusinsinöörien ohjaus, sponsoroitu\n"
-"                     pääasiassa myös valtion ja kansainvälisten järjestöjen\n"
-"                     toimialoina."
+"                     tiedekunnan ja tutkimusinsinöörien ohjauksessa, ja sponsorina toimii\n"
+"                     pääasiassa valtion ja kansainvälisten järjestöt sekä\n"
+"                     eri toimialojen toimijat."
 
 #. module: base
 #: model:res.country,name:base.it
@@ -29365,7 +29365,7 @@ msgstr "Käynnistä"
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch Configuration Wizard"
-msgstr "Lounaskonfiguraation velho"
+msgstr "Ohjattu kokoonpanon aloitustoiminto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
@@ -30364,9 +30364,7 @@ msgstr "Hallitse kulkuneuvojen hylättyjä menoja"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
 msgid "Manage engineering change orders on products, bills of material"
-msgstr ""
-"Tuotteita, materiaaliluetteloita koskevien teknisten muutostilausten "
-"hallinnointi"
+msgstr "Hallinnoi tuotteiden muutostilauksia, materiaaliluetteloita"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_booth
@@ -30808,7 +30806,7 @@ msgstr "Yhdistä kumppanin rivi"
 #. module: base
 #: model:ir.model,name:base.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Kumppanin yhdistämistyökalu"
+msgstr "Ohjattu kumppanin yhdistämistoiminto"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -35661,7 +35659,7 @@ msgstr "Maksu - Tili"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Engine"
-msgstr "Maksupalveluntarjontamoottori"
+msgstr "Maksumoduuli"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_followup
@@ -36022,8 +36020,8 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
-"Ole hyvä ja käytä salasanan vaihto velhoa (käyttäjäasetuksissa tai käyttäjä "
-"menussa) vaihtaaksesi salasanaa."
+"Ole hyvä ja käytä ohjattua salasanan vaihtoa (käyttäjäasetuksissa tai "
+"käyttäjävalikossa) vaihtaaksesi salasanaa."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_order_tracking_display
@@ -37824,7 +37822,7 @@ msgstr "Nollaa näkymän arkkitehtuuri"
 #. module: base
 #: model:ir.model,name:base.model_reset_view_arch_wizard
 msgid "Reset View Architecture Wizard"
-msgstr "Nollaa näkymän arkkitehtuurin ohjattu palautus"
+msgstr "Palauta näkymä ohjatulla arkkitehtuuritoiminnolla"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__other_view
@@ -41371,7 +41369,7 @@ msgid ""
 "Odoo. They are launched during the installation of new modules, but you can "
 "choose to restart some wizards manually from this menu."
 msgstr ""
-"Automaattisia toimintoja käytetään auttamaan uuden Odoo-instanssin "
+"Ohjattua kokoonpanotoimintoja käytetään auttamaan uuden Odoo-instanssin "
 "konfiguroinnissa.  Ne käynnistetään uusien moduulien asennuksen aikana, "
 "mutta voit uudelleen käynnistää joitakin automaattisia toimintoja "
 "manuaalisesti tästä valikosta."
@@ -44098,12 +44096,12 @@ msgstr "Käyttäjätyypit"
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "User, Change Password Wizard"
-msgstr "Käyttäjä, Salasanan vaihtamisen ohjattu toiminto"
+msgstr "Käyttäjä, ohjattu salasanan vaihtaminen"
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_own
 msgid "User, change own password wizard"
-msgstr "Käyttäjä, Oman salasanan vaihtamisen ohjattu toiminto"
+msgstr "Käyttäjä, Ohjattu oman salasanan vaihtaminen"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_default_menu_action

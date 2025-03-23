@@ -139,6 +139,16 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>Nhắc nhở</strong><br/>\n"
+"    Bạn chưa cập nhật tiến độ cho mục tiêu <t t-out=\"object.definition_id.name or ''\"/> (hiện đã đạt được <t t-out=\"object.completeness or ''\"/>%) trong ít nhất <t t-out=\"object.remind_update_delay or ''\"/> ngày. Đừng quên tiếp tục nhé.\n"
+"    <br/><br/>\n"
+"    Cảm ơn bạn!\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"/>\n"
+"    </t>\n"
+"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
