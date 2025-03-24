@@ -183,6 +183,29 @@
 <!-- Single record templates -->
 <!-- Full Layout -->
 <template id="dynamic_filter_template_blog_post_single_full" name="Solo Full">
+    <t t-if="len(records)" class="s_blog_posts_post" data-extra-snippet-classes="o_cc o_cc5" data-column-classes="col-lg-12">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div>
+            <a class="display-3-fs text-reset" t-att-title="'Read ' + record.name" t-att-href="data['call_to_action_url']" t-field="record.name"/>
+            <div class="d-flex flex-wrap my-3">
+                <span class="w-100 w-sm-auto">
+                    <t t-call="website_blog.s_dynamic_snippet_template_author"/>
+                </span>
+                <span class="d-none d-sm-inline text-muted mx-0 mx-sm-2" t-if="blog_posts_post_date_active and blog_posts_post_author_active">•</span>
+                <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                <span class="text-muted mx-2" t-if="blog_posts_post_category_active and (blog_posts_post_date_active or blog_posts_post_author_active)">•</span>
+                <t t-call="website_blog.s_dynamic_snippet_template_category"/>
+            </div>
+            <a class="text-reset" t-att-title="'Read ' + record.name" t-att-href="data['call_to_action_url']">
+                <t t-call="website_blog.s_dynamic_snippet_template_teaser">
+                    <t t-set="teaser_custom_class" t-value="'lead h4-fs'"/>
+                </t>
+            </a>
+            <a class="btn btn-primary d-lg-none w-100 w-sm-auto mt-4" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">Read Now <i class="fa fa-long-arrow-right" role="presentation"/></a>
+        </div>
+    </t>
 </template>
 <!-- Aside Layout -->
 <template id="dynamic_filter_template_blog_post_single_aside" name="Solo Aside">
