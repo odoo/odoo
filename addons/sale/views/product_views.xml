@@ -35,15 +35,6 @@
                     <field name="expense_policy" widget="radio"/>
                 </group>
             </group>
-        </field>
-    </record>
-
-    <!-- TODO VFE inherit product_template_form_view and factorize both views -->
-    <record id="product_form_view_sale_order_button" model="ir.ui.view">
-        <field name="name">product.product.sale.order</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
-        <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button"
                     name="action_view_sales"
@@ -61,30 +52,6 @@
                     </div>
                 </button>
             </div>
-        </field>
-    </record>
-
-    <record id="product_template_form_view_sale_order_button" model="ir.ui.view">
-        <field name="name">product.template.sale.order.button</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view"/>
-        <field name="arch" type="xml">
-            <button name="action_open_documents" position="after">
-                <button class="oe_stat_button"
-                    name="action_view_sales"
-                    type="object" icon="fa-signal"
-                    help="Sold in the last 365 days"
-                    groups="sales_team.group_sale_salesman"
-                    invisible="not sale_ok">
-                    <div class="o_field_widget o_stat_info">
-                        <span class="o_stat_value d-flex gap-1">
-                            <field name="sales_count" widget="statinfo" nolabel="1" class="oe_inline"/>
-                            <field name="uom_name" class="oe_inline"/>
-                        </span>
-                        <span class="o_stat_text">Sold</span>
-                    </div>
-                </button>
-            </button>
         </field>
     </record>
 
