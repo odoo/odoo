@@ -133,7 +133,9 @@
                     <a class="mb-2 mb-md-5 text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
                         <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                         <h4 class="mb-2 mt-0" t-field="record.name"/>
-                        <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                        <t t-call="website_blog.s_dynamic_snippet_template_date">
+                            <t t-set="date_custom_class" t-value="'small'"/>
+                        </t>
                         <p class="s_blog_posts_post_subtitle mt-1 mb-0 lead overflow-hidden" t-field="record.subtitle"/>
                     </a>
                     <div class="d-flex justify-content-between small">
@@ -162,7 +164,9 @@
                 <div class="card-body">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                     <h5 class="text-truncate" t-field="record.name"/>
-                    <t t-call="website_blog.s_dynamic_snippet_template_date"/>
+                    <t t-call="website_blog.s_dynamic_snippet_template_date">
+                        <t t-set="date_custom_class" t-value="'small'"/>
+                    </t>
                     <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
                 </div>
             </a>
@@ -194,18 +198,18 @@
 <template id="website_blog.s_dynamic_snippet_template_author" name="Blog Post Author">
     <div t-if="blog_posts_post_author_active" class="s_blog_posts_post_author d-inline-flex align-items-center">
         <img class="o_avatar me-2 rounded-pill" t-attf-src="data:image/png;base64,{{record.author_avatar}}" t-if="record.author_avatar"/>
-        <span t-field="record.author_name"/>
+        <span t-field="record.author_id.name"/>
     </div>
 </template>
 
 <!-- Blog Post Teaser (optional for Card and List layouts) -->
 <template id="website_blog.s_dynamic_snippet_template_teaser" name="Blog Post Teaser">
-    <p t-if="blog_posts_post_teaser_active" class="s_blog_posts_post_teaser my-1 overflow-hidden" t-field="record.teaser"/>
+    <p t-if="blog_posts_post_teaser_active" t-attf-class="s_blog_posts_post_teaser overflow-hidden {{ teaser_custom_class }}" t-field="record.teaser"/>
 </template>
 
 <!-- Blog Post Date (optional for Card, Horizontal and List layouts) -->
 <template id="website_blog.s_dynamic_snippet_template_date" name="Blog Post Date">
-    <small t-if="blog_posts_post_date_active" class="s_blog_posts_post_date text-muted" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
+    <span t-if="blog_posts_post_date_active" t-attf-class="s_blog_posts_post_date text-muted {{ date_custom_class }}" t-field="record.post_date" t-options='{"format": "MMM d, yyyy"}' />
 </template>
 
 <!-- Blog Post Category (optional) -->
