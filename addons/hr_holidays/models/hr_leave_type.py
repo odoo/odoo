@@ -92,8 +92,8 @@ class HrLeaveType(models.Model):
     employee_requests = fields.Selection([
         ('yes', 'Extra Days Requests Allowed'),
         ('no', 'Not Allowed')], default="no", required=True, string="Employee Requests",
-        help="""Extra Days Requests Allowed: User can request an allocation for himself.\n
-        Not Allowed: User cannot request an allocation.""")
+        help="""If allowed, Employees can create their own allocation requests, \
+            and their Approver can do so for assigned employees.""")
     allocation_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
