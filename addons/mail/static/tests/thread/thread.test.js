@@ -893,3 +893,39 @@ test("Transient messages are added at the end of the thread", async () => {
     await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
     await contains(":nth-child(2 of .o-mail-Message)", { text: "OdooBot" });
 });
+
+test("Can scroll to notification", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "notification 0",
+        message_type: "notification",
+        model: "discuss.channel",
+        pinned_at: "2024-03-24 15:00:00",
+        res_id: channelId,
+    });
+    let lastMessageId;
+    for (let i = 0; i < 60; ++i) {
+        lastMessageId = pyEnv["mail.message"].create({
+            author_id: serverState.partnerId,
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMemberId], {
+        new_message_separator: lastMessageId + 1,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await tick(); // wait for the scroll to first unread to complete
+    await isInViewportOf(".o-mail-Message:contains(message 59)", ".o-mail-Thread");
+    await click("[title='Pinned Messages']");
+    await click(".o-discuss-PinnedMessagesPanel a[role='button']", { text: "Jump" });
+    await isInViewportOf(".o-mail-NotificationMessage:contains(notification 0)", ".o-mail-Thread");
+});
