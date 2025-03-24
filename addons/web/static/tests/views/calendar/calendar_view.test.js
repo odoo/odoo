@@ -3335,6 +3335,154 @@ test(`events starting at midnight on mobile`, async () => {
     expect(`.o_event[data-event-id="8"]`).toHaveText("new event in quick create");
 });
 
+test(`single day event from midnight to midnight`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 00:00:00",
+            stop: "2016-12-13 00:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(cellWidth); // over a single day
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).not.toBeGreaterThan(cellWidth);
+    await changeScale("week");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-day`).getBoundingClientRect().width;
+    expect(eventWidth).not.toBeGreaterThan(cellWidth);
+    await changeScale("day");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(0);
+});
+
+test(`event over two days but lasting less than 24h`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 19:00:00",
+            stop: "2016-12-13 09:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("week");
+    expect(`.fc-day-mon .o_event`).toHaveCount(1);
+    expect(`.fc-day-tue .o_event`).toHaveCount(1);
+    await changeScale("day");
+    expect(`.fc-day-mon .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-day-tue .o_event`).toHaveCount(1);
+});
+
+test(`event over two days lasting longer than 24h`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 09:00:00",
+            stop: "2016-12-13 19:00:00",
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start" date_stop="stop" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("week");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("day");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+});
+
+test(`all day event lasting 2 days`, async () => {
+    mockDate("2016-12-12T08:00:00", 0);
+    Event._records = [
+        {
+            id: 1,
+            name: "event 1",
+            start: "2016-12-12 00:00:00",
+            stop: "2016-12-13 00:00:00",
+            is_all_day: true,
+        },
+    ];
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar date_start="start_date" date_stop="stop_date" all_day="is_all_day" mode="year"/>`,
+    });
+
+    expect(`.o_event`).toHaveCount(1);
+    let eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    let cellWidth = queryFirst(`.fc-daygrid-day-frame`).getBoundingClientRect().width;
+    expect(eventWidth).toBe(2 * cellWidth); // over 2 days
+    await changeScale("month");
+    expect(`.o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-daygrid-day-events`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("week");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    eventWidth = queryOne(`.o_event`).getBoundingClientRect().width;
+    cellWidth = queryFirst(`.fc-day`).getBoundingClientRect().width;
+    expect(eventWidth).toBeGreaterThan(cellWidth);
+    expect(eventWidth).not.toBeGreaterThan(2 * cellWidth);
+    await changeScale("day");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+    await navigate("next");
+    expect(`.fc-daygrid-day-events .o_event`).toHaveCount(1);
+});
+
 test(`set event as all day when field is date`, async () => {
     mockTimeZone(-8);
     Event._fields.start_date = fields.Date();
