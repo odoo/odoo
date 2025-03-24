@@ -1171,6 +1171,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptTrackingMethodTour', login="pos_user")
 
+    def test_printed_receipt_tour(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("point_of_sale.test_printed_receipt_tour")
+
     def test_limited_product_pricelist_loading(self):
         self.env['ir.config_parameter'].sudo().set_param('point_of_sale.limited_product_count', '1')
 
