@@ -153,31 +153,24 @@
                             domain="[('previous_type_ids', '=', previous_activity_type_id)]"
                             string="Recommended Activities"/>
                     </group>
+
                     <group>
-                        <group>
-                            <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="summary" placeholder="e.g. Discuss proposal"/>
-                        </group>
+                        <field name="activity_type_id" required="1" widget="selection_badge_icons" iconField="icon" nolabel="1"/>
+                        <field name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 pb-2"/>
                         <group>
                             <field name="date_deadline"/>
-                            <field name="user_id" widget="many2one_avatar_user"/>
                         </group>
+                        <field name="user_id" widget="many2one_avatar_user"/>
                     </group>
-                    <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
                     <footer>
                         <field name="id" invisible="1"/>
                         <button id="mail_activity_schedule" string="Schedule" close="1" name="action_close_dialog" type="object" class="btn-primary"
                             invisible="id" data-hotkey="q"/>
                         <button id="mail_activity_save" string="Save" name="action_close_dialog" type="object" class="btn-primary"
                             invisible="not id" data-hotkey="q"/>
-                        <button invisible="chaining_type == 'trigger'" string="Mark as Done" name="action_done"
+                        <button invisible="chaining_type == 'trigger'" string="Mark Done" name="action_done"
                             type="object" class="btn-secondary" data-hotkey="w"
-                            context="{'mail_activity_quick_update': True}"/>
-                        <button invisible="chaining_type == 'trigger'" string="Done &amp; Schedule Next" name="action_done_schedule_next"
-                            type="object" class="btn-secondary" data-hotkey="z"
-                            context="{'mail_activity_quick_update': True}"/>
-                        <button invisible="chaining_type == 'suggest'" string="Done &amp; Launch Next" name="action_done_schedule_next"
-                            type="object" class="btn-secondary" data-hotkey="z"
                             context="{'mail_activity_quick_update': True}"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                     </footer>
@@ -208,24 +201,22 @@
         <field name="model">mail.activity</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <form string="Log an Activity" create="false" delete="false">
+            <form string="Log an Activity" create="true" delete="false">
                 <header>
-                    <button string="Mark as Done" class="btn-primary"
+                    <button string="Mark Done" class="btn-primary"
                             name="action_done_redirect_to_other" type="object"/>
                 </header>
                 <sheet string="Activity">
-                    <field name="res_model" invisible="1"/>
                     <field name="display_name" invisible="1"/>
                     <group>
-                        <group>
-                            <field name="activity_type_id" required="1" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="summary" placeholder="e.g. Discuss proposal"/>
-                        </group>
+                        <field name="activity_type_id" required="1"
+                        widget="selection_badge_icons" iconField="icon" nolabel="1"/>
+                        <field name="summary" placeholder="e.g. Discuss proposal"/>
                         <group>
                             <field name="date_deadline"/>
                         </group>
                     </group>
-                    <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                    <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
                 </sheet>
             </form>
         </field>
@@ -236,17 +227,31 @@
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
             <search string="Activity">
-                <field name="res_name"/>
-                <field name="summary"/>
+                <field name="res_name" string="Name" filter_domain="[
+                    '|',
+                        ('res_name', 'ilike', self),
+                        ('summary', 'ilike', self),
+                ]"/>
+                <field name="user_id"/>
                 <field name="activity_type_id"/>
-                <field name="res_model"/>
                 <filter name="filter_user_id_uid" string="My Activities" domain="[('user_id', '=', uid)]"/>
+                <filter name="filter_user_id_no_user" string="Unassigned Activities" domain="[('user_id', '=', False)]"/>
                 <separator/>
+                <separator invisible="1"/>
                 <filter string="Overdue" name="filter_date_deadline_past"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                        help="Show all records which has next action date is before today"/>
+                        help="Show all records whose next activity date is past"/>
                 <filter string="Today" name="filter_date_deadline_today"
                         domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Tomorrow" name="filter_date_deadline_tomorrow"
+                        help="Show all records whose next action date is tomorrow"
+                        domain="[('date_deadline', '=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This week" name="filter_date_deadline_week"
+                        help="Show all records whose next action date is this week"
+                        domain="[
+                            ('date_deadline', '&gt;=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
+                            ('date_deadline', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
+                        )]"/>
                 <filter string="Future" name="filter_date_deadline_future"
                         domain="[('date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
@@ -269,16 +274,15 @@
         <field name="model">mail.activity</field>
         <field name="arch" type="xml">
             <list string="Next Activities"
-                    decoration-danger="date_deadline &lt; current_date and active == True"
-                    decoration-warning="date_deadline == current_date and active == True"
-                    decoration-success="date_deadline &gt; current_date and active == True"
-                    default_order="date_deadline" create="false">
+                    default_order="date_deadline" create="true" js_class="">
                 <header>
                     <button name="action_done" type="object" string="Done" icon="fa-check"/>
                     <button name="action_cancel" type="object" string="Cancel" icon="fa-times"/>
-                    <button name="action_snooze" type="object" string="Snooze 7d" icon="fa-bell-slash"/>
+                    <button name="action_reschedule_today" type="object" string="Today" icon="fa-arrow-down"/>
+                    <button name="action_reschedule_tomorrow" type="object" string="Tomorrow" icon="fa-calendar-plus-o"/>
+                    <button name="action_reschedule_nextweek" type="object" string="Next Week" icon="fa-calendar-o"/>
                 </header>
-                <field name="res_name"/>
+                <field name="res_name" string="Name"/>
                 <field name="activity_type_id"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="summary"/>
@@ -286,7 +290,7 @@
                 <field name="date_done" string="Done Date" optional="hide"/>
                 <button name="action_done" type="object" string="Done" icon="fa-check" invisible="active == False"/>
                 <button name="unlink" type="object" string="Cancel" icon="fa-times" class="text-danger" invisible="active == False"/>
-                <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d" icon="fa-bell-slash" invisible="active == False"/>
+                <widget name="activity_list_reschedule_dropdown"/>
             </list>
         </field>
     </record>
@@ -404,7 +408,7 @@
         <field name="arch" type="xml">
             <calendar string="Activity" date_start="date_deadline" color="activity_type_id" js_class="activity_calendar" create="0" mode="month">
                 <field name="user_id" avatar_field="avatar_128"/>
-                <field name="res_name"/>
+                <field name="res_name" string="Name"/>
                 <field name="date_deadline"/>
                 <field name="summary"/>
                 <field name="activity_type_id" filters="1" invisible="1"/>

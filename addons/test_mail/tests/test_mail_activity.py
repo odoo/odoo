@@ -251,9 +251,11 @@ class TestActivityFlow(TestActivityCommon):
     def test_activity_summary_sync(self):
         """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
         ActivityType = self.env['mail.activity.type']
+        call_activity_type = ActivityType.create({'name': 'call', 'sequence': 1})
         email_activity_type = ActivityType.create({
             'name': 'email',
             'summary': 'Email Summary',
+            'sequence': '30'
         })
         call_activity_type = ActivityType.create({'name': 'call', 'summary': False})
         with Form(
@@ -325,7 +327,7 @@ class TestActivityFlow(TestActivityCommon):
                 'res_id': test_record.id,
             })
         # free activity is ok (no model, no res_id)
-        self.env['mail.activity'].create({})
+        self.env['mail.activity'].create({'user_id': self.env.uid})
 
         activity = self.env['mail.activity'].create({
             'res_id': test_record.id,
@@ -385,14 +387,14 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             for record in data["Store"]["activityGroups"]
             if record.get("model") == self.test_record._name
         )
-        self.assertEqual(total_activity_count, 3)
+        self.assertEqual(total_activity_count, 2)
         total_lead_count = sum(
             record["total_count"]
             for record in data["Store"]["activityGroups"]
             if record.get("model") == self.test_lead_records._name
         )
-        self.assertEqual(total_lead_count, 4)
-        self.assertEqual(data["Store"]["activityCounter"], 9)
+        self.assertEqual(total_lead_count, 2)
+        self.assertEqual(data["Store"]["activityCounter"], 4)
 
 
 @tests.tagged('mail_activity')
@@ -466,6 +468,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'summaries': [act.summary for act in record_activities],
             })
 
             grouped = activity_data['grouped_activities'][test_record_2.id][self.type_upload.id]
@@ -477,7 +480,8 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
                 'attachments_info': {
-                    'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'}
+                    'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'},
+                'summaries': [act.summary for act in record_2_activities],
             })
 
             # Mark all first record activities as "done" and check activity data
@@ -496,7 +500,8 @@ class TestActivityViewHelpers(TestActivityCommon):
                     'count': 1,  # 1 instead of 3 because all attachments are the same one
                     'most_recent_id': self.attachment_1.id,
                     'most_recent_name': self.attachment_1.name,
-                }
+                },
+                'summaries': [act.summary for act in record_activities],
             })
             self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id, test_record.id])
 
@@ -532,6 +537,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'summaries': [act.summary for act in record_activities],
             })
 
 

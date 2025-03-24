@@ -13,65 +13,60 @@
                     <field name="plan_has_user_on_demand" invisible="1"/>
                     <field name="res_ids" invisible="1"/>
                     <field name="plan_available_ids" invisible="1"/>
-                    <sheet>
-                        <group invisible="not plan_available_ids">
-                            <group>
-                                <field name="plan_id" options='{"no_open": True, "no_create": True}'
-                                       placeholder="Pick an Activity Plan to launch"/>
-                            </group>
-                        </group>
+                    <sheet class="o_mail_activity_schedule_wizard">
+                        <field name="plan_id" options="{'no_open': True, 'no_create': True}"
+                                    widget="selection_badge" 
+                                    invisible="not plan_available_ids" nolabel="1"/>
                         <group invisible="not plan_id">
                             <group>
-                                <field name="plan_date" placeholder="Default deadline for the activities..."/>
+                                <field name="plan_date" placeholder="Default deadline for the activities..." string="Due Date"/>
                                 <field name="plan_on_demand_user_id" widget="many2one_avatar_user"
-                                       invisible="not plan_has_user_on_demand"/>
+                                       invisible="not plan_has_user_on_demand" string="Responsible"/>
                             </group>
                             <group>
-                                <label for="plan_summary" class="o_form_label"
-                                       string="Plan summary" colspan="2"/>
-                                <field name="plan_summary" colspan="2" nolabel="1" class="text-muted"/>
+                                <label for="plan_schedule_line_ids" string="Plan Summary" class="o_form_label mb-n2" colspan="2"/>
+                                <field name="plan_schedule_line_ids" nolabel="1" class="text-muted mt-n2 small" colspan="2">
+                                    <list edit="0" no_open="1" class="o_mail_activity_schedule_summary">
+                                        <field name="responsible_user_id" nolabel="1" widget="many2one_avatar_user" width="22px"/>
+                                        <field name="line_description" nolabel="1"/>
+                                        <field name="line_date_deadline" nolabel="1"/>
+                                    </list>
+                                </field>
                             </group>
                         </group>
                         <group invisible="plan_id">
+                            <field name="activity_type_id"
+                                    required="not plan_id"
+                                    widget="selection_badge_icons"
+                                    iconField="icon"
+                                    nolabel="1"
+                                    />
+                            <field name="summary" placeholder="e.g. Discuss Proposal" class="fs-3 pb-2"/>
                             <group>
-                                <field name="res_model" invisible="1"/>
-                                <field name="activity_type_id"
-                                       required="not plan_id"
-                                       options="{'no_create': True, 'no_open': True}"/>
-                                <field name="summary" placeholder="e.g. Discuss proposal"/>
+                                <field name="res_model" widget="activity_model_selector" string="Link to"
+                                    invisible="id or context.get('active_model')"/>
+                                <field name="date_deadline" string="Due Date"/>
+                                <field name="activity_user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                             </group>
-                            <group>
-                                <field name="date_deadline"/>
-                                <field name="activity_user_id" widget="many2one_avatar_user"
-                                       required="not plan_id"/>
-                            </group>
-                            <field name="note" class="oe-bordered-editor" placeholder="Log a note..."/>
+                            <field name="note" class="oe-bordered-editor embedded-editor-height-4" placeholder="Log a note..."/>
                         </group>
                         <div role="alert" class="alert alert-danger mb8" invisible="not has_error">
                             <field name="error"/>
                         </div>
                     </sheet>
                     <footer invisible="plan_id">
-                        <button name="action_schedule_activities" string="Schedule" type="object" class="btn-primary"
+                        <button name="action_schedule_activities" string="Save" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
-                        <button name="action_schedule_activities_done" string="Schedule &amp; Mark as Done" type="object"
-                                invisible="has_error or chaining_type == 'trigger'"
-                                class="btn-secondary"  data-hotkey="w"
-                                context="{'mail_activity_quick_update': True}"/>
-                        <button name="action_schedule_activities_done_and_schedule" string="Done &amp; Schedule Next" type="object"
-                                invisible="has_error or chaining_type == 'trigger'"
-                                class="btn-secondary" data-hotkey="z"
-                                context="{'mail_activity_quick_update': True}"/>
-                        <button name="action_schedule_activities_done_and_schedule" string="Done &amp; Launch Next" type="object"
-                                invisible="has_error or chaining_type == 'suggest'"
-                                class="btn-secondary" data-hotkey="z"
-                                context="{'mail_activity_quick_update': True}"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button name="action_schedule_activities_done" string="Mark Done" type="object"
+                            invisible="has_error or chaining_type == 'trigger'"
+                            class="btn-secondary"  data-hotkey="w"
+                            context="{'mail_activity_quick_update': True}"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                     <footer invisible="not plan_id">
                         <button name="action_schedule_plan" string="Schedule" type="object" class="btn-primary"
                                 invisible="has_error" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>
