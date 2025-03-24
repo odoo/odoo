@@ -22,8 +22,9 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         cls.company_data['company'].phone = "12345"
         cls.company_data['company'].vat = "1234567890123456"
 
-        cls.partner_a.write({"l10n_id_pkp": True, "l10n_id_kode_transaksi": "04", "vat": "1234567890123457"})
+        cls.partner_a.write({"l10n_id_pkp": True, "l10n_id_kode_transaksi": "04", "vat": "1234567890123457", "country_id": cls.env.ref('base.id').id})
         cls.tax_sale_a.amount = 11.0
+        cls.tax_incl = cls.env['account.tax'].create({"name": "tax include 11", "type_tax_use": "sale", "amount": 11.0, "price_include": True})
 
         path = "l10n_id_efaktur_coretax/tests/results/sample.xml"
         with tools.file_open(path, mode='rb') as test_file:
@@ -153,7 +154,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         })
         out_invoice.action_post()
 
-        for msg in ["NPWP for customer", "is not taxable"]:
+        for msg in ["NPWP for customer", "is not taxable", "No country is set"]:
             with self.assertRaisesRegex(ValidationError, msg):
                 out_invoice.download_efaktur()
 
@@ -161,6 +162,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         partner.vat = "1234567890123478"
         partner.l10n_id_pkp = True
         partner.l10n_id_buyer_document_type = 'Passport'
+        partner.country_id = self.env.ref('base.id')
 
         with self.assertRaisesRegex(ValidationError, "Document number for customer"):
             out_invoice.download_efaktur()
@@ -403,14 +405,16 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                     <TrxCode>01</TrxCode>
                     <AddInfo/>
                     <CustomDoc/>
+                    <CustomDocMonthYear/>
                     <RefDesc>INV/2019/00002</RefDesc>
                     <FacilityStamp/>
                     <SellerIDTKU>1234567890123456000000</SellerIDTKU>
                     <BuyerTin>1234567890123457</BuyerTin>
                     <BuyerDocument>TIN</BuyerDocument>
+                    <BuyerCountry>IDN</BuyerCountry>
                     <BuyerDocumentNumber/>
                     <BuyerName>partner_a</BuyerName>
-                    <BuyerAdress/>
+                    <BuyerAdress>Indonesia</BuyerAdress>
                     <BuyerEmail/>
                     <BuyerIDTKU>1234567890123457000000</BuyerIDTKU>
                     <ListOfGoodService>
@@ -441,8 +445,8 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         """ Test XML content of an invoice containing multiple invoice lines (which also includes
         a "description" line.
 
-        Expected to see multiple <GoodService> within <ListOfGoodService> tag and the description
-        line should be excluded from the xml
+        Expected to see multiple <GoodService> within <ListOfGoodService> tag and the 
+        line should be excluded from the XML description
         """
         product_2 = self.env['product.product'].create({'name': "Product B"})
 
@@ -491,8 +495,6 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         """ Test that when selling product that involves the luxury good tax, STLGRate and STLG
         should be filled in """
 
-        # luxury_tax = self.env.ref('l10n_id.tax_luxury_sales')
-        # regular_tax = self.env.ref('l10n_id.tax_ST3')
         luxury_tax = self.env['account.tax'].create({"name": "luxury tax", "type_tax_use": "sale", "amount": 20.0, "tax_group_id": self.env.ref('l10n_id.l10n_id_tax_group_luxury_goods').id})
 
         out_invoice = self.env["account.move"].create({
@@ -526,6 +528,116 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
             </xpath>
             <xpath expr="//STLG" position="replace">
                 <STLG>20000.0</STLG>
+            </xpath>
+            '''
+        )
+
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_invoice_user_main_contact(self):
+        """ Test to ensure that we are always using the address of the
+        customer(partner_id) on the invoice while some legal fields
+        (Is PKP, VAT, Document type, document number, ..) should use from main contact """
+        
+        partner_a_invoice = self.env['res.partner'].create({
+            "name": "partner_a invoice",
+            "type": "invoice",
+            "parent_id": self.partner_a.id,
+            "street": "invoice address",
+            "country_id": self.env.ref('base.id').id,
+        })
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner_a_invoice.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1})
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//BuyerName" position="replace">
+                <BuyerName>partner_a invoice</BuyerName>
+            </xpath>
+            <xpath expr="//BuyerAdress" position="replace">
+                <BuyerAdress>invoice address     Indonesia</BuyerAdress>
+            </xpath>
+            '''
+        )
+
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+    
+    def test_efaktur_tax_include(self):
+        """ Test when tax configuration is tax included in price should affect price calculation """
+        
+        # create invoice containing this
+        move = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 111000, 'quantity': 1, 'tax_ids': [self.tax_incl.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        move.action_post()
+        move.download_efaktur()
+
+        result_tree = etree.fromstring(move.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//Price" position="replace">
+                <Price>100000.0</Price>
+            </xpath>
+            '''
+        )
+
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_tax_include_with_discount(self):
+        """ Test when tax configuration is tax included in price and we also invovle discount in price calculation """
+
+        # create invoice containing this
+        move = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 111000, 'quantity': 1, 'tax_ids': [self.tax_incl.id], 'discount': 10}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        move.action_post()
+        move.download_efaktur()
+
+        result_tree = etree.fromstring(move.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//Price" position="replace">
+                <Price>100000.0</Price>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>10000.0</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>90000.0</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>82500.0</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>9900.0</VAT>
             </xpath>
             '''
         )
