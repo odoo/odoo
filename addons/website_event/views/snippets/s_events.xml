@@ -27,6 +27,7 @@
 <template id="s_events_single_offset" name="Single Event Offset">
     <t t-set="is_single_record" t-value="True"/>
     <t t-set="snippet_extra_classes" t-value="'s_event_event_single_offset'"/>
+    <t t-set="content_classes" t-value="'o_cc o_cc5 bg-transparent'"/>
     <t t-call="website_event.s_events">
         <t t-call="website_event.s_dynamic_snippet_events_single_offset_preview_data"/>
     </t>
@@ -129,6 +130,44 @@
 <!-- Single record templates -->
 <!-- Offset Layout -->
 <template id="dynamic_filter_template_event_event_single_offset" name="Solo Offset">
+    <t t-if="len(records)" class="s_events_event" data-column-classes="col-lg-12" data-content-classes="o_cc o_cc5 bg-transparent">
+        <t t-set="data" t-value="records[0]"/>
+        <t t-set="record" t-value="data['_record']"/>
+        <t t-set="bg" t-value="record._get_background()"/>
+        <div t-if="is_sample" class="position-absolute bottom-0 end-0 px-4 py-2 text-bg-info rounded-pill">Sample</div>
+        <div class="w-100 rounded" t-att-style="'background-image: ' + bg + '; background-size: cover; background-position: center;'">
+            <div class="position-absolute w-100 h-100 rounded bg-black-50"/>
+            <div class="position-relative p-4 p-lg-5">
+                <div class="py-lg-5">
+                    <h2 t-field="record.name"/>
+                    <p class="lead" t-field="record.subtitle"/>
+                </div>
+                <div class="o_cc o_cc5 position-lg-absolute top-100 start-50 w-100 d-flex flex-wrap gap-4 w-xl-75 mt-3 mt-lg-0 mx-0 px-4 py-4 py-lg-3 rounded">
+                    <div t-if="events_event_time_active" class="me-lg-5 order-1 order-lg-0">
+                        <p class="mb-2 fw-bold">Time</p>
+                        <span>
+                            <i class="fa fa-clock-o me-2" role="img"/>
+                            <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
+                        </span>
+                    </div>
+                    <div t-if="events_event_location_active" class="order-1 order-lg-0">
+                        <p class="mb-2 fw-bold">Location</p>
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-map-marker me-2" role="img"/>
+                            <span t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true', 'null_text': 'Online event'}"/>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center justify-content-lg-end w-100 w-lg-auto ms-lg-auto order-0">
+                        <p class="h4-fs mb-0 me-3" t-out="record.date_begin" t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
+                        <div class="d-none d-lg-block ps-3 border-start">
+                            <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="btn btn-primary">Register</a>
+                        </div>
+                    </div>
+                    <a t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']" class="d-lg-none btn btn-primary w-100 mt-3 order-1">Register</a>
+                </div>
+            </div>
+        </div>
+    </t>
 </template>
 <!-- Entry Layout -->
 <template id="dynamic_filter_template_event_event_single_entry" name="Solo Entry">
