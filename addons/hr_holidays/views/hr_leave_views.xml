@@ -172,8 +172,11 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='number_of_days']/../.." position='before'>
-                <field name="employee_id" widget="image" options="{'preview_image': 'avatar_128'}"
-                    class="o_image_64_cover float-start me-2 col-3"/>
+                <field name="write_date" invisible="1"/>
+                <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'
+                        + '?unique=' + record.write_date.raw_value"
+                    class="o_image_64_cover float-start mb-2 me-2" 
+                    alt="Employee's image"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="replace"/>
         </field>
@@ -455,7 +458,7 @@
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
             <list string="Time Off Requests" sample="1">
-                <field name="employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
+                <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
                 <field name="department_id" optional="hidden" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
                 <field name="name"/>
