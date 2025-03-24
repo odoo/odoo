@@ -214,6 +214,12 @@ class PeppolRegistration(models.TransientModel):
             },
         }
         state = self.company_id.account_peppol_proxy_state
+
+        if state == 'sender':
+            # if user asked to register as a receiver, state would've been 'smp_registration'
+            # so this is the final registration state for sender-only registration
+            self.company_id._account_peppol_send_welcome_email()
+
         return self._action_send_notification(
             title=None,
             message=notifications[state]['message'],

@@ -319,3 +319,14 @@ class ResCompany(models.Model):
             'external_provider': external_provider,
             'error_msg': error_msg,
         }
+
+    def _account_peppol_send_welcome_email(self):
+        self.ensure_one()
+        if self.account_peppol_proxy_state not in ('sender', 'receiver'):
+            return
+
+        mail_template = self.env.ref('account_peppol.mail_template_peppol_registration', raise_if_not_found=False)
+        if not mail_template:
+            return
+
+        mail_template.send_mail(self.id, force_send=True)
