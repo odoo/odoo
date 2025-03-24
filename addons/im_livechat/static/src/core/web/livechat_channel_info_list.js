@@ -53,4 +53,20 @@ export class LivechatChannelInfoList extends Component {
             rpc("/im_livechat/session/update_note", { channel_id: this.props.thread.id, note });
         });
     }
+
+    openVisitorProfile() {
+        if (this.ui.isSmall) {
+            this.store.ChatWindow.get({ thread: this.props.thread })?.fold();
+        } else {
+            this.props.thread.openChatWindow({ focus: true });
+        }
+    }
+
+    get visitorProfileURL() {
+        const visitorPersona = this.props.thread?.livechatVisitorMember?.persona;
+        if (visitorPersona?.type === "partner") {
+            return url(`/${startUrl()}/res.partner/${visitorPersona.id}`);
+        }
+        return null;
+    }
 }
