@@ -1062,7 +1062,11 @@ class CalendarEvent(models.Model):
     def _get_attendee_emails(self):
         """ Get comma-separated attendee email addresses. """
         self.ensure_one()
-        return ",".join([e for e in self.attendee_ids.mapped("email") if e])
+        defaults = self._message_get_default_recipients()[self.id]
+        email_to = defaults['email_to'] or ''
+        if defaults['partner_ids']:
+            email_to += ','.join(self.env['res.partner'].browse(defaults['partner_ids']).mapped('email'))
+        return email_to
 
     def _get_mail_tz(self):
         self.ensure_one()
