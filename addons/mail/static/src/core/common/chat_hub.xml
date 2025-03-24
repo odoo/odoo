@@ -37,7 +37,7 @@
             <div t-if="compactCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="compactCounter"/>
             </div>
-            <button class="o-mail-ChatHub-bubbleBtn btn fs-2" t-on-click="expand">
+            <button class="o-mail-ChatHub-bubbleBtn btn fs-2 shadow" t-on-click="expand">
                 <i class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fa fa-commenting"/>
             </button>
         </div>
@@ -50,7 +50,7 @@
             <div t-if="hiddenCounter > 0" class="o-mail-ChatHub-hiddenBtnCounter position-absolute badge rounded-pill fw-bold o-discuss-badge shadow">
                 <t t-out="hiddenCounter"/>
             </div>
-            <button class="o-mail-ChatHub-bubbleBtn btn outline-0">
+            <button class="o-mail-ChatHub-bubbleBtn btn outline-0 shadow">
                 <span class="o-mail-ChatHub-hiddenBtnIcon d-flex justify-content-center align-items-center btn rounded-circle shadow-sm fs-2" t-att-class="{ 'o-active': more.isOpen }">+<t t-esc="chatHub.folded.slice(chatHub.maxFolded).length"/></span>
             </button>
         </div>
