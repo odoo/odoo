@@ -92,8 +92,8 @@ class TestCalendarMail(CalendarMailCommon):
         defaults = event._message_get_default_recipients()
         self.assertDictEqual(
             defaults[event.id],
-            {'email_cc': '', 'email_to': '', 'partner_ids': (self.user_root.partner_id + self.customers[2] + self.customers[0] + self.user_employee_2.partner_id).ids},
-            'FIXME: currently using partner_id + partner_ids field with valid email, does not filter'
+            {'email_cc': '', 'email_to': '', 'partner_ids': (self.customers[0] + self.user_employee_2.partner_id).ids},
+            'Correctly filters out robodoo and aliases'
         )
 
     def test_event_get_suggested_recipients(self):
@@ -105,6 +105,11 @@ class TestCalendarMail(CalendarMailCommon):
                 'email': self.customers[0].email_normalized,
                 'name': self.customers[0].name,
                 'partner_id': self.customers[0].id,
+            }, {  # wrong email suggested, can be corrected ?
+                'create_values': {},
+                'email': self.customers[1].email_normalized,
+                'name': self.customers[1].name,
+                'partner_id': self.customers[1].id,
             }, {
                 'create_values': {},
                 'email': self.user_employee_2.partner_id.email_normalized,
@@ -121,7 +126,7 @@ class TestCalendarMail(CalendarMailCommon):
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
         self.assertEqual(
-            message.notified_partner_ids, self.customers[0] + self.user_employee_2.partner_id,
+            message.notified_partner_ids, self.customers[0] + self.customers[1] + self.user_employee_2.partner_id,
             'Matches suggested recipients',
         )
 
