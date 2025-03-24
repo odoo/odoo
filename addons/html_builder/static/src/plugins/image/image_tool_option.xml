@@ -40,6 +40,19 @@
         </BuilderSelect>
     </BuilderRow>
     <t t-if="state.isCustomFilter">
+        <BuilderRow level="1" label.translate="Color">
+            <BuilderSelect action="'setCustomFilter'" actionParam="'blend'">
+                <BuilderSelectItem actionValue="'normal'">Normal</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'overlay'">Overlay</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'screen'">Screen</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'multiply'">Multiply</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'lighter'">Add</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'exclusion'">Exclusion</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'darken'">Darken</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'lighten'">Lighten</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderColorPicker action="'setCustomFilter'" actionParam="'filterColor'" enabledTabs="['custom']" />
+        </BuilderRow>
         <BuilderRow level="1" label.translate="Saturation">
             <BuilderRange
                 action="'setCustomFilter'"
