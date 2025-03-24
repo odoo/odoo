@@ -10,6 +10,7 @@ import {
     models,
     mountView,
     onRpc,
+    quickCreateKanbanColumn,
 } from "@web/../tests/web_test_helpers";
 
 class Lead extends models.Model {
@@ -347,7 +348,7 @@ test("Forecast drag&drop and add column", async () => {
     expect(queryAllTexts(".o_animated_number")).toEqual(["20", "307"]);
     expect(getProgressBarsColors()).toEqual([["bg-warning"], ["bg-success", "bg-danger"]]);
 
-    await contains(".o_kanban_add_column").click();
+    await quickCreateKanbanColumn();
 
     // Counters and progressbars should be unchanged after adding a column.
     expect(queryAllTexts(".o_animated_number")).toEqual(["20", "307"]);
