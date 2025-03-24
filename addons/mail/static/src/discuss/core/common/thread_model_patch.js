@@ -91,7 +91,7 @@ const threadPatch = {
                 if (!this.selfMember) {
                     return null;
                 }
-                const messages = this.messages;
+                const messages = this.messages.filter((m) => !m.isNotification);
                 const separator = this.selfMember.localNewMessageSeparator;
                 if (separator === 0 && !this.loadOlder) {
                     return messages[0];

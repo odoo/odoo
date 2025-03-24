@@ -93,7 +93,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         },
                                         "body": [
                                             "markup",
-                                            f'<div class="o_mail_notification">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
+                                            f'<div class="o_mail_notification" data-oe-type=\"channel-joined\">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
                                         ],
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date

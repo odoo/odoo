@@ -454,7 +454,7 @@ class DiscussChannel(models.Model):
             (partner or guest)._bus_send_store(custom_store)
             return
         if post_leave_message:
-            notification = Markup('<div class="o_mail_notification">%s</div>') % _(
+            notification = Markup('<div class="o_mail_notification" data-oe-type="channel-left">%s</div>') % _(
                 "left the channel"
             )
             # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
@@ -519,7 +519,7 @@ class DiscussChannel(models.Model):
                         else _("invited %s to the channel", member._get_html_link(for_persona=True))
                     )
                     member.channel_id.message_post(
-                        body=Markup('<div class="o_mail_notification">%s</div>') % notification,
+                        body=Markup('<div class="o_mail_notification" data-oe-type="channel-joined">%s</div>') % notification,
                         message_type="notification",
                         subtype_xmlid="mail.mt_comment",
                     )

@@ -24,4 +24,7 @@ class TestUserLivechatUsername(TestGetOperatorCommon):
         john.partner_id.user_livechat_username = "ELOPERADOR"
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         channel.add_members(partner_ids=john.partner_id.ids)
-        self.assertEqual(channel.message_ids[-1].body, f"<div class=\"o_mail_notification\">invited <a href=\"#\" data-oe-model=\"res.partner\" data-oe-id=\"{john.partner_id.id}\">@ELOPERADOR</a> to the channel</div>")
+        self.assertEqual(
+            channel.message_ids[-1].body,
+            f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{john.partner_id.id}">@ELOPERADOR</a> to the channel</div>',
+        )
