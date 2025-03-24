@@ -43,6 +43,7 @@
     }
     .pos .orders {
         position: sticky;
+        z-index: 1;
     }
 
     .controls {
@@ -50,6 +51,9 @@
         grid-template-areas: 
             "buttons pagination"
             "search search";
+    }
+    .search .fields {
+        z-index: 2;
     }
 }
 
