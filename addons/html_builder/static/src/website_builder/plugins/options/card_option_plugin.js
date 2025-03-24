@@ -30,7 +30,6 @@ class CardOptionPlugin extends Plugin {
                     withImages: true,
                     withShapes: true,
                     withColorCombinations: true,
-                    withGradient: true,
                 },
             },
         ],

@@ -25,7 +25,6 @@ test("change the background shape of elements", async () => {
             withImages: true,
             // todo: handle with_videos
             withShapes: true,
-            withGradient: false,
             withColorCombinations: false,
         },
     });

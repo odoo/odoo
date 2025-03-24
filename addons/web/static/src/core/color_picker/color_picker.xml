@@ -2,22 +2,27 @@
 <t t-name="web.ColorPicker">
     <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
         <div class="my-1 d-flex">
-            <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
-                t-att-class="{active: state.activeTab === 'solid'}"
-                t-on-click="() => this.setTab('solid')">
-                Solid
-            </button>
-            <button class="btn btn-sm btn-light text-truncate btn-tab"
-                t-att-class="{active: state.activeTab === 'custom'}"
-                t-on-click="() => this.setTab('custom')">
-                Custom
-            </button>
-            <button class="btn btn-sm btn-light text-truncate btn-tab"
-                t-if="props.withGradient"
-                t-att-class="{active: state.activeTab === 'gradient'}"
-                t-on-click="() => this.setTab('gradient')">
-                Gradient
-            </button>
+            <t  t-if="this.getEnabledTabs().length > 1">
+                <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
+                    t-if="this.getEnabledTabs().includes('solid')"
+                    t-att-class="{active: state.activeTab === 'solid'}"
+                    t-on-click="() => this.setTab('solid')">
+                    Solid
+                </button>
+                <button class="btn btn-sm btn-light text-truncate btn-tab"
+                    t-if="this.getEnabledTabs().includes('custom')"
+                    t-att-class="{active: state.activeTab === 'custom'}"
+                    t-on-click="() => this.setTab('custom')">
+                    Custom
+                </button>
+                <button class="btn btn-sm btn-light text-truncate btn-tab"
+                    t-if="this.getEnabledTabs().includes('gradient')"
+                    t-att-class="{active: state.activeTab === 'gradient'}"
+                    t-on-click="() => this.setTab('gradient')">
+                    Gradient
+                </button>
+            </t>
+            <div class="flex-grow-1" />
             <button class="btn btn-sm btn-light fa fa-trash me-1"
                     title="Reset"
                     t-on-click="onColorApply"
@@ -78,7 +83,7 @@
                     noTransparency="props.noTransparency" />
             </div>
         </t>
-        <t t-if="state.activeTab==='gradient' and props.withGradient">
+        <t t-if="state.activeTab==='gradient'">
             <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorHover" t-on-focusout="onColorHoverOut">
                 <t t-foreach="this.DEFAULT_GRADIENT_COLORS" t-as="gradient" t-key="gradient">
                     <button class="w-50 m-0 o_color_button o_gradient_color_button btn" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
