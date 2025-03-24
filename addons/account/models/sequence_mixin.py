@@ -328,7 +328,7 @@ class SequenceMixin(models.AbstractModel):
                 try:
                     with mute_logger('odoo.sql_db'):
                         self[self._sequence_field] = sequence
-                        self.env.add_to_compute(self._fields['sequence_prefix'], self)
+                        self._compute_split_sequence()
                         self.flush_recordset([self._sequence_field, 'sequence_prefix', 'sequence_number'])
                         break
                 except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
