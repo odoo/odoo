@@ -16,7 +16,7 @@ export class CarouselSlider extends Interaction {
         },
         ".carousel-item": {
             "t-att-style": () => ({
-                "min-height": `${this.maxHeight}px`,
+                "min-height": this.maxHeight ? `${this.maxHeight}px` : "",
             }),
         },
     };
@@ -55,6 +55,9 @@ export class CarouselSlider extends Interaction {
 
     computeMaxHeight() {
         this.maxHeight = undefined;
+        // "updateContent()" is necessary to reset the min-height before the
+        // following check.
+        this.updateContent();
         for (const itemEl of this.el.querySelectorAll(".carousel-item")) {
             const isActive = itemEl.classList.contains("active");
             itemEl.classList.add("active");
