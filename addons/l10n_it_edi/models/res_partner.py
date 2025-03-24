@@ -135,8 +135,10 @@ class ResPartner(models.Model):
         if l10n_it_codice_fiscale is None:
             self.ensure_one()
             l10n_it_codice_fiscale = self.l10n_it_codice_fiscale
-        if l10n_it_codice_fiscale and re.match(r'^IT[0-9]{11}$', l10n_it_codice_fiscale):
-            return l10n_it_codice_fiscale[2:13]
+        if l10n_it_codice_fiscale:
+            l10n_it_codice_fiscale = l10n_it_codice_fiscale.upper()
+            if re.match(r'^IT[0-9]{11}$', l10n_it_codice_fiscale):
+                return l10n_it_codice_fiscale[2:13]
         return l10n_it_codice_fiscale
 
     @api.onchange('vat', 'country_id')
