@@ -78,4 +78,17 @@
         </button>
     </div>
 </t>
+
+<!--
+    @param {Number} counter
+    @param {string} [badgeClass]
+    @param {string} [iconClass]
+    @param {boolean} [floating=false]
+-->
+<t t-name="mail.discuss_badge">
+    <span class="badge rounded-pill o-discuss-badge flex-shrink-0 bg-inherit d-flex align-items-center justify-content-center" t-attf-class="{{ badgeClass }}" t-att-style="'margin: 0px; background-color: inherit !important;' + (floating ? 'padding: 1px;' : 'padding: 0px;')">
+        <span class="rounded-pill o-innerBadge" t-attf-class="{{ counterClass }}" t-esc="counter" style="top: 0 !important;"/>
+    </span>
+</t>
+
 </templates>
