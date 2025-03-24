@@ -332,24 +332,17 @@ class TestMarketingCardSecurity(MarketingCardCommon):
         See _check_access_right_dynamic_template override.
         """
         campaign = self.campaign.with_user(self.marketing_card_manager)
+        # Will raise ZeroDivisionError if the template is executed
         arbitrary_qweb = """
-        <img t-attf-src="data:image/png;base64,{{object.env.ref('base.user_admin').sudo().image_128}}"/>
+        <img t-attf-src="data:image/png;base64,{{1 / 0}}"/>
         """
 
-        campaign.body_html = arbitrary_qweb
-        # Normally, this should raise an AccessError, as `body_html` is a related to `card_template_id.body`
-        # and the user does not have the write rights on `card.template`.
-        # However, the ORM doesn't forward the new value to the related,
-        # and the new value is put in the cache without error.
-        # In the real world, using the web client or the XMLRPC API,
-        # a user would have to do this operation in two requests:
-        # First set the body_html on the campaign,
-        # Then trigger the render (e.g. with `action_update_cards`),
-        # and the cache would have changed between the two operations, hence setting an arbitrary value on body_html
-        # on a campaign wouldn't work.
-        # Just ensure that the value is well not written in db, nor on the current campaign, nor on the related.
-        # Force a cache invalidation to force a re-fetch from database
-        campaign.invalidate_recordset(fnames=['body_html'])
+        with self.assertRaisesRegex(exceptions.AccessError, 'You are not allowed to modify'):
+            campaign.body_html = arbitrary_qweb
+            # Flush to simulate the end of the transaction and trigger all recomputes
+            self.env.cr.flush()
+
+        # Ensure that the value is well not written in db, nor on the current campaign, nor on the related.
         self.assertTrue(arbitrary_qweb not in campaign.body_html)
         self.assertTrue(arbitrary_qweb not in campaign.card_template_id.body)
 
@@ -369,7 +362,7 @@ class TestMarketingCardSecurity(MarketingCardCommon):
             all(
                 field.related_field.model_name == 'card.template'
                 and not field.store
-                and field.readonly
+                and not field.readonly
                 for field in CardCampaign._fields.values() if hasattr(field, 'render_engine')
             )
         )
