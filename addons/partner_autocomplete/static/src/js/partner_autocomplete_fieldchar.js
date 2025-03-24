@@ -84,7 +84,7 @@ export class PartnerAutoCompleteCharField extends CharField {
         await this.props.record.update(data.company);
 
         // Add UNSPSC codes (tags)
-        if (this.props.record.resModel === 'res.partner' && unspsc_codes) {
+        if (this.props.record.resModel === 'res.partner' && Array.isArray(unspsc_codes) && unspsc_codes.length > 0) {
             // We must first save the record so that we can then create the tags (many2many)
             const saved = await this.props.record.save();
             if (saved){
