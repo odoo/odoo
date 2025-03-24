@@ -11,7 +11,22 @@
                             <i class="fa fa-trash" t-att-class="{'text-danger': props.mode === MODES.delete}"/>
                         </button>
                     </div>
-                    <div t-if="state.isReady and props.mode === MODES.add" class="o_form_view o_xxs_form_view mt-2">
+                    <div t-if="state.isReady and props.mode === MODES.add" class="o_form_view o_xxs_form_view gap-2 mt-2">
+                        <div t-if="props.model.showMultiCreateTimeRange" class="d-flex align-items-baseline gap-2">
+                            <TimePicker
+                                value="this.props.model.data.multiCreateTimeRange.start"
+                                onChange="(time) => this.props.setMultiCreateTimeRange({start: time})"
+                                onInvalid="() => this.props.setMultiCreateTimeRange({start: null})"
+                                showSeconds="false"
+                            />
+                            <i class="fa fa-arrow-right"/>
+                            <TimePicker
+                                value="this.props.model.data.multiCreateTimeRange.end"
+                                onChange="(time) => this.props.setMultiCreateTimeRange({end: time})"
+                                onInvalid="() => this.props.setMultiCreateTimeRange({end: null})"
+                                showSeconds="false"
+                            />
+                        </div>
                         <Record t-props="multiCreateRecordProps" t-slot-scope="data">
                             <FormRenderer record="data.record" archInfo="multiCreateArchInfo" class="'p-0'"/>
                         </Record>
