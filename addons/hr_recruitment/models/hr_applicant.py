@@ -226,23 +226,23 @@ class HrApplicant(models.Model):
 
     def _inverse_partner_email(self):
         for applicant in self:
-            if not applicant.email_from:
+            email_normalized = tools.email_normalize(applicant.email_from or '')
+            if not email_normalized:
                 continue
             if not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(_("You must define a Contact Name for this applicant."))
-                applicant.partner_id = (
-                    self.env["res.partner"]
-                    .with_context(default_lang=self.env.lang)
-                    .find_or_create(applicant.email_from)
+                applicant.partner_id = applicant._partner_find_from_emails_single(
+                    [applicant.email_from], no_create=False,
+                    additional_values={
+                        email_normalized: {'lang': self.env.lang}
+                    },
                 )
             if applicant.partner_name and not applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
-            if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
-                # change email on a partner will trigger other heavy code, so avoid to change the email when
-                # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
+            if email_normalized and not applicant.partner_id.email:
                 applicant.partner_id.email = applicant.email_from
-            if applicant.partner_phone:
+            if applicant.partner_phone and not applicant.partner_id.phone:
                 applicant.partner_id.phone = applicant.partner_phone
 
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile")
