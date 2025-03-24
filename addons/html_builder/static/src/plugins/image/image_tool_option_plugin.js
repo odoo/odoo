@@ -5,6 +5,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isImageCorsProtected, normalizeColor } from "@html_builder/utils/utils_css";
 import { getImageMimetype } from "./image_helpers";
 import { ImageToolOption } from "./image_tool_option";
+import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
@@ -98,7 +99,20 @@ class ImageToolOptionPlugin extends Plugin {
             setCustomFilter: {
                 getValue: ({ editingElement, param: { mainParam: filterProperty } }) => {
                     const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
-                    return filterOptions[filterProperty] || 0;
+                    return (
+                        filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty]
+                    );
+                },
+                isApplied: ({
+                    editingElement,
+                    param: { mainParam: filterProperty },
+                    value: filterValue,
+                }) => {
+                    const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
+                    return (
+                        filterValue ===
+                        (filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty])
+                    );
                 },
                 load: async ({
                     editingElement: img,

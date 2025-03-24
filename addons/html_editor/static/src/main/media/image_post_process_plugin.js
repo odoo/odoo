@@ -243,6 +243,17 @@ export class ImagePostProcessPlugin extends Plugin {
     }
 }
 
+export const defaultImageFilterOptions = {
+    blend: "normal",
+    filterColor: "",
+    blur: "0",
+    desaturateLuminance: "0",
+    saturation: "0",
+    contrast: "0",
+    brightness: "0",
+    sepia: "0",
+};
+
 // webgl color filters
 const _applyAll = (result, filter, filters) => {
     filters.forEach((f) => {
@@ -407,19 +418,7 @@ const glFilters = {
     },
 
     custom: (filter, cv, filterOptions) => {
-        const options = Object.assign(
-            {
-                blend: "normal",
-                filterColor: "",
-                blur: "0",
-                desaturateLuminance: "0",
-                saturation: "0",
-                contrast: "0",
-                brightness: "0",
-                sepia: "0",
-            },
-            JSON.parse(filterOptions || "{}")
-        );
+        const options = Object.assign(defaultImageFilterOptions, JSON.parse(filterOptions || "{}"));
         const filters = [];
         if (options.filterColor) {
             const ctx = cv.getContext("2d");
