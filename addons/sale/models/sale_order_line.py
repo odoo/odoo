@@ -903,15 +903,28 @@ class SaleOrderLine(models.Model):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
         calculated from the ordered quantity. Otherwise, the quantity delivered is used.
+        For combo product lines, first compute all other lines, and then set quantity to invoice
+        only if at least one of its combo item lines is invoiceable.
         """
+        combo_lines = []
         for line in self:
             if line.state == 'sale' and not line.display_type:
-                if line.product_id.invoice_policy == 'order':
+                if line.product_id.type == 'combo':
+                    combo_lines.append(line)
+                elif line.product_id.invoice_policy == 'order':
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
             else:
                 line.qty_to_invoice = 0
+        for combo_line in combo_lines:
+            if any(
+                line.combo_item_id and line.qty_to_invoice
+                for line in combo_line.linked_line_ids
+            ):
+                combo_line.qty_to_invoice = combo_line.product_uom_qty - combo_line.qty_invoiced
+            else:
+                combo_line.qty_to_invoice = 0
 
     @api.depends('state', 'product_uom_qty', 'qty_delivered', 'qty_to_invoice', 'qty_invoiced')
     def _compute_invoice_status(self):
@@ -1300,6 +1313,10 @@ class SaleOrderLine(models.Model):
                 'display_type': 'line_section',
                 'sequence': self.sequence,
                 'name': f'{self.product_id.name} x {qty_to_invoice}',
+                'product_uom_id': self.product_uom_id.id,
+                'quantity': self.qty_to_invoice,
+                'sale_line_ids': [Command.link(self.id)],
+                **optional_values,
             }
         res = {
             'display_type': self.display_type or 'product',
