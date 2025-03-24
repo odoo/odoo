@@ -2238,30 +2238,24 @@ class HttpCase(TransactionCase):
     def make_jsonrpc_request(self, route, params=None, headers=None):
         """Make a JSON-RPC request to the server.
 
-        :param str route: the route to request
-        :param dict params: the parameters to send
         :raises requests.HTTPError: if one occurred
         :raises JsonRpcException: if the response contains an error
-        :return: The 'result' key from the response if any.
         """
-        data = json.dumps({
+        response = self.opener.post(urljoin(self.base_url(), route), json={
             'id': 0,
             'jsonrpc': '2.0',
             'method': 'call',
             'params': params or {},
-        }).encode()
-        headers = headers or {}
-        headers['Content-Type'] = 'application/json'
-        response = self.url_open(route, data, headers=headers)
+        }, headers=headers)
         response.raise_for_status()
         decoded_response = response.json()
-        if 'result' in decoded_response:
-            return decoded_response['result']
         if 'error' in decoded_response:
             raise JsonRpcException(
                 code=decoded_response['error']['code'],
                 message=decoded_response['error']['data']['name']
             )
+        # workaround: JsonRPCDispatcher is broken and may send neither result nor error
+        return decoded_response.get('result')
 
 
 def no_retry(arg):
