@@ -283,6 +283,56 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             },
         )
 
+    def test_channel_to_store_after_operator_left(self):
+        channel = self._common_basic_flow()
+        guest = self.env["mail.guest"].search([], order="id desc", limit=1)
+        channel.with_user(self.operator).action_unfollow()
+        self._reset_bus()
+        self.assertFalse(
+            channel.channel_member_ids.filtered(lambda m: m.partner_id == self.operator.partner_id)
+        )
+        self.assertEqual(
+            Store(channel.with_context(guest=guest).with_user(self.user_public)).get_result()["discuss.channel"],
+            self._filter_channels_fields(
+                {
+                    "anonymous_country": False,
+                    "anonymous_name": f"Visitor #{self.visitor.id}",
+                    "authorizedGroupFullName": False,
+                    "avatar_cache_key": "no-avatar",
+                    "channel_type": "livechat",
+                    "create_uid": self.user_public.id,
+                    "custom_channel_name": False,
+                    "custom_notifications": False,
+                    "default_display_mode": False,
+                    "description": False,
+                    "fetchChannelInfoState": "fetched",
+                    "from_message_id": False,
+                    "group_based_subscription": False,
+                    "id": channel.id,
+                    "invitedMembers": [("ADD", [])],
+                    "is_editable": False,
+                    "is_pinned": True,
+                    "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
+                    "livechat_active": False,
+                    "livechat_operator_id": {
+                        "id": self.operator.partner_id.id,
+                        "type": "partner",
+                    },
+                    "member_count": 1,
+                    "message_needaction_counter": 0,
+                    "message_needaction_counter_bus_id": 0,
+                    "mute_until_dt": False,
+                    "name": f"Visitor #{self.visitor.id} El Deboulonnator",
+                    "parent_channel_id": False,
+                    "requested_by_operator": False,
+                    "rtcSessions": [("ADD", [])],
+                    "uuid": channel.uuid,
+                    "whatsapp_channel_valid_until": False,
+                    "whatsapp_partner_id": False,
+                }
+            ),
+        )
+
 
 @tests.tagged('post_install', '-at_install')
 class TestLivechatBasicFlowHttpCaseMobile(HttpCaseWithUserDemo, TestLivechatCommon):

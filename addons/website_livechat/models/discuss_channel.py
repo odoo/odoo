@@ -46,7 +46,8 @@ class DiscussChannel(models.Model):
             return [
                 Store.Attr(
                     "requested_by_operator",
-                    lambda channel: channel.create_uid in channel.livechat_operator_id.user_ids,
+                    # sudo - res.users: can access operator's user even if he left the channel.
+                    lambda channel: channel.create_uid in channel.livechat_operator_id.sudo().user_ids,
                     predicate=lambda channel: channel.livechat_visitor_id,
                 ),
             ]
