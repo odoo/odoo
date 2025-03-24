@@ -35,7 +35,7 @@ from concurrent.futures import Future, CancelledError, wait
 from contextlib import contextmanager, ExitStack
 from datetime import datetime
 from functools import lru_cache, partial
-from itertools import zip_longest as izip_longest
+from itertools import islice, zip_longest
 from passlib.context import CryptContext
 from textwrap import shorten
 from typing import Optional, Iterable
@@ -85,11 +85,6 @@ try:
 except ImportError:
     # chrome headless tests will be skipped
     websocket = None
-
-try:
-    import freezegun
-except ImportError:
-    freezegun = None
 
 _logger = logging.getLogger(__name__)
 if config['test_enable']:
@@ -710,7 +705,7 @@ class BaseCase(case.TestCase):
         self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
         self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
 
-        for c1, c2 in izip_longest(n1, n2):
+        for c1, c2 in zip_longest(n1, n2):
             self.assertTreesEqual(c1, c2, msg)
 
     def _assertXMLEqual(self, original, expected, parser="xml"):
@@ -1101,11 +1096,8 @@ def save_test_file(test_name, content, prefix, extension='png', logger=_logger, 
     now = datetime.now().strftime(date_format)
     screenshots_dir = pathlib.Path(odoo.tools.config['screenshots']) / get_db_name() / 'screenshots'
     screenshots_dir.mkdir(parents=True, exist_ok=True)
-    fname = f'{prefix}{now}_{test_name}.{extension}'
-    full_path = screenshots_dir / fname
-
-    with full_path.open('wb') as f:
-        f.write(content)
+    full_path = screenshots_dir / f'{prefix}{now}_{test_name}.{extension}'
+    full_path.write_bytes(content)
     logger.runbot(f'{document_type} in: {full_path}')
 
 
@@ -1122,12 +1114,10 @@ class ChromeBrowser:
             raise unittest.SkipTest("websocket-client module is not installed")
         self.user_data_dir = tempfile.mkdtemp(suffix='_chrome_odoo')
 
-        otc = odoo.tools.config
-        self.screencasts_dir = None
-        self.screencast_frames = []
-        if otc['screencasts']:
-            self.screencasts_dir = os.path.join(otc['screencasts'], get_db_name(), 'screencasts')
-            os.makedirs(self.screencasts_frames_dir, exist_ok=True)
+        if scs := odoo.tools.config['screencasts']:
+            self.screencaster = Screencaster(self, scs)
+        else:
+            self.screencaster = NoScreencast()
 
         if os.name == 'posix':
             self.sigxcpu_handler = signal.getsignal(signal.SIGXCPU)
@@ -1156,7 +1146,7 @@ class ChromeBrowser:
             'Runtime.consoleAPICalled': self._handle_console,
             'Runtime.exceptionThrown': self._handle_exception,
             'Page.frameStoppedLoading': self._handle_frame_stopped_loading,
-            'Page.screencastFrame': self._handle_screencast_frame,
+            'Page.screencastFrame': self.screencaster,
         }
         self._receiver = threading.Thread(
             target=self._receive,
@@ -1182,13 +1172,6 @@ class ChromeBrowser:
         emulated_device['width'], emulated_device['height'] = [int(size) for size in test_case.browser_size.split(",")]
         self._websocket_request('Emulation.setDeviceMetricsOverride', params=emulated_device)
 
-    @property
-    def screencasts_frames_dir(self):
-        if screencasts_dir := self.screencasts_dir:
-            return os.path.join(screencasts_dir, 'frames')
-        else:
-            return None
-
     def signal_handler(self, sig, frame):
         if sig == signal.SIGXCPU:
             _logger.info('CPU time limit reached, stopping Chrome and shutting down')
@@ -1197,11 +1180,7 @@ class ChromeBrowser:
 
     def stop(self):
         if hasattr(self, 'ws'):
-            self._websocket_send('Page.stopScreencast')
-            if screencasts_frames_dir := self.screencasts_frames_dir:
-                self.screencasts_dir = None
-                if os.path.isdir(screencasts_frames_dir):
-                    shutil.rmtree(screencasts_frames_dir, ignore_errors=True)
+            self.screencaster.stop()
 
             self._websocket_request('Page.stopLoading')
             self._websocket_request('Runtime.evaluate', params={'expression': """
@@ -1449,9 +1428,6 @@ class ChromeBrowser:
     def _websocket_request(self, method, *, params=None, timeout=10.0):
         assert threading.get_ident() != self._receiver.ident,\
             "_websocket_request must not be called from the consumer thread"
-        if self.ws is None:
-            return
-
         f = self._websocket_send(method, params=params, with_future=True)
         try:
             return f.result(timeout=timeout)
@@ -1463,9 +1439,6 @@ class ChromeBrowser:
 
         If ``with_future`` is set, returns a ``Future`` for the operation.
         """
-        if self.ws is None:
-            return
-
         result = None
         request_id = next(self._request_id)
         if with_future:
@@ -1512,7 +1485,7 @@ class ChromeBrowser:
                 return
             if not self.error_checker or self.error_checker(message):
                 self.take_screenshot()
-                self._save_screencast()
+                self.screencaster.save()
                 try:
                     self._result.set_exception(ChromeBrowserException(message))
                 except CancelledError:
@@ -1576,7 +1549,7 @@ which leads to stray network requests and inconsistencies."""
             return
 
         self.take_screenshot()
-        self._save_screencast()
+        self.screencaster.save()
         try:
             self._result.set_exception(ChromeBrowserException(message))
         except CancelledError:
@@ -1591,22 +1564,6 @@ which leads to stray network requests and inconsistencies."""
         wait = self._frames.pop(frameId, None)
         if wait:
             wait()
-
-    def _handle_screencast_frame(self, sessionId, data, metadata):
-        frames_dir = self.screencasts_frames_dir
-        if not frames_dir:
-            return
-        self._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
-        outfile = os.path.join(frames_dir, 'frame_%05d.b64' % len(self.screencast_frames))
-        try:
-            with open(outfile, 'w') as f:
-                f.write(data)
-                self.screencast_frames.append({
-                    'file_path': outfile,
-                    'timestamp': metadata.get('timestamp')
-                })
-        except FileNotFoundError:
-            self._logger.debug('Useless screencast frame skipped: %s', outfile)
 
     _TO_LEVEL = {
         'debug': logging.DEBUG,
@@ -1638,70 +1595,14 @@ which leads to stray network requests and inconsistencies."""
         f.add_done_callback(handler)
         return f
 
-    def _save_screencast(self, prefix='failed'):
-        # could be encododed with something like that
-        #  ffmpeg -framerate 3 -i frame_%05d.png  output.mp4
-        if not self.screencast_frames:
-            self._logger.debug('No screencast frames to encode')
-            return None
-
-        self.stop_screencast()
-
-        for f in self.screencast_frames:
-            with open(f['file_path'], 'rb') as b64_file:
-                frame = base64.decodebytes(b64_file.read())
-            os.unlink(f['file_path'])
-            f['file_path'] = f['file_path'].replace('.b64', '.png')
-            with open(f['file_path'], 'wb') as png_file:
-                png_file.write(frame)
-
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
-        fname = '%s_screencast_%s.mp4' % (prefix, timestamp)
-        outfile = os.path.join(self.screencasts_dir, fname)
-
-        try:
-            ffmpeg_path = find_in_path('ffmpeg')
-        except IOError:
-            ffmpeg_path = None
-
-        if ffmpeg_path:
-            nb_frames = len(self.screencast_frames)
-            concat_script_path = os.path.join(self.screencasts_dir, fname.replace('.mp4', '.txt'))
-            with open(concat_script_path, 'w') as concat_file:
-                for i in range(nb_frames):
-                    frame_file_path = os.path.join(self.screencasts_frames_dir, self.screencast_frames[i]['file_path'])
-                    end_time = time.time() if i == nb_frames - 1 else self.screencast_frames[i+1]['timestamp']
-                    duration = end_time - self.screencast_frames[i]['timestamp']
-                    concat_file.write("file '%s'\nduration %s\n" % (frame_file_path, duration))
-                concat_file.write("file '%s'" % frame_file_path)  # needed by the concat plugin
-            try:
-                subprocess.run([ffmpeg_path, '-f', 'concat', '-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', '-g', '0', outfile], check=True)
-            except subprocess.CalledProcessError:
-                self._logger.error('Failed to encode screencast.')
-                return
-            self._logger.log(25, 'Screencast in: %s', outfile)
-        else:
-            outfile = outfile.strip('.mp4')
-            shutil.move(self.screencasts_frames_dir, outfile)
-            self._logger.runbot('Screencast frames in: %s', outfile)
-
-    def start_screencast(self):
-        assert self.screencasts_dir
-        self._websocket_send('Page.startScreencast')
-
-    def stop_screencast(self):
-        self._websocket_send('Page.stopScreencast')
-
     def set_cookie(self, name, value, path, domain):
         params = {'name': name, 'value': value, 'path': path, 'domain': domain}
         self._websocket_request('Network.setCookie', params=params)
-        return
 
     def delete_cookie(self, name, **kwargs):
         params = {k: v for k, v in kwargs.items() if k in ['url', 'domain', 'path']}
         params['name'] = name
         self._websocket_request('Network.deleteCookies', params=params)
-        return
 
     def _wait_ready(self, ready_code=None, timeout=60):
         ready_code = ready_code or "document.readyState === 'complete'"
@@ -1752,7 +1653,7 @@ which leads to stray network requests and inconsistencies."""
             err = e
 
         self.take_screenshot()
-        self._save_screencast()
+        self.screencaster.save()
         if isinstance(err, ChromeBrowserException):
             raise err
 
@@ -1845,6 +1746,89 @@ which leads to stray network requests and inconsistencies."""
                 return str(self._from_remoteobject(repl))
             return m[0]
         return replacer
+
+class NoScreencast:
+    def start(self):
+        pass
+
+    def stop(self):
+        pass
+
+    def save(self):
+        pass
+
+    def __call__(self, sessionId, data, metadata):
+        pass
+
+class Screencaster:
+    def __init__(self, browser: ChromeBrowser, directory: str):
+        self.browser: ChromeBrowser = browser
+        self._logger: logging.Logger = browser._logger
+        self.directory = pathlib.Path(directory, get_db_name(), 'screencasts')
+        self.frames_dir = self.directory / 'frames'
+        self.frames_dir.mkdir(parents=True, exist_ok=True)
+        self.frames = []
+
+    def start(self):
+        self._logger.info('Starting screencast')
+        self.browser._websocket_send('Page.startScreencast')
+
+    def __call__(self, sessionId, data, metadata):
+        self.browser._websocket_send('Page.screencastFrameAck', params={'sessionId': sessionId})
+        outfile = self.frames_dir / f'frame_{len(self.frames):05d}.b64'
+        outfile.write_text(data)
+        self.frames.append({
+            'file_path': outfile,
+            'timestamp': metadata.get('timestamp')
+        })
+
+    def stop(self):
+        self.browser._websocket_send('Page.stopScreencast')
+        if self.frames_dir.is_dir():
+            shutil.rmtree(self.frames_dir, ignore_errors=True)
+
+    def save(self):
+        if not self.frames:
+            self._logger.debug('No screencast frames to encode')
+            return
+
+        self.browser._websocket_send('Page.stopScreencast')
+
+        t = time.time()
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S_%f')
+        outdir = self.directory / f'failed_screencast_{timestamp}'
+
+        duration = 1/24
+        concat_script_path = outdir.with_suffix('.txt')
+        with concat_script_path.open("w") as concat_file:
+            for f, next_frame in zip_longest(self.frames, islice(self.frames, 1, None)):
+                frame = base64.b64decode(f['file_path'].read_bytes(), validate=True)
+                f['file_path'].unlink()
+                frame_file_path = f['file_path'].with_suffix('.png')
+                frame_file_path.write_bytes(frame)
+
+                if f['timestamp'] is not None:
+                    end_time = next_frame['timestamp'] if next_frame else t
+                    duration = end_time - f['timestamp']
+                concat_file.write(f"file '{frame_file_path}'\nduration {duration}\n")
+            concat_file.write(f"file '{frame_file_path}'")  # needed by the concat plugin
+
+        try:
+            ffmpeg_path = find_in_path('ffmpeg')
+        except IOError:
+            shutil.move(self.frames_dir, outdir)
+            self._logger.runbot('Screencast frames in: %s', outdir)
+            return
+
+        outfile = outdir.with_suffix('.mp4')
+        try:
+            subprocess.run([ffmpeg_path, '-f', 'concat', '-safe', '0', '-i', concat_script_path, '-pix_fmt', 'yuv420p', '-g', '0', outfile], check=True)
+        except subprocess.CalledProcessError:
+            shutil.move(self.frames_dir, outdir)
+            self._logger.error('Failed to encode screencast, screencast frames in %s', outdir)
+        else:
+            shutil.rmtree(self.frames_dir, ignore_errors=True)
+            self._logger.runbot('Screencast in: %s', outfile)
 
 @lru_cache(1)
 def _find_executable():
@@ -2154,9 +2138,7 @@ class HttpCase(TransactionCase):
                 url = parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
             self._logger.info('Open "%s" in browser', url)
 
-            if browser.screencasts_dir:
-                self._logger.info('Starting screencast')
-                browser.start_screencast()
+            browser.screencaster.start()
             if cookies:
                 for name, value in cookies.items():
                     browser.set_cookie(name, value, '/', HOST)
