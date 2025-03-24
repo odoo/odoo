@@ -800,7 +800,7 @@ class PosOrder(models.Model):
             'invoice_user_id': self.user_id.id,
             'fiscal_position_id': fiscal_position.id,
             'invoice_line_ids': self._prepare_invoice_lines(move_type),
-            'invoice_payment_term_id': self.partner_id.property_payment_term_id.id or False,
+            'invoice_payment_term_id': False,
             'invoice_cash_rounding_id': rounding_method.id,
         }
         if is_single_order and self.refunded_order_id.account_move:
