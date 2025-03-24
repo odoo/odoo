@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_uom_categ_form_view_inherit_coretax" model="ir.ui.view">
+        <field name="name">uom.category.form.inherit.coretax</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ratio']" position="before">
+                <field name="l10n_id_uom_code"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_uom_form_view_inherit_coretax" model="ir.ui.view">
+        <field name="name">uom.uom.form.inherit.coretax</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rounding']" position="after">
+                <field name="l10n_id_uom_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
