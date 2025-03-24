@@ -72,6 +72,8 @@
                                    groups="point_of_sale.group_pos_user"
                                    string="Category"
                                    options="{'color_field': 'color'}"/>
+                            <field name="color"
+                                   widget="color_picker" string="Color" />
                         </group>
                         <group string="Public Description" name="public_description" invisible="1">
                             <field name="public_description"
@@ -188,6 +190,7 @@
             </xpath>
             <div name="tax_info" position="after">
                 <field name="pos_categ_ids" string="POS Category" class="oe_inline" widget="many2many_tags" placeholder="Unsaleable"/>
+                <field name="color" widget="color_picker" string="Color" />
             </div>
         </field>
     </record>

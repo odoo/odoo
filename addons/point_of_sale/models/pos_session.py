@@ -897,7 +897,7 @@ class PosSession(models.Model):
                 base_lines = order.with_context(linked_to_pos=True)._prepare_tax_base_line_values()
                 AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
                 AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
-                AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id)
+                AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, order.company_id, include_caba_tags=True)
                 tax_results = AccountTax._prepare_tax_lines(base_lines, order.company_id)
                 total_amount_currency = 0.0
                 for base_line, to_update in tax_results['base_lines_to_update']:
@@ -1080,7 +1080,7 @@ class PosSession(models.Model):
         destination_account = self._get_receivable_account(payment_method)
 
         account_payment = self.env['account.payment'].with_context(pos_payment=True).create({
-            'amount': abs(amounts['amount']),
+            'amount': abs(amounts['amount']) + diff_amount,
             'journal_id': payment_method.journal_id.id,
             'force_outstanding_account_id': outstanding_account.id,
             'destination_account_id': destination_account.id,

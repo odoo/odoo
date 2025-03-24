@@ -554,7 +554,8 @@ export class SelectionPlugin extends Plugin {
      * @returns {Cursors}
      */
     preserveSelection() {
-        const hadSelection = this.document.getSelection().anchorNode !== null;
+        const hadSelection =
+            this.document.getSelection() && this.document.getSelection().anchorNode !== null;
         const selectionData = this.getSelectionData();
         const selection = selectionData.editableSelection;
         const anchor = { node: selection.anchorNode, offset: selection.anchorOffset };

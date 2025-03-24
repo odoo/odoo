@@ -20,5 +20,4 @@ class ProductDocument(models.Model):
         help="Leave hidden if document only accessible on product form.\n"
             "Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material.",
         default=lambda self: self._default_attached_on_mrp(),
-        groups='mrp.group_mrp_user',
     )

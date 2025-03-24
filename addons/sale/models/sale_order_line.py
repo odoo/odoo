@@ -283,14 +283,18 @@ class SaleOrderLine(models.Model):
         store=True)
     amount_invoiced = fields.Monetary(
         string="Invoiced Amount",
-        compute='_compute_amount_invoiced')
+        compute='_compute_amount_invoiced',
+        compute_sudo=True,  # ensure same access as `untaxed_amount_invoiced`
+    )
     untaxed_amount_to_invoice = fields.Monetary(
         string="Untaxed Amount To Invoice",
         compute='_compute_untaxed_amount_to_invoice',
         store=True)
     amount_to_invoice = fields.Monetary(
         string="Un-invoiced Balance",
-        compute='_compute_amount_to_invoice')
+        compute='_compute_amount_to_invoice',
+        compute_sudo=True,  # ensure same access as `untaxed_amount_to_invoice`
+    )
 
     # Technical computed fields for UX purposes (hide/make fields readonly, ...)
     product_type = fields.Selection(related='product_id.type', depends=['product_id'])
@@ -414,7 +418,7 @@ class SaleOrderLine(models.Model):
         if not self.product_custom_attribute_value_ids and not no_variant_ptavs:
             return ""
 
-        name = "\n"
+        name = ""
 
         custom_ptavs = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id
         multi_ptavs = no_variant_ptavs.filtered(lambda ptav: ptav.display_type == 'multi').sorted()
@@ -1212,6 +1216,13 @@ class SaleOrderLine(models.Model):
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
             raise UserError(_("You cannot change the type of a sale order line. Instead you should delete the current line and create a new line of the proper type."))
+
+        if 'product_id' in values and any(
+            sol.product_id.id != values['product_id']
+            and not sol.product_updatable
+            for sol in self
+        ):
+            raise UserError(_("You cannot modify the product of this order line."))
 
         if 'product_uom_qty' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')

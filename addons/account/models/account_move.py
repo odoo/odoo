@@ -749,6 +749,13 @@ class AccountMove(models.Model):
             expressions=['journal_id', 'company_id', 'date'],
             where="made_sequence_gap = TRUE",
         )  # used in <account.journal>._query_has_sequence_holes
+        create_index(
+            self.env.cr,
+            indexname='account_move_duplicate_bills_idx',
+            tablename='account_move',
+            expressions=['ref'],
+            where="move_type IN ('in_invoice', 'in_refund')",
+        )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -816,7 +823,8 @@ class AccountMove(models.Model):
     def _compute_hide_post_button(self):
         for record in self:
             record.hide_post_button = record.state != 'draft' \
-                or record.auto_post != 'no' and record.date > fields.Date.context_today(record)
+                or record.auto_post != 'no' and \
+                record.date and record.date > fields.Date.context_today(record)
 
     @api.depends('journal_id')
     def _compute_company_id(self):
@@ -1664,7 +1672,7 @@ class AccountMove(models.Model):
             else:
                 move.invoice_filter_type_domain = False
 
-    @api.depends('commercial_partner_id', 'company_id')
+    @api.depends('commercial_partner_id', 'company_id', 'move_type')
     def _compute_bank_partner_id(self):
         for move in self:
             if move.is_inbound():
@@ -1879,6 +1887,7 @@ class AccountMove(models.Model):
         if in_moves:
             in_moves_sql_condition = SQL("""
                 move.move_type in ('in_invoice', 'in_refund')
+                AND duplicate_move.move_type in ('in_invoice', 'in_refund')
                 AND (
                    move.ref = duplicate_move.ref
                    AND (
@@ -3525,17 +3534,18 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         # EXTENDS account sequence.mixin
         self.ensure_one()
-        year_part = "%04d" % self.date.year
+        move_date = self.date or self.invoice_date or fields.Date.context_today(self)
+        year_part = "%04d" % move_date.year
         last_day = int(self.company_id.fiscalyear_last_day)
         last_month = int(self.company_id.fiscalyear_last_month)
         is_staggered_year = last_month != 12 or last_day != 31
         if is_staggered_year:
-            max_last_day = calendar.monthrange(self.date.year, last_month)[1]
+            max_last_day = calendar.monthrange(move_date.year, last_month)[1]
             last_day = min(last_day, max_last_day)
-            if self.date > date(self.date.year, last_month, last_day):
-                year_part = "%s-%s" % (self.date.strftime('%y'), (self.date + relativedelta(years=1)).strftime('%y'))
+            if move_date > date(move_date.year, last_month, last_day):
+                year_part = "%s-%s" % (move_date.strftime('%y'), (move_date + relativedelta(years=1)).strftime('%y'))
             else:
-                year_part = "%s-%s" % ((self.date + relativedelta(years=-1)).strftime('%y'), self.date.strftime('%y'))
+                year_part = "%s-%s" % ((move_date + relativedelta(years=-1)).strftime('%y'), move_date.strftime('%y'))
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
@@ -3544,7 +3554,7 @@ class AccountMove(models.Model):
             # example). Note that it's already the case for monthly sequences.
             starting_sequence = "%s/%s/%s" % (self.journal_id.code, year_part, '0000' if is_staggered_year else '00000')
         else:
-            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, self.date.month)
+            starting_sequence = "%s/%s/%02d/0000" % (self.journal_id.code, year_part, move_date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
         if self.journal_id.payment_sequence and self.origin_payment_id or self.env.context.get('is_payment'):
@@ -4185,14 +4195,20 @@ class AccountMove(models.Model):
 
                 except RedirectWarning:
                     raise
-                except Exception:
+                except Exception as e:
                     message = _(
                         "Error importing attachment '%(file_name)s' as invoice (decoder=%(decoder)s)",
                         file_name=file_data['filename'],
                         decoder=decoder.__name__,
                     )
-                    current_invoice.sudo().message_post(body=message)
                     _logger.exception(message)
+                    if isinstance(e, UserError):
+                        message = Markup("%s<br/><br/>%s<br/>%s") % (
+                            message,
+                            _("This specific error occurred during the import:"),
+                            str(e),
+                        )
+                    current_invoice.sudo().message_post(body=message)
 
             passed_file_data_list.append(file_data)
             close_file(file_data)
@@ -5115,7 +5131,6 @@ class AccountMove(models.Model):
             move.name = False
             move.write({
                 'move_type': new_move_type,
-                'partner_bank_id': False,
                 'currency_id': move.currency_id.id,
                 'fiscal_position_id': move.fiscal_position_id.id,
             })
@@ -5977,7 +5992,10 @@ class AccountMove(models.Model):
 
         def is_internal_partner(partner):
             # Helper to know if the partner is an internal one.
-            return partner == company.partner_id or (partner.user_ids and all(user._is_internal() for user in partner.user_ids))
+            return (
+                    company.partner_id in (partner | partner.parent_id)
+                    or (partner.user_ids and all(user._is_internal() for user in partner.user_ids))
+            )
 
         extra_domain = False
         if custom_values.get('company_id'):

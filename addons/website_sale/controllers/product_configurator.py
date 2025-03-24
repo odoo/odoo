@@ -42,6 +42,18 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             or not (single_product_variant.get('product_id') or is_product_configured)
         )
 
+    def _get_product_template(self, product_template_id):
+        if request.is_frontend:
+            combo_item = request.env['product.combo.item'].sudo().search([
+                ('product_id.product_tmpl_id.id', '=', product_template_id),
+            ])
+            if combo_item and request.env['product.template'].sudo().search_count([
+                ('combo_ids', 'in', combo_item.mapped('combo_id.id')),
+                ('website_published', '=', True),
+            ]):
+                return request.env['product.template'].sudo().browse(product_template_id)
+        return super()._get_product_template(product_template_id)
+
     @route(
         route='/website_sale/product_configurator/get_values',
         type='json',

@@ -8,9 +8,10 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import Form, tagged
+from odoo.tests import Form, HttpCase, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.sale.tests.common import SaleCommon
 
 
@@ -994,3 +995,26 @@ class TestSalesTeam(SaleCommon):
         order.action_update_taxes()
         self.assertEqual(order.amount_total, 252)
         self.assertEqual(order.amount_tax, 52)
+
+@tagged('post_install', '-at_install')
+class TestSaleMailComposerUI(MailCommon, HttpCase):
+    @classmethod
+    def setUpClass(cls):
+        super(TestSaleMailComposerUI, cls).setUpClass()
+        cls.env['mail.alias.domain'].create({'name': 'example.com'})
+        cls.partner = cls.env['res.partner'].create({
+            'name': 'test customer',
+            'email': 'dummy@example.com'
+        })
+        cls.quotation = cls.env['sale.order'].create({
+            'partner_id': cls.partner.id,
+        })
+
+    def test_mail_attachment_removal_tour(self):
+        url = f"/odoo/sales/{self.quotation.id}"
+        with self.mock_mail_app():
+            self.start_tour(
+                url,
+                "mail_attachment_removal_tour",
+                login="admin",
+            )
