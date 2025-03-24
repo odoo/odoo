@@ -158,7 +158,7 @@
                                         />
                                         <field name="autocheck_on_post"/>
                                     </group>
-                                    <group string="Email Alias" name="group_email_alias"
+                                    <group string="Emails" name="group_email_alias"
                                            invisible="type not in ('general', 'sale', 'purchase')">
                                         <field name="display_alias_fields" invisible="1"/>
                                         <div class="o_row" colspan="2" invisible="display_alias_fields">
@@ -171,18 +171,13 @@
                                             <field name="alias_name" placeholder="alias"/>@
                                             <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
                                         </div>
+                                        <field name="incoming_einvoice_notification_email" invisible="type != 'purchase'" placeholder="Enter an email to get notified"/>
                                     </group>
                                     <!-- edi -->
                                     <group name="group_edi_config" string="Electronic Data Interchange" invisible="1"/>
                                     <group string="Payment Communications" invisible="type != 'sale'">
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>
-                                    </group>
-                                    <group string="Incoming E-Invoice Notifications" invisible="type != 'purchase'">
-                                        <field name="notify_on_incoming_einvoice"/>
-                                        <field name="incoming_einvoice_notification_email"
-                                               invisible="not notify_on_incoming_einvoice"
-                                               required="notify_on_incoming_einvoice and type == 'purchase'"/>
                                     </group>
                                 </group>
                             </page>

@@ -6327,6 +6327,9 @@ class AccountMove(models.Model):
         move_ctx = self.with_context(default_move_type=custom_values.get('move_type', 'entry'), default_journal_id=custom_values.get('journal_id'))
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
+
+        move.journal_id._notify_einvoices_received(move)
+
         return move
 
     def _message_post_after_hook(self, new_message, message_values):

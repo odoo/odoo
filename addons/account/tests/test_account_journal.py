@@ -3,15 +3,16 @@
 from ast import literal_eval
 from unittest.mock import patch
 
+from odoo import http
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.account.models.account_payment_method import AccountPaymentMethod
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Form, tagged, HttpCase
 from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
-class TestAccountJournal(AccountTestInvoicingCommon):
+class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -140,6 +141,20 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journals.action_unarchive()
         self.assertTrue(journals[0].active)
         self.assertTrue(journals[1].active)
+
+    def test_journal_notifications_unsubscribe(self):
+        journal = self.company_data['default_journal_purchase']
+        journal.incoming_einvoice_notification_email = 'test@example.com'
+
+        self.authenticate(self.env.user.login, self.env.user.login)
+        res = self.url_open(
+            f'/my/journal/{journal.id}/unsubscribe',
+            data={'csrf_token': http.Request.csrf_token(self)},
+            method='POST',
+        )
+        res.raise_for_status()
+
+        self.assertFalse(journal.incoming_einvoice_notification_email)
 
 
 @tagged('post_install', '-at_install', 'mail_alias')

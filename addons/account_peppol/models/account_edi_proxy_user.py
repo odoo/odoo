@@ -285,7 +285,12 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 continue
 
             if proxy_user['peppol_state'] in ('sender', 'smp_registration', 'receiver', 'rejected'):
-                edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+                if edi_user.company_id.account_peppol_proxy_state != proxy_user['peppol_state']:
+                    edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']
+                    if proxy_user['peppol_state'] == 'receiver':
+                        # First-time receivers get their initial email here.
+                        # If already a sender, they'll receive a second (send+receive) welcome email.
+                        edi_user.company_id._account_peppol_send_welcome_email()
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
