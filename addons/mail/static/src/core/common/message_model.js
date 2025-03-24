@@ -353,6 +353,10 @@ export class Message extends Record {
         return this.email_from;
     }
 
+    get notificationHidden() {
+        return false;
+    }
+
     get inlineBody() {
         if (this.notificationType === "call") {
             return _t("%(caller)s started a call", { caller: this.author.name });

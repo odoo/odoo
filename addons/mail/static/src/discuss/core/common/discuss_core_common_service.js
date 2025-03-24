@@ -112,7 +112,10 @@ export class DiscussCoreCommon {
                     channel.selfMember.syncUnread = true;
                     channel.scrollUnread = true;
                 }
-                if (notifId > channel.selfMember?.message_unread_counter_bus_id) {
+                if (
+                    notifId > channel.selfMember?.message_unread_counter_bus_id &&
+                    !message.isNotification
+                ) {
                     channel.selfMember.message_unread_counter++;
                 }
             }

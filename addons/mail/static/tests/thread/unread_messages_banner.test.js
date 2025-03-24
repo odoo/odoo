@@ -1,12 +1,12 @@
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import {
-    SIZES,
     click,
     contains,
     defineMailModels,
-    isInViewportOf,
     openDiscuss,
     patchUiSize,
     scroll,
+    SIZES,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
@@ -15,15 +15,12 @@ import { tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
-    getService,
     onRpc,
     serverState,
     waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
-import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -110,46 +107,6 @@ test("reset new message separator from unread messages banner", async () => {
         parent: ["span", { text: "30 new messagesMark as Read" }],
     });
     await contains("span", { text: "30 new messagesMark as Read", count: 0 });
-});
-
-test("scroll to unread notification", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
-    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
-    for (let i = 0; i < 60; ++i) {
-        pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
-            body: `message ${i}`,
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-    }
-    onRpc("/discuss/channel/mark_as_read", () => asyncStep("/discuss/channel/mark_as_read"));
-    await start();
-    await openDiscuss(channelId);
-    await tick(); // wait for the scroll to first unread to complete
-    await waitForSteps(["/discuss/channel/mark_as_read"]);
-    await click("span", {
-        text: "Mark as Read",
-        parent: ["span", { text: "60 new messagesMark as Read" }],
-    });
-    await waitForSteps(["/discuss/channel/mark_as_read"]);
-    await contains("span", { count: 0, text: "60 new messagesMark as Read" });
-    queryFirst(".o-mail-Composer-input").blur(); // avoid automatic mark as read
-    await withUser(bobUserId, () => {
-        getService("orm").call("discuss.channel", "add_members", [[channelId]], {
-            partner_ids: [bobPartnerId],
-        });
-    });
-    await click("span", {
-        text: "1 new message",
-        parent: ["span", { text: "1 new messageMark as Read" }],
-    });
-    await isInViewportOf(
-        ".o-mail-NotificationMessage:contains(Bob joined the channel)",
-        ".o-mail-Thread"
-    );
 });
 
 test("remove banner when scrolling to bottom", async () => {

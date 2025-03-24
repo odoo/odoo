@@ -8,5 +8,12 @@ const messagePatch = {
         super.setup(...arguments);
         this.disableChatbotAnswers = false;
     },
+
+    get notificationHidden() {
+        if (this.thread.channel_type !== "livechat" || !this.notificationType) {
+            return super.notificationHidden;
+        }
+        return ["channel-joined", "channel-left"].includes(this.notificationType);
+    },
 };
 patch(Message.prototype, messagePatch);
