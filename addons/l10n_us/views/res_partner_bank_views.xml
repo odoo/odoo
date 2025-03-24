@@ -6,11 +6,10 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='clearing_number']" position="attributes">
-                <attribute name="nolabel">1</attribute>
+                <attribute name="invisible" add="show_aba_routing" separator=" or "/>
             </xpath>
-            <field name="clearing_number" position="before">
-                <label for="clearing_number" invisible="show_aba_routing"/>
-                <label for="clearing_number" string="ABA/Routing" invisible="not show_aba_routing"/>
+            <field name="clearing_number" position="after">
+                <field name="clearing_number" string="ABA/Routing" invisible="not show_aba_routing"/>
             </field>
             <field name="currency_id" position="after">
                 <field name="l10n_us_bank_account_type" invisible="country_code != 'US'"/>
