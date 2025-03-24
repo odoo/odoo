@@ -25,26 +25,14 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     * @override
     */
     start: function () {
-        var self = this;
         return this._super.apply(this, arguments).then(function () {
-            var allPromises = [];
-            self.$('.pagination_wrapper').each(function (){
-                var questionId = $(this).data("question_id");
-                allPromises.push(new publicWidget.registry.SurveyResultPagination(self, {
-                    'questionsEl': self.$('#survey_table_question_'+ questionId)
-                }).attachTo($(this)));
-            });
 
             // Set the size of results tables so that they do not resize when switching pages.
             document.querySelectorAll('.o_survey_results_table_wrapper').forEach((table) => {
                 table.style.height = table.clientHeight + 'px';
             })
 
-            if (allPromises.length !== 0) {
-                return Promise.all(allPromises);
-            } else {
-                return Promise.resolve();
-            }
+            return Promise.resolve();
         });
     },
 
