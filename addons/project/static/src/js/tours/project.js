@@ -121,7 +121,7 @@ registry.category("web_tour.tours").add('project_tour', {
 },
 {
     trigger: "button.o-mail-Chatter-logNote",
-    content: markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # <b>mentions</b> to reach an entire team.")),
+    content: markup(_t("<b>Log internal notes</b> and use @<b>mentions</b> to notify your colleagues.")),
     tooltipPosition: "bottom",
     run: "click",
 },
