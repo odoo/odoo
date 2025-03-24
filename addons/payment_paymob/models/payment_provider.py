@@ -9,7 +9,7 @@ import requests
 from werkzeug import urls
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_paymob import const
@@ -41,6 +41,18 @@ class PaymentProvider(models.Model):
         groups='base.group_system',
     )
     paymob_hmac_key = fields.Char(string="Paymob HMAC Key", required_if_provider='paymob')
+    paymob_api_key = fields.Char(string="Paymob API Key", required_if_provider='paymob')
+    paymob_access_token = fields.Char(
+        string="Paymob Access Token",
+        help="The short-lived token used to access Paymob APIs",
+        groups='base.group_system',
+    )
+    paymob_access_token_expiry = fields.Datetime(
+        string="Paymob Access Token Expiry",
+        help="The moment at which the access token becomes invalid.",
+        default='1970-01-01',
+        groups='base.group_system',
+    )
 
     # ==== CONSTRAINT METHODS === #
 
@@ -66,48 +78,139 @@ class PaymentProvider(models.Model):
                 active_test=False,
             ).search([('name', '=', provider._get_paymob_account_currency())], limit=1)
 
+    # === ACTION METHODS === #
+
+    def action_sync_paymob_payment_methods(self):
+        """ Synchronize the payment methods with the ones on the paymob portal, the integration_name
+        needs to be set to be able to communicate with the `payment_method.code` when the intention
+        is created.
+
+        :return: None
+        """
+        base_url = self.get_base_url()
+        redirect_url = urls.url_join(base_url, PaymobController._return_url)
+        webhook_url = urls.url_join(base_url, PaymobController._webhook_url)
+        endpoint = '/api/ecommerce/integrations'
+        is_live = self.state == 'enabled'
+        params = {
+            'is_plugin': 'true',
+            'page_size': 500,
+            'is_deprecated': 'false',
+            'is_standalone': 'false',
+            'is_next': 'yes',
+            'is_live': json.dumps(is_live),
+        }
+        paymob_payment_methods = self._paymob_make_request(
+            endpoint,
+            params=params,
+            method='GET',
+            is_client_request=False,
+        )['results']
+        available_payment_method_codes = self.payment_method_ids.mapped('code')
+        matched_payment_methods = list(filter(
+            lambda pm: (
+                const.PAYMOB_PAYMENT_METHODS_MAPPING.get(pm.get('gateway_type'))
+                in available_payment_method_codes and not pm.get('integration_name') or not (
+                    'apple' in pm.get('integration_name').lower() or
+                    'google' in pm.get('integration_name').lower()
+                )
+            ),
+            # Apple Pay and Google Pay not supported for now because we don't have mobile only
+            # payment methods.
+            paymob_payment_methods
+        ))
+        for payment_method in matched_payment_methods:
+            payment_method_code = const.PAYMOB_PAYMENT_METHODS_MAPPING[
+                payment_method.get('gateway_type')
+            ]
+            if payment_method_code == 'card' and payment_method.get('installments'):
+                installment_payment_method = self.env['payment.method'].search(
+                    [('code', '=', 'installments')], limit=1
+                )
+                if not installment_payment_method:
+                    continue
+                payment_method_code = 'installments'
+            live_tag = 'live' if is_live else 'test'
+            data = {
+                'integration_name': payment_method_code + live_tag,
+                'transaction_processed_callback': webhook_url,
+                'transaction_response_callback': redirect_url,
+            }
+            self._paymob_make_request(
+                f'/api/ecommerce/integrations/{payment_method["id"]}',
+                method='PUT',
+                data=data,
+                is_client_request=False
+            )
+        # If no error raised by _paymob_make_request
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'title': _("Successfully synchronized with Paymob"),
+                'message': _("Payment methods have been successfully set up!"),
+            }
+        }
+
     # === BUSINESS METHODS === #
 
-    def _paymob_make_request(self, endpoint, data=None):
+    def _paymob_make_request(
+        self, endpoint, data=None, method='POST', is_refresh_token_request=False,
+        is_client_request=True, params=None,
+    ):
         """ Make a request to Paymob API at the specified endpoint.
 
         Note: self.ensure_one()
 
         :param str endpoint: The endpoint to be reached by the request.
         :param dict data: The string payload of the request.
+        :param bool is_refresh_token_request: Whether the request is for refreshing the access
+                                              token.
+        :param bool is_client_request: Whether the request is a client request or a backend request,
+                                       it will depend what auth will be sent the access token
+                                       generated from the api_key or the secret_key.
         :return: The JSON-formatted content of the response.
         :rtype: dict
         :raise ValidationError: If an HTTP error occurs.
         """
         url = self._paymob_get_api_url() + endpoint
-        headers = {
-            'Content-Type': 'application/json',
-            'Authorization': f'Token {payment_utils.get_normalized_field(self.paymob_secret_key)}'
-        }
+        auth = ''
+        if not is_refresh_token_request and is_client_request:
+            auth = payment_utils.get_normalized_field(self.paymob_secret_key)
+        elif not is_refresh_token_request:
+            auth = self._paymob_fetch_access_token()
+        headers = {'Authorization': f'Bearer {auth}'}
+
         try:
-            response = requests.post(url, headers=headers, json=data, timeout=10)
+            response = requests.request(
+                method, url, headers=headers, params=params, json=data, timeout=10
+            )
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError:
-                payload = data or json_payload
                 # Paymob errors https://developer.paymob.com/api/rest/reference/orders/v2/errors/
                 _logger.exception(
-                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(payload)
+                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
                 )
                 msg = response.text
                 if "This field may not be blank" in msg:
                     missing_fields = ", ".join(json.loads(msg).get('billing_data', {}).keys())
 
-                    raise ValidationError(
-                        "Paymob: " + _("The following fields must be filled: %s", missing_fields)
-                    )
+                    raise ValidationError(_(
+                        "%(provider)s The following fields must be filled: %(fields)s",
+                        fields=missing_fields,
+                        provider="Paymob:",
+                    ))
 
-                raise ValidationError(
-                    "Paymob: " + _("The communication with the API failed. Details: %s", msg)
-                )
+                raise ValidationError(_(
+                    "%(provider)s The communication with the API failed. Details: %(msg)s",
+                    msg=msg,
+                    provider="Paymob:"
+                ))
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             _logger.exception("Unable to reach endpoint at %s", url)
-            raise ValidationError("Paymob: " + _("Could not establish the connection to the API."))
+            raise ValidationError(_("%s Could not establish the connection to the API.", "Paymob:"))
         return response.json()
 
     # === BUSINESS METHODS - GETTERS === #
@@ -132,12 +235,12 @@ class PaymentProvider(models.Model):
             if self.paymob_account_country_id:
                 supported_currencies = supported_currencies.filtered(
                     lambda c: c.name == self._get_paymob_account_currency()
-                )
+                )[0]
             else:
                 supported_currencies = supported_currencies.filtered(
                     lambda c: c.name in const.PAYMOB_CONFIG
-                )
-        return supported_currencies[0]
+                )[0]
+        return supported_currencies
 
     def _paymob_get_api_url(self):
         """ Return the API URL according to the provider country.
@@ -174,3 +277,29 @@ class PaymentProvider(models.Model):
             'currency_code': currency and currency.name,
         }
         return json.dumps(inline_form_values)
+
+    def _paymob_fetch_access_token(self):
+        """ Generate a new access token if it's expired, otherwise return the existing access token.
+        Paymob's access tokens expire every hour.
+
+        :return: A valid access token.
+        :rtype: str
+        :raise ValidationError: If the access token can not be fetched.
+        """
+        if fields.Datetime.now() > self.paymob_access_token_expiry:
+            response_content = self._paymob_make_request(
+                '/api/auth/tokens',
+                data={'api_key': self.paymob_api_key},
+                is_refresh_token_request=True,
+                is_client_request=False,
+            )
+            access_token = response_content['token']
+            if not access_token:
+                raise ValidationError(
+                    _("%(provider)s Could not generate a new access token.", provider="Paymob:")
+                )
+            self.write({
+                'paymob_access_token': access_token,
+                'paymob_access_token_expiry': fields.Datetime.now() + timedelta(minutes=55),
+            })
+        return self.paymob_access_token

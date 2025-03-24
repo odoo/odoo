@@ -25,11 +25,33 @@
                         password="True"
                         required="code == 'paymob' and state != 'disabled'"
                     />
+                    <field
+                        name="paymob_api_key"
+                        string="API Key"
+                        password="True"
+                        required="code == 'paymob' and state != 'disabled'"
+                    />
                     <field name="paymob_account_country_id" invisible="code != 'paymob'"/>
-                    <div colspan="2" class="alert alert-warning" invisible="code != 'paymob'">
+                    <div
+                        colspan="2"
+                        class="alert alert-warning"
+                        invisible="code != 'paymob'"
+                        role="alert"
+                    >
                         Currency will be updated to match the country of the paymob account.
                     </div>
                 </group>
+            </group>
+            <group name="payment_form" position='inside'>
+                <div colspan="2" invisible="code != 'paymob'">
+                    <button
+                        string="Synchronize Paymob"
+                        type="object"
+                        name="action_sync_paymob_payment_methods"
+                        help="Make the payment methods compatible with the paymob portal"
+                        class="btn-secondary"
+                    />
+                </div>
             </group>
         </field>
     </record>

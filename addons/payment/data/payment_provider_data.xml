@@ -306,6 +306,7 @@
         <field name="payment_method_ids"
                eval="[Command.set([
                          ref('payment.payment_method_card'),
+                         ref('payment_method_installments_eg'),
                          ref('payment_method_mobile_wallet_eg'),
                          ref('payment_method_kiosk'),
                          ref('payment_method_halan'),
@@ -315,6 +316,7 @@
                          ref('payment_method_souhoola'),
                          ref('payment_method_contact'),
                          ref('payment_method_premium_card'),
+                         ref('payment_method_forsa'),
                          ref('payment_method_tabby'),
                          ref('payment_method_tamara'),
                          ref('payment_method_stcpay'),

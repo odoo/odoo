@@ -1,5 +1,6 @@
 -- disable paymob payment provider
 UPDATE payment_provider
-   SET paymob_email_account = NULL,
-       paymob_client_id = NULL,
-       paymob_client_secret = NULL;
+    SET paymob_public_key = NULL,
+        paymob_secret_key = NULL,
+        paymob_hmac_key = NULL,
+        paymob_api_key = NULL;

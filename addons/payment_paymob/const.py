@@ -38,7 +38,7 @@ PAYMOB_CONFIG = {
 PAYMOB_PAYMENT_METHODS_MAPPING = {
     'VPC': 'card',
     'MIGS': 'card',
-    'UIG': 'mobile_wallets_egypt',
+    'UIG': 'mobilewalletsegypt',
     'CAGG': 'kiosk',
     'HALAN': 'halan',
     'SYMPL': 'sympl',
@@ -47,6 +47,7 @@ PAYMOB_PAYMENT_METHODS_MAPPING = {
     'SOUHOOLAV3': 'souhoola',
     'CONTACT': 'contact',
     'PREMIUM6': 'premiumcard',
+    'FORSA': 'forsa',
     'TABBY': 'tabby',
     'TAMARA': 'tamara',
     'STCPAY': 'stcpay',

@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
 import pprint
 
@@ -11,8 +10,6 @@ from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_paymob import const
-from odoo.addons.payment_paymob.controllers.main import PaymobController
-from odoo.tools.safe_eval import expr_eval, safe_eval
 
 
 _logger = logging.getLogger(__name__)
@@ -77,32 +74,34 @@ class PaymentTransaction(models.Model):
         :rtype: dict
         """
         base_url = self.provider_id.get_base_url()
-        # base_url = "https://8103-178-51-240-182.ngrok-free.app"
         public_key = self.provider_id.paymob_public_key
-        redirect_url = urls.url_join(base_url, PaymobController._return_url)
-        webhook_url = urls.url_join(base_url, PaymobController._webhook_url)
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
+        payment_methods = [self.payment_method_code]
+
+        # In Oman , If the user selects the Oman Net Payment Method to pay, Integration ID for both
+        # Card and Oman Net Integrations should be passed in the Intention API. Transaction will
+        # fail if you will only pass Oman Net Integration ID.
+        if self.payment_method_code == 'omannet':
+            payment_methods = [self.payment_method_code, 'card']
+
+        for index, payment_method in enumerate(payment_methods):
+            payment_methods[index] = payment_method + (
+                'live' if self.provider_id.state == 'enabled' else 'test'
+            )
 
         return {
             'special_reference': self.reference,
             'amount': self.amount * const.PAYMOB_CONFIG[self.currency_id.name]['amount_cents'],
             'currency': self.currency_id.name,
-            'payment_methods': [self.payment_method_code],
-            'notification_url': webhook_url,
-            'redirection_url': redirect_url,
+            'payment_methods': payment_methods,
             'billing_data': {
-                'first_name': partner_first_name,
-                'last_name': partner_last_name,
-                'email': self.partner_email,
-                'street': self.partner_address,
-                'state': self.partner_state_id.name,
-                'phone_number': self.partner_phone,
-                'country': self.partner_country_id.code,
-            },
-            'customer': {
-                'first_name': partner_first_name,
-                'last_name': partner_last_name,
-                'email': self.partner_email,
+                'first_name': partner_first_name or '',
+                'last_name': partner_last_name or '',
+                'email': self.partner_email or '',
+                'street': self.partner_address or '',
+                'state': self.partner_state_id.name or '',
+                'phone_number': self.partner_phone or '',
+                'country': self.partner_country_id.code or '',
             },
         }
 
@@ -122,8 +121,10 @@ class PaymentTransaction(models.Model):
         tx = self.search([('reference', '=', notification_data.get(
             'merchant_order_id')), ('provider_code', '=', 'paymob')])
         if not tx:
-            raise ValidationError("Paymob: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
+            raise ValidationError(_(
+                "%(provider)s No transaction found matching reference %(ref)s.",
+                ref=notification_data.get('ref'),
+                provider="Paymob:",
             ))
         return tx
 
@@ -150,7 +151,7 @@ class PaymentTransaction(models.Model):
         elif notification_data.get('success') == 'true':
             self._set_done()
         elif notification_data.get('is_voided') == 'true':
-            self._set_canceled("Paymob: " + _("Cancelled payment: 'is_voided' was set to true"))
+            self._set_canceled(_("%s Cancelled payment: 'is_voided' was set to true", "Paymob:"))
         elif notification_data.get('success') == 'false':
             _logger.info(
                 "Received data with unsuccessful payment status for transaction with reference %s",
@@ -158,7 +159,8 @@ class PaymentTransaction(models.Model):
             )
             message = notification_data.get('data.message')
             self._set_error(_(
-                "Paymob: " +
-                "An error occurred during the processing of your payment (%s). Please try again.",
-                message,
+                """%(provider)s An error occurred during the processing of your payment (%(msg)s).
+                Please try again.""",
+                msg=message,
+                provider="Paymob:",
             ))

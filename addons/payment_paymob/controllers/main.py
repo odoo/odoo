@@ -140,8 +140,8 @@ class PaymobController(http.Controller):
                 'hmac': hmac,
                 'order': str(order_data.get('id')),
                 'merchant_order_id': order_data.get('merchant_order_id'),
-                'source_data.pan': notification_data.get('source_data').get('pan'),
-                'source_data.sub_type': notification_data.get('source_data').get('sub_type'),
-                'source_data.type': notification_data.get('source_data').get('type'),
+                'source_data.pan': notification_data.get('source_data', {}).get('pan'),
+                'source_data.sub_type': notification_data.get('source_data', {}).get('sub_type'),
+                'source_data.type': notification_data.get('source_data', {}).get('type'),
             })
         return response
