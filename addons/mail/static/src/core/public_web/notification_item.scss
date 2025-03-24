@@ -41,12 +41,16 @@
 }
 
 .o-mail-NotificationItem-markAsRead {
-    background-color: transparent !important;
+    background-color: rgba($success, .1) !important;
     font-size: 0.85rem !important;
     color: $success !important;
+    outline: 1px solid rgba($success, .25);
+    outline-offset: -1px;
+    padding: map-get($spacers, 1) / 2;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.075) !important;
+        outline-color: rgba(darken($success, 10%), .5);
+        background-color: transparent !important;
     }
 }
 

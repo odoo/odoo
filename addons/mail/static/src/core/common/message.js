@@ -198,7 +198,7 @@ export class Message extends Component {
     get attClass() {
         return {
             [this.props.className]: true,
-            "o-card p-2 mt-2 border border-secondary": this.props.asCard,
+            "o-card p-2 ps-1 mx-1 mt-2 mb-2 border border-secondary rounded-3": this.props.asCard,
             "pt-1": !this.props.asCard,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,
             "o-selected": this.props.thread?.composer.replyToMessage?.eq(this.props.message),

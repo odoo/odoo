@@ -26,9 +26,7 @@ threadActionsRegistry
     })
     .add("camera-call", {
         condition(component) {
-            return (
-                component.thread?.allowCalls && !component.thread?.eq(component.rtc.state.channel)
-            );
+            return component.thread?.allowCalls && !component.thread?.eq(component.rtc.channel);
         },
         icon: "fa fa-fw fa-video-camera",
         iconLarge: "fa fa-fw fa-lg fa-video-camera",

@@ -5,7 +5,7 @@
             <div class="input-group">
                 <div class="o_searchview form-control d-flex align-items-center bg-view p-0" role="search" aria-autocomplete="list">
                     <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1 h-100">
-                        <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0 rounded-start px-2" accesskey="Q" placeholder="Search" t-model="state.searchTerm" t-on-keydown="onKeydownSearch" t-ref="autofocus" role="searchbox"/>
+                        <input type="text" class="o_searchview_input flex-grow-1 w-auto border-0 rounded-start px-2 bg-view" accesskey="Q" placeholder="Search" t-model="state.searchTerm" t-on-keydown="onKeydownSearch" t-ref="autofocus" role="searchbox"/>
                     </div>
                 </div>
                 <button class="btn" t-att-class="state.searchedTerm === state.searchTerm ? 'btn-outline-secondary' : 'btn-secondary'" t-on-click="() => this.search()" aria-label="Search button">

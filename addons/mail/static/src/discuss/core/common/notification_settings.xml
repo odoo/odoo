@@ -8,7 +8,7 @@
                     <span><i class="fa fa-exclamation-triangle"/> <a href="#" t-on-click="onClickAllConversationsMuted">All conversations have been muted</a></span>
                 </div>
                 <t t-if="props.thread.mute_until_dt">
-                    <button class="btn w-100 d-flex p-1 opacity-75" t-on-click="()=>this.setMute(false)">
+                    <button class="btn w-100 d-flex p-1 opacity-75 border-0" t-on-click="()=>this.setMute(false)">
                         <div class="d-flex flex-column flex-grow-1 px-2 py-1 w-100 rounded">
                             <span class="fs-6 fw-bold text-wrap text-start text-break">Unmute Conversation</span>
                             <span class="fw-normal smaller text-start" t-out="store.settings.getMuteUntilText(props.thread.mute_until_dt)"/>
@@ -16,12 +16,12 @@
                     </button>
                 </t>
                 <div t-elif="!store.settings.mute_until_dt" class="d-flex">
-                    <Dropdown position="ui.isSmall ? 'bottom-end' : 'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column py-0 my-0'">
-                        <button class="btn w-100 d-flex p-1 opacity-75">
-                            <div class="d-flex flex-grow-1 align-items-center px-2 py-1 w-100 rounded">
+                    <Dropdown position="ui.isSmall ? 'bottom-end' : 'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column py-0 my-0 bg-100 border-secondary'">
+                        <button class="btn w-100 d-flex p-1 opacity-75 border-0">
+                            <div class="d-flex flex-grow-1 align-items-center px-0 py-1 w-100 rounded">
                                 <span class="text-wrap text-start text-break">Mute Conversation</span>
                                 <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>
-                                <i class="oi oi-arrow-right ms-2"/>
+                                <i class="oi oi-arrow-right ms-2 me-1"/>
                             </div>
                         </button>
                         <t t-set-slot="content">
@@ -32,8 +32,8 @@
                     </Dropdown>
                 </div>
                 <t t-if="props.thread.channel_type === 'channel' and !store.settings.mute_until_dt">
-                    <hr class="solid m-2"/>
-                    <button class="btn d-flex w-100 px-1 py-0" t-on-click="() => store.settings.setCustomNotifications(false, props.thread)">
+                    <hr class="solid mx-1 my-2"/>
+                    <button class="btn d-flex w-100 p-0 border-0" t-on-click="() => store.settings.setCustomNotifications(false, props.thread)">
                         <div class="d-flex flex-grow-1 align-items-center px-2 rounded">
                             <div class="d-flex flex-column align-items-start">
                                 <span class="fs-6 text-wrap text-start text-break">Use Default</span>
@@ -44,7 +44,7 @@
                         </div>
                     </button>
                     <t t-foreach="store.settings.NOTIFICATIONS" t-as="notif" t-key="notif.label">
-                        <button class="btn w-100 d-flex px-1 py-0" t-on-click="() => store.settings.setCustomNotifications(notif.label, props.thread)">
+                        <button class="btn w-100 d-flex p-0 border-0" t-on-click="() => store.settings.setCustomNotifications(notif.label, props.thread)">
                             <div class="d-flex flex-grow-1 align-items-center px-2 py-1 rounded">
                                 <span class="fs-6 fw-normal text-wrap text-start text-break" t-esc="notif.name"/>
                                 <div class="o-discuss-NotificationSettings-separator flex-grow-1"/>

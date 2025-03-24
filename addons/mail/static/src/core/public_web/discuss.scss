@@ -23,33 +23,33 @@
 .o-mail-Discuss-header {
     background-color: $white;
     box-shadow: 0px 1px 6px -3px rgba(50, 50, 50, 0.15);
-    --border-opacity: .25;
+    --border-opacity: .35;
 }
 
 .o-mail-Discuss-headerActions button {
     --btn-disabled-opacity: 0.25;
     opacity: 75%;
+    background-color: transparent !important;
 
     &:hover, &.o-isActive {
         opacity: 100%;
     }
     &:not(.o-isActive):hover {
-        background-color: $gray-200;
+        background-color: $gray-200 !important;
     }
     &.o-isActive {
-        background-color: $gray-300;
-        outline: $border-width solid $gray-500;
+        background-color: $gray-200 !important;
+        outline: $border-width solid mix($gray-300, $gray-400);
         outline-offset: -$border-width;
         opacity: 100%;
     }
     &.o-isActive:hover {
-        background-color: $gray-300;
+        background-color: $gray-300 !important;
     }
 }
 
 .o-mail-Discuss-headerActionsGroup {
-    --border-opacity: 0;
-    background-color: mix($gray-100, $gray-200, 75%);
+    --border-opacity: var(--mail-Discuss-headerActionsGroupBorderOpacity, .075);
 }
 
 .o-mail-Discuss-headerCountry {
@@ -79,4 +79,8 @@
             }
         }
     }
+}
+
+.o_web_client:has(.o-mail-Discuss) .o_control_panel {
+    --ControlPanel-border-bottom: #{$border-width} solid #{rgba($border-color, .35)};
 }

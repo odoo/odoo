@@ -47,7 +47,7 @@
                         </t>
                     </div>
                     <div class="o-mail-Discuss-headerActions flex-shrink-0 d-flex align-items-center ms-1">
-                        <span t-if="partitionedActions.quick.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                        <span t-if="partitionedActions.quick.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark rounded-3">
                             <t t-set="groupBefore" t-value="true"/>
                             <t t-foreach="partitionedActions.quick" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
                                 <t t-set="action" t-value="action"/>
@@ -55,7 +55,7 @@
                         </span>
                         <t t-else="" t-set="groupBefore" t-value="false"/>
                         <span t-if="groupBefore" class="text-muted align-self-stretch ms-2 me-1"/>
-                        <span t-if="partitionedActions.other.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                        <span t-if="partitionedActions.other.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark rounded-3">
                          <t t-set="groupBefore" t-value="true"/>
                             <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
                                 <t t-set="action" t-value="action"/>
@@ -64,7 +64,7 @@
                         <t t-else="" t-set="groupBefore" t-value="false"/>
                         <span t-if="groupBefore" class="text-muted align-self-stretch ms-2 me-1"/>
                         <t t-foreach="partitionedActions.group.slice().reverse()" t-as="group" t-key="group_index">
-                            <span t-if="group.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark">
+                            <span t-if="group.length" class="o-mail-Discuss-headerActionsGroup btn-group border border-dark rounded-3">
                                 <t t-foreach="group" t-as="action" t-key="action.id" t-call="mail.Discuss.action">
                                     <t t-set="action" t-value="action"/>
                                 </t>
