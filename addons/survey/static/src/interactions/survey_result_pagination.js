@@ -1,80 +1,102 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { renderToMarkup } from "@web/core/utils/render";
 
-// TODO awa: this widget loads all records and only hides some based on page
-// -> this is ugly / not efficient, needs to be refactored
-publicWidget.registry.SurveyResultPagination = publicWidget.Widget.extend({
-    events: {
-        'click li.o_survey_js_results_pagination a': '_onPageClick',
-        "click .o_survey_question_answers_show_btn": "_onShowAllAnswers",
-    },
+export class SurveyResultPagination extends Interaction {
+    static selector = ".survey_table_with_pagination";
+    dynamicContent = {
+        "li.o_survey_js_results_pagination a": {
+            "t-on-click.prevent": this.onPageClick,
+        },
+        ".o_survey_question_answers_show_btn": {
+            "t-on-click": this.onShowAllAnswers,
+            "t-att-class": () => ({
+                "d-none": this.paginationState.showAll,
+            }),
+        },
+        ".pagination": {
+            "t-att-class": () => ({
+                "d-none": this.paginationState.showAll,
+            }),
+        },
+        ".o_survey_results_table_wrapper": {
+            "t-att-class": () => ({
+                "h-auto": this.paginationState.showAll,
+            }),
+        },
+        tbody: {
+            "t-out": () => this.tableContent,
+        },
+    };
 
-    //--------------------------------------------------------------------------
-    // Widget
-    //--------------------------------------------------------------------------
+    setup() {
+        this.limit = this.el.dataset["record_limit"];
+        this.questionData = this.parseAnswersJSON();
+        this.elCount = this.questionData.length;
+        this.paginationState = {
+            currentPage: 1,
+            minIdx: 0,
+            maxIdx: Math.min(this.elCount, this.limit),
+            showAll: false,
+            hideFilter: this.el.dataset["hideFilter"],
+        };
 
-    /**
-     * @override
-     * @param {$.Element} params.questionsEl The element containing the actual questions
-     *   to be able to hide / show them based on the page number
-     */
-    init: function (parent, params) {
-        this._super.apply(this, arguments);
-        this.$questionsEl = params.questionsEl;
-    },
-
-    /**
-     * @override
-     */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            self.limit = self.$el.data("record_limit");
+        // The following two events are dispatched by survey_result when user
+        // clicks on the "print" button.
+        this.el.addEventListener("save_state_and_show_all", () => {
+            this.paginationStateBackup = Object.assign({}, this.paginationState);
+            this.onShowAllAnswers();
+            this.updateContent();
         });
-    },
+        this.el.addEventListener("restore_state", () => {
+            if (this.paginationStateBackup) {
+                this.paginationState = this.paginationStateBackup;
+            }
+            this.updateContent();
+        });
+    }
 
-    // -------------------------------------------------------------------------
-    // Handlers
-    // -------------------------------------------------------------------------
+    parseAnswersJSON() {
+        const keys = ["id", "value", "url"];
+        return JSON.parse(this.el.dataset["answersJson"]).map((entry, index) => {
+            const content = Object.fromEntries(entry.map((value, index) => [keys[index], value]));
+            return { index: index, ...content };
+        });
+    }
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onPageClick: function (ev) {
-        ev.preventDefault();
-        this.$('li.o_survey_js_results_pagination').removeClass('active');
+    get tableContent() {
+        return renderToMarkup("survey.paginated_results_rows", {
+            records: this.questionData.slice(
+                this.paginationState.minIdx,
+                this.paginationState.maxIdx
+            ),
+            hide_filter: this.paginationState.hideFilter,
+        });
+    }
 
-        var $target = $(ev.currentTarget);
-        $target.closest('li').addClass('active');
-        this.$questionsEl.find("tbody tr").addClass("d-none");
+    onPageClick(ev) {
+        this.pageBtnsEl = this.el.querySelector("ul.pagination");
+        this.pageBtnsEl
+            .querySelector(`li:nth-child(${this.paginationState.currentPage})`)
+            .classList.remove("active");
+        this.paginationState.currentPage = ev.currentTarget.text;
+        this.pageBtnsEl
+            .querySelector(`li:nth-child(${this.paginationState.currentPage})`)
+            .classList.add("active");
+        this.paginationState.minIdx = this.limit * (this.paginationState.currentPage - 1);
+        this.paginationState.maxIdx = Math.min(
+            this.elCount,
+            this.limit * this.paginationState.currentPage
+        );
+    }
 
-        var num = $target.text();
-        var min = this.limit * (num - 1) - 1;
-        if (min === -1) {
-            this.$questionsEl
-                .find("tbody tr:lt(" + this.limit * num + ")")
-                .removeClass("d-none");
-        } else {
-            this.$questionsEl
-                .find("tbody tr:lt(" + this.limit * num + "):gt(" + min + ")")
-                .removeClass("d-none");
-        }
-    },
+    onShowAllAnswers() {
+        this.paginationState.showAll = true;
+        this.paginationState.minIdx = 0;
+        this.paginationState.maxIdx = this.elCount;
+    }
+}
 
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onShowAllAnswers: function (ev) {
-        const btnEl = ev.currentTarget;
-        const pager = btnEl.previousElementSibling;
-        btnEl.classList.add("d-none");
-        this.$questionsEl.find("tbody tr").removeClass("d-none");
-        pager.classList.add("d-none");
-        this.$questionsEl.parent().addClass("h-auto");
-    },
-});
-
-export default {
-    paginationWidget: publicWidget.registry.SurveyResultPagination,
-};
+registry
+    .category("public.interactions")
+    .add("survey.survey_result_pagination", SurveyResultPagination);

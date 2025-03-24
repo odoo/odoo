@@ -247,21 +247,24 @@
     </template>
 
     <template id="question_result_text" name="Question: text result (text_box, char_box)">
-        <t t-set="non_skipped_records" t-value="list(filter(lambda record: not record.skipped, table_data))"/>
-        <div class="o_survey_results_table_wrapper overflow-auto">
-            <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>User Responses</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <t t-call="survey.paginated_results_rows"/>
-                </tbody>
-            </table>
+        <t t-set="answers_json" t-value="question_data['answers_data']"/>
+        <t t-set="hide_filter" t-value="question.id in already_filtered_questions or len(table_data) == 1"/>
+        <div class="survey_table_with_pagination" t-att-data-answers-json="answers_json" t-att-data-hide-filter="hide_filter" t-att-data-record_limit="page_record_limit">   
+            <div class="o_survey_results_table_wrapper overflow-auto">
+                <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>User Responses</th>
+                        </tr>
+                    </thead>
+                    <!-- The following tbody tag is populated by the interaction survey_result_pagination
+                    (see also the template survey.paginated_results_rows) -->
+                    <tbody/>
+                </table>
+            </div>
+            <t t-call="survey.question_table_pagination"/>
         </div>
-        <t t-call="survey.question_table_pagination"/>
     </template>
 
     <template id="question_result_number_or_date_or_datetime" name="Question: number or date (and time) result (numerical_box or date or datetime)">
@@ -306,54 +309,26 @@
                 </table>
             </div>
             <div role="tabpanel" class="tab-pane" t-att-id="'survey_data_question_%d' % question.id">
-                <t t-set="non_skipped_records" t-value="list(filter(lambda record: not record.skipped, table_data))"/>
-                <div class="o_survey_results_table_wrapper overflow-auto">
-                    <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>User Responses</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-call="survey.paginated_results_rows"/>
-                        </tbody>
-                    </table>
+                <t t-set="answers_json" t-value="question_data['answers_data']"/>
+                <t t-set="hide_filter" t-value="question.id in already_filtered_questions or len(table_data) == 1"/>
+                <div class="survey_table_with_pagination" t-att-data-answers-json="answers_json" t-att-data-hide-filter="hide_filter" t-att-data-record_limit="page_record_limit">   
+                    <div class="o_survey_results_table_wrapper overflow-auto">
+                        <table class="table table-hover table-sm o_survey_results_table_indexed" t-att-id="'survey_table_question_%d' % question.id">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>User Responses</th>
+                                </tr>
+                            </thead>
+                            <!-- The following tbody tag is populated by the interaction survey_result_pagination
+                            (see also the template survey.paginated_results_rows) -->
+                            <tbody/>
+                        </table>
+                    </div>
+                    <t t-call="survey.question_table_pagination"/>
                 </div>
-               <t t-call="survey.question_table_pagination"/>
             </div>
         </div>
-    </template>
-
-    <template id="paginated_results_rows" name="Question: paginated results rows">
-        <t t-foreach="non_skipped_records" t-as="input_line">
-            <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
-                <td>
-                    <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
-                    <t t-else="">
-                        <a t-att-href="input_line.user_input_id.get_print_url()">
-                            <t t-esc="input_line_index + 1"></t>
-                        </a>
-                    </t>
-                </td>
-                <td>
-                    <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
-                    <t t-if="question.id in already_filtered_questions or len(table_data) == 1">
-                        <t t-esc="input_line._get_answer_value()"/>
-                    </t>
-                    <t t-else="">
-                        <div class="d-flex justify-content-between">
-                            <t t-esc="input_line._get_answer_value()"/>
-                            <a class="text-primary filter-add-answer d-print-none"
-                            data-model-short-key="L" t-att-data-record-id="input_line.id"
-                            role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
-                                <i class="fa fa-filter"/>
-                            </a>
-                        </div>
-                    </t>
-                </td>
-            </tr>
-        </t>
     </template>
 
     <template id="question_result_choice" name="Question: choice result (simple_choice, multiple_choice, scale)">
@@ -471,12 +446,9 @@
             <tbody>
                 <tr t-foreach="comment_lines" t-as="input_line">
                     <td>
-                        <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
-                        <t t-else="">
-                            <a t-att-href="input_line.user_input_id.get_print_url()">
-                                <t t-esc="input_line_index + 1"></t>
-                            </a>
-                        </t>
+                        <a t-att-href="input_line.user_input_id.get_print_url()">
+                            <t t-esc="input_line_index + 1"></t>
+                        </a>
                     </td>
                     <td>
                         <span t-field="input_line.value_char_box"></span><br/>
@@ -490,8 +462,7 @@
         <t t-set="non_skipped_answers_count" t-value="len(question_data['answer_input_done_ids'])"/>
         <t t-if="non_skipped_answers_count > page_record_limit">
             <div class="d-flex justify-content-between d-print-none pagination_wrapper"
-                t-att-id="'pagination_%d' % question.id" t-att-data-question_id="question.id" 
-                t-att-data-record_limit="page_record_limit">
+                t-att-id="'pagination_%d' % question.id" t-att-data-question_id="question.id">
                 <ul class="pagination mt-2">
                     <t t-set="total" t-value="ceil(non_skipped_answers_count / page_record_limit) + 1"/>
                     <li t-foreach="range(1, total)" t-as="num"
