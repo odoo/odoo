@@ -23,7 +23,6 @@ class WebsiteBackgroundOptionPlugin extends Plugin {
                     withImages: true,
                     withVideos: true,
                     withShapes: true,
-                    withGradient: true,
                     withColorCombinations: true,
                 },
             },
@@ -36,7 +35,6 @@ class WebsiteBackgroundOptionPlugin extends Plugin {
                     withImages: true,
                     withVideos: true,
                     withShapes: true,
-                    withGradient: true,
                     withColorCombinations: true,
                 },
             },
@@ -47,7 +45,6 @@ class WebsiteBackgroundOptionPlugin extends Plugin {
                 props: {
                     withColors: true,
                     withImages: false,
-                    withGradient: true,
                     withColorCombinations: true,
                 },
             },

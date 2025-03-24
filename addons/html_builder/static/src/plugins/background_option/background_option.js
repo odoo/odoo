@@ -14,7 +14,6 @@ export class BackgroundOption extends BaseOptionComponent {
         withColors: { type: Boolean },
         withImages: { type: Boolean },
         withColorCombinations: { type: Boolean },
-        withGradient: { type: Boolean },
         withShapes: { type: Boolean, optional: true },
     };
     static defaultProps = {

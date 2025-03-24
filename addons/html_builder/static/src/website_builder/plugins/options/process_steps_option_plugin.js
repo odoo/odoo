@@ -21,7 +21,6 @@ class ProcessStepsOptionPlugin extends Plugin {
                     withColors: true,
                     withImages: false,
                     withColorCombinations: false,
-                    withGradient: true,
                 },
             },
         ],

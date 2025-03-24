@@ -14,7 +14,6 @@ class BlockquoteOptionPlugin extends Plugin {
                     withColors: true,
                     withImages: true,
                     withShapes: true,
-                    withGradient: true,
                     withColorCombinations: true,
                 },
             }),
