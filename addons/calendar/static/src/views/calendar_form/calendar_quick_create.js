@@ -18,7 +18,7 @@ const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
 
 function getDefaultValuesFromRecord(data) {
     const context = {};
-    for (let fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
+    for (const fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
         if (fieldName in data) {
             let value = data[fieldName];
             const { type } = QUICK_CREATE_CALENDAR_EVENT_FIELDS[fieldName]
@@ -44,6 +44,15 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data)
         this.props.goToFullEvent(context);
+    }
+
+    async onRecordSaved() {
+        const ret = super.onRecordSaved(arguments);
+        if (this.props.context.return_to_parent_breadcrumb) {
+            const breadcrumb = this.actionService.currentController.config.breadcrumbs.at(-2);
+            breadcrumb.onSelected();
+        }
+        return ret;
     }
 }
 

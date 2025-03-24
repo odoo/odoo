@@ -1,0 +1,21 @@
+<templates xml:space="preserve">
+    <span t-name="mail.ActivityListRescheduleDropdown">
+        <Dropdown>
+            <button class="btn btn-link p-0" type="button">
+                <i class="fa fa-calendar o_button_icon"/> <span class="o_dropdown_title">Reschedule</span>
+            </button>
+
+            <t t-set-slot="content">
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, 'today')">
+                    <i class="oi oi-schedule-today me-1"/> Today
+                </DropdownItem>
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, 'tomorrow')">
+                    <i class="oi oi-schedule-tomorrow me-1"/> Tomorrow
+                </DropdownItem>
+                <DropdownItem onSelected="(ev) => this.rescheduleActivity(ev, 'nextweek')">
+                    <i class="oi oi-schedule-later me-1"/> Next Week
+                </DropdownItem>
+            </t>
+        </Dropdown>
+    </span>
+</templates>

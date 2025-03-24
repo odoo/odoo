@@ -244,11 +244,11 @@ class TestActivityFlow(TestActivityCommon):
     def test_activity_summary_sync(self):
         """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
         ActivityType = self.env['mail.activity.type']
+        call_activity_type = ActivityType.create({'name': 'call'})
         email_activity_type = ActivityType.create({
             'name': 'email',
             'summary': 'Email Summary',
         })
-        call_activity_type = ActivityType.create({'name': 'call'})
         with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env['ir.model']._get_id('mail.test.activity'), default_res_id=self.test_record.id)) as ActivityForm:
             # `res_model_id` and `res_id` are invisible, see view `mail.mail_activity_view_form_popup`
             # they must be set using defaults, see `action_feedback_schedule_next`
@@ -381,7 +381,6 @@ class TestActivityViewHelpers(TestActivityCommon):
             'res_id': cls.test_record_2.id,
         } for idx in range(2)])
         cls.upload_type = cls.env.ref('test_mail.mail_act_test_upload_document')
-        cls.upload_type.sudo().keep_done = True
         cls.user_employee.tz = cls.user_admin.tz
 
     @freeze_time("2023-10-18 06:00:00")
@@ -421,7 +420,6 @@ class TestActivityViewHelpers(TestActivityCommon):
                     'id': self.upload_type.id,
                     'name': 'Upload Document',
                     'template_ids': [],
-                    'keep_done': True,
                 })
 
             grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
@@ -432,6 +430,7 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'summaries': [act.summary for act in record_activities],
             })
 
             grouped = activity_data['grouped_activities'][test_record_2.id][self.upload_type.id]
@@ -443,7 +442,8 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'reporting_date': record_2_activities[2].date_deadline,
                 'user_assigned_ids': record_2_activities[2:].user_id.ids,
                 'attachments_info': {
-                    'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'}
+                    'count': 2, 'most_recent_id': self.attachment_2.id, 'most_recent_name': 'Uploaded doc_2'},
+                'summaries': [act.summary for act in record_2_activities],
             })
 
             # Mark all first record activities as "done" and check activity data
@@ -462,7 +462,8 @@ class TestActivityViewHelpers(TestActivityCommon):
                     'count': 1,  # 1 instead of 3 because all attachments are the same one
                     'most_recent_id': self.attachment_1.id,
                     'most_recent_name': self.attachment_1.name,
-                }
+                },
+                'summaries': [act.summary for act in record_activities],
             })
             self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id, test_record.id])
 
@@ -481,24 +482,10 @@ class TestActivityViewHelpers(TestActivityCommon):
                 get_activity_data('mail.test.activity', None, limit=1, fetch_done=True)['activity_res_ids'],
                 [test_record.id])
 
-            # Unset keep done and check activity data: record with only "done" activities must not be returned
-            self.upload_type.sudo().keep_done = False
-            activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
-            self.assertDictEqual(
-                next((t for t in activity_data['activity_types'] if t['id'] == self.upload_type.id), {}),
-                {
-                    'id': self.upload_type.id,
-                    'name': 'Upload Document',
-                    'template_ids': [],
-                    'keep_done': False,
-                })
-            self.assertEqual(activity_data['activity_res_ids'], [test_record_2.id])
-
             # Unarchiving activities should restore the activity
             record_activities.action_unarchive()
             self.assertFalse(any(act.date_done for act in record_activities))
             self.assertTrue(all(act.date_deadline for act in record_activities))
-            self.upload_type.sudo().keep_done = True
             activity_data = get_activity_data('mail.test.activity', None, fetch_done=True)
             grouped = activity_data['grouped_activities'][test_record.id][self.upload_type.id]
             self.assertEqual(grouped['state'], 'overdue')
@@ -512,7 +499,77 @@ class TestActivityViewHelpers(TestActivityCommon):
                 'ids': set(record_activities.ids),
                 'reporting_date': record_activities[0].date_deadline,
                 'user_assigned_ids': record_activities.user_id.ids,
+                'summaries': [act.summary for act in record_activities],
             })
+
+
+@tests.tagged('mail_activity')
+class TestORM(TestActivityCommon):
+    """Test for read_progress_bar"""
+
+    def test_week_grouping(self):
+        """The labels associated to each record in read_progress_bar should match
+        the ones from read_group, even in edge cases like en_US locale on sundays
+        """
+        MailTestActivityCtx = self.env['mail.test.activity'].with_context({"lang": "en_US"})
+
+        # Don't mistake fields date and date_deadline:
+        # * date is just a random value
+        # * date_deadline defines activity_state
+        with freeze_time("2024-09-24 10:00:00"):
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-02',
+                'name': "Yesterday, all my troubles seemed so far away",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test super asap (yesterday)",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-09',
+                'name': "Things we said today",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test asap",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-16',
+                'name': "Tomorrow Never Knows",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make a test tomorrow",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+            )
+
+            domain = [('date', "!=", False)]
+            groupby = "date:week"
+            progress_bar = {
+                'field': 'activity_state',
+                'colors': {
+                    "overdue": 'danger',
+                    "today": 'warning',
+                    "planned": 'success',
+                }
+            }
+
+            # call read_group to compute group names
+            groups = MailTestActivityCtx.formatted_read_group(domain, groupby=[groupby])
+            progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+            self.assertEqual(len(groups), 3)
+            self.assertEqual(len(progressbars), 3)
+
+        # format the read_progress_bar result to get a dictionary under this
+        # format: {activity_state: group_name}; the original format
+        # (after read_progress_bar) is {group_name: {activity_state: count}}
+        pg_groups = {
+            next(state for state, count in data.items() if count): group_name
+            for group_name, data in progressbars.items()
+        }
+
+        self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["today"])
+        self.assertEqual(groups[2][groupby][0], pg_groups["planned"])
 
 
 @tests.tagged('post_install', '-at_install')

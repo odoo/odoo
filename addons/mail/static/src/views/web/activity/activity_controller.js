@@ -108,6 +108,7 @@ export class ActivityController extends Component {
             },
             {
                 onClose: () => this.model.load(this.getSearchProps()),
+                additionalContext: { dialog_size: "medium" },
             }
         );
     }

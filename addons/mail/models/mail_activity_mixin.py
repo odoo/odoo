@@ -395,6 +395,16 @@ class MailActivityMixin(models.AbstractModel):
 
         model_id = self.env['ir.model']._get(self._name).id
         create_vals_list = []
+        if not self._ids:
+            create_vals = {
+                'activity_type_id': activity_type.id,
+                'summary': summary or activity_type.summary,
+                'automated': True,
+                'note': note or activity_type.default_note,
+                'date_deadline': date_deadline,
+            }
+            create_vals.update(act_values)
+            create_vals_list.append(create_vals)
         for record in self:
             create_vals = {
                 'activity_type_id': activity_type.id,

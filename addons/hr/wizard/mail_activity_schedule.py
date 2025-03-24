@@ -39,13 +39,12 @@ class MailActivitySchedule(models.TransientModel):
         )
         for scheduler in self:
             templates_by_responsible_type = scheduler.plan_id.template_ids.grouped('responsible_type')
-            scheduler.plan_summary = Markup('<ul>%(summary_by_responsible)s</ul>') % {
-                'summary_by_responsible': Markup().join(
-                    Markup("%(responsible)s %(summary_lines)s") % {
-                        'responsible': responsible_value_to_label[key],
-                        'summary_lines': scheduler._get_summary_lines(templates)
-                    } for key, templates in templates_by_responsible_type.items()
-                )}
+            scheduler.plan_summary = self.env['mail.activity.schedule.summary']
+            for key, templates in templates_by_responsible_type.items():
+                scheduler.plan_summary += self.env['mail.activity.schedule.summary'].new({'line': responsible_value_to_label[key]})
+                new_summaries = scheduler._get_summary_lines(templates)
+                new_summaries.write({'responsible': responsible_value_to_label[key]})
+                scheduler.plan_summary += new_summaries
 
     @api.depends('res_model_id', 'res_ids')
     def _compute_department_id(self):
@@ -56,3 +55,7 @@ class MailActivitySchedule(models.TransientModel):
                 wizard.department_id = False if len(all_departments) > 1 else all_departments
             else:
                 wizard.department_id = False
+
+class MailActivityScheduleSummary(models.TransientModel):
+    _inherit = 'mail.activity.schedule.summary'
+    responsible = fields.Char()

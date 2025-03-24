@@ -250,11 +250,21 @@ class TestActivitySchedule(ActivityScheduleCase):
             form = self._instantiate_activity_schedule_wizard(self.test_records[0])
             form.plan_id = test_plan
             expected_summary = (
+                '<div class="row">'
+                '<div class="col-6">TestAct1</div><div class="col-6">April 4, 2025</div>'
+                '</div>'
                 '<ul>'
-                '<li>TestAct1<ul><li>TestAct2 3 weeks after previous activity deadline</li></ul></li>'
-                '<li>TestAct2<ul><li>TestAct1 2 days after previous activity completion date or TestAct3 0 days after previous activity deadline</li></ul></li>'
-                '<li>TestAct3</li>'
+                '<li>TestAct2 3 weeks after previous activity deadline</li>'
                 '</ul>'
+                '<div class="row">'
+                '<div class="col-6">TestAct2</div><div class="col-6">April 4, 2025</div>'
+                '</div>'
+                '<ul>'
+                '<li>TestAct1 2 days after previous activity completion date or TestAct3 0 days after previous activity deadline</li>'
+                '</ul>'
+                '<div class="row">'
+                '<div class="col-6">TestAct3</div><div class="col-6">April 4, 2025</div>'
+                '</div>'
             )
             self.assertEqual(form.plan_summary, expected_summary)
 
@@ -270,11 +280,24 @@ class TestActivitySchedule(ActivityScheduleCase):
                 form = self._instantiate_activity_schedule_wizard(test_records)
                 self.assertFalse(form.plan_summary)
                 form.plan_id = self.plan_onboarding
-                self.assertEqual("<ul><li>To-Do: Plan training</li><li>To-Do: Training</li></ul>", form.plan_summary)
+                self.assertEqual(
+                    '<div class="row">'
+                        '<div class="col-6">Plan training</div><div class="col-6">September 27, 2023</div>'
+                    '</div>'
+                    '<div class="row">'
+                        '<div class="col-6">Training</div><div class="col-6">October 14, 2023</div>'
+                    '</div>'
+                , form.plan_summary)
                 self.assertTrue(form._get_modifier('plan_on_demand_user_id', 'invisible'))
                 form.plan_id = self.plan_party
-                self.assertEqual("<ul><li>To-Do: Book a place</li><li>To-Do: Invite special guest</li></ul>",
-                                 form.plan_summary)
+                self.assertEqual(
+                    '<div class="row">'
+                        '<div class="col-6">Book a place</div><div class="col-6">September 29, 2023</div>'
+                    '</div>'
+                    '<div class="row">'
+                        '<div class="col-6">Invite special guest</div><div class="col-6">October 7, 2023</div>'
+                    '</div>'
+                    , form.plan_summary)
                 self.assertFalse(form._get_modifier('plan_on_demand_user_id', 'invisible'))
                 with self._mock_activities():
                     form.save().action_schedule_plan()
@@ -298,10 +321,10 @@ class TestActivitySchedule(ActivityScheduleCase):
                 self.assertFalse(form.has_error)
                 deadline_1 = format_date(self.env, plan_date + relativedelta(days=-1))
                 deadline_2 = format_date(self.env, plan_date + relativedelta(days=7))
-                self.assertEqual(
-                    form.plan_summary,
-                    f"<ul><li>To-Do: Book a place ({deadline_1})</li>"
-                    f"<li>To-Do: Invite special guest ({deadline_2})</li></ul>")
+                self.assertEqual(form.plan_summary[0].line, "Book a place")
+                self.assertEqual(form.plan_summary[0].summary_date_deadline, deadline_1)
+                self.assertEqual(form.plan_summary[1].line, "Invite special guest")
+                self.assertEqual(form.plan_summary[1].summary_date_deadline, deadline_2)
                 with self._mock_activities():
                     form.save().action_schedule_plan()
 

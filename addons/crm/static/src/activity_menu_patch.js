@@ -22,7 +22,7 @@ patch(ActivityMenu.prototype, {
         const context = {};
         if (group.model === "crm.lead") {
             this.dropdown.close();
-            if (filter === "my") {
+            if (filter === "my" || filter === "all") {
                 context["search_default_activities_overdue"] = 1;
                 context["search_default_activities_today"] = 1;
             } else {
