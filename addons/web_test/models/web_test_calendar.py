@@ -10,7 +10,8 @@ class TestCalendar(models.Model):
 
     name = fields.Char(required=True, store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', required=True, index=True)
-    date = fields.Date(required=True, string='From')
+    date = fields.Datetime(required=True, string='From')
+    date_end = fields.Datetime(required=True, string='To')
     duration = fields.Float(required=True, store=True, string="Duration", readonly=False)
     work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1))
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
