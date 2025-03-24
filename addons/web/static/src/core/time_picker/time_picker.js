@@ -10,13 +10,14 @@ const HOURS = [...Array(24)].map((_, i) => i);
 const MINUTES = [...Array(60)].map((_, i) => i);
 
 /**
-* @typedef TimePickerProps
-* @property {string} [class=""]
-* @property {string|Time} [value]
-* @property {(value: Time) => any} [onChange]
-* @property {boolean} [showSeconds=false]
-* @property {number} [minutesRounding=5]
-*/
+ * @typedef TimePickerProps
+ * @property {string} [class=""]
+ * @property {string|Time} [value]
+ * @property {(value: Time) => any} [onChange]
+ * @property {() => {}} [onInvalid]
+ * @property {boolean} [showSeconds=false]
+ * @property {number} [minutesRounding=5]
+ */
 
 export class TimePicker extends Component {
     static template = "web.TimePicker";
@@ -28,12 +29,14 @@ export class TimePicker extends Component {
         class: { type: String, optional: true },
         value: { type: [String, Time], optional: true },
         onChange: { type: Function, optional: true },
+        onInvalid: { type: Function, optional: true },
         showSeconds: { type: Boolean, optional: true },
         minutesRounding: { type: Number, optional: true },
     };
     static defaultProps = {
         class: "",
         onChange: () => {},
+        onInvalid: () => {},
         showSeconds: false,
         minutesRounding: 5,
     };
@@ -218,6 +221,8 @@ export class TimePicker extends Component {
         if (this.state.isValid) {
             this.setValue(value);
             this.close();
+        } else {
+            this.props.onInvalid();
         }
     }
 

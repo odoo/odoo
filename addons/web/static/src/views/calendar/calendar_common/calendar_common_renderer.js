@@ -59,7 +59,7 @@ export class CalendarCommonRenderer extends Component {
         deleteRecord: Function,
         setDate: { type: Function, optional: true },
         sidePanelMode: String,
-        multiCreateRecord: { type: Function, optional: true },
+        multiCreateRecords: { type: Function, optional: true },
         multiDeleteRecords: { type: Function, optional: true },
     };
 

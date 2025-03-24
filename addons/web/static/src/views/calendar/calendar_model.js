@@ -5,6 +5,7 @@ import {
     deserializeDateTime,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
+import { Time } from "@web/core/l10n/time";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -21,10 +22,12 @@ import { computeAggregatedValue } from "@web/views/utils";
 
 export class CalendarModel extends Model {
     static DEBOUNCED_LOAD_DELAY = 600;
+    static services = ["notification"];
 
-    setup(params, services) {
+    setup(params, { notification }) {
         /** @protected */
         this.keepLast = new KeepLast();
+        this.notification = notification;
 
         const formViewFromConfig = (this.env.config.views || []).find((view) => view[1] === "form");
         const formViewIdFromConfig = formViewFromConfig ? formViewFromConfig[0] : false;
@@ -48,6 +51,14 @@ export class CalendarModel extends Model {
             records: {},
             unusualDays: [],
             multiCreateRecord: null,
+            multiCreateTimeRange: {
+                start: new Time(
+                    this.getItemFromStorage("multiCreateTimeStart", { hour: 12, minute: 0 })
+                ),
+                end: new Time(
+                    this.getItemFromStorage("multiCreateTimeEnd", { hour: 13, minute: 0 })
+                ),
+            },
         };
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
@@ -98,6 +109,12 @@ export class CalendarModel extends Model {
     }
     get dateStartType() {
         return this.fields[this.fieldMapping.date_start].type;
+    }
+    get dateStopType() {
+        if (this.fieldMapping.date_stop) {
+            return this.fields[this.fieldMapping.date_stop].type;
+        }
+        return null;
     }
     get eventLimit() {
         return this.meta.eventLimit;
@@ -171,6 +188,9 @@ export class CalendarModel extends Model {
     get showDatePicker() {
         return this.meta.showDatePicker;
     }
+    get showMultiCreateTimeRange() {
+        return this.dateStartType === "datetime" && this.dateStopType === "datetime";
+    }
     get storageKey() {
         return `scaleOf-viewId-${this.env.config.viewId}`;
     }
@@ -214,12 +234,50 @@ export class CalendarModel extends Model {
         await this.load();
     }
 
-    async multiCreateRecords(dates, values) {
+    /**
+     * Create multi records of the specify dates and values.
+     * Optionally time range can be specified to set the start and end time.
+     * Also, if there is a filter section, the first filter section will be chosen as additional value for the record.
+     *
+     * @param {DateTime[]} dates array of Date
+     * @returns {Promise<*>}
+     */
+    async multiCreateRecords(dates) {
         const records = [];
+        const values = await this.data.multiCreateRecord.getChanges();
+        const timeRange = this.data.multiCreateTimeRange;
+
+        if (this.showMultiCreateTimeRange) {
+            if (!timeRange.start || !timeRange.end) {
+                this.notification.add(_t("Invalid time range"), {
+                    title: "User Error",
+                    type: "warning",
+                });
+                return;
+            }
+            if (
+                luxon.DateTime.fromObject(timeRange.start.toObject()) >
+                luxon.DateTime.fromObject(timeRange.end.toObject())
+            ) {
+                this.notification.add(_t("Start time should be before end time"), {
+                    title: "User Error",
+                    type: "warning",
+                });
+                return;
+            }
+        }
+
         // we deliberately only use the values of the first filter section, to avoid combinatorial explosion
         const [section] = this.filterSections;
         for (const date of dates) {
-            const rawRecord = this.buildRawRecord({ start: date });
+            const initialRecordValue = {};
+            if (this.showMultiCreateTimeRange) {
+                initialRecordValue.start = date.plus(timeRange.start.toObject());
+                initialRecordValue.end = date.plus(timeRange.end.toObject());
+            } else {
+                initialRecordValue.start = date;
+            }
+            const rawRecord = this.buildRawRecord(initialRecordValue);
             if (!section) {
                 records.push({
                     ...rawRecord,
@@ -950,5 +1008,32 @@ export class CalendarModel extends Model {
             colorIndex,
             hasAvatar: !!value,
         };
+    }
+
+    setMultiCreateTimeRange(timeRange) {
+        if (timeRange.start) {
+            this.setItemInStorage("multiCreateTimeStart", timeRange.start);
+        }
+        if (timeRange.end) {
+            this.setItemInStorage("multiCreateTimeEnd", timeRange.end);
+        }
+        Object.assign(this.data.multiCreateTimeRange, timeRange);
+    }
+
+    generateLocalStorageKey(key) {
+        return `calendar_${this.resModel}_${key}`;
+    }
+
+    getItemFromStorage(key, defaultValue) {
+        const item = browser.localStorage.getItem(this.generateLocalStorageKey(key));
+        try {
+            return item ? JSON.parse(item) : defaultValue;
+        } catch {
+            return defaultValue;
+        }
+    }
+
+    setItemInStorage(key, value) {
+        browser.localStorage.setItem(this.generateLocalStorageKey(key), JSON.stringify(value));
     }
 }

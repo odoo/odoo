@@ -109,8 +109,12 @@ export class CalendarController extends Component {
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
-            multiCreateRecord: this.multiCreateRecord.bind(this),
-            multiDeleteRecords: this.multiDeleteRecords.bind(this),
+            async multiCreateRecords(dates) {
+                await this.model.multiCreateRecords(dates);
+            },
+            async multiDeleteRecords(ids) {
+                await this.model.unlinkRecords(ids);
+            },
         };
     }
 
@@ -203,6 +207,9 @@ export class CalendarController extends Component {
                 if (Object.values(SIDE_PANEL_MODES).includes(mode)) {
                     this.state.sidePanelMode = mode;
                 }
+            },
+            setMultiCreateTimeRange: async (dates) => {
+                await this.model.setMultiCreateTimeRange(dates);
             },
         };
     }
@@ -383,14 +390,5 @@ export class CalendarController extends Component {
     toggleWeekendVisibility() {
         this.state.isWeekendVisible = !this.state.isWeekendVisible;
         browser.localStorage.setItem("calendar.isWeekendVisible", this.state.isWeekendVisible);
-    }
-
-    async multiCreateRecord(dates) {
-        const values = await this.model.data.multiCreateRecord.getChanges();
-        await this.model.multiCreateRecords(dates, values);
-    }
-
-    async multiDeleteRecords(ids) {
-        await this.model.unlinkRecords(ids);
     }
 }
