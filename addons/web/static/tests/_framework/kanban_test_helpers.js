@@ -111,7 +111,7 @@ export function getKanbanRecordTexts(columnIndex) {
 }
 
 export function quickCreateKanbanColumn() {
-    return contains(".o_column_quick_create > .o_quick_create_folded").click();
+    return contains(".o_column_quick_create.o_quick_create_folded div").click();
 }
 
 /**

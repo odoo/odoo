@@ -8,7 +8,7 @@ registry.category("web_tour.tours").add('project_todo_main_functions', {
     trigger: '.o_app[data-menu-xmlid="project_todo.menu_todo_todos"]',
     run: "click",
 }, {
-    trigger: ".o_project_task_kanban_view .o_column_quick_create .o_kanban_add_column",
+    trigger: ".o_project_task_kanban_view .o_column_quick_create.o_quick_create_folded div",
     content: "Create a personal stage from the To-do kanban view",
     run: "click",
 },

@@ -4067,11 +4067,11 @@ test("quick create record while adding a new column", async () => {
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
 
     // add a new column
-    expect(".o_column_quick_create .o_quick_create_folded").toHaveCount(1);
+    expect(".o_column_quick_create.o_quick_create_folded").toHaveCount(1);
 
     await quickCreateKanbanColumn();
 
-    expect(".o_column_quick_create .o_quick_create_unfolded").toHaveCount(1);
+    expect(".o_column_quick_create.o_quick_create_unfolded").toHaveCount(1);
 
     await editKanbanColumnName("new column");
     await validateKanbanColumn();
@@ -5946,19 +5946,19 @@ test("quick create several columns in a row", async () => {
     expect(".o_column_quick_create").toHaveCount(1, {
         message: "should have a ColumnQuickCreate widget",
     });
-    expect(".o_column_quick_create .o_quick_create_folded:visible").toHaveCount(1, {
+    expect(".o_column_quick_create.o_quick_create_folded:visible").toHaveCount(1, {
         message: "the ColumnQuickCreate should be folded",
     });
-    expect(".o_column_quick_create .o_quick_create_unfolded:visible").toHaveCount(0, {
+    expect(".o_column_quick_create.o_quick_create_unfolded:visible").toHaveCount(0, {
         message: "the ColumnQuickCreate should be folded",
     });
 
     // add a new column
     await quickCreateKanbanColumn();
-    expect(".o_column_quick_create .o_quick_create_folded:visible").toHaveCount(0, {
+    expect(".o_column_quick_create.o_quick_create_folded:visible").toHaveCount(0, {
         message: "the ColumnQuickCreate should be unfolded",
     });
-    expect(".o_column_quick_create .o_quick_create_unfolded:visible").toHaveCount(1, {
+    expect(".o_column_quick_create.o_quick_create_unfolded:visible").toHaveCount(1, {
         message: "the ColumnQuickCreate should be unfolded",
     });
     await editKanbanColumnName("New Column 1");
@@ -5966,10 +5966,10 @@ test("quick create several columns in a row", async () => {
     expect(".o_kanban_group").toHaveCount(3, { message: "should now have three columns" });
 
     // add another column
-    expect(".o_column_quick_create .o_quick_create_folded:visible").toHaveCount(0, {
+    expect(".o_column_quick_create.o_quick_create_folded:visible").toHaveCount(0, {
         message: "the ColumnQuickCreate should still be unfolded",
     });
-    expect(".o_column_quick_create .o_quick_create_unfolded:visible").toHaveCount(1, {
+    expect(".o_column_quick_create.o_quick_create_unfolded:visible").toHaveCount(1, {
         message: "the ColumnQuickCreate should still be unfolded",
     });
     await editKanbanColumnName("New Column 2");
@@ -6193,7 +6193,7 @@ test("quick create column and examples: with folded columns", async () => {
     });
 
     // the quick create should already be unfolded as there are no records
-    expect(".o_column_quick_create .o_quick_create_unfolded").toHaveCount(1);
+    expect(".o_column_quick_create.o_quick_create_unfolded").toHaveCount(1);
 
     // click to see the examples
     await contains(".o_column_quick_create .o_kanban_examples").click();
@@ -7300,7 +7300,7 @@ test("empty grouped kanban with sample data: delete a column", async () => {
     await contains(".o_dialog footer .btn-primary").click();
 
     expect(".o_kanban_group").toHaveCount(0);
-    expect(".o_column_quick_create .o_quick_create_unfolded").toHaveCount(1);
+    expect(".o_column_quick_create.o_quick_create_unfolded").toHaveCount(1);
 });
 
 test("empty grouped kanban with sample data: add a column and delete it right away", async () => {
@@ -12117,12 +12117,15 @@ test("column quick create - title and placeholder", async function (assert) {
         groupBy: ["product_id"],
     });
 
-    expect(".o_column_quick_create .o_quick_create_folded").toHaveText("Product");
+    expect(".o_column_quick_create.o_quick_create_folded").toHaveProperty(
+        "textContent",
+        " Add Product"
+    );
 
-    await contains("button.o_kanban_add_column").click();
+    await quickCreateKanbanColumn();
 
     expect(
-        ".o_column_quick_create .o_quick_create_unfolded .input-group .form-control"
+        ".o_column_quick_create.o_quick_create_unfolded .input-group .form-control"
     ).toHaveAttribute("placeholder", "Product...");
 });
 
@@ -13785,10 +13788,14 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
     });
     // scroll to the end
     await contains(".o_content").scroll({ left: 5000 });
-    expect(".o_content").toHaveProperty("scrollLeft", 3604);
+    expect(".o_content").toHaveProperty("scrollLeft", 3302);
     await contains(".o_kanban_group:last").click();
-    expect(".o_content").toHaveProperty("scrollLeft", 3604, {
-        message: "last group had enough space to remain completely visible after unfold: no scroll",
+    expect(".o_content").toHaveProperty("scrollLeft", 3562);
+    ({ x, width } = queryRect('.o_kanban_group:contains("column 11\n(1)")'));
+    // TODO JUM: change digits option
+    expect(x + width).toBeCloseTo(window.innerWidth, {
+        digits: 0,
+        message: "same as above",
     });
 });
 
