@@ -261,14 +261,9 @@ class AccountJournal(models.Model):
         compute='_compute_show_refresh_out_einvoices_status_button',
     )
 
-    notify_on_incoming_einvoice = fields.Boolean(
-        string="Send Email on Incoming E-Invoice",
-        help="Send an email to the customer/vendor when receiving an e-invoice.",
-        default=True,
-    )
     incoming_einvoice_notification_email = fields.Char(
-        string="Email on Incoming E-Invoice",
-        help="Email address to send the email to when receiving an e-invoice.",
+        string="Invoice Notifications",
+        help="Receive an email for incoming electronic invoices.",
         compute='_compute_incoming_einvoice_notification_email',
         store=True,
         readonly=False,
@@ -488,11 +483,13 @@ class AccountJournal(models.Model):
             temp_move = self.env['account.move'].new({'journal_id': journal.id})
             journal.accounting_date = temp_move._get_accounting_date(move_date, has_tax)
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'type')
     def _compute_incoming_einvoice_notification_email(self):
         for journal in self:
-            if not journal.incoming_einvoice_notification_email:
-                journal.incoming_einvoice_notification_email = journal.company_id.email
+            if journal.type == 'purchase':
+                journal.incoming_einvoice_notification_email = journal.incoming_einvoice_notification_email or journal.company_id.email
+            else:
+                journal.incoming_einvoice_notification_email = False
 
     @api.depends('type')
     def _compute_show_fetch_in_einvoices_button(self):
@@ -654,6 +651,12 @@ class AccountJournal(models.Model):
                                         "1/ click on the top-right button 'Journal Entries' from this journal form\n"
                                         "2/ then filter on 'Draft' entries\n"
                                         "3/ select them all and post or delete them through the action menu"))
+
+    @api.constrains('type', 'incoming_einvoice_notification_email')
+    def _check_incoming_einvoice_notification_email(self):
+        for journal in self:
+            if not journal.type == 'purchase' and journal.incoming_einvoice_notification_email:
+                raise ValidationError(_("The incoming e-invoice notification email can only be set on purchase journals."))
 
     @api.depends('type')
     def _compute_refund_sequence(self):
@@ -1171,24 +1174,18 @@ class AccountJournal(models.Model):
     def _notify_einvoices_received(self, moves):
         self.ensure_one()
 
-        if not moves:
-            return
-
-        self._send_einvoice_received_mail_if_needed(moves)
-
-    def _send_einvoice_received_mail_if_needed(self, moves):
-        self.ensure_one()
-        if not all((
-            moves,
-            self.notify_on_incoming_einvoice,
-            self.incoming_einvoice_notification_email,
-        )):
+        if not moves or not self.incoming_einvoice_notification_email:
             return
 
         mail_template = self.env.ref('account.mail_template_einvoice_notification', raise_if_not_found=False)
         if not mail_template:
             return
+
         mail_template.with_context(einvoices=moves).send_mail(self.id, force_send=True)
+
+    def button_unsubscribe_from_invoice_notifications(self):
+        self.ensure_one()
+        self.incoming_einvoice_notification_email = False
 
     def button_fetch_in_einvoices(self):
         # TO OVERRIDE

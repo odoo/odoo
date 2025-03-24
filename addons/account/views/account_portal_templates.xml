@@ -109,6 +109,32 @@
       </t>
     </template>
 
+    <template id="portal_my_journal_mail_notifications" name="My journal email notification settings">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Email Notifications</t>
+            </t>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Invoice Notifications</h5>
+                            <p class="card-text">You can unsubscribe from emails received upon invoice reception here.</p>
+                            <div t-if="completed" class="alert alert-success" role="alert">
+                                Successfully unsubscribed from invoice notifications
+                            </div>
+                            <form t-else="" method="POST">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <button type="submit" class="btn btn-primary">Unsubscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="portal_invoice_page" name="Invoice/Bill" inherit_id="portal.portal_sidebar" primary="True">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
             <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly">
