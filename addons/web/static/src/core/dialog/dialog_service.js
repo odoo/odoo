@@ -66,7 +66,10 @@ export const dialogService = {
                 },
                 {
                     onRemove: (closeParams) => {
-                        stack.pop();
+                        stack.splice(
+                            stack.findIndex((d) => d.id === id),
+                            1
+                        );
                         deactivate();
                         if (stack.length) {
                             stack.at(-1).isActive = true;
