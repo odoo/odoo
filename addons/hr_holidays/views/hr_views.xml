@@ -214,16 +214,16 @@
         </field>
     </record>
 
-    <record id="view_employee_tree_inherit_leave" model="ir.ui.view">
-        <field name="name">hr.employee.list.leave</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='work_location_id']" position="after">
-                <field name="leave_manager_id" optional="hide" widget="many2one_avatar_user"/>
-            </xpath>
-        </field>
-    </record>
+<!--    <record id="view_employee_tree_inherit_leave" model="ir.ui.view">-->
+<!--        <field name="name">hr.employee.list.leave</field>-->
+<!--        <field name="model">hr.employee</field>-->
+<!--        <field name="inherit_id" ref="hr.view_employee_tree"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='work_location_id']" position="after">-->
+<!--                <field name="leave_manager_id" optional="hide" widget="many2one_avatar_user"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="hr_employee_public_form_view_inherit" model="ir.ui.view">
         <field name="name">hr.employee.public.leave.form.inherit</field>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="hr_employee_contract_wizard_view_form" model="ir.ui.view">
+            <field name="name">hr.employee.contract.wizard.view.form</field>
+            <field name="model">hr.employee.contract.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="name" placeholder="e.g. Permanent Contract"/>
+                            <field name="date_from"/>
+                            <field name="date_to" placeholder="No End Date"/>
+                        </group>
+<!--                        <div class="alert alert-info" role="alert" invisible="not contract_to_split">-->
+<!--                            At that date, the employee is under the previous contract: <field name="contract_to_split" nolabel="True"/>.-->
+<!--                            If you continue, the contract will end on the day before the start of this new contract.-->
+<!--                        </div>-->
+                    </sheet>
+                    <footer>
+                        <button name="action_create_new_contract" string="Create" type="object" class="oe_highlight" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_employee_contract_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Contract</field>
+            <field name="res_model">hr.employee.contract.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'dialog_size': 'medium'}</field>
+        </record>
+    </data>
+</odoo>

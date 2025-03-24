@@ -31,6 +31,7 @@ class HrEmployee(models.Model):
     _description = "Employee"
     _order = 'name'
     _inherit = ['hr.employee.base', 'mail.thread.main.attachment', 'mail.activity.mixin', 'resource.mixin', 'avatar.mixin']
+    _inherits = {'hr.employee.version': 'version_id'}
     _mail_post_access = 'read'
     _primary_email = 'work_email'
 
@@ -38,7 +39,16 @@ class HrEmployee(models.Model):
     def _lang_get(self):
         return self.env['res.lang'].get_installed()
 
-    # resource and user
+    version_id = fields.Many2one(
+        'hr.employee.version',
+        compute='_compute_version_id',
+        search='_search_version_id',
+        ondelete='cascade',
+        required=True,
+        store=False)
+
+    # Global Fields
+    resource_id = fields.Many2one('resource.resource')
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(string="Employee Name", related='resource_id.name', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
@@ -49,59 +59,43 @@ class HrEmployee(models.Model):
         check_company=True,
         precompute=True,
         ondelete='restrict')
+    lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
-    resource_calendar_id = fields.Many2one(tracking=True)
-    department_id = fields.Many2one(tracking=True)
     company_id = fields.Many2one('res.company', required=True)
-    company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True, groups="base.group_system,hr.group_hr_user")
-    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True, groups="base.group_system,hr.group_hr_user")
-    # private info
-    private_street = fields.Char(string="Private Street", groups="hr.group_hr_user")
-    private_street2 = fields.Char(string="Private Street2", groups="hr.group_hr_user")
-    private_city = fields.Char(string="Private City", groups="hr.group_hr_user")
-    private_state_id = fields.Many2one(
-        "res.country.state", string="Private State",
-        domain="[('country_id', '=?', private_country_id)]",
-        groups="hr.group_hr_user")
-    private_zip = fields.Char(string="Private Zip", groups="hr.group_hr_user")
-    private_country_id = fields.Many2one("res.country", string="Private Country", groups="hr.group_hr_user")
+    company_country_id = fields.Many2one('res.country', 'Company Country',
+                                         related='company_id.country_id', readonly=True,
+                                         groups="base.group_system,hr.group_hr_user")
+    company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'],
+                                       readonly=True, groups="base.group_system,hr.group_hr_user")
+    category_ids = fields.Many2many(
+        'hr.employee.category', 'employee_category_rel',
+        'employee_id', 'category_id', groups="hr.group_hr_user",
+        string='Tags')
+
     private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
-    lang = fields.Selection(selection=_lang_get, string="Lang", groups="hr.group_hr_user")
-    country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
-    gender = fields.Selection([
-        ('male', 'Male'),
-        ('female', 'Female'),
-        ('other', 'Other')
-    ], groups="hr.group_hr_user", tracking=True)
-    marital = fields.Selection(
-        selection='_get_marital_status_selection',
-        string='Marital Status',
-        groups="hr.group_hr_user",
-        default='single',
-        required=True,
-        tracking=True)
-
-    spouse_complete_name = fields.Char(string="Spouse Complete Name", groups="hr.group_hr_user", tracking=True)
-    spouse_birthdate = fields.Date(string="Spouse Birthdate", groups="hr.group_hr_user", tracking=True)
-    children = fields.Integer(string='Number of Dependent Children', groups="hr.group_hr_user", tracking=True)
-    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
-    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
-    birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
-    birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
-    birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
-    ssnid = fields.Char('SSN No', help='Social Security Number', groups="hr.group_hr_user", tracking=True)
-    sinid = fields.Char('SIN No', help='Social Insurance Number', groups="hr.group_hr_user", tracking=True)
-    identification_id = fields.Char(string='Identification No', groups="hr.group_hr_user", tracking=True)
-    passport_id = fields.Char('Passport No', groups="hr.group_hr_user", tracking=True)
     bank_account_id = fields.Many2one(
         'res.partner.bank', 'Bank Account',
         domain="[('partner_id', '=', work_contact_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         groups="hr.group_hr_user",
         tracking=True,
         help='Employee bank account to pay salaries')
+
+    emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
+    emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
+
+    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user", tracking=True)
+    sex = fields.Selection([
+        ('male', 'Male'),
+        ('female', 'Female'),
+    ], groups="hr.group_hr_user", tracking=True)
+    place_of_birth = fields.Char('Place of Birth', groups="hr.group_hr_user", tracking=True)
+    country_of_birth = fields.Many2one('res.country', string="Country of Birth", groups="hr.group_hr_user", tracking=True)
+    birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
+    birthday_public_display = fields.Boolean('Show to all employees', groups="hr.group_hr_user", default=False)
+    birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
+
     permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user", tracking=True)
     visa_no = fields.Char('Visa No', groups="hr.group_hr_user", tracking=True)
     visa_expire = fields.Date('Visa Expiration Date', groups="hr.group_hr_user", tracking=True)
@@ -109,24 +103,18 @@ class HrEmployee(models.Model):
     has_work_permit = fields.Binary(string="Work Permit", groups="hr.group_hr_user")
     work_permit_scheduled_activity = fields.Boolean(default=False, groups="hr.group_hr_user")
     work_permit_name = fields.Char('work_permit_name', compute='_compute_work_permit_name', groups="hr.group_hr_user")
+
+    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user",
+                          copy=False)
+    pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
+                      help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application "
+                           "(if enabled in Configuration) and to change the cashier in the Point of Sale application.")
+
+    # user
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=True)
-    certificate = fields.Selection([
-        ('graduate', 'Graduate'),
-        ('bachelor', 'Bachelor'),
-        ('master', 'Master'),
-        ('doctor', 'Doctor'),
-        ('other', 'Other'),
-    ], 'Certificate Level', groups="hr.group_hr_user", tracking=True)
-    study_field = fields.Char("Field of Study", groups="hr.group_hr_user", tracking=True)
+
     study_school = fields.Char("School", groups="hr.group_hr_user", tracking=True)
-    emergency_contact = fields.Char("Contact Name", groups="hr.group_hr_user", tracking=True)
-    emergency_phone = fields.Char("Contact Phone", groups="hr.group_hr_user", tracking=True)
-    distance_home_work = fields.Integer(string="Home-Work Distance", groups="hr.group_hr_user", tracking=True)
-    km_home_work = fields.Integer(string="Home-Work Distance in Km", groups="hr.group_hr_user", compute="_compute_km_home_work", inverse="_inverse_km_home_work", store=True)
-    distance_home_work_unit = fields.Selection([
-        ('kilometers', 'km'),
-        ('miles', 'mi'),
-    ], 'Home-Work Distance unit', tracking=True, groups="hr.group_hr_user", default='kilometers', required=True)
+
     employee_type = fields.Selection([
             ('employee', 'Employee'),
             ('worker', 'Worker'),
@@ -137,23 +125,13 @@ class HrEmployee(models.Model):
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user",
         help="Categorize your Employees by type. This field also has an impact on contracts. Only Employees, Students and Trainee will have contract history.")
 
-    job_id = fields.Many2one(tracking=True)
     # employee in company
     child_ids = fields.One2many('hr.employee', 'parent_id', string='Direct subordinates')
-    category_ids = fields.Many2many(
-        'hr.employee.category', 'employee_category_rel',
-        'employee_id', 'category_id', groups="hr.group_hr_user",
-        string='Tags')
+
     # misc
     notes = fields.Text('Notes', groups="hr.group_hr_user")
     color = fields.Integer('Color Index', default=0)
-    barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
-    pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
-        help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
-    departure_reason_id = fields.Many2one("hr.departure.reason", string="Departure Reason", groups="hr.group_hr_user",
-                                          copy=False, tracking=True, ondelete='restrict')
-    departure_description = fields.Html(string="Additional Information", groups="hr.group_hr_user", copy=False)
-    departure_date = fields.Date(string="Departure Date", groups="hr.group_hr_user", copy=False, tracking=True)
+
     message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(string="ID Card Copy", groups="hr.group_hr_user")
     driving_license = fields.Binary(string="Driving License", groups="hr.group_hr_user")
@@ -198,6 +176,33 @@ class HrEmployee(models.Model):
         'A user cannot be linked to multiple employees in the same company.',
     )
 
+    # def _register_hook(self):
+    #     ignored_fields = ['id', 'employee_id']
+    #     for field_name in self.env['hr.employee.version']._fields:
+    #         if field_name in ignored_fields:
+    #             continue
+    #         print(field_name)
+    #         field = self._fields[field_name]
+    #         field._depends_context = ('version_id',)
+    #         depends, depends_context = field.get_depends(self)
+    #         self.pool.field_depends_context[field] = tuple(depends_context)
+    #     return super()._register_hook()
+
+    def _create(self, vals_list):
+        versions = []
+        for val in vals_list:
+            versions.append(val['stored'].pop('version_id', None))
+        result = super(HrEmployee, self)._create(vals_list)
+
+        for (employee, version_id) in zip(result, versions):
+            self.env['hr.employee.version'].browse(version_id).employee_id = employee.id
+        return result
+
+    def create(self, vals_list):
+        print(vals_list)
+        return super(HrEmployee, self).create(vals_list)
+
+
     @api.model
     def check_field_access_rights(self, operation, field_names):
         # DISCLAIMER: Dirty hack to avoid having to create a bridge module to override only a
@@ -219,6 +224,71 @@ class HrEmployee(models.Model):
             or self.env.user.has_group("hr.group_hr_user")
             or field.name not in ('activity_calendar_event_id', 'rating_ids', 'website_message_ids', 'message_has_sms_error')
         )
+
+    @api.depends_context('version_id')
+    def _compute_version_id(self):
+        for employee in self:
+            if self._context.get('version_id'):
+                version = self.env['hr.employee.version'].search([('id', '=', self._context['version_id'])], limit=1)
+            else:
+                today_version = self._get_version()
+                if today_version:
+                    version = today_version
+                else:
+                    version = self.env['hr.employee.version'].search([('employee_id', '=', employee.id)], limit=1)
+            print(self, version)
+            employee.version_id = version
+
+    def _search_version_id(self, operator, value):
+        return [('id', 'in', self.env['hr.employee.version'].search([('id', operator, value)]).mapped('employee_id.id'))]
+
+    @api.depends('name')
+    def _compute_legal_name(self):
+        for employee in self:
+            if not employee.legal_name:
+                employee.legal_name = employee.name
+
+    # @api.depends_context('uid')
+    # @api.depends('version_ids')
+    # def _compute_current_version_id(self):
+    #     today = fields.Date.today()
+    #     for record in self:
+    #         record.selected_version_id = record._get_version(today)
+    #
+    # @api.depends('current_version_id')
+    # def _compute_selected_version_id(self):
+    #     for record in self:
+    #         record.selected_version_id = record.current_version_id
+    #
+    # @api.depends('contract_ids')
+    # def _compute_selected_contract_id(self):
+    #     for record in self:
+    #         record.selected_contract_id = record.contract_ids[0] if record.contract_ids else 0
+
+    def _get_version(self, date=fields.Date.today()):
+        # Version are ordered from the most recent to the oldest
+        previous_versions = self.env['hr.employee.version'].search([
+            ('employee_id', '=', self.id),
+            '|',
+            ('date_version', '=', False),
+            ('date_version', '<=', date)])
+        return previous_versions[0] if previous_versions else self.env['hr.employee.version']
+    #
+    # def _get_contracts(self, date):
+    #     return self.contract_ids.filtered(
+    #         lambda c:
+    #         (c.date_from <= date and not c.date_to) or
+    #         (c.date_to and c.date_from <= date <= c.date_to))
+
+    # def _get_contracts_between(self, date_from, date_to):
+    #     return self.contract_ids.filtered(
+    #         lambda c:
+    #         (c.date_from <= date and not c.date_to) or
+    #         (c.date_to and c.date_from <= date <= c.date_to))
+
+    def action_delete_selected_contract(self):
+        self.ensure_one()
+        self.selected_contract_id.unlink()
 
     @api.depends('name', 'user_id.avatar_1920', 'image_1920')
     def _compute_avatar_1920(self):
@@ -267,14 +337,14 @@ class HrEmployee(models.Model):
             permit_no = '_' + employee.permit_no if employee.permit_no else ''
             employee.work_permit_name = "%swork_permit%s" % (name, permit_no)
 
-    @api.depends('distance_home_work', 'distance_home_work_unit')
-    def _compute_km_home_work(self):
-        for employee in self:
-            employee.km_home_work = employee.distance_home_work * 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
-
-    def _inverse_km_home_work(self):
-        for employee in self:
-            employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.km_home_work
+    # @api.depends('distance_home_work', 'distance_home_work_unit')
+    # def _compute_km_home_work(self):
+    #     for employee in self:
+    #         employee.km_home_work = employee.distance_home_work * 1.609 if employee.distance_home_work_unit == "miles" else employee.distance_home_work
+    #
+    # def _inverse_km_home_work(self):
+    #     for employee in self:
+    #         employee.distance_home_work = employee.km_home_work / 1.609 if employee.distance_home_work_unit == "miles" else employee.km_home_work
 
     def _get_partner_count_depends(self):
         return ['user_id']
@@ -612,7 +682,21 @@ class HrEmployee(models.Model):
         employees._message_log_batch(onboarding_notes_bodies)
         return employees
 
+    # @api.model
+    # def _get_historized_fields(self):
+    #     return {'department_id', 'job_id', 'work_contact_id'}
+
     def write(self, vals):
+        # next_history_ids = self.env['hr.employee.version'].search([
+        #     ('employee_id', '=', self.id),
+        #     ('date_from', '>=', self.selected_history_id.date_to)])
+        # fields_to_update = set(vals) & self._get_historized_fields()
+        # if 'selected_history_id' not in vals and next_history_ids and fields_to_update:
+        #     print("Do you want to update the next versions ?")
+        #     print(next_history_ids)
+        #     print(vals)
+        #     print(fields_to_update)
+
         if 'work_contact_id' in vals:
             account_ids = vals.get('bank_account_id') or self.bank_account_id.ids
             if account_ids:
@@ -775,14 +859,14 @@ class HrEmployee(models.Model):
                 date_to,
                 domain=[('company_id', 'in', [False, self.company_id.id])])
 
-    def _get_marital_status_selection(self):
-        return [
-            ('single', _('Single')),
-            ('married', _('Married')),
-            ('cohabitant', _('Legal Cohabitant')),
-            ('widower', _('Widower')),
-            ('divorced', _('Divorced')),
-        ]
+    # def _get_marital_status_selection(self):
+    #     return [
+    #         ('single', _('Single')),
+    #         ('married', _('Married')),
+    #         ('cohabitant', _('Legal Cohabitant')),
+    #         ('widower', _('Widower')),
+    #         ('divorced', _('Divorced')),
+    #     ]
 
     def _load_scenario(self):
         demo_tag = self.env.ref('hr.employee_category_demo', raise_if_not_found=False)

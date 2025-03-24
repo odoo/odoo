@@ -7,8 +7,8 @@ from odoo import models, fields, api, _
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    vehicle = fields.Char(related="employee_id.vehicle")
-    bank_account_id = fields.Many2one(related="employee_id.bank_account_id")
+    # vehicle = fields.Char(related="employee_id.vehicle")  # TODO: dead code
+    bank_account_id = fields.Many2one(related="employee_id.bank_account_id")  # TODO: why not in 'hr' directly ?
 
     @property
     def SELF_READABLE_FIELDS(self):

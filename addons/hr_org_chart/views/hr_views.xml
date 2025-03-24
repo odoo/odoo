@@ -23,19 +23,25 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
-                <button name="%(hr_org_chart.action_hr_employee_org_chart)d"
-                    icon="fa-users"
-                    type="action"
-                    context="{'hierarchy_res_id': id}"
-                    invisible="(not parent_id and not child_ids) or parent_id == id">
-                    <div class="o_stat_info">
-                        <span class="o_stat_text">Org Chart</span>
-                    </div>
-                </button>
-            </xpath>
+<!--            <xpath expr="//div[@name='button_box']" position="inside">-->
+<!--                <button name="%(hr_org_chart.action_hr_employee_org_chart)d"-->
+<!--                    icon="fa-users"-->
+<!--                    type="action"-->
+<!--                    context="{'hierarchy_res_id': id}"-->
+<!--                    invisible="(not parent_id and not child_ids) or parent_id == id">-->
+<!--                    <div class="o_stat_info">-->
+<!--                        <span class="o_stat_text">Org Chart</span>-->
+<!--                    </div>-->
+<!--                </button>-->
+<!--            </xpath>-->
+            <group name="organization" position="replace"/>
             <div id="o_work_employee_main" position="after">
-                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
+                <div id="o_employee_right" class="col-lg-5 px-0 ps-lg-5 pe-lg-0">
+                    <group name="organization" string="Organization">
+                        <field name="department_id"/>
+                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                        <field name="parent_id" widget="many2one_avatar_employee"/>
+                    </group>
                     <separator string="Organization Chart"/>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>
@@ -102,12 +108,35 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='o_work_employee_main']" position="after">
                 <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <group name="organization" string="Organization">
+                        <field name="department_id"/>
+                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                    </group>
                     <separator string="Organization Chart"/>
                     <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
                 </div>
             </xpath>
         </field>
     </record>
+
+<!--    <record id="hr_employee_history_view_form_inherit_org_chart" model="ir.ui.view">-->
+<!--        <field name="name">hr.employee.version.view.form.inherit.org_chart</field>-->
+<!--        <field name="model">hr.employee.version</field>-->
+<!--        <field name="inherit_id" ref="hr.hr_employee_history_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <group name="organization" position="replace"/>-->
+<!--            <xpath expr="//div[@id='o_work_employee_main']" position="after">-->
+<!--                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">-->
+<!--                    <group name="organization" string="Organization">-->
+<!--                        <field name="department_id"/>-->
+<!--                        <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>-->
+<!--                    </group>-->
+<!--                    <separator string="Organization Chart"/>-->
+<!--                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>-->
+<!--                </div>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
 
     <record id="res_users_view_form" model="ir.ui.view">
         <field name="name">res.users.preferences.view.form.inherit.org_chart</field>

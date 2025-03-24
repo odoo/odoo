@@ -12,6 +12,19 @@
         <field name="binding_type">report</field>
     </record>
 
+    <!-- TODO: This does not work right now -->
+    <record id="hr_employee_history_print_badge" model="ir.actions.report">
+        <field name="name">Print Badge</field>
+        <field name="model">hr.employee.version</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr.print_employee_badge</field>
+        <field name="report_file">hr.print_employee_badge</field>
+        <field name="paperformat_id" ref="hr.paperformat_hr_employee_badge"/>
+        <field name="print_report_name">'Badge - %s' % (object.name).replace('/', '')</field>
+        <field name="binding_model_id" ref="model_hr_employee_version"/>
+        <field name="binding_type">report</field>
+    </record>
+
     <template id="print_employee_badge">
         <t t-call="web.basic_layout">
             <div class="page">

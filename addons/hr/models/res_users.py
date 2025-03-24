@@ -47,7 +47,7 @@ HR_WRITABLE_FIELDS = [
     'emergency_phone',
     'employee_bank_account_id',
     'employee_country_id',
-    'gender',
+    'sex',
     'identification_id',
     'ssnid',
     'job_title',
@@ -122,7 +122,7 @@ class ResUsers(models.Model):
     identification_id = fields.Char(related='employee_id.identification_id', readonly=False, related_sudo=False)
     ssnid = fields.Char(related='employee_id.ssnid', readonly=False, related_sudo=False)
     passport_id = fields.Char(related='employee_id.passport_id', readonly=False, related_sudo=False)
-    gender = fields.Selection(related='employee_id.gender', readonly=False, related_sudo=False)
+    sex = fields.Selection(related='employee_id.sex', readonly=False, related_sudo=False)
     birthday = fields.Date(related='employee_id.birthday', readonly=False, related_sudo=False)
     birthday_public_display = fields.Boolean(related='employee_id.birthday_public_display', readonly=False, related_sudo=False)
     place_of_birth = fields.Char(related='employee_id.place_of_birth', readonly=False, related_sudo=False)

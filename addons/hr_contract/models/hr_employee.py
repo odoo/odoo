@@ -14,14 +14,14 @@ from odoo.tools.date_intervals import Intervals
 class HrEmployeePublic(models.Model):
     _inherit = 'hr.employee.public'
 
-    first_contract_date = fields.Date(compute='_compute_manager_only_fields', search='_search_first_contract_date')
+    # first_contract_date = fields.Date(compute='_compute_manager_only_fields', search='_search_first_contract_date')
 
     def _get_manager_only_fields(self):
         return super()._get_manager_only_fields() + ['first_contract_date']
 
-    def _search_first_contract_date(self, operator, value):
-        employees = self.env['hr.employee'].sudo().search([('id', 'child_of', self.env.user.employee_id.ids), ('first_contract_date', operator, value)])
-        return [('id', 'in', employees.ids)]
+    # def _search_first_contract_date(self, operator, value):
+    #     employees = self.env['hr.employee'].sudo().search([('id', 'child_of', self.env.user.employee_id.ids), ('first_contract_date', operator, value)])
+    #     return [('id', 'in', employees.ids)]
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -36,15 +36,17 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user")
-    vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")
-    contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts', groups="hr.group_hr_user")
-    contract_id = fields.Many2one(
-        'hr.contract', string='Current Contract', groups="hr.group_hr_user",
-        domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee', copy=False)
-    calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch', groups="base.group_system,hr.group_hr_user")
-    contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count', groups="hr.group_hr_user")
-    contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
-    first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
+
+    form_contract_name = fields.Char(related='selected_version_id.contract_name', readonly=False)
+    # vehicle = fields.Char(string='Company Vehicle', groups="hr.group_hr_user")  # TODO: Deadcode
+    # contract_ids = fields.One2many('hr.contract', 'employee_id', string='Employee Contracts', groups="hr.group_hr_user")
+    # contract_id = fields.Many2one(
+    #     'hr.contract', string='Current Contract', groups="hr.group_hr_user",
+    #     domain="[('company_id', '=', company_id), ('employee_id', '=', id)]", help='Current contract of the employee', copy=False)
+    # calendar_mismatch = fields.Boolean(related='contract_id.calendar_mismatch', groups="base.group_system,hr.group_hr_user")
+    # contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count', groups="hr.group_hr_user")
+    # contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
+    # first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user", store=True)
 
     @api.depends('name')
     def _compute_legal_name(self):
@@ -52,16 +54,16 @@ class HrEmployee(models.Model):
             if not employee.legal_name:
                 employee.legal_name = employee.name
 
-    def _get_departure_date(self):
-        # Primarily used in the archive wizard
-        # to pick a good default for the departure date
-        self.ensure_one()
-        if self.contract_id.state == "open":
-            return False
-        expired_contract = self.env['hr.contract'].search([('employee_id', '=', self.id), ('state', '=', 'close')], limit=1, order='date_end desc')
-        if expired_contract:
-            return expired_contract.date_end
-        return super()._get_departure_date()
+    # def _get_departure_date(self):
+    #     # Primarily used in the archive wizard
+    #     # to pick a good default for the departure date
+    #     self.ensure_one()
+    #     if self.contract_id.state == "open":
+    #         return False
+    #     expired_contract = self.env['hr.contract'].search([('employee_id', '=', self.id), ('state', '=', 'close')], limit=1, order='date_end desc')
+    #     if expired_contract:
+    #         return expired_contract.date_end
+    #     return super()._get_departure_date()
 
     def _get_first_contracts(self):
         self.ensure_one()
@@ -96,15 +98,15 @@ class HrEmployee(models.Model):
             contracts = remove_gap(contracts)
         return min(contracts.mapped('date_start')) if contracts else False
 
-    @api.depends('contract_ids.state', 'contract_ids.date_start', 'contract_ids.active')
-    def _compute_first_contract_date(self):
-        for employee in self:
-            employee.first_contract_date = employee._get_first_contract_date()
-
-    @api.depends('contract_id', 'contract_id.state', 'contract_id.kanban_state')
-    def _compute_contract_warning(self):
-        for employee in self:
-            employee.contract_warning = not employee.contract_id or employee.contract_id.kanban_state == 'blocked' or employee.contract_id.state != 'open'
+    # @api.depends('contract_ids.state', 'contract_ids.date_start', 'contract_ids.active')
+    # def _compute_first_contract_date(self):
+    #     for employee in self:
+    #         employee.first_contract_date = employee._get_first_contract_date()
+    #
+    # @api.depends('contract_id', 'contract_id.state', 'contract_id.kanban_state')
+    # def _compute_contract_warning(self):
+    #     for employee in self:
+    #         employee.contract_warning = not employee.contract_id or employee.contract_id.kanban_state == 'blocked' or employee.contract_id.state != 'open'
 
     def _compute_contracts_count(self):
         # read_group as sudo, since contract count is displayed on form view
@@ -132,69 +134,69 @@ class HrEmployee(models.Model):
     def _get_incoming_contracts(self, date_from, date_to):
         return self._get_contracts(date_from, date_to, states=['draft'], kanban_state=['done'])
 
-    def _get_calendars(self, date_from=None):
-        res = super()._get_calendars(date_from=date_from)
-        if not date_from:
-            return res
-        contracts = self.env['hr.contract'].sudo().search([
-            '|',
-                ('state', 'in', ['open', 'close']),
-                '&',
-                    ('state', '=', 'draft'),
-                    ('kanban_state', '=', 'done'),
-            ('employee_id', 'in', self.ids),
-            ('date_start', '<=', date_from),
-            '|',
-                ('date_end', '=', False),
-                ('date_end', '>=', date_from)
-        ])
-        contracts_by_employee = defaultdict(lambda: self.env['hr.contract'])
-        for contract in contracts:
-            contracts_by_employee[contract.employee_id.id] += contract
-        for employee in self:
-            employee_contracts = contracts_by_employee[employee.id]
-            if employee_contracts:
-                res[employee.id] = contracts[0].resource_calendar_id.sudo(False)
-        return res
+    # def _get_calendars(self, date_from=None):
+    #     res = super()._get_calendars(date_from=date_from)
+    #     if not date_from:
+    #         return res
+    #     contracts = self.env['hr.contract'].sudo().search([
+    #         '|',
+    #             ('state', 'in', ['open', 'close']),
+    #             '&',
+    #                 ('state', '=', 'draft'),
+    #                 ('kanban_state', '=', 'done'),
+    #         ('employee_id', 'in', self.ids),
+    #         ('date_start', '<=', date_from),
+    #         '|',
+    #             ('date_end', '=', False),
+    #             ('date_end', '>=', date_from)
+    #     ])
+    #     contracts_by_employee = defaultdict(lambda: self.env['hr.contract'])
+    #     for contract in contracts:
+    #         contracts_by_employee[contract.employee_id.id] += contract
+    #     for employee in self:
+    #         employee_contracts = contracts_by_employee[employee.id]
+    #         if employee_contracts:
+    #             res[employee.id] = contracts[0].resource_calendar_id.sudo(False)
+    #     return res
 
-    def _get_calendar_periods(self, start, stop):
-        """
-        :param datetime start: the start of the period
-        :param datetime stop: the stop of the period
-        """
-        calendar_periods_by_employee = defaultdict(list)
-        contracts_by_employee = self.env['hr.contract'].sudo()._read_group(domain=[
-            '|',
-                ('state', 'in', ['open', 'close']),
-                '&',
-                    ('state', '=', 'draft'),
-                    ('kanban_state', '=', 'done'),
-            ('date_start', '<=', stop),
-            '|',
-                ('date_end', '=', False),
-                ('date_end', '>=', start),
-            ('employee_id', 'in', self.ids),
-        ], groupby=['employee_id'], aggregates=['id:recordset'])
-        for employee, contracts in contracts_by_employee:
-            for contract in contracts:
-                # if employee is under fully flexible contract, use timezone of the employee
-                calendar_tz = timezone(contract.resource_calendar_id.tz) if contract.resource_calendar_id else timezone(employee.resource_id.tz)
-                utc = timezone('UTC')
-                date_start = datetime.combine(
-                    contract.date_start,
-                    time(0, 0, 0)
-                ).replace(tzinfo=calendar_tz).astimezone(utc)
-                if contract.date_end:
-                    date_end = datetime.combine(
-                        contract.date_end + relativedelta(days=1),
-                        time(0, 0, 0)
-                    ).replace(tzinfo=calendar_tz).astimezone(utc)
-                else:
-                    date_end = stop
-                calendar_periods_by_employee[employee].append(
-                    (max(date_start, start), min(date_end, stop), contract.resource_calendar_id)
-                )
-        return calendar_periods_by_employee
+    # def _get_calendar_periods(self, start, stop):
+    #     """
+    #     :param datetime start: the start of the period
+    #     :param datetime stop: the stop of the period
+    #     """
+    #     calendar_periods_by_employee = defaultdict(list)
+    #     contracts_by_employee = self.env['hr.contract'].sudo()._read_group(domain=[
+    #         '|',
+    #             ('state', 'in', ['open', 'close']),
+    #             '&',
+    #                 ('state', '=', 'draft'),
+    #                 ('kanban_state', '=', 'done'),
+    #         ('date_start', '<=', stop),
+    #         '|',
+    #             ('date_end', '=', False),
+    #             ('date_end', '>=', start),
+    #         ('employee_id', 'in', self.ids),
+    #     ], groupby=['employee_id'], aggregates=['id:recordset'])
+    #     for employee, contracts in contracts_by_employee:
+    #         for contract in contracts:
+    #             # if employee is under fully flexible contract, use timezone of the employee
+    #             calendar_tz = timezone(contract.resource_calendar_id.tz) if contract.resource_calendar_id else timezone(employee.resource_id.tz)
+    #             utc = timezone('UTC')
+    #             date_start = datetime.combine(
+    #                 contract.date_start,
+    #                 time(0, 0, 0)
+    #             ).replace(tzinfo=calendar_tz).astimezone(utc)
+    #             if contract.date_end:
+    #                 date_end = datetime.combine(
+    #                     contract.date_end + relativedelta(days=1),
+    #                     time(0, 0, 0)
+    #                 ).replace(tzinfo=calendar_tz).astimezone(utc)
+    #             else:
+    #                 date_end = stop
+    #             calendar_periods_by_employee[employee].append(
+    #                 (max(date_start, start), min(date_end, stop), contract.resource_calendar_id)
+    #             )
+    #     return calendar_periods_by_employee
 
     @api.model
     def _get_all_contracts(self, date_from, date_to, states=['open']):
@@ -203,29 +205,29 @@ class HrEmployee(models.Model):
         """
         return self.search(['|', ('active', '=', True), ('active', '=', False)])._get_contracts(date_from, date_to, states=states)
 
-    def _get_unusual_days(self, date_from, date_to=None):
-        employee_contracts = self.env['hr.contract'].sudo().search([
-            ('state', '!=', 'cancel'),
-            ('employee_id', '=', self.id),
-            ('date_start', '<=', date_to),
-            '|',
-            ('date_end', '=', False),
-            ('date_end', '>=', date_from),
-        ])
-        if not employee_contracts:
-            return super()._get_unusual_days(date_from, date_to)
-        unusual_days = {}
-        date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
-        date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
-        for contract in employee_contracts:
-            tmp_date_from = max(date_from_date, contract.date_start)
-            tmp_date_to = min(date_to_date, contract.date_end) if contract.date_end else date_to_date
-            unusual_days.update(contract.resource_calendar_id.sudo(False)._get_unusual_days(
-                datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
-                datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
-                self.company_id,
-            ))
-        return unusual_days
+    # def _get_unusual_days(self, date_from, date_to=None):
+    #     employee_contracts = self.env['hr.contract'].sudo().search([
+    #         ('state', '!=', 'cancel'),
+    #         ('employee_id', '=', self.id),
+    #         ('date_start', '<=', date_to),
+    #         '|',
+    #         ('date_end', '=', False),
+    #         ('date_end', '>=', date_from),
+    #     ])
+    #     if not employee_contracts:
+    #         return super()._get_unusual_days(date_from, date_to)
+    #     unusual_days = {}
+    #     date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
+    #     date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
+    #     for contract in employee_contracts:
+    #         tmp_date_from = max(date_from_date, contract.date_start)
+    #         tmp_date_to = min(date_to_date, contract.date_end) if contract.date_end else date_to_date
+    #         unusual_days.update(contract.resource_calendar_id.sudo(False)._get_unusual_days(
+    #             datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
+    #             datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC),
+    #             self.company_id,
+    #         ))
+    #     return unusual_days
 
     def _employee_attendance_intervals(self, start, stop, lunch=False):
         self.ensure_one()
@@ -290,13 +292,13 @@ class HrEmployee(models.Model):
             duration_data['hours'] += contract_duration_data['hours']
         return duration_data
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.get('contract_id'):
-            for employee in self:
-                employee.resource_calendar_id.transfer_leaves_to(employee.contract_id.resource_calendar_id, employee.resource_id)
-                employee.resource_calendar_id = employee.contract_id.resource_calendar_id
-        return res
+    # def write(self, vals):
+    #     res = super().write(vals)
+    #     if vals.get('contract_id'):
+    #         for employee in self:
+    #             employee.resource_calendar_id.transfer_leaves_to(employee.contract_id.resource_calendar_id, employee.resource_id)
+    #             employee.resource_calendar_id = employee.contract_id.resource_calendar_id
+    #     return res
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_open_contract(self):

@@ -12,7 +12,8 @@ class HrEmployeeBase(models.AbstractModel):
         'Indirect Subordinates Count',
         compute='_compute_subordinates', recursive=True, store=False,
         compute_sudo=True)
-    department_color = fields.Integer("Department Color", related="department_id.color")
+    # department_color = fields.Integer("Department Color", related="department_id.color")
+    department_color = fields.Integer()
     child_count = fields.Integer(
         'Direct Subordinates Count',
         compute='_compute_child_count', recursive=True,
