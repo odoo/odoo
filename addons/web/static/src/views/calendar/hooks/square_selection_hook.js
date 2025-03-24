@@ -93,6 +93,7 @@ export function useSquareSelection() {
         if (!targetElement) {
             return;
         }
+        document.activeElement?.blur(); // Force blur on activeElement to force update value
         const rowSelector = 'tr[role="row"]';
         state.startCol = state.endCol = getElementIndex(targetElement);
         state.startRow = state.endRow = getElementIndex(targetElement.closest(rowSelector));
@@ -138,7 +139,7 @@ export function useSquareSelection() {
                     dates.push(date);
                 }
             }
-            await component.props.multiCreateRecord(dates);
+            await component.props.multiCreateRecords(dates);
         } else if (component.props.sidePanelMode === SIDE_PANEL_MODES.delete) {
             const ids = [];
             for (const element of currentSelectionElement) {

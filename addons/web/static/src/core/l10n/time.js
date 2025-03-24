@@ -14,7 +14,6 @@ const NUMERAL_MAPS = [
  * A representation of a specific time in a 24 hour format
  */
 export class Time {
-
     /**
      * This method will return a Time object contructed
      * differently depending on the type of {value}
@@ -87,7 +86,12 @@ export class Time {
      * @returns {boolean}
      */
     equals(other, checkSeconds = false) {
-        return other && this.hour === other.hour && this.minute === other.minute && (!checkSeconds || this.second === other.second);
+        return (
+            other &&
+            this.hour === other.hour &&
+            this.minute === other.minute &&
+            (!checkSeconds || this.second === other.second)
+        );
     }
 
     /**
@@ -102,18 +106,28 @@ export class Time {
         const hourFormat = this._is24HourFormat ? "H" : "h";
         const secondFormat = showSeconds ? ":ss" : "";
         const meridiemFormat = this._isMeridiemFormat ? "a" : "";
-        return this.toDateTime().toFormat(`${hourFormat}:mm${secondFormat}${meridiemFormat}`).toLowerCase();
+        return this.toDateTime()
+            .toFormat(`${hourFormat}:mm${secondFormat}${meridiemFormat}`)
+            .toLowerCase();
     }
 
     /**
      * @returns {DateTime}
      */
     toDateTime() {
-        return DateTime.fromObject({
+        return DateTime.fromObject(this.toObject());
+    }
+
+    /**
+     * Returns the time as an Object
+     * @returns {{hour: number, minute: number, second: number}}
+     */
+    toObject() {
+        return {
             hour: this.hour,
             minute: this.minute,
             second: this.second,
-        });
+        };
     }
 }
 

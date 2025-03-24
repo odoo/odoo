@@ -1,6 +1,7 @@
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { FormRenderer } from "@web/views/form/form_renderer";
 import { DateTimePicker } from "@web/core/datetime/datetime_picker";
+import { TimePicker } from "@web/core/time_picker/time_picker";
 import { CalendarFilterSection } from "@web/views/calendar/calendar_filter_section/calendar_filter_section";
 import { Record } from "@web/model/record";
 import { useService } from "@web/core/utils/hooks";
@@ -18,11 +19,12 @@ export class CalendarSidePanel extends Component {
     static components = {
         FormRenderer,
         DatePicker: DateTimePicker,
+        TimePicker,
         FilterSection: CalendarFilterSection,
         Record,
     };
     static template = "web.CalendarSidePanel";
-    static props = ["model", "mode", "setMode", "context?"];
+    static props = ["model", "mode", "setMode", "context?", "setMultiCreateTimeRange"];
     static defaultProps = {
         context: {},
     };
