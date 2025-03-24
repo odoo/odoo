@@ -37,6 +37,7 @@ from datetime import datetime
 from functools import lru_cache, partial
 from itertools import zip_longest as izip_longest
 from passlib.context import CryptContext
+from textwrap import shorten
 from typing import Optional, Iterable
 from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
@@ -1432,21 +1433,18 @@ class ChromeBrowser:
             request_id = res.get('id')
             try:
                 if request_id is None:
-                    handler = self._handlers.get(res['method'])
-                    if handler:
+                    if handler := self._handlers.get(res['method']):
                         handler(**res['params'])
-                else:
-                    f = self._responses.pop(request_id, None)
-                    if f:
-                        if 'result' in res:
-                            f.set_result(res['result'])
-                        else:
-                            f.set_exception(ChromeBrowserException(res['error']['message']))
+                elif f := self._responses.pop(request_id, None):
+                    if 'result' in res:
+                        f.set_result(res['result'])
+                    else:
+                        f.set_exception(ChromeBrowserException(res['error']['message']))
             except Exception:
-                msg = str(msg)
-                if msg and len(msg) > 500:
-                    msg = msg[:500] + '...'
-                _logger.exception("While processing message %s", msg)
+                _logger.exception(
+                    "While processing message %s",
+                    shorten(str(msg), 500, placeholder='...'),
+                )
 
     def _websocket_request(self, method, *, params=None, timeout=10.0):
         assert threading.get_ident() != self._receiver.ident,\
