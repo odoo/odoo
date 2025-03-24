@@ -30,7 +30,14 @@ const dynamicSnippetBlogPostsOptions = dynamicSnippetOptions.extend({
             hover_effect_opt: ["big_picture"],
             picture_size_opt: ["big_picture", "horizontal", "card"],
             teaser_opt: ["card", "list"],
-            date_opt: ["card", "horizontal", "list"],
+            date_opt: [
+                "card",
+                "horizontal",
+                "list",
+                "single_full",
+                "single_aside",
+                "single_circle",
+            ],
         };
         if (widgetName in templatesWidgetVisibility) {
             return templatesWidgetVisibility[widgetName].includes(templateKey);
