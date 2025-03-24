@@ -493,14 +493,11 @@ class EventTrack(models.Model):
     # MESSAGING
     # ------------------------------------------------------------
 
-    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
-        recipients = super()._message_get_default_recipients(with_cc=with_cc, all_tos=all_tos)
+    def _message_add_default_recipients(self):
+        recipients = super()._message_add_default_recipients()
         for track in self.filtered(lambda t: not t.partner_id.email_normalized and not email_normalize(t.contact_email) and t.partner_email):
             info = recipients[track.id]
-            info['email_to'] = ','.join(tools.mail.email_split_and_format_normalize(track.partner_email)) or track.partner_email
-            # default only: email is sufficient, otherwise propose even "wrong" partners
-            if not all_tos:
-                info['partner_ids'] = []
+            info['email_to_lst'] = tools.mail.email_split_and_format_normalize(track.partner_email) or [track.partner_email]
         return recipients
 
     def _message_post_after_hook(self, message, msg_vals):
