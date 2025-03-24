@@ -1,5 +1,5 @@
 import { Record } from "./record";
-import { IS_DELETED_SYM, STORE_SYM } from "./misc";
+import { IS_DELETED_SYM, STORE_SYM, modelRegistry } from "./misc";
 import { reactive, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -202,5 +202,14 @@ export class Store extends Record {
         return () => {
             ready = false;
         };
+    }
+    _cleanupData(data) {
+        super._cleanupData(data);
+        if (this._getPyModelName() === "Store") {
+            delete data.Models;
+            for (const [name] of modelRegistry.getEntries()) {
+                delete data[name];
+            }
+        }
     }
 }
