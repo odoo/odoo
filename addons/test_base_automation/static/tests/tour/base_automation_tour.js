@@ -462,10 +462,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
             },
         },
         {
-            trigger: ".modal-content .o_form_renderer [name='state'] span[value*='object_write']",
-            run: "click",
-        },
-        {
             trigger: ".modal-content .o_form_renderer [name='state'] span[value*='followers']",
             run: "click",
         },
