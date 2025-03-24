@@ -73,16 +73,16 @@ export class LeaveStatsComponent extends Component {
             return;
         }
 
-        const dateFrom = date.startOf("month");
-        const dateTo = date.endOf("month");
+        const dateFrom = date.startOf("month").setZone(null);
+        const dateTo = dateFrom.plus({'months': 1});
 
         const departmentLeaves = await this.orm.searchRead(
             "hr.leave",
             [
                 ["department_id", "=", department[0]],
                 ["state", "=", "validate"],
-                ["date_from", "<=", dateTo],
-                ["date_to", ">=", dateFrom],
+                ["date_from", "<", serializeDateTime(dateTo)],
+                ["date_to", ">=", serializeDateTime(dateFrom)],
             ],
             [
                 "employee_id",
@@ -126,14 +126,14 @@ export class LeaveStatsComponent extends Component {
             return;
         }
 
-        const dateFrom = date.startOf("year");
-        const dateTo = date.endOf("year");
+        const dateFrom = date.startOf("year").setZone(null);
+        const dateTo = dateFrom.plus({"years": 1});
         this.state.leaves = await this.orm.formattedReadGroup(
             "hr.leave",
             [
                 ["employee_id", "=", employee[0]],
                 ["state", "=", "validate"],
-                ["date_from", "<=", serializeDateTime(dateTo)],
+                ["date_from", "<", serializeDateTime(dateTo)],
                 ["date_to", ">=", serializeDateTime(dateFrom)],
             ],
             ["holiday_status_id"],
