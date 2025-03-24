@@ -87,6 +87,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_name', {
             'query': query,
             'query_country_code': query_country_code,
+            'origin_country_code': self.env.company.country_id.code,
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -103,6 +104,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
+            'origin_country_code': self.env.company.country_id.code,
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -163,6 +165,7 @@ class ResPartner(models.Model):
     def enrich_by_duns(self, duns, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_duns', {
             'duns': duns,
+            'origin_country_code': self.env.company.country_id.code,
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
@@ -170,6 +173,7 @@ class ResPartner(models.Model):
     def enrich_by_gst(self, gst, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_gst', {
             'gst': gst,
+            'origin_country_code': self.env.company.country_id.code,
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
@@ -177,6 +181,7 @@ class ResPartner(models.Model):
     def enrich_by_domain(self, domain, timeout=15):
         response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich_by_domain', {
             'domain': domain,
+            'origin_country_code': self.env.company.country_id.code,
         }, timeout=timeout)
         return self._process_enriched_response(response, error)
 
