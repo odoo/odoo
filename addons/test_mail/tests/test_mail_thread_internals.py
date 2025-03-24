@@ -4,7 +4,7 @@ from unittest.mock import DEFAULT
 import base64
 
 from odoo import exceptions, tools
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
@@ -19,11 +19,60 @@ class TestAPI(MailCommon, TestRecipients):
     def setUpClass(cls):
         super().setUpClass()
         cls.user_portal = cls._create_portal_user()
-        cls.test_partner = cls.env['res.partner'].create({
-            'email': '"Test External" <test.external@example.com>',
-            'phone': '+32455001122',
-            'name': 'Test External',
+        cls.test_partner, cls.test_partner_archived = cls.env['res.partner'].create([
+            {
+                'email': '"Test External" <test.external@example.com>',
+                'phone': '+32455001122',
+                'name': 'Name External',
+            }, {
+                'active': False,
+                'email': '"Test Archived" <test.archived@example.com>',
+                'phone': '+32455221100',
+                'name': 'Name Archived',
+            },
+        ])
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            email='eglantine@example.com',
+            groups='base.group_user',
+            login='employee2',
+            name='Eglantine Employee',
+            notification_type='email',
+            signature='--\nEglantine',
+        )
+        cls.partner_employee_2 = cls.user_employee_2.partner_id
+        cls.user_employee_archived = mail_new_test_user(
+            cls.env,
+            email='albert@example.com',
+            groups='base.group_user',
+            login='albert',
+            name='Albert Alemployee',
+            notification_type='email',
+            signature='--\nAlbert',
+        )
+        cls.user_employee_archived.active = False
+        cls.partner_employee_archived = cls.user_employee_archived.partner_id
+
+        cls.test_aliases = cls.env['mail.alias'].create([
+            {
+                'alias_domain_id': cls.mail_alias_domain.id,
+                'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket.mc'),
+                'alias_name': 'test.alias.free',
+            }, {
+                'alias_domain_id': cls.mail_alias_domain.id,
+                'alias_model_id': cls.env['ir.model']._get_id('mail.test.ticket.mc'),
+                'alias_name': 'test.alias.partner',
+            }
+        ])
+        cls.test_partner_alias = cls.env['res.partner'].create({
+            'email': f'"Do not do this" <{cls.test_aliases[1].alias_full_name}>',
+            'name': 'Someone created a partner with email=alias',
         })
+        cls.test_partner_catchall = cls.env['res.partner'].create({
+            'email': f'"Do not do this neither" <{cls.mail_alias_domain.catchall_email}>',
+            'name': 'Someone created a partner with email=catchall',
+        })
+
         cls.ticket_record = cls.env['mail.test.ticket.mc'].create({
             'company_id': cls.user_employee.company_id.id,
             'email_from': '"Paulette Vachette" <paulette@test.example.com>',
@@ -56,6 +105,11 @@ class TestAPI(MailCommon, TestRecipients):
                 'name': 'Publicly Created',
             },
         ])
+
+    def test_assert_initial_values(self):
+        """ Just be sure of what we test """
+        self.assertFalse(self.user_employee_archived.active)
+        self.assertTrue(self.partner_employee_archived.active)
 
     @users('employee')
     def test_body_escape(self):
@@ -390,6 +444,74 @@ class TestAPI(MailCommon, TestRecipients):
                 'Mail: prioritize email should not return partner if email is found'
             )
 
+    @users('employee')
+    def test_message_get_default_recipients_banned(self):
+        """ Test defensive behavior to avoid contacting critical emails like
+        aliases, public users, ... """
+        tickets = self.env['mail.test.ticket.mc'].create([
+            # do not propose public partners
+            {
+                'customer_id': self.user_public.partner_id.id,
+                'name': 'Public',
+            },
+            # do not propose root
+            {
+                'customer_id': self.user_root.partner_id.id,
+                'name': 'Root',
+            },
+            # do not propose alias domain emails
+            {
+                'email_from': self.mail_alias_domain.catchall_email,
+            },
+            # do not propose when partner = alias
+            {
+                'customer_id': self.test_partner_alias.id,
+                'name': 'Partner = Alias',
+            },
+            # do not propose alias email
+            {
+                'email_from': self.test_aliases[0].alias_full_name,
+                'name': 'Alias email',
+            },
+            # do not propose alias email (even if linked to a partner)
+            {
+                'email_from': self.test_aliases[1].alias_full_name,
+                'name': 'Alias email, existing partner',
+            },
+            # propose archived
+            {
+                'customer_id': self.test_partner_archived.id,
+                'name': 'Archived partner',
+            },
+            # propose active based on archived user
+            {
+                'customer_id': self.partner_employee_archived.id,
+                'name': 'Archived partner',
+            },
+        ])
+        expected_all = [
+            # nobody to suggest (no public !)
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # FIXME should be nobody to suggest (no root !)
+            {'email_cc': '', 'email_to': '', 'partner_ids': [self.partner_root.id]},
+            # FIXME alias domain email is not ok
+            {'email_cc': '', 'email_to': 'catchall.test@test.mycompany.com', 'partner_ids': []},
+            # FIXME partner with alias email is not ok
+            {'email_cc': '', 'email_to': '', 'partner_ids': [self.test_partner_alias.id]},
+            # FIXME alias email is not ok
+            {'email_cc': '', 'email_to': 'test.alias.free@test.mycompany.com', 'partner_ids': []},
+            # FIXME alias email is not ok even if linked to partner
+            {'email_cc': '', 'email_to': 'test.alias.partner@test.mycompany.com', 'partner_ids': []},
+            # archived is ok, customer
+            {'email_cc': '', 'email_to': '', 'partner_ids': [self.test_partner_archived.id]},
+            # active based on archived user is ok, customer
+            {'email_cc': '', 'email_to': '', 'partner_ids': [self.partner_employee_archived.id]},
+        ]
+        defaults = tickets._message_get_default_recipients(all_tos=False)
+        for ticket, expected in zip(tickets, expected_all, strict=True):
+            with self.subTest(ticket_name=ticket.name):
+                self.assertDictEqual(defaults[ticket.id], expected)
+
     @users("employee")
     def test_message_get_suggested_recipients(self):
         """ Test default creation values returned for suggested recipient. """
@@ -439,9 +561,85 @@ class TestAPI(MailCommon, TestRecipients):
                     }
                 )
 
-        # do not propose public partners
-        ticket_public = self.env['mail.test.ticket.mc'].create({'customer_id': self.user_public.partner_id.id})
-        self.assertFalse(ticket_public._message_get_suggested_recipients(no_create=True))
+    @users("employee")
+    def test_message_get_suggested_recipients_banned(self):
+        """ Ban list: public partners, aliases, alias domains """
+        domains = self.env['mail.alias.domain'].sudo().search([])
+        domains_cc_list = []
+        for domain in domains:
+            domains_cc_list += [
+                f'"Bounce {domain.name}" <{domain.bounce_email}>',
+                f'"Catchall {domain.name}" <{domain.catchall_email}>',
+                f'"Default {domain.name}" <{domain.default_from_email}>',
+            ]
+        tickets = self.env['mail.test.ticket.mc'].create([
+            # do not propose public partners
+            {
+                'customer_id': self.user_public.partner_id.id,
+                'name': 'Public',
+            },
+            # do not propose root
+            {
+                'customer_id': self.user_root.partner_id.id,
+                'name': 'Root',
+            },
+            # valid, but with message containing alias domain emails
+            {
+                'customer_id': self.test_partner.id,
+                'name': 'Valid partner + invalid domain emails in discussion',
+            },
+            # valid, but with message containing alias emails or partners
+            {
+                'customer_id': self.test_partner_archived.id,
+                'name': 'Valid partner archived + invalid in discussion',
+            },
+        ])
+        tickets[2].message_post(
+            author_id=self.user_root.partner_id.id,
+            body='Message with lots of invalid emails',
+            incoming_email_cc=', '.join(domains_cc_list),
+            message_type='email',
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        tickets[3].message_post(
+            author_id=False,
+            email_from=self.mail_alias_domain.bounce_email,
+            body='Message with alias emails and partners',
+            message_type='email',
+            incoming_email_to=f'"Alias" <{self.test_aliases[0].alias_full_name}>',
+            partner_ids=(self.test_partner_alias + self.test_partner_catchall).ids,
+            subtype_id=self.env.ref('mail.mt_comment').id,
+        )
+        expected_all = [
+            # nobody to suggest (no public !)
+            [],
+            #nobody to suggest (no root !)
+            [],
+            # only valid is the customer
+            [
+                {
+                    'create_values': {},
+                    'email': self.test_partner.email_normalized,
+                    'name': self.test_partner.name,
+                    'partner_id': self.test_partner.id,
+                },
+            ],
+            # only valid is the customer (and not aliases nor partner with alias email)
+            [
+                {
+                    'create_values': {},
+                    'email': self.test_partner_archived.email_normalized,
+                    'name': self.test_partner_archived.name,
+                    'partner_id': self.test_partner_archived.id,
+                },
+            ],
+        ]
+        suggested_all = tickets._message_get_suggested_recipients_batch(no_create=True, reply_discussion=True)
+        for ticket, expected in zip(tickets, expected_all, strict=True):
+            with self.subTest(ticket_name=ticket.name):
+                suggested = suggested_all[ticket.id]
+                for suggestion, expected_sugg in zip(suggested, expected, strict=True):
+                    self.assertDictEqual(suggestion, expected_sugg)
 
     @users("employee")
     def test_message_get_suggested_recipients_conversation(self):
@@ -472,17 +670,20 @@ class TestAPI(MailCommon, TestRecipients):
                 'incoming_email_cc': tools.mail.formataddr(test_cc_tuples[1]),
                 'incoming_email_to': tools.mail.formataddr(test_to_tuples[0]),
                 'message_type': 'email',
+                'subtype_id': self.env.ref('mail.mt_comment').id,
             }),
             (self.user_root, {
                 'body': 'Some automated email',
                 'message_type': 'email_outgoing',
                 'partner_ids': self.user_portal.partner_id.ids,
+                'subtype_id': self.env.ref('mail.mt_comment').id,
             }),
             (self.user_employee, {
                 'body': 'Salesman reply by email',
                 'incoming_email_cc': tools.mail.formataddr(test_cc_tuples[2]),
                 'incoming_email_to': tools.mail.formataddr(test_to_tuples[1]),
                 'message_type': 'email',
+                'subtype_id': self.env.ref('mail.mt_comment').id,
             }),
         ]:
             messages += test_record.with_user(user).message_post(**post_values)
@@ -585,6 +786,94 @@ class TestAPI(MailCommon, TestRecipients):
         ], strict=True):
             with self.subTest():
                 self.assertDictEqual(recipient, expected)
+
+    @users("employee")
+    def test_message_get_suggested_recipients_conversation_filter(self):
+        """ Test sorting of messages when suggested is used in reply-all based
+        on last message. """
+        test_record = self.env['mail.test.recipients'].create({
+            'email_cc': '"Test Cc" <test.cc.1@test.example.com>',
+            'name': 'Test Recipients',
+        })
+        base_expected = [{
+            'create_values': {},
+            'email': 'test.cc.1@test.example.com',
+            'name': 'Test Cc',
+            'partner_id': False,
+        }]
+        for user, post_values, expected_add in [
+            (
+                self.user_employee,
+                {
+                    'body': 'Note with pings, to ignore',
+                    'message_type': 'comment',
+                    'subtype_id': self.env.ref('mail.mt_note').id,
+                },
+                []
+            ), (
+                self.user_root,
+                {
+                    'author_id': False,
+                    'email_from': '"Outdated" <outdated@test.example.com>',
+                    'body': 'Incoming (old) email',
+                    'message_type': 'email',
+                    'subtype_id': self.env.ref('mail.mt_comment').id,
+                },
+                [{
+                    'create_values': {},
+                    'email': 'outdated@test.example.com',
+                    'name': 'Outdated',
+                    'partner_id': False,
+                }],
+            ), (
+                self.user_employee,
+                {
+                    'body': 'Some discussion',
+                    'message_type': 'comment',
+                    'partner_ids': self.user_portal.partner_id.ids,
+                    'subtype_id': self.env.ref('mail.mt_comment').id,
+                },
+                [{
+                    'create_values': {},
+                    'email': self.user_portal.email_normalized,
+                    'name': self.user_portal.name,
+                    'partner_id': self.user_portal.partner_id.id,
+                }, {
+                    'create_values': {},
+                    'email': self.user_employee.email_normalized,
+                    'name': self.user_employee.name,
+                    'partner_id': self.user_employee.partner_id.id,
+                }],
+            ), (
+                self.user_root,
+                {
+                    'author_id': self.partner_employee_2.id,
+                    'body': 'Some marketing email',
+                    'message_type': 'email_outgoing',
+                    'subtype_id': self.env.ref('mail.mt_note').id,
+                },
+                [{
+                    'create_values': {},
+                    'email': self.user_portal.email_normalized,
+                    'name': self.user_portal.name,
+                    'partner_id': self.user_portal.partner_id.id,
+                }, {
+                    'create_values': {},
+                    'email': self.user_employee.email_normalized,
+                    'name': self.user_employee.name,
+                    'partner_id': self.user_employee.partner_id.id,
+                }],
+            ),
+        ]:
+            test_record.with_user(user).message_post(**post_values)
+            test_record.message_unsubscribe(partner_ids=test_record.message_partner_ids.ids)
+            suggested = test_record._message_get_suggested_recipients(reply_discussion=True, no_create=True)
+            expected = base_expected + expected_add
+            # as we can't use sorted directly, reorder manually, hey
+            expected.sort(key=lambda item: item['partner_id'], reverse=True)
+            with self.subTest(message=post_values['body']):
+                for sugg, expected_sugg in zip(suggested, expected, strict=True):
+                    self.assertDictEqual(sugg, expected_sugg)
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
