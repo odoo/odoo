@@ -6,7 +6,7 @@ import { useBus } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
-import { getColor } from "@web/views/calendar/utils";
+import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
 import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_hook";
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
@@ -176,19 +176,7 @@ export class CalendarCommonRenderer extends Component {
         return Object.values(this.props.model.records).map((r) => this.convertRecordToEvent(r));
     }
     convertRecordToEvent(record) {
-        const allDay = record.isAllDay || record.end.diff(record.start, "hours").hours >= 24;
-        return {
-            id: record.id,
-            title: record.title,
-            start: record.start.toISO(),
-            end:
-                (["week", "month"].includes(this.props.model.scale) && allDay) ||
-                record.isAllDay ||
-                (allDay && record.end.toMillis() !== record.end.startOf("day").toMillis())
-                    ? record.end.plus({ days: 1 }).toISO()
-                    : record.end.toISO(),
-            allDay: allDay,
-        };
+        return convertRecordToEvent(record);
     }
     getPopoverProps(record) {
         return {
