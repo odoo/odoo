@@ -29,6 +29,9 @@ export function useSearchBarToggler() {
     function toggleSearchBar() {
         isToggled = !isToggled;
         updateState();
+        if (ui.isSmall) {
+            this.env.bus.trigger("cp_toggle_search_bar");
+        }
     }
 
     const onResize = useDebounced(updateState, 200);

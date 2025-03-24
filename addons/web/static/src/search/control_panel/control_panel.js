@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Pager } from "@web/core/pager/pager";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useCommand } from "@web/core/commands/command_hook";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -233,6 +233,16 @@ export class ControlPanel extends Component {
             tolerance: 10,
             onWillStartDrag: (params) => this._sortEmbeddedActionStart(params),
             onDrop: (params) => this._sortEmbeddedActionDrop(params),
+        });
+
+        useBus(this.env.bus, "cp_toggle_search_bar", () => {
+            this.isScrolling = true;
+            // Wait 2 animation frame
+            // - The owl render to draw the search input
+            // - The implicit scroll trigger by the owl render
+            browser.requestAnimationFrame(() =>
+                browser.requestAnimationFrame(() => (this.isScrolling = false))
+            );
         });
     }
 
