@@ -1,3 +1,5 @@
+/* global posmodel */
+
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
@@ -9,6 +11,9 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+import { run } from "@point_of_sale/../tests/generic_helpers/utils";
+import { renderToElement } from "@web/core/utils/render";
+import { formatCurrency } from "@web/core/currency";
 
 registry.category("web_tour.tours").add("ReceiptScreenTour", {
     checkDelay: 50,
@@ -173,5 +178,40 @@ registry.category("web_tour.tours").add("ReceiptTrackingMethodTour", {
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickValidate(),
             ReceiptScreen.trackingMethodIsLot("123456789"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1", "5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            run(() => {
+                const line = posmodel.getOrder().lines[0];
+                const context = {
+                    line,
+                    props: { basic_receipt: true },
+                    formatCurrency: (amount) => formatCurrency(amount, line.currency.id),
+                };
+
+                const rendered = renderToElement("point_of_sale.Orderline", {
+                    this: context,
+                    ...context,
+                });
+
+                if (!rendered.innerHTML.includes("Desk Pad")) {
+                    throw new Error("Desk Pad is not present on the ticket");
+                }
+
+                if (rendered.innerHTML.includes("5.00 / Units")) {
+                    throw new Error("The price should not be included on a basic receipt");
+                }
+            }, "Basic receipt doesn't have price"),
         ].flat(),
 });

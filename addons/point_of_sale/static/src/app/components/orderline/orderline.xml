@@ -34,7 +34,7 @@
                             <i class="fa fa-tag pe-1"/><em><t t-esc="discount" />% </em> discount off on <t t-esc="env.utils.formatCurrency(line.allPrices.priceWithTaxBeforeDiscount)"/>
                         </t>
                     </li>
-                    <li class="price-per-unit" t-if="props.mode == 'receipt' || line.price_type !== 'original'">
+                    <li class="price-per-unit" t-if="!props.basic_receipt and (props.mode == 'receipt' || line.price_type !== 'original')">
                         <t t-if="line.price !== 0">
                             <i class="fa fa-money center pe-1"/>
                             <t t-esc="formatCurrency(line.unitDisplayPrice)" />
