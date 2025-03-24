@@ -13,17 +13,31 @@
                   <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
             <xpath expr="//button[@name='action_schedule_activities']" position="attributes">
-                  <attribute name="invisible">has_error or activity_category == 'meeting' or id</attribute>
+                  <attribute name="invisible" add="activity_category == 'meeting' or id" separator="or"/>
             </xpath>
             <xpath expr="//field[@name='note']" position="attributes">
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
+            <xpath expr="//field[@name='summary']" position="attributes">
+                <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='summary']" position="after">
+                <div invisible="activity_category != 'meeting'" class="text-muted text-center w-100">
+                    <div>
+                        <i class="fa fa-3x fa-calendar p-5" title="Calendar" aria-hidden="true"/>
+                    </div>
+                    <p>Schedule a meeting in your calendar</p>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_schedule_activities_done']" position="attributes">
+                <attribute name="invisible" add="activity_category == 'meeting'" separator="or"/>
+            </xpath>
             <xpath expr="//button[@name='action_schedule_activities']" position="before">
-                  <button string="Open Calendar"
-                          invisible="activity_category not in ('meeting', 'phonecall')"
-                          name="action_create_calendar_event"
-                          type="object"
-                          class="btn-primary"/>
+                <button string="Schedule"
+                        invisible="activity_category != 'meeting'"
+                        name="action_create_calendar_event"
+                        type="object"
+                        class="btn-primary"/>
             </xpath>
         </field>
     </record>

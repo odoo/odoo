@@ -236,6 +236,7 @@ export class MailActivity extends models.ServerModel {
                 reporting_date: reportingDate ? reportingDate.toFormat("yyyy-LL-dd") : false,
                 state: ongoing.length ? this._compute_state_from_date(dateDeadline) : "done",
                 user_assigned_ids: userAssignedIds,
+                summaries: ongoing.map((a) => a.summary ? a.summary : ''),
                 ...attachmentsInfo,
             };
         }

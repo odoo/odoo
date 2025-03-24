@@ -6,6 +6,7 @@ from . import base_partner_merge_automatic_wizard
 from . import mail_blacklist_remove
 from . import mail_compose_message
 from . import mail_activity_schedule
+from . import mail_activity_schedule_summary
 from . import mail_resend_message
 from . import mail_template_preview
 from . import mail_template_reset
