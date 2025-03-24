@@ -2,7 +2,7 @@ import { getMimetype } from "@html_editor/main/media/image_crop";
 import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { isImageCorsProtected } from "@html_builder/utils/utils_css";
+import { isImageCorsProtected, normalizeColor } from "@html_builder/utils/utils_css";
 import { getImageMimetype } from "./image_helpers";
 import { ImageToolOption } from "./image_tool_option";
 
@@ -91,6 +91,27 @@ class ImageToolOptionPlugin extends Plugin {
                         mimetype: getImageMimetype(img),
                         glFilter: glFilterName,
                     }),
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
+                },
+            },
+            setCustomFilter: {
+                getValue: ({ editingElement, param: { mainParam: filterProperty } }) => {
+                    const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
+                    return filterOptions[filterProperty] || 0;
+                },
+                load: async ({
+                    editingElement: img,
+                    param: { mainParam: filterProperty },
+                    value,
+                }) => {
+                    const filterOptions = JSON.parse(img.dataset.filterOptions || "{}");
+                    filterOptions[filterProperty] =
+                        filterProperty === "filterColor" ? normalizeColor(value) : value;
+                    return await this.dependencies.imagePostProcess.processImage(img, {
+                        filterOptions: JSON.stringify(filterOptions),
+                    });
+                },
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
                 },

@@ -68,7 +68,7 @@ export class BuilderRange extends Component {
     }
 
     get rangeInputValue() {
-        return this.state.value ? this.formatRawValue(this.state.value) : "";
+        return this.state.value ? this.formatRawValue(this.state.value) : "0";
     }
 
     get displayValue() {

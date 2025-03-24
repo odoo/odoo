@@ -1,4 +1,4 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { ImageShapeOption } from "./image_shape_option";
 
 export class ImageToolOption extends BaseOptionComponent {
@@ -7,4 +7,10 @@ export class ImageToolOption extends BaseOptionComponent {
         ImageShapeOption,
     };
     static props = {};
+    setup() {
+        super.setup();
+        this.state = useDomState((editingElement) => ({
+            isCustomFilter: editingElement.dataset.glFilter === "custom",
+        }));
+    }
 }
