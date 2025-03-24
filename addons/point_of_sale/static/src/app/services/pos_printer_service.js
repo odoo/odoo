@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PrinterService } from "@point_of_sale/app/services/printer_service";
-import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 export const posPrinterService = {
     dependencies: ["hardware_proxy", "dialog", "renderer"],
@@ -40,13 +41,14 @@ class PosPrinterService extends PrinterService {
             if (error.body === undefined) {
                 console.error("An unknown error occured in printHtml:", error);
             }
-            this.dialog.add(ConfirmationDialog, {
-                title: error.title || _t("Printing error"),
-                body: (error.body ?? "") + _t("Do you want to print using the web printer? "),
-                confirm: async () => {
-                    // We want to call the _printWeb when the dialog is fully gone
-                    // from the screen which happens after the next animation frame.
-                    await new Promise(requestAnimationFrame);
+            this.dialog.closeAll();
+            this.dialog.add(RetryPrintPopup, {
+                title: error.title,
+                message: error.body,
+                retry: () => {
+                    this.printHtml(...arguments);
+                },
+                download: () => {
                     this.printWeb(...arguments);
                 },
             });
