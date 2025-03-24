@@ -1,7 +1,4 @@
 /** @odoo-module */
-import { ORM } from "@web/core/orm_service";
-import { patch } from "@web/core/utils/patch";
-
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -16,24 +13,38 @@ async function nextTick() {
     await new Promise(requestAnimationFrame);
 }
 
-function observeOrmCalls() {
-    const calls = [];
-
-    const unpatch = patch(ORM.prototype, {
-        call() {
-            const prom = super.call(...arguments);
-            calls.push([prom, arguments]);
-            return prom;
-        },
-    });
-
-    async function wait(unobserve = true) {
-        await Promise.all(calls.map((i) => i[0]));
-        if (unobserve) {
-            unpatch();
-        }
+function waitUntil(predicate, options) {
+    // Early check before running the loop
+    const result = predicate();
+    if (result) {
+        return Promise.resolve().then(() => result);
     }
-    return wait;
+
+    const timeout = Math.floor(options?.timeout ?? 200);
+    let handle;
+    let timeoutId;
+    let running = true;
+
+    return new Promise((resolve, reject) => {
+        const runCheck = () => {
+            const result = predicate();
+            if (result) {
+                resolve(result);
+            } else if (running) {
+                handle = requestAnimationFrame(runCheck);
+            } else {
+                let message =
+                    options?.message || `'waitUntil' timed out after %timeout% milliseconds`;
+                reject(new Error(message.replace("%timeout%", String(timeout))));
+            }
+        };
+
+        handle = requestAnimationFrame(runCheck);
+        timeoutId = setTimeout(() => (running = false), timeout);
+    }).finally(() => {
+        cancelAnimationFrame(handle);
+        clearTimeout(timeoutId);
+    });
 }
 
 registry.category("web_tour.tours").add("test_base_automation", {
@@ -459,7 +470,6 @@ registry.category("web_tour.tours").add("test_form_view_resequence_actions", {
     ],
 });
 
-let waitOrmCalls;
 registry.category("web_tour.tours").add("test_form_view_model_id", {
     test: true,
     steps: () => [
@@ -492,31 +502,16 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         {
             trigger:
                 ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(test_base_automation.project)",
-            run(helpers) {
-                waitOrmCalls = observeOrmCalls();
-                helpers.click(this.$anchor);
-                return nextTick();
-            },
-        },
-        {
-            trigger: "body",
-            async run() {
-                await waitOrmCalls();
-                await nextTick();
-            },
+            run: "click"
         },
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                const triggerGroups = Array.from(this.$anchor[0].querySelectorAll("optgroup"));
-                assertEqual(
-                    triggerGroups.map((el) => el.getAttribute("label")).join(" // "),
-                    "Values Updated // Timing Conditions // Custom // External"
-                );
-                assertEqual(
-                    triggerGroups.map((el) => el.innerText).join(" // "),
-                    "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook"
-                );
+                return waitUntil(() => {
+                    const triggerGroups = Array.from(this.$anchor[0].querySelectorAll("optgroup"));
+                    return triggerGroups.map((el) => el.getAttribute("label")).join(" // ") === "Values Updated // Timing Conditions // Custom // External" &&
+                        triggerGroups.map((el) => el.innerText).join(" // ") === "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On saveOn deletionOn UI change // On webhook";
+                }, { timeout: 500 })
             },
         },
         {
@@ -608,23 +603,15 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         {
             trigger:
                 ".o_field_widget[name='model_id'] .dropdown-menu li a:contains(Threaded Lead Test)",
-            run(helpers) {
-                waitOrmCalls = observeOrmCalls();
-                helpers.click(this.$anchor);
-                return nextTick();
-            },
-        },
-        {
-            trigger: "body",
-            async run() {
-                await waitOrmCalls();
-                await nextTick();
-            },
+            run: "click",
         },
         {
             trigger: ".o_field_widget[name='trigger']",
             run() {
-                assertEqual(Array.from(this.$anchor[0].querySelectorAll("select optgroup")).map(el => el.label).join(", "), "Values Updated, Email Events, Timing Conditions, Custom, External")
+                return waitUntil(() => {
+                    const actualText = Array.from(this.$anchor[0].querySelectorAll("select optgroup")).map(el => el.label).join(", ");
+                    return actualText === "Values Updated, Email Events, Timing Conditions, Custom, External";
+                }, { timeout: 500 })
             }
         },
         {
