@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         },
         {
             content: "check the first variant is already in wishlist",
-            trigger: '#product_detail .o_add_wishlist_dyn:disabled',
+            trigger: '#product_detail .o_add_wishlist_dyn.disabled',
         },
         {
             trigger: "#product_detail label:contains(Aluminium) input",
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
-            trigger: "#product_detail .o_add_wishlist_dyn:not(:disabled)",
+            trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
         },
         {
             content: "wait button enable and click on add to wishlist",
