@@ -157,6 +157,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.l10n_in_edi_attachment_id:
             return json.loads(self.l10n_in_edi_attachment_id.sudo().raw.decode("utf-8"))
+        return {}
 
     def _l10n_in_lock_invoice(self):
         try:
