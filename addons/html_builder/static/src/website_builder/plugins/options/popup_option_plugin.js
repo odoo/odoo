@@ -99,6 +99,12 @@ class PopupOptionPlugin extends Plugin {
                     );
                 },
             },
+            setPopupDelay: {
+                apply: ({ editingElement, value }) => {
+                    editingElement.dataset.showAfter = value * 1000;
+                },
+                getValue: ({ editingElement }) => editingElement.dataset.showAfter / 1000,
+            },
         };
     }
 
