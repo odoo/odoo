@@ -1,7 +1,6 @@
 import collections
 import inspect
 
-from odoo.models import BaseModel
 from odoo.modules.registry import Registry
 from odoo.tests.common import get_db_name, tagged
 from .lint_case import LintCase
@@ -15,25 +14,24 @@ EMPTY = inspect.Parameter.empty
 
 
 failure_message = """\
-Invalid override of {model}.{method} in {child_module}, {message}.
+Invalid override in {model} of {method}, {message}.
 
 Original definition in {parent_module}:
     def {method}{original_signature}
 
-Incompatible definition in {child_module}:
+Incompatible override definition in {child_module}:
     def {method}{override_signature}"""
 
 
 MODULES_TO_IGNORE = {
     'pos_blackbox_be',  # TODO cannot update to sanitize without certification
 }
-methods_to_sanitize = {
-    method_name
-    for method_name in dir(BaseModel)
-    if not method_name.startswith('_')
-} - {
+METHODS_TO_IGNORE = {
     # Not yet sanitized...
-    'write', 'default_get'
+    'write', 'default_get',
+}
+MODEL_METHODS_TO_IGNORE = {
+    ('ir.config_parameter', 'init'),
 }
 
 
@@ -58,6 +56,26 @@ def get_odoo_module_name(python_module_name):
     return python_module_name
 
 
+def check_parameter(pparam: inspect.Parameter, cparam: inspect.Parameter) -> bool:
+    # don't check annotations
+    return (
+        pparam.name == cparam.name
+        or pparam.kind == POSITIONAL_ONLY
+    ) and (
+        # if parent has a default, child should have the same one
+        pparam.default is EMPTY
+        or pparam.default == cparam.default
+    ) and (
+        # if both are annotated, then they should be similar (for typing)
+        (pann := pparam.annotation) is EMPTY
+        or (cann := cparam.annotation) is EMPTY
+        or pann == cann
+        # accept annotations of different types as valid to keep logic simple
+        # for example, typing can be a str or the class
+        or pann.__class__ != cann.__class__
+    )
+
+
 def assert_valid_override(parent_signature, child_signature):
     pparams = parent_signature.parameters
     cparams = child_signature.parameters
@@ -65,19 +83,6 @@ def assert_valid_override(parent_signature, child_signature):
     # parent and child have exact same signature
     if pparams == cparams:
         return
-
-    parent_is_annotated = any(p.annotation is not inspect._empty for p in pparams.values())
-    child_is_annotated = any(p.annotation is not inspect._empty for p in cparams.values())
-
-    # don't check annotations when one of the two methods is not annotated
-    if parent_is_annotated != child_is_annotated:
-        pparams = {name: param.replace(annotation=EMPTY) for name, param in pparams.items()}
-        cparams = {name: param.replace(annotation=EMPTY) for name, param in cparams.items()}
-        parent_is_annotated = child_is_annotated = False
-
-        # parent and child have exact same signature, modulo annotations
-        if pparams == cparams:
-            return
 
     # parent has *args/**kwargs: child can define new custom args/kwargs
     parent_has_varargs = any(pp.kind == VAR_POSITIONAL for pp in pparams.values())
@@ -88,30 +93,33 @@ def assert_valid_override(parent_signature, child_signature):
     child_has_varkwargs = any(cp.kind == VAR_KEYWORD for cp in cparams.values())
 
     # check positionals
-    pposparams = [(pp_name, pp) for pp_name, pp in pparams.items()
+    pposparams = [pp for pp in pparams.values()
                   if pp.kind in (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)]
-    cposparams = [(cp_name, cp) for cp_name, cp in cparams.items()
+    cposparams = [cp for cp in cparams.values()
                   if cp.kind in (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)]
     if len(cposparams) < len(pposparams):
         assert child_has_varargs, "missing positional parameters"
-        assert cposparams == pposparams[:len(cposparams)], "wrong positional parameters"
+        pposparams = pposparams[:len(cposparams)]
     elif len(cposparams) > len(pposparams):
         assert parent_has_varargs, "too many positional parameters"
-        assert cposparams[:len(pposparams)] == pposparams, "wrong positional parameters"
-    else:
-        assert cposparams == pposparams, "wrong positional parameters"
+        cposparams = cposparams[:len(pposparams)]
+    for pparam, cparam in zip(pposparams, cposparams, strict=True):
+        assert check_parameter(pparam, cparam), f"wrong positional paramter {cparam.name!r}"
 
     # check keywords
-    pkwparams = {(pp_name, pp) for pp_name, pp in pparams.items()
+    pkwparams = {pp_name: pp for pp_name, pp in pparams.items()
                  if pp.kind in (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)}
-    ckwparams = {(cp_name, cp) for cp_name, cp in cparams.items()
+    ckwparams = {cp_name: cp for cp_name, cp in cparams.items()
                  if cp.kind in (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)}
-    if ckwparams < pkwparams:
-        assert child_has_varkwargs, "missing keyword parameters"
-    elif ckwparams > pkwparams:
-        assert parent_has_varkwargs, "too many keyword parameters"
-    elif ckwparams != pkwparams:
-        assert child_has_varkwargs and parent_has_varkwargs, "wrong keyword parameters"
+    for name, pparam in pkwparams.items():
+        cparam = ckwparams.get(name)
+        if cparam is None:
+            assert child_has_varkwargs, f"missing keyword parameter {name!r}"
+        else:
+            assert check_parameter(pparam, cparam), f"wrong keyword parameter {name!r}"
+    if not parent_has_varkwargs:
+        for name in (ckwparams.keys() - pkwparams.keys()):
+            assert ckwparams[name].default is not EMPTY, "too many keyword parameters"
 
 
 def assert_attribute_override(parent_method, child_method):
@@ -131,11 +139,11 @@ class TestLintOverrideSignatures(LintCase):
             if model_cls._module in MODULES_TO_IGNORE:
                 continue
             for method_name, _ in inspect.getmembers(model_cls, inspect.isroutine):
-                if method_name not in methods_to_sanitize:
-                    # TODO sanitize all methods
-                    continue
-                if method_name == 'init' and model_name == 'ir.config_parameter':
-                    # TODO refactor ir.config_parameter
+                if (
+                    method_name.startswith('__')
+                    or method_name in METHODS_TO_IGNORE
+                    or (model_name, method_name) in MODEL_METHODS_TO_IGNORE
+                ):
                     continue
 
                 # Find the original function definition
