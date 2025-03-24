@@ -15,6 +15,7 @@ import { WebsiteSystrayItem } from "./website_systray_item";
 import { uniqueId } from "@web/core/utils/functions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { _t } from "@web/core/l10n/translation";
+import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 
 export class WebsiteBuilder extends Component {
     static template = "html_builder.WebsiteBuilder";
@@ -25,6 +26,7 @@ export class WebsiteBuilder extends Component {
         this.target = null;
         this.orm = useService("orm");
         this.notification = useService("notification");
+        this.dialog = useService("dialog");
         this.websiteContent = useRef("iframe");
         useSubEnv({
             builderRef: useRef("container"),
@@ -107,7 +109,12 @@ export class WebsiteBuilder extends Component {
     }
 
     onNewPage() {
-        console.log("todo: new page");
+        this.dialog.add(AddPageDialog, {
+            onAddPage: () => {
+                this.websiteService.context.showNewContentModal = false;
+            },
+            websiteId: this.websiteService.currentWebsite.id,
+        });
     }
 
     async onEditPage() {
