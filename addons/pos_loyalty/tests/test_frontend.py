@@ -528,6 +528,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_pos_tour("GiftCardProgramTour2")
         # Check that gift cards are used
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
+        loyalty_history = self.env['loyalty.history'].search([('card_id','=',gift_card_program.coupon_ids.id)])
+        self.assertEqual(loyalty_history.used, 3.2)
 
     def test_ewallet_program(self):
         """
@@ -2607,3 +2609,16 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_loyalty_on_order_with_fixed_tax', login="pos_user")
+
+    def test_gift_card_no_date(self):
+        """
+        This test create a physical gift card without expiracy date.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference and activate the gift_card_product_50
+        LoyaltyProgram.search([]).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+
+        # Create gift card program
+        self.create_programs([('name', 'gift_card')])
+        self.start_pos_tour("test_gift_card_no_date")

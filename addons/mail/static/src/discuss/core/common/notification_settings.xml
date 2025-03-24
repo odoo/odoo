@@ -15,7 +15,7 @@
                         </div>
                     </button>
                 </t>
-                <div t-else="" class="d-flex">
+                <div t-elif="!store.settings.mute_until_dt" class="d-flex">
                     <Dropdown position="'right-start'" menuClass="'o-mail-NotificationSettings-submenu d-flex flex-column py-0 my-0'">
                         <button class="btn w-100 d-flex p-1 opacity-75">
                             <div class="d-flex flex-grow-1 align-items-center px-2 py-1 w-100 rounded">
@@ -31,7 +31,7 @@
                         </t>
                     </Dropdown>
                 </div>
-                <t t-if="props.thread.channel_type === 'channel'">
+                <t t-if="props.thread.channel_type === 'channel' and !store.settings.mute_until_dt">
                     <hr class="solid m-2"/>
                     <button class="btn d-flex w-100 px-1 py-0" t-on-click="() => store.settings.setCustomNotifications(false, props.thread)">
                         <div class="d-flex flex-grow-1 align-items-center px-2 rounded">

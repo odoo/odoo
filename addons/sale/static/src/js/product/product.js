@@ -59,7 +59,7 @@ export class Product extends Component {
         const modelPath = this.props.id
             ? `product.product/${ this.props.id }`
             : `product.template/${ this.props.product_tmpl_id }`;
-        return `/web/image/${ modelPath }/image_128`;
+        return `/web/image/${ modelPath }/image_256`;
     }
 
     /**

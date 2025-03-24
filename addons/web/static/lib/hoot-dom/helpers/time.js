@@ -273,7 +273,7 @@ export function mockedSetInterval(callback, ms, ...args) {
 
     const handler = () => {
         if (allowTimers) {
-            intervalValues[1] = Math.max(now(), intervalValues[1] + ms);
+            intervalValues[1] = $max(now(), intervalValues[1] + ms);
         } else {
             mockedClearInterval(intervalId);
         }

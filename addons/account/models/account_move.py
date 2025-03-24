@@ -749,6 +749,13 @@ class AccountMove(models.Model):
             expressions=['journal_id', 'company_id', 'date'],
             where="made_sequence_gap = TRUE",
         )  # used in <account.journal>._query_has_sequence_holes
+        create_index(
+            self.env.cr,
+            indexname='account_move_duplicate_bills_idx',
+            tablename='account_move',
+            expressions=['ref'],
+            where="move_type IN ('in_invoice', 'in_refund')",
+        )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -1664,7 +1671,7 @@ class AccountMove(models.Model):
             else:
                 move.invoice_filter_type_domain = False
 
-    @api.depends('commercial_partner_id', 'company_id')
+    @api.depends('commercial_partner_id', 'company_id', 'move_type')
     def _compute_bank_partner_id(self):
         for move in self:
             if move.is_inbound():
@@ -1879,6 +1886,7 @@ class AccountMove(models.Model):
         if in_moves:
             in_moves_sql_condition = SQL("""
                 move.move_type in ('in_invoice', 'in_refund')
+                AND duplicate_move.move_type in ('in_invoice', 'in_refund')
                 AND (
                    move.ref = duplicate_move.ref
                    AND (
@@ -5122,7 +5130,6 @@ class AccountMove(models.Model):
             move.name = False
             move.write({
                 'move_type': new_move_type,
-                'partner_bank_id': False,
                 'currency_id': move.currency_id.id,
                 'fiscal_position_id': move.fiscal_position_id.id,
             })
@@ -5984,7 +5991,10 @@ class AccountMove(models.Model):
 
         def is_internal_partner(partner):
             # Helper to know if the partner is an internal one.
-            return partner == company.partner_id or (partner.user_ids and all(user._is_internal() for user in partner.user_ids))
+            return (
+                    company.partner_id in (partner | partner.parent_id)
+                    or (partner.user_ids and all(user._is_internal() for user in partner.user_ids))
+            )
 
         extra_domain = False
         if custom_values.get('company_id'):

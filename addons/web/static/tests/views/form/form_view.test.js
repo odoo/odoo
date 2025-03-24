@@ -4461,7 +4461,9 @@ test(`clicking on stat buttons in edit mode on desktop`, async () => {
         },
     });
 
-    onRpc("web_save", ({ args }) => expect(args[1].foo).toBe("tralala"));
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].foo).toBe("tralala");
+    });
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -4502,7 +4504,9 @@ test(`clicking on stat buttons in edit mode on mobile`, async () => {
         },
     });
 
-    onRpc("web_save", ({ args }) => expect(args[1].foo).toBe("tralala"));
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].foo).toBe("tralala");
+    });
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -7859,10 +7863,12 @@ test(`no autofocus with disable_autofocus option`, async () => {
         type: "form",
         arch: `<form disable_autofocus="1"><field name="int_field"/></form>`,
     });
-    expect(`.o_field_widget[name="foo"] input`).not.toBeFocused();
+
+    expect(`.o_field_widget[name="int_field"] input`).not.toBeFocused();
 
     await contains(`.o_form_button_save`).click();
-    expect(`.o_field_widget[name="foo"] input`).not.toBeFocused();
+
+    expect(`.o_field_widget[name="int_field"] input`).not.toBeFocused();
 });
 
 test.tags("desktop");
@@ -9059,9 +9065,9 @@ test(`buttons with "confirm" attribute: click twice on "Ok" on desktop`, async (
     await contains(`.o_statusbar_buttons button`).click();
     expect.verifySteps([]);
 
-    contains(`.modal-footer button.btn-primary`).click();
-    await animationFrame();
+    await click(`.modal-footer button.btn-primary`);
     expect(`.modal-footer button.btn-primary`).not.toBeEnabled();
+    await animationFrame();
     expect.verifySteps(["web_save", "execute_action"]);
 });
 
@@ -9091,9 +9097,9 @@ test(`buttons with "confirm" attribute: click twice on "Ok" on mobile`, async ()
     await contains(`.o-dropdown-item-unstyled-button button`).click();
     expect.verifySteps([]);
 
-    contains(`.modal-footer button.btn-primary`).click();
-    await animationFrame();
+    await click(`.modal-footer button.btn-primary`);
     expect(`.modal-footer button.btn-primary`).not.toBeEnabled();
+    await animationFrame();
     expect.verifySteps(["web_save", "execute_action"]);
 });
 

@@ -127,7 +127,7 @@ const {
     Math: { ceil: $ceil, max: $max, min: $min },
     MouseEvent,
     Number: { isInteger: $isInteger, isNaN: $isNaN, parseFloat: $parseFloat },
-    Object: { assign: $assign, values: $values },
+    Object: { assign: $assign, create: $create, values: $values },
     PointerEvent,
     PromiseRejectionEvent,
     String,
@@ -1210,11 +1210,12 @@ const _keyDown = async (target, eventInit) => {
     };
 
     const { ctrlKey, key, shiftKey } = keyDownEvent;
+    const initialValue = target.value;
     let inputData = null;
     let inputType = null;
     let nextSelectionEnd = null;
     let nextSelectionStart = null;
-    let nextValue = target.value;
+    let nextValue = initialValue;
     let triggerSelect = false;
 
     if (isEditable(target)) {
@@ -1417,7 +1418,7 @@ const _keyDown = async (target, eventInit) => {
         }
     }
 
-    if (target.value !== nextValue) {
+    if (initialValue !== nextValue) {
         target.value = nextValue;
         const inputEventInit = {
             data: inputData,
@@ -1700,9 +1701,9 @@ const LOG_COLORS = {
 const LONG_TAP_DELAY = 500;
 
 /** @type {Record<string, Event[]>} */
-const currentEvents = Object.create(null);
+const currentEvents = $create(null);
 /** @type {Record<EventType, EventInit>} */
-const currentEventInit = Object.create(null);
+const currentEventInit = $create(null);
 /** @type {string[]} */
 const currentEventTypes = [];
 /** @type {(() => Promise<void>) | null} */
