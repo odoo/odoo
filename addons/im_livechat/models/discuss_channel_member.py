@@ -21,8 +21,11 @@ class DiscussChannelMember(models.Model):
         ])
         sessions_to_be_unpinned = members.filtered(lambda m: m.message_unread_counter == 0)
         sessions_to_be_unpinned.write({'unpin_dt': fields.Datetime.now()})
+        sessions_to_be_unpinned.channel_id.livechat_active = False
         for member in sessions_to_be_unpinned:
             member._bus_send("discuss.channel/unpin", {"id": member.channel_id.id})
+        for channel in sessions_to_be_unpinned.channel_id:
+            channel._bus_send_store(channel, "livechat_active")
 
     def _to_store_defaults(self):
         # sudo: discuss.channel - reading livechat channel to check whether current member is a bot is allowed
