@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.WebsiteSystrayItem">
     <div class="d-flex">
-        <a href="#" class="o-website-btn-custo-secondary btn d-flex align-items-center rounded-0 border-0 px-3" t-on-click="props.onNewPage">New</a>
+        <NewContentSystrayItem onNewPage="props.onNewPage"/>
         <EditWebsiteSystrayItem t-props="this.editWebsiteSystrayItemProps"/>
     </div>
 </t>

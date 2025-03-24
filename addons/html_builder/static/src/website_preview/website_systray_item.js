@@ -1,3 +1,4 @@
+import { NewContentSystrayItem } from "./new_content_systray_item";
 import { EditWebsiteSystrayItem } from "./edit_website_systray_item";
 import { Component, onWillStart } from "@odoo/owl";
 
@@ -9,6 +10,7 @@ export class WebsiteSystrayItem extends Component {
         iframeLoaded: { type: Object },
     };
     static components = {
+        NewContentSystrayItem,
         EditWebsiteSystrayItem,
     };
 

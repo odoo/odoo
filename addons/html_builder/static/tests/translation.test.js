@@ -19,6 +19,8 @@ const websiteServiceInTranslateMode = {
             defaultLangName: "English (US)",
         },
     },
+    // Minimal context to avoid crashes.
+    context: { showNewContentModal: false },
 };
 
 test("systray in translate mode", async () => {
