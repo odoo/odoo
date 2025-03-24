@@ -143,10 +143,19 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise request.not_found()
-        member = channel._find_or_create_member_for_self()
-        if not member:
-            raise NotFound()
-        member._notify_typing(is_typing)
+        if is_typing:
+            member = channel._find_or_create_member_for_self()
+        else:
+            # Do not create member automatically when setting typing to `False`
+            # as it could be resulting from the user leaving.
+            member = request.env["discuss.channel.member"].search(
+                [
+                    ("channel_id", "=", channel_id),
+                    ("is_self", "=", True),
+                ]
+            )
+        if member:
+            member._notify_typing(is_typing)
 
     @http.route("/discuss/channel/attachments", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
     @add_guest_to_context
