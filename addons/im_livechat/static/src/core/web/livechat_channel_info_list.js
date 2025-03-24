@@ -14,12 +14,26 @@ export class LivechatChannelInfoList extends Component {
     setup() {
         super.setup();
         this.rpc = useService("orm");
+        this.actionService = useService("action");
     }
 
     onBlurNote() {
         rpc("/im_livechat/session/update_note", {
             channel_id: this.props.thread.id,
             note: htmlEscape(this.props.thread.livechatNoteText),
+        });
+    }
+
+    get visitorPersona() {
+        return this.props.thread?.livechatVisitorMember?.persona;
+    }
+
+    openVisitorContact() {
+        return this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: "res.partner",
+            views: [[false, "form"]],
+            res_id: this.visitorPersona?.id,
         });
     }
 }

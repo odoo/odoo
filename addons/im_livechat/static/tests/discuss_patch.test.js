@@ -7,10 +7,15 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { describe, test } from "@odoo/hoot";
+import { describe, test, expect } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
-import { Command, serverState } from "@web/../tests/web_test_helpers";
-
+import {
+    Command,
+    serverState,
+    mockService,
+    asyncStep,
+    waitForSteps,
+} from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
 import { press } from "@odoo/hoot-dom";
@@ -150,4 +155,31 @@ test("sidebar search finds livechats", async () => {
     await click("input[placeholder='Find or start a conversation']");
     await click("a", { text: "Visitor 11" });
     await contains(".o-mail-Discuss-threadName[title='Visitor 11']");
+});
+
+test("open visitor's partner profile if visitor has one", async () => {
+    const pyEnv = await startServer();
+    const livechatPartner = pyEnv["res.partner"].create({ name: "Joel Willis" });
+    const channel = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: livechatPartner }),
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+    });
+    mockService("action", {
+        doAction(action) {
+            if (action.res_model === "res.partner") {
+                asyncStep("action_executed");
+                expect(action.res_id).toEqual(livechatPartner);
+            } else {
+                super.doAction(action);
+            }
+        },
+    });
+    await start();
+    await openDiscuss(channel);
+    await click("button[title='View Contact']");
+    await waitForSteps(["action_executed"]);
 });
