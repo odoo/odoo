@@ -6,6 +6,9 @@ import { Component, useRef } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 import { formatDate } from "@web/core/l10n/dates";
+import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils";
+
 
 export class ActivityCell extends Component {
     static components = {
@@ -26,6 +29,7 @@ export class ActivityCell extends Component {
         reloadFunc: Function,
         resId: Number,
         resModel: String,
+        summaries: Array,
         userAssignedIds: Array,
     };
     static template = "mail.ActivityCell";
@@ -37,6 +41,14 @@ export class ActivityCell extends Component {
 
     get reportingDateFormatted() {
         return formatDate(luxon.DateTime.fromISO(this.props.reportingDate));
+    }
+    get displayedSummaries() {
+        const summariesWithContent = this.props.summaries.filter((textContent) => !!textContent);
+        const extras = this.props.summaries.length - summariesWithContent.length
+        if (summariesWithContent.length > 0 && extras > 0) {
+            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras } ));
+        }
+        return formatList(summariesWithContent);
     }
 
     get ongoingActivityCount() {

@@ -18,7 +18,7 @@ const QUICK_CREATE_CALENDAR_EVENT_FIELDS = {
 
 function getDefaultValuesFromRecord(data) {
     const context = {};
-    for (let fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
+    for (const fieldName in QUICK_CREATE_CALENDAR_EVENT_FIELDS) {
         if (fieldName in data) {
             let value = data[fieldName];
             const { type } = QUICK_CREATE_CALENDAR_EVENT_FIELDS[fieldName]
@@ -44,6 +44,21 @@ export class CalendarQuickCreateFormController extends CalendarFormController {
     goToFullEvent() {
         const context = getDefaultValuesFromRecord(this.model.root.data)
         this.props.goToFullEvent(context);
+    }
+
+    /**
+     * This override makes it so that, after creating a calendar event through the activity buttons/widget
+     * on a record, the user is redirected back to the record they clicked the activity button on.
+     */
+    async onRecordSaved() {
+        await super.onRecordSaved(arguments);
+        if (this.props.context.return_to_parent_breadcrumb) {
+            const breadcrumb = this.actionService.currentController.config.breadcrumbs.at(-2);
+            if (breadcrumb) {
+                // todo guce postfreeze: make safer (knowledge macro system?)
+                breadcrumb.onSelected();
+            }
+        }
     }
 }
 

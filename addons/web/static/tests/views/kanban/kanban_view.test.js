@@ -12282,7 +12282,7 @@ test("quick create record in grouped kanban in a form view dialog", async () => 
 
     expect(".modal").toHaveCount(1);
 
-    await clickModalButton({ text: "Save & Close" });
+    await clickModalButton({ text: "Save" });
 
     expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(3, {
         message: "first column should contain three records",

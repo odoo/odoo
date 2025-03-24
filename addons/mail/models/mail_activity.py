@@ -6,7 +6,7 @@ import pytz
 
 from collections import defaultdict, Counter
 from datetime import date, datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import MO, relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
@@ -84,7 +84,6 @@ class MailActivity(models.Model):
     # description
     user_id = fields.Many2one(
         'res.users', 'Assigned to',
-        default=lambda self: self.env.user,
         index=True, required=False, ondelete='cascade')
     user_tz = fields.Selection(string='Timezone', related="user_id.tz", store=True)
     state = fields.Selection([
@@ -569,7 +568,14 @@ class MailActivity(models.Model):
         """ Opens the related record based on the model and ID """
         self.ensure_one()
         if not self.res_model:
-            raise ValueError('Invalid path, UPDATE ME')
+            return {
+                'res_id': self.id,
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'mail.activity',
+                'view_id': self.env.ref('mail.mail_activity_view_form_popup').id,
+                'target': 'new',
+            }
         return {
             'res_id': self.res_id,
             'res_model': self.res_model,
@@ -584,6 +590,15 @@ class MailActivity(models.Model):
         for activity in self:
             if activity.active:
                 activity.date_deadline = max(activity.date_deadline, today) + timedelta(days=7)
+
+    def action_reschedule_today(self):
+        self.filtered('active').date_deadline = date.today()
+
+    def action_reschedule_tomorrow(self):
+        self.filtered('active').date_deadline = date.today() + timedelta(days=1)
+
+    def action_reschedule_nextweek(self):
+        self.filtered('active').date_deadline = date.today() + relativedelta(weeks=1, weekday=MO(-1))
 
     def action_cancel(self):
         for activity in self:
@@ -711,6 +726,7 @@ class MailActivity(models.Model):
             # As ongoing is sorted on date_deadline, we get assignees on activity with oldest deadline first
             user_assigned_ids = ongoing.user_id.ids
             attachments = [attachments_by_id[attach.id] for attach in completed.attachment_ids]
+
             grouped_activities[res_id][activity_type_id.id] = {
                 'count_by_state': dict(Counter(
                     self._compute_state_from_date(act.date_deadline, user_tz) if act.active else 'done'
@@ -719,6 +735,7 @@ class MailActivity(models.Model):
                 'reporting_date': ongoing and date_deadline or date_done or None,
                 'state': self._compute_state_from_date(date_deadline, user_tz) if ongoing else 'done',
                 'user_assigned_ids': user_assigned_ids,
+                'summaries': [act.summary if act.summary else '' for act in activities],
             }
             if attachments:
                 most_recent_attachment = max(attachments, key=lambda a: (a['create_date'], a['id']))

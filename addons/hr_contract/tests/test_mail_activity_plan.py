@@ -55,4 +55,3 @@ class TestActivitySchedule(ActivityScheduleHRCase):
         ])
         with self._instantiate_activity_schedule_wizard(customers) as form:
             form.plan_id = self.plan_party
-            self.assertFalse(form.plan_date)

@@ -386,7 +386,9 @@ class ResUsers(models.Model):
                 activities_rec_groups[activity.res_model][activity.res_id] += activity
             else:
                 activities_model_groups["mail.activity"] += activity
-
+        model_activity_states = {
+            'mail.activity': {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
+        }
         for model_name, activities_by_record in activities_rec_groups.items():
             res_ids = activities_by_record.keys()
             Model = self.env[model_name]
@@ -400,11 +402,25 @@ class ResUsers(models.Model):
             if has_model_access_right and unallowed_records and not is_all_user_companies_allowed:
                 unallowed_records -= unallowed_records.with_context(
                     allowed_company_ids=user_company_ids)._filtered_access('read')
+            model_activity_states[model_name] = {'overdue_count': 0, 'today_count': 0, 'planned_count': 0, 'total_count': 0}
             for record_id, activities in activities_by_record.items():
                 if record_id in unallowed_records.ids:
+                    model_key = 'mail.activity'
                     activities_model_groups['mail.activity'] += activities
                 elif record_id in allowed_records.ids:
+                    model_key = model_name
                     activities_model_groups[model_name] += activities
+                else:
+                    continue
+
+                if 'overdue' in activities.mapped('state'):
+                    model_activity_states[model_key]['overdue_count'] += 1
+                    model_activity_states[model_key]['total_count'] += 1
+                if 'today' in activities.mapped('state'):
+                    model_activity_states[model_key]['today_count'] += 1
+                    model_activity_states[model_key]['total_count'] += 1
+                else:
+                    model_activity_states[model_name]['planned_count'] += 1
 
         model_ids = [self.env["ir.model"]._get_id(name) for name in activities_model_groups]
         user_activities = {}
@@ -419,16 +435,12 @@ class ResUsers(models.Model):
                 "model": model_name,
                 "type": "activity",
                 "icon": icon,
-                "total_count": 0,
-                "today_count": 0,
-                "overdue_count": 0,
-                "planned_count": 0,
+                "total_count": model_activity_states[model_name]['total_count'],
+                "today_count": model_activity_states[model_name]['today_count'],
+                "overdue_count": model_activity_states[model_name]['overdue_count'],
+                "planned_count": model_activity_states[model_name]['planned_count'],
                 "view_type": getattr(Model, '_systray_view', 'list'),
             }
             if model_name == 'mail.activity':
                 user_activities[model_name]['activity_ids'] = activities.ids
-            for activity in activities:
-                user_activities[model_name]["%s_count" % activity.state] += 1
-                if activity.state in ("today", "overdue"):
-                    user_activities[model_name]["total_count"] += 1
         return list(user_activities.values())

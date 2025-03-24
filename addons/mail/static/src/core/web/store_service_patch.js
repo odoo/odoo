@@ -93,7 +93,12 @@ const StorePatch = {
                     target: "new",
                     context,
                 },
-                { onClose: resolve }
+                { 
+                    onClose: resolve,
+                    additionalContext: { 
+                        dialog_size: "medium",
+                    },
+                }
             )
         );
     },

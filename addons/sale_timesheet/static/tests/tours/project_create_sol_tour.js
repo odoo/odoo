@@ -23,7 +23,7 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
            trigger: ".o_field_widget[name=employee_id] .o-autocomplete--dropdown-menu .o_m2o_dropdown_option_create_edit a",
            run: "click",
         }, {
-            trigger: ".modal:not(.o_inactive_modal) button:contains(save & close)",
+            trigger: ".modal:not(.o_inactive_modal) button:contains(save)",
             content: "Save employee",
             run: "click",
         }, {
@@ -43,7 +43,7 @@ patch(registry.category("web_tour.tours").get("project_create_sol_tour"), {
             content: "Select the customer in the autocomplete dropdown",
             run: "click",
         }, {
-            trigger: ".modal:not(.o_inactive_modal) button:contains(save & close)",
+            trigger: ".modal:not(.o_inactive_modal) button:contains(save)",
             content: "Save project",
             run: "click",
         });
