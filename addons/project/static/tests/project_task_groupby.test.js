@@ -37,7 +37,7 @@ test("project.task (kanban): Can create stage if we are in tasks of specific pro
     expect(".o_column_quick_create").toHaveCount(1, {
         message: "should have a quick create column",
     });
-    expect(".o_kanban_add_column").toHaveCount(1, {
+    expect(".o_column_quick_create.o_quick_create_folded").toHaveCount(1, {
         message: "Add column button should be visible",
     });
     await quickCreateKanbanColumn();
@@ -53,7 +53,7 @@ test("project.task (kanban): Cannot create stage if we are not in tasks of speci
     expect(".o_column_quick_create").toHaveCount(0, {
         message: "quick create column should not be visible",
     });
-    expect(".o_kanban_add_column").toHaveCount(0, {
+    expect(".o_column_quick_create.o_quick_create_folded").toHaveCount(0, {
         message: "Add column button should not be visible",
     });
 });

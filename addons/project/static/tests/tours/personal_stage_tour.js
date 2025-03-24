@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     run: "click",
 }, {
     content: "Check that we can create a new stage",
-    trigger: '.o_column_quick_create .o_quick_create_folded',
+    trigger: '.o_column_quick_create.o_quick_create_folded div',
     run: "click",
 }, {
     content: "Create a new personal stage",
