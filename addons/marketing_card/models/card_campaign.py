@@ -23,7 +23,7 @@ class CardCampaign(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    body_html = fields.Html(related='card_template_id.body', render_engine="qweb")
+    body_html = fields.Html(related='card_template_id.body', render_engine="qweb", readonly=False)
 
     card_count = fields.Integer(compute='_compute_card_stats')
     card_click_count = fields.Integer(compute='_compute_card_stats')
