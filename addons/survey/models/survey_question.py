@@ -629,7 +629,12 @@ class SurveyQuestion(models.Model):
             table_data, graph_data = question._get_stats_data(answer_lines)
             question_data['table_data'] = table_data
             question_data['graph_data'] = json.dumps(graph_data)
-
+            if question.question_type in ["text_box", "char_box", "numerical_box", "date", "datetime"]:
+                answers_data = [
+                    [input_line.id, input_line._get_answer_value(), input_line.user_input_id.get_print_url()]
+                    for input_line in table_data if not input_line.skipped
+                ]
+                question_data["answers_data"] = json.dumps(answers_data, default=str)
             all_questions_data.append(question_data)
         return all_questions_data
 

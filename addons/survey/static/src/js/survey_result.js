@@ -24,28 +24,16 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
     /**
     * @override
     */
-    start: function () {
-        var self = this;
-        return this._super.apply(this, arguments).then(function () {
-            var allPromises = [];
-            self.$('.pagination_wrapper').each(function (){
-                var questionId = $(this).data("question_id");
-                allPromises.push(new publicWidget.registry.SurveyResultPagination(self, {
-                    'questionsEl': self.$('#survey_table_question_'+ questionId)
-                }).attachTo($(this)));
-            });
+    start: async function () {
+        await this._super.apply(this, arguments);
 
-            // Set the size of results tables so that they do not resize when switching pages.
-            document.querySelectorAll('.o_survey_results_table_wrapper').forEach((table) => {
-                table.style.height = table.clientHeight + 'px';
-            })
-
-            if (allPromises.length !== 0) {
-                return Promise.all(allPromises);
-            } else {
-                return Promise.resolve();
-            }
+        // Set the size of results tables so that they do not resize when switching pages.
+        document.querySelectorAll(".o_survey_results_table_wrapper").forEach((table) => {
+            table.style.height = table.clientHeight + "px";
         });
+
+        $(document).on("keydown", this._onKeydown.bind(this));
+        return Promise.resolve();
     },
 
     // -------------------------------------------------------------------------
@@ -178,7 +166,30 @@ publicWidget.registry.SurveyResultWidget = publicWidget.Widget.extend({
      * @private
      */
     _onPrintResultsClick: function () {
+        // For each paginator, save the current state and uncollapse the table.
+        document.querySelectorAll(".survey_table_with_pagination").forEach((paginator) => {
+            paginator.dispatchEvent(new Event("save_state_and_show_all"));
+        });
         window.print();
+        // Restore the original state of each paginator after the print.
+        document.querySelectorAll(".survey_table_with_pagination").forEach((paginator) => {
+            paginator.dispatchEvent(new Event("restore_state"));
+        });
+    },
+
+    /**
+     * Called when a key is pressed on the survey result page.
+     * If the user pressed CTRL+P, the print procedure is started.
+     * @private
+     * @param {Event} ev Keydown event
+     */
+    _onKeydown: function (ev) {
+        const isMeta = ev.metaKey || ev.ctrlKey;
+        if (ev.key === "p" && isMeta) {
+            ev.preventDefault();
+            ev.stopImmediatePropagation();
+            this._onPrintResultsClick();
+        }
     },
 
     /**
