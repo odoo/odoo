@@ -150,6 +150,7 @@ class ProductTemplate(models.Model):
         string="Pricelist Rules",
         comodel_name='product.pricelist.item',
         inverse_name='product_tmpl_id',
+        # FIXME MASH this domain doesn't work
         domain=lambda self: [
             '|',
             ('product_tmpl_id', '=', self.ids),
