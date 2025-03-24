@@ -13,7 +13,7 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode', 'product_tag_ids', 'default_code']
+        return ['id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids', 'barcode', 'product_tag_ids', 'default_code', 'standard_price']
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
