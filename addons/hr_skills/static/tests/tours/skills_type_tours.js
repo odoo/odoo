@@ -39,6 +39,11 @@ registry.category("web_tour.tours").add("hr_skills_type_tour", {
             run: "edit Macaroon",
         },
         {
+            content: "Open skill level page",
+            trigger: "a:contains('Levels'):first",
+            run: "click",
+        },
+        {
             trigger: "div[name=skill_level_ids] .o_field_x2many_list_row_add a",
             run: "click",
         },
