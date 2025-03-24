@@ -45,7 +45,13 @@
                         </div>
                     </group>
                     <footer>
-                        <button string="Confirm" name="validate_move" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                        <button string="Confirm"
+                                name="validate_move"
+                                type="object"
+                                default_focus="1"
+                                class="btn-primary"
+                                data-hotkey="q"
+                                context="{'validate_analytic': True}"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
