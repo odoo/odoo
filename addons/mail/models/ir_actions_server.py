@@ -129,7 +129,7 @@ class IrActionsServer(models.Model):
             case 'followers':
                 if self.followers_type == 'generic':
                     _field_chain, field_chain_str = self._get_relation_chain("followers_partner_field_name")
-                    self.name = _(
+                    return _(
                         'Add followers based on field: %(field_chain_str)s',
                         field_chain_str=field_chain_str
                     )
@@ -141,7 +141,7 @@ class IrActionsServer(models.Model):
             case 'remove_followers':
                 if self.followers_type == 'generic':
                     _field_chain, field_chain_str = self._get_relation_chain("followers_partner_field_name")
-                    self.name = _(
+                    return _(
                         'Remove followers based on field: %(field_chain_str)s',
                         field_chain_str=field_chain_str
                     )
