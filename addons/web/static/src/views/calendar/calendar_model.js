@@ -48,6 +48,7 @@ export class CalendarModel extends Model {
             records: {},
             unusualDays: [],
             multiCreateRecord: null,
+            multiCreateTimes: {},
         };
 
         const debouncedLoadDelay = this.constructor.DEBOUNCED_LOAD_DELAY;
@@ -98,6 +99,12 @@ export class CalendarModel extends Model {
     }
     get dateStartType() {
         return this.fields[this.fieldMapping.date_start].type;
+    }
+    get dateStopType() {
+        if (this.fieldMapping.date_stop) {
+            return this.fields[this.fieldMapping.date_stop].type;
+        }
+        return null;
     }
     get eventLimit() {
         return this.meta.eventLimit;
@@ -171,6 +178,9 @@ export class CalendarModel extends Model {
     get showDatePicker() {
         return this.meta.showDatePicker;
     }
+    get showMultiCreateTimeRange() {
+        return this.dateStartType === "datetime" && this.dateStopType === "datetime";
+    }
     get storageKey() {
         return `scaleOf-viewId-${this.env.config.viewId}`;
     }
@@ -214,12 +224,23 @@ export class CalendarModel extends Model {
         await this.load();
     }
 
-    async multiCreateRecords(dates, values) {
+    async multiCreateRecords(dates, values, options = {}) {
         const records = [];
         // we deliberately only use the values of the first filter section, to avoid combinatorial explosion
         const [section] = this.filterSections;
         for (const date of dates) {
-            const rawRecord = this.buildRawRecord({ start: date });
+            const initialRecordValue = {};
+            if (this.showMultiCreateTimeRange) {
+                Object.assign(initialRecordValue, {
+                    start: date.plus(options.start?.toObject() || {}),
+                    end: date.plus(options.end?.toObject() || {}),
+                });
+            } else {
+                Object.assign(initialRecordValue, {
+                    start: date,
+                });
+            }
+            const rawRecord = this.buildRawRecord(initialRecordValue);
             if (!section) {
                 records.push({
                     ...rawRecord,

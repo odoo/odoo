@@ -109,6 +109,7 @@ export class CalendarController extends Component {
             deleteRecord: this.deleteRecord.bind(this),
             editRecord: this.editRecord.bind(this),
             setDate: this.setDate.bind(this),
+            setMultiCreateTimes: this.setMultiCreateTimes.bind(this),
             multiCreateRecord: this.multiCreateRecord.bind(this),
             multiDeleteRecords: this.multiDeleteRecords.bind(this),
         };
@@ -204,6 +205,7 @@ export class CalendarController extends Component {
                     this.state.sidePanelMode = mode;
                 }
             },
+            setMultiCreateTimes: this._baseRendererProps.setMultiCreateTimes,
         };
     }
 
@@ -387,7 +389,12 @@ export class CalendarController extends Component {
 
     async multiCreateRecord(dates) {
         const values = await this.model.data.multiCreateRecord.getChanges();
-        await this.model.multiCreateRecords(dates, values);
+        const options = this.model.data.multiCreateTimes;
+        await this.model.multiCreateRecords(dates, values, options);
+    }
+
+    setMultiCreateTimes(options) {
+        Object.assign(this.model.data.multiCreateTimes, options);
     }
 
     async multiDeleteRecords(ids) {
