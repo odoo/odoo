@@ -172,6 +172,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "avatar_128_access_token": limited_field_access_token(
                                         self.test_partner, "avatar_128"
                                     ),
+                                    "department": False,
+                                    "designation": False,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
@@ -179,7 +181,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "is_company": False,
                                     "name": "Test Partner",
                                     "out_of_office_date_end": False,
+                                    "phone": False,
                                     "userId": False,
+                                    "workplace": False,
                                     "write_date": test_partner_write_date,
                                 },
                             ),
@@ -219,6 +223,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "avatar_128_access_token": limited_field_access_token(
                                         self.test_partner, "avatar_128"
                                     ),
+                                    "department": False,
+                                    "designation": False,
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
@@ -226,7 +232,9 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "is_company": False,
                                     "name": "Test Partner",
                                     "out_of_office_date_end": False,
+                                    "phone": False,
                                     "userId": False,
+                                    "workplace": False,
                                     "write_date": test_partner_write_date,
                                 }
                             ),

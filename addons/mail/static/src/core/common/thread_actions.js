@@ -108,6 +108,9 @@ function transformAction(component, id, action) {
             }
             return action.condition(component);
         },
+        get hideInDiscuss() {
+            return action.hideInDiscuss?.(component);
+        },
         /** Condition to disable the button of this action (but still display it). */
         get disabledCondition() {
             return action.disabledCondition?.(component);

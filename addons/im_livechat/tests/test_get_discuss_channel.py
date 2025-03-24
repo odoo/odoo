@@ -69,13 +69,17 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         self.partner_root, "avatar_128"
                     ),
+                    "department": False,
+                    "designation": False,
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
+                    "phone": False,
                     "userId": self.user_root.id,
+                    "workplace": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -122,6 +126,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         self.partner_root, "avatar_128"
                     ),
+                    "department": False,
+                    "designation": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -129,7 +135,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
+                    "phone": False,
                     "userId": self.user_root.id,
+                    "workplace": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -222,6 +230,8 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "avatar_128_access_token": limited_field_access_token(
                         self.partner_root, "avatar_128"
                     ),
+                    "department": False,
+                    "designation": False,
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
@@ -229,7 +239,9 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_company": False,
                     "name": "OdooBot",
                     "out_of_office_date_end": False,
+                    "phone": False,
                     "userId": self.user_root.id,
+                    "workplace": False,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
