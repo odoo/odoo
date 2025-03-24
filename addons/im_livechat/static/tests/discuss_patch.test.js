@@ -151,3 +151,20 @@ test("sidebar search finds livechats", async () => {
     await click("a", { text: "Visitor 11" });
     await contains(".o-mail-Discuss-threadName[title='Visitor 11']");
 });
+
+test("open visitor's partner profile if visitor has one", async () => {
+    const pyEnv = await startServer();
+    const livechatPartner = pyEnv["res.partner"].create({ name: "Joel Willis" });
+    const channel = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: livechatPartner }),
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: serverState.partnerId,
+    });
+    await start();
+    await openDiscuss(channel);
+    await click("a[title='View Contact']");
+    await contains("div.o_field_widget > input:value(Joel Willis)");
+});
