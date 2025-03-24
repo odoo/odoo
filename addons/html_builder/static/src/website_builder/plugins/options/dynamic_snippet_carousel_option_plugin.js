@@ -7,6 +7,18 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
     static shared = ["getComponentProps"];
     static dependencies = ["dynamicSnippetOption"];
     resources = {
+        builder_actions: {
+            setCarouselSliderSpeed: {
+                apply: ({ editingElement, value }) => {
+                    editingElement.dataset.carouselInterval = value * 1000;
+                },
+                // TODO: the first check should not be needed once the concept
+                // of _setOptionsDefaultValues will be implemented.
+                getValue: ({ editingElement }) =>
+                    editingElement.dataset.carouselInterval &&
+                    editingElement.dataset.carouselInterval / 1000,
+            },
+        },
         builder_options: {
             OptionComponent: DynamicSnippetCarouselOption,
             props: this.getComponentProps(),

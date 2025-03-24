@@ -30,12 +30,20 @@ class DynamicSnippetProductsOptionPlugin extends Plugin {
     }
     async _fetchCategories() {
         // TODO put in an utility function
-        const websiteDomain = ['|', ['website_id', '=', false], ['website_id', '=', this.services.website.currentWebsite.id]];
-        return this.services.orm.searchRead("product.public.category", websiteDomain, ["id", "name"], { order: "name asc" });
+        const websiteDomain = [
+            "|",
+            ["website_id", "=", false],
+            ["website_id", "=", this.services.website.currentWebsite.id],
+        ];
+        return this.services.orm.searchRead(
+            "product.public.category",
+            websiteDomain,
+            ["id", "name"],
+            { order: "name asc" }
+        );
     }
 }
 
 registry
     .category("website-plugins")
     .add(DynamicSnippetProductsOptionPlugin.id, DynamicSnippetProductsOptionPlugin);
-
