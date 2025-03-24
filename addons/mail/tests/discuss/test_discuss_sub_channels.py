@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 
@@ -153,3 +155,14 @@ class TestDiscussSubChannels(HttpCase):
         sub_channel = parent.sub_channel_ids[0]
         with self.assertRaises(UserError):
             sub_channel.group_public_id = self.env.ref("base.group_system")
+
+    def test_10_sub_channel_message_author_member(self):
+        bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")
+        parent = self.env["discuss.channel"].create({
+            "name": "General",
+            "channel_member_ids": [Command.create({"partner_id": bob_user.partner_id.id})],
+        })
+        message = parent.with_user(bob_user).message_post(body="Hello there!")
+        sub_channel = parent._create_sub_channel(from_message_id=message.id)
+        self.assertIn(bob_user.partner_id, sub_channel.channel_member_ids.partner_id)
+        self.assertEqual(len(sub_channel.channel_member_ids), 2)
