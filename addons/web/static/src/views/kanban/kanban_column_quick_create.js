@@ -3,7 +3,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 
-import { Component, useExternalListener, useState, useRef } from "@odoo/owl";
+import { Component, useExternalListener, useState, useRef, onPatched } from "@odoo/owl";
 
 export class KanbanColumnQuickCreate extends Component {
     static template = "web.KanbanColumnQuickCreate";
@@ -47,6 +47,11 @@ export class KanbanColumnQuickCreate extends Component {
 
         // Key Navigation
         useHotkey("escape", () => this.fold());
+        onPatched(() => {
+            if (!this.props.folded) {
+                this.root.el.scrollIntoView({ behavior: "smooth" });
+            }
+        });
     }
 
     get canShowExamples() {
