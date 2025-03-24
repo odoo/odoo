@@ -1531,10 +1531,6 @@ class ChromeBrowser:
                 r = yield self._websocket_send("Runtime.getHeapUsage", with_future=True)
                 _logger.info("heap %d (allocated %d)", r['usedSize'], r['totalSize'])
 
-            if self.test_case.allow_end_on_form:
-                self._result.set_result(True)
-                return
-
             @run
             def _check_form():
                 node_id = 0
@@ -1550,9 +1546,9 @@ class ChromeBrowser:
                 if node_id:
                     self.take_screenshot("unsaved_form_")
                     msg = """\
-Tour finished with an open form view in edition mode.
+Tour finished with a dirty form view being open.
 
-Form views in edition mode are automatically saved when the page is closed, \
+Dirty form views are automatically saved when the page is closed, \
 which leads to stray network requests and inconsistencies."""
                     if self._result.done():
                         _logger.error("%s", msg)
@@ -1563,8 +1559,6 @@ which leads to stray network requests and inconsistencies."""
                 if not self._result.done():
                     self._result.set_result(True)
                 elif self._result.exception() is None:
-                    # if the future was already failed, we're happy,
-                    # otherwise swap for a new failed
                     _logger.error("Tried to make the tour successful twice.")
 
 
@@ -1928,7 +1922,6 @@ class HttpCase(TransactionCase):
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
-    allow_end_on_form = False
 
     _logger: logging.Logger = None
 
