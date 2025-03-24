@@ -80,9 +80,8 @@ export function disambiguate(value, displayNames) {
     return hasSomeString && hasSomethingElse;
 }
 
-export function useMakeGetFieldDef(fieldService) {
-    fieldService ||= useService("field");
-    const loadFieldInfo = useLoadFieldInfo(fieldService);
+export function useMakeGetFieldDef() {
+    const loadFieldInfo = useLoadFieldInfo();
     return async (resModel, tree, additionalsPath = []) => {
         const pathsInTree = getPathsInTree(tree, true);
         const paths = new Set([...pathsInTree, ...additionalsPath]);
@@ -126,9 +125,8 @@ export function useMakeGetFieldDef(fieldService) {
     };
 }
 
-function useGetTreePathDescription(fieldService) {
-    fieldService ||= useService("field");
-    const loadPathDescription = useLoadPathDescription(fieldService);
+function useGetTreePathDescription() {
+    const loadPathDescription = useLoadPathDescription();
     return async (resModel, tree) => {
         const paths = getPathsInTree(tree);
         const promises = [];
@@ -156,8 +154,8 @@ async function getDisplayNames(tree, getFieldDef, nameService) {
     return Object.fromEntries(zip(resModels, await Promise.all(proms)));
 }
 
-export function useMakeGetConditionDescription(fieldService, nameService) {
-    const makeGetPathDescriptions = useGetTreePathDescription(fieldService);
+export function useMakeGetConditionDescription(nameService) {
+    const makeGetPathDescriptions = useGetTreePathDescription();
     return async (resModel, tree, getFieldDef) => {
         tree = simplifyTree(tree);
         const [displayNames, getPathDescription] = await Promise.all([
@@ -198,14 +196,13 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
 
     const coModeldisplayNames = displayNames[getResModel(fieldDef)];
     const dis = disambiguate(value, coModeldisplayNames);
-    const values =
-        ["within", "is_not_within"].includes(operator)
-            ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
-            : (Array.isArray(value) ? value : [value])
-                  .slice(0, 21)
-                  .map((val, index) =>
-                      index < 20 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
-                  );
+    const values = ["within", "is_not_within"].includes(operator)
+        ? [value[0], Within.options.find((option) => option[0] === value[1])[1]]
+        : (Array.isArray(value) ? value : [value])
+              .slice(0, 21)
+              .map((val, index) =>
+                  index < 20 ? formatValue(val, dis, fieldDef, coModeldisplayNames) : "..."
+              );
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {
@@ -230,11 +227,10 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     return description;
 }
 
-export function useGetTreeDescription(fieldService, nameService) {
-    fieldService ||= useService("field");
+export function useGetTreeDescription(nameService) {
     nameService ||= useService("name");
-    const makeGetFieldDef = useMakeGetFieldDef(fieldService);
-    const makeGetConditionDescription = useMakeGetConditionDescription(fieldService, nameService);
+    const makeGetFieldDef = useMakeGetFieldDef();
+    const makeGetConditionDescription = useMakeGetConditionDescription(nameService);
     return async (resModel, tree) => {
         async function getTreeDescription(resModel, tree, isSubExpression = false) {
             tree = simplifyTree(tree);

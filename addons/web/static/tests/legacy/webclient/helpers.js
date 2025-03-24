@@ -27,7 +27,6 @@ import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favo
 import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, onMounted, xml } from "@odoo/owl";
-import { fieldService } from "@web/core/field_service";
 import { nameService } from "@web/core/name_service";
 import { datetimePickerService } from "@web/core/datetime/datetimepicker_service";
 
@@ -60,7 +59,6 @@ export function setupWebClientRegistries() {
         command: () => commandService,
         dialog: () => dialogService,
         effect: () => effectService,
-        field: () => fieldService,
         hotkey: () => hotkeyService,
         http: () => makeFakeHTTPService(),
         pwa: () => makeFakePwaService(),

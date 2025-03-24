@@ -13,7 +13,6 @@ import {
 } from "@web/../tests/helpers/utils";
 import { commandService } from "@web/core/commands/command_service";
 import { dialogService } from "@web/core/dialog/dialog_service";
-import { fieldService } from "@web/core/field_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
@@ -34,7 +33,6 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
 export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("action", actionService);
     serviceRegistry.add("dialog", dialogService);
-    serviceRegistry.add("field", fieldService);
     serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("name", nameService);
     serviceRegistry.add("notification", notificationService);

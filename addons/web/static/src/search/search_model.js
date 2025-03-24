@@ -22,6 +22,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { _t } from "@web/core/l10n/translation";
 import { domainFromTree, treeFromDomain } from "@web/core/tree_editor/condition_tree";
 import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
+import { loadPropertyDefinitions } from "@web/core/field_service";
 
 const { DateTime } = luxon;
 const SPECIAL = Symbol("special");
@@ -157,15 +158,14 @@ export class SearchModel extends EventBus {
      */
     setup(services) {
         // services
-        const { field: fieldService, name: nameService, orm, view, dialog } = services;
+        const { name: nameService, orm, view, dialog } = services;
         this.orm = orm;
-        this.fieldService = fieldService;
         this.viewService = view;
         this.dialog = dialog;
         this.orderByCount = false;
 
-        this.getDomainTreeDescription = useGetTreeDescription(fieldService, nameService);
-        this.makeGetFieldDef = useMakeGetFieldDef(fieldService);
+        this.getDomainTreeDescription = useGetTreeDescription(nameService);
+        this.makeGetFieldDef = useMakeGetFieldDef();
 
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();
@@ -1063,11 +1063,7 @@ export class SearchModel extends EventBus {
             domain.push(["id", "=", this.context.active_id]);
         }
 
-        const definitions = await this.fieldService.loadPropertyDefinitions(
-            resModel,
-            fieldName,
-            domain
-        );
+        const definitions = await loadPropertyDefinitions(resModel, fieldName, domain);
         const result = groupBy(Object.values(definitions), (definition) => definition.record_id);
         return Object.entries(result).map(([recordId, definitions]) => ({
             definitionRecordId: parseInt(recordId),

@@ -1,7 +1,7 @@
-import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
-import { useService } from "@web/core/utils/hooks";
-import { domainFromTree, condition } from "@web/core/tree_editor/condition_tree";
+import { loadFields } from "@web/core/field_service";
+import { condition, domainFromTree } from "@web/core/tree_editor/condition_tree";
+import { getDefaultValue } from "@web/core/tree_editor/tree_editor_value_editors";
 import { getDefaultPath } from "@web/core/tree_editor/utils";
 
 export function getDefaultCondition(fieldDefs) {
@@ -17,9 +17,8 @@ export function getDefaultDomain(fieldDefs) {
 }
 
 export function useGetDefaultLeafDomain() {
-    const fieldService = useService("field");
     return async (resModel) => {
-        const fieldDefs = await fieldService.loadFields(resModel);
+        const fieldDefs = await loadFields(resModel);
         return getDefaultDomain(fieldDefs);
     };
 }

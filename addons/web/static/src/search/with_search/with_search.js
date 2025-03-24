@@ -55,7 +55,6 @@ export class WithSearch extends Component {
             {
                 orm: useService("orm"),
                 view: useService("view"),
-                field: useService("field"),
                 name: useService("name"),
                 dialog: useService("dialog"),
             },
@@ -67,13 +66,12 @@ export class WithSearch extends Component {
             : null;
         useSubEnv({ searchModel: this.searchModel, searchPanelState });
 
+        // @ts-ignore
         useBus(this.searchModel, "update", this.render);
         useSetupAction({
-            getGlobalState: () => {
-                return {
-                    searchModel: JSON.stringify(this.searchModel.exportState()),
-                };
-            },
+            getGlobalState: () => ({
+                searchModel: JSON.stringify(this.searchModel.exportState()),
+            }),
         });
 
         onWillStart(async () => {

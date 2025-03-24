@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { sortBy } from "@web/core/utils/arrays";
-import { useService } from "@web/core/utils/hooks";
+import { loadFields, loadPath } from "@web/core/field_service";
 
 class Page {
     constructor(resModel, fieldDefs, options = {}) {
@@ -110,7 +110,6 @@ export class ModelFieldSelectorPopover extends Component {
     };
 
     setup() {
-        this.fieldService = useService("field");
         this.state = useState({ page: null });
         this.keepLast = new KeepLast();
         this.debouncedSearchFields = debounce(this.searchFields.bind(this), 250);
@@ -155,7 +154,7 @@ export class ModelFieldSelectorPopover extends Component {
 
     async followRelation(fieldDef) {
         const { modelsInfo } = await this.keepLast.add(
-            this.fieldService.loadPath(this.state.page.resModel, `${fieldDef.name}.*`)
+            loadPath(this.state.page.resModel, `${fieldDef.name}.*`)
         );
         this.state.page.selectedName = fieldDef.name;
         const { resModel, fieldDefs } = modelsInfo.at(-1);
@@ -179,12 +178,12 @@ export class ModelFieldSelectorPopover extends Component {
 
     async loadPages(resModel, path) {
         if (typeof path !== "string" || !path.length) {
-            const fieldDefs = await this.fieldService.loadFields(resModel);
+            const fieldDefs = await loadFields(resModel);
             return new Page(resModel, this.filter(fieldDefs, path), {
                 isDebugMode: this.props.isDebugMode,
             });
         }
-        const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
+        const { isInvalid, modelsInfo, names } = await loadPath(resModel, path);
         switch (isInvalid) {
             case "model":
                 throw new Error(`Invalid model name: ${resModel}`);

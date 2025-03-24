@@ -56,10 +56,7 @@ export class OdooViewsDataSource extends LoadableDataSource {
 
     async loadMetadata() {
         if (!this._metaData.fields) {
-            this._metaData.fields = await getFields(
-                this.odooDataProvider.fieldService,
-                this._metaData.resModel
-            );
+            this._metaData.fields = await getFields(this._metaData.resModel);
         }
         this._metaDataLoaded = true;
     }

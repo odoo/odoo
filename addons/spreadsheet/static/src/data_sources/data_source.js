@@ -5,6 +5,7 @@ import { RPCError } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { CellErrorType, EvaluationError } from "@odoo/o-spreadsheet";
 import { _t } from "@web/core/l10n/translation";
+import { loadFields } from "@web/core/field_service";
 
 /**
  * @typedef {import("./odoo_data_provider").OdooDataProvider} OdooDataProvider
@@ -160,13 +161,12 @@ export class ModelNotFoundError extends Error {}
  * Return the fields of a given model.
  * If the model is not found, a `ModelNotFoundError` is thrown.
  *
- * @param {object} fieldService
  * @param {string} model
  * @returns {Promise<import("@spreadsheet").OdooFields>}
  */
-export async function getFields(fieldService, model) {
+export async function getFields(model) {
     try {
-        return await fieldService.loadFields(model);
+        return await loadFields(model);
     } catch (e) {
         if (e instanceof RPCError && e.code === 404) {
             throw new ModelNotFoundError(model);

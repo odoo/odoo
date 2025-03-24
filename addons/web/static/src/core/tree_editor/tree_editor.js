@@ -22,6 +22,7 @@ import {
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useLoadFieldInfo } from "@web/core/model_field_selector/utils";
 import { deepEqual, shallowEqual } from "@web/core/utils/objects";
+import { loadFields } from "@web/core/field_service";
 
 const TRUE_TREE = condition(1, "=", 1);
 
@@ -115,14 +116,10 @@ export class TreeEditor extends Component {
 
     setup() {
         this.isTree = isTree;
-        this.fieldService = useService("field");
         this.nameService = useService("name");
-        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
-        this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
-        this.makeGetConditionDescription = useMakeGetConditionDescription(
-            this.fieldService,
-            this.nameService
-        );
+        this.loadFieldInfo = useLoadFieldInfo();
+        this.makeGetFieldDef = useMakeGetFieldDef();
+        this.makeGetConditionDescription = useMakeGetConditionDescription(this.nameService);
         onWillStart(() => this.onPropsUpdated(this.props));
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
     }
@@ -142,7 +139,7 @@ export class TreeEditor extends Component {
         }
 
         const [fieldDefs, getFieldDef] = await Promise.all([
-            this.fieldService.loadFields(props.resModel),
+            loadFields(props.resModel),
             this.makeGetFieldDef(props.resModel, this.tree),
         ]);
         this.getFieldDef = getFieldDef;

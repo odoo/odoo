@@ -96,7 +96,7 @@ export class OdooPivotLoader {
      * @returns {Promise<OdooFields>} Fields of the model
      */
     async getFields(model) {
-        return getFields(this.odooDataProvider.fieldService, model);
+        return getFields(model);
     }
     /**
      * @param {string} model Technical name of the model

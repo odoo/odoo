@@ -7,7 +7,6 @@ declare module "services" {
     import { dialogService } from "@web/core/dialog/dialog_service";
     import { effectService } from "@web/core/effects/effect_service";
     import { frequentEmojiService } from "@web/core/emoji_picker/frequent_emoji_service";
-    import { fieldService } from "@web/core/field_service";
     import { fileUploadService } from "@web/core/file_upload/file_upload_service";
     import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
     import { localizationService } from "@web/core/l10n/localization_service";
@@ -45,7 +44,6 @@ declare module "services" {
         demo_data: typeof demoDataService;
         dialog: typeof dialogService;
         effect: typeof effectService;
-        field: typeof fieldService;
         file_upload: typeof fileUploadService;
         hotkey: typeof hotkeyService;
         http: typeof httpService;

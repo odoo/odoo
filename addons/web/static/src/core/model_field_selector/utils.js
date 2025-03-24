@@ -1,16 +1,15 @@
-import { useService } from "@web/core/utils/hooks";
+import { loadPath } from "@web/core/field_service";
 
 function makeString(value) {
     return String(value ?? "-");
 }
 
-export function useLoadFieldInfo(fieldService) {
-    fieldService ||= useService("field");
+export function useLoadFieldInfo() {
     return async (resModel, path) => {
         if (typeof path !== "string" || !path) {
             return { resModel, fieldDef: null };
         }
-        const { isInvalid, names, modelsInfo } = await fieldService.loadPath(resModel, path);
+        const { isInvalid, names, modelsInfo } = await loadPath(resModel, path);
         if (isInvalid) {
             return { resModel, fieldDef: null };
         }
@@ -20,8 +19,7 @@ export function useLoadFieldInfo(fieldService) {
     };
 }
 
-export function useLoadPathDescription(fieldService) {
-    fieldService ||= useService("field");
+export function useLoadPathDescription() {
     return async (resModel, path, allowEmpty) => {
         if ([0, 1].includes(path)) {
             return { isInvalid: false, displayNames: [makeString(path)] };
@@ -32,7 +30,7 @@ export function useLoadPathDescription(fieldService) {
         if (typeof path !== "string" || !path) {
             return { isInvalid: true, displayNames: [makeString()] };
         }
-        const { isInvalid, modelsInfo, names } = await fieldService.loadPath(resModel, path);
+        const { isInvalid, modelsInfo, names } = await loadPath(resModel, path);
         const result = { isInvalid: !!isInvalid, displayNames: [] };
         if (!isInvalid) {
             const lastName = names.at(-1);

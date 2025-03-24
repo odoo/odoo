@@ -14,7 +14,6 @@ import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_se
 import { getOperatorEditorInfo } from "@web/core/tree_editor/tree_editor_operator_editor";
 import { _t } from "@web/core/l10n/translation";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { useService } from "@web/core/utils/hooks";
 import { useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 import { getDefaultCondition } from "./utils";
 
@@ -41,9 +40,8 @@ export class DomainSelector extends Component {
     };
 
     setup() {
-        this.fieldService = useService("field");
-        this.loadFieldInfo = useLoadFieldInfo(this.fieldService);
-        this.makeGetFieldDef = useMakeGetFieldDef(this.fieldService);
+        this.loadFieldInfo = useLoadFieldInfo();
+        this.makeGetFieldDef = useMakeGetFieldDef();
 
         this.tree = null;
         this.showArchivedCheckbox = false;
@@ -119,15 +117,13 @@ export class DomainSelector extends Component {
         const { isDebugMode } = this.props;
         return {
             component: ModelFieldSelector,
-            extractProps: ({ update, value: path }) => {
-                return {
-                    path,
-                    update,
-                    resModel,
-                    isDebugMode,
-                    readonly: false,
-                };
-            },
+            extractProps: ({ update, value: path }) => ({
+                path,
+                update,
+                resModel,
+                isDebugMode,
+                readonly: false,
+            }),
             isSupported: (path) => [0, 1].includes(path) || typeof path === "string",
             defaultValue: () => defaultCondition.path,
             stringify: (path) => formatValue(path),
