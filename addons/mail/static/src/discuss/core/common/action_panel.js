@@ -22,6 +22,8 @@ export class ActionPanel extends Component {
     get classNames() {
         return `o-mail-ActionPanel overflow-auto d-flex flex-column flex-shrink-0 position-relative py-2 pt-0 h-100 bg-inherit ${
             !this.env.inChatter ? " px-2" : " o-mail-ActionPanel-chatter"
-        } ${this.env.inDiscussApp ? " o-mail-discussSidebarBgColor" : ""}`;
+        } ${this.env.inDiscussApp ? " o-mail-discussSidebarBgColor" : ""} ${
+            this.props.resizable ? "" : "rounded"
+        }`;
     }
 }
