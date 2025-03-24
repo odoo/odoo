@@ -26,42 +26,56 @@
     }
 }
 
-.content_centered {
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-}
-
 .o_kanban_view {
     .o_view_sample_data .ribbon {
         display: none;
     }
 
     .o_kanban_renderer {
-        // Grouped / Ungrouped sections hidding
+    
+    .o_hr_recruitment_kanban_card_mobile_screen {
+        min-height: 130px;
+    }
+
         &.o_kanban_grouped {
             .o_kanban_record {
                 margin: 1rem;
             }
-            .o_recruitment_kanban_card_ungrouped {
-                display:none !important;
+
+            .o_hr_recruitment_kanban_card_large_screen {
+                display: none;    
             }
 
-            .content_centered {
-                margin: 1rem;
-            }
-            .o_field_many2one_avatar_user .o_avatar .w-0{
-                width: auto !important;
-            }
         }
+
         &.o_kanban_ungrouped {
-            .o_recruitment_kanban_card_grouped {
-                display:none !important;
+            @media only screen and (max-width: 768px) {
+                .o_hr_recruitment_kanban_card_large_screen {
+                    display: none;    
+                }
             }
-            .o_hr_recruitment_kanban_card{
-                border: 0px !important
+            @media only screen and (min-width: 768px) {
+                .o_hr_recruitment_kanban_card_mobile_screen {
+                    display: none;
+                }
             }
         }
     }
+}
+
+.o_hr_recruitment_kanban_card {
+    border: 0px;
+}
+
+.number {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 0.5rem;
+    align-content: center;
+}
+
+.number_description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
