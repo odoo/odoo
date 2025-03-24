@@ -257,34 +257,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <t t-foreach="non_skipped_records" t-as="input_line">
-                        <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
-                            <td>
-                                <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
-                                <t t-else="">
-                                    <a t-att-href="input_line.user_input_id.get_print_url()">
-                                        <t t-esc="input_line_index + 1"></t>
-                                    </a>
-                                </t>
-                            </td>
-                            <td>
-                                <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
-                                <t t-if="question.id in already_filtered_questions or len(table_data) == 1">
-                                    <t t-esc="input_line._get_answer_value()"/>
-                                </t>
-                                <t t-else="">
-                                    <div class="d-flex justify-content-between">
-                                        <t t-esc="input_line._get_answer_value()"/>
-                                        <a class="text-primary filter-add-answer d-print-none"
-                                            data-model-short-key="L" t-att-data-record-id="input_line.id"
-                                            role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
-                                            <i class="fa fa-filter"/>
-                                        </a>
-                                    </div>
-                                </t>
-                            </td>
-                        </tr>
-                    </t>
+                    <t t-call="survey.paginated_results_rows"/>
                 </tbody>
             </table>
         </div>
@@ -343,40 +316,44 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <t t-foreach="non_skipped_records" t-as="input_line">
-                                <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
-                                    <td>
-                                        <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
-                                        <t t-else="">
-                                            <a t-att-href="input_line.user_input_id.get_print_url()">
-                                                <t t-esc="input_line_index + 1"></t>
-                                            </a>
-                                        </t>
-                                    </td>
-                                    <td>
-                                        <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
-                                        <t t-if="question.id in already_filtered_questions or len(table_data) == 1">
-                                            <t t-esc="input_line._get_answer_value()"/>
-                                        </t>
-                                        <t t-else="">
-                                            <div class="d-flex justify-content-between">
-                                                <t t-esc="input_line._get_answer_value()"/>
-                                                <a class="text-primary filter-add-answer d-print-none"
-                                                    data-model-short-key="L" t-att-data-record-id="input_line.id"
-                                                    role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
-                                                    <i class="fa fa-filter"/>
-                                                </a>
-                                            </div>
-                                        </t>
-                                    </td>
-                                </tr>
-                            </t>
+                            <t t-call="survey.paginated_results_rows"/>
                         </tbody>
                     </table>
                 </div>
                <t t-call="survey.question_table_pagination"/>
             </div>
         </div>
+    </template>
+
+    <template id="paginated_results_rows" name="Question: paginated results rows">
+        <t t-foreach="non_skipped_records" t-as="input_line">
+            <tr t-att-class="'d-none' if not input_line in non_skipped_records[:page_record_limit] else ''">
+                <td>
+                    <t t-if="no_print_url"><t t-esc="input_line_index + 1"></t></t>
+                    <t t-else="">
+                        <a t-att-href="input_line.user_input_id.get_print_url()">
+                            <t t-esc="input_line_index + 1"></t>
+                        </a>
+                    </t>
+                </td>
+                <td>
+                    <!-- If answer already covered by filter or if there is only one line to display, do not allow filtering on it again -->
+                    <t t-if="question.id in already_filtered_questions or len(table_data) == 1">
+                        <t t-esc="input_line._get_answer_value()"/>
+                    </t>
+                    <t t-else="">
+                        <div class="d-flex justify-content-between">
+                            <t t-esc="input_line._get_answer_value()"/>
+                            <a class="text-primary filter-add-answer d-print-none"
+                            data-model-short-key="L" t-att-data-record-id="input_line.id"
+                            role="button" aria-label="Filter surveys" title="Only show survey results having selected this answer">
+                                <i class="fa fa-filter"/>
+                            </a>
+                        </div>
+                    </t>
+                </td>
+            </tr>
+        </t>
     </template>
 
     <template id="question_result_choice" name="Question: choice result (simple_choice, multiple_choice, scale)">
