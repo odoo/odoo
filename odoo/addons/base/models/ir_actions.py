@@ -547,7 +547,7 @@ class IrActionsServer(models.Model):
         ('code', 'Execute Code'),
         ('webhook', 'Send Webhook Notification'),
         ('multi', 'Multi Actions')], string='Type',
-        default='object_write', required=True, copy=True,
+        required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Update a Record': update the values of a record\n"
              "- 'Create Activity': create an activity (Discuss)\n"
