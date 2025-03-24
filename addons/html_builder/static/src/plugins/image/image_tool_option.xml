@@ -39,6 +39,48 @@
             <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="custom_glfilter_opt">Custom</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+    <t t-if="state.isCustomFilter">
+        <BuilderRow level="1" label.translate="Saturation">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'saturation'"
+                min="-100"
+                max="100"
+                step="10" />
+        </BuilderRow>
+        <BuilderRow level="1" label.translate="Contrast">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'contrast'"
+                min="-100"
+                max="100"
+                step="10" />
+        </BuilderRow>
+        <BuilderRow level="1" label.translate="Brightness">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'brightness'"
+                min="-100"
+                max="100"
+                step="10" />
+        </BuilderRow>
+        <BuilderRow level="1" label.translate="Sepia">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'sepia'"
+                min="0"
+                max="100"
+                step="5" />
+        </BuilderRow>
+        <BuilderRow level="1" label.translate="Blur">
+            <BuilderRange
+                action="'setCustomFilter'"
+                actionParam="'blur'"
+                min="0"
+                max="2000"
+                step="100" />
+        </BuilderRow>
+    </t>
     <BuilderRow label.translate="Size">
         <BuilderButtonGroup styleAction="'width'">
             <BuilderButton styleActionValue="''" title.translate="Resize Default">Default</BuilderButton>
