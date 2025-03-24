@@ -79,9 +79,9 @@ class TestChromeBrowser(HttpCase):
         self.addCleanup(self.browser.stop)
 
     def test_screencasts(self):
-        self.browser.start_screencast()
+        self.browser.screencaster.start()
         self.browser.navigate_to('about:blank')
         self.browser._wait_ready()
         code = "setTimeout(() => console.log('test successful'), 2000); setInterval(() => document.body.innerText = (new Date()).getTime(), 100);"
         self.browser._wait_code_ok(code, 10)
-        self.browser._save_screencast()
+        self.browser.screencaster.save()
