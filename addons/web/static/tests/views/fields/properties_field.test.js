@@ -43,15 +43,15 @@ async function closePopover() {
 async function changeType(propertyType) {
     const TYPES_INDEX = {
         char: 1,
-        integer: 3,
-        float: 4,
-        date: 5,
-        datetime: 6,
-        selection: 7,
-        tags: 8,
-        many2one: 9,
-        many2many: 10,
-        separator: 11,
+        integer: 4,
+        float: 5,
+        date: 6,
+        datetime: 7,
+        selection: 8,
+        tags: 9,
+        many2one: 10,
+        many2many: 11,
+        separator: 12,
     };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(".o_field_property_definition_type input");
@@ -662,6 +662,54 @@ test("properties: float and integer", async () => {
     await editValue("azerty", "0", "Wrong integer value should be interpreted as 0");
     await editValue("1,2,3,4,5,6", "123,456");
     await editValue("1,2,3,4,5,6.1,2,3", "0");
+});
+
+/**
+ * Test the text property.
+ */
+test("properties: text", async () => {
+    onRpc("has_access", () => true);
+
+    Partner._records = [
+        {
+            id: 1337,
+            company_id: 42,
+            properties: {
+                property_1: "text value",
+            },
+        },
+    ];
+
+    ResCompany._records.push({
+        id: 42,
+        name: "Company 2",
+        definitions: [
+            {
+                name: "property_1",
+                string: "My Text",
+                type: "text",
+                view_in_kanban: true,
+            },
+        ],
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1337,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    expect(".o_field_properties textarea").toHaveCount(1);
+    expect(".o_field_properties textarea").toHaveValue("text value");
 });
 
 /**

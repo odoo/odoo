@@ -69,7 +69,7 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         # standard types
-        'boolean', 'integer', 'float', 'char', 'date', 'datetime',
+        'boolean', 'integer', 'float', 'text', 'char', 'date', 'datetime',
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
@@ -483,7 +483,7 @@ class Properties(Field):
                 # E.G. convert zero to False
                 property_value = bool(property_value)
 
-            elif property_type == 'char' and not isinstance(property_value, str):
+            elif property_type in ('char', 'text') and not isinstance(property_value, str):
                 property_value = False
 
             elif property_value and property_type == 'selection':
