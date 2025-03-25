@@ -3759,6 +3759,23 @@ const SnippetOptionWidget = publicWidget.Widget.extend({
             }
         }
 
+        if (params.cssProperty === "border-width" || params.cssProperty === "border-radius" || params.cssProperty === "background-color") {
+            let filterEl = this.$target[0].querySelector(":scope > .o_we_bg_filter");
+            if (!filterEl && this.$target[0].classList.contains("o_we_bg_filter")) {
+                filterEl = this.$target[0];
+            }
+            if (filterEl) {
+                filterEl.style.borderRadius = 
+                    Math.max(0,
+                        (
+                            (parseInt(window.getComputedStyle(filterEl.parentElement).getPropertyValue("border-radius")) || 0)
+                            -
+                            (parseInt(window.getComputedStyle(filterEl.parentElement).getPropertyValue("border-width")) || 0)
+                        )
+                    ) + "px";
+            }
+        }
+
         _restoreTransitions();
     },
     /**
