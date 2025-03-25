@@ -9,6 +9,7 @@ from . import test_discuss_channel
 from . import test_cors_livechat
 from . import test_get_discuss_channel
 from . import test_get_operator
+from . import test_im_livechat_channel
 from . import test_im_livechat_report
 from . import test_im_livechat_support_page
 from . import test_js

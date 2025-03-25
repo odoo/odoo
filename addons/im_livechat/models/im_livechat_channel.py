@@ -5,6 +5,7 @@ import random
 import re
 
 from odoo import api, Command, fields, models, _
+from odoo.exceptions import AccessError
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
@@ -170,12 +171,16 @@ class Im_LivechatChannel(models.Model):
     # --------------------------
     def action_join(self):
         self.ensure_one()
-        self.user_ids = [Command.link(self.env.user.id)]
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            raise AccessError(_("Only Live Chat operators can join Live Chat channels"))
+        # sudo: im_livechat.channel - operators can join channels
+        self.sudo().user_ids = [Command.link(self.env.user.id)]
         self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_quit(self):
         self.ensure_one()
-        self.user_ids = [Command.unlink(self.env.user.id)]
+        # sudo: im_livechat.channel - users can leave channels
+        self.sudo().user_ids = [Command.unlink(self.env.user.id)]
         self.env.user._bus_send_store(self, ["are_you_inside", "name"])
 
     def action_view_rating(self):
