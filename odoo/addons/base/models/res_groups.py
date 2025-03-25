@@ -14,7 +14,8 @@ class ResGroups(models.Model):
 
     name = fields.Char(required=True, translate=True)
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
-    all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', search='_search_all_user_ids', string='Users and implied users')
+    all_user_ids = fields.Many2many('res.users', string='Users and implied users',
+        compute='_compute_all_user_ids', search='_search_all_user_ids', inverse='_inverse_all_user_ids')
 
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
@@ -203,6 +204,20 @@ class ResGroups(models.Model):
     def _compute_all_user_ids(self):
         for group in self.with_context(active_test=False):
             group.all_user_ids = group.all_implied_by_ids.user_ids
+
+    def _inverse_all_user_ids(self):
+        for group in self:
+            user_to_add = group.all_user_ids - group.all_implied_by_ids.user_ids
+            user_to_remove = group.all_implied_by_ids.user_ids - group.all_user_ids
+            group.user_ids = group.user_ids - user_to_remove + user_to_add
+
+            cannot_remove = group.all_implied_by_ids.user_ids & user_to_remove
+            if cannot_remove:
+                raise UserError(self.env._(
+                    "It is not possible to remove implied group %(group)s from users %(users)s",
+                    group=repr(group.name),
+                    users=', '.join(cannot_remove.mapped('name')),
+                ))
 
     def _search_all_user_ids(self, operator, value):
         return [('all_implied_by_ids.user_ids', operator, value)]
