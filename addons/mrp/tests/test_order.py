@@ -4905,6 +4905,8 @@ class TestMrpOrder(TestMrpCommon):
         """
         Test updating an MO from BoM when the finished product has a kit with variants as a component.
         """
+        # Enable variants
+        self.env.user.group_ids += self.env.ref('product.group_product_variant')
         # Create an attribute for variants
         color_attribute = self.env['product.attribute'].create({
             'name': 'Variant Color',
