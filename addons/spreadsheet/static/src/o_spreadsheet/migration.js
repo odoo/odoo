@@ -1,9 +1,6 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { OdooCorePlugin } from "@spreadsheet/plugins";
 const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
-const { corePluginRegistry, migrationStepRegistry } = spreadsheet.registries;
-
-export const ODOO_VERSION = 13;
+const { migrationStepRegistry } = spreadsheet.registries;
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -22,14 +19,12 @@ const MAP_FN_NAMES_V10 = {
 
 const dmyRegex = /^([0|1|2|3][1-9])\/(0[1-9]|1[0-2])\/(\d{4})$/i;
 
-migrationStepRegistry.add("odoo_migration", {
-    versionFrom: "16.1",
+migrationStepRegistry.add("17.3.1", {
     migrate(data) {
         return migrateOdooData(data);
     },
 });
-migrationStepRegistry.add("odoo_migration_sorted_column", {
-    versionFrom: "24.1",
+migrationStepRegistry.add("18.1.2", {
     migrate(data) {
         const version = data.odooVersion || 0;
         if (version < 13) {
@@ -410,13 +405,3 @@ function migrate12to13(data) {
     }
     return data;
 }
-
-export class OdooVersion extends OdooCorePlugin {
-    static getters = /** @type {const} */ ([]);
-
-    export(data) {
-        data.odooVersion = ODOO_VERSION;
-    }
-}
-
-corePluginRegistry.add("odooMigration", OdooVersion);
