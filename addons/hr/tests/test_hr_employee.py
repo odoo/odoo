@@ -472,3 +472,19 @@ class TestHrEmployee(TestHrCommon):
                 employee.ids,
                 self.env['hr.employee'].with_user(new_user).search(domain).ids,
             )
+
+    def test_is_flexible(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+        })
+        self.assertTrue(employee.resource_calendar_id)
+        self.assertFalse(employee.is_flexible)
+        self.assertFalse(employee.is_fully_flexible)
+
+        employee.resource_calendar_id.flexible_hours = True
+        self.assertTrue(employee.is_flexible)
+        self.assertFalse(employee.is_fully_flexible)
+
+        employee.resource_calendar_id = False
+        self.assertTrue(employee.is_flexible)
+        self.assertTrue(employee.is_fully_flexible)
