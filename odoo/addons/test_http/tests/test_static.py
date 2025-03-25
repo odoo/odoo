@@ -5,8 +5,9 @@ from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from os.path import basename, join as opj
 from unittest.mock import patch
+from urllib.parse import urlsplit
+
 from freezegun import freeze_time
-from urllib3.util import parse_url
 
 from odoo import api, http
 from odoo.tests import new_test_user, tagged, RecordCapturer
@@ -334,7 +335,7 @@ class TestHttpStatic(TestHttpStaticCommon):
         })
 
         res = self.url_open(bad_path, allow_redirects=False)
-        location = parse_url(res.headers.get('Location', ''))
+        location = urlsplit(res.headers.get('Location', ''))
         self.assertNotEqual(location.path, bad_path, "loop detected")
         self.assertEqual(res.status_code, 404)
 

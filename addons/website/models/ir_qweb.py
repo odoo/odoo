@@ -3,13 +3,11 @@ import re
 import logging
 
 from collections import OrderedDict
-from urllib3.util import parse_url
+from urllib.parse import urlsplit
 
 from odoo import models
 from odoo.http import request
 from odoo.tools import lazy
-from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.osv import expression
 from odoo.addons.website.models import ir_http
 from odoo.exceptions import AccessError
 
@@ -141,7 +139,7 @@ class IrQweb(models.AbstractModel):
             }
             remove_src = False
             if tagName in ('iframe', 'script'):
-                src_host = parse_url((atts.get('src') or '').lower()).host
+                src_host = urlsplit((atts.get('src') or '').lower()).hostname
                 if src_host:
                     remove_src = any(
                         # "www.example.com" and "example.com" should block both.
