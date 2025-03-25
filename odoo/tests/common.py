@@ -31,29 +31,28 @@ import traceback
 import unittest
 import warnings
 from collections import defaultdict, deque
-from concurrent.futures import Future, CancelledError, wait
+from concurrent.futures import CancelledError, Future, InvalidStateError, wait
 from contextlib import contextmanager, ExitStack
 from datetime import datetime
 from functools import lru_cache, partial
 from itertools import islice, zip_longest
-from passlib.context import CryptContext
 from textwrap import shorten
-from typing import Optional, Iterable
+from typing import Optional, Iterable, cast
+from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
 from xmlrpc import client as xmlrpclib
-
-try:
-    from concurrent.futures import InvalidStateError
-except ImportError:
-    InvalidStateError = NotImplementedError
 
 import freezegun
 import requests
 import werkzeug.urls
 from lxml import etree, html
+from passlib.context import CryptContext
 from requests import PreparedRequest, Session
 from urllib3.util import Url, parse_url
 
+import odoo.addons.base
+import odoo.http
+import odoo.models
 import odoo.orm.registry
 from odoo import api
 from odoo.exceptions import AccessError
@@ -67,6 +66,7 @@ from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
 
 from . import case, test_cursor
+from .result import OdooTestResult
 
 try:
     # the behaviour of decorator changed in 5.0.5 changing the structure of the traceback when
@@ -265,6 +265,9 @@ class BaseCase(case.TestCase):
     """ Subclass of TestCase for Odoo-specific code. This class is abstract and
     expects self.registry, self.cr and self.uid to be initialized by subclasses.
     """
+    registry: Registry = None
+    env: api.Environment = None
+    cr: Cursor = None
     def __init_subclass__(cls):
         """Assigns default test tags ``standard`` and ``at_install`` to test
         cases not having them. Also sets a completely unnecessary
@@ -304,7 +307,7 @@ class BaseCase(case.TestCase):
             "Blocking un-mocked external HTTP request %s %s", r.method, r.url)
         raise BlockedRequest(f"External requests verboten (was {r.method} {r.url})")
 
-    def run(self, result):
+    def run(self, result: OdooTestResult) -> None:
         testMethod = getattr(self, self._testMethodName)
 
         if getattr(testMethod, '_retry', True) and getattr(self, '_retry', True):
@@ -313,7 +316,6 @@ class BaseCase(case.TestCase):
             tests_run_count = 1
             _logger.info('Auto retry disabled for %s', self)
 
-        quiet_log = None
         for retry in range(tests_run_count):
             result.had_failure = False  # reset in case of retry without soft_fail
             if retry:
@@ -322,11 +324,11 @@ class BaseCase(case.TestCase):
                 with warnings.catch_warnings(), \
                         result.soft_fail(), \
                         lower_logging(25, logging.INFO) as quiet_log:
-                    super().run(result)
+                    super().run(cast(TestResult, result))
                 if not (result.had_failure or quiet_log.had_error_log):
                     break
             else:  # last try
-                super().run(result)
+                super().run(cast(TestResult, result))
                 if not result.wasSuccessful() and BaseCase._tests_run_count != 1:
                     _logger.runbot('Disabling auto-retry after a failed test')
                     BaseCase._tests_run_count = 1
@@ -455,7 +457,7 @@ class BaseCase(case.TestCase):
     def _assertRaises(self, exception, *, msg=None):
         """ Context manager that clears the environment upon failure. """
         with ExitStack() as init:
-            if hasattr(self, 'env'):
+            if self.env:
                 init.enter_context(self.env.cr.savepoint())
                 if issubclass(exception, AccessError):
                     # The savepoint() above calls flush(), which leaves the
@@ -582,7 +584,7 @@ class BaseCase(case.TestCase):
                 count = self.cr.sql_log_count - count0
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
-                    frame, filename, linenum, funcname, lines, index = inspect.stack()[2]
+                    _frame, filename, linenum, funcname, _lines, _index = inspect.stack()[2]
                     filename = filename.replace('\\', '/')
                     if "/odoo/addons/" in filename:
                         filename = filename.rsplit("/odoo/addons/", 1)[1]
@@ -661,14 +663,14 @@ class BaseCase(case.TestCase):
             r = {}
             for field_name in field_names:
                 record_value = record[field_name]
-                match (field := record._fields[field_name]).type:
-                    case 'many2one':
+                match record._fields[field_name]:
+                    case odoo.fields.Many2one():
                         record_value = record_value.id
-                    case 'one2many' | 'many2many':
+                    case odoo.fields.One2many() | odoo.fields.Many2many():
                         record_value = sorted(record_value.ids)
-                    case 'float' if digits := field.get_digits(record.env):
+                    case odoo.fields.Float() as field if digits := field.get_digits(record.env):
                         record_value = Approx(record_value, digits[1], decorate=False)
-                    case 'monetary' if currency_field_name := field.get_currency_field(record):
+                    case odoo.fields.Monetary() as field if currency_field_name := field.get_currency_field(record):
                         # don't round if there's no currency set
                         if c := record[currency_field_name]:
                             record_value = Approx(record_value, c, decorate=False)
@@ -772,8 +774,8 @@ class BaseCase(case.TestCase):
         which will wrap the current cursor.
         """
         assert not cls._registry_patched, 'Can only patch registry once'
-        assert hasattr(cls, 'cr'), 'No cursor'
-        assert hasattr(cls, 'registry'), 'No registry'
+        assert cls.cr, 'No cursor'
+        assert cls.registry, 'No registry'
 
         cls.registry_patches = cls._registry_test_mode_patches(
             cr=cls.cr, registry=cls.registry,
@@ -783,19 +785,19 @@ class BaseCase(case.TestCase):
         cls._registry_patched = True
         cls.addClassCleanup(cls.registry_leave_test_mode)
 
-    def registry_enter_test_mode(self, *, cr: Cursor | None = None, register_cleanup=True):
+    def registry_enter_test_mode(self, *, cr: Cursor | None = None, register_cleanup: bool = True) -> None:
         """
         Puts the registry in test mode.
 
         New cursors returned by the registry will be instances of `TestCursor`
         which will wrap the current cursor.
 
-        :param cr (default=self.cr): the cursor to wrap.
-        :param registry_cleanup: whether to register cleanup.
+        :param cr: the cursor to wrap (defaults to the current cursor if none)
+        :param register_cleanup: whether to register cleanup.
         """
         assert not type(self)._registry_patched, 'Can only patch registry once'
-        assert cr or hasattr(self, 'cr'), 'No cursor'
-        assert hasattr(self, 'registry'), 'No registry'
+        assert cr or self.cr, 'No cursor'
+        assert self.registry, 'No registry'
 
         type(self).registry_patches = self._registry_test_mode_patches(
             cr=cr or self.cr, registry=self.registry,
@@ -872,7 +874,7 @@ class Approx:  # noqa: PLW1641
     Most of the time, :meth:`TestCase.assertAlmostEqual` is more useful, but it
     doesn't work for all helpers.
     """
-    def __init__(self, value: float, rounding: int | float | odoo.addons.base.models.res_currency.Currency, /, decorate: bool) -> None:  # noqa: PYI041
+    def __init__(self, value: float, rounding: int | float | odoo.addons.base.models.res_currency.ResCurrency, /, decorate: bool) -> None:  # noqa: PYI041
         self.value = value
         self.decorate = decorate
         if isinstance(rounding, int):
@@ -909,9 +911,6 @@ class TransactionCase(BaseCase):
     fields. If a test modifies the registry (custom models and/or fields), it
     should prepare the necessary cleanup (`self.registry.reset_changes()`).
     """
-    registry: Registry = None
-    env: api.Environment = None
-    cr: Cursor = None
     muted_registry_logger = mute_logger(odoo.orm.registry._logger.name)
     freeze_time = None
 
@@ -962,7 +961,7 @@ class TransactionCase(BaseCase):
         cls.startClassPatcher(cls._signal_changes_patcher)
 
         cls.cr = cls.registry.cursor()
-        cls.addClassCleanup(cls.cr.close)
+        cls.addClassCleanup(cast(Cursor, cls.cr).close)
 
         if cls.freeze_time:
             cls.startClassPatcher(freezegun.freeze_time(cls.freeze_time))
@@ -1056,7 +1055,7 @@ class SingleTransactionCase(BaseCase):
         cls.addClassCleanup(cls.registry.clear_all_caches)
 
         cls.cr = cls.registry.cursor()
-        cls.addClassCleanup(cls.cr.close)
+        cls.addClassCleanup(cast(Cursor, cls.cr).close)
 
         cls.env = api.Environment(cls.cr, api.SUPERUSER_ID, {})
 
@@ -1176,9 +1175,10 @@ class ChromeBrowser:
         if sig == signal.SIGXCPU:
             _logger.info('CPU time limit reached, stopping Chrome and shutting down')
             self.stop()
-            os._exit(0)
+            exit()
 
     def stop(self):
+        # method may be called during `_open_websocket`
         if hasattr(self, 'ws'):
             self.screencaster.stop()
 
@@ -1197,17 +1197,16 @@ class ChromeBrowser:
             self._websocket_send('Browser.close')
             self._logger.info("Closing websocket connection")
             self.ws.close()
-        if self.chrome:
-            self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
-            self.chrome.terminate()
-            self.chrome.wait(5)
 
-        if self.user_data_dir and os.path.isdir(self.user_data_dir) and self.user_data_dir != '/':
-            self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
-            shutil.rmtree(self.user_data_dir, ignore_errors=True)
+        self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
+        self.chrome.terminate()
+        self.chrome.wait(5)
+
+        self._logger.info('Removing chrome user profile "%s"', self.user_data_dir)
+        shutil.rmtree(self.user_data_dir, ignore_errors=True)
 
         # Restore previous signal handler
-        if self.sigxcpu_handler and os.name == 'posix':
+        if self.sigxcpu_handler:
             signal.signal(signal.SIGXCPU, self.sigxcpu_handler)
 
     @property
@@ -1760,6 +1759,7 @@ class NoScreencast:
     def __call__(self, sessionId, data, metadata):
         pass
 
+
 class Screencaster:
     def __init__(self, browser: ChromeBrowser, directory: str):
         self.browser: ChromeBrowser = browser
@@ -1904,6 +1904,7 @@ class HttpCase(TransactionCase):
     browser = None
     browser_size = '1366x768'
     touch_enabled = False
+    session: odoo.http.Session = None
 
     _logger: logging.Logger = None
 
@@ -2151,7 +2152,7 @@ class HttpCase(TransactionCase):
                 timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
                 _logger.log(
                     logging.INFO if cpu_throttling_os else logging.WARNING,
-                    'CPU throttling mode is only suitable for local testing - ' \
+                    'CPU throttling mode is only suitable for local testing - '
                     'Throttling browser CPU to %sx slowdown and extending timeout to %s sec', cpu_throttling, timeout)
                 browser._websocket_request('Emulation.setCPUThrottlingRate', params={'rate': cpu_throttling})
 
