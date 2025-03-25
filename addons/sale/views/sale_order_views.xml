@@ -662,6 +662,17 @@
                                        column_invisible="parent.company_price_include == 'tax_excluded'"
                                        invisible="is_downpayment"
                                        string="Amount"/>
+                                <!-- Optional amounts -->
+                                <field name="price_total"
+                                       column_invisible="parent.company_price_include == 'tax_included'"
+                                       optional="hide"
+                                       invisible="is_downpayment"
+                                       string="Tax Incl."/>
+                                <field name="price_subtotal"
+                                       column_invisible="parent.company_price_include == 'tax_excluded'"
+                                       optional="hide"
+                                       invisible="is_downpayment"
+                                       string="Tax Excl."/>
                                 <!-- Others fields -->
                                 <field name="tax_calculation_rounding_method" column_invisible="True"/>
                                 <field name="state" column_invisible="True"/>
