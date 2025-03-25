@@ -419,6 +419,11 @@ export class Field extends Component {
                         attrs: { ...fieldInfo.attrs, ...this.props.attrs },
                     };
                 }
+                if (fieldInfo.attrs.placeholder || fieldInfo.options.placeholder_field) {
+                    fieldInfo.placeholder =
+                        record.data[fieldInfo.options.placeholder_field] ||
+                        fieldInfo.attrs.placeholder;
+                }
 
                 const dynamicInfo = {
                     get context() {

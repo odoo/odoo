@@ -169,6 +169,21 @@ test("with placeholder", async () => {
     expect(`.o_field_widget input`).toHaveAttribute("placeholder", "Placeholder");
 });
 
+test("placeholder_field shows as placeholder", async () => {
+    Product._fields.url1 = fields.Char({
+        default: "http://www.url1.com",
+    });
+    await mountView({
+        type: "form",
+        resModel: "product",
+        arch: `<form>
+            <field name="url" widget="url" options="{'placeholder_field' : 'url1'}"/>
+            <field name="url1"/>
+        </form>`,
+    });
+    expect(`.o_field_url input`).toHaveAttribute("placeholder", "http://www.url1.com");
+});
+
 test("with non falsy, but non url value", async () => {
     Product._fields.url.default = "odoo://hello";
     await mountView({

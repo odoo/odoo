@@ -3679,6 +3679,20 @@ test("Many2oneField with placeholder", async () => {
     expect(".o_field_widget[name='trululu'] input").toHaveAttribute("placeholder", "Placeholder");
 });
 
+test("placeholder_field shows as placeholder", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form>
+            <field name="name"/>
+            <field name="trululu" options="{'placeholder_field': 'name'}"/>
+        </form>`,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name='trululu'] input").toHaveAttribute("placeholder", "first record");
+});
+
 test("external_button performs a doAction by default", async () => {
     Partner._views = {
         form: '<form><field name="trululu"/></form>',
@@ -3914,7 +3928,7 @@ test("search typeahead", async () => {
     expect.verifySteps([]);
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
         "Start typing 3 characters",
-        "Create \"r\"",
+        'Create "r"',
         "Create and edit...",
         "Search more...",
     ]);
@@ -3924,7 +3938,7 @@ test("search typeahead", async () => {
     expect.verifySteps([]);
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
         "Start typing 3 characters",
-        "Create \"re\"",
+        'Create "re"',
         "Create and edit...",
         "Search more...",
     ]);
@@ -3935,7 +3949,7 @@ test("search typeahead", async () => {
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual([
         "first record",
         "second record",
-        "Create \"rec\"",
+        'Create "rec"',
         "Create and edit...",
         "Search more...",
     ]);

@@ -61,7 +61,8 @@ export function computeM2OProps(fieldProps) {
         relation: fieldProps.record.fields[fieldProps.name].relation,
         searchThreshold: fieldProps.searchThreshold,
         string: fieldProps.string || fieldProps.record.fields[fieldProps.name].string || "",
-        update: (value, options = {}) => fieldProps.record.update({ [fieldProps.name]: value }, options),
+        update: (value, options = {}) =>
+            fieldProps.record.update({ [fieldProps.name]: value }, options),
         value: toRaw(fieldProps.record.data[fieldProps.name]),
     };
 }
