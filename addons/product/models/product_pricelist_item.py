@@ -558,7 +558,7 @@ class ProductPricelistItem(models.Model):
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency):
+    def _compute_base_price(self, product, quantity, uom, date, currency, **kwargs):
         """ Compute the base price for a given rule
 
         :param product: recordset of product (product.product/product.template)
