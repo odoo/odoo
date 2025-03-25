@@ -160,5 +160,8 @@ class PaymentPortal(main.PaymentPortal):
             order_sudo.validate_taxes_on_sales_order()  # re-applies taxcloud taxes if necessary
             if order_sudo.currency_id.compare_amounts(initial_amount, order_sudo.amount_total):
                 raise ValidationError(
-                    _("Cannot process payment: applied reward was changed or has expired.")
+                    _(
+                        "Cannot process payment: applied reward was changed or has expired.\n"
+                        "Please refresh the page and try again."
+                    )
                 )
