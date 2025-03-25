@@ -214,6 +214,14 @@ class AccountEdiXmlCII(models.AbstractModel):
             sum_fixed_taxes = sum(x['amount'] for x in line_vals['allowance_charge_vals_list'])
             line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
 
+            line_vals['quantity'] = line_vals['line'].quantity #/!\ The quantity is the line.quantity since we keep the unece_uom_code!
+
+            # Invert the quantity and the gross_price_total_unit if a line has a negative price total
+            if line_vals['line'].currency_id.compare_amounts(line_vals['gross_price_total_unit'], 0) == -1:
+                line_vals['quantity'] *= -1
+                line_vals['gross_price_total_unit'] *= -1
+                line_vals['price_subtotal_unit'] *= -1
+
         # Fixed taxes: set the total adjusted amounts on the document level
         template_values['tax_basis_total_amount'] = tax_details['base_amount_currency']
         template_values['tax_total_amount'] = tax_details['tax_amount_currency']

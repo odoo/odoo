@@ -480,3 +480,20 @@ class TestCIIFR(TestUBLCommon):
             list_line_subtotals=[99], currency_id=self.currency_data['currency'].id, list_line_price_unit=[99],
             list_line_discount=[0], list_line_taxes=[self.tax_21+self.recupel], move_type='out_invoice',
         )
+
+    def test_facturx_has_no_negative_lines(self):
+        """
+        Test that the is no negative ChargeAmount in the facturx xml
+        """
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {'product_id': self.product_a.id, 'quantity': 1, 'price_unit': 100.0, 'tax_ids': [(6, 0, [self.tax_sale_a.id])],},
+                {'product_id': self.product_b.id, 'quantity': 1, 'price_unit': -50.0, 'tax_ids': [(6, 0, [self.tax_sale_a.id])],}
+            ],
+        )
+
+        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, None, 'from_odoo/facturx_positive_discount_price_unit.xml')
+
