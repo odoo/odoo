@@ -2157,7 +2157,7 @@ class CrmLead(models.Model):
 
             # To avoid that a tag take too much importance if its subset is too small,
             # we ignore the tag frequencies if we have less than 50 won or lost for this tag.
-            if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 50:
+            if field == 'tag_id' and (frequency['won_count'] + frequency['lost_count']) < 0:
                 continue
 
             if frequency.team_id:
