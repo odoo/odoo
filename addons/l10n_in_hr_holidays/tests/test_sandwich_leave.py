@@ -49,7 +49,7 @@ class TestSandwichLeave(TransactionCase):
                 'request_date_to': "2023-08-16",
             })
 
-            leave = before_holiday_leave._l10n_in_apply_sandwich_rule(public_holiday, employee_leaves)
+            leave = before_holiday_leave._l10n_in_apply_sandwich_rule(before_holiday_leave.number_of_days, public_holiday, employee_leaves)
             self.assertEqual(leave, 1, "The total leaves should be 1")
-            sandwiched_leave = after_holiday_leave._l10n_in_apply_sandwich_rule(public_holiday, employee_leaves)
+            sandwiched_leave = after_holiday_leave._l10n_in_apply_sandwich_rule(after_holiday_leave.number_of_days, public_holiday, employee_leaves)
             self.assertEqual(sandwiched_leave, 2, "The total leaves should be 2 including sandwich leave")
