@@ -1199,6 +1199,7 @@
                                                column_invisible="parent.move_type in ['in_invoice', 'in_refund', 'in_receipt'] or parent.company_price_include == 'tax_excluded'"
                                                string="Amount"/>
                                         <!-- Others fields -->
+                                        <field name="move_id" force_save="1" column_invisible="True"/>
                                         <field name="partner_id" column_invisible="True"/>
                                         <field name="currency_id" column_invisible="True"/>
                                         <field name="company_id" column_invisible="True"/>

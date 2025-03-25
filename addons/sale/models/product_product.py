@@ -17,6 +17,10 @@ class ProductProduct(models.Model):
         compute='_compute_product_is_in_sale_order',
         search='_search_product_is_in_sale_order',
     )
+    is_in_selected_section_of_sale_order = fields.Boolean(
+        compute='_compute_is_in_selected_section_of_sale_order',
+        search='_search_is_in_selected_section_of_sale_order',
+    )
 
     def _compute_sales_count(self):
         r = {}
@@ -65,6 +69,12 @@ class ProductProduct(models.Model):
         for product in self:
             product.product_catalog_product_is_in_sale_order = bool(data.get(product.id, 0))
 
+    @api.depends_context('order_id', 'selected_section_id')
+    def _compute_is_in_selected_section_of_sale_order(self):
+        product_ids = self._get_product_ids_in_selected_section_of_sale_order()
+        for product in self:
+            product.is_in_selected_section_of_sale_order = product.id in product_ids
+
     def _search_product_is_in_sale_order(self, operator, value):
         if operator != 'in':
             return NotImplemented
@@ -72,6 +82,11 @@ class ProductProduct(models.Model):
             ('order_id', 'in', [self.env.context.get('order_id', '')]),
         ], ['product_id']).product_id.ids
         return [('id', 'in', product_ids)]
+
+    def _search_is_in_selected_section_of_sale_order(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return [('id', 'in', self._get_product_ids_in_selected_section_of_sale_order())]
 
     @api.readonly
     def action_view_sales(self):
@@ -91,6 +106,16 @@ class ProductProduct(models.Model):
 
     def _get_invoice_policy(self):
         return self.invoice_policy
+
+    def _get_product_ids_in_selected_section_of_sale_order(self):
+        order_id = self.env.context.get('order_id')
+        if not order_id:
+            return []
+
+        return self.env['sale.order'].browse(order_id).order_line.filtered_domain([
+            ('linked_section_line_id', '=', self.env.context.get('selected_section_id')),
+            ('product_uom_qty', '>', 0),
+        ]).mapped('product_id').ids
 
     def _filter_to_unlink(self):
         domain = [('product_id', 'in', self.ids)]

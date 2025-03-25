@@ -70,6 +70,7 @@ This module contains all the common features of Sales Management and eCommerce.
             'sale/static/src/js/models/*',
             'sale/static/src/js/product/*',
             'sale/static/src/js/product_card/*',
+            'sale/static/src/js/product_catalog/*',
             'sale/static/src/js/product_configurator_dialog/*',
             'sale/static/src/js/product_list/*',
             'sale/static/src/js/product_template_attribute_line/*',

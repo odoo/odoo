@@ -74,6 +74,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
+            selected_section_id: this.env.searchModel.selectedSection.sectionId,
         }
     }
 
@@ -84,6 +85,10 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
     updateQuantity(quantity) {
         if (this.productCatalogData.readOnly) {
             return;
+        }
+        const lineCountChange = (quantity > 0) - (this.productCatalogData.quantity > 0);
+        if (lineCountChange !== 0) {
+            this.notifyLineCountChange(lineCountChange);
         }
         this.productCatalogData.quantity = quantity || 0;
         this.debouncedUpdateQuantity();
@@ -124,5 +129,13 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
      */
     decreaseQuantity() {
         this.updateQuantity(parseFloat(this.productCatalogData.quantity - 1));
+    }
+
+    notifyLineCountChange(lineCountChange) {
+        const sectionId = this.env.searchModel.selectedSection.sectionId
+        this.env.searchModel.trigger("section-line-count-change", {
+            sectionId: sectionId,
+            lineCountChange: lineCountChange,
+        });
     }
 }

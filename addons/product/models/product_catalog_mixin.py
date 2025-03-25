@@ -144,3 +144,144 @@ class ProductCatalogMixin(models.AbstractModel):
         :rtype: float
         """
         return 0
+
+    def _create_order_section(
+        self, section_name, child_field, *, line_model=None, parent_field=None, **kwargs,
+    ):
+        """ Create a new section in order.
+
+        :param str section_name: The name of the section to create.
+        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param str line_model: Model name of the line (e.g., 'sale.order.line').
+        :param str parent_field: Field name of the order.
+        :param dict kwargs: Additional values given for inherited models.
+        :return: A dictionary with newly created section's 'id', 'name' and 'sequence'.
+        :rtype: dict
+        """
+        sequence = self[child_field][-1].sequence + 1 if self[child_field] else 10
+        section = self.env[line_model].create({
+            parent_field: self.id,
+            'name': section_name,
+            'display_type': 'line_section',
+            'sequence': sequence,
+            **kwargs,
+        })
+
+        return {
+            'id': section.id,
+            'name': section.name,
+            'sequence': section.sequence,
+        }
+
+    def _get_new_line_sequence(self, child_field, selected_section_id):
+        """ Compute the sequence number for inserting a new line into the order.
+
+        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param int selected_section_id: ID of the section line to insert after.
+        :return: Computed sequence number.
+        :rtype: int
+        """
+        section_lines = self[child_field].filtered_domain([
+            ('display_type', '=', 'line_section'),
+        ]).sorted('sequence')
+
+        if selected_section_id:
+            # Insert after the selected section line
+            sequence = section_lines.filtered_domain([
+                ('id', '=', selected_section_id),
+            ]).sequence + 1
+        elif section_lines:
+            # Insert before the first section (top of the order)
+            sequence = section_lines[0].sequence
+        else:
+            # No sections exist, insert at the end
+            sequence = (self[child_field] and self[child_field][-1].sequence + 1) or 10
+
+        for line in self[child_field].filtered_domain([('sequence', '>=', sequence)]):
+            line.sequence += 1
+
+        return sequence
+
+    def _get_order_sections(self, child_field, **kwargs):
+        """ Return section data for the product catalog display.
+
+        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param dict kwargs: Additional values given for inherited models.
+        :return: List of section dicts with 'id', 'name', 'sequence', and 'line_count'.
+        :rtype: list
+        """
+        if not child_field:
+            return []
+        sections = {False: {
+            'id': False,
+            'name': self.env._("No Section"),
+            'sequence': 0,
+            'line_count': 0,
+        }}
+
+        for line in self[child_field]:
+            if line.display_type == 'line_section':
+                sections[line.id] = {
+                    'id': line.id,
+                    'name': line.name,
+                    'sequence': line.sequence,
+                    'line_count': 0,
+                }
+            elif (
+                not line.display_type
+                and line.product_id.product_tmpl_id.type != 'combo'
+                and line.product_uom_qty > 0
+            ):
+                sec_id = line.linked_section_line_id.id
+                sections[sec_id]['line_count'] += 1
+
+        return sorted(sections.values(), key=lambda x: x['sequence'])
+
+    def _resequence_order_sections(self, sections, child_field, **kwargs):
+        """ Resequence the sections of the order based on the provided move and target sections.
+        The sections are reordered by updating their sequence numbers.
+
+        :param list sections: A list of dictionaries containing move and target sections.
+        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :param dict kwargs: Additional values given for inherited models.
+        :return: A dictonary containing the new sequences of all the sections of order.
+        :rtype: dict
+        """
+        if not child_field:
+            return {}
+        lines = self[child_field].sorted('sequence')
+        move_section, target_section = sections
+
+        move_block = lines.filtered_domain([
+            '|',
+            ('id', '=', move_section['id']),
+            ('linked_section_line_id', '=', move_section['id']),
+        ])
+
+        target_block = lines.filtered_domain([
+            '|',
+            ('id', '=', target_section['id']),
+            ('linked_section_line_id', '=', target_section['id']),
+        ])
+
+        remaining_lines = lines - move_block
+        insert_after = move_section['sequence'] < target_section['sequence']
+        insert_index = len(remaining_lines)
+        for idx, line in enumerate(remaining_lines):
+            if line.id == (target_block[-1].id if insert_after else target_section['id']):
+                insert_index = idx + 1 if insert_after else idx
+                break
+
+        reordered_lines = (
+            remaining_lines[:insert_index] +
+            move_block +
+            remaining_lines[insert_index:]
+        )
+
+        sections = {}
+        for sequence, line in enumerate(reordered_lines, start=1):
+            line.sequence = sequence
+            if line.display_type == 'line_section':
+                sections[line.id] = sequence
+
+        return sections

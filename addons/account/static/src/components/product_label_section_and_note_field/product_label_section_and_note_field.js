@@ -148,6 +148,17 @@ export class ProductLabelSectionAndNoteField extends Component {
             ev.preventDefault();
         }
     }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    async onSectionOrNoteKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "enter" || hotkey === "tab") {
+            this.updateLabel(ev.target.value);
+            await this.props.record.save();
+        }
+    }
 }
 
 export const productLabelSectionAndNoteField = {
