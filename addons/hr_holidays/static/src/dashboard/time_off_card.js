@@ -176,7 +176,7 @@ export class TimeOffCard extends Component {
     }
 }
 
-function openLeaveWindow(actionService, resModel, name, domain, context) {
+export function openLeaveWindow(actionService, resModel, name, domain, context) {
     actionService.doAction({
         type: "ir.actions.act_window",
         name: name,
