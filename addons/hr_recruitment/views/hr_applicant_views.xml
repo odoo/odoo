@@ -121,7 +121,8 @@
                         class="oe_stat_button"
                         icon="fa-users"
                         type="object"
-                        invisible="not id or is_pool_applicant or not is_applicant_in_pool">
+                        invisible="not id or is_pool_applicant or not is_applicant_in_pool"
+                        groups="hr_recruitment.group_hr_recruitment_user">
                         <field name="talent_pool_count" widget="statinfo" string="Talent Pools"/>
                     </button>
                 </div>
