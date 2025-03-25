@@ -388,7 +388,7 @@ class AccountMove(models.Model):
         in_round = self._l10n_in_round_value
         return {
             'SlNo': str(index),
-            'PrdDesc': (line.product_id.display_name or line.name).replace("\n", ""),
+            'PrdDesc': line.name.replace("\n", ""),
             'IsServc': line.product_id.type == 'service' and 'Y' or 'N',
             'HsnCd': self._l10n_in_extract_digits(line.l10n_in_hsn_code),
             'Qty': in_round(quantity or 0.0, 3),
