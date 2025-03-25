@@ -8,86 +8,84 @@ patch(accountTaxHelpers, {
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
     l10n_in_get_hsn_summary_table(base_lines, display_uom) {
-        const results_map = {};
         const l10n_in_tax_types = new Set();
+        const items_map = {};
+
+        function get_base_line_grouping_key(base_line) {
+            const unique_taxes_data = new Set(
+                base_line.tax_details.taxes_data
+                    .filter(tax_data => ['igst', 'cgst', 'sgst'].includes(tax_data.tax.l10n_in_tax_type))
+                    .map(tax_data => tax_data.tax)
+            );
+            const rate = [...unique_taxes_data].reduce((sum, tax) => sum + tax.amount, 0);
+
+            return {
+                l10n_in_hsn_code: base_line.l10n_in_hsn_code,
+                uom_name: base_line.product_uom_id.name,
+                rate: rate,
+            };
+        }
+
+        // quantity / amount_untaxed.
         for (const base_line of base_lines) {
-            const l10n_in_hsn_code = base_line.l10n_in_hsn_code;
-            if (!l10n_in_hsn_code) {
+            const raw_key = get_base_line_grouping_key(base_line);
+            if (!raw_key.l10n_in_hsn_code) {
                 continue;
             }
 
-            const price_unit = base_line.price_unit;
-            const discount = base_line.discount;
-            const quantity = base_line.quantity;
-            const product = base_line.product;
-            const uom = base_line.uom || {};
-            const taxes = base_line.taxes_data;
-
-            const final_price_unit = price_unit * (1 - discount / 100);
-
-            // Compute the taxes.
-            const taxes_computation = this.get_tax_details(taxes, final_price_unit, quantity, {
-                precision_rounding: 0.01,
-                rounding_method: "round_per_line",
-                product: product,
-            });
-
-            // Rate.
-            const gst_tax_amounts = taxes_computation.taxes_data
-                .filter((x) => ["igst", "cgst", "sgst"].includes(x.tax.l10n_in_tax_type))
-                .map((x) => [x.tax.id, x.tax.amount]);
-            const unique_gst_tax_amounts = Array.from(new Set(gst_tax_amounts.map(JSON.stringify)))
-                .map(JSON.parse);
-            let rate = 0;
-            for (const [, tax_amount] of unique_gst_tax_amounts) {
-                rate += tax_amount;
-            }
-
-            const key = {
-                l10n_in_hsn_code: l10n_in_hsn_code,
-                rate: rate,
-                uom_name: uom.name || "",
-            };
-            const keyStr = JSON.stringify(key);
-
-            if (keyStr in results_map) {
-                results_map[keyStr].quantity += quantity;
-                results_map[keyStr].amount_untaxed += taxes_computation.total_excluded;
-            } else {
-                results_map[keyStr] = {
-                    ...key,
-                    quantity: quantity,
-                    amount_untaxed: taxes_computation.total_excluded,
-                    tax_amounts: {
-                        igst: 0.0,
-                        cgst: 0.0,
-                        sgst: 0.0,
-                        cess: 0.0,
-                    },
-                };
-            }
-
-            for (const tax_data of taxes_computation.taxes_data) {
-                if (tax_data.tax.l10n_in_tax_type) {
-                    results_map[keyStr].tax_amounts[tax_data.tax.l10n_in_tax_type] += tax_data.tax_amount;
-                    l10n_in_tax_types.add(tax_data.tax.l10n_in_tax_type);
+            const key = JSON.stringify(raw_key);
+            if (!(key in items_map)) {
+                items_map[key] = {
+                    key: raw_key,
+                    quantity: 0.0,
+                    amount_untaxed: 0.0,
+                    tax_amount_igst: 0.0,
+                    tax_amount_cgst: 0.0,
+                    tax_amount_sgst: 0.0,
+                    tax_amount_cess: 0.0,
                 }
             }
+
+            const item = items_map[key];
+            item.quantity += base_line.quantity;
+            item.amount_untaxed += (
+                base_line.tax_details.total_excluded_currency +
+                base_line.tax_details.delta_total_excluded_currency
+            );
+        }
+
+        // Tax amounts.
+        function grouping_function(base_line, tax_data) {
+            return {
+                ...get_base_line_grouping_key(base_line),
+                l10n_in_tax_type: tax_data.tax.l10n_in_tax_type,
+            };
+        }
+
+        const base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, grouping_function);
+        const values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
+        for (const values of Object.values(values_per_grouping_key)) {
+            const grouping_key = values.grouping_key;
+            if (!grouping_key || !grouping_key.l10n_in_hsn_code || !grouping_key.l10n_in_tax_type) {
+                continue;
+            }
+
+            const key = JSON.stringify({
+                l10n_in_hsn_code: grouping_key.l10n_in_hsn_code,
+                uom_name: grouping_key.uom_name,
+                rate: grouping_key.rate,
+            });
+            const item = items_map[key];
+            const l10n_in_tax_type = grouping_key.l10n_in_tax_type;
+            item[`tax_amount_${l10n_in_tax_type}`] += values.tax_amount_currency;
+            l10n_in_tax_types.add(l10n_in_tax_type);
         }
 
         const items = [];
-        for (const value of Object.values(results_map)) {
-            items.push({
-                l10n_in_hsn_code: value.l10n_in_hsn_code,
-                uom_name: value.uom_name,
-                rate: value.rate,
-                quantity: value.quantity,
-                amount_untaxed: value.amount_untaxed,
-                tax_amount_igst: value.tax_amounts.igst,
-                tax_amount_cgst: value.tax_amounts.cgst,
-                tax_amount_sgst: value.tax_amounts.sgst,
-                tax_amount_cess: value.tax_amounts.cess,
-            });
+        for (const values of Object.values(items_map)) {
+            const item = {...values.key, ...values};
+            delete item.key;
+            items.push(item);
         }
         return {
             has_igst: l10n_in_tax_types.has("igst"),
@@ -97,5 +95,5 @@ patch(accountTaxHelpers, {
             display_uom: display_uom,
             items: items,
         };
-    },
+    }
 });
