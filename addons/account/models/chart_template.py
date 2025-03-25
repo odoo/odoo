@@ -1097,41 +1097,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template(model='account.reconcile.model')
     def _get_account_reconcile_model(self, template_code):
         return {
-            "reconcile_perfect_match": {
-                "name": _('Invoices/Bills Perfect Match'),
-                "sequence": 1,
-                "rule_type": 'invoice_matching',
-                "auto_reconcile": True,
-                "match_same_currency": True,
-                "allow_payment_tolerance": True,
-                "payment_tolerance_type": 'percentage',
-                "payment_tolerance_param": 0,
-                "match_partner": True,
-            },
-            "reconcile_partial_underpaid": {
-                "name": _('Invoices/Bills Partial Match if Underpaid'),
-                "sequence": 2,
-                "rule_type": 'invoice_matching',
-                "auto_reconcile": False,
-                "match_same_currency": True,
-                "allow_payment_tolerance": False,
-                "match_partner": True,
-            },
-            "reconcile_bill": {
-                "name": 'Create Bill',
-                "sequence": 5,
-                "rule_type": 'writeoff_button',
-                'counterpart_type': 'purchase',
-                'line_ids': [
-                    Command.create({
-                        'amount_type': 'percentage_st_line',
-                        'amount_string': '100',
-                    }),
-                ],
-            },
             'internal_transfer_reco': {
                 'name': _('Internal Transfers'),
-                'rule_type': 'writeoff_button',
                 'line_ids': [
                     Command.create({
                         'amount_type': 'percentage',

@@ -422,7 +422,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'reconcile_from_label': {
                 'name': 'Line with Bank Fees',
-                'rule_type': 'writeoff_suggestion',
                 'match_label': 'contains',
                 'match_label_param': 'BRT',
                 'line_ids': [

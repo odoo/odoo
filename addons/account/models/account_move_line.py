@@ -275,6 +275,10 @@ class AccountMoveLine(models.Model):
         readonly=True,
         help='Credit journal items that are matched with this journal item.',
     )
+    reconciled_lines_ids = fields.Many2many(
+        comodel_name='account.move.line',
+        compute='_compute_reconciled_lines_ids', inverse='_inverse_reconciled_lines_ids',
+    )
     matching_number = fields.Char(
         string="Matching #",
         copy=False,
@@ -1072,6 +1076,11 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.payment_date = line.discount_date if line.discount_date and date.today() <= line.discount_date else line.date_maturity
 
+    @api.depends('matched_debit_ids', 'matched_credit_ids')
+    def _compute_reconciled_lines_ids(self):
+        for line in self:
+            line.reconciled_lines_ids = line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id
+
     def _search_payment_date(self, operator, value):
         if operator == 'in':
             # recursive call with operator '='
@@ -1178,6 +1187,12 @@ class AccountMoveLine(models.Model):
             line.account_id.tax_ids
             and not line.product_id.taxes_id.filtered(lambda tax: tax.company_id == line.company_id)
         ))
+
+    def _inverse_reconciled_lines_ids(self):
+        self._reconcile_plan([
+            line + line.reconciled_lines_ids
+            for line in self
+        ])
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -2620,6 +2635,7 @@ class AccountMoveLine(models.Model):
                     'currency_id': line.currency_id.id,
                     'partner_id': line.partner_id.id,
                     'sequence': sequence,
+                    'reconciled_lines_ids': [Command.set(line.ids)],
                 },
                 {
                     'name': _('Currency exchange rate difference'),
@@ -2682,16 +2698,8 @@ class AccountMoveLine(models.Model):
                 ))
 
         # ==== Create the moves ====
-        exchange_moves = self.env['account.move'].create(exchange_move_values_list)
-
-        # ==== Reconcile ====
-        reconciliation_plan = []
-        for exchange_move, exchange_diff_values in zip(exchange_moves, exchange_diff_values_list):
-            for source_line, sequence in exchange_diff_values['to_reconcile']:
-                exchange_diff_line = exchange_move.line_ids[sequence]
-                reconciliation_plan.append((source_line + exchange_diff_line))
-
-        self.with_context(no_exchange_difference=True)._reconcile_plan(reconciliation_plan)
+        exchange_moves = self.env['account.move'].with_context(no_exchange_difference=True).create(exchange_move_values_list)
+        # The reconciliation of exchange moves is now dealt thanks to the reconciled_lines_ids field
 
         # ==== See if the exchange moves need to be posted or not ====
         exchange_moves_to_post = self.env['account.move']
@@ -3044,6 +3052,24 @@ class AccountMoveLine(models.Model):
 
     def _check_edi_line_tax_required(self):
         return self.product_id.type != 'combo'
+
+    def _get_aml_values(self, **kwargs):
+        self.ensure_one()
+        return {
+            'name': self.name,
+            'account_id': self.account_id.id,
+            'currency_id': self.currency_id.id,
+            'amount_currency': self.amount_currency,
+            'balance': self.balance,
+            'reconcile_model_id': self.reconcile_model_id.id,
+            'analytic_distribution': self.analytic_distribution,
+            'tax_repartition_line_id': self.tax_repartition_line_id.id,
+            'tax_ids': [Command.set(self.tax_ids.ids)],
+            'tax_tag_ids': [Command.set(self.tax_tag_ids.ids)],
+            'group_tax_id': self.group_tax_id.id,
+            'partner_id': self.partner_id.id,
+            **kwargs,
+        }
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS

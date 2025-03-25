@@ -68,7 +68,7 @@ class AccountBankStatementLine(models.Model):
 
     # This field is used to record the third party name when importing bank statement in electronic format,
     # when the partner doesn't exist yet in the database (or cannot be found).
-    partner_name = fields.Char()
+    partner_name = fields.Char(index='btree_not_null')
 
     # Transaction type is used in electronic format, when the type of transaction is available in the imported file.
     transaction_type = fields.Char()
