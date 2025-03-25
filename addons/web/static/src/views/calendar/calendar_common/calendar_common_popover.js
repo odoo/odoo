@@ -45,13 +45,16 @@ export class CalendarCommonPopover extends Component {
         return this.props.model.activeFields;
     }
     get isEventEditable() {
-        return true;
+        return this.props.model.canEdit;
     }
     get isEventDeletable() {
         return this.props.model.canDelete;
     }
+    get isEventViewable() {
+        return true;
+    }
     get hasFooter() {
-        return this.isEventEditable || this.isEventDeletable;
+        return this.isEventEditable || this.isEventDeletable || this.isEventViewable;
     }
 
     isInvisible(fieldNode, record) {
