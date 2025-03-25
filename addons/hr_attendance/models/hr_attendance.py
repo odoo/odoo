@@ -97,7 +97,7 @@ class HrAttendance(models.Model):
         day_starts = {
             att: self._get_day_start_and_day(att.employee_id, att.check_in)
             for att in self
-            if att.employee_id
+            if att.employee_id and att.check_in
         }
         if not day_starts:
             return
