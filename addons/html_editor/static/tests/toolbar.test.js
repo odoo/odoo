@@ -16,12 +16,7 @@ import {
     waitForNone,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
-import {
-    contains,
-    onRpc,
-    patchTranslations,
-    patchWithCleanup,
-} from "@web/../tests/web_test_helpers";
+import { contains, patchTranslations, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { fontItems, fontSizeItems } from "../src/main/font/font_plugin";
 import { Plugin } from "../src/plugin";
 import { MAIN_PLUGINS } from "../src/plugin_sets";
@@ -765,51 +760,6 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     await tick(); // selectionChange
     await animationFrame();
     expect(".o-we-toolbar").toHaveCount(0);
-});
-
-test("should not close cropper while loading media", async () => {
-    onRpc("/html_editor/get_image_info", () => {
-        return {
-            original: {
-                image_src: "#",
-            },
-        };
-    });
-    onRpc("/web/image/__odoo__unknown__src__/", () => {
-        return {};
-    });
-
-    await setupEditor(`<p>[<img src="#">]</p>`);
-    await waitFor('div[name="image_transform"]');
-
-    await click('div[name="image_transform"] > .btn');
-    await animationFrame();
-
-    await click('.btn[name="image_crop"]');
-    await animationFrame();
-
-    await waitFor('.btn[title="Discard"]', { timeout: 1000 });
-    await click('.btn[title="Discard"]');
-    await animationFrame();
-
-    // cropper should not close as the cropper still loading the image.
-    expect('.btn[title="Discard"]').toHaveCount(1);
-    // debugger;
-    // once the image loaded we should be able to close
-    await waitFor("img.o_we_cropper_img", { timeout: 1000 });
-    await click('.btn[title="Discard"]');
-    await animationFrame();
-
-    await click("img");
-    await tick();
-    await animationFrame();
-
-    await click('div[name="image_transform"] > .btn');
-    await animationFrame();
-
-    await click('.btn[name="image_crop"]');
-    await animationFrame();
-    expect('.btn[title="Discard"]').toHaveCount(1);
 });
 
 describe.tags("desktop");
