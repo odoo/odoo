@@ -14,6 +14,9 @@ class ResGroups(models.Model):
     user_ids = fields.Many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', help='Users explicitly in this group')
     all_user_ids = fields.Many2many('res.users', compute='_compute_all_user_ids', search='_search_all_user_ids', string='Users and implied users')
 
+    all_users_count = fields.Integer('# Users', help='Number of users having this group (implicitly or explicitly)',
+        compute='_compute_all_users_count', compute_sudo=True)
+
     model_access = fields.One2many('ir.model.access', 'group_id', string='Access Controls', copy=True)
     rule_groups = fields.Many2many('ir.rule', 'rule_group_rel',
         'group_id', 'rule_group_id', string='Rules', domain="[('global', '=', False)]")
@@ -296,3 +299,20 @@ class ResGroups(models.Model):
             for group in groups
         }
         return SetDefinitions(data)
+
+    @api.depends('all_user_ids')
+    def _compute_all_users_count(self):
+        for group in self:
+            group.all_users_count = len(group.all_user_ids)
+
+    def action_show_all_users(self):
+        self.ensure_one()
+        return {
+            'name': _('Users and implied users'),
+            'view_mode': 'list,form',
+            'res_model': 'res.users',
+            'type': 'ir.actions.act_window',
+            'context': {'create': False, 'delete': False, 'form_view_ref': 'base.view_users_form'},
+            'domain': [('id', 'in', self.all_user_ids.ids)],
+            'target': 'current',
+        }
