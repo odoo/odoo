@@ -518,8 +518,8 @@ class ResourceCalendar(models.Model):
             # take durations in days proportionally to what is left of the interval.
             interval_hours = (stop - start).total_seconds() / 3600
             day_hours[start.date()] += interval_hours
-            if len(self) == 1 and self.flexible_hours and self.hours_per_day:
-                day_days[start.date()] += interval_hours / self.hours_per_day
+            if len(self) == 1 and self.flexible_hours:
+                day_days[start.date()] += interval_hours / self.hours_per_day if self.hours_per_day else 0
             else:
                 day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
 
