@@ -70,7 +70,7 @@ class Properties(Field):
 
     ALLOWED_TYPES = (
         # standard types
-        'boolean', 'integer', 'float', 'char', 'date', 'datetime',
+        'boolean', 'integer', 'float', 'text', 'char', 'date', 'datetime',
         # relational like types
         'many2one', 'many2many', 'selection', 'tags',
         # UI types
