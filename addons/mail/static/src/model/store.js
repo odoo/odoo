@@ -19,6 +19,27 @@ export class Store extends Record {
         return this.recordByLocalId.get(localId);
     }
 
+    destroy() {
+        this.MAKE_UPDATE(() => {
+            const singletons = [];
+            for (const [localId, record] of this.recordByLocalId.entries()) {
+                if (this.localId !== localId && record.exists()) {
+                    if (record.Model._localId(record.Model.id, record) === undefined) {
+                        // singleton, delete after non-singletons
+                        singletons.push(record);
+                    } else {
+                        record.delete();
+                    }
+                }
+            }
+            for (const singleton of singletons) {
+                singleton.delete();
+            }
+        });
+        this.delete();
+        this._[IS_DELETED_SYM] = true;
+    }
+
     /** @param {() => any} fn */
     MAKE_UPDATE(fn) {
         this._.UPDATE++;
@@ -101,6 +122,9 @@ export class Store extends Record {
                     /** @type {[Record, Map<string, true>]} */
                     const [record, map] = FU_QUEUE.entries().next().value;
                     FU_QUEUE.delete(record);
+                    if (RHD_QUEUE.has(record) || RD_QUEUE.has(record)) {
+                        return;
+                    }
                     for (const fieldName of map.keys()) {
                         record._.onUpdate(record, fieldName);
                     }

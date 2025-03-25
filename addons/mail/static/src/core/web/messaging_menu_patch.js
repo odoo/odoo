@@ -165,6 +165,9 @@ patch(MessagingMenu.prototype, {
         this.state.searchOpen = !this.state.searchOpen;
     },
     get counter() {
+        if (!this.store.exists()) {
+            return 0;
+        }
         let value =
             this.store.inbox.counter +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);

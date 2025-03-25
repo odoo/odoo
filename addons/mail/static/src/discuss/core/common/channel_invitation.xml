@@ -2,10 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelInvitation">
-        <ActionPanel t-if="props.thread" title.translate="Invite people" resizable="false" icon="'fa fa-user-plus'">
-            <t t-call="discuss.ChannelInvitation.main"/>
-        </ActionPanel>
-        <t t-else="" t-call="discuss.ChannelInvitation.main"/>
+        <t t-if="store?.exists()">
+            <ActionPanel t-if="props.thread" title.translate="Invite people" resizable="false" icon="'fa fa-user-plus'">
+                <t t-call="discuss.ChannelInvitation.main"/>
+            </ActionPanel>
+            <t t-else="" t-call="discuss.ChannelInvitation.main"/>
+        </t>
     </t>
 
     <t t-name="discuss.ChannelInvitation.main">

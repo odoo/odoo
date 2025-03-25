@@ -2,6 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
+    <t t-if="store?.exists()" t-call="mail.Discuss.main"/>
+</t>
+
+<t t-name="mail.Discuss.main">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center bg-view': ui.isSmall }" t-ref="root">
         <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>

@@ -128,6 +128,9 @@ export class Store extends BaseStore {
     menuThreads = Record.many("Thread", {
         /** @this {import("models").Store} */
         compute() {
+            if (!this.discuss) {
+                return;
+            }
             /** @type {import("models").Thread[]} */
             const searchTerm = cleanTerm(this.discuss.searchTerm);
             let threads = Object.values(this.Thread.records).filter(

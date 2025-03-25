@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.MessageSeenIndicator">
+        <t t-if="store?.exists()" t-call="mail.MessageSeenIndicator.main"/>
+    </t>
+
+    <t t-name="mail.MessageSeenIndicator.main">
         <span class="o-mail-MessageSeenIndicator position-relative" t-att-class="{ 'opacity-50': !props.message.hasEveryoneSeen, 'text-primary opacity-75': props.message.hasEveryoneSeen, 'cursor-pointer': props.message.channelMemberHaveSeen.length }" t-att-title="summary" t-attf-class="{{ props.className }}" t-on-click="openDialog">
             <t t-if="!props.message.isMessagePreviousToLastSelfMessageSeenByEveryone">
                 <i t-if="props.message.hasSomeoneFetched or props.message.hasSomeoneSeen" class="fa fa-check ps-1"/>
@@ -20,7 +24,7 @@
     </t>
 
     <t t-name="mail.MessageSeenIndicatorDialog">
-        <Dialog size="'sm'" title.translate="Seen by:" footer="false" withBodyPadding="false">
+        <Dialog t-if="store?.exists()" size="'sm'" title.translate="Seen by:" footer="false" withBodyPadding="false">
             <ul class="list-group list-group-flush list-unstyled py-1" t-ref="content">
                 <li class="list-group-item py-2" t-foreach="props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
                     <t t-call="mail.MessageSeenIndicatorPopover.card"/>

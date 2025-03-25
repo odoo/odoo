@@ -912,7 +912,7 @@ export class Rtc extends Record {
     log(session, entry, param2 = {}) {
         const { error, step, state, important, ...data } = param2;
         session.logStep = entry;
-        if (!this.store.settings.logRtc && !important) {
+        if (!this.store.settings?.logRtc && !important) {
             return;
         }
         console.debug(
@@ -1236,7 +1236,7 @@ export class Rtc extends Record {
         }
         await this._initConnection();
         await this.resetMicAudioTrack({ force: audio });
-        if (!this.state.channel?.id) {
+        if (!this.state.channel?.id || !this.store.exists()) {
             return;
         }
         this.soundEffectsService.play("call-join");

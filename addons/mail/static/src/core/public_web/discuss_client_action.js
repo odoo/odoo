@@ -31,7 +31,11 @@ export class DiscussClientAction extends Component {
             this.restoreDiscussThread(nextProps);
         });
         onMounted(() => (this.store.discuss.isActive = true));
-        onWillUnmount(() => (this.store.discuss.isActive = false));
+        onWillUnmount(() => {
+            if (this.store.exists()) {
+                this.store.discuss.isActive = false;
+            }
+        });
     }
 
     getActiveId(props) {

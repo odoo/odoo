@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+    <t t-inherit="mail.Discuss.main" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='content']" position="before">
             <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         </xpath>
