@@ -6257,6 +6257,22 @@ class AccountMove(models.Model):
             return self.company_id.account_discount_income_allocation_id
         return None
 
+    def _get_available_invoice_template_pdf_report_ids(self):
+        """
+        Helper to get available invoice template pdf reports
+        """
+        moves = self
+
+        for move_type in ['out_invoice', 'out_refund', 'out_receipt']:
+            moves += self.new({'move_type': move_type})
+
+        available_reports = moves._get_available_action_reports()
+
+        if not available_reports:
+            raise UserError(_("There is no template that applies to invoices."))
+
+        return available_reports
+
     # -------------------------------------------------------------------------
     # TOOLING
     # -------------------------------------------------------------------------
