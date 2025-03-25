@@ -3,6 +3,7 @@
 
 from . import test_purchase
 from . import test_purchase_downpayment
+from . import test_purchase_order_product_catalog
 from . import test_purchase_order_report
 from . import test_purchase_invoice
 from . import test_access_rights

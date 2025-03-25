@@ -1,3 +1,4 @@
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 import { buildM2OFieldDescription, extractM2OFieldProps, m2oSupportedOptions } from "@web/views/fields/many2one/many2one_field";
 import { registry } from "@web/core/registry";
@@ -49,6 +50,16 @@ export class ProductLabelSectionAndNoteField extends ProductNameAndDescriptionFi
             !this.isSection() &&
             !this.isNote()
         );
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     */
+    async onSectionOrNoteKeydown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === 'enter' || hotkey === 'tab') {
+            this.updateLabel(ev.target.value);
+        }
     }
 }
 

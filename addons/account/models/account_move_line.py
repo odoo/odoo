@@ -364,6 +364,12 @@ class AccountMoveLine(models.Model):
         help="This field is used for payable and receivable journal entries. "
              "You can put the limit date for the payment of this line.",
     )
+    section_line_id = fields.Many2one(
+        'account.move.line',
+        string="Section Line",
+        compute='_compute_section_line_id',
+        help="Section under which this line is grouped.",
+    )
 
     # === Price fields === #
     price_unit = fields.Float(
@@ -852,6 +858,16 @@ class AccountMoveLine(models.Model):
                 line.quantity = line.quantity if line.quantity else 1
             else:
                 line.quantity = False
+
+    def _compute_section_line_id(self):
+        move_lines = self.sorted(lambda l: l.sequence)
+        current_section_line = False
+        for line in move_lines:
+            if line.display_type == 'line_section':
+                current_section_line = line
+                line.section_line_id = False
+            else:
+                line.section_line_id = current_section_line
 
     @api.depends('display_type')
     def _compute_sequence(self):
@@ -3286,7 +3302,7 @@ class AccountMoveLine(models.Model):
     def action_add_from_catalog(self):
         """ Will open the catalog view """
         move = self.env['account.move'].browse(self.env.context.get('order_id'))
-        return move.action_add_from_catalog()
+        return move.with_context(child_field='line_ids').action_add_from_catalog()
 
     # -------------------------------------------------------------------------
     # Catalog

@@ -107,3 +107,11 @@ class TestUi(AccountTestInvoicingHttpCommon):
         move.action_post()
         self.assertTrue(self.env.user.has_group('account.group_partial_purchase_deductibility'))
         self.start_tour("/odoo/vendor-bills/new", 'deductible_amount_column', login=self.env.user.login)
+
+    def test_add_section_from_product_catalog_on_invoice_tour(self):
+        self.product.write({'is_favorite': True})
+        self.start_tour(
+            '/odoo/customer-invoices/new',
+            'test_add_section_from_product_catalog_on_invoice',
+            login='admin',
+        )
