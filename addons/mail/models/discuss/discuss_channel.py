@@ -1293,7 +1293,7 @@ class DiscussChannel(models.Model):
         notification = (
             Markup('<div class="o_mail_notification">%s</div>')
             % _(
-                "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s. %(goto_all)sSee all threads%(goto_all_end)s."
+                "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
             )
         ) % {
             "user": self.env.user.display_name,
@@ -1302,8 +1302,6 @@ class DiscussChannel(models.Model):
             )
             % sub_channel.id,
             "goto_end": Markup("</a>"),
-            "goto_all": Markup("<a href='#' data-oe-type='sub-channels-menu'>"),
-            "goto_all_end": Markup("</a>"),
             "thread_name": sub_channel.name,
         }
         self.message_post(

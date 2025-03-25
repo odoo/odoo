@@ -37,7 +37,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
     await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} started a thread: New Thread. See all threads.1:00 PM`,
+        text: `${serverState.partnerName} started a thread: New Thread.1:00 PM`,
     });
     await click(".o-mail-NotificationMessage a", { text: "New Thread" });
     await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
@@ -57,24 +57,6 @@ test("can manually unpin a sub-thread", async () => {
         parent: [".o-mail-DiscussSidebar-item", { text: "New Thread" }],
     });
     await contains(".o-mail-DiscussSidebar-item", { text: "New Thread", count: 0 });
-});
-
-test("open sub channel menu from notification", async () => {
-    mockDate("2025-01-01 12:00:00", +1);
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Discuss-threadName", { value: "General" });
-    await click("button[title='Threads']");
-    await click("button[aria-label='Create Thread']");
-    await contains(".o-mail-Discuss-threadName", { value: "New Thread" });
-    await click(".o-mail-DiscussSidebarChannel", { name: "General" });
-    await contains(".o-mail-NotificationMessage", {
-        text: `${serverState.partnerName} started a thread: New Thread. See all threads.1:00 PM`,
-    });
-    await click(".o-mail-NotificationMessage a", { text: "See all threads" });
-    await contains(".o-mail-SubChannelList");
 });
 
 test("create sub thread from existing message", async () => {
