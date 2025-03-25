@@ -41,6 +41,33 @@ export function OrderButtonNotContain(data) {
     ];
     return steps;
 }
+export function clickCourseButton() {
+    return [
+        {
+            content: "click course button",
+            trigger: `.course-btn`,
+            run: "click",
+        },
+    ];
+}
+export function selectCourseLine(name) {
+    return [
+        {
+            content: `select course ${name}`,
+            trigger: `.order-course-name:contains(${name})`,
+            run: "click",
+        },
+    ];
+}
+export function fireCourseButton() {
+    return [
+        {
+            content: "fire course button",
+            trigger: `.actionpad .fire-btn`,
+            run: "click",
+        },
+    ];
+}
 export function setTab(name) {
     return [
         {
