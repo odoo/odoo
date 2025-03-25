@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BlogPostsOption } from "./blog_posts_option";
+import { BlogPostsOption } from "./dynamic_snippet_blog_posts_option";
 
 class BlogPostsOptionPlugin extends Plugin {
     static id = "blogPostsOption";
@@ -26,12 +26,13 @@ class BlogPostsOptionPlugin extends Plugin {
     }
     async _fetchBlogs() {
         // TODO put in an utility function
-        const websiteDomain = ['|', ['website_id', '=', false], ['website_id', '=', this.services.website.currentWebsite.id]];
+        const websiteDomain = [
+            "|",
+            ["website_id", "=", false],
+            ["website_id", "=", this.services.website.currentWebsite.id],
+        ];
         return this.services.orm.searchRead("blog.blog", websiteDomain, ["id", "name"]);
     }
 }
 
-registry
-    .category("website-plugins")
-    .add(BlogPostsOptionPlugin.id, BlogPostsOptionPlugin);
-
+registry.category("website-plugins").add(BlogPostsOptionPlugin.id, BlogPostsOptionPlugin);

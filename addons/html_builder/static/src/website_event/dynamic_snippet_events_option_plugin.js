@@ -19,4 +19,3 @@ class DynamicSnippetEventsOptionPlugin extends Plugin {
 registry
     .category("website-plugins")
     .add(DynamicSnippetEventsOptionPlugin.id, DynamicSnippetEventsOptionPlugin);
-
