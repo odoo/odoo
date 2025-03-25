@@ -4,8 +4,8 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
 import { Plugin } from "@html_editor/plugin";
-import { GoogleMapApiKeyDialog } from "./google_map_api_key_dialog";
-import { GoogleMapOption } from "./google_map_option";
+import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
+import { GoogleMapsOption } from "./google_maps_option";
 
 /**
  * A `google.maps.places.PlaceResult` object.
@@ -27,13 +27,13 @@ import { GoogleMapOption } from "./google_map_option";
  * @typedef {{ isValid: boolean, message?: string }} ApiKeyValidation
  */
 
-export class GoogleMapOptionPlugin extends Plugin {
-    static id = "googleMapOption";
+export class GoogleMapsOptionPlugin extends Plugin {
+    static id = "googleMapsOption";
     static dependencies = ["history", "remove"];
     resources = {
         builder_options: [
             {
-                OptionComponent: GoogleMapOption,
+                OptionComponent: GoogleMapsOption,
                 selector: ".s_google_map",
                 props: {
                     getPlace: this.getPlace.bind(this),
@@ -66,7 +66,7 @@ export class GoogleMapOptionPlugin extends Plugin {
         // the API is loaded. We do this in the plugin instead. Once
         // `html_builder` replaces `website`, we should be able to remove
         // `website_map_service` since only google_map service will be used.
-        this.googleMapService = this.services.google_map;
+        this.googleMapsService = this.services.google_maps;
         this.dialog = this.services.dialog;
         this.orm = this.services.orm;
         this.notification = this.services.notification;
@@ -85,7 +85,7 @@ export class GoogleMapOptionPlugin extends Plugin {
             showDescription: {
                 isApplied: ({ editingElement }) => !!editingElement.querySelector(".description"),
                 apply: ({ editingElement }) => {
-                    editingElement.append(renderToElement("html_builder.GoogleMapDescription"));
+                    editingElement.append(renderToElement("html_builder.GoogleMapsDescription"));
                 },
                 clean: ({ editingElement }) => {
                     editingElement.querySelector(".description").remove();
@@ -103,10 +103,15 @@ export class GoogleMapOptionPlugin extends Plugin {
      * @returns {Promise<void>}
      */
     async loadGoogleMaps(editingElement, forceReconfigure = false) {
-        /** @type {string | undefined} */
-        const apiKey = await this.googleMapService.getGMapAPIKey();
-        const didReconfigure = await this.configureGMapAPI({ apiKey, force: forceReconfigure });
-        const didLoad = !!(await this.loadGoogleMapAPIFromService(didReconfigure));
+        /** @type {string  |undefined} */
+        const apiKey = await this.googleMapsService.getGMapsAPIKey();
+        const didReconfigure = await this.configureGMapsAPI({ apiKey, force: forceReconfigure });
+        // @TODO mysterious-egg: we don't wait here because sometimes the
+        // promise never resolves. This is because it finds an API key and has
+        // already called `loadJS` with it, `loadJS` will fetch the result from
+        // cache and never actually call the Google API's URL, bypassing its
+        // callback in the process, on which we depend to resolve the promise.
+        const didLoad = !!(await this.loadGoogleMapsAPIFromService(didReconfigure));
         if (didLoad) {
             this.mapsAPI = google.maps;
             this.placesAPI = google.maps.places;
@@ -132,8 +137,8 @@ export class GoogleMapOptionPlugin extends Plugin {
      * @returns {Promise<string|undefined>} A promise that resolves to an API
      *                                      key if found.
      */
-    async loadGoogleMapAPIFromService(shouldRefetch) {
-        return this.googleMapService.loadGMapAPI(true, shouldRefetch);
+    async loadGoogleMapsAPIFromService(shouldRefetch) {
+        return this.googleMapsService.loadGMapsAPI(true, shouldRefetch);
     }
 
     /**
@@ -148,7 +153,7 @@ export class GoogleMapOptionPlugin extends Plugin {
     async getPlace(editingElement, coordinates) {
         const place = await this.nearbySearch(coordinates);
         if (place?.error && !this.isGoogleMapsErrorBeingHandled) {
-            this.notifyGMapError(editingElement);
+            this.notifyGMapsError(editingElement);
         } else if (!place && !this.isGoogleMapsErrorBeingHandled) {
             // Somehow the search failed but Google didn't trigger an error.
             // @TODO mysterious-egg should we keep this? Seems radical. Not sure
@@ -196,8 +201,8 @@ export class GoogleMapOptionPlugin extends Plugin {
      *                                even if the provided API key is valid.
      * @returns {Promise<boolean>} true if a new API key was written to db.
      */
-    async configureGMapAPI({ apiKey, force }) {
-        const apiKeyValidation = await this.validateGMapApiKey(apiKey);
+    async configureGMapsAPI({ apiKey, force }) {
+        const apiKeyValidation = await this.validateGMapsApiKey(apiKey);
         if (!force && apiKeyValidation.isValid) {
             return false;
         }
@@ -209,7 +214,7 @@ export class GoogleMapOptionPlugin extends Plugin {
             let isInvalidated = false;
             // Open the Google API Key Dialog.
             this.dialog.add(
-                GoogleMapApiKeyDialog,
+                GoogleMapsApiKeyDialog,
                 {
                     originalApiKey: apiKey,
                     originalApiKeyValidation: apiKeyValidation,
@@ -219,7 +224,7 @@ export class GoogleMapOptionPlugin extends Plugin {
                         });
                         isInvalidated = true;
                     },
-                    validateGMapApiKey: this.validateGMapApiKey.bind(this),
+                    validateGMapsApiKey: this.validateGMapsApiKey.bind(this),
                 },
                 {
                     onClose: () => resolve(isInvalidated),
@@ -237,7 +242,7 @@ export class GoogleMapOptionPlugin extends Plugin {
      * @param {string} key
      * @returns {Promise<{ status: number }>}
      */
-    async fetchGoogleMap(key) {
+    async fetchGoogleMaps(key) {
         return await fetch(
             `https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(
                 key
@@ -256,15 +261,15 @@ export class GoogleMapOptionPlugin extends Plugin {
      * search immediately after validation. If it fails, the error is handled
      * and the dialog is re-opened.
      * @see nearbySearch
-     * @see notifyGMapError
+     * @see notifyGMapsError
      *
      * @param {string} key
      * @returns {Promise<ApiKeyValidation>}
      */
-    async validateGMapApiKey(key) {
+    async validateGMapsApiKey(key) {
         if (key) {
             try {
-                const response = await this.fetchGoogleMap(key);
+                const response = await this.fetchGoogleMaps(key);
                 const isValid = response.status === 200;
                 return {
                     isValid,
@@ -303,14 +308,14 @@ export class GoogleMapOptionPlugin extends Plugin {
             placesService.nearbySearch(
                 {
                     // Do a 'nearbySearch' followed by 'getDetails' to avoid using
-                    // GMap Geocoder which the user may not have enabled... but
+                    // GMaps Geocoder which the user may not have enabled... but
                     // ideally Geocoder should be used to get the exact location at
                     // those coordinates and to limit billing query count.
                     location,
                     radius: 1,
                 },
                 (results, status) => {
-                    const GMAP_CRITICAL_ERRORS = [
+                    const GMAPS_CRITICAL_ERRORS = [
                         this.placesAPI.PlacesServiceStatus.REQUEST_DENIED,
                         this.placesAPI.PlacesServiceStatus.UNKNOWN_ERROR,
                     ];
@@ -324,14 +329,14 @@ export class GoogleMapOptionPlugin extends Plugin {
                                 if (status === this.placesAPI.PlacesServiceStatus.OK) {
                                     this.gpsMapCache.set(coordinates, place);
                                     resolve(place);
-                                } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                                } else if (GMAPS_CRITICAL_ERRORS.includes(status)) {
                                     resolve({ error: status });
                                 } else {
                                     resolve();
                                 }
                             }
                         );
-                    } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                    } else if (GMAPS_CRITICAL_ERRORS.includes(status)) {
                         resolve({ error: status });
                     } else {
                         resolve();
@@ -349,7 +354,7 @@ export class GoogleMapOptionPlugin extends Plugin {
      *
      * @param {Element} editingElement
      */
-    notifyGMapError(editingElement) {
+    notifyGMapsError(editingElement) {
         // TODO this should be better to detect all errors. This is random.
         // When misconfigured (wrong APIs enabled), sometimes Google throws
         // errors immediately (which then reaches this code), sometimes it
@@ -376,4 +381,4 @@ export class GoogleMapOptionPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(GoogleMapOptionPlugin.id, GoogleMapOptionPlugin);
+registry.category("website-plugins").add(GoogleMapsOptionPlugin.id, GoogleMapsOptionPlugin);

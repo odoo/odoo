@@ -9,43 +9,43 @@ import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
 import { escape } from "@web/core/utils/strings";
 
-registry.category("services").add("google_map", {
-    dependencies: ["notification"],
+registry.category("services").add("google_maps", {
+    dependencies: [ "notification" ],
     start(env, deps) {
         const notification = deps["notification"];
-        let gmapAPIKeyProm;
-        let gmapAPILoading;
+        let gMapsAPIKeyProm;
+        let gMapsAPILoading;
         const promiseKeys = {};
         const promiseKeysResolves = {};
         let lastKey;
-        window.odoo_gmap_api_post_load = (async function odoo_gmap_api_post_load() {
+        window.odoo_gmaps_api_post_load = (async function odoo_gmaps_api_post_load() {
             promiseKeysResolves[lastKey]?.();
         }).bind(this);
         return {
             /**
              * @param {boolean} [refetch=false]
              */
-            async getGMapAPIKey(refetch) {
-                if (refetch || !gmapAPIKeyProm) {
-                    gmapAPIKeyProm = new Promise(async (resolve) => {
-                        const data = await rpc("/website/google_maps_api_key");
-                        resolve(JSON.parse(data).google_maps_api_key || "");
+            async getGMapsAPIKey(refetch) {
+                if (refetch || !gMapsAPIKeyProm) {
+                    gMapsAPIKeyProm = new Promise(async resolve => {
+                        const data = await rpc('/website/google_maps_api_key');
+                        resolve(JSON.parse(data).google_maps_api_key || '');
                     });
                 }
-                return gmapAPIKeyProm;
+                return gMapsAPIKeyProm;
             },
             /**
              * @param {boolean} [editableMode=false]
              * @param {boolean} [refetch=false]
              */
-            async loadGMapAPI(editableMode, refetch) {
+            async loadGMapsAPI(editableMode, refetch) {
                 // Note: only need refetch to reload a configured key and load
                 // the library. If the library was loaded with a correct key and
                 // that the key changes meanwhile... it will not work but we can
                 // agree the user can bother to reload the page at that moment.
-                if (refetch || !gmapAPILoading) {
-                    gmapAPILoading = new Promise(async resolve => {
-                        const key = await this.getGMapAPIKey(refetch);
+                if (refetch || !gMapsAPILoading) {
+                    gMapsAPILoading = new Promise(async resolve => {
+                        const key = await this.getGMapsAPIKey(refetch);
                         lastKey = key;
 
                         if (key) {
@@ -54,7 +54,7 @@ registry.category("services").add("google_map", {
                                     promiseKeysResolves[key] = resolve;
                                 });
                                 await loadJS(
-                                    `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmap_api_post_load&key=${encodeURIComponent(
+                                    `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmaps_api_post_load&key=${encodeURIComponent(
                                         key
                                     )}`
                                 );
@@ -77,7 +77,7 @@ registry.category("services").add("google_map", {
                         }
                     });
                 }
-                return gmapAPILoading;
+                return gMapsAPILoading;
             },
         };
     },

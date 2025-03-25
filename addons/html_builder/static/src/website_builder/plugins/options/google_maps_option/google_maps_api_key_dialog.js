@@ -7,11 +7,11 @@ import { Component, useState, useRef } from "@odoo/owl";
  * @typedef {import('./google_map_option_plugin.js').ApiKeyValidation} ApiKeyValidation
  */
 
-export class GoogleMapApiKeyDialog extends Component {
+export class GoogleMapsApiKeyDialog extends Component {
     static template = "website.s_google_map_modal";
     static components = { Dialog };
     static props = {
-        validateGMapApiKey: Function,
+        validateGMapsApiKey: Function,
         originalApiKey: String,
         originalApiKeyValidation: Object,
         onSave: Function,
@@ -34,7 +34,7 @@ export class GoogleMapApiKeyDialog extends Component {
             const buttons = this.modalRef.el.querySelectorAll("button");
             buttons.forEach((button) => button.setAttribute("disabled", true));
             /** @type {ApiKeyValidation} */
-            const apiKeyValidation = await this.props.validateGMapApiKey(this.state.apiKey);
+            const apiKeyValidation = await this.props.validateGMapsApiKey(this.state.apiKey);
             this.state.apiKeyValidation = apiKeyValidation;
             if (apiKeyValidation.isValid) {
                 await this.props.onSave(this.state.apiKey);

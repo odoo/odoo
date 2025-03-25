@@ -1,8 +1,8 @@
 import { describe, test, expect } from "@odoo/hoot";
 import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { GoogleMapOptionPlugin } from "@html_builder/website_builder/plugins/options/google_map_option/google_map_option_plugin";
-import { GoogleMapOption } from "@html_builder/website_builder/plugins/options/google_map_option/google_map_option";
+import { GoogleMapsOptionPlugin } from "@html_builder/website_builder/plugins/options/google_maps_option/google_maps_option_plugin";
+import { GoogleMapsOption } from "@html_builder/website_builder/plugins/options/google_maps_option/google_maps_option";
 import { queryOne, waitFor, waitForNone } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
@@ -44,16 +44,16 @@ describe("API key validation", () => {
                 google_maps_api_key: key,
             })
         );
-        patchWithCleanup(GoogleMapOption.prototype, {
+        patchWithCleanup(GoogleMapsOption.prototype, {
             // Can't do anything since we're not loading the API.
             initializeAutocomplete() {},
         });
-        patchWithCleanup(GoogleMapOptionPlugin.prototype, {
+        patchWithCleanup(GoogleMapsOptionPlugin.prototype, {
             /**
              * Return the key again instead of actually loading the API, which
              * wouldn't work given we don't have a real key.
              */
-            async loadGoogleMapAPIFromService() {
+            async loadGoogleMapsAPIFromService() {
                 window.google = {
                     maps: { places: {} },
                 };
@@ -64,7 +64,7 @@ describe("API key validation", () => {
              * status code informing us of whether an API key is valid or not
              * for our purposes.
              */
-            fetchGoogleMap(key) {
+            fetchGoogleMaps(key) {
                 const { billing, staticApi, javascriptApi, placesApi } = JSON.parse(key);
                 return {
                     status: billing && staticApi && javascriptApi ? 200 : 403,

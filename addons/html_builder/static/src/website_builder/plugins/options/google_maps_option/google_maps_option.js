@@ -3,15 +3,15 @@
 import { useRef, onMounted, useState, useEffect, onWillDestroy } from "@odoo/owl";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
-/** @import { Coordinates, Place } from './google_map_option_plugin.js' */
+/** @import { Coordinates, Place } from './google_maps_option_plugin.js' */
 /**
  * @typedef {Object} Props
  * @property {function(Element, Coordinates):Promise<Place | undefined>} getPlace
  * @property {function(Element, Place)} onPlaceChanged
  */
 
-export class GoogleMapOption extends BaseOptionComponent {
-    static template = "html_builder.GoogleMapOption";
+export class GoogleMapsOption extends BaseOptionComponent {
+    static template = "html_builder.GoogleMapsOption";
     /** @type {Props} */
     static props = {
         getPlace: { type: Function },
