@@ -2,35 +2,7 @@
 import re
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
-
-
-class AccountReconcileModelPartnerMapping(models.Model):
-    _name = 'account.reconcile.model.partner.mapping'
-    _description = 'Partner mapping for reconciliation models'
-    _check_company_auto = True
-
-    model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True, index=True, ondelete='cascade')
-    company_id = fields.Many2one(related='model_id.company_id')
-    partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True, ondelete='cascade', check_company=True)
-    payment_ref_regex = fields.Char(string="Find Text in Label")
-    narration_regex = fields.Char(string="Find Text in Notes")
-
-    @api.constrains('narration_regex', 'payment_ref_regex')
-    def validate_regex(self):
-        for record in self:
-            if not (record.narration_regex or record.payment_ref_regex):
-                raise ValidationError(_("Please set at least one of the match texts to create a partner mapping."))
-            current_regex = None
-            try:
-                if record.payment_ref_regex:
-                    current_regex = record.payment_ref_regex
-                    re.compile(record.payment_ref_regex)
-                if record.narration_regex:
-                    current_regex = record.narration_regex
-                    re.compile(record.narration_regex)
-            except re.error:
-                raise ValidationError(_("The following regular expression is invalid to create a partner mapping: %s", current_regex))
+from odoo.exceptions import UserError
 
 
 class AccountReconcileModelLine(models.Model):
@@ -41,19 +13,15 @@ class AccountReconcileModelLine(models.Model):
     _check_company_auto = True
 
     model_id = fields.Many2one('account.reconcile.model', readonly=True, index='btree_not_null', ondelete='cascade')
-    allow_payment_tolerance = fields.Boolean(related='model_id.allow_payment_tolerance')
-    payment_tolerance_param = fields.Float(related='model_id.payment_tolerance_param')
-    rule_type = fields.Selection(related='model_id.rule_type')
     company_id = fields.Many2one(related='model_id.company_id', store=True)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
         domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]", check_company=True)
-
-    # This field is ignored in a bank statement reconciliation.
-    journal_id = fields.Many2one(
-        related='model_id.journal_id',
+    partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        string='Partner',
     )
-    label = fields.Char(string='Journal Item Label', translate=True)
+    label = fields.Char(string='Label', translate=True)
     amount_type = fields.Selection(
         selection=[
             ('fixed', 'Fixed'),
@@ -63,12 +31,8 @@ class AccountReconcileModelLine(models.Model):
             ('from_transaction_details', 'From Transaction Details'),
         ],
         required=True,
-        store=True,
-        precompute=True,
-        compute='_compute_amount_type',
-        readonly=False,
+        default='percentage',
     )
-
     # technical shortcut to parse the amount to a float
     amount = fields.Float(string="Float Amount", compute='_compute_float_amount', store=True)
     amount_string = fields.Char(string="Amount", default='100', required=True, help="""Value for the amount of the writeoff line
@@ -80,9 +44,6 @@ class AccountReconcileModelLine(models.Model):
         string="Taxes",
         ondelete='restrict',
         check_company=True,
-        compute='_compute_tax_ids',
-        readonly=False,
-        store=True,
     )
 
     @api.onchange('amount_type')
@@ -100,29 +61,6 @@ class AccountReconcileModelLine(models.Model):
                 record.amount = float(record.amount_string)
             except ValueError:
                 record.amount = 0
-
-    @api.depends('rule_type', 'model_id.counterpart_type')
-    def _compute_amount_type(self):
-        for line in self:
-            if line.rule_type == 'writeoff_button' and line.model_id.counterpart_type in ('sale', 'purchase'):
-                line.amount_type = line.amount_type or 'percentage_st_line'
-            else:
-                line.amount_type = line.amount_type or 'percentage'
-
-    @api.depends('model_id.counterpart_type', 'rule_type', 'account_id', 'company_id', 'company_id.account_purchase_tax_id')
-    def _compute_tax_ids(self):
-        for line in self:
-            if line.rule_type == 'writeoff_button' and line.model_id.counterpart_type in ('sale', 'purchase'):
-                line.tax_ids = line.tax_ids.filtered(lambda x: x.type_tax_use == line.model_id.counterpart_type)
-                if not line.tax_ids:
-                    line.tax_ids = line.account_id.tax_ids.filtered(lambda x: x.type_tax_use == line.model_id.counterpart_type)
-                if not line.tax_ids:
-                    if line.model_id.counterpart_type == 'purchase' and line.company_id.account_purchase_tax_id:
-                        line.tax_ids = line.company_id.account_purchase_tax_id
-                    elif line.model_id.counterpart_type == 'sale' and line.company_id.account_sale_tax_id:
-                        line.tax_ids = line.company_id.account_sale_tax_id
-            else:
-                line.tax_ids = line.tax_ids
 
     @api.constrains('amount_string')
     def _validate_amount(self):
@@ -160,59 +98,24 @@ class AccountReconcileModel(models.Model):
         comodel_name='res.company',
         string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
-    rule_type = fields.Selection(selection=[
-        ('writeoff_button', 'Button to generate counterpart entry'),
-        ('writeoff_suggestion', 'Rule to suggest counterpart entry'),
-        ('invoice_matching', 'Match invoices & payments'),
-    ], string='Type', default='writeoff_button', required=True, tracking=True)
-    auto_reconcile = fields.Boolean(string='Auto-validate', tracking=True,
+
+    trigger = fields.Selection([('manual', 'Manual'), ('auto_reconcile', 'Automated')], default='manual', required=True, tracking=True,
         help='Validate the statement line automatically (reconciliation based on your rule).')
-    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the information of the counterpart.')
-    matching_order = fields.Selection(
-        selection=[
-            ('old_first', 'Oldest first'),
-            ('new_first', 'Newest first'),
-        ],
-        required=True,
-        default='old_first',
-        tracking=True,
-    )
-    counterpart_type = fields.Selection(
-        selection=[
-            ('general', 'Journal Entry'),
-            ('sale', 'Customer Invoices'),
-            ('purchase', 'Vendor Bills'),
-        ],
-        string="Counterpart Type",
-        default='general',
-    )
-    journal_id = fields.Many2one(
-        comodel_name='account.journal',
-        string="Journal",
-        help="The journal in which the counterpart entry will be created.",
-        check_company=True,
-        store=True,
-        readonly=False,
-        compute='_compute_journal_id',
-    )
+    next_activity_type_id = fields.Many2one(
+        comodel_name='mail.activity.type',
+        string='Next Activity')
 
     # ===== Conditions =====
-    match_text_location_label = fields.Boolean(
-        default=True,
-        help="Search in the Statement's Label to find the Invoice/Payment's reference",
-        tracking=True,
+    can_be_proposed = fields.Boolean(
+        compute='_compute_can_be_proposed', store=True,
+        copy=False,
     )
-    match_text_location_note = fields.Boolean(
-        default=False,
-        help="Search in the Statement's Note to find the Invoice/Payment's reference",
-        tracking=True,
+    mapped_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        compute='_compute_partner_mapping', store=True,
+        copy=False,
     )
-    match_text_location_reference = fields.Boolean(
-        default=False,
-        help="Search in the Statement's Reference to find the Invoice/Payment's reference",
-        tracking=True,
-    )
-    match_journal_ids = fields.Many2many('account.journal', string='Journals Availability',
+    match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
         check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
@@ -228,81 +131,32 @@ class AccountReconcileModel(models.Model):
         ('contains', 'Contains'),
         ('not_contains', 'Not Contains'),
         ('match_regex', 'Match Regex'),
-    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when the label:
-        * Contains: The proposition label must contains this string (case insensitive).
+    ], string='Label', tracking=True, help='''The reconciliation model will only be applied when either the statement line label or transaction details matches the following:
+        * Contains: The statement line must contains this string (case insensitive).
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.''')
     match_label_param = fields.Char(string='Label Parameter', tracking=True)
-    match_transaction_details = fields.Selection(selection=[
-        ('contains', 'Contains'),
-        ('not_contains', 'Not Contains'),
-        ('match_regex', 'Match Regex'),
-    ], string='Transaction details', tracking=True, help='''The reconciliation model will only be applied when the transaction details:
-            * Contains: The proposition label must contains this string (case insensitive).
-            * Not Contains: Negation of "Contains".
-            * Match Regex: Define your own regular expression. (Care that it's a jsonfield)''')
-    match_transaction_details_param = fields.Char(string='Transaction Details Parameter', tracking=True)
-    match_note = fields.Selection(selection=[
-        ('contains', 'Contains'),
-        ('not_contains', 'Not Contains'),
-        ('match_regex', 'Match Regex'),
-    ], string='Note', tracking=True, help='''The reconciliation model will only be applied when the note:
-        * Contains: The proposition note must contains this string (case insensitive).
-        * Not Contains: Negation of "Contains".
-        * Match Regex: Define your own regular expression.''')
-    match_note_param = fields.Char(string='Note Parameter', tracking=True)
-    match_same_currency = fields.Boolean(string='Same Currency', default=True, tracking=True,
-        help='Restrict to propositions having the same currency as the statement line.')
-    allow_payment_tolerance = fields.Boolean(
-        string="Payment Tolerance",
-        default=True,
-        tracking=True,
-        help="Difference accepted in case of underpayment.",
-    )
-    payment_tolerance_param = fields.Float(
-        string="Gap",
-        compute='_compute_payment_tolerance_param',
-        readonly=False,
-        store=True,
-        tracking=True,
-        help="The sum of total residual amount propositions matches the statement line amount under this amount/percentage.",
-    )
-    payment_tolerance_type = fields.Selection(
-        selection=[('percentage', "in percentage"), ('fixed_amount', "in amount")],
-        default='percentage',
-        required=True,
-        tracking=True,
-        help="The sum of total residual amount propositions and the statement line amount allowed gap type.",
-    )
-    match_partner = fields.Boolean(string='Partner is Set', tracking=True,
-        help='The reconciliation model will only be applied when a customer/vendor is set.')
     match_partner_ids = fields.Many2many('res.partner', string='Partners',
         help='The reconciliation model will only be applied to the selected customers/vendors.')
-    match_partner_category_ids = fields.Many2many('res.partner.category', string='Categories',
-        help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
-    partner_mapping_line_ids = fields.One2many(string="Partner Mapping Lines",
-                                               comodel_name='account.reconcile.model.partner.mapping',
-                                               inverse_name='model_id',
-                                               help="The mapping uses regular expressions.\n"
-                                                    "- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
-                                                    "- To Match the text anywhere (in label or notes), put your text between .*\n"
-                                                    "  e.g: .*N°48748 abc123.*")
-    past_months_limit = fields.Integer(
-        string="Search Months Limit",
-        default=18,
-        tracking=True,
-        help="Number of months in the past to consider entries from when applying this model.",
-    )
-    decimal_separator = fields.Char(
-        default=lambda self: self.env['res.lang']._get_data(code=self.env.user.lang).decimal_point,
-        tracking=True,
-        help="Every character that is nor a digit nor this separator will be removed from the matching string",
-    )
-    # used to decide if we should show the decimal separator for the regex matching field
-    show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator')
-    number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
+
+    @api.depends('mapped_partner_id', 'match_label', 'match_partner_ids', 'trigger')
+    def _compute_can_be_proposed(self):
+        for model in self:
+            model.can_be_proposed = not model.mapped_partner_id and (model.match_label or model.match_partner_ids or model.trigger == 'auto_reconcile')
+
+    @api.depends('match_label', 'line_ids.partner_id', 'line_ids.account_id')
+    def _compute_partner_mapping(self):
+        for model in self:
+            is_partner_mapping = model.match_label and len(model.line_ids) == 1 and model.line_ids[0].partner_id and not model.line_ids[0].account_id
+            model.mapped_partner_id = is_partner_mapping and model.line_ids[0].partner_id.id
+
+    def action_set_manual(self):
+        self.trigger = 'manual'
+
+    def action_set_auto_reconcile(self):
+        self.trigger = 'auto_reconcile'
 
     def action_reconcile_stat(self):
         self.ensure_one()
@@ -318,42 +172,6 @@ class AccountReconcileModel(models.Model):
             'help': """<p class="o_view_nocontent_empty_folder">{}</p>""".format(_('This reconciliation model has created no entry so far')),
         })
         return action
-
-    def _compute_number_entries(self):
-        data = self.env['account.move.line']._read_group([('reconcile_model_id', 'in', self.ids)], ['reconcile_model_id'], ['__count'])
-        mapped_data = {reconcile_model.id: count for reconcile_model, count in data}
-        for model in self:
-            model.number_entries = mapped_data.get(model.id, 0)
-
-    @api.depends('line_ids.amount_type')
-    def _compute_show_decimal_separator(self):
-        for record in self:
-            record.show_decimal_separator = any(l.amount_type in {'regex', 'from_transaction_details'} for l in record.line_ids)
-
-    @api.depends('payment_tolerance_param', 'payment_tolerance_type')
-    def _compute_payment_tolerance_param(self):
-        for record in self:
-            if record.payment_tolerance_type == 'percentage':
-                record.payment_tolerance_param = min(100.0, max(0.0, record.payment_tolerance_param))
-            else:
-                record.payment_tolerance_param = max(0.0, record.payment_tolerance_param)
-
-    @api.depends('counterpart_type')
-    def _compute_journal_id(self):
-        for record in self:
-            if record.journal_id.type != record.counterpart_type:
-                record.journal_id = None
-            else:
-                record.journal_id = record.journal_id
-
-    @api.constrains('allow_payment_tolerance', 'payment_tolerance_param', 'payment_tolerance_type')
-    def _check_payment_tolerance_param(self):
-        for record in self:
-            if record.allow_payment_tolerance:
-                if record.payment_tolerance_type == 'percentage' and not 0 <= record.payment_tolerance_param <= 100:
-                    raise ValidationError(_("A payment tolerance defined as a percentage should always be between 0 and 100"))
-                elif record.payment_tolerance_type == 'fixed_amount' and record.payment_tolerance_param < 0:
-                    raise ValidationError(_("A payment tolerance defined as an amount should always be higher than 0"))
 
     def copy_data(self, default=None):
         default = dict(default or {})

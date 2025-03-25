@@ -233,8 +233,6 @@ class TestAccountTax(AccountTestInvoicingCommon):
         })
         self.env['account.reconcile.model'].create({
             'name': "test_tax_is_used",
-            'rule_type': 'writeoff_suggestion',
-            'auto_reconcile': False,
             'line_ids': [Command.create({
                 'account_id': self.company_data['default_account_revenue'].id,
                 'tax_ids': [Command.set(tax_reconciliation.ids)],
