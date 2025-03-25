@@ -409,6 +409,7 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         test_user = self.env['res.users'].with_company(self.test_company).create({
             'name': 'Jonathan Doe',
             'login': 'jdoe@example.com',
+            'group_ids': self.env.ref('hr_timesheet.group_hr_timesheet_user'),
         })
         test_user.with_company(self.test_company).action_create_employee()
         test_user.employee_id.write({

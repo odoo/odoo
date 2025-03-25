@@ -225,6 +225,7 @@ class TestCarrierPropagation(TransactionCase):
             'login': 'Mars Man',
             'name': 'Spleton',
             'email': 'alien@mars.com',
+            'group_ids': self.env.ref('stock.group_stock_user'),
         })
         super_product_2 = self.ProductProduct.create({
             'name': 'Super Product 2',
