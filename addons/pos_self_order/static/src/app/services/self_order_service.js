@@ -196,6 +196,29 @@ export class SelfOrder extends Reactive {
         }
     }
 
+    showComboSelectionPage(product) {
+        const selectedCombos = [];
+        for (const combo of product.combo_ids) {
+            const { combo_item_ids } = combo;
+            if (
+                combo_item_ids.length > 1 ||
+                combo.qty_max > 1 ||
+                combo_item_ids[0]?.product_id.isConfigurable()
+            ) {
+                return { show: true, selectedCombos: [] };
+            }
+            selectedCombos.push({
+                combo_item_id: this.models["product.combo.item"].get(combo_item_ids[0].id),
+                configuration: {
+                    attribute_custom_values: [],
+                    attribute_value_ids: [],
+                    price_extra: 0,
+                },
+            });
+        }
+        return { show: false, selectedCombos };
+    }
+
     async addToCart(
         productTemplate,
         qty,

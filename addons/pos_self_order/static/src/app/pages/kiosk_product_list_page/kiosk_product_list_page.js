@@ -168,7 +168,23 @@ export class KioskProductListPage extends Component {
             return;
         }
         if (product.isCombo()) {
-            this.router.navigate("combo_selection", { id: product.id });
+            const { show, selectedCombos } = this.selfOrder.showComboSelectionPage(product);
+            if (show) {
+                this.router.navigate("combo_selection", { id: product.id });
+            } else {
+                this.flyToCart(target);
+                this.selfOrder.addToCart(
+                    product,
+                    1,
+                    "",
+                    {},
+                    {},
+                    selectedCombos.map((combo) => ({
+                        ...combo,
+                        qty: 1,
+                    }))
+                );
+            }
         } else if (product.isConfigurable() || product.public_description) {
             this.router.navigate("product", { id: product.id });
         } else {
