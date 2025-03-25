@@ -130,6 +130,11 @@ def assert_attribute_override(parent_method, child_method, is_private):
         parent_attr = getattr(parent_method, attribute, None)
         child_attr = getattr(child_method, attribute, None)
         assert parent_attr == child_attr, f"attribute {attribute!r} does not match"
+    # https://docs.python.org/3/library/typing.html#typing.final
+    assert not getattr(parent_method, '__final__', False), "parent method is final"
+    # https://docs.python.org/3/library/warnings.html#warnings.deprecated
+    assert bool(getattr(parent_method, '__deprecated__', False)) == bool(getattr(child_method, '__deprecated__', False)), \
+        "parent and child method should either both be deprecated or none of them"
 
 
 @tagged('-at_install', 'post_install')
