@@ -60,7 +60,7 @@ class SaleEdiXmlUbl_Bis3(models.AbstractModel):
             'name': self._find_value('.//cac:Delivery/cac:DeliveryParty//cbc:Name', tree),
         }
 
-    def _get_line_xpaths(self, document_type=None, qty_factor=1):
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
         # Override account.edi.xml.ubl_bis3
         return {
             **super()._get_line_xpaths(),

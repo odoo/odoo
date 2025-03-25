@@ -445,7 +445,7 @@ class ProductProduct(models.Model):
         self.env.registry.clear_cache()
         return res
 
-    def _filter_to_unlink(self, check_access=True):
+    def _filter_to_unlink(self):
         return self
 
     def _unlink_or_archive(self, check_access=True):
