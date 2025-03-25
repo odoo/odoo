@@ -56,11 +56,12 @@ def get_odoo_module_name(python_module_name):
     return python_module_name
 
 
-def check_parameter(pparam: inspect.Parameter, cparam: inspect.Parameter) -> bool:
+def check_parameter(pparam: inspect.Parameter, cparam: inspect.Parameter, is_private: bool = False) -> bool:
     # don't check annotations
     return (
         pparam.name == cparam.name
         or pparam.kind == POSITIONAL_ONLY
+        or is_private  # ignore names of (positional or keyword) attributes
     ) and (
         # if parent has a default, child should have the same one
         pparam.default is EMPTY
@@ -76,7 +77,7 @@ def check_parameter(pparam: inspect.Parameter, cparam: inspect.Parameter) -> boo
     )
 
 
-def assert_valid_override(parent_signature, child_signature):
+def assert_valid_override(parent_signature, child_signature, is_private):
     pparams = parent_signature.parameters
     cparams = child_signature.parameters
 
@@ -93,10 +94,9 @@ def assert_valid_override(parent_signature, child_signature):
     child_has_varkwargs = any(cp.kind == VAR_KEYWORD for cp in cparams.values())
 
     # check positionals
-    pposparams = [pp for pp in pparams.values()
-                  if pp.kind in (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)]
-    cposparams = [cp for cp in cparams.values()
-                  if cp.kind in (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)]
+    pos_kinds = (POSITIONAL_ONLY, POSITIONAL_OR_KEYWORD)
+    pposparams = [pp for pp in pparams.values() if pp.kind in pos_kinds]
+    cposparams = [cp for cp in cparams.values() if cp.kind in pos_kinds]
     if len(cposparams) < len(pposparams):
         assert child_has_varargs, "missing positional parameters"
         pposparams = pposparams[:len(cposparams)]
@@ -104,26 +104,29 @@ def assert_valid_override(parent_signature, child_signature):
         assert parent_has_varargs, "too many positional parameters"
         cposparams = cposparams[:len(pposparams)]
     for pparam, cparam in zip(pposparams, cposparams, strict=True):
-        assert check_parameter(pparam, cparam), f"wrong positional paramter {cparam.name!r}"
+        assert check_parameter(pparam, cparam, is_private=is_private), f"wrong positional paramter {cparam.name!r}"
 
     # check keywords
-    pkwparams = {pp_name: pp for pp_name, pp in pparams.items()
-                 if pp.kind in (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)}
-    ckwparams = {cp_name: cp for cp_name, cp in cparams.items()
-                 if cp.kind in (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)}
+    kw_kinds = (KEYWORD_ONLY,) if is_private else (POSITIONAL_OR_KEYWORD, KEYWORD_ONLY)
+    pkwparams = {pp_name: pp for pp_name, pp in pparams.items() if pp.kind in kw_kinds}
+    ckwparams = {cp_name: cp for cp_name, cp in cparams.items() if cp.kind in kw_kinds}
     for name, pparam in pkwparams.items():
         cparam = ckwparams.get(name)
         if cparam is None:
             assert child_has_varkwargs, f"missing keyword parameter {name!r}"
         else:
-            assert check_parameter(pparam, cparam), f"wrong keyword parameter {name!r}"
+            assert check_parameter(pparam, cparam, is_private=is_private), f"wrong keyword parameter {name!r}"
     if not parent_has_varkwargs:
         for name in (ckwparams.keys() - pkwparams.keys()):
             assert ckwparams[name].default is not EMPTY, "too many keyword parameters"
 
 
-def assert_attribute_override(parent_method, child_method):
-    for attribute in ('_autovacuum', '_api_model'):
+def assert_attribute_override(parent_method, child_method, is_private):
+    if is_private:
+        attributes = ('_autovacuum',)
+    else:
+        attributes = ('_autovacuum', '_api_model')
+    for attribute in attributes:
         parent_attr = getattr(parent_method, attribute, None)
         child_attr = getattr(child_method, attribute, None)
         assert parent_attr == child_attr, f"attribute {attribute!r} does not match"
@@ -155,6 +158,7 @@ class TestLintOverrideSignatures(LintCase):
 
                 parent_module = get_odoo_module_name(parent_class.__module__)
                 original_signature = inspect.signature(method)
+                is_private = method_name.startswith('_')
 
                 # Assert that all child classes correctly override the method
                 for child_class in reverse_mro:
@@ -167,8 +171,8 @@ class TestLintOverrideSignatures(LintCase):
 
                     with self.subTest(module=child_module, model=model_name, method=method_name):
                         try:
-                            assert_valid_override(original_signature, override_signature)
-                            assert_attribute_override(method, override)
+                            assert_valid_override(original_signature, override_signature, is_private=is_private)
+                            assert_attribute_override(method, override, is_private=is_private)
                             counter[method_name].hit += 1
                         except AssertionError as exc:
                             counter[method_name].miss += 1
