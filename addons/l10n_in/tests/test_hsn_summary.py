@@ -373,7 +373,7 @@ class TestL10nInHSNSummary(TestTaxCommon):
         self.cess_5_plus_1591.sequence = 100
 
         document = self.populate_document(self.init_document([
-            {'l10n_in_hsn_code': self.test_hsn_code_1, 'quantity': 1.0,'price_unit': 15.80, 'product_uom_id': self.uom_unit, 'tax_ids': self.gst_18 + self.cess_5_plus_1591},
+            {'l10n_in_hsn_code': self.test_hsn_code_1, 'quantity': 1.0, 'price_unit': 15.80, 'product_uom_id': self.uom_unit, 'tax_ids': self.gst_18 + self.cess_5_plus_1591},
         ]))
         expected_values = {
             'has_igst': False,
@@ -675,7 +675,7 @@ class TestL10nInHSNSummary(TestTaxCommon):
     def _test_l10n_in_hsn_summary_6(self):
         """ Test with Sale RC tax. """
         document = self.populate_document(self.init_document([
-            {'l10n_in_hsn_code': self.test_hsn_code_1, 'quantity': 1.0,'price_unit': 100.0, 'product_uom_id': self.uom_unit, 'tax_ids': self.igst_18_rc},
+            {'l10n_in_hsn_code': self.test_hsn_code_1, 'quantity': 1.0, 'price_unit': 100.0, 'product_uom_id': self.uom_unit, 'tax_ids': self.igst_18_rc},
         ]))
         expected_values = {
             'has_igst': True,
@@ -758,8 +758,8 @@ class TestL10nInHSNSummary(TestTaxCommon):
                     'rate': 5.0,
                     'amount_untaxed': 1000.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 24.0,
-                    'tax_amount_sgst': 24.0,
+                    'tax_amount_cgst': 24.5,
+                    'tax_amount_sgst': 24.5,
                     'tax_amount_cess': 0.0,
                 },
                 {
@@ -769,8 +769,8 @@ class TestL10nInHSNSummary(TestTaxCommon):
                     'rate': 5.0,
                     'amount_untaxed': 1000.0,
                     'tax_amount_igst': 0.0,
-                    'tax_amount_cgst': 25.0,
-                    'tax_amount_sgst': 25.0,
+                    'tax_amount_cgst': 24.5,
+                    'tax_amount_sgst': 24.5,
                     'tax_amount_cess': 0.0,
                 },
             ],
