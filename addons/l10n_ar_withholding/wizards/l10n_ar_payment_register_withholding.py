@@ -36,7 +36,7 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
             from_date = to_date + relativedelta(day=1)
             # We search for the payments in the same month of the same regimen and the same code.
             domain_same_period_withholdings = [
-                *self.env['account.move.line']._check_company_domain(self.tax_id.company_id),
+                *self.env['account.move.line']._check_company_domain(self.env.company),
                 ('parent_state', '=', 'posted'),
                 ('tax_line_id.l10n_ar_code', '=', self.tax_id.l10n_ar_code),
                 ('tax_line_id.l10n_ar_tax_type', 'in', ['earnings', 'earnings_scale']),
@@ -47,7 +47,7 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
             else:
                 same_period_withholdings = 0.0
             domain_same_period_base = [
-                *self.env['account.move.line']._check_company_domain(self.tax_id.company_id),
+                *self.env['account.move.line']._check_company_domain(self.env.company),
                 ('parent_state', '=', 'posted'),
                 ('tax_ids.l10n_ar_code', '=', self.tax_id.l10n_ar_code),
                 ('tax_ids.l10n_ar_tax_type', 'in', ['earnings', 'earnings_scale']),
