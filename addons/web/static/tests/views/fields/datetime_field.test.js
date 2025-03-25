@@ -550,3 +550,67 @@ test("datetime field in kanban view with condensed option", async () => {
     const expectedDateString = "2/8/2017 8:00"; // 10:00:00 without timezone
     expect(".o_kanban_record:first").toHaveText(expectedDateString);
 });
+
+test("placeholder_field shows as placeholder (char)", async () => {
+    Partner._fields.char = fields.Char({
+        default: "My Placeholder",
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="char"/>
+                <field name="datetime" options="{'condensed': true, 'placeholder_field': 'char'}"/>
+            </form>`,
+    });
+    expect("div[name='datetime'] input").toHaveAttribute("placeholder", "My Placeholder", {
+        message: "placeholder_field should be the placeholder",
+    });
+});
+
+test("placeholder_field shows as placeholder (datetime)", async () => {
+    mockTimeZone(0);
+
+    defineParams({
+        lang_parameters: {
+            date_format: "%d/%m/%Y",
+            time_format: "%H:%M",
+        },
+    });
+
+    Partner._fields.datetime_example = fields.Datetime({
+        string: "A datetime",
+        searchable: true,
+        default: "2025-04-01 09:11:11",
+        required: true,
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="datetime_example"/>
+                <field name="datetime" options="{'condensed': true, 'placeholder_field': 'datetime_example'}"/>
+                <field name="datetime" options="{'condensed': false, 'placeholder_field': 'datetime_example'}"/>
+            </form>`,
+    });
+    expect("div[name='datetime']:nth-of-type(2) input").toHaveAttribute(
+        "placeholder",
+        "1/4/2025 9:11",
+        {
+            message: "placeholder_field should be the placeholder",
+        }
+    );
+    expect("div[name='datetime']:nth-of-type(3) input").toHaveAttribute(
+        "placeholder",
+        "01/04/2025 09:11",
+        {
+            message: "placeholder_field should be the placeholder",
+        }
+    );
+});

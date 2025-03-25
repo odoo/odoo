@@ -10,7 +10,7 @@ export class CharWithPlaceholderField extends CharField {
 
     /** Override **/
     get formattedValue() {
-        return super.formattedValue || this.placeholder;
+        return super.formattedValue || this.props.placeholder;
     }
 }
 

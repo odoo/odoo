@@ -44,6 +44,12 @@ export const m2oSupportedOptions = [
             "Defines the minimum number of characters to perform the search. If not set, the search is performed on focus."
         ),
     },
+    {
+        label: _t("Dynamic placeholder"),
+        name: "placeholder_field",
+        type: "field",
+        availableTypes: ["char"],
+    },
 ];
 /** @type {import("registries").FieldsRegistryItemShape["supportedTypes"]} */
 export const m2oSupportedTypes = ["many2one"];
@@ -63,7 +69,7 @@ export function buildM2OFieldDescription(component) {
 }
 
 export function extractM2OFieldProps(staticInfo, dynamicInfo) {
-    const { attrs, context, decorations, options, string } = staticInfo;
+    const { attrs, context, decorations, options, string, placeholder } = staticInfo;
 
     const hasCreatePermission = attrs.can_create ? evaluateBooleanExpr(attrs.can_create) : true;
     const hasWritePermission = attrs.can_write ? evaluateBooleanExpr(attrs.can_write) : true;
@@ -80,7 +86,7 @@ export function extractM2OFieldProps(staticInfo, dynamicInfo) {
         domain: dynamicInfo.domain,
         nameCreateField: options.create_name_field,
         openActionContext: context || "{}",
-        placeholder: attrs.placeholder,
+        placeholder,
         searchThreshold: options.search_threshold,
         string,
     };

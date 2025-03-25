@@ -248,6 +248,12 @@ export const many2ManyTagsField = {
                 "Defines the minimum number of characters to perform the search. If not set, the search is performed on focus."
             ),
         },
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
     ],
     supportedTypes: ["many2many", "one2many"],
     relatedFields: ({ options }) => {
@@ -257,7 +263,7 @@ export const many2ManyTagsField = {
         }
         return relatedFields;
     },
-    extractProps({ attrs, options, string }, dynamicInfo) {
+    extractProps({ attrs, options, string, placeholder }, dynamicInfo) {
         const hasCreatePermission = attrs.can_create ? evaluateBooleanExpr(attrs.can_create) : true;
         const noCreate = Boolean(options.no_create);
         const canCreate = noCreate ? false : hasCreatePermission;
@@ -272,7 +278,7 @@ export const many2ManyTagsField = {
             createDomain: options.create,
             context: dynamicInfo.context,
             domain: dynamicInfo.domain,
-            placeholder: attrs.placeholder,
+            placeholder,
             searchThreshold: options.search_threshold,
             string,
         };
