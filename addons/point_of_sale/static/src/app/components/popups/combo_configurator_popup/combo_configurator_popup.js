@@ -37,10 +37,8 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     shouldShowCombo(combo) {
-        return (
-            combo.combo_item_ids.length > 0 &&
-            (combo.combo_item_ids.length > 1 || combo.combo_item_ids[0].product_id.isConfigurable())
-        );
+        const items = combo.combo_item_ids;
+        return items.length > 1 || combo.qty_max > 1 || items[0]?.product_id?.isConfigurable();
     }
 
     autoSelectSingleChoices() {
