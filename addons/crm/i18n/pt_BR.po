@@ -215,7 +215,7 @@ msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
-msgstr ""
+msgstr "<span> leads atribuídos nos últimos 30 dias, de um máximo de </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -245,6 +245,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>Atribuir leads periodicamente com base em prioridades e filtros.</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    Todas as equipes de vendas usarão essa configuração por padrão, a menos que o site\n"
+"especifique o contrário.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -426,6 +431,8 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr ""
+"Uma liderança em uma etapa ganha não pode ser perdida. Primeiro, mova-o para"
+" outra etapa."
 
 #. module: crm
 #. odoo-python
@@ -567,7 +574,7 @@ msgstr "Adicione o próximo %s"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.mail_followers_edit_action_from_lead
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Adicionar/Remover seguidores"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
@@ -866,6 +873,9 @@ msgid ""
 "operations, as the probabilities of opportunities in this stage will be "
 "recomputed on saving."
 msgstr ""
+"A alteração do valor de \"É estágio Ganho\" pode induzir a um grande número "
+"de operações, pois as probabilidades de oportunidades nesse estágio serão "
+"recalculadas ao serem salvas."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_tree
@@ -1398,7 +1408,7 @@ msgstr "Não vincular a um cliente"
 #. odoo-python
 #: code:addons/crm/models/crm_stage.py:0
 msgid "Do you really want to update this stage?"
-msgstr ""
+msgstr "Você realmente quer atualizar esse estágio?"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -2022,12 +2032,12 @@ msgstr "Atribuir lead"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment"
-msgstr ""
+msgstr "Atribuição de leads"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Assignment Filter"
-msgstr ""
+msgstr "Filtro de atribuição de leads"
 
 #. module: crm
 #. odoo-python
@@ -2063,7 +2073,7 @@ msgstr "Planos de lead"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Lead Priority Filter"
-msgstr ""
+msgstr "Filtro de prioridade de leads"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2473,6 +2483,8 @@ msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
 msgstr ""
+"Domínio de atribuição de membro preferencial do usuário %(user)s e equipe "
+"%(team)s está formatado incorretamente"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2723,7 +2735,7 @@ msgstr "Estoque insuficiente"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Not specified"
-msgstr ""
+msgstr "Não especificado"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__description
@@ -3019,7 +3031,7 @@ msgstr "O usuário está na lista de bloqueio"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_optout
 msgid "Pause assignment"
-msgstr ""
+msgstr "Atribuição de intervalo"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
@@ -3133,7 +3145,7 @@ msgstr "Pontuação preditiva de lead: recalcular probabilidades automatizadas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain_preferred
 msgid "Preference assignment Domain"
-msgstr ""
+msgstr "Domínio da atribuição preferencial"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3671,7 +3683,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "The lead %s cannot be won and lost at the same time."
-msgstr ""
+msgstr "O lead %s não pode estar em Ganho e Perdido ao mesmo tempo."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_model_id
@@ -4176,7 +4188,7 @@ msgstr "Contagem de oportunidades ganhas"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__won_status
 msgid "Won/Lost"
-msgstr ""
+msgstr "Ganho/Perdido"
 
 #. module: crm
 #. odoo-python
@@ -4302,7 +4314,7 @@ msgstr "gerar oportunidades no seu funil de vendas?<br>"
 #. odoo-python
 #: code:addons/crm/models/crm_lost_reason.py:0
 msgid "lost_reason_id"
-msgstr ""
+msgstr "lost_reason_id"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__team_count
@@ -4325,7 +4337,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "type"
-msgstr ""
+msgstr "tipo"
 
 #. module: crm
 #. odoo-python

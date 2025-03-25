@@ -68,16 +68,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
-"*ドラフト:転送はまだ確認されていません。予約は適用されません。 \n"
-"*別の操作を待機中:この転送は、準備が整う前に別の操作を待機しています。 \n"
-"*待機中:転送は一部の製品の可用性を待機しています。 \n"
-"(a)配送ポリシーは'できるだけ早く'です。製品を予約することはできません。 \n"
-"(b)配送ポリシーは'すべての製品の準備ができたら'です。すべての製品を予約できるわけではありません。 \n"
-"*準備完了:転送を処理する準備ができています。 \n"
-"(a)配送ポリシーは'できるだけ早く'です。少なくとも1つの製品が予約されています。 \n"
-"(b)配送ポリシーは'すべての製品の準備ができたら'です。すべての製品が予約されています。 \n"
-"*完了:転送は処理されました。 \n"
-"*キャンセル済み:転送はキャンセルされました。"
+" * ドラフト：転送はまだ確定していません。予約は適用されません。\n"
+"* 別のオペレーション待ち：この転送は準備が整う前に別のオペレーションを待っています。\n"
+"* 待機中：転送は一部のプロダクトの在庫確保を待っています。\n"
+"(a) 配送方針が \"できるだけ早く\" の場合：プロダクトは予約できません。\n"
+"(b) 発送方針が \"全てのプロダクトが準備でき次第\" の場合：全てのプロダクトが予約できませんでした。\n"
+"* 準備完了：転送は処理準備が整いました。\n"
+"(a) 発送方針が\"できるだけ早く\"の場合：少なくとも1つのプロダクトが予約されました。\n"
+"(b) 発送方針が \"全てのプロダクトが準備でき次第\" の場合：全てのプロダクトが予約されました。\n"
+"* 完了：転送が処理されました。\n"
+"* 取消：転送がキャンセルされました。"
 
 #. module: stock
 #. odoo-python
@@ -582,8 +582,8 @@ msgid ""
 "<i class=\"fa fa-exclamation-triangle\"/>\n"
 "                                All products could not be reserved. Click on the \"Check Availability\" button to try to reserve products."
 msgstr ""
-"<i class=\"fa fa-exclamation-triangle\"/>すべてのプロダクトを予約できませんでした。 "
-"'在庫確認'ボタンをクリックして、プロダクトの予約を試みてください。</i>"
+"<i class=\"fa fa-exclamation-triangle\"/>すべてのプロダクトを引当てできませんでした。 '在庫確認' "
+"ボタンをクリックして、プロダクトの予約を試みてください。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -1778,7 +1778,7 @@ msgstr "集約バーコード(すなわち、複数のバーコードエンコ�
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Check Availability"
-msgstr "利用可能確認"
+msgstr "在庫状況を確認"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
@@ -3434,7 +3434,7 @@ msgstr "予測"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_availability
 msgid "Forecast Availability"
-msgstr "可用性の予測"
+msgstr "在庫状況の予測"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -4793,7 +4793,7 @@ msgstr "遅れた活動"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr "遅延利用可能"
+msgstr "在庫遅延"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -5692,7 +5692,7 @@ msgstr "ノート"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Nothing to check the availability for."
-msgstr "可用性をチェックするものはありません。"
+msgstr "在庫状況をチェックするものはありません。"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
@@ -6674,7 +6674,7 @@ msgstr "プロダクト"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability
 msgid "Product Availability"
-msgstr "プロダクト在庫"
+msgstr "プロダクト在庫状況"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__product_capacity_ids
@@ -6867,7 +6867,7 @@ msgstr "プロダクト"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability_state
 msgid "Products Availability State"
-msgstr "製品の入手可能性の状態"
+msgstr "プロダクト在庫状況ステータス"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__priority
@@ -8304,7 +8304,7 @@ msgstr "割り当てを表示"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_check_availability
 msgid "Show Check Availability"
-msgstr "チェックの可用性を表示"
+msgstr "在庫状況の確認を表示"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
@@ -8880,7 +8880,7 @@ msgstr "技術情報"
 msgid ""
 "Technical field used to compute whether the button \"Check Availability\" "
 "should be displayed."
-msgstr "可用性の確認'ボタンを表示するかどうかを計算するために使用される技術フィールド。"
+msgstr "\"在庫状況を確認\" ボタンを表示するかどうかを計算するために使用される技術フィールド。"
 
 #. module: stock
 #. odoo-python
@@ -9356,6 +9356,8 @@ msgid ""
 "This order point has been created automatically.\n"
 "snoozing it will not affect future ones created for the same product."
 msgstr ""
+"このオーダポイントは自動的に作成されました。\n"
+"スヌーズしても、同じプロダクトに対して今後作成されるオーダポイントには影響しません。"
 
 #. module: stock
 #. odoo-python
@@ -10078,7 +10080,7 @@ msgstr "照会"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "View Availability"
-msgstr "利用可能表示"
+msgstr "在庫状況を表示"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
