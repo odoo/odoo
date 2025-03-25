@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import _, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrRecruitmentSource(models.Model):
@@ -44,6 +45,13 @@ class HrRecruitmentSource(models.Model):
             # check that you can create source before to call mail.alias in sudo with known/controlled vals
             source.check_access('create')
             source.alias_id = self.env['mail.alias'].sudo().create(vals)
+
+    def create_and_get_alias(self):
+        self.ensure_one()
+        if not self.has_domain:
+            raise ValidationError(_('There is no alias domain (for example @example.com) configured for the source or the company.'))
+        self.create_alias()
+        return self.email
 
     def unlink(self):
         """ Cascade delete aliases to avoid useless / badly configured aliases. """

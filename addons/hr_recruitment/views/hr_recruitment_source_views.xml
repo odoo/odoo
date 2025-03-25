@@ -10,7 +10,7 @@
                     <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" readonly="id" optional="show"/>
                     <field name="medium_id" optional="show"/>
                     <field name="email" widget="RecruitmentCopyClipboardCharField"
-                           invisible="not email or not has_domain"/>
+                        options = "{'contentGenerationFunctionName': 'create_and_get_alias'}"/>
                     <button name="create_alias" string="Generate Email" class="btn btn-primary" type="object" invisible="not has_domain or email"/>
                 </list>
             </field>

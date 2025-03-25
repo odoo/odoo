@@ -265,11 +265,11 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='job_name']" position="attributes">
-                <attribute name="class" add="d-flex" separator=" "/>
+            <xpath expr="//h1" position="attributes">
+                <attribute name="class" add="d-flex align-items-center" separator=" "/>
             </xpath>
             <xpath expr="//field[@name='name']" position="before">
-                    <field name="is_favorite" class="align-content-center" widget="boolean_favorite" nolabel="1"/>
+                <field name="is_favorite" widget="boolean_favorite" class="hr_recruitment_is_favorite_job" nolabel="1"/>
             </xpath>
             <xpath expr="//form" position="attributes">
                 <attribute name="js_class">recruitment_form_view</attribute>

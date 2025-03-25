@@ -42,8 +42,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def _compute_duplicate_applicant_ids_domain(self):
         for wizard in self:
             domain = self.applicant_ids._get_similar_applicants_domain()
-            domain = expression.AND([domain, [('id', 'not in', self.applicant_ids.ids)]])
-            domain = expression.AND([domain, [('application_status', 'not in', ['hired', 'refused', 'archived'])]])
+            domain = expression.AND([
+                domain,
+                [('id', 'not in', self.applicant_ids.ids)],
+                [('application_status', 'not in', ['hired', 'refused', 'archived'])]
+            ])
             wizard.duplicate_applicant_ids_domain = domain
             wizard.duplicates_count = self.env['hr.applicant'].search_count(wizard.duplicate_applicant_ids_domain)
 
@@ -73,8 +76,14 @@ class ApplicantGetRefuseReason(models.TransientModel):
             for duplicate_applicant in self.duplicate_applicant_ids:
                 url = original_applicant_by_duplicate_applicant[duplicate_applicant]._get_html_link()
                 message_by_duplicate_applicant[duplicate_applicant.id] = _(
-                    "Refused automatically because this application has been identified as a duplicate of %(link)s", link=url)
-            self.duplicate_applicant_ids._message_log_batch(bodies={duplicate.id: message_by_duplicate_applicant[duplicate.id] for duplicate in self.duplicate_applicant_ids})
+                    "Refused automatically because this application has been identified as a duplicate of %(link)s",
+                    link=url)
+            self.duplicate_applicant_ids._message_log_batch(bodies=
+                {
+                    duplicate.id: message_by_duplicate_applicant[duplicate.id]
+                    for duplicate in self.duplicate_applicant_ids
+                }
+            )
         refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False, 'refuse_date': datetime.now()})
 
         if self.send_mail:

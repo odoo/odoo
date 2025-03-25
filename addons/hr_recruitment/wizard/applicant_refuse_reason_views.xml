@@ -4,7 +4,7 @@
             <field name="name">applicant.get.refuse.reason.form</field>
             <field name="model">applicant.get.refuse.reason</field>
             <field name="arch" type="xml">
-                <form string="Refuse Reason">
+                <form string="Refuse Reason" disable_autofocus="true">
                     <group col="1">
                         <field name="refuse_reason_id" string="Reason" widget="selection_badge" options="{'horizontal': true, 'no_create': True, 'no_open': True}"/>
                         <group invisible="not refuse_reason_id">
