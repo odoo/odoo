@@ -45,6 +45,9 @@ class AccountMoveSend(models.AbstractModel):
         if partner_default_template := move.partner_id.with_company(move.company_id).invoice_template_pdf_report_id:
             return partner_default_template
 
+        if journal_default_template := move.journal_id.with_company(move.company_id).invoice_template_pdf_report_id:
+            return journal_default_template
+
         action_report = self.env.ref('account.account_invoices')
 
         if move._is_action_report_available(action_report):
