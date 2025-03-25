@@ -18,7 +18,4 @@ class BlogPostTagsOptionPlugin extends Plugin {
     };
 }
 
-registry
-    .category("website-plugins")
-    .add(BlogPostTagsOptionPlugin.id, BlogPostTagsOptionPlugin);
-
+registry.category("website-plugins").add(BlogPostTagsOptionPlugin.id, BlogPostTagsOptionPlugin);
