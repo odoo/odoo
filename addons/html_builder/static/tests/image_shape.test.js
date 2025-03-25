@@ -484,7 +484,6 @@ describe("toggle ratio", () => {
 
         const croppedSrc = queryFirst(":iframe .test-options-target img").src;
 
-        // debugger;
         await contains(`[data-action-id="toggleImageShapeRatio"] input`).click();
 
         // ensure the shape action has been applied

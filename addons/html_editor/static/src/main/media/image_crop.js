@@ -196,7 +196,6 @@ export class ImageCrop extends Component {
      */
     async save() {
         const cropperData = this.getCropperData(this.cropper);
-        this.closeCropper();
         this.props.onSave?.({
             mimetype: this.mimetype,
             aspectRatio: this.aspectRatio,
@@ -204,6 +203,7 @@ export class ImageCrop extends Component {
             // todo nby: what about `delete image.dataset.resizeWidth;` ? (see previously `processImageCrop`)
             // todo nby: what about `forceModification: true,`? (see previously `processImageCrop`)
         });
+        this.closeCropper();
     }
     /**
      * Resets the crop box to prevent it going outside the image.

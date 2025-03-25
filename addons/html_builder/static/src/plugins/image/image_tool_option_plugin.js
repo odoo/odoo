@@ -8,7 +8,7 @@ import { ImageToolOption } from "./image_tool_option";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
-    static dependencies = ["history", "userCommand", "imagePostProcess"];
+    static dependencies = ["history", "userCommand", "imagePostProcess", "imageCrop"];
     resources = {
         builder_options: [
             {
@@ -34,8 +34,19 @@ class ImageToolOptionPlugin extends Plugin {
             cropImage: {
                 isApplied: ({ editingElement }) =>
                     cropperDataFieldsWithAspectRatio.some((field) => editingElement.dataset[field]),
-                apply: () => {
-                    this.dependencies.userCommand.getCommand("cropImage").run();
+                load: ({ editingElement: img }) =>
+                    new Promise((resolve) => {
+                        this.dependencies.imageCrop.openCropImage(img, {
+                            onClose: resolve,
+                            onSave: async (newDataset) => {
+                                resolve(
+                                    this.dependencies.imagePostProcess.processImage(img, newDataset)
+                                );
+                            },
+                        });
+                    }),
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes?.();
                 },
             },
             resetCrop: {
@@ -76,6 +87,7 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 load: async ({ editingElement: img, param: { mainParam: glFilterName } }) =>
                     await this.dependencies.imagePostProcess.processImage(img, {
+                        // todo: is it still needed to get the mimetype?
                         mimetype: getImageMimetype(img),
                         glFilter: glFilterName,
                     }),
