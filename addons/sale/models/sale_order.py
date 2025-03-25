@@ -2207,6 +2207,21 @@ class SaleOrder(models.Model):
             })
         return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
 
+    def _get_product_catalog_order_sections(self):
+        """ Get the sections for the product catalog order."""
+        sections = self.env["sale.order.line"].search([
+            ["display_type", "=", "line_section"], ["order_id", "=", self.id]
+        ])
+        return sections.read(["id", "name", "sequence"])
+
+    def _create_product_catalog_order_section(self, name):
+        self.env["sale.order.line"].create({
+            "order_id": self.id,
+            "name": name,
+            "display_type": "line_section",
+            "sequence": ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
+        })
+
     #=== TOOLING ===#
 
     def _is_readonly(self):

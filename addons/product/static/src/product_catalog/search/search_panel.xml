@@ -1,25 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates id="template" xml:space="preserve">
+    <t t-name="ProductCatalog.SearchPanelContent" t-inherit="web.SearchPanelContent"
+        t-inherit-mode="primary">
+        <section t-foreach="sections" t-as="section" t-key="section.id"
+            t-attf-class="o_search_panel_section o_search_panel_{{ section.type }}"
+            position="before">
+            <t t-if="this.env.model.config.context.active_model == 'sale.order.line'">
+                <section
+                    class="o_search_panel_section o_search_panel_filter"
+                >
+                    <header
+                        class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+                        <b>All Sections</b>
+                    </header>
+                    <li t-foreach="[...this.state.sectionOfSections.keys()]" t-as="secName" t-key="secName"
+                        class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 cursor-pointer"
+                        >
+                        <label
+                        t-on-click="() => this.toggleSectionSelection(secName)"
+                            class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
+                            t-att-class="this.env.model.config.context.selected_section.name == secName ? 'fw-bold' : ''">
+                            <span class="o_search_panel_label_title text-truncate" t-out="secName" />
+                        </label>
+                    </li>
+                    <t t-if="this.state.isAddingSection">
+                        <input type="text" class="o_section_input" placeholder="Enter section name"
+                            t-ref="sectionInputRef"
+                            t-model="this.state.newSectionName"
+                            t-on-keydown="onSectionInputKeydown"
+                            t-on-blur="createSection" />
+                    </t>
+                    <t t-else="">
+                        <button type="button" class="btn btn-link mt-2"
+                            t-on-click="enableSectionInput">
+                            + Add Section
+                        </button>
+                    </t>
+                </section>
+            </t>
+        </section>
+    </t>
+    <t t-name="ProductCatalog.SearchPanel.Regular" t-inherit="ProductCatalog.SearchPanelContent" t-inherit-mode="primary"/>
+    <t t-name="ProductCatalog.SearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <xpath expr="//t[@t-call='web.SearchPanel.Regular']" position="attributes">
+            <attribute name="t-call">ProductCatalog.SearchPanel.Regular</attribute>
+        </xpath>
+    </t>
     <t t-name="ProductCatalogSearchPanel.FiltersGroup" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
         <li t-foreach="[...values.keys()]" position="replace">
-            <li t-foreach="[...this.state.sectionOfAttributes.keys()]" t-as="attrName" t-key="attrName"
+            <li t-foreach="[...this.state.sectionOfTags.keys()]" t-as="tagName" t-key="tagName"
                 class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
                 t-att-class="{ 'ps-2' : isChildList }">
-                <t t-set="attrCount" t-value="this.state.sectionOfAttributes.get(attrName).get('count')"/>
-                <t t-set="attrIds" t-value="this.state.sectionOfAttributes.get(attrName).get('ids')"/>
+                <t t-set="tagCount" t-value="this.state.sectionOfTags.get(tagName).get('count')"/>
+                <t t-set="tagIds" t-value="this.state.sectionOfTags.get(tagName).get('ids')"/>
                 <div class="form-check w-100">
                     <input type="checkbox"
-                           t-attf-id="{{ section.id }}_input_{{ attrName }}"
+                           t-attf-id="{{ section.id }}_input_{{ tagName }}"
                            class="form-check-input"
-                           t-on-click="ev => this.toggleSectionFilterValue(section.id, attrIds, ev)"/>
+                           t-on-click="ev => this.toggleSectionFilterValue(section.id, tagIds, ev)"/>
                     <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 o_cursor_pointer"
-                           t-attf-for="{{ section.id }}_input_{{ attrName }}"
+                           t-attf-for="{{ section.id }}_input_{{ tagName }}"
                            t-att-title="(group and group.tooltip) or false">
-                        <span class="o_search_panel_label_title text-truncate" t-esc="attrName"/>
-                        <span t-if="section.enableCounters and attrCount gt 0"
+                        <span class="o_search_panel_label_title text-truncate" t-esc="tagName"/>
+                        <span t-if="section.enableCounters and tagCount gt 0"
                               class="o_search_panel_counter text-muted mx-2 small"
-                              t-esc="attrCount"/>
+                              t-esc="tagCount"/>
                     </label>
                 </div>
             </li>

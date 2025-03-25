@@ -44,3 +44,14 @@ class ProductCatalogController(Controller):
         return order.with_company(order.company_id)._update_order_line_info(
             product_id, quantity, **kwargs,
         )
+
+    @route('/product/catalog/get_sections', auth='user', type='jsonrpc', readonly=True)
+    def product_catalog_order_get_sections(self, res_model, order_id, **kwargs):
+        order = request.env[res_model].browse(order_id)
+        return order.with_company(order.company_id)._get_product_catalog_order_sections(**kwargs)
+
+    @route('/product/catalog/create_section', auth='user', type='jsonrpc')
+    def product_catalog_order_create_section(self, res_model, order_id, section_name, **kwargs):
+        order = request.env[res_model].browse(order_id)
+        return order.with_company(order.company_id)._create_product_catalog_order_section(section_name, **kwargs)
+

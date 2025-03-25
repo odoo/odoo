@@ -30,6 +30,14 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             for (const record of result.records) {
                 record.productCatalogData = orderLinesInfo[record.id];
             }
+
+            if (params.context.selected_section) {
+                result.records = this._filterProductsBySections(
+                    result.records,
+                    params.context.selected_section,
+                    params.context.sections,
+                );
+            }
         }
         return result;
     }
@@ -59,5 +67,15 @@ export class ProductCatalogKanbanModel extends RelationalModel {
             };
         }
         return sampleOrderLineInfo;
+    }
+
+    _filterProductsBySections(records, selectedSection, allSections) {
+        const minSeq = selectedSection.sequence;
+        const maxSeq = allSections.find(sec => sec.sequence > minSeq)?.sequence ?? Infinity;
+
+        return records.filter(record => {
+            const seq = record.productCatalogData?.sequence ?? 0;
+            return seq > minSeq && seq < maxSeq;
+        });
     }
 }

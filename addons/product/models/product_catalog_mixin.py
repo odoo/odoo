@@ -129,3 +129,17 @@ class ProductCatalogMixin(models.AbstractModel):
         :rtype: float
         """
         return 0
+
+    def _get_product_catalog_order_sections(self):
+        """ Returns the sections to be shown in the product catalog.
+        Must be overrided by each model using this mixin.
+        :rtype: list
+        """
+        return []
+
+    def _create_product_catalog_order_section(self, section_name):
+        """ Create a new section in the product catalog.
+        Must be overrided by each model using this mixin.
+        :param str section_name: The name of the section to create.
+        """
+        return None
