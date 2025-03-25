@@ -7,7 +7,7 @@ import itertools
 import json
 import logging
 import operator
-from collections import OrderedDict
+from collections import defaultdict, OrderedDict
 
 from werkzeug.exceptions import InternalServerError
 
@@ -140,16 +140,13 @@ class GroupsTreeNode:
             self.children[key] = GroupsTreeNode(self._model, self._export_field_names, self._groupby, self._groupby_type)
         return self.children[key]
 
-    def insert_leaf(self, group):
+    def insert_leaf(self, group, data):
         """
         Build a leaf from `group` and insert it in the tree.
         :param group: dict as returned by `formatted_read_group`
         """
         leaf_path = [group.get(groupby_field) for groupby_field in self._groupby]
         count = group.pop('__count')
-
-        # reorder the record with the default order (it doesn't respect order from the view/user)
-        records = self._model.with_context(active_test=False).search([('id', 'in', group.pop('id:array_agg'))])
 
         # Follow the path from the top level group to the deepest
         # group which actually contains the records' data.
@@ -161,8 +158,7 @@ class GroupsTreeNode:
             # Update count value and aggregated value.
             node.count += count
 
-        node.data = records.with_env(self._model.env).export_data(self._export_field_names).get('datas', [])
-        return records
+        node.data = data
 
 
 class ExportXlsxWriter:
@@ -560,9 +556,13 @@ class ExportFormat(object):
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
+        records = Model.browse(ids) if ids else Model.search(domain)
+
         groupby = params.get('groupby')
         if not import_compat and groupby:
+            export_data = records.export_data(['.id'] + field_names).get('datas', [])
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
+            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
             if ids:
                 domain = [('id', 'in', ids)]
                 SearchModel = Model.with_context(active_test=False)
@@ -570,17 +570,37 @@ class ExportFormat(object):
                 SearchModel = Model
             groups_data = SearchModel.formatted_read_group(domain, groupby, ['__count', 'id:array_agg'])
 
-            # formatted_read_group returns a dict only for final groups (with actual data),
-            # not for intermediary groups. The full group tree must be re-constructed.
-            tree = GroupsTreeNode(Model, field_names, groupby, groupby_type)
-            records = Model.browse()
-            for leaf in groups_data:
-                records |= tree.insert_leaf(leaf)
+            # Build a map from record ID to its export rows
+            record_rows = {}
+            current_id = None
+            for row in export_data:
+                if row[0]:  # First column is the record ID
+                    current_id = int(row[0])
+                    record_rows[current_id] = []
+                record_rows[current_id].append(row[1:])
+
+            # To preserve the natural model order, base the data order on the result of `export_data`,
+            # which comes from a `Model.search`
+
+            # 1. Map each record ID to its group index
+            groups = [group['id:array_agg'] for group in groups_data]
+            record_to_group = defaultdict(list)
+            for group_index, ids in enumerate(groups):
+                for record_id in ids:
+                    record_to_group[record_id].append(group_index)
+
+            # 2. Iterate on the result of `export_data` and assign each data to its right group
+            grouped_rows = [[] for _ in groups]
+            for record_id, rows in record_rows.items():
+                for group_index in record_to_group[record_id]:
+                    grouped_rows[group_index].extend(rows)
+
+            # 3. Insert one leaf per group, providing the group information and its data
+            for group_info, group_rows in zip(groups_data, grouped_rows):
+                tree.insert_leaf(group_info, group_rows)
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
-            records = Model.browse(ids) if ids else Model.search(domain)
-
             export_data = records.export_data(field_names).get('datas', [])
             response_data = self.from_data(fields, columns_headers, export_data)
 
