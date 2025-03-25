@@ -365,6 +365,10 @@ class TestSalePrices(SaleCommon):
             'company_ids': [Command.set([other_company.id])],
             'name': 'E.T',
             'login': 'hohoho',
+            'group_ids': (
+                self.env.ref('sales_team.group_sale_salesman') |
+                self.env.ref('product.group_product_manager')
+            ),
         })
         with mute_logger('odoo.models.unlink'):
             self.env['res.currency.rate'].search([]).unlink()
