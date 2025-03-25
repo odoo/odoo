@@ -95,3 +95,12 @@ class TestUi(AccountTestInvoicingHttpCommon):
             'default_code': '0',
         })
         self.start_tour("/odoo/customer-invoices/new", 'test_use_product_catalog_on_invoice', login="admin")
+
+    def test_add_section_from_product_catalog_on_invoice_tour(self):
+        self.product.write({'is_favorite': True})
+        self.start_tour(
+            '/odoo/customer-invoices/new',
+            'test_add_section_from_product_catalog_on_invoice',
+            login='admin',
+            step_delay=1000,
+        )

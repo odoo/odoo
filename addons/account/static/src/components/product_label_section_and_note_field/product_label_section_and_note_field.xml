@@ -12,6 +12,7 @@
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                    t-on-keydown="onSectionOrNoteKeydown"
                     t-ref="labelNodeRef"
                 />
             </t>
@@ -24,6 +25,7 @@
                     t-att-readonly="sectionAndNoteIsReadonly"
                     t-att-value="label"
                     t-on-change="(ev) => this.updateLabel(ev.target.value)"
+                    t-on-keydown="onSectionOrNoteKeydown"
                     t-ref="labelNodeRef"
                 />
             </t>

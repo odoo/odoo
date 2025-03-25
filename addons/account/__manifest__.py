@@ -129,6 +129,7 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/helpers/*.js',
         ],
         'web.assets_tests': [
+            'account/static/src/js/tours/tour_utils.js',
             'account/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
