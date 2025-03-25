@@ -797,7 +797,11 @@ class IrCronTrigger(models.Model):
 
     @api.autovacuum
     def _gc_cron_triggers(self):
-        domain = [('call_at', '<', datetime.now() + relativedelta(weeks=-1))]
+        # active cron jobs are cleared by `_clear_schedule` when the job starts
+        domain = [
+            ('call_at', '<', datetime.now() + relativedelta(weeks=-1)),
+            ('cron_id.active', '=', False),
+        ]
         records = self.search(domain, limit=GC_UNLINK_LIMIT)
         if len(records) >= GC_UNLINK_LIMIT:
             self.env.ref('base.autovacuum_job')._trigger()
