@@ -108,10 +108,7 @@
         ],
         'mass_mailing.mailing_assets': [
             'mass_mailing/static/src/scss/mailing_portal.scss',
-            'mass_mailing/static/src/interactions/mailing_portal_subscription.js',
-            'mass_mailing/static/src/interactions/mailing_portal_subscription_blocklist.js',
-            'mass_mailing/static/src/interactions/mailing_portal_subscription_feedback.js',
-            'mass_mailing/static/src/interactions/mailing_portal_subscription_form.js',
+            'mass_mailing/static/src/interactions/subscribe.js',
             'mass_mailing/static/src/xml/mailing_portal_subscription_blocklist.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_feedback.xml',
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
