@@ -28,3 +28,26 @@ class TestWebsiteSaleProductPage(HttpCase, ProductVariantsCommon, WebsiteSaleCom
         blue_sofa.product_template_attribute_value_ids.price_extra = 20
 
         self.start_tour(red_sofa.website_url, 'website_sale_contact_us_button')
+
+    def test_product_reviews_reactions_public(self):
+        """ Check that public users can not react to reviews """
+
+        self.env["ir.ui.view"].with_context(active_test=False).search([
+            ("key", "=", "website_sale.product_comment")
+        ]).write({"active": True})
+
+        self.product_product_7 = self.env["product.product"].create({
+            "name": "Storage Box Test",
+            "standard_price": 70.0,
+            "list_price": 79.0,
+            "website_published": True,
+            "invoice_policy": "delivery",
+        })
+        self.product_product_7.product_tmpl_id.message_post(
+            body="Bad box!",
+            message_type="comment",
+            rating_value="1",
+            subtype_xmlid="mail.mt_comment"
+        )
+
+        self.start_tour("/", "website_sale_product_reviews_reactions_public", login=None)
