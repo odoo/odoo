@@ -2608,6 +2608,11 @@ class TestTourBoM(HttpCase):
             'product_qty': 1,
             'type': 'normal',
         })
+        # This product is not directly used in py tests but needed to run tours without demo data.
+        cls.component = cls.env['product.product'].create({
+            'name': 'compo test',
+            'is_storable': True,
+        })
 
     def test_mrp_bom_product_catalog(self):
         grp_uom = self.env.ref('uom.group_uom')
