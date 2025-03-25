@@ -2,6 +2,7 @@ import { BorderConfigurator } from "@html_builder/plugins/border_configurator_op
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
 import { useService } from "@web/core/utils/hooks";
+import { useState } from "@odoo/owl";
 import { useOperation } from "../core/operation_plugin";
 import {
     BaseOptionComponent,
@@ -37,6 +38,11 @@ export class OptionsContainer extends BaseOptionComponent {
         useVisibilityObserver("content", useApplyVisibility("root"));
 
         this.callOperation = useOperation();
+        this.state = useState({
+            isUpToDate: this.env.editor.shared.versionControl.hasAccessToOutdatedEl(
+                this.props.editingElement
+            ),
+        });
     }
 
     get title() {
@@ -78,5 +84,16 @@ export class OptionsContainer extends BaseOptionComponent {
                 scrollToClone: true,
             });
         });
+    }
+
+    // Version control
+    replaceElementWithNewVersion() {
+        this.callOperation(() => {
+            this.env.editor.shared.versionControl.replaceWithNewVersion(this.props.editingElement);
+        });
+    }
+    accessOutdated() {
+        this.env.editor.shared.versionControl.giveAccessToOutdatedEl(this.props.editingElement);
+        this.state.isUpToDate = true;
     }
 }
