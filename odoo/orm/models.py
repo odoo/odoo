@@ -5574,6 +5574,8 @@ class BaseModel(metaclass=MetaModel):
     @property
     def ids(self) -> list[int]:
         """ Return the list of actual record ids corresponding to ``self``. """
+        if all(self._ids):
+            return list(self._ids)  # already real records
         return list(origin_ids(self._ids))
 
     # backward-compatibility with former browse records
@@ -6227,6 +6229,8 @@ class BaseModel(metaclass=MetaModel):
     @property
     def _origin(self) -> Self:
         """ Return the actual records corresponding to ``self``. """
+        if all(self._ids):
+            return self  # already real records
         ids = tuple(origin_ids(self._ids))
         prefetch_ids = OriginIds(self._prefetch_ids)
         return self.__class__(self.env, ids, prefetch_ids)
