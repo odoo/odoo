@@ -352,6 +352,30 @@ QUnit.module('partner_autocomplete', {
         assert.strictEqual(input.value, "");
     });
 
+    QUnit.test("Can unset the partner many2one field", async function (assert) {
+        assert.expect(5);
+        const record = { id: 1, name: "Some partner", parent_id: 1 };
+        makeViewParams.serverData.models["res.partner"].records.push(record);
+        makeViewParams.resId = 1;
+        const mockRPC = makeViewParams.mockRPC;
+        makeViewParams.mockRPC = function(route, { args, method }) {
+            if (method === "web_save") {
+                assert.step("web_save");
+                assert.deepEqual(args[1].parent_id, false);
+            }
+            return mockRPC(...arguments);
+        }
+        await makeView(makeViewParams);
+        assert.strictEqual(target.querySelector("[name=parent_id] input").value, "Some partner");
+        const input = target.querySelector("[name=parent_id] input.o-autocomplete--input.o_input");
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await editInput(target.querySelector("[name=parent_id] input.o-autocomplete--input.o_input"), null, "");
+        assert.isVisible(target, ".o_form_button_save");
+        await click(target.querySelector(".o_form_button_save"));
+        assert.verifySteps(["web_save"]);
+    });
+
     QUnit.test("Hide auto complete suggestion for no create", async function (assert) {
         const partnerMakeViewParams = {
             ...makeViewParams,
