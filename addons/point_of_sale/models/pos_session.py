@@ -1090,6 +1090,9 @@ class PosSession(models.Model):
             vals.append(self._get_combine_receivable_vals(payment_method, amounts['amount'], amounts['amount_converted']))
         for payment, amounts in split_receivables_pay_later.items():
             vals.append(self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted']))
+        for val in vals:
+            # Entries related to a `pay_later` payment method should not be excluded from follow-ups.
+            val['no_followup'] = False
         data['pay_later_move_lines'] = MoveLine.create(vals)
         return data
 
@@ -1680,7 +1683,7 @@ class PosSession(models.Model):
             'domain': self._get_captured_payments_domain(),
             'context': {'search_default_group_by_payment_method': 1}
         }
-    
+
     def _get_captured_payments_domain(self):
         return [('session_id', 'in', self.ids), ('pos_order_id.state', 'in', ['paid', 'invoiced', 'done'])]
 
