@@ -70,7 +70,7 @@ class ResUsers(models.Model):
                 )
                 _logger.info("New device alert email sent for user <%s> to <%s>", user.login, user.email)
 
-    def _notify_security_setting_update_prepare_values(self, content, suggest_2fa=True, **kwargs):
+    def _notify_security_setting_update_prepare_values(self, content, *, suggest_2fa=True, **kwargs):
         """" Prepare rendering values for the 'mail.account_security_alert' qweb template
 
           :param bool suggest_2fa:

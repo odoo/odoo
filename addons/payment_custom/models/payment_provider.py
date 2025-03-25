@@ -51,7 +51,7 @@ class PaymentProvider(models.Model):
                     f'</div>'
 
     @api.model
-    def _get_removal_domain(self, provider_code, custom_mode='', **kwargs):
+    def _get_removal_domain(self, provider_code, *, custom_mode='', **kwargs):
         res = super()._get_removal_domain(provider_code, custom_mode=custom_mode, **kwargs)
         if provider_code == 'custom' and custom_mode:
             return AND([res, [('custom_mode', '=', custom_mode)]])
