@@ -13,6 +13,7 @@ import {
     onWillDestroy,
     markup,
     useExternalListener,
+    status,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
@@ -142,6 +143,11 @@ export class ImageCrop extends Component {
         await this.scrollToInvisibleImage();
         // Replacing the src with the original's so that the layout is correct.
         await loadImage(this.originalSrc, this.media);
+        if (status(this) !== "mounted") {
+            // Abort if the component has been destroyed in the meantime
+            // since `this.imageRef.el` is `null` when it is not mounted.
+            return;
+        }
         const cropperImage = this.imageRef.el;
         [cropperImage.style.width, cropperImage.style.height] = [
             this.media.width + "px",
