@@ -2,6 +2,7 @@
 
 import json
 import logging
+from werkzeug import urls
 
 from collections import defaultdict
 from datetime import timedelta
@@ -817,6 +818,18 @@ class SaleOrder(models.Model):
                 if product_msg := line.sale_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
             order.sale_warning_text = '\n'.join(warnings)
+
+    def _get_share_url(self, redirect=False, signup_partner=False, pid=None, share_token=True):
+        """ Override the method to add the display_success_msg parameter to the URL."""
+        res = super()._get_share_url(
+            redirect=redirect, signup_partner=signup_partner, pid=pid, share_token=share_token
+        )
+        if self._name == 'sale.order':
+            url = urls.url_parse(res)
+            url_params = url.decode_query()
+            url_params.update([('display_success_msg', True)])
+            res = url.replace(query=urls.url_encode(url_params)).to_url()
+        return res
 
     #=== CONSTRAINT METHODS ===#
 
