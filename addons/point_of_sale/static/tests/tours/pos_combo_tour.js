@@ -4,7 +4,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_scre
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { inLeftSide, scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
@@ -12,7 +12,7 @@ registry.category("web_tour.tours").add("PosComboPriceTaxIncludedTour", {
     steps: () =>
         [
             Dialog.confirm("Open session"),
-            ...ProductScreen.clickDisplayedProduct("Office Combo"),
+            scan_barcode("SuperCombo"),
             combo.select("Combo Product 3"),
             combo.select("Combo Product 9"),
             // Check Product Configurator is open
