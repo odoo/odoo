@@ -40,15 +40,14 @@ from textwrap import shorten
 from typing import Optional, Iterable, cast
 from unittest import TestResult
 from unittest.mock import patch, _patch, Mock
+from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 from xmlrpc import client as xmlrpclib
 
 import freezegun
 import requests
-import werkzeug.urls
 from lxml import etree, html
 from passlib.context import CryptContext
 from requests import PreparedRequest, Session
-from urllib3.util import Url, parse_url
 
 import odoo.addons.base
 import odoo.http
@@ -297,8 +296,8 @@ class BaseCase(case.TestCase):
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # allow localhost requests
         # TODO: also check port?
-        url = werkzeug.urls.url_parse(r.url)
-        if url.host in (HOST, 'localhost'):
+        url = urlsplit(r.url)
+        if url.hostname in (HOST, 'localhost'):
             return _super_send(s, r, **kw)
         if url.scheme == 'file':
             return _super_send(s, r, **kw)
@@ -1322,17 +1321,14 @@ class ChromeBrowser:
         ``protocol``
             get the full protocol
         """
-        command = '/'.join(['json', command]).strip('/')
-        url = werkzeug.urls.url_join('http://%s:%s/' % (HOST, self.devtools_port), command)
+        url = f'http://{HOST}:{self.devtools_port}/json/{command}'.rstrip('/')
         self._logger.info("Issuing json command %s", url)
         delay = 0.1
         tries = 0
         failure_info = None
         message = None
         while timeout > 0:
-            try:
-                self.chrome.send_signal(0)
-            except ProcessLookupError:
+            if self.chrome.poll() is not None:
                 message = 'Chrome crashed at startup'
                 break
             try:
@@ -1949,33 +1945,23 @@ class HttpCase(TransactionCase):
 
     def parse_http_location(self, location):
         """ Parse a Location http header typically found in 201/3xx
-        responses, return the corresponding Url object. The scheme/host
+        responses, return the corresponding parsed url object. The scheme/host
         are taken from ``base_url()`` in case they are missing from the
         header.
-
-        https://urllib3.readthedocs.io/en/stable/reference/urllib3.util.html#urllib3.util.Url
         """
         if not location:
-            return Url()
-        base_url = parse_url(self.base_url())
-        url = parse_url(location)
-        return Url(
-            scheme=url.scheme or base_url.scheme,
-            auth=url.auth or base_url.auth,
-            host=url.host or base_url.host,
-            port=url.port or base_url.port,
-            path=url.path,
-            query=url.query,
-            fragment=url.fragment,
-        )
+            return urlsplit('')
+        s = urlsplit(urljoin(self.base_url(), location))
+        # normalise query parameters
+        return s._replace(query=urlencode(parse_qsl(s.query)))
 
     def assertURLEqual(self, test_url, truth_url, message=None):
         """ Assert that two URLs are equivalent. If any URL is missing
         a scheme and/or host, assume the same scheme/host as base_url()
         """
         self.assertEqual(
-            self.parse_http_location(test_url).url,
-            self.parse_http_location(truth_url).url,
+            self.parse_http_location(test_url),
+            self.parse_http_location(truth_url),
             message,
         )
 
@@ -2129,14 +2115,14 @@ class HttpCase(TransactionCase):
             # test cursors, which uses different caches than this transaction.
             self.cr.flush()
             self.cr.clear()
-            url = werkzeug.urls.url_join(self.base_url(), url_path)
+            url = urljoin(self.base_url(), url_path)
             if watch:
-                parsed = werkzeug.urls.url_parse(url)
-                qs = parsed.decode_query()
+                parsed = urlsplit(url)
+                qs = dict(parse_qsl(parsed.query))
                 qs['watch'] = '1'
                 if debug is not False:
                     qs['debug'] = "assets"
-                url = parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+                url = urlunsplit(parsed._replace(query=urlencode(qs)))
             self._logger.info('Open "%s" in browser', url)
 
             browser.screencaster.start()
