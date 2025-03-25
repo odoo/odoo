@@ -1822,6 +1822,9 @@ class AccountTax(models.Model):
                 total_tax_rep_amounts['tax_amount_currency'] += tax_rep_data['tax_amount_currency']
                 total_tax_rep_amounts['tax_amount'] += tax_rep_data['tax_amount']
                 tax_reps_data.append(tax_rep_data)
+            
+            if not tax_reps_data:
+                continue
 
             # Distribute the delta on the repartition lines.
             sorted_tax_reps_data = sorted(
