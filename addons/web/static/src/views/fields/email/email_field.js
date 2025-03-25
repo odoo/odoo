@@ -20,9 +20,17 @@ export class EmailField extends Component {
 export const emailField = {
     component: EmailField,
     displayName: _t("Email"),
+    supportedOptions: [
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
+    ],
     supportedTypes: ["char"],
-    extractProps: ({ attrs }) => ({
-        placeholder: attrs.placeholder,
+    extractProps: ({ placeholder }) => ({
+        placeholder,
     }),
 };
 

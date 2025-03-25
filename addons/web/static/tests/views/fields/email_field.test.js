@@ -85,6 +85,21 @@ test("with placeholder", async () => {
     expect(`.o_field_email input`).toHaveAttribute("placeholder", "Placeholder");
 });
 
+test("placeholder_field shows as placeholder", async () => {
+    Contact._fields.char = fields.Char({
+        default: "My Placeholder",
+    });
+    await mountView({
+        type: "form",
+        resModel: "contact",
+        arch: `<form>
+            <field name="email" widget="email" options="{'placeholder_field' : 'char'}"/>
+            <field name="char"/>
+        </form>`,
+    });
+    expect(`.o_field_email input`).toHaveAttribute("placeholder", "My Placeholder");
+});
+
 test("trim user value", async () => {
     await mountView({
         type: "form",

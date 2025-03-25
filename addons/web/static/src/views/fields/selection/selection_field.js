@@ -98,12 +98,20 @@ export class SelectionField extends Component {
 export const selectionField = {
     component: SelectionField,
     displayName: _t("Selection"),
+    supportedOptions: [
+        {
+            label: _t("Dynamic Placeholder"),
+            name: "placeholder_field",
+            type: "field",
+            availableTypes: ["char"],
+        },
+    ],
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.data[fieldName] === false,
-    extractProps({ attrs, viewType }, dynamicInfo) {
+    extractProps({ viewType, placeholder }, dynamicInfo) {
         const props = {
             autosave: viewType === "kanban",
-            placeholder: attrs.placeholder,
+            placeholder,
             required: dynamicInfo.required,
             domain: dynamicInfo.domain,
         };

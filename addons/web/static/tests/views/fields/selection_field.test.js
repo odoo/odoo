@@ -279,6 +279,21 @@ test("selection field with placeholder", async () => {
     expect(".o_field_widget[name='trululu'] select option:first").not.toHaveClass("d-none");
 });
 
+test("placeholder_field shows as placeholder", async () => {
+    Partner._fields.char = fields.Char({
+        default: "My Placeholder",
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form>
+            <field name="trululu" widget="selection" options="{'placeholder_field' : 'char'}"/>
+            <field name="char"/>
+        </form>`,
+    });
+    expect(`.o_field_widget[name='trululu'] select option:first`).toHaveText("My Placeholder");
+});
+
 test("SelectionField in kanban view", async () => {
     await mountView({
         type: "kanban",
