@@ -566,6 +566,21 @@ export class HistoryPlugin extends Plugin {
                 }
                 case "childList": {
                     record.addedNodes.forEach((added) => {
+                        // When nodes are expected to not be observed by the
+                        // history, e.g. because they belong to a distinct
+                        // lifecycle such as interactions, some operations such
+                        // as replaceChildren might impact such a node together
+                        // with observed ones.
+                        // Marking the node with skipHistoryHack makes sure that
+                        // it does not accidentally get observed during those
+                        // operations.
+                        // TODO Find a better solution.
+                        if (
+                            added?.dataset?.skipHistoryHack ||
+                            added?.closest?.("data-skip-history-hack")
+                        ) {
+                            return;
+                        }
                         const mutation = {
                             type: "add",
                         };
@@ -588,6 +603,13 @@ export class HistoryPlugin extends Plugin {
                         this.currentStep.mutations.push(mutation);
                     });
                     record.removedNodes.forEach((removed) => {
+                        // TODO Find a better solution.
+                        if (
+                            removed?.dataset?.skipHistoryHack ||
+                            removed?.closest?.("data-skip-history-hack")
+                        ) {
+                            return;
+                        }
                         this.currentStep.mutations.push({
                             type: "remove",
                             id: this.nodeToIdMap.get(removed),

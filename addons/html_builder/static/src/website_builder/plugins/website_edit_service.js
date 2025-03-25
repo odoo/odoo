@@ -1,6 +1,7 @@
 import { registry } from "@web/core/registry";
 import { PublicRoot } from "@web/legacy/js/public/public_root";
 import { Colibri } from "@web/public/colibri";
+import { Interaction } from "@web/public/interaction";
 import { patch } from "@web/core/utils/patch";
 
 export function buildEditableInteractions(builders) {
@@ -124,6 +125,18 @@ registry.category("services").add("website_edit", {
                     },
                     applyTOut(...args) {
                         historyCallbacks.ignoreDOMMutations(() => super.applyTOut(...args));
+                    },
+                }),
+                patch(Interaction.prototype, {
+                    insert(...args) {
+                        const el = args[0];
+                        super.insert(...args);
+                        // Avoid deletion accidents.
+                        // E.g. if an interaction inserts a node into a parent
+                        // node, and an option uses replaceChildren on the
+                        // parent node, you do not want the inserted node to be
+                        // reinserted upon undo of the option's action.
+                        el.dataset.skipHistoryHack = "true";
                     },
                 })
             );
