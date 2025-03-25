@@ -4200,7 +4200,7 @@ export class OdooEditor extends EventTarget {
         const dataHtmlElement = document.createElement('data');
         dataHtmlElement.append(rangeContent);
         const odooHtml = dataHtmlElement.innerHTML.replace(/\uFEFF/g, "");
-        const odooText = selection.toString().replace(/\uFEFF/g, "");
+        const odooText = selection.toString().replace(/\uFEFF/g, "").replace(/\u00A0/g, " ");
         clipboardEvent.clipboardData.setData('text/plain', odooText);
         clipboardEvent.clipboardData.setData('text/html', odooHtml);
         clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
