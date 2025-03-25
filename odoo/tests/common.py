@@ -2687,10 +2687,9 @@ class HttpCase(TransactionCase):
         if 'error' in decoded_response:
             raise JsonRpcException(
                 code=decoded_response['error']['code'],
-                message=decoded_response['error']['data']['name']
+                message=decoded_response['error']['data']['name'],
             )
-        # workaround: JsonRPCDispatcher is broken and may send neither result nor error
-        return decoded_response.get('result')
+        return decoded_response['result']
 
 
 def no_retry(arg):

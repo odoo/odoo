@@ -115,6 +115,10 @@ class TestHttp(http.Controller):
             raise werkzeug.exceptions.BadRequest("Invalid JSON data") from exc
         return request.make_json_response(data)
 
+    @http.route('/test_http/echo-json-null', type='jsonrpc', auth='none', readonly=True)
+    def echo_json_null(self):
+        return
+
     # =====================================================
     # Models
     # =====================================================

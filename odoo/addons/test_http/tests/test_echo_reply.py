@@ -93,6 +93,18 @@ class TestHttpEchoReplyJsonNoDB(TestHttpBase):
         self.assertEqual(res.status_code, 400, res.text)
         self.assertEqual(res.text, "Invalid JSON-RPC data")
 
+    def test_echojson5_null(self):
+        payload = json.dumps({
+            'jsonrpc': '2.0',
+            'id': 1234,
+            'params': {},
+        })
+        res = self.nodb_url_open("/test_http/echo-json-null", data=payload, headers=CT_JSON)
+        res.raise_for_status()
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.headers['Content-Type'], 'application/json; charset=utf-8')
+        self.assertEqual(res.text, r'{"jsonrpc": "2.0", "id": 1234, "result": null}', "result must not be absent")
+
 
 @tagged('post_install', '-at_install')
 class TestHttpEchoReplyHttpWithDB(TestHttpBase):

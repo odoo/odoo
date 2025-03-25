@@ -48,7 +48,7 @@ export function useActionLinks({ resModel, reload }) {
                 options.onClose = reload || (() => render(component));
             }
             const action = await keepLast.add(orm.call(data.model, data.method));
-            if (action !== undefined) {
+            if (action !== null) {
                 keepLast.add(Promise.resolve(doAction(action, options)));
             }
         } else if (target.getAttribute("name")) {
