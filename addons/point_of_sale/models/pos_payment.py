@@ -100,6 +100,7 @@ class PosPayment(models.Model):
                 'account_id': accounting_partner.with_company(order.company_id).property_account_receivable_id.id,  # The field being company dependant, we need to make sure the right value is received.
                 'partner_id': accounting_partner.id,
                 'move_id': payment_move.id,
+                'no_followup': False,
             }, amounts['amount'], amounts['amount_converted'])
             is_split_transaction = payment.payment_method_id.split_transactions
             if is_split_transaction and is_reverse:
@@ -112,6 +113,7 @@ class PosPayment(models.Model):
                 'account_id': reversed_move_receivable_account_id,
                 'move_id': payment_move.id,
                 'partner_id': accounting_partner.id if is_split_transaction and is_reverse else False,
+                'no_followup': False,
             }, amounts['amount'], amounts['amount_converted'])
             self.env['account.move.line'].create([credit_line_vals, debit_line_vals])
             payment_move._post()

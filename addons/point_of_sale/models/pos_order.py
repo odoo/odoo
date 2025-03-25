@@ -891,6 +891,7 @@ class PosOrder(models.Model):
             'amount_currency': amount_currency,
             'balance': balance,
             'tax_tag_invert': not base_line_vals['is_refund'],
+            'no_followup': False,
         }
 
     def _prepare_aml_values_list_per_nature(self):
