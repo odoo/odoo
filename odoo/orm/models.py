@@ -71,7 +71,7 @@ from .fields_textual import Char
 
 from .identifiers import NewId
 from .utils import (
-    OriginIds, check_object_name, origin_ids, parse_field_expr,
+    OriginIds, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
     READ_GROUP_ALL_TIME_GRANULARITY, READ_GROUP_TIME_GRANULARITY, READ_GROUP_NUMBER_GRANULARITY,
     SUPERUSER_ID,
@@ -5576,7 +5576,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the list of actual record ids corresponding to ``self``. """
         if all(self._ids):
             return list(self._ids)  # already real records
-        return list(origin_ids(self._ids))
+        return list(OriginIds(self._ids))
 
     # backward-compatibility with former browse records
     _cr = property(lambda self: self.env.cr)
@@ -6231,7 +6231,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the actual records corresponding to ``self``. """
         if all(self._ids):
             return self  # already real records
-        ids = tuple(origin_ids(self._ids))
+        ids = tuple(OriginIds(self._ids))
         prefetch_ids = OriginIds(self._prefetch_ids)
         return self.__class__(self.env, ids, prefetch_ids)
 
