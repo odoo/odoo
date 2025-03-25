@@ -101,7 +101,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
 
     def _check_can_post(self, values):
         # Ensure a certificate is available.
-        if not self.company_id.l10n_es_tbai_certificate_id:
+        if not self.company_id._get_l10n_es_tbai_certificate_id():
             return _("Please configure the certificate for TicketBAI.")
 
         # Ensure a tax agency is available.
@@ -228,7 +228,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         return {
             'url': get_key(self.company_id.l10n_es_tbai_tax_agency, 'cancel_url_' if self.is_cancel else 'post_url_', company.l10n_es_tbai_test_env),
             'headers': {"Content-Type": "application/xml; charset=utf-8"},
-            'pkcs12_data': company.l10n_es_tbai_certificate_id,
+            'pkcs12_data': company._get_l10n_es_tbai_certificate_id(),
             'data': self.xml_attachment_id.raw,
         }
 
@@ -284,7 +284,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     }
                 }),
             },
-            'pkcs12_data': company.l10n_es_tbai_certificate_id,
+            'pkcs12_data': company._get_l10n_es_tbai_certificate_id(),
             'data': lroe_bytes,
         }
 
@@ -654,7 +654,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         self.ensure_one()
 
         company = self.company_id
-        certificate_sudo = company.sudo().l10n_es_tbai_certificate_id
+        certificate_sudo = company.sudo()._get_l10n_es_tbai_certificate_id()
         if not certificate_sudo:
             raise UserError(_('No certificate found'))
 
