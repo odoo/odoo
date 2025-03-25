@@ -42,6 +42,66 @@ export default class IndexedDB {
     }
 
     async promises(storeName, arrData, method) {
+<<<<<<< a589bb8f91c5068c836b93ab0e04b635f7f4a679
+||||||| 1ca879612fe546108fd1067839924ae8c25b2bb9
+        if (method !== "delete") {
+            const data = await this.readAll([storeName]);
+            const storeData = data[storeName];
+            if (storeData?.length > 0) {
+                for (const idx in arrData) {
+                    const data = { ...arrData[idx] };
+                    delete data.JSONuiState;
+                    delete data.date_order;
+                    delete data.write_date;
+
+                    let alreadyExists = storeData.find((item) => item.uuid === data.uuid);
+                    if (alreadyExists) {
+                        alreadyExists = { ...alreadyExists };
+                        delete alreadyExists.JSONuiState;
+                        delete alreadyExists.date_order;
+                        delete alreadyExists.write_date;
+                    }
+
+                    if (!alreadyExists || JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
+                        arrData[idx].write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+                    } else {
+                        delete arrData[idx];
+                    }
+                }
+            }
+        }
+
+=======
+        if (method !== "delete") {
+            const data = await this.readAll([storeName]);
+            const storeData = data[storeName];
+            if (storeData?.length > 0) {
+                for (const idx in arrData) {
+                    const data = { ...arrData[idx] };
+                    delete data.JSONuiState;
+                    delete data.date_order;
+                    delete data.write_date;
+
+                    let alreadyExists = storeData.find((item) => item.uuid === data.uuid);
+                    if (alreadyExists) {
+                        alreadyExists = { ...alreadyExists };
+                        delete alreadyExists.JSONuiState;
+                        delete alreadyExists.date_order;
+                        delete alreadyExists.write_date;
+                    }
+
+                    if (!alreadyExists || JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
+                        arrData[idx].write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss", {
+                            numberingSystem: "latn",
+                        });
+                    } else {
+                        delete arrData[idx];
+                    }
+                }
+            }
+        }
+
+>>>>>>> 3b79991e92534680cce97e8e5c6730fc5f5d5cfd
         const transaction = this.getNewTransaction([storeName], "readwrite");
         if (!transaction) {
             return false;
