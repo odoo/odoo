@@ -20,6 +20,7 @@ import {
     generatePreparationReceiptElement,
 } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 import { renderToElement } from "@web/core/utils/render";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -256,6 +257,42 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
             FloorScreen.hasTable("2"),
             FloorScreen.hasTable("4"),
             FloorScreen.hasTable("5"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_pos_restaurant_course", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickDisplayedProduct("Minute Maid"),
+            ProductScreen.clickCourseButton(),
+            ProductScreen.clickOrderButton(),
+            FloorScreen.clickTable("5"),
+            // Check only 2 courses are there and empty course gets removed on clicking Order button
+            {
+                trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
+            },
+            ProductScreen.clickCourseButton(),
+            Chrome.clickPlanButton(),
+            FloorScreen.isShown(),
+            FloorScreen.clickTable("5"),
+            // Check only 2 courses are there and empty course gets removed on clicking Plan button
+            {
+                trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
+            },
+            // Check empty course gets remove after fire course.
+            ProductScreen.clickCourseButton(),
+            ProductScreen.selectCourseLine("Course 2"),
+            ProductScreen.fireCourseButton(),
+            FloorScreen.clickTable("5"),
+            {
+                trigger: negate('.order-course-name:eq(2) > span:contains("Course 3")'),
+            },
         ].flat(),
 });
 
