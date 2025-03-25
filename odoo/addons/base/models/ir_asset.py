@@ -244,7 +244,7 @@ class IrAsset(models.Model):
             # this should never happen
             raise ValueError("Unexpected directive")
 
-    def _get_related_assets(self, domain):
+    def _get_related_assets(self, domain, **kwargs):
         """
         Returns a set of assets matching the domain, regardless of their
         active state. This method can be overridden to filter the results.
@@ -277,7 +277,7 @@ class IrAsset(models.Model):
 
         return root_bundle
 
-    def _get_active_addons_list(self):
+    def _get_active_addons_list(self, **kwargs):
         """Can be overridden to filter the returned list of active modules."""
         return self._get_installed_addons_list()
 

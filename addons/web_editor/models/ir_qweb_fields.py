@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
@@ -39,14 +38,14 @@ class IrQweb(models.AbstractModel):
     """
     _inherit = 'ir.qweb'
 
-    def _compile_node(self, el, compile_context, indent):
+    def _compile_node(self, el, compile_context, level):
         snippet_key = compile_context.get('snippet-key')
         template = compile_context['template']
         sub_call_key = compile_context.get('snippet-sub-call-key')
         # We only add the 'data-snippet' & 'data-name' attrib once when
         # compiling the root node of the template.
         if template not in {snippet_key, sub_call_key} or el.getparent() is not None:
-            return super()._compile_node(el, compile_context, indent)
+            return super()._compile_node(el, compile_context, level)
 
         snippet_base_node = el
         if el.tag == 't':
@@ -72,7 +71,7 @@ class IrQweb(models.AbstractModel):
         snippet_name = compile_context.get('snippet-name')
         if snippet_name and 'data-name' not in snippet_base_node.attrib:
             snippet_base_node.attrib['data-name'] = snippet_name
-        return super()._compile_node(el, compile_context, indent)
+        return super()._compile_node(el, compile_context, level)
 
     # compile directives
 

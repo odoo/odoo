@@ -455,7 +455,7 @@ class MicrosoftCalendarSync(models.AbstractModel):
         """
         raise NotImplementedError()
 
-    def _microsoft_values(self, fields_to_sync):
+    def _microsoft_values(self, fields_to_sync, initial_values=()):
         """
         Implements this method to return a dict with values formatted
         according to the Microsoft Calendar API

@@ -884,7 +884,7 @@ class ProjectTask(models.Model):
         return copied_tasks
 
     @api.model
-    def get_empty_list_help(self, help):
+    def get_empty_list_help(self, help_message):
         tname = _("task")
         project_id = self.env.context.get('default_project_id', False)
         if project_id:
@@ -896,7 +896,7 @@ class ProjectTask(models.Model):
             empty_list_help_model='project.project',
             empty_list_help_document_name=tname,
         )
-        return super().get_empty_list_help(help)
+        return super().get_empty_list_help(help_message)
 
     # ----------------------------------------
     # Case management

@@ -159,7 +159,7 @@ class ProductPricelist(models.Model):
         return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
 
     def _compute_price_rule(
-            self, products, quantity, currency=None, uom=None, date=False, compute_price=True,
+            self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
             **kwargs
     ):
         """ Low-level method - Mono pricelist, multi products

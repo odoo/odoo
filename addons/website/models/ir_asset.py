@@ -22,13 +22,13 @@ class IrAsset(models.Model):
             route_prefix = f'/web/assets/{website_id}'
         return f'{route_prefix}/{unique}/{filename}'
 
-    def _get_related_assets(self, domain, website_id=None, **params):
+    def _get_related_assets(self, domain, *, website_id=None, **params):
         if website_id:
             domain += self.env['website'].website_domain(website_id)
         assets = super()._get_related_assets(domain, **params)
         return assets.filter_duplicate(website_id)
 
-    def _get_active_addons_list(self, website_id=None, **params):
+    def _get_active_addons_list(self, *, website_id=None, **params):
         """Overridden to discard inactive themes."""
         addons_list = super()._get_active_addons_list(**params)
 

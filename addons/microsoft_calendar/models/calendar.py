@@ -496,7 +496,7 @@ class CalendarEvent(models.Model):
             return 'organizer'
         return ATTENDEE_CONVERTER_O2M.get(attendee.state, 'None')
 
-    def _microsoft_values(self, fields_to_sync, initial_values={}):
+    def _microsoft_values(self, fields_to_sync, initial_values=()):
         values = dict(initial_values)
         if not fields_to_sync:
             return values
@@ -651,8 +651,8 @@ class CalendarEvent(models.Model):
                                     "\nEither update the events/attendees or archive these events %(details)s:"
                                     "\n%(invalid_events)s", details=details, invalid_events=invalid_events))
 
-    def _microsoft_values_occurence(self, initial_values={}):
-        values = initial_values
+    def _microsoft_values_occurence(self, initial_values=()):
+        values = dict(initial_values)
         values['type'] = 'occurrence'
 
         if self.allday:
