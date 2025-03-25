@@ -4870,7 +4870,7 @@ class TestMrpOrder(TestMrpCommon):
 
     def test_update_mo_from_bom_with_kit(self):
         """
-        Test that an MO can be updated from BoM when the finished product has a kit as a component.
+        Test updating an MO from BoM when the finished product has a kit as a component.
         """
         # Test that the finished product has a kit as a component
         kit_bom_line = self.bom_3.bom_line_ids.filtered(lambda line: line.product_id.is_kits)
@@ -4891,8 +4891,99 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(self.bom_3.bom_line_ids, kit_bom_line)
         mo.action_update_bom()
         self.assertRecordValues(mo.move_raw_ids, [
-            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 2, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
-            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 3, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 4, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 6, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+        # Check propagation upon update of the kit quantity
+        kit_bom_line.product_qty = 3
+        kit_bom.bom_line_ids[0].product_qty = 4
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 12, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 9, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+        # Check with multiple kits with different UOMs
+        with Form(self.bom_3) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = self.product_5
+                bom_line.product_qty = 1
+                bom_line.product_uom_id = self.uom_dozen
+        mo.action_update_bom()
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': kit_bom.bom_line_ids[0].product_id.id, 'product_uom_qty': 60, 'product_uom': kit_bom.bom_line_ids[0].product_id.uom_id.id},
+            {'product_id': kit_bom.bom_line_ids[1].product_id.id, 'product_uom_qty': 45, 'product_uom': kit_bom.bom_line_ids[1].product_id.uom_id.id},
+        ])
+
+    def test_update_mo_from_bom_with_kit_variants(self):
+        """
+        Test updating an MO from BoM when the finished product has a kit with variants as a component.
+        """
+        # Create an attribute for variants
+        color_attribute = self.env['product.attribute'].create({
+            'name': 'Variant Color',
+            'value_ids': [
+                Command.create({'name': 'White'}),
+                Command.create({'name': 'Black'}),
+            ],
+        })
+        colors = color_attribute.value_ids
+        paint_products = [
+            self.env['product.product'].create({'name': f"{color.name} paint"})
+            for color in colors
+        ]
+        # Create kit product
+        kit_product = self.env['product.template'].create([
+            {'name': 'Painted Stick'},
+        ])
+        with Form(kit_product) as prod:
+            with prod.attribute_line_ids.new() as attr_line:
+                attr_line.attribute_id = color_attribute
+                attr_line.value_ids = colors
+        self.assertEqual(kit_product.product_variant_count, 2)
+        kit_product_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_product.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': self.product_4.product_variant_id.id, 'product_qty': 1}),
+                Command.create({'product_id': paint_products[0].product_variant_id.id, 'product_qty': 2, 'bom_product_template_attribute_value_ids': kit_product.product_variant_ids[0].product_template_variant_value_ids.ids}),
+                Command.create({'product_id': paint_products[1].product_variant_id.id, 'product_qty': 1, 'bom_product_template_attribute_value_ids': kit_product.product_variant_ids[1].product_template_variant_value_ids.ids}),
+            ],
+        })
+        self.assertEqual(len(kit_product_bom.bom_line_ids), 3)
+        # Create a MO
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.move_raw_ids), 1)
+        # Add a variant of the kit to the main BoM
+        with Form(self.bom_4) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = kit_product.product_variant_ids[0]
+                bom_line.product_qty = 1
+        # Update the MO
+        mo.action_update_bom()
+        self.assertEqual(len(mo.move_raw_ids), 3)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': self.product_1.id, 'product_qty': 1},
+            {'product_id': self.product_4.id, 'product_qty': 1},
+            {'product_id': paint_products[0].id, 'product_qty': 2},
+        ])
+        # Add a different variant of the kit to the main BoM
+        with Form(self.bom_4) as main_bom:
+            with main_bom.bom_line_ids.new() as bom_line:
+                bom_line.product_id = kit_product.product_variant_ids[1]
+                bom_line.product_qty = 1
+        # Update the MO
+        mo.action_update_bom()
+        self.assertEqual(len(mo.move_raw_ids), 4)
+        self.assertRecordValues(mo.move_raw_ids, [
+            {'product_id': self.product_1.id, 'product_qty': 1},
+            {'product_id': self.product_4.id, 'product_qty': 2},
+            {'product_id': paint_products[0].id, 'product_qty': 2},
+            {'product_id': paint_products[1].id, 'product_qty': 1},
         ])
 
     @freeze_time('2024-11-26 9:00')

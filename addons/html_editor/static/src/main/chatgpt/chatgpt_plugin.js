@@ -7,7 +7,7 @@ import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
-
+import { isContentEditable } from "@html_editor/utils/dom_info";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
@@ -41,12 +41,12 @@ export class ChatGPTPlugin extends Plugin {
                 isAvailable: (selection) => {
                     return !selection.isCollapsed && user.userId;
                 },
-                isDisabled: this.isReplaceableByAI.bind(this),
+                isDisabled: this.isNotReplaceableByAI.bind(this),
                 Component: LanguageSelector,
                 props: {
                     onSelected: (language) => this.openDialog({ language }),
                     isDisabled: (selection) => {
-                        return this.isReplaceableByAI(selection);
+                        return this.isNotReplaceableByAI(selection);
                     },
                 },
             },
@@ -55,7 +55,7 @@ export class ChatGPTPlugin extends Plugin {
                 groupId: "ai",
                 commandId: "openChatGPTDialog",
                 text: "AI",
-                isDisabled: this.isReplaceableByAI.bind(this),
+                isDisabled: this.isNotReplaceableByAI.bind(this),
             },
         ],
 
@@ -68,12 +68,12 @@ export class ChatGPTPlugin extends Plugin {
         },
     };
 
-    isReplaceableByAI(selection = this.dependencies.selection.getEditableSelection()) {
+    isNotReplaceableByAI(selection = this.dependencies.selection.getEditableSelection()) {
         const isEmpty = !selection.textContent().replace(/\s+/g, "");
-        const crossBlocks = [...selection.commonAncestorContainer.childNodes].find(
-            (el) => this.dependencies.split.isUnsplittable(el) && el.isContentEditable
+        const cannotReplace = [...selection.commonAncestorContainer.childNodes].find(
+            (el) => this.dependencies.split.isUnsplittable(el) || !isContentEditable(el)
         );
-        return crossBlocks || isEmpty;
+        return cannotReplace || isEmpty;
     }
 
     openDialog(params = {}) {

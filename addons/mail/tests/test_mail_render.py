@@ -446,7 +446,6 @@ class TestRegexRendering(common.MailCommon):
             ('''<div><p t-out="object.name"/></div>''', '<div><p>Alice</p></div>'),
             ('''<div/aa t-out="object.name"></div/aa>''', '<div>Alice</div>'),
             ('''<div/aa='x' t-out="object.name"></div/aa='x'>''', '<div>Alice</div>'),
-            ('''<55 t-out="object.name"></55>''', '&lt;55 t-out="object.name"&gt;55&gt;'),
         )
         o_qweb_render = self.env['ir.qweb']._render
         for template, expected in static_templates:
@@ -455,6 +454,12 @@ class TestRegexRendering(common.MailCommon):
                 self.assertEqual(render(template), expected)
                 self.assertFalse(qweb_render.called)
                 self.assertFalse(unsafe_eval.called)
+
+        with (patch('odoo.addons.base.models.ir_qweb.IrQWeb._render', side_effect=o_qweb_render) as qweb_render,
+                patch('odoo.addons.base.models.ir_qweb.unsafe_eval', side_effect=eval) as unsafe_eval):
+            self.assertNotIn("<55", render('''<55 t-out="object.name"></55>'''))
+            self.assertFalse(qweb_render.called)
+            self.assertFalse(unsafe_eval.called)
 
         # double check that we are able to catch the eval
         non_static_templates = (
