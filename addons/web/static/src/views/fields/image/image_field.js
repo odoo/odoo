@@ -58,14 +58,15 @@ export class ImageField extends Component {
                 "ImageField: previewImage must be provided when set on a many2one field"
             );
         }
-        if (this.props.record.fields[this.props.name].related) {
-            this.lastUpdate = DateTime.now();
+        const field = this.props.record.fields[this.props.name];
+        if (field.related?.includes(".")) {
+            this.uniqueId = DateTime.now();
             let key = this.props.value;
             onWillRender(() => {
                 const nextKey = this.props.value;
 
                 if (key !== nextKey) {
-                    this.lastUpdate = DateTime.now();
+                    this.uniqueId = DateTime.now();
                 }
 
                 key = nextKey;
@@ -89,10 +90,7 @@ export class ImageField extends Component {
     }
 
     get rawCacheKey() {
-        if (this.props.record.fields[this.props.name].related) {
-            return this.lastUpdate;
-        }
-        return this.props.record.data.write_date;
+        return this.uniqueId || this.props.record.data.write_date;
     }
 
     get sizeStyle() {
