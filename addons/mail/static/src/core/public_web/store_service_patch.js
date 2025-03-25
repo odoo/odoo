@@ -6,22 +6,24 @@ import { patch } from "@web/core/utils/patch";
 patch(Store.prototype, {
     setup() {
         super.setup(...arguments);
-        this.discuss = fields.One("DiscussApp");
+        this.discuss = fields.One("DiscussApp", {
+            compute: () => ({ activeTab: "main" }),
+            earger: true,
+        });
         /** @type {number|undefined} */
         this.action_discuss_id;
+        this.onNewMessage = this.onNewMessage.bind(this);
+    },
+    onNewMessage({ detail: { channel, message, silent } }) {
+        if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
+            return;
+        }
+        channel.notifyMessageToUser(message);
     },
     onStarted() {
         super.onStarted(...arguments);
-        this.discuss = { activeTab: "main" };
-        this.env.bus.addEventListener(
-            "discuss.channel/new_message",
-            ({ detail: { channel, message, silent } }) => {
-                if (this.env.services.ui.isSmall || message.isSelfAuthored || silent) {
-                    return;
-                }
-                channel.notifyMessageToUser(message);
-            }
-        );
+        this.env.bus.removeEventListener("discuss.channel/new_message", this.onNewMessage);
+        this.env.bus.addEventListener("discuss.channel/new_message", this.onNewMessage);
     },
 });
 

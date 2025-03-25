@@ -45,7 +45,6 @@ export class Call extends Component {
         super.setup();
         this.grid = useRef("grid");
         this.notification = useService("notification");
-        this.rtc = useService("discuss.rtc");
         this.isMobileOs = isMobileOS();
         this.ui = useService("ui");
         this.state = useState({
@@ -72,6 +71,10 @@ export class Call extends Component {
         useExternalListener(browser, "fullscreenchange", this.onFullScreenChange);
         useHotkey("shift+d", () => this.rtc.toggleDeafen());
         useHotkey("shift+m", () => this.rtc.toggleMicrophone());
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get isActiveCall() {

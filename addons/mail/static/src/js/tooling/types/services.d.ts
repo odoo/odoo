@@ -26,6 +26,7 @@ declare module "services" {
         "discuss.core.web": typeof discussCoreWeb;
         "discuss.p2p": typeof discussP2P;
         "discuss.ptt_extension": typeof pttExtensionHookService;
+        /** @deprecated */
         "discuss.rtc": typeof rtcService;
         "discuss.voice_message": typeof voiceMessageService;
         "mail.attachment_upload": typeof attachmentUploadService;

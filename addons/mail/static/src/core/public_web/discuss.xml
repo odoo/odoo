@@ -2,10 +2,14 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Discuss">
+    <t t-if="store?.exists()" t-call="mail.Discuss.main"/>
+</t>
+
+<t t-name="mail.Discuss.main">
     <t t-set="partitionedActions" t-value="threadActions.partition"/>
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': ui.isSmall }" t-ref="root">
         <DiscussSidebar t-if="!ui.isSmall and props.hasSidebar"/>
-        <div t-if="!(ui.isSmall and store.discuss.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
+        <div t-if="!(ui.isSmall and store.discuss?.activeTab !== 'main')" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 overflow-auto" t-ref="content">
             <div class="o-mail-Discuss-header px-2 d-flex flex-shrink-0 align-items-center border-bottom border-secondary z-1 flex-grow-0" t-ref="header">
                 <t t-if="thread">
                     <div t-if="['channel', 'group', 'chat'].includes(thread.channel_type)" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mx-2 my-1 bg-inherit">
@@ -100,7 +104,7 @@
                                 <t t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
                             </div>
                         </t>
-                        <div t-elif="(!ui.isSmall or store.discuss.activeTab === 'main') and store.discuss.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
+                        <div t-elif="(!ui.isSmall or store.discuss?.activeTab === 'main') and store.discuss?.hasRestoredThread" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
                             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
                         </div>
                     </t>
@@ -120,7 +124,7 @@
 <t t-name="mail.MobileMailbox">
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
-            'active o-active shadow-none': mailbox.eq(store.discuss.thread),
+            'active o-active shadow-none': mailbox.eq(store.discuss?.thread),
         }" t-on-click="mailbox.setAsDiscussThread" t-esc="mailbox.display_name"
     />
 </t>

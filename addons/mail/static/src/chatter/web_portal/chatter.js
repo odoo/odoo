@@ -6,6 +6,7 @@ import {
     onMounted,
     onWillUpdateProps,
     useChildSubEnv,
+    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -51,6 +52,16 @@ export class Chatter extends Component {
                 this.load(this.state.thread, this.requestList);
             }
         });
+        useEffect(
+            () => {
+                if (this.store.resetCount) {
+                    const { model, id } = this.state.thread;
+                    this.state.thread = this.store.Thread.insert({ model, id });
+                    this.load(this.state.thread, this.requestList);
+                }
+            },
+            () => [this.store.resetCount]
+        );
     }
 
     get afterPostRequestList() {

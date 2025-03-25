@@ -23,18 +23,18 @@ patch(MessagingMenu.prototype, {
         useEffect(
             () => {
                 if (
-                    this.store.discuss.searchTerm &&
+                    this.store.discuss?.searchTerm &&
                     this.lastSearchTerm !== this.store.discuss.searchTerm &&
                     this.state.activeIndex
                 ) {
                     this.state.activeIndex = 0;
                 }
-                if (!this.store.discuss.searchTerm) {
+                if (!this.store.discuss?.searchTerm) {
                     this.state.activeIndex = null;
                 }
-                this.lastSearchTerm = this.store.discuss.searchTerm;
+                this.lastSearchTerm = this.store.discuss?.searchTerm;
             },
-            () => [this.store.discuss.searchTerm]
+            () => [this.store.discuss?.searchTerm]
         );
         useEffect(
             () => {
@@ -52,6 +52,7 @@ patch(MessagingMenu.prototype, {
             if (
                 !this.store.inbox.isLoaded &&
                 this.store.inbox.status !== "loading" &&
+                this.store.inbox &&
                 this.store.inbox.counter !== this.store.inbox.messages.length
             ) {
                 this.store.inbox.fetchNewMessages();
@@ -65,13 +66,13 @@ patch(MessagingMenu.prototype, {
         return (
             this.threads.length > 0 ||
             (this.store.failures.length > 0 &&
-                this.store.discuss.activeTab === "main" &&
+                this.store.discuss?.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.shouldAskPushPermission &&
-                this.store.discuss.activeTab === "main" &&
+                this.store.discuss?.activeTab === "main" &&
                 !this.env.inDiscussApp) ||
             (this.canPromptToInstall &&
-                this.store.discuss.activeTab === "main" &&
+                this.store.discuss?.activeTab === "main" &&
                 !this.env.inDiscussApp)
         );
     },
@@ -84,7 +85,7 @@ patch(MessagingMenu.prototype, {
             },
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "main" && this.canPromptToInstall,
+            isShown: this.store.discuss?.activeTab === "main" && this.canPromptToInstall,
         };
     },
     get notificationRequest() {
@@ -93,13 +94,13 @@ patch(MessagingMenu.prototype, {
             displayName: _t("Turn on notifications"),
             iconSrc: this.store.odoobot.avatarUrl,
             partner: this.store.odoobot,
-            isShown: this.store.discuss.activeTab === "main" && this.shouldAskPushPermission,
+            isShown: this.store.discuss?.activeTab === "main" && this.shouldAskPushPermission,
         };
     },
     get tabs() {
         return [
             {
-                counter: this.env.inDiscussApp ? this.store.inbox.counter : undefined,
+                counter: this.env.inDiscussApp ? this.store.inbox?.counter : undefined,
                 icon: this.env.inDiscussApp ? "fa fa-inbox" : "fa fa-envelope",
                 id: "main",
                 label: this.env.inDiscussApp ? _t("Mailboxes") : _t("All"),
@@ -166,6 +167,9 @@ patch(MessagingMenu.prototype, {
         this.state.searchOpen = !this.state.searchOpen;
     },
     get counter() {
+        if (!this.store.exists() || !this.store.inbox) {
+            return 0;
+        }
         let value =
             this.store.inbox.counter +
             this.store.failures.reduce((acc, f) => acc + parseInt(f.notifications.length), 0);

@@ -145,6 +145,9 @@ export class Store extends BaseStore {
     menuThreads = fields.Many("Thread", {
         /** @this {import("models").Store} */
         compute() {
+            if (!this.discuss) {
+                return;
+            }
             /** @type {import("models").Thread[]} */
             const searchTerm = cleanTerm(this.discuss.searchTerm);
             let threads = Object.values(this.Thread.records).filter(
@@ -334,7 +337,7 @@ export class Store extends BaseStore {
         });
         await this.store.chatHub.initPromise;
         this.ChatWindow.get(thread)?.update({ autofocus: 0 });
-        this.env.services["discuss.rtc"].toggleCall(thread, { camera: true });
+        this.env.services["mail.store"].rtc.toggleCall(thread, { camera: true });
         this.openInviteThread = thread;
     }
 
@@ -620,6 +623,20 @@ export class Store extends BaseStore {
             loadMore: messages.length === this.FETCH_LIMIT,
             messages: this["mail.message"].insert(messages),
         };
+    }
+    async onReset() {
+        await super.onReset();
+        this.insert(session.storeData);
+        /**
+         * Add defaults for `self` and `settings` because in livechat there could be no user and no
+         * guest yet (both undefined at init), but some parts of the code that loosely depend on
+         * these values will still be executed immediately. Providing a dummy default is enough to
+         * avoid crashes, the actual values being filled at livechat init when they are necessary.
+         */
+        this.self ??= { id: -1, type: "guest" };
+        this.settings ??= {};
+        await this.initialize();
+        this.onStarted();
     }
 }
 Store.register();

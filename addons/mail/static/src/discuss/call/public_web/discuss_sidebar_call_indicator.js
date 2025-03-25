@@ -17,7 +17,10 @@ export class DiscussSidebarCallIndicator extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 }
 

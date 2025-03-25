@@ -22,7 +22,7 @@ const callSettingsAction = threadActionsRegistry.get("settings");
 patch(callSettingsAction, {
     condition(component) {
         return component.thread?.channel_type === "livechat"
-            ? component.env.services["discuss.rtc"].state.channel?.eq(component.thread)
+            ? component.env.services["mail.store"].rtc.state.channel?.eq(component.thread)
             : super.condition(...arguments);
     },
 });

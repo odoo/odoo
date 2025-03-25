@@ -188,6 +188,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/tests/legacy/helpers/cleanup.js',
             'web/static/tests/legacy/helpers/utils.js',
             'web/static/tests/legacy/utils.js',
+            'mail/static/tests/tours/discuss_store_reset_tour.js',
             'mail/static/tests/tours/discuss_channel_public_tour.js',
             'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
             'mail/static/tests/tours/discuss_channel_call_action.js',
