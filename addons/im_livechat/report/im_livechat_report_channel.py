@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, tools
+from odoo.tools import SQL
 
 
 class Im_LivechatReportChannel(models.Model):
@@ -41,60 +42,91 @@ class Im_LivechatReportChannel(models.Model):
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
         tools.drop_view_if_exists(self.env.cr, 'im_livechat_report_channel')
-        self.env.cr.execute("""
-            CREATE OR REPLACE VIEW im_livechat_report_channel AS (
-                SELECT
-                    C.id as id,
-                    C.uuid as uuid,
-                    C.id as channel_id,
-                    C.name as channel_name,
-                    CONCAT(L.name, ' / ', C.id) as technical_name,
-                    C.livechat_channel_id as livechat_channel_id,
-                    C.create_date as start_date,
-                    to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
-                    to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
-                    extract(dow from  C.create_date) as day_number, 
-                    EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
-                    EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
-                    count(distinct C.livechat_operator_id) as nbr_speaker,
-                    count(distinct M.id) as nbr_message,
-                    CASE 
-                        WHEN EXISTS (select distinct M.author_id FROM mail_message M
-                                        WHERE M.author_id=C.livechat_operator_id
-                                        AND M.res_id = C.id
-                                        AND M.model = 'discuss.channel'
-                                        AND C.livechat_operator_id = M.author_id)
-                        THEN 0
-                        ELSE 1
-                    END as is_without_answer,
-                    (DATE_PART('day', date_trunc('day', now()) - date_trunc('day', C.create_date)) + 1) as days_of_activity,
-                    CASE
-                        WHEN C.anonymous_name IS NULL THEN 0
-                        ELSE 1
-                    END as is_anonymous,
-                    C.country_id,
-                    CASE 
-                        WHEN rate.rating = 5 THEN 1
-                        ELSE 0
-                    END as is_happy,
-                    Rate.rating as rating,
-                    CASE
-                        WHEN Rate.rating = 1 THEN 'Unhappy'
-                        WHEN Rate.rating = 5 THEN 'Happy'
-                        WHEN Rate.rating = 3 THEN 'Neutral'
-                        ELSE null
-                    END as rating_text,
-                    CASE 
-                        WHEN rate.rating > 0 THEN 0
-                        ELSE 1
-                    END as is_unrated,
-                    C.livechat_operator_id as partner_id
-                FROM discuss_channel C
-                    JOIN mail_message M ON (M.res_id = C.id AND M.model = 'discuss.channel')
-                    JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
-                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
-                    LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
-                    WHERE C.livechat_operator_id is not null
-                GROUP BY C.livechat_operator_id, C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, Rate.rating
-            )
-        """)
+        self.env.cr.execute(
+            SQL("CREATE OR REPLACE VIEW im_livechat_report_channel AS (%s)",
+            self._query()
+        ))
+
+    def _query(self) -> SQL:
+        return SQL("%s %s %s %s", self._select(), self._from(), self._where(), self._group_by())
+
+    def _select(self) -> SQL:
+        return SQL(
+            """
+            SELECT
+                C.id as id,
+                C.uuid as uuid,
+                C.id as channel_id,
+                C.name as channel_name,
+                CONCAT(L.name, ' / ', C.id) as technical_name,
+                C.livechat_channel_id as livechat_channel_id,
+                C.create_date as start_date,
+                to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
+                to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
+                extract(dow from  C.create_date) as day_number, 
+                EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
+                EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
+                count(distinct C.livechat_operator_id) as nbr_speaker,
+                count(distinct M.id) as nbr_message,
+                CASE 
+                    WHEN EXISTS (select distinct M.author_id FROM mail_message M
+                                    WHERE M.author_id=C.livechat_operator_id
+                                    AND M.res_id = C.id
+                                    AND M.model = 'discuss.channel'
+                                    AND C.livechat_operator_id = M.author_id)
+                    THEN 0
+                    ELSE 1
+                END as is_without_answer,
+                (DATE_PART('day', date_trunc('day', now()) - date_trunc('day', C.create_date)) + 1) as days_of_activity,
+                CASE
+                    WHEN C.anonymous_name IS NULL THEN 0
+                    ELSE 1
+                END as is_anonymous,
+                C.country_id,
+                CASE 
+                    WHEN rate.rating = 5 THEN 1
+                    ELSE 0
+                END as is_happy,
+                Rate.rating as rating,
+                CASE
+                    WHEN Rate.rating = 1 THEN 'Unhappy'
+                    WHEN Rate.rating = 5 THEN 'Happy'
+                    WHEN Rate.rating = 3 THEN 'Neutral'
+                    ELSE null
+                END as rating_text,
+                CASE 
+                    WHEN rate.rating > 0 THEN 0
+                    ELSE 1
+                END as is_unrated,
+                C.livechat_operator_id as partner_id
+            """,
+        )
+
+    def _from(self) -> SQL:
+        return SQL(
+            """
+            FROM discuss_channel C
+                JOIN mail_message M ON (M.res_id = C.id AND M.model = 'discuss.channel')
+                JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
+                LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
+                LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
+            """,
+        )
+
+    def _where(self) -> SQL:
+        return SQL("WHERE C.livechat_operator_id is not null")
+
+    def _group_by(self) -> SQL:
+        return SQL(
+            """
+            GROUP BY
+                C.livechat_operator_id,
+                C.id,
+                C.name,
+                C.livechat_channel_id,
+                L.name,
+                C.create_date,
+                C.uuid,
+                Rate.rating
+            """,
+        )
