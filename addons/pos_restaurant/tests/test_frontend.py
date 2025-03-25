@@ -335,6 +335,11 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour5Actions')
 
+    def test_pos_restaurant_course(self):
+        self.pos_config.write({'printer_ids': False})
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_pos_restaurant_course')
+
     def test_preparation_printer_content(self):
             self.env['pos.printer'].create({
                 'name': 'Printer',
