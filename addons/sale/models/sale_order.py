@@ -2068,10 +2068,14 @@ class SaleOrder(models.Model):
                 res[product.id]['warning'] = product.sale_line_warn_msg
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['sale.order.line'])
         for line in self.order_line:
-            if line.display_type or line.product_id.id not in product_ids:
+            if (
+                line.display_type
+                or line.product_id.id not in product_ids
+                or line.section_line_id.id != selected_section_id
+            ):
                 continue
             grouped_lines[line.product_id] |= line
         return grouped_lines
@@ -2092,16 +2096,29 @@ class SaleOrder(models.Model):
                 or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
         )
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(
+            self,
+            product_id,
+            quantity,
+            *,
+            selected_section_id=False,
+            child_field='order_line',
+            **kwargs,
+        ):
         """ Update sale order line information for a given product or create a
         new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
+        :param int quantity: The quantity selected in the catalog.
+        :param int selected_section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  sale order and the quantity selected.
         :rtype: float
         """
         request.update_context(catalog_skip_tracking=True)
-        sol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
+        sol = self.order_line.filtered_domain([
+            ('product_id', '=', product_id),
+            ('section_line_id', '=', selected_section_id),
+        ])
         if sol:
             if quantity != 0:
                 sol.product_uom_qty = quantity
@@ -2122,9 +2139,16 @@ class SaleOrder(models.Model):
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_uom_qty': quantity,
-                'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
+                'sequence': self._get_new_line_sequence(child_field, selected_section_id),
             })
         return sol.price_unit * (1-(sol.discount or 0.0)/100.0)
+
+    def _get_section_model_info(self):
+        """ Override of `product` to return the model name and parent field for the order lines.
+
+        :return: line_model, parent_field
+        """
+        return 'sale.order.line', 'order_id'
 
     #=== TOOLING ===#
 

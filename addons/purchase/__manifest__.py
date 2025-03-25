@@ -52,6 +52,9 @@
         'web.assets_frontend': [
             'purchase/static/src/interactions/**/*',
         ],
+        'web.assets_tests': [
+            'purchase/static/tests/tours/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
