@@ -144,6 +144,15 @@ export function registerTemplate(name, url, templateString) {
     }
     templates[name] = templateString;
     info[name] = { blockId, url };
+
+    return () => {
+        delete templates[name];
+        delete info[name];
+        delete parsedTemplates[name];
+        delete parsedTemplateExtensions[name];
+        processedTemplates.delete(name);
+        registered.delete(JSON.stringify([...arguments]));
+    };
 }
 
 export function registerTemplateExtension(inheritFrom, url, templateString) {
@@ -164,6 +173,16 @@ export function registerTemplateExtension(inheritFrom, url, templateString) {
         templateString,
         url,
     });
+
+    return () => {
+        const index = templateExtensions[inheritFrom]?.[blockId]?.findIndex(
+            (ext) => ext.templateString === templateString && ext.url === url
+        );
+        if (index && index > -1) {
+            templateExtensions[inheritFrom][blockId].splice(index, 1);
+        }
+        registered.delete(JSON.stringify([...arguments]));
+    };
 }
 
 /**

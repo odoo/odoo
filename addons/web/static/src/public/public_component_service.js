@@ -1,7 +1,7 @@
 import { App } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
-import { _t } from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 
 class ComponentManager {
     constructor(env) {
@@ -10,7 +10,7 @@ class ComponentManager {
             getTemplate,
             env: env,
             dev: env.debug,
-            translateFn: _t,
+            translateFn: appTranslateFn,
             translatableAttributes: ["data-tooltip"],
         };
         /** @type {Map<HTMLElement, { app: App, mountProm: Promise<any> }>} */

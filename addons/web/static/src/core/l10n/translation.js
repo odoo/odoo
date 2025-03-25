@@ -180,3 +180,11 @@ export function __namespacedGettext(moduleName, ...args) {
     odoo.translationContext = null;
     return translatedTerms;
 }
+
+/**
+ * @param {string} str
+ * @param {string} ctx
+ */
+export function appTranslateFn(str, ctx) {
+    return __namespacedGettext(ctx, str);
+}

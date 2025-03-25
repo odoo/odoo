@@ -1,7 +1,7 @@
 import { after, destroy, getFixture } from "@odoo/hoot";
 import { queryFirst, queryOne } from "@odoo/hoot-dom";
 import { App, Component, xml } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { __namespacedGettext as _translateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
 import { getTemplate } from "@web/core/templates";
@@ -113,7 +113,9 @@ export async function mountWithCleanup(ComponentClass, options) {
         getTemplate,
         globalValues,
         test: true,
-        translateFn: _t,
+        translateFn(str, ctx) {
+            return _translateFn(ctx, str);
+        },
         warnIfNoStaticProps: true,
         ...options,
         env: env || getMockEnv() || (await makeMockEnv()),

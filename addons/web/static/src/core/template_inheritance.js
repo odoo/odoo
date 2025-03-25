@@ -2,6 +2,15 @@ const RSTRIP_REGEXP = /(?=\n[ \t]*$)/;
 let translationContext = null;
 const contextByTextNode = new Map();
 
+const TCTX = "t-translation-context";
+
+function getTranslationContext(node) {
+    if (node.hasAttribute(TCTX)) {
+        return node.getAttribute(TCTX);
+    }
+    return getTranslationContext(node.parentElement);
+}
+
 /**
  * The child nodes of operation represent new content to create before target or
  * or other elements to move before target from the target tree (tree from which target is part of).
@@ -68,12 +77,12 @@ function getXpath(operation) {
     // hasclass does not exist in XPath 1.0 but is a custom function defined server side (see _hasclass) usable in lxml.
     // Here we have to replace it by a complex condition (which is not nice).
     // Note: we assume that classes do not contain the 2 chars , and )
-    return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) => {
-        return capturedGroup
+    return xpath.replaceAll(HASCLASS_REGEXP, (_, capturedGroup) =>
+        capturedGroup
             .split(",")
             .map((c) => `contains(concat(' ', @class, ' '), ' ${c.trim().slice(1, -1)} ')`)
-            .join(" and ");
-    });
+            .join(" and ")
+    );
 }
 
 /**
@@ -128,7 +137,7 @@ function getNodes(element, operation) {
     for (const childNode of operation.childNodes) {
         if (childNode.tagName === "xpath" && childNode.getAttribute?.("position") === "move") {
             const node = getElement(element, childNode);
-            setTranslationContext(node);
+            node.setAttribute(TCTX, getTranslationContext(node));
             removeNode(node);
             nodes.push(node);
         } else {
@@ -275,7 +284,7 @@ function setTranslationContext(node) {
             }
             break;
         case Node.ELEMENT_NODE:
-            node.setAttribute("t-translation-context", translationContext);
+            node.setAttribute(TCTX, translationContext);
             break;
         case Node.COMMENT_NODE:
         default:
@@ -348,7 +357,7 @@ export function applyInheritance(root, operations, url = "") {
 export function applyContextToTextNode() {
     for (const [textNode, context] of contextByTextNode) {
         const wrapper = document.createElement("t");
-        wrapper.setAttribute("t-translation-context", context);
+        wrapper.setAttribute(TCTX, context);
         textNode.before(wrapper);
         wrapper.appendChild(textNode);
     }
