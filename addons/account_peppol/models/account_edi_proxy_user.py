@@ -105,7 +105,13 @@ class AccountEdiProxyClientUser(models.Model):
         edi_users._peppol_get_message_status()
 
     def _cron_peppol_get_participant_status(self):
+<<<<<<< 18.0
         edi_users = self.search([('proxy_type', '=', 'peppol')])
+||||||| d25c5ff80957467ad412884256069f8a086919bb
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration'])])
+=======
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['in_verification', 'sender', 'smp_registration']), ('proxy_type', '=', 'peppol')])
+>>>>>>> ff0b1e5bb99d12e6f963401dbe9c1afc00e68acb
         edi_users._peppol_get_participant_status()
 
         # throughout the registration process, we need to check the status more frequently
