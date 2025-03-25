@@ -1665,6 +1665,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, "AddMultipleSerialsAtOnce", login="pos_user")
 
+    def test_fiscal_position_tax_group_labels(self):
+        tax_1 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'price_include_override': 'tax_included',
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        tax_1.tax_group_id.pos_receipt_label = 'Tax Group 1'
+
+        tax_2 = self.env['account.tax'].create({
+            'name': 'Tax 5%',
+            'amount': 5,
+            'price_include_override': 'tax_included',
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        tax_2.tax_group_id.pos_receipt_label = 'Tax Group 2'
+
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax_1.id])],
+            'list_price': 100,
+            'available_in_pos': True,
+        })
+
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'Fiscal Position Test',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax_1.id,
+                'tax_dest_id': tax_2.id,
+            })],
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionTaxLabels', login="pos_user")
+
     def test_order_and_invoice_amounts(self):
         payment_term = self.env['account.payment.term'].create({
             'name': "early_payment_term",
