@@ -893,19 +893,27 @@ const Wysiwyg = Widget.extend({
                     // id parameters.
                     return;
                 }
-                // Modifying an image always creates a copy of the original, even if
-                // it was modified previously, as the other modified image may be used
-                // elsewhere if the snippet was duplicated or was saved as a custom one.
-                const newAttachmentSrc = await this._rpc({
-                    route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
-                    params: {
-                        res_model: resModel,
-                        res_id: parseInt(resId),
-                        data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
-                        mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
-                        name: (el.dataset.fileName ? el.dataset.fileName : null),
-                    },
-                });
+                // Frequent media changes or page reloads may trigger a save request  
+                // without removing the `o_modified_image_to_save` class, causing a traceback  
+                // on the next save since the element loses its base64 `src`.  
+                // If the image isn't already saved, a new copy is created.
+                let newAttachmentSrc = el.getAttribute('src');
+                const isImageAlreadySaved = !newAttachmentSrc || !newAttachmentSrc.startsWith("data:");
+                if (!isImageAlreadySaved) {
+                    // Modifying an image always creates a copy of the original, even if
+                    // it was modified previously, as the other modified image may be used
+                    // elsewhere if the snippet was duplicated or was saved as a custom one.
+                    newAttachmentSrc = await this._rpc({
+                        route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
+                        params: {
+                            res_model: resModel,
+                            res_id: parseInt(resId),
+                            data: (isBackground ? el.dataset.bgSrc : el.getAttribute('src')).split(',')[1],
+                            mimetype: (isBackground ? el.dataset.mimetype : el.getAttribute('src').split(":")[1].split(";")[0]),
+                            name: (el.dataset.fileName ? el.dataset.fileName : null),
+                        },
+                    });
+                }
                 el.classList.remove('o_modified_image_to_save');
                 if (isBackground) {
                     const parts = weUtils.backgroundImageCssToParts($(el).css('background-image'));
