@@ -387,8 +387,8 @@ def load_certificate():
     Send a request to Odoo with customer db_uuid and enterprise_code to get a true certificate
     """
     db_uuid = get_conf('db_uuid')
-    enterprise_code = get_conf('enterprise_code')
-    if not (db_uuid and enterprise_code):
+    enterprise_code = get_conf('enterprise_code') or ""
+    if not db_uuid:
         return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
 
     try:
