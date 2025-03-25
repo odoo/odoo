@@ -328,8 +328,7 @@ class SequenceMixin(models.AbstractModel):
                 try:
                     with mute_logger('odoo.sql_db'):
                         self[self._sequence_field] = sequence
-                        self.env.add_to_compute(self._fields['sequence_prefix'], self)
-                        self.flush_recordset([self._sequence_field, 'sequence_prefix', 'sequence_number'])
+                        self.flush_recordset([self._sequence_field])
                         break
                 except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
                     sp.rollback()
@@ -337,7 +336,9 @@ class SequenceMixin(models.AbstractModel):
         # because we are flushing, and because the business code might be flushing elsewhere (i.e. to
         # validate constraints), the fields depending on the sequence field might be protected by the
         # ORM. This is not desired, so we already reset them here.
-        self.modified([self._sequence_field, 'sequence_prefix', 'sequence_number'])
+        self._compute_split_sequence()
+        self.flush_recordset(['sequence_prefix', 'sequence_number'])
+        self.modified([self._sequence_field])
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.
