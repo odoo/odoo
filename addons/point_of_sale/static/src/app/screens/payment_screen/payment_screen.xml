@@ -3,21 +3,21 @@
 
     <t t-name="point_of_sale.PaymentScreen">
         <t t-if="ui.isSmall">
-            <div class="payment-screen screen d-flex flex-column h-100 p-2 bg-200">
+            <div class="payment-screen screen d-flex flex-column h-100 p-2 bg-200 overflow-hidden gap-2">
                 <t t-call="point_of_sale.PaymentScreenDue" />
-                <t t-call="point_of_sale.PaymentScreenMethods" />
                 <div class="d-flex flex-grow-1 flex-column overflow-y-auto gap-1">
-                    <PaymentScreenStatus order="currentOrder" />
-                    <PaymentScreenPaymentLines
-                        paymentLines="paymentLines"
-                        deleteLine.bind="deletePaymentLine"
-                        sendForceDone.bind="sendForceDone"
-                        sendPaymentReverse.bind="sendPaymentReverse"
-                        sendPaymentCancel.bind="sendPaymentCancel"
-                        sendPaymentRequest.bind="sendPaymentRequest"
-                        selectLine.bind="selectPaymentLine"
-                        updateSelectedPaymentline.bind="updateSelectedPaymentline" />
+                    <t t-call="point_of_sale.PaymentScreenMethods" />
                 </div>
+                <PaymentScreenStatus order="currentOrder" />
+                <PaymentScreenPaymentLines
+                    paymentLines="paymentLines"
+                    deleteLine.bind="deletePaymentLine"
+                    sendForceDone.bind="sendForceDone"
+                    sendPaymentReverse.bind="sendPaymentReverse"
+                    sendPaymentCancel.bind="sendPaymentCancel"
+                    sendPaymentRequest.bind="sendPaymentRequest"
+                    selectLine.bind="selectPaymentLine"
+                    updateSelectedPaymentline.bind="updateSelectedPaymentline" />
                 <t t-call="point_of_sale.PaymentScreenButtons" />
                 <div t-attf-class="d-flex switchpane gap-2 mt-2">
                     <t t-call="point_of_sale.PaymentScreenBack" />
@@ -28,8 +28,10 @@
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
                 <div class="main-content d-flex gap-2 h-100 bg-200 overflow-auto">
-                    <div class="left-content d-flex flex-column col-md-4 p-2">
-                        <t t-call="point_of_sale.PaymentScreenMethods" />
+                    <div class="left-content d-flex flex-column col-md-4 p-2 h-100 overflow-hidden gap-2">
+                        <div class="flex-grow-1 overflow-auto">
+                            <t t-call="point_of_sale.PaymentScreenMethods" />
+                        </div>
                         <t t-call="point_of_sale.PaymentScreenButtons" />
                         <Numpad class="'py-2'"  buttons="getNumpadButtons()"/>
                         <div t-attf-class="d-flex flex-row gap-2">
@@ -39,7 +41,7 @@
                     </div>
                     <div class="center-content d-flex flex-column flex-grow-1 gap-2 py-2">
                         <t t-call="point_of_sale.PaymentScreenDue" />
-                        <div class="payment-summary d-flex flex-grow-1 flex-column gap-2 overflow-y-auto justify-content-center rounded-3 bg-view">
+                        <div class="payment-summary d-flex flex-grow-1 flex-column gap-2 overflow-y-auto justify-content-center rounded-3 bg-view p-2">
                             <PaymentScreenStatus order="currentOrder" />
                             <PaymentScreenPaymentLines
                                 paymentLines="paymentLines"
