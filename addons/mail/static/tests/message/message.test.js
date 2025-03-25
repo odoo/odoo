@@ -1381,9 +1381,12 @@ test("Can remove files of message individually", async () => {
     await contains(
         ":nth-child(1 of .o-mail-Message) :nth-child(2 of .o-mail-AttachmentContainer) [title='Remove']"
     );
-    await contains(":nth-child(2 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']", {
-        count: 0,
-    });
+    await contains(
+        ":nth-child(2 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']",
+        {
+            count: 0,
+        }
+    );
     await contains(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']");
 });
 

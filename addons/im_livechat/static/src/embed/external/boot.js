@@ -22,11 +22,12 @@ odoo.livechatReady = new Deferred();
     await startServices(env);
     odoo.isReady = true;
     const target = await makeShadow(makeRoot(document.body));
-    await mount(MainComponentsContainer, target, {
+    const root = await mount(MainComponentsContainer, target, {
         env,
         getTemplate,
         translateFn: _t,
         dev: env.debug,
     });
     odoo.livechatReady.resolve();
+    odoo.__WOWL_DEBUG__ = { root };
 })();

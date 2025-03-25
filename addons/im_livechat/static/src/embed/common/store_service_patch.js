@@ -33,5 +33,17 @@ const StorePatch = {
         /** @type {boolean} */
         this.livechat_available = session.livechatData?.isAvailable;
     },
+    onStarted() {
+        super.onStarted();
+        if (this.livechat_available) {
+            const { options } = session.livechatData;
+            this.fetchStoreData("init_livechat", options.channel_id, { readonly: false });
+            if (options.chatbot_test_store) {
+                this.chatHub.initPromise.then(() => {
+                    this.insert(options.chatbot_test_store);
+                });
+            }
+        }
+    },
 };
 patch(Store.prototype, StorePatch);

@@ -23,7 +23,7 @@ const threadPatch = {
         return this.recipientsCount === this.recipients.length;
     },
     computeIsDisplayed() {
-        if (this.store.discuss.isActive && !this.store.env.services.ui.isSmall) {
+        if (this.store.discuss?.isActive && !this.store.env.services.ui.isSmall) {
             return this.eq(this.store.discuss.thread);
         }
         return super.computeIsDisplayed();
@@ -84,6 +84,6 @@ const threadPatch = {
             partner_ids: [this.store.self.id],
         });
         this.store.insert(data);
-    }
+    },
 };
 patch(Thread.prototype, threadPatch);
