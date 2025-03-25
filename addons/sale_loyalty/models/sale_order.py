@@ -599,6 +599,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         command_list = []
         for vals, line in zip(reward_vals, old_lines):
+            if vals['product_id'] == line.product_id.id:
+                vals['name'] = line.name  # Preserve custom description
             command_list.append((Command.UPDATE, line.id, vals))
         if len(reward_vals) > len(old_lines):
             command_list.extend((Command.CREATE, 0, vals) for vals in reward_vals[len(old_lines):])
