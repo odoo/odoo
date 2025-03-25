@@ -150,7 +150,7 @@ export class ModelFieldSelectorPopover extends Component {
         return this.props.showDebugInput ?? this.props.isDebugMode;
     }
 
-    filter(fieldDefs, path) {
+    async filter(fieldDefs, path) {
         const filteredKeys = Object.keys(fieldDefs).filter((k) =>
             this.props.filter(fieldDefs[k], path)
         );
@@ -164,7 +164,7 @@ export class ModelFieldSelectorPopover extends Component {
         this.state.page.selectedName = fieldDef.name;
         const { resModel, fieldDefs } = modelsInfo.at(-1);
         this.openPage(
-            new Page(resModel, this.filter(fieldDefs, this.state.page.path), {
+            new Page(resModel, await this.filter(fieldDefs, this.state.page.path), {
                 previousPage: this.state.page,
                 isDebugMode: this.props.isDebugMode,
             })
@@ -184,7 +184,7 @@ export class ModelFieldSelectorPopover extends Component {
     async loadPages(resModel, path) {
         if (typeof path !== "string" || !path.length) {
             const fieldDefs = await this.fieldService.loadFields(resModel);
-            return new Page(resModel, this.filter(fieldDefs, path), {
+            return new Page(resModel, await this.filter(fieldDefs, path), {
                 isDebugMode: this.props.isDebugMode,
             });
         }
@@ -194,7 +194,7 @@ export class ModelFieldSelectorPopover extends Component {
                 throw new Error(`Invalid model name: ${resModel}`);
             case "path": {
                 const { resModel, fieldDefs } = modelsInfo[0];
-                return new Page(resModel, this.filter(fieldDefs, path), {
+                return new Page(resModel, await this.filter(fieldDefs, path), {
                     selectedName: path,
                     isDebugMode: this.props.isDebugMode,
                 });
@@ -204,7 +204,7 @@ export class ModelFieldSelectorPopover extends Component {
                 for (let index = 0; index < names.length; index++) {
                     const name = names[index];
                     const { resModel, fieldDefs } = modelsInfo[index];
-                    page = new Page(resModel, this.filter(fieldDefs, path), {
+                    page = new Page(resModel, await this.filter(fieldDefs, path), {
                         previousPage: page,
                         selectedName: name,
                         isDebugMode: this.props.isDebugMode,
