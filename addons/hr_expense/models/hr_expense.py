@@ -1176,6 +1176,11 @@ class HrExpense(models.Model):
         self._message_set_main_attachment_id(self.env["ir.attachment"].browse(kwargs['attachment_ids'][-1:]), force=True)
 
     @api.model
+    def _get_untitled_expense_name(self):
+        """ Done in a specific function to be called by hr_expense_extract to keep the same translation """
+        return _("Untitled Expense")
+
+    @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
             Create the expenses from files.
@@ -1198,7 +1203,7 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             vals = {
-                'name': _("Untitled Expense %s", format_date(self.env, fields.Date.context_today(self))),
+                'name':  f"{self._get_untitled_expense_name()} {format_date(self.env, fields.Date.context_today(self))}",
                 'price_unit': 0,
                 'product_id': product.id,
             }
