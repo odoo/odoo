@@ -132,14 +132,36 @@ export class PosOrder extends Base {
                 ? 1
                 : -1;
 
-        const baseLines = orderLines.map((line) =>
-            accountTaxHelpers.prepare_base_line_for_taxes_computation(
+        const baseLines = orderLines.map((line) => {
+            const originalTaxes = Array.isArray(line.tax_ids)
+                ? line.tax_ids.map((tax) => tax.raw)
+                : [];
+
+            const preparedBaseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
                 line.prepareBaseLineForTaxesComputationExtraValues({
                     quantity: documentSign * line.qty,
                 })
-            )
-        );
+            );
+
+            const originalPriceIncludeTax = originalTaxes.find(
+                (tax) => tax.price_include && tax.amount > 0
+            );
+            const hasZeroTaxNow = preparedBaseLine.tax_ids.some((tax) => tax.amount === 0);
+
+            if (
+                originalPriceIncludeTax &&
+                hasZeroTaxNow &&
+                originalPriceIncludeTax.amount_type === "percent"
+            ) {
+                const originalTaxRate = originalPriceIncludeTax.amount / 100;
+                const newUnitPrice = preparedBaseLine.price_unit / (1 + originalTaxRate);
+                preparedBaseLine.price_unit = newUnitPrice;
+            }
+
+            return preparedBaseLine;
+        });
+
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
 
