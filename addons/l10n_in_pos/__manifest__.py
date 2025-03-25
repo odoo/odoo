@@ -25,6 +25,9 @@
             'l10n_in_pos/static/src/**/*',
             'l10n_in_pos/static/src/customer_display/customer_display_adapter.js',
         ],
+        'web.assets_tests': [
+            'l10n_in_pos/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
