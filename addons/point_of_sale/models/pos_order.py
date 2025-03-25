@@ -857,6 +857,7 @@ class PosOrder(models.Model):
                 'amount_currency': amount_currency,
                 'balance': balance,
                 'tax_tag_invert': not base_line_vals['is_refund'],
+                'no_followup': False,
             })
             total_amount_currency += amount_currency
             total_balance += balance
