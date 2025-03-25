@@ -29,7 +29,10 @@
                         <t t-name="menu">
                             <div class="container">
                                 <a type="object" name="action_view_rating" class="dropdown-item" role="menuitem">Ratings</a>
-                                <a type="open" class="dropdown-item" role="menuitem">Configure Channel</a>
+                                <a type="open" class="dropdown-item" role="menuitem">
+                                    <span groups="im_livechat.im_livechat_group_manager">Configure Channel</span>
+                                    <span groups="!im_livechat.im_livechat_group_manager">View Channel</span>
+                                </a>
                             </div>
                         </t>
                         <t t-name="card" class="p-0 row g-0">
@@ -44,7 +47,7 @@
                                     </div>
                                     <div>
                                         <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-primary">Leave</button>
-                                        <button t-else="" name="action_join" type="object" class="btn btn-secondary">Join</button>
+                                        <button t-else="" name="action_join" type="object" class="btn btn-secondary" groups="im_livechat.im_livechat_group_user">Join</button>
                                     </div>
                                 </div>
                                 <footer class="pt-0">
@@ -117,7 +120,7 @@
                                         Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
                                     </p>
                             </page>
-                            <page string="Options" name="options">
+                            <page string="Options" name="options" groups="im_livechat.im_livechat_group_manager">
                                 <group>
                                     <group string="Livechat Button">
                                         <field name="button_text" string="Notification text" help="Text to display on the notification"/>
@@ -146,11 +149,11 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Channel Rules" name="channel_rules">
+                            <page string="Channel Rules" name="channel_rules" groups="im_livechat.im_livechat_group_manager">
                                 <field name="rule_ids" colspan="2"/>
                                 <div class="text-muted" colspan="2">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</div>
                             </page>
-                            <page string="Widget" name="configuration_widget">
+                            <page string="Widget" name="configuration_widget" groups="im_livechat.im_livechat_group_manager">
                                 <div class="alert alert-warning mt4 mb16" role="alert" invisible="web_page">
                                     Save your Channel to get your configuration widget.
                                 </div>
