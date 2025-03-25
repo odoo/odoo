@@ -32,6 +32,7 @@ patch(Navbar.prototype, {
         return this.canClick() && this.pos.showScreen("TicketScreen");
     },
     onClickPlanButton() {
+        this.pos.getOrder()?.cleanCourses(); //remove empty course on sync
         return this.canClick() && this.pos.showScreen("FloorScreen");
     },
     get mainButton() {
