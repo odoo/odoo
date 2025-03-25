@@ -730,12 +730,11 @@ action = {
                 <!-- searchpanel -->
                 <searchpanel>
                     <field name="categ_id"
-                           string="Product Category"
+                           string="Categories"
                            icon="fa-th-list"/>
-                    <field name="product_template_attribute_value_ids"
-                           string="Attributes"
+                    <field name="product_tag_ids"
+                           string="Tags"
                            icon="fa-th-list"
-                           domain="[('ptav_active', '=', True), ('product_tmpl_id.active', '=', True)]"
                            enable_counters="1"
                            select="multi"/>
                 </searchpanel>

@@ -87,6 +87,11 @@ class PurchaseOrderLine(models.Model):
     product_template_attribute_value_ids = fields.Many2many(related='product_id.product_template_attribute_value_ids', readonly=True)
     product_no_variant_attribute_value_ids = fields.Many2many('product.template.attribute.value', string='Product attribute values that do not create variants', ondelete='restrict')
     purchase_line_warn_msg = fields.Text(related='product_id.purchase_line_warn_msg')
+    section_line_id = fields.Many2one(
+        comodel_name='purchase.order.line',
+        compute='_compute_section_line_id',
+        store=True,
+    )
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
@@ -388,6 +393,17 @@ class PurchaseOrderLine(models.Model):
         if self.product_uom_id.id != self.product_id.uom_id.id:
             price_unit *= self.product_id.uom_id.factor / self.product_uom_id.factor
         return price_unit
+
+    @api.depends('order_id.order_line.sequence')
+    def _compute_section_line_id(self):
+        for order, lines in self.grouped('order_id').items():
+            current_section_line = False
+            for line in lines.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    current_section_line = line
+                    line.section_line_id = False
+                else:
+                    line.section_line_id = current_section_line
 
     def action_add_from_catalog(self):
         order = self.env['purchase.order'].browse(self.env.context.get('order_id'))

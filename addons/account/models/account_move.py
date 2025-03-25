@@ -2671,23 +2671,39 @@ class AccountMove(models.Model):
                 )
         return product_infos
 
-    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['account.move.line'])
         for line in self.line_ids:
-            if line.display_type == 'product' and line.product_id.id in product_ids:
+            if (
+                line.section_line_id.id == selected_section_id
+                and line.display_type == 'product'
+                and line.product_id.id in product_ids
+            ):
                 grouped_lines[line.product_id] |= line
         return grouped_lines
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(
+            self,
+            product_id,
+            quantity,
+            *,
+            selected_section_id=False,
+            child_field='line_ids',
+            **kwargs,
+        ):
         """ Update account_move_line information for a given product or create a
         new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
         :param int quantity: The quantity selected in the catalog
+        :param int selected_section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  sale order and the quantity selected.
         :rtype: float
         """
-        move_line = self.line_ids.filtered(lambda line: line.product_id.id == product_id)
+        move_line = self.line_ids.filtered_domain([
+            ('product_id', '=', product_id),
+            ('section_line_id', '=', selected_section_id),
+        ])
         if move_line:
             if quantity != 0:
                 move_line.quantity = quantity
@@ -2705,6 +2721,7 @@ class AccountMove(models.Model):
                 'move_id': self.id,
                 'quantity': quantity,
                 'product_id': product_id,
+                'sequence': self._get_new_line_sequence(child_field, selected_section_id),
             })
         return move_line.price_unit
 
@@ -2714,6 +2731,27 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.state == 'cancel'
+
+    def _get_section_model_info(self):
+        """ Override of `product` to return the model name and parent field for the move lines.
+
+        :return: line_model, parent_field
+        """
+        return 'account.move.line', 'move_id'
+
+    def _is_line_valid_for_section_line_count(self, line):
+        """ Override of `product` to check if a line is valid for inclusion in the section's line
+            count.
+
+        :param recordset line: A record of an order line.
+        :return: True if this line is a valid, else False.
+        :rtype: bool
+        """
+        return (
+            line.product_id
+            and line.product_id.product_tmpl_id.type != 'combo'
+            and line.quantity > 0
+        )
 
     # -------------------------------------------------------------------------
     # EARLY PAYMENT DISCOUNT

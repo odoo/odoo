@@ -1,28 +1,101 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <templates id="template" xml:space="preserve">
-    <t t-name="ProductCatalogSearchPanel.FiltersGroup" t-inherit="web.SearchPanel.FiltersGroup" t-inherit-mode="primary">
-        <li t-foreach="[...values.keys()]" position="replace">
-            <li t-foreach="[...this.state.sectionOfAttributes.keys()]" t-as="attrName" t-key="attrName"
-                class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 o_cursor_pointer"
-                t-att-class="{ 'ps-2' : isChildList }">
-                <t t-set="attrCount" t-value="this.state.sectionOfAttributes.get(attrName).get('count')"/>
-                <t t-set="attrIds" t-value="this.state.sectionOfAttributes.get(attrName).get('ids')"/>
-                <div class="form-check w-100">
-                    <input type="checkbox"
-                           t-attf-id="{{ section.id }}_input_{{ attrName }}"
-                           class="form-check-input"
-                           t-on-click="ev => this.toggleSectionFilterValue(section.id, attrIds, ev)"/>
-                    <label class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 o_cursor_pointer"
-                           t-attf-for="{{ section.id }}_input_{{ attrName }}"
-                           t-att-title="(group and group.tooltip) or false">
-                        <span class="o_search_panel_label_title text-truncate" t-esc="attrName"/>
-                        <span t-if="section.enableCounters and attrCount gt 0"
-                              class="o_search_panel_counter text-muted mx-2 small"
-                              t-esc="attrCount"/>
-                    </label>
-                </div>
-            </li>
-        </li>
+    <t
+        t-name="product.SearchPanelContent"
+        t-inherit="web.SearchPanelContent"
+        t-inherit-mode="primary"
+    >
+        <section position="before">
+            <section t-if="showSections" class="o_search_panel_sections mt-5">
+                <header class="d-flex align-items-center cursor-default gap-2 mb-3">
+                    <i class="fa fa-filter"/>
+                    <span class="text-uppercase fw-bold">Sections</span>
+                    <div class="d-flex align-items-center ms-auto">
+                        <span class="me-2">Filter</span>
+                        <div class="form-check form-switch mb-0">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                t-att-checked="selectedSection.filtered ? true : false"
+                                t-on-click="() => this.setSelectedSection(
+                                    selectedSection.sectionId, !selectedSection.filtered
+                                )"
+                            />
+                        </div>
+                    </div>
+                </header>
+                <ul class="list-group d-block">
+                    <li
+                        draggable="true"
+                        t-foreach="this.state.sectionOfSections.keys()"
+                        t-as="secId"
+                        t-key="secId"
+                        t-att-class="'list-group-item p-0 mb-1 border-0 cursor-pointer ' + (
+                            selectedSection.sectionId == secId ? 'o_selected_section' : ''
+                        )"
+                        t-on-dragstart="(e) => onDragStart(secId, e)"
+                        t-on-dragover="(e) => onDragOver(e)"
+                        t-on-drop="(e) => this.onDrop(secId, e)"
+                    >
+                        <div class="d-flex align-items-center">
+                            <t t-set="section" t-value="this.state.sectionOfSections.get(secId)"/>
+                            <span
+                                t-if="secId"
+                                class="o_row_handle oi oi-draggable ui-sortable-handle"
+                            />
+                            <i
+                                t-else=""
+                                class="fa fa-pencil"
+                                t-on-click="() => this.enableSectionInput('top')"
+                            />
+                            <input
+                                t-if="secId === false and this.state.isAddingSection === 'top'"
+                                class="ms-2 o_section_input"
+                                type="text"
+                                t-model="this.state.newSectionName"
+                                t-on-keydown="onSectionInputKeydown"
+                                t-on-blur="createSection"
+                            />
+                            <div
+                                t-else=""
+                                class="w-100 ms-2 d-flex align-items-center justify-content-between overflow-hidden"
+                                t-on-click="() => this.setSelectedSection(
+                                    secId, selectedSection.filtered
+                                )"
+                                t-att-title="section.name"
+                            >
+                                <span class="o_section_name text-truncate" t-out="section.name"/>
+                                <span class="mx-2 text-muted" t-out="section.line_count"/>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <input
+                    t-if="this.state.isAddingSection === 'bottom'"
+                    class="o_section_input py-1"
+                    type="text"
+                    placeholder="Enter a description"
+                    t-model="this.state.newSectionName"
+                    t-on-keydown="onSectionInputKeydown"
+                    t-on-blur="createSection"
+                />
+                <button
+                    t-else=""
+                    class="btn btn-link px-0 py-1"
+                    type="button"
+                    t-on-click="() => this.enableSectionInput('bottom')"
+                >
+                    + Add Section
+                </button>
+            </section>
+        </section>
+    </t>
+
+    <t t-name="product.SearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+        <t t-call="web.SearchPanel.Regular" position="attributes">
+            <attribute name="t-call">product.SearchPanelContent</attribute>
+        </t>
     </t>
 </templates>

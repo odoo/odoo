@@ -2,7 +2,6 @@
 
 from collections import defaultdict
 from datetime import timedelta
-
 from markupsafe import Markup
 
 from odoo import api, fields, models
@@ -306,6 +305,11 @@ class SaleOrderLine(models.Model):
         string='Tax calculation rounding method', readonly=True)
     company_price_include = fields.Selection(related="company_id.account_price_include")
     sale_line_warn_msg = fields.Text(related='product_id.sale_line_warn_msg')
+    section_line_id = fields.Many2one(
+        comodel_name='sale.order.line',
+        compute='_compute_section_line_id',
+        store=True,
+    )
 
     #=== COMPUTE METHODS ===#
 
@@ -1129,6 +1133,17 @@ class SaleOrderLine(models.Model):
         for line in self:
             # line.ids checks whether it's a new record not yet saved
             line.product_uom_readonly = line.ids and line.state in ['sale', 'cancel']
+
+    @api.depends('order_id.order_line.sequence')
+    def _compute_section_line_id(self):
+        for order, lines in self.grouped('order_id').items():
+            current_section_line = False
+            for line in lines.sorted('sequence'):
+                if line.display_type == 'line_section':
+                    current_section_line = line
+                    line.section_line_id = False
+                else:
+                    line.section_line_id = current_section_line
 
     #=== CONSTRAINT METHODS ===#
 

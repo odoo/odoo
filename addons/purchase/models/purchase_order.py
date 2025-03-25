@@ -1130,10 +1130,14 @@ class PurchaseOrder(models.Model):
             res[product.id] |= self._get_product_price_and_data(product)
         return res
 
-    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, selected_section_id=False, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['purchase.order.line'])
         for line in self.order_line:
-            if line.display_type or line.product_id.id not in product_ids:
+            if (
+                line.display_type
+                or line.product_id.id not in product_ids
+                or line.section_line_id.id != selected_section_id
+            ):
                 continue
             grouped_lines[line.product_id] |= line
         return grouped_lines
@@ -1230,16 +1234,29 @@ class PurchaseOrder(models.Model):
         for line, date in updated_dates:
             line._update_date_planned(date)
 
-    def _update_order_line_info(self, product_id, quantity, **kwargs):
+    def _update_order_line_info(
+            self,
+            product_id,
+            quantity,
+            *,
+            selected_section_id=False,
+            child_field='order_line',
+            **kwargs,
+        ):
         """ Update purchase order line information for a given product or create
         a new one if none exists yet.
         :param int product_id: The product, as a `product.product` id.
+        :param int quantity: The quantity selected in the catalog.
+        :param int selected_section_id: The id of section selected in the catalog.
         :return: The unit price of the product, based on the pricelist of the
                  purchase order and the quantity selected.
         :rtype: float
         """
         self.ensure_one()
-        pol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
+        pol = self.order_line.filtered_domain([
+            ('product_id', '=', product_id),
+            ('section_line_id', '=', selected_section_id),
+        ])
         if pol:
             if quantity != 0:
                 pol.product_qty = quantity
@@ -1254,12 +1271,22 @@ class PurchaseOrder(models.Model):
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_qty': quantity,
-                'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
+                'sequence': self._get_new_line_sequence(child_field, selected_section_id),
             })
             if pol.selected_seller_id:
                 # Fix the PO line's price on the seller's one.
                 pol.price_unit = pol.selected_seller_id.price_discounted
         return pol.price_unit_discounted
+
+    def _create_order_section(self, child_field, name, position, **kwargs):
+        return super()._create_order_section(child_field, name, position, product_qty=0, **kwargs)
+
+    def _get_section_model_info(self):
+        """ Override of `product` to return the model name and parent field for the order lines.
+
+        :return: line_model, parent_field
+        """
+        return 'purchase.order.line', 'order_id'
 
     def _create_update_date_activity(self, updated_dates):
         note = Markup('<p>%s</p>\n') % _('%s modified receipt dates for the following products:', self.partner_id.name)

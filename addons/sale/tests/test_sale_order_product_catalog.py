@@ -31,3 +31,11 @@ class TestSaleOrderProductCatalog(HttpCase):
             'sale_catalog',
             login="admin",
         )
+
+    def test_add_section_from_product_catalog_on_sale_order_tour(self):
+        self.env['product.template'].create({'name': "Test Product", 'is_favorite': True})
+        self.start_tour(
+            '/web#action=sale.action_quotations',
+            'test_add_section_from_product_catalog_on_sale_order',
+            login='admin',
+        )
