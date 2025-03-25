@@ -29,7 +29,7 @@
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
                 <div class="main-content d-flex gap-2 h-100 bg-100 overflow-auto">
-                    <div class="left-content d-flex flex-column col-md-4 p-2 border-end bg-white">
+                    <div class="left-content d-flex flex-column col-md-4 p-2 border-end bg-white overflow-y-auto">
                         <t t-call="point_of_sale.PaymentScreenMethods" />
                         <t t-call="point_of_sale.PaymentScreenButtons" />
                         <Numpad class="'my-2'"  buttons="getNumpadButtons()"/>

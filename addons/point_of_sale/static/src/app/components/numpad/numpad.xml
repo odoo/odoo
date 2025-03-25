@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
   <t t-name="point_of_sale.Numpad">
-    <div t-attf-class="d-grid numpad numpad-{{buttons.length / 4}}-cols {{props.class}} overflow-hidden">
+    <div t-attf-class="d-grid numpad numpad-{{buttons.length / 4}}-cols {{props.class}}">
       <t t-foreach="buttons.map((b) => typeof b === 'object' ? b : { value: b })"  t-as="button" t-key="button.value">
         <span t-if="Object.keys(button).length === 0"/>
         <button 
