@@ -15,14 +15,14 @@ class PosOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
+        new_vals_list = [{k: v for k, v in vals.items() if k != 'combo_parent_uuid'} for vals in vals_list]
+        records = super().create(new_vals_list)
+        for i, vals in enumerate(vals_list):
             if (vals.get('combo_parent_uuid')):
-                vals.update([
-                    ('combo_parent_id', self.search([('uuid', '=', vals.get('combo_parent_uuid'))]).id)
-                ])
-            if 'combo_parent_uuid' in vals:
-                del vals['combo_parent_uuid']
-        return super().create(vals_list)
+                records[i].update({
+                    'combo_parent_id': self.search([('uuid', '=', vals.get('combo_parent_uuid'))]).id,
+                })
+        return records
 
     def write(self, vals):
         if (vals.get('combo_parent_uuid')):
