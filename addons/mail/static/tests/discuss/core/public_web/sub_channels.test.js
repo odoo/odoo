@@ -120,6 +120,25 @@ test("create sub thread from existing message (slow network)", async () => {
     });
 });
 
+test("Shows 'message is deleted' on sub-thread without name from empty message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["mail.message"].create({
+        body: "hey there",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".dropdown-item:contains('Delete')");
+    await click("button", { text: "Confirm" });
+    await click(".o-mail-Message [title='Expand']");
+    await click("[title='Create Thread']");
+    await contains(".o-mail-Discuss-threadName", { value: "This message has been removed" });
+});
+
 test("create sub thread from sub-thread list", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });

@@ -1268,7 +1268,7 @@ class DiscussChannel(models.Model):
             "goto_end": Markup("</a>"),
             "goto_all": Markup("<a href='#' data-oe-type='sub-channels-menu'>"),
             "goto_all_end": Markup("</a>"),
-            "thread_name": sub_channel.name,
+            "thread_name": sub_channel.name or _("This message has been removed"),
         }
         self.message_post(
             body=notification, message_type="notification", subtype_xmlid="mail.mt_comment"
