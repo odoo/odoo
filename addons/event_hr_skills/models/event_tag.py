@@ -6,4 +6,4 @@ from odoo import fields, models
 class EventTagCategory(models.Model):
     _inherit = 'event.tag.category'
 
-    show_on_resume = fields.Boolean("Show on Resume", help="Display events with this tag on employee resumes")
+    resume_line_type_id = fields.Many2one('hr.resume.line.type', "Type of corresponding resume lines")

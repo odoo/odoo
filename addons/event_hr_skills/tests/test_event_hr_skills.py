@@ -18,7 +18,7 @@ class TestEventHrSkills(common.TransactionCase):
         })
         cls.training_category_tag = cls.env['event.tag.category'].create({
             'name': 'Training',
-            'show_on_resume': True,
+            'resume_line_type_id': cls.env.ref('hr_skills.resume_type_experience').id,
             'tag_ids': [
                 Command.create({'name': 'Sponsored MOOC'}),
                 Command.create({'name': 'Internal Training'}),
@@ -42,7 +42,7 @@ class TestEventHrSkills(common.TransactionCase):
         return registration
 
     def test_attending_creates_resume_line(self):
-        """ Check if an employee attends a ``show_on_resume`` tagged event,
+        """ Check if an employee attends a ``_show_on_resume()`` event,
             a resume line is created.
         """
         registration = self.env['event.registration'].create({
@@ -73,14 +73,14 @@ class TestEventHrSkills(common.TransactionCase):
         self.assertEqual(len(registration), 1)
 
     def test_show_on_resume(self):
-        """ Check that un/setting the ``show_on_resume`` field affects the line
+        """ Check that un/setting the ``resume_line_type_id`` field affects the line
         """
         registration = self._register_employee()
 
-        self.training_category_tag.show_on_resume = False
+        self.training_category_tag.resume_line_type_id = False
         self.assertEqual(0, len(registration.resume_line_ids), "Resume line should have been deleted")
 
-        self.training_category_tag.show_on_resume = True
+        self.training_category_tag.resume_line_type_id = self.env.ref('hr_skills.resume_type_experience')
         self.assertEqual(1, len(registration.resume_line_ids))
 
     def test_tag_ids(self):

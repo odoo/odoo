@@ -7,10 +7,10 @@ class HrResumeLine(models.Model):
     _inherit = 'hr.resume.line'
 
     display_type = fields.Selection(selection_add=[('event', 'Event')])
-    event_registration_id = fields.Many2one('event.registration', ondelete='cascade')
+    event_registration_id = fields.Many2one('event.registration', ondelete='cascade', index=True)
     event_id = fields.Many2one(
         'event.event', string="Event",
-        domain = [('tag_ids.category_id', 'any', [('show_on_resume', '=', 'True')])],
+        domain = [('tag_ids.category_id', 'any', [('resume_line_type_id', '!=', False)])],
     )
 
     def _create_event_registrations(self):
@@ -71,3 +71,5 @@ class HrResumeLine(models.Model):
         self.date_start = self.event_id.date_begin
         self.date_end = self.event_id.date_end
         self.name = self.event_id.name
+        if line_types := self.event_id.tag_ids.category_id.resume_line_type_id:
+            self.line_type_id = line_types[0]

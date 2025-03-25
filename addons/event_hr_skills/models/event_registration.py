@@ -12,14 +12,14 @@ class EventRegistration(models.Model):
         self.ensure_one()
         return (
             self.state == 'done'
-            and any(self.event_id.tag_ids.category_id.mapped('show_on_resume'))
+            and any(self.event_id.tag_ids.category_id.resume_line_type_id)
         )
 
     def _regenerate_resume_lines(self):
         create_vals_list = []
         lines_to_unlink = self.env['hr.resume.line']
 
-        def line_vals(registration, employee):
+        def line_vals(registration, employee, line_type):
             return {
                 'employee_id': employee.id,
                 'event_registration_id': registration.id,
@@ -27,7 +27,7 @@ class EventRegistration(models.Model):
                 'name': registration.event_id.name,
                 'date_start': registration.event_id.date_begin,
                 'date_end': registration.event_id.date_end,
-                'display_type': 'event',
+                'line_type_id': line_type.id,
             }
 
         for registration in self:
@@ -41,8 +41,9 @@ class EventRegistration(models.Model):
 
             if self.env.context.get('no_create_resume_lines'):
                 continue
+            line_type = self.event_id.tag_ids.category_id.resume_line_type_id[0]
             create_vals_list.extend([
-                line_vals(registration, employee)
+                line_vals(registration, employee, line_type)
                 for employee in registration.partner_id.employee_ids
                 if employee not in registration.resume_line_ids.employee_id
             ])
@@ -51,7 +52,7 @@ class EventRegistration(models.Model):
         if create_vals_list:
             self.env['hr.resume.line'].create(create_vals_list)
 
-    @api.depends('partner_id.employee_ids', 'event_id.tag_ids.category_id.show_on_resume')
+    @api.depends('partner_id.employee_ids', 'event_id.tag_ids.category_id.resume_line_type_id')
     def _compute_resume_line_ids(self):
         self._regenerate_resume_lines()
 

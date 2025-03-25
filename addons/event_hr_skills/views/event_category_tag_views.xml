@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="event.event_tag_category_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='right_preface']" position="inside">
-                    <field name="show_on_resume" widget="boolean_toggle"/>
+                    <field name="resume_line_type_id"/>
             </xpath>
             <xpath expr="//group[@id='right_preface']" position="attributes">
                 <attribute name='invisible'>0</attribute>
@@ -21,7 +21,7 @@
         <field name="inherit_id" ref="event.event_tag_category_view_tree"/>
         <field name="arch" type="xml">
             <field name="tag_ids" position="after">
-                <field name="show_on_resume" optional="show"/>
+                <field name="resume_line_type_id" optional="hide"/>
             </field>
         </field>
     </record>
