@@ -150,6 +150,7 @@ class IrAttachment(models.Model):
         * pdf_reader:       The pdf_reader if type is pdf.
         * attachment:       The associated ir.attachment if any
         * sort_weight:      The associated weigth used for sorting the arrays
+        * originator_pdf:   The origin pdf filename in case of an embedded xml file
         """
         to_process = []
 

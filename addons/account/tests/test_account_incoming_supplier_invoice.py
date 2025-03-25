@@ -313,8 +313,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
             self._assert_extend_with_attachments({pdf1: 1, xml1: 2}, origin='journal')
             self.assertEqual(decoded_files, {pdf1.name, xml1.name})
         with self.with_success_decoder() as decoded_files:
-            self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='mail_alias')
-            self.assertEqual(decoded_files, {xml1.name})
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 2}, origin='mail_alias')
+            self.assertEqual(decoded_files, {pdf1.name, xml1.name})
         with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({xml1: 1, xml2: 1}, origin='chatter')
             self.assertEqual(decoded_files, {xml1.name})
@@ -345,7 +345,14 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
             self._assert_extend_with_attachments({pdf1: 1, xml1: 2}, origin='journal')
             self.assertEqual(decoded_files, {xml_filename, xml1.name})
-        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
+        with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1) as xml_filename:
+            self._assert_extend_with_attachments({pdf1: 1, xml1: 2}, origin='mail_alias')
+            self.assertEqual(decoded_files, {xml_filename, xml1.name})
+        from odoo.tools.pdf import OdooPdfFileReader
+        with self.with_success_decoder() as decoded_files, \
+             patch.object(OdooPdfFileReader, 'getAttachments', return_value=[(xml1.name, '<test2></test2>')]), \
+             patch.object(self.registry['account.move'], '_get_ubl_cii_builder_from_xml_tree', return_value=self.env['account.edi.xml.cii']):
+            #the attachments are an XML and a PDF, that contains the same XML. In that case, we expect only one invoice to be created, with both files attached
             self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {xml1.name})
 

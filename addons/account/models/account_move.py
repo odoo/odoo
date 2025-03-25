@@ -3180,6 +3180,8 @@ class AccountMove(models.Model):
         invoices = self
         current_invoice = self
         passed_file_data_list = []
+        parsed_xml = {}
+        parsed_pdf = {}
         for file_data in file_data_list:
 
             # Rogue binaries from mail alias are skipped and unlinked.
@@ -3193,22 +3195,18 @@ class AccountMove(models.Model):
                 continue
 
             # The invoice has already been decoded by an embedded file.
-            if attachments_by_invoice.get(file_data['attachment']):
-                add_file_data_results(file_data, attachments_by_invoice[file_data['attachment']])
+            if invoice_created_by_embedded_file := attachments_by_invoice.get(file_data['attachment']) or parsed_pdf.get(file_data['filename']):
+                add_file_data_results(file_data, invoice_created_by_embedded_file)
                 close_file(file_data)
                 continue
 
-            # When receiving multiple files, if they have a different type, we supposed they are all linked
-            # to the same invoice.
-            if (
-                passed_file_data_list
-                and passed_file_data_list[-1]['filename'] != file_data['filename']
-                and passed_file_data_list[-1]['sort_weight'] != file_data['sort_weight']
-            ):
-                add_file_data_results(file_data, invoices[-1])
+            # The invoice has already been decoded by an XML file, and we're now checking a PDF that contains the same XML
+            if file_data['type'] == 'xml' and file_data.get('originator_pdf') and parsed_xml.get(file_data['filename']):
+                add_file_data_results(file_data, parsed_xml[file_data['filename']])
                 close_file(file_data)
                 continue
 
+            # we already created a record and we don't allow more
             if passed_file_data_list and not new:
                 add_file_data_results(file_data, invoices[-1])
                 close_file(file_data)
@@ -3230,6 +3228,12 @@ class AccountMove(models.Model):
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)
+
+                        # keep track of what has been already decoded
+                        if file_data['type'] == 'xml':
+                            parsed_xml[file_data['filename']] = invoice
+                        if file_data.get('originator_pdf'):
+                            parsed_pdf[file_data['originator_pdf'].name] = invoice
 
                 except RedirectWarning:
                     raise
