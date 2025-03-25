@@ -6,6 +6,7 @@ import { ImageCrop } from "./image_crop";
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
     static dependencies = ["selection", "history", "imagePostProcess"];
+    static shared = ["openCropImage"];
     resources = {
         user_commands: [
             {
@@ -29,19 +30,15 @@ export class ImageCropPlugin extends Plugin {
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
-    async openCropImage() {
-        const selectedImg = this.getSelectedImage();
+    async openCropImage(selectedImg, imageCropProps) {
+        selectedImg = selectedImg || this.getSelectedImage();
         if (!selectedImg) {
             return;
         }
-
-        registry.category("main_components").add("ImageCropping", {
+        return registry.category("main_components").add("ImageCropping", {
             Component: ImageCrop,
             props: {
                 media: selectedImg,
-                onClose: () => {
-                    registry.category("main_components").remove("ImageCropping");
-                },
                 onSave: async (newDataset) => {
                     // todo: should use the mutex if there is one?
                     const updateImageAttributes =
@@ -53,6 +50,11 @@ export class ImageCropPlugin extends Plugin {
                     this.dependencies.history.addStep();
                 },
                 document: this.document,
+                ...imageCropProps,
+                onClose: () => {
+                    registry.category("main_components").remove("ImageCropping");
+                    imageCropProps.onClose?.();
+                },
             },
         });
     }
