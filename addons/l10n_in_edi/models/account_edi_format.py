@@ -323,11 +323,10 @@ class AccountEdiFormat(models.Model):
             # government does not accept negative in qty or unit price
             unit_price_in_inr = unit_price_in_inr * -1
             quantity = quantity * -1
-        PrdDesc = line.product_id.display_name or line.name
         AccountMove = self.env['account.move']
         return {
             "SlNo": str(index),
-            "PrdDesc": PrdDesc.replace("\n", ""),
+            "PrdDesc": line.name.replace("\n", ""),
             "IsServc": line.product_id.type == "service" and "Y" or "N",
             "HsnCd": AccountMove._l10n_in_extract_digits(line.l10n_in_hsn_code),
             "Qty": AccountMove._l10n_in_round_value(quantity or 0.0, 3),
