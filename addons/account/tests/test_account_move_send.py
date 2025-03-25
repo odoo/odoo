@@ -1120,3 +1120,51 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         }
         results = wizard._get_sending_settings()
         self.assertDictEqual(results, expected_results)
+
+    def test_pdf_report_id(self):
+        """
+        Test the field 'pdf_report_id' from 'account.move.send.wizard' and so the
+        '_get_default_pdf_report_id'method from 'account.move.send'.
+        The rules to determine the pdf report should be :
+        - 1st: if a default report is set on the partner, use that one
+        - 2nd: if a default report is set on the journal, use that one
+        - 3rd: otherwise, use the first one
+        """
+
+        # Test with only 1 report
+        invoice = self.init_invoice('out_invoice', partner=self.partner_a, amounts=[300], post=True)
+        default_report = invoice._get_available_invoice_template_pdf_report_ids()[0]
+        wizard = self.create_send_and_print(invoice)
+        self.assertEqual(default_report, wizard.pdf_report_id)
+
+        # Test with 2 reports and second one is the default for the partner
+        second_report = self.env['ir.actions.report'].create({
+            'name': 'Second report',
+            'model': 'account.move',
+            'report_name': 'test_account_move_send.second_report',
+            'is_invoice_report': True,
+        })
+        # before default assignment, we still get the first report
+        wizard = self.create_send_and_print(invoice)
+        self.assertEqual(default_report, wizard.pdf_report_id)
+        # after default assignment, we get the assigned report
+        self.partner_a.invoice_template_pdf_report_id = second_report
+        wizard = self.create_send_and_print(invoice)
+        self.assertEqual(second_report, wizard.pdf_report_id)
+
+        # Test with 3 reports, and third one is default for journal
+        third_report = self.env['ir.actions.report'].create({
+            'name': 'Third report',
+            'model': 'account.move',
+            'report_name': 'test_account_move_send.third_report',
+            'is_invoice_report': True,
+        })
+        self.company_data['default_journal_sale'].invoice_template_pdf_report_id = third_report
+        invoice2 = self.init_invoice('out_invoice', partner=self.partner_b, post=True, amounts=[1000], journal=self.company_data['default_journal_sale'])
+        wizard = self.create_send_and_print(invoice2)
+        self.assertEqual(third_report, wizard.pdf_report_id)
+
+        # Test with 3 reports, the second one is default for partner and the third one is default for journal
+        invoice3 = self.init_invoice('out_invoice', partner=self.partner_a, post=True, amounts=[300], journal=self.company_data['default_journal_sale'])
+        wizard = self.create_send_and_print(invoice3)
+        self.assertEqual(second_report, wizard.pdf_report_id)

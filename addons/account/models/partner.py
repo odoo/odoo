@@ -480,17 +480,8 @@ class ResPartner(models.Model):
             partner.days_sales_outstanding = ((partner.credit / total_invoiced_tax_included) * days_since_oldest_invoice) if total_invoiced_tax_included else 0
 
     def _compute_available_invoice_template_pdf_report_ids(self):
-        moves = self.env['account.move']
-
-        for move_type in ['out_invoice', 'out_refund', 'out_receipt']:
-            moves += self.env['account.move'].new({'move_type': move_type})
-
-        available_reports = moves._get_available_action_reports()
-
-        if not available_reports:
-            raise UserError(_("There is no template that applies to invoices."))
-
-        self.available_invoice_template_pdf_report_ids = available_reports
+        for partner in self:
+            partner.available_invoice_template_pdf_report_ids = self.env['account.move']._get_available_invoice_template_pdf_report_ids()
 
     def _get_company_currency(self):
         for partner in self:
