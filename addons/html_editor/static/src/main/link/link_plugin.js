@@ -9,7 +9,13 @@ import {
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
-import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
+import {
+    childNodeIndex,
+    DIRECTIONS,
+    leftPos,
+    nodeSize,
+    rightPos,
+} from "@html_editor/utils/position";
 import { prepareUpdate } from "@html_editor/utils/dom_state";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
 import { isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
@@ -665,6 +671,30 @@ export class LinkPlugin extends Plugin {
                 return;
             }
         }
+        const normalizeCursorAtEdgeOfLink = (node, offset, link) => {
+            if (link && node.textContent === "\uFEFF" && closestElement(node, "A") === link) {
+                const edge = isPositionAtEdgeofLink(link, childNodeIndex(node));
+                if (edge) {
+                    const oldNode = node;
+                    [node, offset] =
+                        edge === "start"
+                            ? [node.nextSibling, 0]
+                            : [node.previousSibling, nodeSize(node.previousSibling)];
+                    cursors.update((cursor) => {
+                        if (cursor.node === oldNode) {
+                            [cursor.node, cursor.offset] = [node, offset];
+                        }
+                    });
+                }
+            }
+            return [node, offset];
+        };
+        [anchorNode, anchorOffset] = normalizeCursorAtEdgeOfLink(
+            anchorNode,
+            anchorOffset,
+            startLink
+        );
+        [focusNode, focusOffset] = normalizeCursorAtEdgeOfLink(focusNode, focusOffset, endLink);
         const removeEmptyLinksAround = (node) => {
             if (!node.parentElement?.isContentEditable) {
                 return;

@@ -1,6 +1,7 @@
-import { describe, test } from "@odoo/hoot";
-import { testEditor } from "../_helpers/editor";
+import { describe, expect, test } from "@odoo/hoot";
+import { setupEditor, testEditor } from "../_helpers/editor";
 import { unlinkFromPopover, unlinkByCommand, unlinkFromToolbar } from "../_helpers/user_actions";
+import { getContent, setSelection } from "../_helpers/selection";
 
 describe("range collapsed, remove by popover unlink button", () => {
     test("should remove the link if collapsed range at the end of a link", async () => {
@@ -276,6 +277,39 @@ describe("range not collapsed", () => {
                 },
                 contentAfter: '<p>[ab<a contenteditable="false" href="exist">cd</a>ef]</p>',
             });
+        });
+        test("should be able to remove link if selection has FEFF character", async () => {
+            const { el } = await setupEditor(
+                '<p><a href="google.com" class="btn btn-primary">[]test</a></p>'
+            );
+            const link = el.querySelector("a");
+            const firstFeffChar = link.firstChild;
+            const secondFeffChar = link.lastChild;
+            setSelection({
+                anchorNode: firstFeffChar,
+                anchorOffset: 0,
+                focusNode: secondFeffChar,
+                focusOffset: 1,
+            });
+            await unlinkFromToolbar();
+            expect(getContent(el)).toBe("<p>[test]</p>");
+        });
+        test("should be able to remove link if selection has FEFF character (2)", async () => {
+            const { el } = await setupEditor(
+                '<p><a href="google.com" class="btn btn-primary">[]test</a></p>'
+            );
+            const link = el.querySelector("a");
+            const firstFeffChar = link.firstChild;
+            const textNode = firstFeffChar.nextSibling;
+            const secondFeffChar = link.lastChild;
+            setSelection({
+                anchorNode: secondFeffChar,
+                anchorOffset: 1,
+                focusNode: textNode,
+                focusOffset: 0,
+            });
+            await unlinkFromToolbar();
+            expect(getContent(el)).toBe("<p>]test[</p>");
         });
     });
 });
