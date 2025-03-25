@@ -144,7 +144,7 @@ publicWidget.registry.websiteSaleCartNavigation = publicWidget.Widget.extend({
      */
     destroy() {
         this.resizeObserver?.disconnect();
-        super.destroy();
+        this._super.apply(this, arguments);
     },
 });
 
