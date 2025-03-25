@@ -714,6 +714,21 @@
                                     string="Amount"
                                     column_invisible="parent.company_price_include == 'tax_excluded'"
                                     invisible="is_downpayment"/>
+                                <!-- Optional amounts columns -->
+                                <field
+                                    name="price_total"
+                                    string="Tax Incl."
+                                    column_invisible="parent.company_price_include == 'tax_included'"
+                                    invisible="is_downpayment"
+                                    optional="hide"
+                                />
+                                <field
+                                    name="price_subtotal"
+                                    string="Tax Excl."
+                                    column_invisible="parent.company_price_include == 'tax_excluded'"
+                                    invisible="is_downpayment"
+                                    optional="hide"
+                                />
                             </list>
                             <kanban class="o_kanban_mobile">
                                 <field name="display_type"/>
