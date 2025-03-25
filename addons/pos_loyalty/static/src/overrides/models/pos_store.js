@@ -93,6 +93,16 @@ patch(PosStore.prototype, {
                         (reward.reward_type !== "product" ||
                             (reward.reward_type == "product" && !reward.multi_product))
                     ) {
+                        if (
+                            (reward.reward_type == "product" &&
+                                reward.program_id.applies_on !== "both") ||
+                            (reward.program_id.applies_on == "both" && reward.reward_product_qty)
+                        ) {
+                            this.addLineToCurrentOrder({
+                                product_id: reward.reward_product_id,
+                                qty: reward.reward_product_qty || 1,
+                            });
+                        }
                         order._applyReward(reward, coupon_id);
                         changed = true;
                     }
@@ -124,7 +134,8 @@ patch(PosStore.prototype, {
      */
     async updatePrograms() {
         const order = this.get_order();
-        if (!order) {
+        // 'order.delivery_provider_id' check is used for UrbanPiper orders (as loyalty points and rewards are not allowed for UrbanPiper orders)
+        if (!order || order.delivery_provider_id) {
             return;
         }
         const changesPerProgram = {};

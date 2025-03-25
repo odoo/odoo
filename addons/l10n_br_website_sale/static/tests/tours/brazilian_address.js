@@ -55,6 +55,9 @@ registry.category("web_tour.tours").add("test_brazilian_address", {
         },
         tourUtils.goToCheckout(),
         {
+            trigger: "form[data-company-country-code=BR]:has(#o_city_id:hidden)",
+        },
+        {
             content: 'Input a zip first',
             trigger: 'input[name="zip"]',
             run: 'fill 83490-000',

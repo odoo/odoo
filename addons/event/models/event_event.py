@@ -623,9 +623,11 @@ class EventEvent(models.Model):
         sold_out_events = []
         for event in self:
             if event.seats_limited and event.seats_max and event.seats_available < minimal_availability:
-                sold_out_events.append(
-                    (_('- "%(event_name)s": Missing %(nb_too_many)i seats.',
-                        event_name=event.name, nb_too_many=-event.seats_available)))
+                sold_out_events.append(_(
+                    '- "%(event_name)s": Missing %(nb_too_many)i seats.',
+                    event_name=event.name,
+                    nb_too_many=minimal_availability - event.seats_available,
+                ))
         if sold_out_events:
             raise ValidationError(_('There are not enough seats available for:')
                                   + '\n%s\n' % '\n'.join(sold_out_events))

@@ -14,6 +14,17 @@ class AccountMove(models.Model):
         help="The pos order that was reverted after closing the session to create an invoice for it.")
     pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
 
+    @api.depends('tax_cash_basis_created_move_ids', 'pos_session_ids')
+    def _compute_always_tax_exigible(self):
+        super()._compute_always_tax_exigible()
+        # The pos closing move does not create caba entries (anymore); we set the tax values directly on the closing move.
+        # (But there may still be old closing moves that used caba entries from previous versions.)
+        for move in self:
+            if move.always_tax_exigible or move.tax_cash_basis_created_move_ids:
+                continue
+            if move.pos_session_ids:
+                move.always_tax_exigible = True
+
     def _stock_account_get_last_step_stock_moves(self):
         stock_moves = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):

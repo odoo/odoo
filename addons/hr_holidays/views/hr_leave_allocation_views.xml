@@ -270,7 +270,7 @@
         <field name="priority">16</field>
         <field name="arch" type="xml">
             <list string="Allocation Requests" sample="1">
-                <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_user" readonly="state in ['refuse', 'validate']"/>
+                <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_employee" readonly="state in ['refuse', 'validate']"/>
                 <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
                 <field name="holiday_status_id" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
                 <field name="name" string="Title" optional="hide"/>
@@ -377,10 +377,11 @@
                     </t>
                     <t t-name="card" class="flex-row">
                         <aside>
-                            <field name="employee_id"
-                                widget="image"
-                                options="{'preview_image': 'avatar_128'}"
-                                class="o_image_64_cover float-start mr4"/>
+                            <field name="write_date" invisible="1"/>
+                            <img t-att-src="'/web/image/hr.employee.public/' + record.employee_id.raw_value + '/avatar_128'
+                                    + '?unique=' + record.write_date.raw_value"
+                                class="o_image_64_cover float-start mb-2 me-2" 
+                                alt="Employee's image"/>
                         </aside>
                         <main class="w-100 ps-3">
                             <div class="flex-row mb-1">

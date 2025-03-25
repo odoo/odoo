@@ -1075,7 +1075,8 @@ class ProductCategory(models.Model):
             category.parent_route_ids = routes - category.route_ids
 
     def _search_total_route_ids(self, operator, value):
-        categ_ids = self.filtered_domain([('total_route_ids', operator, value)]).ids
+        categories = self.env['product.category'].sudo().search([])
+        categ_ids = categories.filtered_domain([('total_route_ids', operator, value)]).ids
         return [('id', 'in', categ_ids)]
 
     @api.depends('route_ids', 'parent_route_ids')

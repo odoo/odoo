@@ -26,18 +26,20 @@ const {
 
 /**
  * @param {any[]} args
+ * @param {string} [prefix]
+ * @param {string} [prefixColor]
  */
-const styledArguments = (args) => {
-    const prefix = `%c[HOOT]%c`;
-    const styles = [`color:#ff0080;font-weight:bold`, ""];
+const styledArguments = (args, prefix, prefixColor) => {
+    const fullPrefix = `%c[${prefix || "HOOT"}]%c`;
+    const styles = [`color:${prefixColor || "#ff0080"};font-weight:bold`, ""];
     let firstArg = args.shift() ?? "";
     if (typeof firstArg === "function") {
         firstArg = firstArg();
     }
     if (typeof firstArg === "string") {
-        args.unshift(`${prefix} ${firstArg}`, ...styles);
+        args.unshift(`${fullPrefix} ${firstArg}`, ...styles);
     } else {
-        args.unshift(prefix, ...styles, firstArg);
+        args.unshift(fullPrefix, ...styles, firstArg);
     }
     return args;
 };
@@ -144,7 +146,7 @@ export const logger = {
         if (logger.level < LOG_LEVELS.debug) {
             return;
         }
-        $debug(...styledArguments(args));
+        $debug(...styledArguments(args, "DEBUG", "#ffb000"));
     },
     /**
      * @param {import("./test").Test} test

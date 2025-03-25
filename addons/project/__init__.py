@@ -35,3 +35,8 @@ def _project_post_init(env):
 
     # Create analytic plan fields on project model for existing plans
     env['account.analytic.plan'].search([])._sync_plan_column('project.project')
+
+def _project_uninstall_hook(env):
+    """Since the m2m table for the project share wizard's `partner_ids` field is not dropped at uninstall, it is
+    necessary to ensure it is emptied, else re-installing the module will fail due to foreign keys constraints."""
+    env['project.share.wizard'].search([("partner_ids", "!=", False)]).partner_ids = False

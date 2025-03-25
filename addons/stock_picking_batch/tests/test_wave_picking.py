@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -238,6 +238,7 @@ class TestBatchPicking(TransactionCase):
         move = lines.move_id
         self.assertEqual(len(move), 1)
         all_db_pickings = self.env['stock.picking'].search([])
+        all_db_pickings.write({'scheduled_date': '2025-01-01 00:00:00'})
         res_dict = lines.action_open_add_to_wave()
         res_dict['context'] = {'active_model': 'stock.move.line', 'active_ids': lines.ids}
         self.assertEqual(res_dict.get('res_model'), 'stock.add.to.wave')
@@ -258,6 +259,8 @@ class TestBatchPicking(TransactionCase):
         self.assertTrue(lines.batch_id == wave)
         new_all_db_picking = self.env['stock.picking'].search([])
         self.assertEqual(len(all_db_pickings) + 1, len(new_all_db_picking))
+        new_picking = new_all_db_picking - all_db_pickings
+        self.assertEqual(new_picking.scheduled_date, fields.Datetime.to_datetime('2025-01-01 00:00:00'))
 
     def test_wave_split_move(self):
         lines = self.picking_internal.move_ids.filtered(lambda m: m.product_id == self.productB).move_line_ids[0:2]
