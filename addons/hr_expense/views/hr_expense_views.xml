@@ -423,10 +423,10 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <!-- Search -->
-                    <field name="name" filter_domain="[('name', '=like', self)]" string="Expense"/>
-                    <field name="department_id" filter_domain="[('department_id.name', '=like', self)]"/>
-                    <field name="company_id" filter_domain="[('company_id.name', '=like', self)]" groups="base.group_multi_company"/>
-                    <field name="employee_id" filter_domain="[('employee_id.name', '=like', self)]"/>
+                    <field name="name" filter_domain="[('name', 'ilike', self)]" string="Expense"/>
+                    <field name="department_id" filter_domain="[('department_id.name', 'ilike', self)]"/>
+                    <field name="company_id" filter_domain="[('company_id.name', 'ilike', self)]" groups="base.group_multi_company"/>
+                    <field name="employee_id" filter_domain="[('employee_id.name', 'ilike', self)]"/>
 
                     <!-- Filters -->
                     <filter string="My Expenses" name="my_open_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
