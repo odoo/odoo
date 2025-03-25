@@ -1,5 +1,6 @@
 import { Builder } from "@html_builder/builder";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
+import { VersionControlPlugin } from "@html_builder/core/version_control_plugin";
 import { EditInteractionPlugin } from "@html_builder/website_builder/plugins/edit_interaction_plugin";
 import { WebsiteSessionPlugin } from "@html_builder/website_builder/plugins/website_session_plugin";
 import { WebsiteBuilder } from "@html_builder/website_preview/website_builder_action";
@@ -65,6 +66,7 @@ export async function setupWebsiteBuilder(
         loadIframeBundles = false,
         loadAssetsFrontendJS = false,
         hasToCreateWebsite = true,
+        versionControl = false,
         styleContent,
         headerContent = "",
         beforeWrapwrapContent = "",
@@ -178,6 +180,14 @@ export async function setupWebsiteBuilder(
     if (snippets) {
         patchWithCleanup(IrUiView.prototype, {
             render_public_asset: () => getSnippetView(snippets),
+        });
+    }
+
+    if (!versionControl) {
+        patchWithCleanup(VersionControlPlugin.prototype, {
+            hasAccessToOutdatedEl() {
+                return true;
+            },
         });
     }
 
