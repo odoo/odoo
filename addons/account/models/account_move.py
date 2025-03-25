@@ -335,6 +335,13 @@ class AccountMove(models.Model):
         ],
         string='Audit Trail Messages',
     )
+    no_followup = fields.Boolean(
+        string="No Follow-Up",
+        compute='_compute_no_followup',
+        inverse='_inverse_no_followup',
+        readonly=False,
+        help="Exclude this journal entry from follow-up reports."
+    )
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
@@ -2171,6 +2178,23 @@ class AccountMove(models.Model):
         if operator not in ('in', '<', '<='):
             return NotImplemented
         return [('line_ids', 'any', [('reconciled', '=', False), ('payment_date', operator, value)])]
+
+    @api.depends('line_ids.no_followup')
+    def _compute_no_followup(self):
+        for move in self:
+            if move.is_invoice():
+                move.no_followup = move.line_ids.filtered(
+                    lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
+                )[0].no_followup
+            else:
+                move.no_followup = True
+
+    def _inverse_no_followup(self):
+        for move in self:
+            if move.is_invoice():
+                move.line_ids.filtered(
+                    lambda line: line.account_type in ('asset_receivable', 'liability_payable'),
+                ).no_followup = move.no_followup
 
     # -------------------------------------------------------------------------
     # SEARCH METHODS
