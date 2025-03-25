@@ -384,6 +384,10 @@ class HrEmployee(models.Model):
             return self.browse(ctx.get('default_employee_id'))
         return self.env.user.employee_id
 
+    # this function is meant to be overridden by hr_holidays_cash_out module
+    def _get_consumed_cash_out(self, leave_types, allocations_per_employee_type, allocations_leaves_consumed, to_recheck_leaves_per_leave_type):
+        pass
+
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
         employees = self or self._get_contextual_employee()
         leaves_domain = [
@@ -560,6 +564,16 @@ class HrEmployee(models.Model):
                         leave_type_data[False]['remaining_leaves'] = 0
                         if leave.state == 'validate':
                             leave_type_data[False]['leaves_taken'] += allocated_time
+
+        self.with_context(
+            ignored_cash_out_ids=self.env.context.get("ignored_cash_out_ids"),
+        )._get_consumed_cash_out(
+            leave_types,
+            allocations_per_employee_type,
+            allocations_leaves_consumed,
+            to_recheck_leaves_per_leave_type,
+        )
+
         for employee in to_recheck_leaves_per_leave_type:
             for leave_type in to_recheck_leaves_per_leave_type[employee]:
                 content = to_recheck_leaves_per_leave_type[employee][leave_type]
