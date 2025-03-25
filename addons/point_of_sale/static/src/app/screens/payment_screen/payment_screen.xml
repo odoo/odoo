@@ -29,6 +29,7 @@
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
                 <div class="main-content d-flex gap-2 h-100 bg-100 overflow-auto">
+<<<<<<< 8e6caf4d5045473f2887b910ceb67d7066585f50
                     <div class="left-content d-flex flex-column col-md-4 p-2 h-100 overflow-hidden gap-2">
                         <div class="flex-grow-1 overflow-auto">
                             <t t-call="point_of_sale.PaymentScreenMethods" />
@@ -37,6 +38,17 @@
                             <t t-call="point_of_sale.PaymentScreenButtons" />
                             <Numpad class="'my-2'"  buttons="getNumpadButtons()"/>
                         </div>
+||||||| 42d2a44023474f92005bd11d9628de66327d2ba6
+                    <div class="left-content d-flex flex-column col-md-4 p-2 border-end bg-view">
+                        <t t-call="point_of_sale.PaymentScreenMethods" />
+                        <t t-call="point_of_sale.PaymentScreenButtons" />
+                        <Numpad class="'my-2'"  buttons="getNumpadButtons()"/>
+=======
+                    <div class="left-content d-flex flex-column col-md-4 p-2 border-end bg-view overflow-y-auto">
+                        <t t-call="point_of_sale.PaymentScreenMethods" />
+                        <t t-call="point_of_sale.PaymentScreenButtons" />
+                        <Numpad class="'my-2'"  buttons="getNumpadButtons()"/>
+>>>>>>> 13656c4f3f10a803b0824e28f4dd5b30324c69b1
                         <div t-attf-class="d-flex flex-row gap-2">
                             <t t-call="point_of_sale.PaymentScreenBack" />
                             <t t-call="point_of_sale.PaymentScreenValidate" />
