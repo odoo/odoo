@@ -205,7 +205,7 @@ class AccountMove(models.Model):
             uom = line.product_uom_id and line.product_uom_id.name or ''
 
             line_data = b';'.join([
-                self._l10n_ke_fmt(line.product_id.display_name or line.name, 36),                       # 36 symbols for the article's name
+                self._l10n_ke_fmt(line.name, 36),                       # 36 symbols for the article's name
                 self._l10n_ke_fmt(item_code.tax_rate or 'A', 1),        # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
                 price[:15].encode('cp1251'),                    # 1 to 15 symbols for article's price with up to 5 digits after decimal point
                 self._l10n_ke_fmt(uom, 3),                              # 3 symbols for unit of measure
