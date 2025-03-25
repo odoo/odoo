@@ -49,8 +49,6 @@ class TestAccountCZ(AccountTestInvoicingCommon):
             'amount': 100,
             'date': '2024-12-31',
         })
-        wizard = self.env['bank.rec.widget'].with_context(default_st_line_id=st_line.id).new({})
-        wizard._action_validate()
 
         inv_line = self.env['account.move'].search([('statement_line_id', '=', st_line.id)])
         self.assertNotEqual(inv_line.taxable_supply_date, st_line.date)

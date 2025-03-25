@@ -540,7 +540,7 @@ class PosSession(models.Model):
                 st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit) - closing")
                 st_line_vals['counterpart_account_id'] = self.cash_journal_id.profit_account_id.id
 
-            created_line = self.env['account.bank.statement.line'].create(st_line_vals)
+            created_line = self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True).create(st_line_vals)
 
             if created_line:
                 created_line.move_id.message_post(body=_(
@@ -1243,7 +1243,7 @@ class PosSession(models.Model):
                 )
 
         # create the statement lines and account move lines
-        BankStatementLine = self.env['account.bank.statement.line']
+        BankStatementLine = self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True)
         split_cash_statement_lines = {}
         combine_cash_statement_lines = {}
         split_cash_receivable_lines = {}
@@ -1806,7 +1806,7 @@ class PosSession(models.Model):
             for session in sessions
         ]
 
-        self.env['account.bank.statement.line'].create(vals_list)
+        self.env['account.bank.statement.line'].with_context(no_retrieve_partner=True).create(vals_list)
 
     def delete_cash_in_out(self, absl_id, partner_id):
         if not self.env.user.has_group('account.group_account_basic'):

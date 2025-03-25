@@ -1390,7 +1390,7 @@ class AccountTax(models.Model):
         could be updated, the ones to be created and the ones to be deleted.
         We can't use directly an account.move.line because this is also used by
         - expense (to create the journal entry)
-        - the bank reconciliation widget (to generate the bank.rec.widget.line corresponding to tax lines)
+        - the bank reconciliation widget
         All fields in this list are the same as the corresponding fields defined in account.move.line.
 
         The mechanism is the same as '_prepare_base_line_for_taxes_computation'.
