@@ -253,8 +253,7 @@ class TestEventNotifications(TransactionCase, MailCase, MockEmail, CronMixinCase
                 self.env['calendar.alarm_manager']._send_reminder()
                 self.assertEqual(len(capt.records), 1)
 
-            with freeze_time('2022-04-28 10:00+0000'):
-                self.env['ir.cron.trigger']._gc_cron_triggers()
+            self.env['ir.cron.trigger'].search([('cron_id', '=', cron.id)]).unlink()
 
             with freeze_time('2022-05-16 10:00+0000'):
                 self.env['calendar.alarm_manager']._send_reminder()
@@ -319,9 +318,7 @@ class TestEventNotifications(TransactionCase, MailCase, MockEmail, CronMixinCase
                 self.assertEqual(len(capt.records), 1, "Only one trigger must be created for the entire recurrence.")
                 self.assertEqual(capt.records.mapped('call_at'), [datetime(2024, 4, 16, 11, 0)], "Alarm must be one hour before the first event.")
 
-            # Garbage-collect the previous trigger from the cron.
-            with freeze_time('2024-05-10 11:00+0000'):
-                self.env['ir.cron.trigger']._gc_cron_triggers()
+            self.env['ir.cron.trigger'].search([('cron_id', '=', cron.id)]).unlink()
 
             with freeze_time('2024-04-22 10:00+0000'):
                 # The next alarm will be set through the next_date selection for the next event.
