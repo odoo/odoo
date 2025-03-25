@@ -24,7 +24,7 @@
         </div>
         <div class="o_cw_body">
             <t t-call="{{ constructor.subTemplates.body }}" />
-            <div class="card-footer d-flex gap-1 border-top" t-att-class="{ 'o_footer_shrink': !hasFooter }">
+            <div t-if="hasFooter" class="card-footer d-flex gap-1 border-top">
                 <t t-call="{{ constructor.subTemplates.footer }}" />
             </div>
         </div>
@@ -67,8 +67,11 @@
     </t>
 
     <t t-name="web.CalendarCommonPopover.footer">
-        <t t-if="isEventEditable">
-            <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">Edit</a>
+        <t t-if="isEventEditable or isEventViewable">
+            <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">
+                <t t-if="isEventEditable">Edit</t>
+                <t t-else="">View</t>
+            </a>
         </t>
         <t t-if="isEventDeletable">
             <a href="#" class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">Delete</a>
