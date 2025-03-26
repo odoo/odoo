@@ -63,6 +63,8 @@ export class RecordInternal {
     /** @type {string} */
     localId;
     gettingField = false;
+    /** @type {Function[]} List of functions to stop reactive observers on record like Record.onChange() */
+    reactiveStopFns = [];
 
     /**
      * @param {Record} record
@@ -93,7 +95,7 @@ export class RecordInternal {
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                onChange(recordProxy, fieldName, () => {
+                const stopFn = onChange(recordProxy, fieldName, () => {
                     if (this.fieldsComputing.get(fieldName)) {
                         /**
                          * Use a reactive to reset the computeInNeed flag when there is
@@ -104,19 +106,29 @@ export class RecordInternal {
                         this.fieldsComputeInNeed.delete(fieldName);
                     }
                 });
+                this.reactiveStopFns.push(stopFn);
                 // reset flags triggered by registering onChange
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
+            let computeObserverReady = true;
+            const OBSERVER_SYM = Symbol("computeObserver");
             const cb = function computeObserver() {
-                self.requestCompute(record, fieldName);
+                if (computeObserverReady) {
+                    void computeProxy2[OBSERVER_SYM];
+                    self.requestCompute(record, fieldName);
+                }
             };
+            this.reactiveStopFns.push(() => {
+                computeObserverReady = false;
+                computeProxy2[OBSERVER_SYM] = 1; // force trigger callback to "clear" reactive
+            });
             const computeProxy2 = reactive(recordProxy, cb);
             this.fieldsComputeProxy2.set(fieldName, computeProxy2);
         }
         if (Model._.fieldsSort.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                onChange(recordProxy, fieldName, () => {
+                const stopFn = onChange(recordProxy, fieldName, () => {
                     if (this.fieldsSorting.get(fieldName)) {
                         /**
                          * Use a reactive to reset the inNeed flag when there is a
@@ -127,12 +139,22 @@ export class RecordInternal {
                         this.fieldsSortInNeed.delete(fieldName);
                     }
                 });
+                this.reactiveStopFns.push(stopFn);
                 // reset flags triggered by registering onChange
                 this.fieldsComputeInNeed.delete(fieldName);
                 this.fieldsSortInNeed.delete(fieldName);
             }
+            let sortProxy2Ready = true;
+            const OBSERVER_SYM = Symbol("sortObserver");
             const sortProxy2 = reactive(recordProxy, function sortObserver() {
-                self.requestSort(record, fieldName);
+                if (sortProxy2Ready) {
+                    void sortProxy2[OBSERVER_SYM];
+                    self.requestSort(record, fieldName);
+                }
+            });
+            this.reactiveStopFns.push(() => {
+                sortProxy2Ready = false;
+                sortProxy2[OBSERVER_SYM] = 1; // force trigger callback to "clear" reactive
             });
             this.fieldsSortProxy2.set(fieldName, sortProxy2);
         }

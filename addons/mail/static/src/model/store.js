@@ -166,6 +166,11 @@ export class Store extends Record {
                     record._[IS_DELETED_SYM] = true;
                     delete record.Model.records[record.localId];
                     this.recordByLocalId.delete(record.localId);
+                    const stopFns = toRaw(record)._raw._.reactiveStopFns;
+                    while (stopFns.length) {
+                        const fn = stopFns.pop();
+                        fn();
+                    }
                 }
             }
             this._.UPDATE--;
@@ -199,7 +204,17 @@ export class Store extends Record {
      */
     _onChange(record, key, callback) {
         let proxy;
+        let ready = true;
+        const ON_CHANGE_SYM = Symbol("onChange");
+        const stopFn = () => {
+            ready = false;
+            if (proxy) {
+                proxy[ON_CHANGE_SYM] = 1; // force trigger callback to "clear" reactive
+            }
+        };
+        toRaw(record)._raw._.reactiveStopFns.push(stopFn);
         function _observe() {
+            void proxy[ON_CHANGE_SYM];
             // access proxy[key] only once to avoid triggering reactive get() many times
             const val = proxy[key];
             if (typeof val === "object" && val !== null) {
@@ -211,20 +226,15 @@ export class Store extends Record {
             }
         }
         if (Array.isArray(key)) {
-            for (const k of key) {
-                this._onChange(record, k, callback);
-            }
-            return;
+            const stopFns = key.map((k) => this._onChange(record, k, callback));
+            return () => stopFns.forEach((fn) => fn());
         }
-        let ready = true;
         proxy = reactive(record, () => {
             if (ready) {
                 callback(_observe);
             }
         });
         _observe();
-        return () => {
-            ready = false;
-        };
+        return stopFn;
     }
 }

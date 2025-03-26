@@ -375,25 +375,34 @@ export class Rtc extends Record {
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
         this.p2pService = services["discuss.p2p"];
-        onChange(this.store.settings, "useBlur", () => {
+        const stopFn1 = onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
             }
         });
-        onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
-            if (this.blurManager) {
-                this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+        const stopFn2 = onChange(
+            this.store.settings,
+            ["edgeBlurAmount", "backgroundBlurAmount"],
+            () => {
+                if (this.blurManager) {
+                    this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
+                    this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+                }
             }
-        });
-        onChange(this.store.settings, ["voiceActivationThreshold", "use_push_to_talk"], () => {
-            this.linkVoiceActivationDebounce();
-        });
-        onChange(this.store.settings, "audioInputDeviceId", async () => {
+        );
+        const stopFn3 = onChange(
+            this.store.settings,
+            ["voiceActivationThreshold", "use_push_to_talk"],
+            () => {
+                this.linkVoiceActivationDebounce();
+            }
+        );
+        const stopFn4 = onChange(this.store.settings, "audioInputDeviceId", async () => {
             if (this.localSession) {
                 await this.resetMicAudioTrack({ force: true });
             }
         });
+        toRaw(this)._raw._.reactiveStopFns.push(stopFn1, stopFn2, stopFn3, stopFn4);
         this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
             const channel = this.state.channel;
             if (!channel) {
