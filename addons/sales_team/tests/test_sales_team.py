@@ -2,6 +2,7 @@
 
 from odoo import exceptions
 from odoo.tests import tagged, users
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 from odoo.addons.sales_team.tests.common import (
     SalesTeamCommon,
@@ -170,7 +171,7 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.env.user.id)]})
         self.assertEqual(team_c2.member_ids, self.env.user)
 
-        # cannot add someone from another company
+        # cannot add someone from another company (when user allowed only in c1 and team is in c2)
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
 
@@ -180,9 +181,24 @@ class TestMultiCompany(TestSalesMC):
         team_c2.write({'member_ids': [(4, self.user_sales_salesman.id)]})
         self.assertEqual(team_c2.member_ids, self.user_sales_salesman)
 
-        # cannot change company as it breaks memberships mc check
+        # cannot change team company if its users aren't allowed in the new company
         with self.assertRaises(exceptions.UserError):
             team_c2.write({'company_id': self.company_2.id})
+
+        # a user allowed in multiple companies can be added to a team of any of these companies
+        team_c2.write({'member_ids': [(5, 0)]})
+        team_c2.write({'company_id': self.company_2.id})
+        c1, c2 = self.company_main, self.company_2
+        with self.with_user('admin'):  # user_sales_manager can't create user
+            user_c1_c2 = mail_new_test_user(
+                self.env,
+                login=f"Test_user_default_to_c{c1.id}_allowed_c{'c'.join(map(str, [c1.id, c2.id]))}",
+                company_id=c1.id,
+                company_ids=[(4, company.id) for company in c1 + c2]
+            )
+        user_c1_c2 = user_c1_c2.with_env(self.env)
+        team_c2.write({'member_ids': [(4, user_c1_c2.id)]})
+        self.assertIn(user_c1_c2, team_c2.member_ids)
 
     @users('user_sales_manager')
     def test_team_memberships(self):
