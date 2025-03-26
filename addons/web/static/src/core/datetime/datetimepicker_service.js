@@ -361,7 +361,7 @@ export const datetimePickerService = {
 
                     if (unit !== "time") {
                         if (pickerProps.range && source === "picker") {
-                            if (!value[0] || !value[1]) {
+                            if (!value[0]) {
                                 pickerProps.focusedDateIndex = 0;
                             } else if (
                                 pickerProps.focusedDateIndex === 0 ||

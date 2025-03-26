@@ -192,6 +192,34 @@ test("Date field - interaction with the datepicker", async () => {
     expect("input[data-field=date_end]").toHaveValue("03/18/2017");
 });
 
+test("Date field - interaction with the datepicker - empty dates", async () => {
+    Partner._fields.date_start = fields.Date({ string: "Date end", required: true });
+    Partner._fields.date_end = fields.Date({ string: "Date end", required: true });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}"/>
+            </form>`,
+    });
+
+    // open the first one
+    await contains("input[data-field=date_start]").click();
+
+    expect(".o_select_start").not.toBeDisplayed();
+    expect(".o_select_end").not.toBeDisplayed();
+
+    // Change date
+    await contains(getPickerCell("5")).click();
+    await contains(getPickerCell("12")).click();
+
+    expect(".o_select_start").toHaveText("5");
+    expect(".o_select_end").toHaveText("12");
+});
+
 test("date picker should still be present when scrolling outside of it", async () => {
     Partner._records[0].datetime_end = "2017-03-13 00:00:00";
 
