@@ -15,9 +15,8 @@ import {
 import { useBus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 
-export function useDomState(getState, { checkEditingElement = true } = {}) {
+export function useDomState(getState, { checkEditingElement = true, onReady } = {}) {
     const env = useEnv();
-    const state = useState(getState(env.getEditingElement()));
     const isValid = (el) => (!el && !checkEditingElement) || (el && el.isConnected);
     const handler = () => {
         const editingElement = env.getEditingElement();
@@ -25,9 +24,45 @@ export function useDomState(getState, { checkEditingElement = true } = {}) {
             Object.assign(state, getState(editingElement));
         }
     };
-    env.editorBus.addEventListener("DOM_UPDATED", handler);
-    onWillDestroy(() => env.editorBus.removeEventListener("DOM_UPDATED", handler));
+    const state = useState({});
+    if (onReady) {
+        onReady.then(() => {
+            handler();
+        });
+    } else {
+        handler();
+    }
+
+    useBus(env.editorBus, "DOM_UPDATED", handler);
+    // Promise.resolve().then(() => env.editorBus.addEventListener("DOM_UPDATED", handler));
+    // onWillDestroy(() => env.editorBus.removeEventListener("DOM_UPDATED", handler));
     return state;
+}
+
+export function useActionInfo() {
+    const comp = useComponent();
+
+    const getParam = (paramName) => {
+        let param = comp.props[paramName];
+        param = param === undefined ? comp.env.weContext[paramName] : param;
+        if (typeof param === "object") {
+            param = JSON.stringify(param);
+        }
+        return param;
+    };
+
+    const actionParam = getParam("actionParam");
+
+    return {
+        actionId: comp.props.action || comp.env.weContext.action,
+        actionParam,
+        actionValue: comp.props.actionValue,
+        classAction: getParam("classAction"),
+        styleAction: getParam("styleAction"),
+        styleActionValue: comp.props.styleActionValue,
+        attributeAction: getParam("attributeAction"),
+        attributeActionValue: comp.props.attributeActionValue,
+    };
 }
 
 function querySelectorAll(targets, selector) {
@@ -239,7 +274,8 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     });
 }
 export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
-    const { operation, isApplied, getActions, priority, clean } = useClickableBuilderComponent();
+    const { operation, isApplied, getActions, priority, clean, onReady } =
+        useClickableBuilderComponent();
     const env = useEnv();
 
     let isSelectableActive = isApplied;
@@ -273,9 +309,12 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         });
     }
 
-    const state = useDomState(() => ({
-        isActive: isSelectableActive(),
-    }));
+    const state = useDomState(
+        () => ({
+            isActive: isSelectableActive(),
+        }),
+        { onReady }
+    );
 
     return { state, operation };
 }
@@ -285,31 +324,55 @@ export function useClickableBuilderComponent() {
     const { getAllActions, callOperation, isApplied } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const asyncActions = [];
-    for (const a of getAllActions()) {
-        if (a.actionId) {
-            const b = getAction(a.actionId);
-            if (b.prepare) {
-                asyncActions.push({ action: b, descr: a });
+    let hasReloadAction = false;
+    for (const descr of getAllActions()) {
+        if (descr.actionId) {
+            const action = getAction(descr.actionId);
+            if (action.prepare) {
+                asyncActions.push({ action, descr });
+            }
+            if (action.isReload) {
+                hasReloadAction = true;
             }
         }
     }
+    let onReady;
     if (asyncActions.length) {
+        let resolve;
+        onReady = new Promise((r) => {
+            resolve = r;
+        });
         onWillStart(async function () {
             await Promise.all(asyncActions.map((obj) => obj.action.prepare(obj.descr)));
-            comp.env.editorBus.trigger("DOM_UPDATED");
+            resolve();
         });
     }
 
     const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(callApply);
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
+
     const hasPreview =
-        comp.props.preview === true ||
-        (comp.props.preview === undefined && comp.env.weContext.preview !== false);
+        !hasReloadAction &&
+        (comp.props.preview === true ||
+            (comp.props.preview === undefined && comp.env.weContext.preview !== false));
 
     const operation = {
         commit: () => {
-            callOperation(applyOperation.commit);
+            if (hasReloadAction) {
+                callOperation(async (...args) => {
+                    const { editingElement } = args[0][0];
+                    await Promise.all([
+                        callApply(...args),
+                        comp.env.editor.shared.savePlugin.save(),
+                    ]);
+                    const inHeader = editingElement.closest("header");
+                    const target = inHeader ? "header" : null;
+                    comp.env.editor.config.reloadEditor({ target });
+                });
+            } else {
+                callOperation(applyOperation.commit);
+            }
         },
         preview: () => {
             callOperation(applyOperation.preview, {
@@ -353,7 +416,7 @@ export function useClickableBuilderComponent() {
         }
     }
 
-    function callApply(applySpecs) {
+    async function callApply(applySpecs) {
         comp.env.selectableContext?.cleanSelectedItem(applySpecs);
         const cleans = inheritedActionIds
             .map((actionId) => comp.env.dependencyManager.get(actionId).cleanSelectedItem)
@@ -363,26 +426,33 @@ export function useClickableBuilderComponent() {
         }
         const hasClean = applySpecs.some((applySpec) => applySpec.clean);
         const shouldClean = _shouldClean(comp, hasClean, isApplied());
+        // const hasReload = applySpecs.some((applySpec) => applySpec.isReload);
+        const proms = [];
         for (const applySpec of applySpecs) {
             if (shouldClean) {
-                applySpec.clean?.({
-                    editingElement: applySpec.editingElement,
-                    param: applySpec.actionParam,
-                    value: applySpec.actionValue,
-                    dependencyManager: comp.env.dependencyManager,
-                    selectableContext: comp.env.selectableContext,
-                });
+                proms.push(
+                    applySpec.clean?.({
+                        editingElement: applySpec.editingElement,
+                        param: applySpec.actionParam,
+                        value: applySpec.actionValue,
+                        dependencyManager: comp.env.dependencyManager,
+                        selectableContext: comp.env.selectableContext,
+                    })
+                );
             } else {
-                applySpec.apply({
-                    editingElement: applySpec.editingElement,
-                    param: applySpec.actionParam,
-                    value: applySpec.actionValue,
-                    loadResult: applySpec.loadResult,
-                    dependencyManager: comp.env.dependencyManager,
-                    selectableContext: comp.env.selectableContext,
-                });
+                proms.push(
+                    applySpec.apply({
+                        editingElement: applySpec.editingElement,
+                        param: applySpec.actionParam,
+                        value: applySpec.actionValue,
+                        loadResult: applySpec.loadResult,
+                        dependencyManager: comp.env.dependencyManager,
+                        selectableContext: comp.env.selectableContext,
+                    })
+                );
             }
         }
+        await Promise.all(proms);
     }
     function getPriority() {
         return (
@@ -404,6 +474,7 @@ export function useClickableBuilderComponent() {
         clean,
         priority: getPriority(),
         getActions: getAllActions,
+        onReady,
     };
 }
 export function useInputBuilderComponent({
@@ -649,34 +720,29 @@ export function getAllActionsAndOperations(comp) {
     }
     function callOperation(fn, params = {}) {
         const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
-        comp.env.editor.shared.operation.next(
-            () => {
-                fn(actionsSpecs);
+        comp.env.editor.shared.operation.next(() => fn(actionsSpecs), {
+            load: async () => {
+                const hasClean = actionsSpecs.some((applySpec) => applySpec.clean);
+                return Promise.all(
+                    actionsSpecs.map(async (applySpec) => {
+                        if (!applySpec.load) {
+                            return;
+                        }
+                        if (_shouldClean(comp, hasClean, isApplied())) {
+                            // The element will be cleaned, do not load
+                            return;
+                        }
+                        const result = await applySpec.load({
+                            editingElement: applySpec.editingElement,
+                            param: applySpec.actionParam,
+                            value: applySpec.actionValue,
+                        });
+                        applySpec.loadResult = result;
+                    })
+                );
             },
-            {
-                load: async () => {
-                    const hasClean = actionsSpecs.some((applySpec) => applySpec.clean);
-                    return Promise.all(
-                        actionsSpecs.map(async (applySpec) => {
-                            if (!applySpec.load) {
-                                return;
-                            }
-                            if (_shouldClean(comp, hasClean, isApplied())) {
-                                // The element will be cleaned, do not load
-                                return;
-                            }
-                            const result = await applySpec.load({
-                                editingElement: applySpec.editingElement,
-                                param: applySpec.actionParam,
-                                value: applySpec.actionValue,
-                            });
-                            applySpec.loadResult = result;
-                        })
-                    );
-                },
-                ...params.operationParams,
-            }
-        );
+            ...params.operationParams,
+        });
     }
     function isApplied() {
         const getAction = comp.env.editor.shared.builderActions.getAction;

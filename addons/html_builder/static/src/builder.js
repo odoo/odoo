@@ -80,8 +80,8 @@ export class Builder extends Component {
                         editorBus.trigger("DOM_UPDATED");
                     }
                 },
+                reloadEditor: this.props.reloadEditor,
                 resources: {
-                    reload_editor: this.props.reloadEditor,
                     on_mobile_preview_clicked: () => {
                         editorBus.trigger("DOM_UPDATED");
                     },

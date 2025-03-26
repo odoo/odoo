@@ -29,7 +29,7 @@ export class WebsiteBuilder extends Component {
         useSubEnv({
             builderRef: useRef("container"),
         });
-        this.state = useState({ isEditing: false, isMobile: false, value: 1 });
+        this.state = useState({ isEditing: false, isMobile: false, key: 1 });
         this.websiteService = useService("website");
         this.ui = useService("ui");
         // TODO: to remove: this is only needed to not use the website systray
@@ -169,7 +169,7 @@ export class WebsiteBuilder extends Component {
         this.target = param.target || null;
         await this.reloadIframe(this.state.isEditing);
         // trigger an new instance of the builder menu
-        this.state.value++;
+        this.state.key++;
 
         this.notification.add(_t("Your modifications were saved to apply this option."), {
             title: _t("Content saved."),

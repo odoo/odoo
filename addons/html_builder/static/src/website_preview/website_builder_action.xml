@@ -13,7 +13,7 @@
         </div>
         <LocalOverlayContainer localOverlay="overlayRef" identifier="env.localOverlayContainerKey"/>
         <div t-att-class="{'o_builder_sidebar_open': state.isEditing}" class="o-website-builder_sidebar border-start border-dark">
-            <LazyComponent  t-if="state.isEditing" Component="'website.Builder'" props="() => this.menuProps" bundle="'html_builder.assets'" t-key="state.value"/>        
+            <LazyComponent  t-if="state.isEditing" Component="'website.Builder'" props="() => this.menuProps" bundle="'html_builder.assets'" t-key="state.key"/>        
         </div>
     </div>
 </t>
