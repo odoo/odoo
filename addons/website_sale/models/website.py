@@ -3,6 +3,7 @@
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.http import request
+from odoo.modules.module import get_manifest
 from odoo.osv import expression
 from odoo.tools import lazy, ormcache
 from odoo.tools.translate import LazyTranslate, _
@@ -502,6 +503,17 @@ class Website(models.Model):
         request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
         request.session.pop(FISCAL_POSITION_SESSION_CACHE_KEY, None)
         request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
+
+    @api.model
+    def get_theme_configurator_snippets(self, theme_name):
+        existing_snippets = super().get_theme_configurator_snippets(theme_name)
+        existing_snippets['homepage'] = list(
+            dict.fromkeys(
+                existing_snippets['homepage']
+                + get_manifest('website_sale')['configurator_snippets']['homepage']
+            )
+        )
+        return existing_snippets
 
     @api.model
     def action_dashboard_redirect(self):

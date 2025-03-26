@@ -2,73 +2,24 @@ import { localization } from "@web/core/l10n/localization";
 import { translatedTerms } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { clickOnEditAndWaitEditMode } from "@website/js/tours/tour_utils";
+import * as tourUtils from '@website/js/tours/tour_utils';
 
 registry.category("web_tour.tours").add('configurator_translation', {
     url: '/website/configurator',
     steps: () => [
-    // Configurator first screen
+    ...tourUtils.websiteConfiguratorDescription("business", "ab", "in fr", "get_leads"),
+    tourUtils.websiteConfiguratorPalette("#FFFBF6"),
     {
-        content: "click next",
-        trigger: 'button.o_configurator_show',
-        run: "click",
-    },
-    // Make sure "Back" works
-    {
-        content: "use browser's Back",
-        trigger: 'a.o_change_website_type',
-        run() {
-            window.history.back();
-        },
-    }, {
-        content: "return to description screen",
-        trigger: 'button.o_configurator_show',
-        run: "click",
-    },
-    // Description screen
-    {
-        content: "select a website type",
-        trigger: 'a.o_change_website_type',
-        run: "click",
-    }, {
-        content: "insert a website industry",
-        trigger: '.o_configurator_industry input',
-        run: "edit ab",
-    }, {
-        content: "select a website industry from the autocomplete",
-        trigger: '.o_configurator_industry_wrapper ul li a:contains("in fr")',
-        run: "click",
-    }, {
-        content: "select an objective",
-        trigger: '.o_configurator_purpose_dd a',
-        run: "click",
-    }, {
-        content: "choose from the objective list",
-        trigger: 'a.o_change_website_purpose',
-        run: "click",
-    },
-    // Palette screen
-    {
-        content: "chose a palette card",
-        trigger: '.palette_card',
-        run: "click",
-    },
-    // Features screen
-    {
-        content: "select confidentialité",
-        trigger: '.card:contains(Parseltongue_privacy)',
+        content: "Select confidentialité",
+        trigger: `.card:contains(Parseltongue_privacy)`,
         run: "click",
     }, {
         content: "Click on build my website",
         trigger: 'button.btn-primary',
         run: "click",
-    }, {
-        content: "Loader should be shown",
-        trigger: '.o_website_loader_container',
-    }, {
-        content: "Wait until the configurator is finished",
-        trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
-        timeout: 30000,
-    }, {
+    },
+    ...tourUtils.websiteConfiguratorLoadHomePage(),
+    {
         content: "Check if the current interface language is active and monkey patch terms",
         trigger: "body",
         run() {
