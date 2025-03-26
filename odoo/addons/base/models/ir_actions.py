@@ -680,7 +680,7 @@ class IrActionsServer(models.Model):
         if (relation_chain := self._get_relation_chain("update_path")) and relation_chain[0] and isinstance(relation_chain[0][-1], fields.Json):
             warnings.append(_("I'm sorry to say that JSON fields (such as '%s') are currently not supported.", relation_chain[0][-1].string))
 
-        if self.state == 'webhook':
+        if self.state == 'webhook' and self.model_id:
             restricted_fields = []
             Model = self.env[self.model_id.model]
             for model_field in self.webhook_field_ids:
