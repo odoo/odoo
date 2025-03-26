@@ -306,6 +306,48 @@ GMC_SUPPORTED_UOM = {
     'sqm',
 }
 
+SNIPPET_DEFAULTS = {
+    'website_sale.s_dynamic_snippet_products': {
+        'filter_xmlid': 'website_sale.dynamic_filter_newest_products',
+        'template_key': 'website_sale.dynamic_filter_template_product_product_products_item',
+        'data_attributes': {
+            'snippet': 's_dynamic_snippet_products',
+            'carousel-interval': '5000',
+            'product-category-id': 'all',
+            'number-of-elements': '4',
+            'number-of-elements-small-devices': '2',
+            'show-variants': 'true',
+        },
+        'add_classes': [
+            'o_wsale_products_opt_design_cards',
+            'o_wsale_products_opt_rounded_2',
+            'o_wsale_products_opt_has_comparison',
+            {
+                's_dynamic_snippet_title': 's_dynamic_snippet_title_aside col-lg-3 flex-lg-column justify-content-lg-start',
+            },
+        ],
+        'remove_classes': [
+            'o_wsale_products_opt_design_thumbs',
+            'o_wsale_products_opt_has_description',
+        ],
+    },
+    'website_sale.s_dynamic_snippet_category_list': {
+        'filter_xmlid': 'website_sale.dynamic_filter_category_list',
+        'template_key': (
+            'website_sale.dynamic_filter_template_product_public_category_clickable_items'
+        ),
+        'data_attributes': {
+            'snippet': 's_dynamic_snippet_category_list',
+            'show-parent': 'true',
+            'columns': '4',
+            'rounded': '2',
+            'gap': '2',
+            'size': 'medium',
+            'alignment': 'center',
+        },
+    },
+}
+
 GMC_BASE_MEASURE = re.compile(r'(?P<base_count>\d+)?\s*(?P<base_unit>[a-z]+)')
 
 SHOP_PATH = '/shop'

@@ -673,7 +673,19 @@ class IrModuleModule(models.Model):
         # Configurator
         # ------------------------------------------------------------
 
-        configurator_snippets = manifest.get('configurator_snippets', {})
+        configurator_snippets = dict(manifest.get('configurator_snippets', {}))
+        addons = manifest.get('configurator_snippets_addons', {})
+        installed_modules = self.env['ir.module.module']._installed()
+
+        # Add addon snippets to the main snippet list for batch generation
+        for module_name, pages in addons.items():
+            # generate snippet only if the module is installed
+            if module_name not in installed_modules and module_name != self.name:
+                continue
+            for page, snippets_to_insert in pages.items():
+                snippets = configurator_snippets.setdefault(page, [])
+                dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
+                configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
 
         # Generate general configurator snippet templates
         create_values = []

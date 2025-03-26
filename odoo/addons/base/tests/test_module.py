@@ -43,6 +43,7 @@ class TestModuleManifest(BaseCase):
             'category': 'Uncategorized',
             'cloc_exclude': [],
             'configurator_snippets': {},
+            'configurator_snippets_addons': {},
             'countries': [],
             'data': [],
             'demo': [],
