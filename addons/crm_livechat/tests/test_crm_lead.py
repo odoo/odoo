@@ -95,3 +95,26 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             self.user_sales_leads.partner_id | self.user_portal.partner_id | self.user_sales_manager.partner_id
         )
         self.assertEqual(lead.partner_id, self.user_portal.partner_id)
+
+    def test_create_lead_when_channel_has_deleted_message(self):
+        bob_operator = mail_new_test_user(
+            self.env, login="bob_user", groups="im_livechat.im_livechat_group_user,sales_team.group_sale_salesman"
+        )
+        self.authenticate("bob_user", "bob_user")
+        self.livechat_channel.user_ids = bob_operator
+        self.env["mail.presence"]._update_presence(bob_operator)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {"anonymous_name": "Visitor", "channel_id": self.livechat_channel.id},
+        )
+        channel = self.env["discuss.channel"].browse(data["discuss.channel"][0]["id"])
+        message = channel.message_post(
+            author_id=bob_operator.partner_id.id,
+            body="Hello, how can I help you?",
+            message_type="comment",
+        )
+        channel._message_update_content(message, "")
+        self.env.invalidate_all()
+        self.assertFalse(channel.lead_ids)
+        channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")
+        self.assertEqual(channel.lead_ids.name, "BobLead")
