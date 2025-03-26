@@ -1,0 +1,4 @@
+#!/bin/sh
+
+
+docker build -t odoo:dev -f "$(dirname "$0")/DockerFile.dev" --build-arg USER=$(whoami) --build-arg UID=$(id -u) --build-arg GID=$(id -g) "$(dirname "$0")"
