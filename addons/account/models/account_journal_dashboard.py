@@ -565,18 +565,9 @@ class account_journal(models.Model):
                 query_results_to_pay[journal.id] = query_result[journal.id]
                 late_query_results[journal.id] = [r for r in query_result[journal.id] if r['late']]
 
-        to_check_vals = {
-            journal.id: (amount_total_signed_sum, count)
-            for journal, amount_total_signed_sum, count in self.env['account.move']._read_group(
-                domain=[
-                    *self.env['account.move']._check_company_domain(self.env.companies),
-                    ('journal_id', 'in', sale_purchase_journals.ids),
-                    ('to_check', '=', True),
-                ],
-                groupby=['journal_id'],
-                aggregates=['amount_total_signed:sum', '__count'],
-            )
-        }
+        query, params = sale_purchase_journals._get_to_check_payment_query().select(*bills_field_list)
+        self.env.cr.execute(query, params)
+        to_check_vals = group_by_journal(self.env.cr.dictfetchall())
 
         self.env.cr.execute(SQL("""
             SELECT id, moves_exists
@@ -601,7 +592,8 @@ class account_journal(models.Model):
             (number_waiting, sum_waiting) = self._count_results_and_sum_amounts(query_results_to_pay[journal.id], currency)
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts[journal.id], currency)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results[journal.id], currency)
-            amount_total_signed_sum, count = to_check_vals.get(journal.id, (0, 0))
+            (number_to_check, sum_to_check) = self._count_results_and_sum_amounts(to_check_vals[journal.id], currency)
+
             if journal.type == 'purchase':
                 title_has_sequence_holes = _("Irregularities due to draft, cancelled or deleted bills with a sequence number since last lock date.")
                 drag_drop_settings = {
@@ -616,8 +608,8 @@ class account_journal(models.Model):
                 }
 
             dashboard_data[journal.id].update({
-                'number_to_check': count,
-                'to_check_balance': currency.format(amount_total_signed_sum),
+                'number_to_check': number_to_check,
+                'to_check_balance': currency.format(sum_to_check),
                 'title': _('Bills to pay') if journal.type == 'purchase' else _('Invoices owed to you'),
                 'number_draft': number_draft,
                 'number_waiting': number_waiting,
@@ -713,6 +705,14 @@ class account_journal(models.Model):
                 ('state', '=', 'posted'),
             ])),
             ('account_type', '=', 'asset_receivable' if journal_type == 'sale' else 'liability_payable'),
+        ])
+
+    def _get_to_check_payment_query(self):
+        # todo in master: use this hook function in _fill_general_dashboard_data as it's the same domain
+        return self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
+            ('journal_id', 'in', self.ids),
+            ('to_check', '=', True),
         ])
 
     def _count_results_and_sum_amounts(self, results_dict, target_currency):
