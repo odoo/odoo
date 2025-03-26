@@ -196,8 +196,8 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "invitedMembers": [("ADD", [])],
                         "is_editable": True,
                         "last_interest_dt": fields.Datetime.to_string(channel.last_interest_dt),
-                        "livechatChannel": self.livechat_channel.id,
                         "livechat_active": True,
+                        "livechat_channel_id": self.livechat_channel.id,
                         "livechat_operator_id": {
                             "id": self.operator.partner_id.id,
                             "type": "partner",
