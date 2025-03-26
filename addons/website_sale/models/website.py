@@ -3,21 +3,19 @@
 import base64
 import json
 import logging
-from lxml import etree
 
+from lxml import etree
 from werkzeug import urls
 from werkzeug.exceptions import NotFound
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import AccessError
-
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import file_open, ormcache
 from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
-
 
 logger = logging.getLogger(__name__)
 _lt = LazyTranslate(__name__)
@@ -1007,3 +1005,6 @@ class Website(models.Model):
             path_parts.pop(2)
             canonical_url = canonical_url.replace(path='/'.join(path_parts))
         return canonical_url.to_url()
+
+    def _get_snippet_defaults(self, snippet):
+        return super()._get_snippet_defaults(snippet) | const.SNIPPET_DEFAULTS.get(snippet, {})

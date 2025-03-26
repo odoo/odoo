@@ -73,6 +73,7 @@
         'views/snippets/s_mega_menu/multi_menus.xml',
         'views/snippets/s_mega_menu/odoo_menu.xml',
         'views/snippets/s_mega_menu/thumbnails.xml',
+        'views/generate_primary_template.xml',
     ],
     'demo': [
         'data/demo.xml',

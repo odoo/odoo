@@ -484,12 +484,143 @@ class Website(models.Model):
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
 
+    def _get_snippet_defaults(self, snippet):
+        """Retrieve the default configuration for a given dynamic snippet."""
+        return {}
+
+    def _get_snippet_view_key(self, snippet, page_code):
+        if '.' not in snippet:
+            snippet = 'website.' + snippet
+        module, snippet = snippet.split('.')
+        return f'{module}.configurator_{page_code}_{snippet}'
+
+    def _preconfigure_snippet(self, snippet, el, customizations):
+        """Apply default configuration values to a snippet element.
+
+        This ensures that when a dynamic snippet is appended via the
+        configurator, all of its required default classes/attributes
+        are added to the DOM element before it is rendered.
+        """
+        def modify_class(target_classes, class_name, operation):
+            """Add or remove a single class string from target_classes list."""
+            if operation == 'remove' and class_name in target_classes:
+                target_classes.remove(class_name)
+            elif operation == 'add' and class_name not in target_classes:
+                target_classes.append(class_name)
+
+        default_settings = self._get_snippet_defaults(snippet)
+        if not (customizations or default_settings):
+            # Nothing to preconfigure on the given snippet
+            return
+
+        snippet_classes = el.get('class', '').split()
+
+        filter_name = customizations.get('filter_xmlid') or default_settings.get('filter_xmlid')
+        if filter_name:
+            selected_filter = self.env.ref(filter_name)
+            el.set('data-filter-id', str(selected_filter.id))
+            el.set('data-number-of-records', str(selected_filter.limit))
+
+        selected_template_key = customizations.get('template_key') or default_settings.get('template_key')
+        if selected_template_key:
+            el.set('data-template-key', selected_template_key)
+            template_class = re.sub(r'.*\.dynamic_filter_template_', 's_', selected_template_key)
+            if template_class not in snippet_classes:
+                snippet_classes.append(template_class)
+
+        class_modifications = [
+            ('remove', customizations.get('remove_classes', []) or default_settings.get('remove_classes', [])),
+            ('add', customizations.get('add_classes', []) or default_settings.get('add_classes', [])),
+        ]
+
+        for operation, items in class_modifications:
+            for item in items:
+                if isinstance(item, dict):
+                    for selector, classes in item.items():
+                        child_el = el.xpath(f"//*[hasclass('{selector}')]")
+                        if child_el:
+                            node = child_el[0]
+                            child_classes = node.get('class', '').split()
+                            modify_class(child_classes, classes, operation)
+                            node.set('class', ' '.join(child_classes))
+                else:
+                    modify_class(snippet_classes, item, operation)
+
+        data_attributes = {
+            **default_settings.get('data_attributes', {}),
+            **customizations.get('data_attributes', {}),
+        }
+        for key, value in data_attributes.items():
+            el.set(f'data-{key}', value)
+
+        el.set('class', ' '.join(snippet_classes))
+
+        style = customizations.get('style', {}) or default_settings.get('style', {})
+        if style:
+            style_attr = ' '.join(f'{attr}: {value};' for attr, value in style.items())
+            el.set('style', style_attr)
+
+        # Apply theme-specific customizations to the dynamic snippets
+        if 'background' in customizations:
+            self._set_background_options(el, customizations['background'])
+
+        return
+
+    def _set_background_options(self, el, background_options):
+        snippet_classes = el.get('class').split()
+        snippet_style = (el.get('style') or '').split()
+
+        if 'color' in background_options:
+            snippet_classes = [c for c in snippet_classes if not c.startswith('o_cc')]
+            snippet_classes.append('o_cc ' + background_options['color'])
+        if 'image' in background_options:
+            snippet_classes.append('oe_img_bg o_bg_img_center')
+            snippet_style.append(background_options['image'])
+        if 'shape' in background_options:
+            el.set('data-oe-shape-data', background_options['shape']['data-oe-shape-data'])
+            shape_el = html.fromstring(background_options['shape']['element'])
+            el.insert(0, shape_el)
+
+        el.set('class', ' '.join(snippet_classes))
+        el.set('style', ' '.join(snippet_style))
+
     @api.model
     def get_theme_configurator_snippets(self, theme_name):
-        return {
+        """
+        Prepare and return configurator_snippets by fetching theme snippets and
+        inserting addon snippets at their intended positions.
+        """
+        configurator_snippets = {
             **get_manifest('website')['configurator_snippets'],
             **get_manifest(theme_name).get('configurator_snippets', {}),
         }
+        configurator_snippets_addons = {
+            **get_manifest(theme_name).get('configurator_snippets_addons', {}),
+        }
+
+        if not configurator_snippets_addons:
+            return configurator_snippets
+
+        installed_modules = self.env['ir.module.module']._installed()
+
+        for module_name, module_addon in configurator_snippets_addons.items():
+            if module_name not in installed_modules:
+                continue
+            for page, snippets_to_insert in module_addon.items():
+                snippet_list = configurator_snippets.setdefault(page, [])
+                for snippet_name, position, target in snippets_to_insert:
+                    if snippet_name in snippet_list:
+                        continue
+                    try:
+                        snippet_idx = snippet_list.index(target) + (position == 'after')
+                        snippet_list.insert(snippet_idx, snippet_name)
+                    except ValueError:
+                        logger.error(
+                            "Skipping snippet '%s' because the target snippet is misconfigured.",
+                            snippet_name,
+                        )
+
+        return configurator_snippets
 
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
@@ -853,7 +984,8 @@ class Website(models.Model):
         for page_code in requested_pages - {'privacy_policy'}:
             snippet_list = configurator_snippets.get(page_code, [])
             for snippet in snippet_list:
-                render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
+                snippet_key = website._get_snippet_view_key(snippet, page_code)
+                render, placeholders = _render_snippet(snippet_key)
                 for placeholder in placeholders:
                     generated_content[placeholder] = ''
         if text_must_be_translated_for_openai:
@@ -948,7 +1080,8 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    render, placeholders = _render_snippet(f'website.configurator_{page_code}_{snippet}')
+                    snippet_key = website._get_snippet_view_key(snippet, page_code)
+                    render, placeholders = _render_snippet(snippet_key)
                     # Fill rendered block with AI text
                     render = xml_translate(_format_replacement, render)
 
@@ -957,6 +1090,13 @@ class Website(models.Model):
                     # Add the data-snippet attribute to identify the snippet
                     # for compatibility code
                     el.attrib['data-snippet'] = snippet
+
+                    # Theme specific customizations for non-website snippets
+                    theme_customizations = get_manifest(theme_name).get('theme_customizations', {})
+                    customizations = theme_customizations.get(snippet, {})
+
+                    # Configure non-website snippet with defaults and theme-level customizations.
+                    website._preconfigure_snippet(snippet, el, customizations)
 
                     # Remove the previews needed for the snippets dialog
                     dialog_preview_els = el.find_class('s_dialog_preview')

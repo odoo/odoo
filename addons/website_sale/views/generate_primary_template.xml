@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--
+Non-website snippets need to be generated in the same way as other snippets, following the format 
+module_name.configurator_{snippet_name} or module_name.configurator_{page}_{snippet_name}. 
+Since these snippets are module-specific (e.g. website_sale) and do not exist in the website module
+itself, their parent_id cannot be resolved during generation until the respective module
+is installed.
+
+To handle this, configurator snippet addons are declared inside their own module manifest.
+This makes the generation process independent, generic, and consistent with how themes also declare
+their configurator snippets. As a result, snippet templates are only generated when the
+corresponding module is installed, ensuring that dynamic snippets are correctly created and linked
+at the right time.
+-->
+<function model="ir.module.module" name="_generate_primary_snippet_templates">
+    <value eval="[ref('base.module_website_sale')]"/>
+</function>
+
+</odoo>
