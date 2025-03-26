@@ -119,6 +119,12 @@ class HrLeave(models.Model):
             del values['date_to']
         return values
 
+    def _default_employee_id(self):
+        employee = self.env.user.employee_id or self.env['hr.employee'].search(self._get_employee_domain(), limit=1)
+        if not employee:
+            raise UserError(_("This company does not have any employees."))
+        return employee
+
     # description
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False, copy=False)
     private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
@@ -152,7 +158,7 @@ class HrLeave(models.Model):
 
     employee_id = fields.Many2one(
         'hr.employee', string='Employee', index=True, ondelete="restrict", required=True,
-        tracking=True, domain=lambda self: self._get_employee_domain(), default=lambda self: self.env.user.employee_id)
+        tracking=True, domain=lambda self: self._get_employee_domain(), default=_default_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', string="Employee Company", store=True)
     company_id = fields.Many2one('res.company', compute='_compute_company_id', store=True)
     active_employee = fields.Boolean(related='employee_id.active', string='Employee Active')
