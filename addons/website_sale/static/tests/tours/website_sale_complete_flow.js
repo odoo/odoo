@@ -72,13 +72,8 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "edit 10000",
     },
     {
-        content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Continue checkout")',
-        run: "click",
-    },
-    {
-        content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
+        content: "Click on Confirm button",
+        trigger: 'a[name="website_sale_main_button"]',
         run: "click",
     },
     {
@@ -124,8 +119,8 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "edit 10000",
     },
     {
-        content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Save address")',
+        content: "Click on Confirm button to save the address",
+        trigger: 'a[name="website_sale_main_button"]',
         run: "click",
     },
     {
@@ -137,13 +132,8 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '#billing_address_row:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
     },
     {
-        content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
-        run: "click",
-    },
-    {
         content: "Click for edit billing address",
-        trigger: '.o_portal_address_row a[href^="/shop/address?address_type=billing"] .js_edit_address:first',
+        trigger: '#billing_container .o_portal_address_row a[href^="/shop/address?address_type=billing"].js_edit_address:first',
         run: "click",
     },
     {
@@ -170,14 +160,14 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "edit SO1BillingCityEdited",
     },
     {
-        content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Save address")',
+        content: "Click on Confirm button to save the address",
+        trigger: 'a[name="website_sale_main_button"]',
         run: "click",
     },
         tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#billing_address_row:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
+        trigger: '#delivery_and_billing :contains(Billing:):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -339,7 +329,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
     {
         content: "Add new delivery address",
-        trigger: '.all_delivery a[href^="/shop/address"]:contains("Add address")',
+        trigger: '#delivery_address_row a[href^="/shop/address"]:contains("Add address")',
         run: "click",
     },
     {
@@ -368,10 +358,15 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "edit 1200",
     },
     {
-        content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Save address")',
+        trigger: `input[name="email"]`,
+        run: "edit ghi@odoo.com",
+    },
+    {
+        content: "Click on Confirm button to save the address",
+        trigger: 'a[name="website_sale_main_button"]',
         run: "click",
     },
+        tourUtils.confirmOrder(),
     {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
@@ -494,6 +489,11 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
+    {
+        content: "Click on 'Confirm' button (redirect to the 'extra info' form)",
+        trigger: 'a[href^="/shop/extra_info"]',
+        run: "click",
+    },
     {
         content: "Click on 'Continue checkout' button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
