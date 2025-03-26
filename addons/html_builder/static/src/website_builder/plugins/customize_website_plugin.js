@@ -187,6 +187,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 apply: () => this.stuffHappened(),
             },
             websiteConfig: {
+                isReload: true,
                 prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
                 isApplied: ({ param }) => {
                     const views = param.views || [];
@@ -337,10 +338,6 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 
     async toggleConfig(action, apply) {
-        if (this.dependencies.history.getIsPreviewing()) {
-            // ignore previews!
-            return;
-        }
         // step 1: enable and disable views
         const toEnable = new Set();
         const toDisable = new Set();
@@ -384,14 +381,10 @@ export class CustomizeWebsitePlugin extends Plugin {
             ? this.customizeWebsiteVariables(action.param.vars)
             : Promise.resolve();
 
-        const saveProm = this.dependencies.savePlugin.save();
-        await Promise.all([updateTheme, saveProm, updateVars]);
+        await Promise.all([updateTheme, updateVars]);
         if (this.isDestroyed) {
             return true;
         }
-        const inHeader = action.editingElement.closest("header");
-        const target = inHeader ? "header" : null;
-        this.dispatchTo("reload_editor", { target });
     }
 
     getConfigKey(key) {

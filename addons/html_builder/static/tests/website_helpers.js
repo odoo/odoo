@@ -9,7 +9,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { after, describe } from "@odoo/hoot";
+import { after, before, describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
@@ -18,6 +18,7 @@ import {
     mockService,
     models,
     mountWithCleanup,
+    onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
@@ -52,6 +53,9 @@ export function defineWebsiteModels() {
     describe.current.tags("desktop");
     defineMailModels();
     defineModels([Website, IrUiView]);
+    before(() => {
+        onRpc("/website/theme_customize_data_get", () => []);
+    });
 }
 
 /**

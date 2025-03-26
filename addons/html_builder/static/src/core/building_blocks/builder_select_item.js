@@ -1,6 +1,10 @@
 import { Component, onMounted, useRef } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import { clickableBuilderComponentProps, useSelectableItemComponent } from "../utils";
+import {
+    clickableBuilderComponentProps,
+    useActionInfo,
+    useSelectableItemComponent,
+} from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderSelectItem extends Component {
@@ -18,6 +22,7 @@ export class BuilderSelectItem extends Component {
         if (!this.env.selectableContext) {
             throw new Error("BuilderSelectItem must be used inside a BuilderSelect component.");
         }
+        this.info = useActionInfo();
         const item = useRef("item");
         let label = "";
         const getLabel = () => {
