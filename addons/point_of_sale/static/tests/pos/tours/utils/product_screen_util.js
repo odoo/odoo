@@ -773,3 +773,55 @@ export function setTimeZone(testTimeZone) {
         },
     };
 }
+
+function productInputSteps(name, barcode, list_price) {
+    return [
+        {
+            content: "Enter product name.",
+            trigger: 'div[name="name"] input',
+            run: `edit ${name}`,
+        },
+        {
+            content: "Enter barcode to fetch product data using barcodelookup.",
+            trigger: 'div[name="barcode"] input',
+            run: `edit ${barcode}`,
+        },
+        {
+            content: "Enter list_price.",
+            trigger: 'div[name="list_price"] input',
+            run: `edit ${list_price}`,
+        },
+    ];
+}
+
+export function createProductFromFrontend(name, barcode, list_price, category) {
+    return [
+        ...productInputSteps(name, barcode, list_price),
+        {
+            content: "Remove default tax 15%.",
+            trigger: 'div[name="taxes_id"] .o_delete',
+            run: "click",
+        },
+        {
+            content: "Open category selector.",
+            trigger: 'div[name="pos_categ_ids"] input',
+            run: "click",
+        },
+        {
+            isActive: ["desktop"],
+            content: "Select category.",
+            trigger: `.o_input_dropdown .o-autocomplete--dropdown-menu li:contains(${category})`,
+            run: "click",
+        },
+        {
+            isActive: ["mobile"],
+            content: "Select category.",
+            trigger: `.o_kanban_renderer .o_kanban_record span:contains(${category})`,
+            run: "click",
+        },
+    ];
+}
+
+export function editProductFromFrontend(name, barcode, list_price) {
+    return productInputSteps(name, barcode, list_price);
+}

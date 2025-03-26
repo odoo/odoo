@@ -1788,6 +1788,9 @@ export class PosStore extends WithLazyGetterTrap {
                     resId: product?.id,
                     onSave: (record) => {
                         this.data.read("product.template", [record.evalContext.id]);
+                        this.data.searchRead("product.product", [
+                            ["product_tmpl_id", "=", record.evalContext.id],
+                        ]);
                         this.action.doAction({
                             type: "ir.actions.act_window_close",
                         });
