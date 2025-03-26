@@ -929,7 +929,7 @@ test("empty many2one field", async () => {
 
     expect(".dropdown-menu li.o_m2o_dropdown_option").toHaveCount(2);
     expect(".dropdown-menu li.o_m2o_start_typing").toHaveCount(0);
-    expect(".dropdown-menu li.o_m2o_no_result").toHaveCount(1);
+    expect(".dropdown-menu li.o_m2o_no_result").toHaveCount(0);
 });
 
 test("empty readonly many2one field", async () => {

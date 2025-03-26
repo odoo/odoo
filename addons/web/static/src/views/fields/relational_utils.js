@@ -385,6 +385,7 @@ export class Many2XAutocomplete extends Component {
         } else {
             this.lastProm = this.abortableSearch(request);
             const records = await this.lastProm.promise;
+            addSearchMore = records.length > 0;
             if (records.length) {
                 for (const record of records) {
                     options.push({
@@ -392,8 +393,7 @@ export class Many2XAutocomplete extends Component {
                         record,
                     });
                 }
-            } else {
-                addSearchMore = false;
+            } else if (!this.activeActions.createEdit && !this.props.quickCreate) {
                 options.push({
                     label: _t("No records"),
                     classList: "o_m2o_no_result",

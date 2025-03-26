@@ -388,7 +388,7 @@ QUnit.module('partner_autocomplete', {
         assert.containsN(
             autocompleteContainer,
             ".o-autocomplete--dropdown-item",
-            7,  //3 suggestions + create + search more + create & edit + search worldwide
+            6,  // create + create & edit + 3 partner suggestions + search worldwide
             "Odoo autocomplete options should be shown"
         );
     });
