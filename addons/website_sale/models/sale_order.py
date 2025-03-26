@@ -323,7 +323,7 @@ class SaleOrder(models.Model):
         }
 
     def _cart_find_product_line(
-        self, product_id, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
+        self, product_id, *, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
     ):
         """Find the cart line matching the given parameters.
 
@@ -468,6 +468,7 @@ class SaleOrder(models.Model):
         self,
         product_id,
         quantity,
+        *,
         linked_line_id=False,
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,

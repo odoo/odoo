@@ -43,6 +43,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='cloud_storage_google_account_info',
     )
 
+    @api.model
     def get_values(self):
         res = super().get_values()
         if account_info := self.env['ir.config_parameter'].get_param('cloud_storage_google_account_info'):

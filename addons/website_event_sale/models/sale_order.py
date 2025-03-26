@@ -7,7 +7,7 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _cart_find_product_line(self, product_id, event_ticket_id=False, **kwargs):
+    def _cart_find_product_line(self, product_id, *, event_ticket_id=False, **kwargs):
         lines = super()._cart_find_product_line(
             product_id, event_ticket_id=event_ticket_id, **kwargs,
         )
@@ -16,7 +16,7 @@ class SaleOrder(models.Model):
 
         return lines.filtered(lambda line: line.event_ticket_id.id == event_ticket_id)
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, event_ticket_id=False, **kwargs):
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, *, event_ticket_id=False, **kwargs):
         """Restrict quantity updates for event tickets according to available seats."""
         new_qty, warning = super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
 
@@ -59,7 +59,7 @@ class SaleOrder(models.Model):
 
         return new_qty, warning
 
-    def _prepare_order_line_values(self, product_id, quantity, event_ticket_id=False, **kwargs):
+    def _prepare_order_line_values(self, product_id, quantity, *, event_ticket_id=False, **kwargs):
         """Add corresponding event to the SOline creation values (if ticket is provided)."""
         values = super()._prepare_order_line_values(product_id, quantity, **kwargs)
 
