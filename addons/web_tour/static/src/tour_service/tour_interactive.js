@@ -340,6 +340,49 @@ export class TourInteractive {
                     name: "input",
                     target: element,
                 });
+                if (element.classList.contains("o-autocomplete--input")) {
+                    consumeEvents.push({
+                        name: "keydown",
+                        target: element,
+                        conditional: (ev) => {
+                            if (
+                                ["Tab", "Enter"].includes(ev.key) &&
+                                ev.target.parentElement.querySelector(
+                                    ".o-autocomplete--dropdown-item .ui-state-active"
+                                )
+                            ) {
+                                const nextStep = this.actions.at(this.currentActionIndex + 1);
+                                if (
+                                    this.findTriggers(nextStep.anchor)
+                                        .at(0)
+                                        ?.closest(".o-autocomplete--dropdown-item")
+                                ) {
+                                    // Skip the next step if the next one is a click on a dropdown item
+                                    this.currentActionIndex++;
+                                }
+                                return true;
+                            }
+                        },
+                    });
+                    consumeEvents.push({
+                        name: "click",
+                        target: element.ownerDocument,
+                        conditional: (ev) => {
+                            if (ev.target.closest(".o-autocomplete--dropdown-item")) {
+                                const nextStep = this.actions.at(this.currentActionIndex + 1);
+                                if (
+                                    this.findTriggers(nextStep.anchor)
+                                        .at(0)
+                                        ?.closest(".o-autocomplete--dropdown-item")
+                                ) {
+                                    // Skip the next step if the next one is a click on a dropdown item
+                                    this.currentActionIndex++;
+                                }
+                                return true;
+                            }
+                        },
+                    });
+                }
             }
         }
 
