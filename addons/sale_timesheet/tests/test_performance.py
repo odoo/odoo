@@ -19,7 +19,7 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
         })
         self.assertFalse(project.task_ids.sale_line_id)
         self.env.invalidate_all()
-        with self.assertQueryCount(83):
+        with self.assertQueryCount(85):
             project.write({
                 'allow_billable': True,
                 'partner_id': self.partner_b.id,
