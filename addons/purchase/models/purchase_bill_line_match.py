@@ -97,7 +97,7 @@ class PurchaseBillLineMatch(models.Model):
               FROM purchase_order_line pol
          LEFT JOIN purchase_order po ON pol.order_id = po.id
              WHERE po.state = 'purchase'
-               AND pol.product_qty > pol.qty_invoiced
+               AND (pol.product_qty > pol.qty_invoiced OR pol.qty_to_invoice != 0)
                 OR ((pol.display_type = '' OR pol.display_type IS NULL) AND pol.is_downpayment AND pol.qty_invoiced > 0)
         """)
 
