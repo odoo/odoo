@@ -43,7 +43,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             )["store_data"]
         channel_info = data["discuss.channel"][0]
         self.assertEqual(channel_info['anonymous_name'], "Visitor 22")
-        self.assertEqual(channel_info["anonymous_country"], belgium.id)
+        self.assertEqual(channel_info["country_id"], belgium.id)
         self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
 
         # ensure persona info are hidden (in particular email and real name when livechat username is present)
@@ -102,7 +102,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         })["store_data"]
         channel_info = data["discuss.channel"][0]
         self.assertFalse(channel_info['anonymous_name'])
-        self.assertEqual(channel_info["anonymous_country"], belgium.id)
+        self.assertEqual(channel_info["country_id"], belgium.id)
         self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
         operator_member_domain = [
             ('channel_id', '=', channel_info['id']),
@@ -213,7 +213,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             "type": "partner",
         })
         self.assertFalse(channel_info['anonymous_name'])
-        self.assertEqual(channel_info['anonymous_country'], False)
+        self.assertEqual(channel_info['country_id'], False)
         self.assertEqual(
             data["res.partner"],
             self._filter_partners_fields(

@@ -58,8 +58,8 @@ class DiscussChannel(models.Model):
         fields = [
             "anonymous_name",
             "chatbot_current_step",
+            Store.One("country_id", ["code", "name"]),
             "livechat_active",
-            Store.One("country_id", ["code", "name"], rename="anonymous_country"),
             "livechat_operator_id",
         ]
         if self.env.user._is_internal():
