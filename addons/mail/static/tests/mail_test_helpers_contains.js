@@ -1,7 +1,7 @@
 /** @odoo-module alias=@web/../tests/utils default=false */
 
 import { __debug__, after, afterEach, expect, getFixture } from "@odoo/hoot";
-import { queryAll, queryFirst } from "@odoo/hoot-dom";
+import { queryAll, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
@@ -207,7 +207,7 @@ function triggerEvent(el, selector, eventType, eventInit, options = {}) {
     // Actual dispatch
     const [Constructor, processParams] = getEventConstructor(eventType);
     const event = new Constructor(eventType, processParams(eventInit));
-    target.dispatchEvent(event);
+    manuallyDispatchProgrammaticEvent(target, event.type, eventInit);
 
     if (__debug__.debug) {
         const group = `%c[${event.type.toUpperCase()}]`;
@@ -724,6 +724,55 @@ class Contains {
      */
     executeAction(el) {
         let message = this.successMessage;
+        const insertChar = (editor, char) => {
+            // Create and dispatch events to mock text insertion. Unfortunatly, the
+            // events will be flagged `isTrusted: false` by the browser, requiring
+            // the editor to detect them since they would not trigger the default
+            // browser behavior otherwise.
+            const setSelection = ({
+                anchorNode,
+                anchorOffset,
+                focusNode = anchorNode,
+                focusOffset = anchorOffset,
+            }) => {
+                const selection = anchorNode.ownerDocument.getSelection();
+                selection.setBaseAndExtent(anchorNode, anchorOffset, focusNode, focusOffset);
+            };
+            const selection = editor.ownerDocument.getSelection();
+            let offset = selection.anchorOffset;
+            let node = selection.anchorNode;
+            if (node.nodeType !== Node.TEXT_NODE) {
+                // if there is a child, we need to create a text node and combine with the first child
+                if (node.textContent) {
+                    let lastChild = node.lastChild;
+                    while (lastChild.lastChild) {
+                        lastChild = lastChild.lastChild;
+                    }
+                    if (lastChild.nodeType === Node.TEXT_NODE) {
+                        lastChild.textContent += char;
+                        setSelection({
+                            anchorNode: lastChild,
+                            anchorOffset: lastChild.textContent.length,
+                        });
+                    } else {
+                        node = document.createTextNode(char);
+                        offset = 1;
+                        lastChild.appendChild(node);
+                        setSelection({ anchorNode: node, anchorOffset: 1 });
+                    }
+                } else {
+                    const newTextNode = document.createTextNode(char);
+                    offset = 1;
+                    node.replaceChild(newTextNode, node.firstChild);
+                    setSelection({ anchorNode: newTextNode, anchorOffset: 1 });
+                }
+            } else {
+                node.textContent =
+                    node.textContent.slice(0, offset) + char + node.textContent.slice(offset);
+                offset++;
+                setSelection({ anchorNode: node, anchorOffset: offset });
+            }
+        };
         if (this.options.click) {
             message = `${message} and clicked it`;
             _click(el, undefined, {
@@ -780,19 +829,53 @@ class Contains {
         if (this.options.insertText !== undefined) {
             message = `${message} and inserted text "${this.options.insertText.content}" (replace: ${this.options.insertText.replace})`;
             el.focus();
-            if (this.options.insertText.replace) {
-                el.value = "";
-                el.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Backspace" }));
-                el.dispatchEvent(new window.KeyboardEvent("keyup", { key: "Backspace" }));
-                el.dispatchEvent(new window.InputEvent("input"));
+            if (!["TEXTAREA", "INPUT"].includes(el.tagName) && el.hasAttribute("contenteditable")) {
+                if (this.options.insertText.replace) {
+                    el.innerHTML = "<p><br></p>";
+                    manuallyDispatchProgrammaticEvent(el, "keydown", { key: "Backspace" });
+                    // InputEvent is required to simulate the insert text.
+                    manuallyDispatchProgrammaticEvent(el, "beforeinput", {
+                        inputType: "insertText",
+                        data: "Backspace",
+                    });
+                    manuallyDispatchProgrammaticEvent(el, "input", {
+                        inputType: "insertText",
+                        data: "Backspace",
+                    });
+                    // KeyUpEvent is not required but is triggered like the browser would.
+                    manuallyDispatchProgrammaticEvent(el, "keyup", { key: "Backspace" });
+                }
+                for (const char of this.options.insertText.content) {
+                    manuallyDispatchProgrammaticEvent(el, "keydown", { key: char });
+                    // InputEvent is required to simulate the insert text.
+                    manuallyDispatchProgrammaticEvent(el, "beforeinput", {
+                        inputType: "insertText",
+                        data: char,
+                    });
+                    insertChar(el, char);
+                    manuallyDispatchProgrammaticEvent(el, "input", {
+                        inputType: "insertText",
+                        data: char,
+                    });
+                    // KeyUpEvent is not required but is triggered like the browser would.
+                    manuallyDispatchProgrammaticEvent(el, "keyup", { key: char });
+                }
+                manuallyDispatchProgrammaticEvent(el, "change");
+            } else {
+                if (this.options.insertText.replace) {
+                    el.value = "";
+                    el.dispatchEvent(new window.KeyboardEvent("keydown", { key: "Backspace" }));
+                    el.dispatchEvent(new window.KeyboardEvent("keyup", { key: "Backspace" }));
+                    el.dispatchEvent(new window.InputEvent("input"));
+                }
+                for (const char of this.options.insertText.content) {
+                    el.value += char;
+                    el.dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
+                    el.dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
+                    el.dispatchEvent(new window.InputEvent("input"));
+                }
+                el.dispatchEvent(new window.InputEvent("change"));
             }
-            for (const char of this.options.insertText.content) {
-                el.value += char;
-                el.dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
-                el.dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
-                el.dispatchEvent(new window.InputEvent("input"));
-            }
-            el.dispatchEvent(new window.InputEvent("change"));
         }
         if (this.options.pasteFiles) {
             message = `${message} and pasted ${this.options.pasteFiles.length} file(s)`;
@@ -800,7 +883,14 @@ class Contains {
             Object.defineProperty(ev, "clipboardData", {
                 value: createFakeDataTransfer(this.options.pasteFiles),
             });
-            el.dispatchEvent(ev);
+            if (!["TEXTAREA", "INPUT"].includes(el.tagName) && el.hasAttribute("contenteditable")) {
+                const clipboardData = new DataTransfer();
+                clipboardData.items.add(...this.options.pasteFiles);
+                const pasteEvent = new ClipboardEvent("paste", { clipboardData, bubbles: true });
+                el.dispatchEvent(pasteEvent);
+            } else {
+                el.dispatchEvent(ev);
+            }
         }
         if (this.options.setFocus) {
             message = `${message} and focused it`;
@@ -849,10 +939,14 @@ class Contains {
             .filter((el) => el);
         /** @type {Contains[]} */
         this.childrenContains = [];
+        const areStringsExactlyEqual = (str1, str2) => {
+            const normalizeSpaces = (str) => str.replace(/\u00A0/g, " "); // Replace non-breaking spaces with regular spaces
+            return normalizeSpaces(str1) === normalizeSpaces(str2);
+        };
         const res = baseRes.filter((el, currentIndex) => {
             let condition =
                 (this.options.textContent === undefined ||
-                    el.textContent.trim() === this.options.textContent) &&
+                    areStringsExactlyEqual(el.textContent.trim(), this.options.textContent)) &&
                 (this.options.value === undefined || el.value === this.options.value) &&
                 (this.options.scroll === undefined ||
                     (this.options.scroll === "bottom"
@@ -860,9 +954,9 @@ class Contains {
                         : Math.abs(el.scrollTop - this.options.scroll) <= 1));
             if (condition && this.options.text !== undefined) {
                 if (
-                    el.textContent.trim() !== this.options.text &&
+                    !areStringsExactlyEqual(el.textContent.trim(), this.options.text) &&
                     [...el.querySelectorAll("*")].every(
-                        (el) => el.textContent.trim() !== this.options.text
+                        (el) => !areStringsExactlyEqual(el.textContent.trim(), this.options.text)
                     )
                 ) {
                     condition = false;

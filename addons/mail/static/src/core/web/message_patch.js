@@ -1,5 +1,5 @@
 import { Message } from "@mail/core/common/message";
-import { getNonEditableMentions, parseEmail } from "@mail/utils/common/format";
+import { formatMentionBlocksInBody, parseEmail } from "@mail/utils/common/format";
 import { markEventHandled } from "@web/core/utils/misc";
 import { renderToMarkup } from "@web/core/utils/render";
 
@@ -22,6 +22,11 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
+import { HtmlComposer } from "./html_composer";
+
+patch(Message, {
+    components: { ...Message.components, HtmlComposer },
+});
 
 patch(Message.prototype, {
     setup() {
@@ -76,7 +81,7 @@ patch(Message.prototype, {
         });
 
         const body = renderToMarkup("mail.Message.bodyInForward", {
-            body: getNonEditableMentions(this.message.body),
+            body: formatMentionBlocksInBody(this.message.body),
             date: datetimeFormatted,
             email,
             message: this.message,
@@ -119,7 +124,7 @@ patch(Message.prototype, {
         });
 
         const body = renderToMarkup("mail.Message.bodyInReply", {
-            body: getNonEditableMentions(this.message.body),
+            body: formatMentionBlocksInBody(this.message.body),
             date: datetimeFormatted,
             email,
             message: this.message,

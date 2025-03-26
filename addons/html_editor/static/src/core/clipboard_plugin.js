@@ -1,7 +1,13 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { removeClass, removeStyle, unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import {
+    removeClass,
+    removeStyle,
+    unwrapContents,
+    wrapInlinesInBlocks,
+    splitTextNode,
+} from "../utils/dom";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {
@@ -175,7 +181,7 @@ export class ClipboardPlugin extends Plugin {
 
         this.dependencies.history.stageSelection();
 
-        this.dispatchTo("before_paste_handlers", selection);
+        this.dispatchTo("before_paste_handlers", selection, ev);
         // refresh selection after potential changes from `before_paste` handlers
         selection = this.dependencies.selection.getEditableSelection();
 

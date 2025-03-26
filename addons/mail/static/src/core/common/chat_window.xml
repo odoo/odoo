@@ -108,7 +108,7 @@
                             <Typing channel="thread" size="'medium'"/>
                         </div>
                     </div>
-                    <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
+                    <t t-name="composer"><Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/></t>
                 </t>
             </t>
         </div>
