@@ -488,16 +488,15 @@ export class Form extends Interaction {
      * @private
      */
     _onPrepareEmailData() {
-        const formEl = this.el;
-        const fieldEls = formEl.querySelectorAll(
-            ".s_website_form_field:not(.s_website_form_dnone)"
+        const fieldEls = this.el.querySelectorAll(
+            ".s_website_form_field:not(.s_website_form_dnone):not([data-type='binary'])"
         );
 
         let result = {};
 
-        fieldEls.forEach((element) => {
-            const labelEl = element.querySelector("label.s_website_form_label");
-            const inputEl = element.querySelector("input, select, textarea");
+        fieldEls.forEach((fieldEl) => {
+            const labelEl = fieldEl.querySelector("label.s_website_form_label");
+            const inputEl = fieldEl.querySelector(".s_website_form_input");
 
             if (labelEl && inputEl) {
                 const labelContent = labelEl
@@ -505,20 +504,18 @@ export class Form extends Interaction {
                     ?.innerText.trim();
                 let inputValue;
 
-                if (inputEl.type === "button") {
-                    return;
-                } else if (inputEl.type === "checkbox") {
-                    const checkboxes = element.querySelectorAll("input[type='checkbox']:checked");
+                if (inputEl.type === "checkbox") {
+                    const checkboxes = fieldEl.querySelectorAll("input[type='checkbox']:checked");
                     inputValue = Array.from(checkboxes)
                         .map((checkbox) => {
-                            const label = element.querySelector("label[for='${checkbox.id}']");
+                            const label = fieldEl.querySelector("label[for='${checkbox.id}']");
                             return label ? label.textContent.trim() : checkbox.value;
                         })
                         .join(", ");
                 } else if (inputEl.type === "radio") {
-                    const radio = element.querySelector('input[type="radio"]:checked');
+                    const radio = fieldEl.querySelector('input[type="radio"]:checked');
                     if (radio) {
-                        const label = element.querySelector("label[for='${radio.id}']");
+                        const label = fieldEl.querySelector("label[for='${radio.id}']");
                         inputValue = label ? label.textContent.trim() : radio.value;
                     } else {
                         inputValue = "";
@@ -534,13 +531,13 @@ export class Form extends Interaction {
         });
 
         const hiddenFieldValue = JSON.stringify(result);
-        let hiddenField = formEl.querySelector("input[name='send_a_copy']");
+        let hiddenField = this.el.querySelector("input[name='send_a_copy']");
 
         if (!hiddenField) {
             hiddenField = document.createElement("input");
             hiddenField.type = "hidden";
             hiddenField.name = "send_a_copy";
-            formEl.appendChild(hiddenField);
+            this.el.appendChild(hiddenField);
         }
         hiddenField.value = hiddenFieldValue;
     } 

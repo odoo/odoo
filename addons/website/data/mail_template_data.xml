@@ -6,7 +6,7 @@
             <field name="name">Website: Send a copy of the form to Visitor</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="email_from">{{ object.company_id.email }}</field>
-            <field name="email_to">{{ ctx.get("to_mail","") }}</field>
+            <field name="email_to">{{ ctx.get("to_mail", "") }}</field>
             <field name="subject">Your answers on Form</field>
             <field name="description">Send a copy of the form to the user after successful submission</field>
             <field name="body_html" type="html">
@@ -20,7 +20,7 @@
                                             <h3 class="mb-2">Copy of your Form Submission</h3>
                                             <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
                                             <div style="font-size: 13px;">
-                                                Hello <t t-out="ctx.get('visitor_name','')">OdooBot</t>,<br /><br />
+                                                Hello <t t-out="ctx.get('visitor_name')">Visitor</t>,<br /><br />
                                                 Thanks to have filling in the form. <br /><br />
                                                 <t t-out="ctx.get('filled_values', '')"/><br />
                                                 Completed on <t t-out="format_date(datetime.datetime.now(), 'short')"/>. <br /><br />

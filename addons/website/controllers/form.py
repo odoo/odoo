@@ -69,7 +69,7 @@ class WebsiteForm(http.Controller):
             })
 
         user_email = kwargs.get("email_from") or kwargs.get("email")
-        visitor_name = kwargs.get("partner_name") or kwargs.get("contact_name") or kwargs.get("name") or 'Visitor'
+        visitor_name = kwargs.get("partner_name") or kwargs.get("contact_name") or kwargs.get("name")
 
         try:
             data = self.extract_data(model_record, kwargs)
@@ -99,9 +99,7 @@ class WebsiteForm(http.Controller):
                     request.env[model_name].sudo().browse(id_record).send()
 
                 try:
-                    send_email_flag = kwargs.get("send_a_copy", False)
-
-                    if send_email_flag and user_email:
+                    if user_email and kwargs.get("send_a_copy", False):
                         send_a_copy_dict = json.loads(kwargs.get("send_a_copy"))
                         template = request.env.ref("website.email_template_form_submission")
                         filled_values = nl2br(
@@ -116,8 +114,8 @@ class WebsiteForm(http.Controller):
                         ).send_mail(
                             2, force_send=True, raise_exception=True
                         )
-                except Exception as e:
-                    _logger.exception("Error while sending a copy of the form submission to the user: %s", e)
+                except Exception:
+                    _logger.exception("Error while sending a copy of the form submission to the user")
 
         # Some fields have additional SQL constraints that we can't check generically
         # Ex: crm.lead.probability which is a float between 0 and 1

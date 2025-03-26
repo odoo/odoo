@@ -1120,10 +1120,12 @@ registerWebsitePreviewTour(
             groupName: "Contact & Forms",
         }),
         {
+            content: "Select the form by clicking on an input field",
             trigger: ":iframe input[name=email_from]",
             run: "click",
         },
         {
+            content: "Check if the 'Send a Copy' option is enabled by default.", 
             trigger: "we-button[data-select-class=o_send_a_copy] we-checkbox",
             run: function () {
                 // to check whether the option is active by default or not.
@@ -1131,34 +1133,42 @@ registerWebsitePreviewTour(
             },
         },
         {
+            content: "Open dropdown to change Action",
             trigger: "we-toggler:contains('Send an E-mail')",
             run: "click",
         },
         {
+            content: "Select 'Apply for a Job' action",
             trigger: "we-button.o_we_user_value_widget div:contains('Apply for a Job')",
             run: "click",
         },
         {
+            content: "Select the 'email_from' input field from the form. ",
             trigger: ":iframe input[name=email_from]",
             run: "click",
         },
         {
+            content: "Remove email field from the form",
             trigger: ":iframe button.oe_snippet_remove",
             run: "click",
         },
         {
+            content: "Verify whether the email field has been removed.",
             trigger:
                 ":iframe section[data-snippet=s_website_form] form:not(input[name=email_from])",
         },
         {
+            content: "Enble 'Send a Copy' option",
             trigger: "we-button[data-select-class=o_send_a_copy] we-checkbox",
             run: "click",
         },
         {
+            content: "Select the 'email_from' input field from the form.",
             trigger: ":iframe input[name=email_from]",
             run: "click",
         },
         {
+            content: "Verify that the email field can no longer removable.",
             trigger:
                 "we-alert span:contains('The field “email_from” is mandatory for the action “Send a Copy”.')",
         },
