@@ -1,10 +1,12 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
-import { expect, test } from "@odoo/hoot";
-import { animationFrame, dblclick, waitFor } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, dblclick, microTick, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
+import { mockImageRequests, testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
+mockImageRequests();
 
 test("click on Image shouldn't open toolbar", async () => {
     const { getEditor } = await setupWebsiteBuilder(
@@ -35,4 +37,34 @@ test("double click on text", async () => {
     await dblclick(":iframe .text_class");
     await animationFrame();
     expect(".modal-content").toHaveCount(0);
+});
+
+describe("Image format/optimize", () => {
+    test("Should format an image to be 800px", async () => {
+        const { getEditor } = await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+        const editor = getEditor();
+        await contains(":iframe .test-options-target img").click();
+
+        await contains("[data-label='Format'] .dropdown").click();
+        await waitFor('[data-action-id="setImageFormat"]');
+        queryAll(`[data-action-id="setImageFormat"]`)
+            .find((el) => el.textContent.includes("800px"))
+            .click();
+        // ensure the shape action has been applied
+        await editor.shared.operation.next(() => {});
+
+        const img = queryFirst(":iframe .test-options-target img");
+        expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
+        expect(":iframe .test-options-target img").toHaveAttribute(
+            "data-computed-mimetype",
+            "image/webp"
+        );
+        expect(img.src.startsWith("data:image/webp;base64,")).toBe(true);
+        await waitFor("[data-label='Format']");
+        expect(queryFirst("[data-label='Format'] .dropdown").textContent).toMatch(/800px/);
+    });
 });
