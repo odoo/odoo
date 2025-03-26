@@ -27,7 +27,7 @@
             </span>
             <div class="px-3 py-4 text-center">
                 <button class="btn btn-primary btn-lg" t-attf-style="{{selfOrder.config.self_ordering_mode === 'kiosk' ? 'height: 10vh; width: 40vw;' : ''}}" t-on-click="backToHome">
-                    <span t-if="!confirmedOrder.uiState.receiptReady" class="spinner-border"></span>
+                    <span t-if="!confirmedOrder?.uiState?.receiptReady" class="spinner-border"></span>
                     <t t-elif="this.selfOrder.config.self_ordering_mode === 'kiosk'">Close</t>
                     <t t-else="">Ok</t>
                 </button>

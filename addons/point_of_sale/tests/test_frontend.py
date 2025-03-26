@@ -1905,11 +1905,14 @@ class TestTaxCommonPOS(TestPointOfSaleHttpCommon, TestTaxCommon):
         self.assertRecordValues(order, [expected_amounts])
 
     def assert_pos_orders_and_invoices(self, tour, tests_with_orders):
-        with self.with_new_session(user=self.pos_user) as session:
-            self.start_pos_tour(tour)
-            orders = self.env['pos.order'].search([('session_id', '=', session.id)], limit=len(tests_with_orders))
-            for index, (order, (test_code, _document, _soft_checking, _amount_type, _amount, expected_values)) in enumerate(zip(orders, tests_with_orders)):
-                with self.subTest(test_code=test_code, index=index):
-                    self.assert_pos_order_totals(order, expected_values)
-                    if order.account_move:
-                        self.assert_invoice_totals(order.account_move, expected_values)
+        if self.main_pos_config.current_session_id:
+            self.main_pos_config.current_session_id.post_closing_cash_details(0)
+            self.main_pos_config.current_session_id.close_session_from_ui()
+
+        self.start_pos_tour(tour)
+        orders = self.env['pos.order'].search([('session_id', '=', self.main_pos_config.current_session_id.id)], limit=len(tests_with_orders))
+        for index, (order, (test_code, _document, _soft_checking, _amount_type, _amount, expected_values)) in enumerate(zip(orders, tests_with_orders)):
+            with self.subTest(test_code=test_code, index=index):
+                self.assert_pos_order_totals(order, expected_values)
+                if order.account_move:
+                    self.assert_invoice_totals(order.account_move, expected_values)
