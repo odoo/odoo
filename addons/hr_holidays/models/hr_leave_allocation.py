@@ -44,6 +44,12 @@ class HrLeaveAllocation(models.Model):
             ]
         return domain
 
+    def _default_employee_id(self):
+        employee = self.env.user.employee_id or self.env['hr.employee'].search(self._domain_employee_id(), limit=1)
+        if not employee:
+            raise UserError(_("This company does not have any employees."))
+        return employee
+
     name = fields.Char(
         string='Description',
         compute='_compute_description',
@@ -69,7 +75,7 @@ class HrLeaveAllocation(models.Model):
         domain=_domain_holiday_status_id,
         default=_default_holiday_status_id)
     employee_id = fields.Many2one(
-        'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
+        'hr.employee', string='Employee', default=_default_employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
