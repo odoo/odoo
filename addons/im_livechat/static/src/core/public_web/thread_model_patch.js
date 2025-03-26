@@ -12,8 +12,8 @@ patch(Thread.prototype, {
                 return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
+        this.country_id = fields.One("res.country");
         this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
-        this.anonymous_country = fields.One("res.country");
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {
@@ -51,8 +51,8 @@ patch(Thread.prototype, {
         if (!this.correspondent.persona.is_public && this.correspondent.persona.country) {
             return `${this.correspondent.name} (${this.correspondent.persona.country.name})`;
         }
-        if (this.anonymous_country) {
-            return `${this.correspondent.name} (${this.anonymous_country.name})`;
+        if (this.country_id) {
+            return `${this.correspondent.name} (${this.country_id.name})`;
         }
         return this.correspondent.name;
     },
