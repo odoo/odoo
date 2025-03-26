@@ -4,6 +4,12 @@ import { registry } from "@web/core/registry";
 export class DynamicSnippetProducts extends DynamicSnippetCarousel {
     static selector = ".s_dynamic_snippet_products";
 
+    setup() {
+        super.setup();
+        this.el.dataset.productCategoryId ||= 'all';
+        this.el.dataset.showVariants ??= true;
+    }
+
     /**
      * Gets the category search domain
      */
@@ -46,6 +52,20 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
             searchDomain.push(["all_product_tag_ids", "in", productTagIds.map(productTag => productTag.id)]);
         }
         return searchDomain;
+    }
+
+    /**
+     * @override
+     */
+    getContextualFilterDomain() {
+        return [['product_cross_selling', '=', false]];
+    }
+
+    /**
+     * @override
+     */
+    getModelNameFilter() {
+        return 'product.product';
     }
 
     /**
