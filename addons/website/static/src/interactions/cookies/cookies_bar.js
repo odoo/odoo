@@ -32,6 +32,68 @@ export class CookiesBar extends Popup {
         this.showToggle();
     }
 
+    start() {
+        super.start();
+
+        // Add a link to the cookie policy page in the copyright footer.
+        // TODO: In master, add this link via XML.
+        const copyrightFooterContainerEl = document.querySelector(
+            ".o_footer_copyright_name"
+        )?.parentElement;
+        if (copyrightFooterContainerEl) {
+            const cookiePolicyLinkEl = cloneContentEls(`
+                <p><a href="/cookie-policy" class="o_cookie_policy_link">${_t(
+                    "Cookie Policy"
+                )}</a></p>
+            `).firstElementChild;
+            this.insert(cookiePolicyLinkEl, copyrightFooterContainerEl);
+        }
+
+        // Since cookie preferences can be changed, update the gtag script that
+        // toggles the gtag consent. So, when the user modifies their cookie
+        // preference their gtag consent is also updated.
+        // TODO: In master, update the #tracking_code_config script via XML.
+        const originalTrackingCodeScriptEl = document.querySelector("#tracking_code_config");
+        if (originalTrackingCodeScriptEl) {
+            // Remove the one-time event listener added by the original script
+            document.removeEventListener("optionalCookiesAccepted", window.allConsentsGranted);
+
+            // Create a new script element
+            const updatedTrackingCodeScript = `
+                window.dataLayer = window.dataLayer || [];
+                function gtag() {
+                    dataLayer.push(arguments);
+                }
+
+                function updateConsents(consentState) {
+                    gtag("consent", "update", {
+                        "ad_storage": consentState,
+                        "ad_user_data": consentState,
+                        "ad_personalization": consentState,
+                        "analytics_storage": consentState,
+                    });
+                }
+
+                document.addEventListener("optionalCookiesAccepted", () => {
+                    updateConsents("granted");
+                });
+
+                document.addEventListener("optionalCookiesDenied", () => {
+                    updateConsents("denied");
+                });
+            `;
+            const newScriptEl = document.createElement("script");
+            newScriptEl.id = "tracking_code_config";
+            newScriptEl.textContent = updatedTrackingCodeScript;
+
+            // Replace the original script with the new one
+            originalTrackingCodeScriptEl.parentNode.replaceChild(
+                newScriptEl,
+                originalTrackingCodeScriptEl
+            );
+        }
+    }
+
     showPopup() {
         super.showPopup();
         if (this.toggleEl) {
@@ -52,11 +114,11 @@ export class CookiesBar extends Popup {
     }
 
     onToggleCookiesBar() {
+        this.cookieValue = cookie.get(this.el.id);
         this.bsModal.toggle();
         // As we're using Bootstrap's events, the Popup class prevents the modal
         // from being shown after hiding it: override that behavior.
         this.popupAlreadyShown = false;
-        cookie.delete(this.el.id);
     }
 
     /**
@@ -67,6 +129,8 @@ export class CookiesBar extends Popup {
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}, "ts": ${Date.now()}}`;
         if (isFullConsent) {
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        } else {
+            document.dispatchEvent(new Event("optionalCookiesDenied"));
         }
         this.bsModal.hide();
         this.services.website_cookies.bus.trigger("cookiesBar.discard");
