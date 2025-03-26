@@ -1699,7 +1699,6 @@ export class PosStore extends WithLazyGetterTrap {
         // printing errors
         if (unsuccedPrints.length) {
             const failedReceipts = unsuccedPrints.join(", ");
-            //debugger;
             this.dialog.add(AlertDialog, {
                 title: _t("Printing failed"),
                 body: _t("Failed in printing %s changes of the order", failedReceipts),
@@ -2264,19 +2263,32 @@ export class PosStore extends WithLazyGetterTrap {
               });
     }
 
+    sortByWordIndex(products, words) {
+        return products.sort((a, b) => {
+            const nameA = unaccent(a.name);
+            const nameB = unaccent(b.name);
+
+            const indexA = nameA.indexOf(words);
+            const indexB = nameB.indexOf(words);
+            return (
+                (indexA === -1) - (indexB === -1) || indexA - indexB || nameA.localeCompare(nameB)
+            );
+        });
+    }
+
     getProductsBySearchWord(searchWord, products) {
         const words = unaccent(searchWord.toLowerCase(), false);
         const exactMatches = products.filter((product) => product.exactMatch(words));
 
         if (exactMatches.length > 0 && words.length > 2) {
-            return exactMatches;
+            return this.sortByWordIndex(exactMatches, words);
         }
 
         const matches = products.filter((p) =>
             unaccent(p.searchString, false).toLowerCase().includes(words)
         );
 
-        return Array.from(new Set([...exactMatches, ...matches]));
+        return this.sortByWordIndex(Array.from(new Set([...exactMatches, ...matches])), words);
     }
 
     getPaymentMethodDisplayText(pm, order) {
