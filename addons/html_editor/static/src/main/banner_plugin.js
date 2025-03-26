@@ -76,6 +76,7 @@ export class BannerPlugin extends Plugin {
         ],
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_editor_banner"),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
     };
 
     setup() {
@@ -127,5 +128,11 @@ export class BannerPlugin extends Plugin {
 
     normalize(root) {
         this.dependencies.sanitize.restoreSanitizedContentEditable(root);
+    }
+
+    cleanForSave({ root }) {
+        root.querySelectorAll(".o_editor_banner [contenteditable='true']").forEach((el) => {
+            el.removeAttribute("contenteditable");
+        });
     }
 }

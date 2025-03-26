@@ -34,6 +34,7 @@ export class FilePlugin extends Plugin {
             },
         }),
         selectors_for_feff_providers: () => ".o_file_box",
+        clean_for_save_handlers: this.cleanForSave.bind(this),
     };
 
     get recordInfo() {
@@ -77,5 +78,11 @@ export class FilePlugin extends Plugin {
         });
         const { name: filename, mimetype } = attachment;
         return renderStaticFileBox(filename, mimetype, url);
+    }
+
+    cleanForSave({ root }) {
+        root.querySelectorAll(".o_file_box [contenteditable='true']").forEach((el) => {
+            el.removeAttribute("contenteditable");
+        });
     }
 }

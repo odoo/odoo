@@ -2193,3 +2193,35 @@ describe("translatable", () => {
         expect(".o_field_html .btn.o_field_translate").not.toBeVisible();
     });
 });
+
+test('should remove `contenteditable="true"` from banner on save', async () => {
+    onRpc("partner", "web_save", ({ args }) => {
+        expect.step("web_save");
+        expect(args[1].txt).toBe(
+            `<div contenteditable="false" class="o_editor_banner"><a href="#">link</a></div><div><br></div>`
+        );
+    });
+    Partner._records = [
+        {
+            id: 1,
+            txt: ``,
+        },
+    ];
+    await mountView({
+        type: "form",
+        resId: 1,
+        resIds: [1, 2],
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="txt" widget="html"/>
+            </form>`,
+    });
+
+    pasteOdooEditorHtml(
+        htmlEditor,
+        `<div class="o_editor_banner" contenteditable="false"><a href="#" contenteditable="true">link</a></div>`
+    );
+    await clickSave();
+    expect.verifySteps(["web_save"]);
+});
