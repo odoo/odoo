@@ -12,6 +12,8 @@ from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import convert, SQL
 from odoo.osv import expression
 
+DEFAULT_LIMIT_LOAD_PRODUCT = 5000
+DEFAULT_LIMIT_LOAD_PARTNER = 100
 
 class PosConfig(models.Model):
     _name = 'pos.config'
@@ -742,20 +744,18 @@ class PosConfig(models.Model):
         }).id
 
     def get_limited_product_count(self):
-        default_limit = 5000
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', default_limit)
+        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', DEFAULT_LIMIT_LOAD_PRODUCT)
         try:
             return int(config_param)
         except (TypeError, ValueError, OverflowError):
-            return default_limit
+            return DEFAULT_LIMIT_LOAD_PRODUCT
 
     def _get_limited_partner_count(self):
-        default_limit = 100
-        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', default_limit)
+        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', DEFAULT_LIMIT_LOAD_PARTNER)
         try:
             return int(config_param)
         except (TypeError, ValueError, OverflowError):
-            return default_limit
+            return DEFAULT_LIMIT_LOAD_PARTNER
 
     def get_limited_partners_loading(self, offset=0):
         return self.env.execute_query(SQL("""
@@ -1038,7 +1038,7 @@ class PosConfig(models.Model):
     def _set_default_pos_load_limit(self):
         param_model = self.env["ir.config_parameter"]
         if not param_model.get_param("point_of_sale.limited_product_count"):
-            param_model.set_param("point_of_sale.limited_product_count", 20000)
+            param_model.set_param("point_of_sale.limited_product_count", DEFAULT_LIMIT_LOAD_PRODUCT)
 
         if not param_model.get_param("point_of_sale.limited_customer_count"):
-            param_model.set_param("point_of_sale.limited_customer_count", 100)
+            param_model.set_param("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
