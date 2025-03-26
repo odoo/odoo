@@ -1,5 +1,4 @@
 import { hasTouch, isBrowserFirefox } from "@web/core/browser/feature_detection";
-import { rpc } from "@web/core/network/rpc";
 import { utils as uiUtils } from "@web/core/ui/ui_service";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
@@ -630,54 +629,6 @@ publicWidget.registry.WebsiteSaleSearchModal = publicWidget.Widget.extend({
     },
 });
 
-publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
-    selector: '.oe_website_sale',
-    disabledInEditableMode: false,
-    events: {
-        'change .o_wsale_apply_layout input': '_onApplyShopLayoutChange',
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onApplyShopLayoutChange: function (ev) {
-        const wysiwyg = this.options.wysiwyg;
-        if (wysiwyg) {
-            wysiwyg.odooEditor.observerUnactive('_onApplyShopLayoutChange');
-        }
-        var clickedValue = $(ev.target).val();
-        var isList = clickedValue === 'list';
-        if (!this.editableMode) {
-            rpc('/shop/save_shop_layout_mode', {
-                'layout_mode': isList ? 'list' : 'grid',
-            });
-        }
-
-        const activeClasses = ev.target.parentElement.dataset.activeClasses.split(' ');
-        ev.target.parentElement.querySelectorAll('.btn').forEach((btn) => {
-            activeClasses.map(c => btn.classList.toggle(c));
-        });
-
-        var $grid = this.$('#products_grid');
-        // Disable transition on all list elements, then switch to the new
-        // layout then reenable all transitions after having forced a redraw
-        // TODO should probably be improved to allow disabling transitions
-        // altogether with a class/option.
-        $grid.find('*').css('transition', 'none');
-        $grid.toggleClass('o_wsale_layout_list', isList);
-        void $grid[0].offsetWidth;
-        $grid.find('*').css('transition', '');
-        if (wysiwyg) {
-            wysiwyg.odooEditor.observerActive('_onApplyShopLayoutChange');
-        }
-    },
-});
-
 publicWidget.registry.WebsiteSaleAccordionProduct = publicWidget.Widget.extend({
     selector: "#product_accordion",
 
@@ -753,7 +704,6 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
 
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,
-    WebsiteSaleLayout: publicWidget.registry.WebsiteSaleLayout,
     WebsiteSaleSearchModal: publicWidget.registry.WebsiteSaleSearchModal,
     WebsiteSaleProductPage: publicWidget.registry.WebsiteSaleAccordionProduct,
     WebsiteSaleCarouselProduct: publicWidget.registry.websiteSaleCarouselProduct,
