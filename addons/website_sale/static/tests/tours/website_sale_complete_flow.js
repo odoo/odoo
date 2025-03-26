@@ -77,11 +77,6 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "click",
     },
     {
-        content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
-        run: "click",
-    },
-    {
         content: "Billing address is not same as delivery address",
         trigger: '#use_delivery_as_billing',
         run: "click",
@@ -137,11 +132,6 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '#billing_address_row:contains(17, SO1 Billing Road):contains(SO1BillingCity):contains(Afghanistan)',
     },
     {
-        content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
-        run: "click",
-    },
-    {
         content: "Click for edit billing address",
         trigger: '.all_billing .js_edit_address:first',
         run: "click",
@@ -177,7 +167,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         tourUtils.confirmOrder(),
     {
         content: "Check selected billing address is same as typed in previous step",
-        trigger: '#billing_address_row:contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
+        trigger: '#delivery_and_billing :contains(Billing:):contains(SO1 Billing Street Edited, 33):contains(SO1BillingCityEdited):contains(Afghanistan)',
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -372,6 +362,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '.oe_cart .btn:contains("Save address")',
         run: "click",
     },
+        tourUtils.confirmOrder(),
     {
         content: "Select `Wire Transfer` payment method",
         trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
@@ -494,6 +485,11 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     },
         tourUtils.goToCart(),
         tourUtils.goToCheckout(),
+    {
+        content: "Click on 'Confirm' button (redirect to the 'extra info' form)",
+        trigger: 'a[href^="/shop/extra_info"]',
+        run: "click",
+    },
     {
         content: "Click on 'Continue checkout' button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
