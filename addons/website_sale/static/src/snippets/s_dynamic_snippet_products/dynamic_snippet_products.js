@@ -51,6 +51,20 @@ export class DynamicSnippetProducts extends DynamicSnippetCarousel {
     /**
      * @override
      */
+    getContextualFilterDomain() {
+        return [['product_cross_selling', '=', false]];
+    }
+
+    /**
+     * @override
+     */
+    getModelNameFilter() {
+        return 'product.product';
+    }
+
+    /**
+     * @override
+     */
     getSearchDomain() {
         const searchDomain = super.getSearchDomain(...arguments);
         searchDomain.push(...this.getCategorySearchDomain());

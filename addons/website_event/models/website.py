@@ -71,6 +71,12 @@ class Website(models.Model):
 
         return new_page
 
+    @api.model
+    def get_available_snippets(self):
+        available_snippets = super().get_available_snippets()
+        available_snippets.add('website_event.s_events')
+        return available_snippets
+
     def get_suggested_controllers(self):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
