@@ -15,7 +15,7 @@ class CrmTeamMember(models.Model):
         'crm.team', string='Sales Team',
         group_expand='_read_group_expand_full',  # Always display all the teams
         default=False,  # TDE: temporary fix to activate depending computed fields
-        check_company=True, index=True, ondelete="cascade", required=True)
+        check_company=False, index=True, ondelete="cascade", required=True)
     user_id = fields.Many2one(
         'res.users', string='Salesperson',  # TDE FIXME check responsible field
         check_company=True, index=True, ondelete='cascade', required=True,
@@ -74,6 +74,16 @@ class CrmTeamMember(models.Model):
                 _("You are trying to create duplicate membership(s). We found that %(duplicates)s already exist(s).",
                   duplicates=", ".join("%s (%s)" % (m.user_id.name, m.crm_team_id.name) for m in duplicates)
                  ))
+
+    @api.constrains('crm_team_id', 'user_id')
+    def _constrains_company_membership(self):
+        for membership in self.filtered(lambda m: m.crm_team_id.company_id):
+            if membership.crm_team_id.company_id not in membership.user_id.company_ids:
+                raise exceptions.UserError(_("User '%(user)s' is not allowed in the company '%(company)s' of the Sales Team '%(team)s'.",
+                    user=membership.user_id.name,
+                    company=membership.crm_team_id.company_id.display_name,
+                    team=membership.crm_team_id.name
+                ))
 
     @api.depends('crm_team_id', 'is_membership_multi', 'user_id')
     @api.depends_context('default_crm_team_id')
