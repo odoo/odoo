@@ -53,6 +53,7 @@ class ResConfigSettings(models.TransientModel):
     pos_module_pos_discount = fields.Boolean(related='pos_config_id.module_pos_discount', readonly=False)
     pos_module_pos_hr = fields.Boolean(related='pos_config_id.module_pos_hr', readonly=False)
     pos_module_pos_restaurant = fields.Boolean(related='pos_config_id.module_pos_restaurant', readonly=False)
+    pos_module_pos_appointment = fields.Boolean(related="pos_config_id.module_pos_appointment", readonly=False)
     pos_module_pos_avatax = fields.Boolean(related='pos_config_id.module_pos_avatax', readonly=False)
     pos_is_order_printer = fields.Boolean(compute='_compute_pos_printer', store=True, readonly=False)
     pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
