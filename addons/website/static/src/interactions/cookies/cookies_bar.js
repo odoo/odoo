@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { _t } from "@web/core/l10n/translation";
 import { isVisible } from "@web/core/utils/ui";
-import { cloneContentEls } from "@website/js/utils";
 import { setUtmsHtmlDataset } from "@website/utils/misc";
 
 // Extending the Popup class with cookiebar functionality.
@@ -29,34 +28,23 @@ export class CookiesBar extends Popup {
 
     setup() {
         super.setup();
-        this.showToggle();
     }
 
     showPopup() {
         super.showPopup();
-        if (this.toggleEl) {
+
+        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
+        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
             this.onToggleCookiesBar();
         }
     }
 
-    showToggle() {
-        const policyLinkEl = this.el.querySelector(".o_cookies_bar_text_policy");
-        if (policyLinkEl && window.location.pathname === new URL(policyLinkEl.href).pathname) {
-            this.toggleEl = cloneContentEls(`
-            <button class="o_cookies_bar_toggle btn btn-info btn-sm rounded-circle d-flex gap-2 align-items-center position-fixed pe-auto">
-                <i class="fa fa-eye" alt="" aria-hidden="true"></i> <span class="o_cookies_bar_toggle_label"></span>
-            </button>
-            `).firstElementChild;
-            this.insert(this.toggleEl, this.el, "beforebegin");
-        }
-    }
-
     onToggleCookiesBar() {
+        this.cookieValue = cookie.get(this.el.id);
         this.bsModal.toggle();
         // As we're using Bootstrap's events, the Popup class prevents the modal
         // from being shown after hiding it: override that behavior.
         this.popupAlreadyShown = false;
-        cookie.delete(this.el.id);
     }
 
     /**
@@ -67,9 +55,10 @@ export class CookiesBar extends Popup {
         this.cookieValue = `{"required": true, "optional": ${isFullConsent}, "ts": ${Date.now()}}`;
         if (isFullConsent) {
             document.dispatchEvent(new Event("optionalCookiesAccepted"));
+        } else {
+            document.dispatchEvent(new Event("optionalCookiesDenied"));
         }
         this.bsModal.hide();
-        this.services.website_cookies.bus.trigger("cookiesBar.discard");
     }
 
     onHideModal() {

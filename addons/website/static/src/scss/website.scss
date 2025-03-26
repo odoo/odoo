@@ -336,6 +336,16 @@ body {
             }
         }
     }
+
+    #footer {
+        & + .o_cookie_policy_link_container {
+            margin-top: 1rem;
+        }
+
+        & ~ .o_cookie_policy_link_container:last-of-type {
+            margin-bottom: 1rem;
+        }
+    }
 }
 
 // We don't want the area to be visible in edit mode when we edit the popup that
