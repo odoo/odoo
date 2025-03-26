@@ -294,7 +294,11 @@ class HrJob(models.Model):
                     if partner not in job.manager_id._get_related_partners().ids
                 ]
                 job.message_unsubscribe(to_unsubscribe)
-                application_ids = job.application_ids.filtered(lambda x: x.user_id == old_recruiters[job])
+                application_ids = job.application_ids.filtered(
+                    lambda x:
+                        x.user_id == old_recruiters[job] and
+                        x.application_status == 'ongoing'
+                )
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
                     application_ids.user_id = job.user_id

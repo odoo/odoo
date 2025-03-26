@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import fields
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import new_test_user
 
@@ -133,3 +134,23 @@ class TestRecruitmentInterviewer(MailCase):
         # Checked that notification message is created
         message = self.env['mail.message'].search([('res_id', '=', applicant.id)], limit=1)
         self.assertEqual(message.subject, f"You have been assigned as an interviewer for {applicant.display_name}")
+
+    def test_update_recruiter_for_ongoing_application(self):
+        Application = self.env['hr.applicant']
+        new_manager_user = new_test_user(self.env, 'thala',
+            groups='base.group_user,hr_recruitment.group_hr_recruitment_manager',
+            name='New Recruitment Manager', email='thala@example.com')
+        ongoing_application = Application.create({
+            'job_id': self.job.id,
+            'user_id': self.manager_user.id,
+            'application_status': 'ongoing',
+        })
+        hired_application = Application.create({
+            'job_id': self.job.id,
+            'user_id': self.manager_user.id,
+            'date_closed': fields.Datetime.now(),
+            'application_status': 'hired',
+        })
+        self.job.write({'user_id': new_manager_user.id})
+        self.assertEqual(ongoing_application.user_id, new_manager_user)
+        self.assertEqual(hired_application.user_id, self.manager_user)
