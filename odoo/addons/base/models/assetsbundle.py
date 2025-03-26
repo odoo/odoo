@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import re
+import sys
 import textwrap
 import uuid
 
@@ -1279,17 +1280,9 @@ class ScssStylesheetAsset(PreprocessedCSS):
     def compile(self, source):
         if libsass is None:
             return super().compile(source)
-
         try:
             profiler.force_hook()
-            return libsass.compile(
-                string=source,
-                include_paths=[
-                    self.bootstrap_path,
-                ],
-                output_style=self.output_style,
-                precision=self.precision,
-            )
+            return self.compile_string(source)
         except libsass.CompileError as e:
             raise CompileError(e.args[0])
 
@@ -1300,6 +1293,30 @@ class ScssStylesheetAsset(PreprocessedCSS):
             sassc = 'sassc'
         return [sassc, '--stdin', '--precision', str(self.precision), '--load-path', self.bootstrap_path, '-t', self.output_style]
 
+    def compile_string(self, string):
+        if isinstance(string, str):
+            string = string.encode('utf-8')
+        fs_encoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
+        include_paths = self.bootstrap_path.encode(fs_encoding)
+        precision = self.precision
+        output_style = libsass._sass.OUTPUT_STYLES[self.output_style]
+        source_comments = False
+        custom_functions = []
+        indented = False
+        importers = None
+        source_map_contents = False
+        source_map_embed = False
+        omit_source_map_url = False
+        source_map_root = None
+        s, v = libsass._sass.compile_string(
+            string, output_style, source_comments, include_paths, precision,
+            custom_functions, indented, importers,
+            source_map_contents, source_map_embed, omit_source_map_url,
+            source_map_root,
+        )
+        if s:
+            return v.decode('utf-8')
+        raise CompileError(v)
 
 class LessStylesheetAsset(PreprocessedCSS):
     def get_command(self):
