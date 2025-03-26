@@ -399,20 +399,21 @@ class AccountBankStatementLine(models.Model):
             'name': False,
             **vals,
         } for vals in vals_list])
-
+        to_create_lines_vals = []
         for i, (st_line, vals) in enumerate(zip(st_lines, vals_list)):
-            counterpart_account_id = counterpart_account_ids[i]
-
-            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             if 'line_ids' not in vals_list[i]:
-                to_write['line_ids'] = [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals(
-                    counterpart_account_id=counterpart_account_id)]
+                to_create_lines_vals.extend(
+                    line_vals
+                    for line_vals in st_line._prepare_move_line_default_vals(counterpart_account_ids[i])
+                )
+            to_write = {'statement_line_id': st_line.id, 'narration': st_line.narration, 'name': False}
             with self.env.protecting(self.env['account.move']._get_protected_vals(vals, st_line)):
                 st_line.move_id.write(to_write)
-            self.env.add_to_compute(self.env['account.move']._fields['name'], st_line.move_id)
+        self.env['account.move.line'].create(to_create_lines_vals)
+        self.env.add_to_compute(self.env['account.move']._fields['name'], st_lines.move_id)
 
-            # Otherwise field narration will be recomputed silently (at next flush) when writing on partner_id
-            self.env.remove_to_compute(st_line.move_id._fields['narration'], st_line.move_id)
+        # Otherwise field narration will be recomputed silently (at next flush) when writing on partner_id
+        self.env.remove_to_compute(self.env['account.move']._fields['narration'], st_lines.move_id)
 
         # No need for the user to manage their status (from 'Draft' to 'Posted')
         st_lines.move_id.action_post()
