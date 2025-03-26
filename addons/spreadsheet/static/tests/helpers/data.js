@@ -292,6 +292,18 @@ export class ResCurrency extends models.Model {
     ];
 }
 
+export class ResCountry extends webModels.ResCountry {
+    _name = "res.country";
+    name = fields.Char({ string: "Country" });
+    code = fields.Char({ string: "Code" });
+
+    _records = [
+        { id: 1, name: "Belgium", code: "BE" },
+        { id: 2, name: "France", code: "FR" },
+        { id: 3, name: "United States", code: "US" },
+    ];
+}
+
 export class Partner extends models.Model {
     _name = "partner";
 
@@ -525,6 +537,7 @@ export const SpreadsheetModels = {
     IrActions,
     ResGroup,
     ResUsers,
+    ResCountry,
     SpreadsheetMixin,
     ResCurrency,
     Partner,
