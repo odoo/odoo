@@ -1010,6 +1010,7 @@ class ChromeBrowser:
             '--no-default-browser-check': '',
             '--no-first-run': '',
             '--disable-extensions': '',
+            '--disable-component-extensions-with-background-pages': '',
             '--disable-background-networking' : '',
             '--disable-background-timer-throttling' : '',
             '--disable-backgrounding-occluded-windows': '',
