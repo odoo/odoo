@@ -133,7 +133,7 @@ class SaleOrder(models.Model):
 
         # If the order has exactly one project and that project comes from a template, set the company of the template
         # on the project.
-        for order in self:
+        for order in self.sudo(): # Salesman may not have access to projects
             if len(order.project_ids) == 1:
                 project = order.project_ids[0]
                 for sol in order.order_line:
