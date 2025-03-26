@@ -3,8 +3,8 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2025
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1522,28 +1522,28 @@ msgstr "Pobrania częściowe"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation
 msgid "Backorder Confirmation"
-msgstr "Potwierdzenie zamówienia oczekującego"
+msgstr "Potwierdzenie pobrania częściowego"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_backorder_confirmation_line
 msgid "Backorder Confirmation Line"
-msgstr "Linia potwierdzenia zamówienia oczekującego"
+msgstr "Linia potwierdzenia zamówienia zaległego"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__backorder_confirmation_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Linie potwierdzenia zamówienia oczekującego"
+msgstr "Linie potwierdzenia zamówienia zaległego"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Backorder creation"
-msgstr "Tworzenie zamówienia oczekującego"
+msgstr "Tworzenie pobrania częściowego"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Backorders"
-msgstr "Zamówienia oczekujące"
+msgstr "Pobrania częściowe"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__barcode
@@ -1800,14 +1800,14 @@ msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
 msgstr ""
-"Zmiana firmy tego zapisu jest w tym momencie zabroniona, należy go raczej "
+"Zmiana firmy tego rekordu jest w tym momencie zabroniona, należy go raczej "
 "zarchiwizować i utworzyć nowy."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr "Zmiana typu operacji tego zapisu jest w tym momencie zabroniona."
+msgstr "Zmiana typu operacji tego rekordu jest w tym momencie zabroniona."
 
 #. module: stock
 #. odoo-python
@@ -2138,7 +2138,7 @@ msgstr "Ilość Pobrań"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Ilość zebranych zamówień oczekujących"
+msgstr "Ilość zebranych pobrań częściowych"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
@@ -2181,13 +2181,13 @@ msgstr "Odpowiednik lokalizacji"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Utwórz zamówienie oczekujące"
+msgstr "Utwórz pobranie częściowe"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Create Backorder?"
-msgstr "Utworzyć zamówienie oczekujące?"
+msgstr "Utwórzyć pobranie częściowe?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
@@ -2213,8 +2213,8 @@ msgid ""
 "                            products later. Do not create a backorder if you will not\n"
 "                            process the remaining products."
 msgstr ""
-"Utwórz zamówienie oczekujące, jeśli spodziewasz się przetworzyć pozostałe\n"
-"produkty później. Nie twórz zamówienia oczekującego, jeśli nie zamierzasz\n"
+"Utwórz zamówienie zaległe, jeśli spodziewasz się przetworzyć pozostałe\n"
+"produkty później. Nie twórz zamówienia zaległego, jeśli nie zamierzasz\n"
 "przetwarzać pozostałych produktów."
 
 #. module: stock
@@ -2481,7 +2481,7 @@ msgstr "Zliczanie cykliczne"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "DEMO_DATE"
-msgstr "DEMO_DATE"
+msgstr "DEMO_DATA"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -3227,7 +3227,7 @@ msgstr "Dokumentacja"
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Done"
-msgstr "Gotowe"
+msgstr "Wykonano"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
@@ -3471,7 +3471,7 @@ msgstr "Pierwsze weszło, pierwsze wyszło (FIFO)"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "First Lot Number"
-msgstr "Pierwszy numer partii"
+msgstr "Pierwszy numer serii"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__next_serial
@@ -4079,8 +4079,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the route "
 "without removing it."
 msgstr ""
-"Jeśli nie jest zaznaczone, umożliwi to ukrycie trasy bez konieczności "
-"usuwania jej."
+"Jeśli opcja jest niezaznaczona, to marszruta będzie ukryta (i nie będziesz "
+"jej musiał usuwać)."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__empty
@@ -4098,8 +4098,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the delivery slip "
 "of a picking when it is validated."
 msgstr ""
-"Jeśli to pole jest zaznaczone, Odoo automatycznie wydrukuje dowód dostawy "
-"kompletacji, kiedy ta będzie zatwierdzona."
+"Jeśli to pole jest zaznaczone, Odoo automatycznie wydrukuje dowód dostawy, "
+"kiedy będzie zatwierdzony."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_lot_labels
@@ -4108,7 +4108,7 @@ msgid ""
 "of a picking when it is validated."
 msgstr ""
 "Jeśli to pole jest zaznaczone, Odoo automatycznie wydrukuje etykiety "
-"partii/NS kompletacji, kiedy ta będzie zatwierdzona."
+"partii/NS kompletacji, kiedy będzie zatwierdzona."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__auto_print_package_label
@@ -4252,7 +4252,7 @@ msgstr "Natychmiastowe pobranie"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/generate_serial.js:0
 msgid "Import Lots"
-msgstr "Import partii"
+msgstr "Import serii"
 
 #. module: stock
 #. odoo-javascript
@@ -4685,7 +4685,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_type
 msgid "It specifies goods to be deliver partially or all at once"
-msgstr "Określa towary, które mają być wydane w partiach lub jednocześnie"
+msgstr "To określa towary, które mają być wydane częściowo lub naraz"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__move_type
@@ -4946,7 +4946,7 @@ msgstr "Czynności zaległe"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Late Availability"
-msgstr "Późna dostępność"
+msgstr "Późna dostępnosc"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
@@ -5716,7 +5716,7 @@ msgstr "Nie wybrano %s lub wybrano zlecenie dostawy"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Brak zamówienia oczekującego"
+msgstr "Bez pobrania częściowego"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__no-message
@@ -6338,12 +6338,12 @@ msgstr "Opakowanie"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package A"
-msgstr "Paczka A"
+msgstr "Package A"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Package B"
-msgstr "Paczka B"
+msgstr "Package B"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_quant_package_barcode_small
@@ -7527,7 +7527,7 @@ msgstr "Przyjmij w 3 krokach (wejście + jakość + zasoby)"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__two_steps
 msgid "Receive then Store (2 steps)"
-msgstr "Przyjmij a następnie przechowuj (2 kroki)"
+msgstr "Przyjmij a potem przechowuj (2 kroki)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__reception_steps__three_steps
@@ -7614,7 +7614,7 @@ msgstr "Powiązane ruchy akcji"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Relocate"
-msgstr "Relokuj"
+msgstr "RElokuj"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_relocate_view_form
@@ -8603,7 +8603,7 @@ msgstr "Pokaż transfery"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Pokaż wszystkie zapisy, których data kolejnej czynności przypada przed "
+"Pokaż wszystkie rekordy, których data kolejnej czynności przypada przed "
 "dzisiaj"
 
 #. module: stock
@@ -8877,7 +8877,7 @@ msgstr "Pobranie"
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_quant_view_graph
 msgid "Stock Quant"
-msgstr "Ilość zasobów"
+msgstr "Kwant zasobów"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_quantity_history
@@ -9028,7 +9028,7 @@ msgstr "Rodzaj przechowywania"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Store To"
-msgstr "Przechowuj do"
+msgstr "Przechowuj w"
 
 #. module: stock
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
@@ -9062,7 +9062,7 @@ msgstr "Przechowuj w podlokacji"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__sublocation
 msgid "Sublocation"
-msgstr "Pod-lokalizacja"
+msgstr "pod-lokalizacja"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__supplied_wh_id
@@ -9187,7 +9187,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "The backorder %s has been created."
-msgstr "Zamówienie oczekujące %s zostało utworzone."
+msgstr "Zamówienie zaległe %s zostało utworzone."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_barcode_company_uniq
@@ -9710,7 +9710,7 @@ msgstr "Ilość jest wyrażona w domyślnej jednostce miary tego produktu."
 #. odoo-javascript
 #: code:addons/stock/static/src/views/list/inventory_report_list_model.js:0
 msgid "This record already exists."
-msgstr "Ten zapis już istnieje."
+msgstr "Ten rekord już istnieje."
 
 #. module: stock
 #. odoo-python
@@ -10196,7 +10196,7 @@ msgstr "Typ operacji"
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ wyjątku działania na zapisie."
+msgstr "Typ wyjątku działania na rekordzie."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -11339,7 +11339,7 @@ msgid ""
 "You tried to create a record that already exists. The existing record was "
 "modified instead."
 msgstr ""
-"Próbowano utworzyć zapis, który już istnieje. Istniejący zapis został "
+"Próbowano utworzyć rekord, który już istnieje. Istniejący rekord został "
 "zmodyfikowany."
 
 #. module: stock
@@ -11557,7 +11557,7 @@ msgstr "np. magazyn centralny"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "e.g. LOT-PR-00012"
-msgstr "np. LOT-PR-00012"
+msgstr "e.g. LOT-PR-00012"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
@@ -11592,7 +11592,7 @@ msgstr "np. Przyjęcia"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "e.g. SN000001"
-msgstr "np. SN000001"
+msgstr "e.g. SN000001"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -11607,7 +11607,7 @@ msgstr "np. odbiór dwuetapowy"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
-msgstr "np. d7vctmiv2rwgenebha8bxq7irooudn"
+msgstr "e.g. d7vctmiv2rwgenebha8bxq7irooudn"
 
 #. module: stock
 #: model:product.removal,method:stock.removal_fifo

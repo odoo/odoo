@@ -5,8 +5,8 @@
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
 # Jessica Jakara, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-15 15:04+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3323,8 +3323,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
-"Näytä vaihtoehto tähän liittyvissä asiakirjoissa, jolla voit avata "
-"kokoonpanon ohjatun toiminnon tällä mallilla"
+"Näytä vaihtoehto tähän liittyvissä asiakirjoissa, jolla voit avata ohjatun "
+"kokoonpanotoiminnon tällä mallilla"
 
 #. module: mail
 #. odoo-javascript
@@ -4462,7 +4462,7 @@ msgstr "HTTP-reititys"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr "Hallitse sähköpostissa"
+msgstr "Hallinnoi sähköpostitse"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
@@ -5695,7 +5695,7 @@ msgstr "Linkin esikatselut"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Link copied!"
-msgstr "Linkki on kopioitu!"
+msgstr "Linkki kopioitu!"
 
 #. module: mail
 #. odoo-javascript
@@ -7897,7 +7897,7 @@ msgid ""
 msgstr ""
 "Käsittele jokainen saapuva sähköposti osana tämän dokumenttityypin "
 "keskustelua. Tämä luo uuden dokumentin jokaiselle uudelle keskustelulle, tai"
-" liittää vastausviestit olemassaoleviin keskusteluihin (dokumentteihin)."
+" liittää vastausviestit olemassaoleville keskusteluille (dokumenteille)."
 
 #. module: mail
 #. odoo-javascript
@@ -9598,7 +9598,7 @@ msgid ""
 "or raw); received %(engine)s instead."
 msgstr ""
 "Mallin renderöinti tukee vain inline_template-, qweb- tai qweb_view- (view "
-"tai raw) -muotoja; vastaanotettu sen sijaan %(engine)s."
+"tai raw) -muotoja; sen sijaan saatiin %(engine)s."
 
 #. module: mail
 #. odoo-javascript
@@ -10047,7 +10047,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/res_config_settings.py:0
 msgid "This layout seems to no longer exist."
-msgstr "Näkymää ei näytä olevan enää olemassa."
+msgstr "Tätä asettelua ei ole enää olemassa."
 
 #. module: mail
 #. odoo-javascript
@@ -10390,15 +10390,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
-"Palvelimen toimintatyyppi. Käytettävissä seuraavat arvot:\n"
-"- 'Päivitä kirjaus': päivitä kirjauksen arvot\n"
-"- 'Luo toiminto': luo toiminnon (Viestintä)\n"
-"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin (Viestintä)\n"
-"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin (tekstiviesti)- 'Lisää/poista seuraajia': lisää tai poista seuraajia kirjauksesta (Viestintä)\n"
-"- 'Luo kirjaus': luo uusi kirjaus uusilla arvoilla\n"
-"- 'Suorita koodi': Python-koodin lohko, joka suoritetaan\n"
-"- 'Lähetä Webhook-ilmoitus': lähetä POST-pyyntö ulkoiseen järjestelmään, joka tunnetaan myös nimellä Webhook\n"
-"- 'Suorita olemassa olevat toiminnot': Määritä toiminto, joka käynnistää useita muita palvelintoimintoja\n"
+"Palvelimen toimintatyyppi. Käytettävissä ovat seuraavat arvot:\n"
+"- päivitä tietue: päivitä tietueen arvot\n"
+"- 'Create Activity': luo toiminnon (Keskustele)\n"
+"- 'Lähetä sähköposti': lähettää viestin, huomautuksen tai sähköpostin (Keskustele)\n"
+"- 'Lähetä tekstiviesti': lähetä tekstiviestejä, kirjaa ne asiakirjoihin (tekstiviesti)- 'Lisää/poista seuraajia': lisää tai poista seuraajia tietueeseen (Keskustele)\n"
+"- 'Luo tietue': luo uusi tietue uusilla arvoilla\n"
+"- 'Execute Code': Python-koodin lohko, joka suoritetaan\n"
+"- 'Send Webhook Notification': lähetä POST-pyyntö ulkoiseen järjestelmään, joka tunnetaan myös nimellä Webhook\n"
+"- 'Execute Existing Actions': Määritä toiminto, joka käynnistää useita muita palvelintoimintoja\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -11113,7 +11113,7 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
-"Asiakirjoja tulostettaessa ja dataa viedessä/tuodessa, aika-arvot lasketaan tämän aikavyöhykkeen mukaan.\n"
+"Kun tulostetaan asiakirjoja ja viedään tai tuodaan tietoja, aika-arvot lasketaan tämän aikavyöhykkeen mukaan.\n"
 "Jos aikavyöhykettä ei ole asetettu, käytetään UTC (Coordinated Universal Time) -aikavyöhykettä.\n"
 "Muuten arvot lasketaan verkkoselaimen aika-asetusten mukaan."
 

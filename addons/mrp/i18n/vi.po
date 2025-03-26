@@ -1072,7 +1072,7 @@ msgstr "Dựa trên"
 #: model:ir.actions.act_window,name:mrp.action_mrp_batch_produce
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text
 msgid "Batch Production"
-msgstr "Sản xuất hàng loạt"
+msgstr "Sản xuất theo lô"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__before
@@ -2013,7 +2013,7 @@ msgstr "Ủy thác một phần quy trình sản xuất cho các đơn vị gia 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__delivery_count
 msgid "Delivery Orders"
-msgstr "Phiếu xuất kho"
+msgstr "Lệnh giao hàng"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__note
@@ -2290,7 +2290,7 @@ msgstr "Thời lượng dự kiến (phút)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_text_help
 msgid "Explanation for batch production"
-msgstr "Giải thích về sản xuất hàng loạt"
+msgstr "Giải thích về sản xuất theo lô"
 
 #. module: mrp
 #. odoo-javascript
@@ -4166,7 +4166,7 @@ msgstr "Kiểu lấy hàng"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_ids
 msgid "Picking associated to this manufacturing order"
-msgstr "Phiếu lấy hàng có liên quan tới lệnh sản xuất này"
+msgstr "Phiếu xuất kho có liên quan tới lệnh sản xuất này"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_loc_id
@@ -4388,7 +4388,7 @@ msgstr "Sản xuất tất cả"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_batch_produce
 msgid "Produce a batch of production order"
-msgstr "Tiến hành sản xuất một loạt MO"
+msgstr "Tiến hành sản xuất một lô MO"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -5642,7 +5642,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
-msgstr ""
+msgstr "Số lượng đã sản xuất phải lớn hơn 0."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6851,6 +6851,8 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
 msgstr ""
+"Bạn không thể sản xuất nhiều hơn 1 đơn vị của một sản phẩm có số sê-ri cùng "
+"một lúc."
 
 #. module: mrp
 #. odoo-python
@@ -7024,7 +7026,7 @@ msgid ""
 "instance."
 msgstr ""
 "nó được chuyển đi thông qua một lệnh chuyển hàng, ví dụ như một phiếu nhập "
-"kho hoặc phiếu xuất kho."
+"kho hoặc lệnh giao hàng."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

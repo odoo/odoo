@@ -3,8 +3,8 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2025
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-15 15:04+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -129,7 +129,7 @@ msgid ""
 "others"
 msgstr ""
 "%(emoji)s reakcja od %(person1)s, %(person2)s, %(person3)s, i %(count)s "
-"inncyh"
+"innych"
 
 #. module: mail
 #. odoo-javascript
@@ -531,7 +531,7 @@ msgstr ""
 "                                użytkowników w historii wiadomości.\n"
 "                            </span>\n"
 "                            <span invisible=\"mail_post_method != 'comment'\">\n"
-"                                Wiadomość zostanie opublikowana jako wiadomość w zapisie,\n"
+"                                Wiadomość zostanie opublikowana jako wiadomość w rekordzie,\n"
 "                                powiadamiając wszystkich obserwujących. Pojawi się ono w historii wiadomości.\n"
 "                            </span>"
 
@@ -555,7 +555,7 @@ msgstr "<span>Jeśli nie zostało to zrobione przez ciebie:</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
 msgid "<span>Open Record</span>"
-msgstr "<span>Otwórz zapis</span>"
+msgstr "<span>Otwórz rekord</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
@@ -584,7 +584,7 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Słownik (dictionary) python, który będzie wyliczony i zastosowany jako "
-"wartości domyślne do tworzenia nowego zapisu w tym aliasie."
+"wartości domyślne do tworzenia nowego rekordu w tym aliasie."
 
 #. module: mail
 #. odoo-python
@@ -816,7 +816,7 @@ msgstr "Działania do stworzenia"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
-msgstr "Aktywności muszą być powiązane z zapisami z niezerowym res_id."
+msgstr "Aktywności muszą być powiązane z rekordami z niezerowym res_id."
 
 #. module: mail
 #. odoo-javascript
@@ -1935,12 +1935,12 @@ msgstr "Anulowano"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_canned_response
 msgid "Canned Response"
-msgstr "Szybka odpowiedź"
+msgstr "Gotowa odpowiedź"
 
 #. module: mail
 #: model:res.groups,name:mail.group_mail_canned_response_admin
 msgid "Canned Response Administrator"
-msgstr "Administrator szybkich odpowiedzi"
+msgstr "Administrator gotowych odpowiedzi"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_canned_response_action
@@ -1957,7 +1957,7 @@ msgstr "Wyszukiwanie gotowych odpowiedzi"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 msgid "Canned response"
-msgstr "Szybka odpowiedź"
+msgstr "Gotowa odpowiedź"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_canned_response__source
@@ -1966,14 +1966,14 @@ msgid ""
 "in your messages. Type ':' followed by the name of your shortcut (e.g. "
 ":hello) to use in your messages."
 msgstr ""
-"Szybka odpowiedź która będzie automatycznie podmieniona poprzez dłuższą "
+"Gotowa odpowiedź która będzie automatycznie podmieniona poprzez dłuższą "
 "treść. Wpisz ':' a następnie nazwę swojego skrótu (np. :hello) aby użyć go w"
 " swojej wiadomości."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "Canned responses"
-msgstr "Szybkie odpowiedzi"
+msgstr "Gotowe odpowiedzi"
 
 #. module: mail
 #. odoo-python
@@ -2685,7 +2685,7 @@ msgstr "Utwórz szablon e-mail"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__object_id
 msgid "Create a New Record"
-msgstr "Utwórz nowy zapis"
+msgstr "Utwórz nowy rekord"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_plan_action
@@ -2798,7 +2798,7 @@ msgstr "Data utworzenia"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/chatter.js:0
 msgid "Creating a new record..."
-msgstr "Tworzę nowy zapis..."
+msgstr "Tworzę nowy rekord..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -3035,7 +3035,7 @@ msgid ""
 "- partner (using id on a partner or the partner_id field) OR\n"
 "- email (using email_from or email field)"
 msgstr ""
-"Domyślni odbiorcy zapisu:\n"
+"Domyślni odbiorcy rekordu:\n"
 "- partnerzy (za pomocą ID partnera lub pola partner_id) LUB\n"
 "- e-mail (za pomocą adresu w polu email)"
 
@@ -3380,7 +3380,7 @@ msgstr "Domena"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Done"
-msgstr "Gotowe"
+msgstr "Wykonano"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
@@ -3438,13 +3438,13 @@ msgstr "Pobierz:"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/mail_attachment_dropzone.xml:0
 msgid "Drop Files here"
-msgstr "Upuść tutaj pliki"
+msgstr "Upuść pliki tutaj"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__date_deadline
 msgid "Due Date"
-msgstr "Termin Płatności"
+msgstr "Termin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
@@ -3499,7 +3499,7 @@ msgstr "Dynamiczne raporty"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__generic
 msgid "Dynamic User (based on record)"
-msgstr "Dynamiczny użytkownik (na podstawie zapisu)"
+msgstr "Dynamiczny użytkownik (na podstawie rekordu)"
 
 #. module: mail
 #. odoo-javascript
@@ -3733,8 +3733,8 @@ msgid ""
 "Email aliases %(alias_name)s cannot be used on several records at the same "
 "time. Please update records one by one."
 msgstr ""
-"Aliasy e-mail %(alias_name)s nie mogą być używane w kilku zapisach "
-"jednocześnie. Należy aktualizować zapisy jeden po drugim."
+"Aliasy e-mail %(alias_name)s nie mogą być używane w kilku rekordach "
+"jednocześnie. Należy aktualizować rekordy jeden po drugim."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
@@ -3857,7 +3857,7 @@ msgid ""
 "notification records. Please see with an administrator."
 msgstr ""
 "Błąd bez zgłaszania wyjątku. Prawdopodobnie spowodowany równoległym dostępem"
-" do zapisów powiadomień. Skontaktuj się z administratorem."
+" do rekordów powiadomień. Skontaktuj się z administratorem."
 
 #. module: mail
 #. odoo-python
@@ -4714,7 +4714,7 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
-"ID zapisu nadrzędnego zawierającego alias (np. projekt zawierający alias "
+"ID rekordu nadrzędnego zawierającego alias (np. projekt zawierający alias "
 "tworzenia zadań)"
 
 #. module: mail
@@ -5166,7 +5166,7 @@ msgid ""
 "record or an XMLID"
 msgstr ""
 "Nieprawidłowy szablon lub źródło widoku %(svalue)s(typ %(stype)s), powinien "
-"być zapis lub XMLID"
+"być rekord lub XMLID"
 
 #. module: mail
 #. odoo-python
@@ -5183,8 +5183,8 @@ msgstr ""
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
-"Nieprawidłowy szablon lub zapis źródła widoku %(svalue)s, zamiast tego jest "
-"%(model)s"
+"Nieprawidłowy szablon lub rekord źródła widoku %(svalue)s, zamiast tego jest"
+" %(model)s"
 
 #. module: mail
 #. odoo-python
@@ -5940,7 +5940,7 @@ msgid ""
 "found (model %(model_name)s)."
 msgstr ""
 "Kompozytor poczty w trybie komentarza powinien działać na co najmniej jednym"
-" zapisie. Nie znaleziono zapisów (model %(model_name)s)."
+" rekordzie. Nie znaleziono rekordów (model %(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -6237,7 +6237,7 @@ msgstr "Reakcje na Wiadomość"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__record_name
 #: model:ir.model.fields,field_description:mail.field_mail_message__record_name
 msgid "Message Record Name"
-msgstr "Nazwa zapisu wiadomości"
+msgstr "Nazwa rekordu wiadomości"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_translation
@@ -6299,8 +6299,9 @@ msgid ""
 "on its wall."
 msgstr ""
 "Podtyp wiadomości precyzuje rodzaj wiadomości. W szczególności dla "
-"powiadomień. Na przykład: powiadomienie może dotyczyć nowego zapisu (Nowe), "
-"lub zmiany etapu (Zmiana etapu). Podtypy ułatwiają porządkowanie wiadomości."
+"powiadomień. Na przykład: powiadomienie może dotyczyć nowego rekordu (Nowe),"
+" lub zmiany etapu (Zmiana etapu). Podtypy ułatwiają porządkowanie "
+"wiadomości."
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_subtype
@@ -6414,7 +6415,7 @@ msgid ""
 "Mixin to compute the time a record has spent in each value a many2one field "
 "can take"
 msgstr ""
-"Mixin do obliczania czasu, jaki zapis spędził w każdej wartości pola "
+"Mixin do obliczania czasu, jaki rekord spędził w każdej wartości pola "
 "many2one."
 
 #. module: mail
@@ -6704,7 +6705,7 @@ msgstr "Brak dostępnego statusu IM"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__no_record
 msgid "No Record"
-msgstr "Brak zapisów"
+msgstr "Brak rekordów"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_activity_without_access_action
@@ -6836,7 +6837,7 @@ msgstr "Nie znaleziono użytkowników"
 #. odoo-python
 #: code:addons/mail/controllers/mail.py:0
 msgid "Non existing record or wrong token."
-msgstr "Nieistniejący zapis lub nieprawidłowy token."
+msgstr "Nieistniejący rekord lub nieprawidłowy token."
 
 #. module: mail
 #. odoo-javascript
@@ -6948,7 +6949,7 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received "
 "%(aids)s)"
 msgstr ""
-"Powiadomienie powinno otrzymywać zapisy załączników jako listę "
+"Powiadomienie powinno otrzymywać rekordy załączników jako listę "
 "identyfikatorów (otrzymano %(aids)s)"
 
 #. module: mail
@@ -7314,9 +7315,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Opcjonalne ID wątku (zapisu), do którego przychodzące wiadomości będą "
-"dowiązane, nawet jeśli nie są odpowiedzią na ten zapis. Jeśli ustawione, to "
-"będzie zapobiegać tworzeniu nowych zapisów."
+"Opcjonalne ID wątku (rekordu), do którego przychodzące wiadomości będą "
+"dowiązane, nawet jeśli nie są odpowiedzią na ten rekord. Jeśli ustawione, to"
+" będzie zapobiegać tworzeniu nowych rekordów."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
@@ -7485,7 +7486,7 @@ msgstr "Model nadrzędny"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "ID wątku zapisu nadrzędnego"
+msgstr "ID wątku rekordu nadrzędnego"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__parent_channel_id
@@ -7809,7 +7810,7 @@ msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
 msgstr ""
-"Wysłanie wiadomości powinno skutkować otrzymaniem zapisów załączników w "
+"Wysłanie wiadomości powinno skutkować otrzymaniem rekordów załączników w "
 "postaci listy identyfikatorów ( otrzymano %(aids)s)"
 
 #. module: mail
@@ -7826,7 +7827,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Powered by"
-msgstr "Powered by"
+msgstr "Zasilane przez"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
@@ -8114,17 +8115,17 @@ msgstr "Zalecany typ czynności"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__resource_ref
 msgid "Record"
-msgstr "Zapis"
+msgstr "Rekord"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__record_name
 msgid "Record Name"
-msgstr "Nazwa zapisu"
+msgstr "Nazwa rekordu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "ID wątku zapisu"
+msgstr "ID wątku rekordu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__references
@@ -8561,7 +8562,7 @@ msgstr "Planowane akywności"
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity On Selected Records"
-msgstr "Zaplanuj aktywność w wybranych zapisach"
+msgstr "Zaplanuj aktywność w wybranych rekordach"
 
 #. module: mail
 #. odoo-javascript
@@ -8591,7 +8592,7 @@ msgstr "Zaplanuj czynność"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_list_popover.xml:0
 msgid "Schedule an activity on selected records"
-msgstr "Zaplanuj działanie na wybranych zapisach"
+msgstr "Zaplanuj działanie na wybranych rekordach"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_cron
@@ -8784,25 +8785,25 @@ msgstr "Zobacz wszystkie przypięte wiadomości."
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user)s"
-msgstr "Widziano przez %(user)s"
+msgstr "Wyświetlono przez %(user)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s and %(user2)s"
-msgstr "Widziano przez %(user1)s i %(user2)s"
+msgstr "Wyświetlono przez %(user1)s i %(user2)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s and %(user3)s"
-msgstr "Widziano przez %(user1)s, %(user2)s i %(user3)s"
+msgstr "Wyświetlono przez %(user1)s, %(user2)s i %(user3)s"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/message_seen_indicator.js:0
 msgid "Seen by %(user1)s, %(user2)s, %(user3)s and %(count)s others"
-msgstr "Widziano przez %(user1)s, %(user2)s, %(user3)s i %(count)s innych"
+msgstr "Wyświetlono przez %(user1)s, %(user2)s, %(user3)s i %(count)s innych"
 
 #. module: mail
 #. odoo-javascript
@@ -9132,7 +9133,7 @@ msgstr "Pokaż wszystkich odbiorców"
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Pokaż wszystkie zapisy, których data kolejnej czynności przypada przed "
+"Pokaż wszystkie rekordy, których data kolejnej czynności przypada przed "
 "dzisiaj"
 
 #. module: mail
@@ -9180,7 +9181,8 @@ msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
-"Akcja w bocznym pasku to udostępnienia tego szablonu dla zapisów tego modelu"
+"Akcja w bocznym pasku to udostępnienia tego szablonu dla rekordów tego "
+"modelu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__og_site_name
@@ -9363,7 +9365,7 @@ msgstr "Przestań odpowiadać"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
-msgstr "Przechowuj wiadomości e-mail i odpowiedzi w czacie każdego zapisu"
+msgstr "Przechowuj wiadomości e-mail i odpowiedzi w czacie każdego rekordu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_link_preview
@@ -9574,7 +9576,7 @@ msgid ""
 "“%(res_ids)s” instead."
 msgstr ""
 "Renderowanie szablonów powinno być wywoływane przy użyciu listy ID; zamiast "
-"tego otrzymano \"%(res_ids)s\"."
+"tego otrzymano “%(res_ids)s”."
 
 #. module: mail
 #. odoo-python
@@ -9640,7 +9642,7 @@ msgstr "Testuj i potwierdź"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Test Record:"
-msgstr "Zapis testowy:"
+msgstr "Rekord testowy:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
@@ -9849,8 +9851,8 @@ msgid ""
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
 "Model (rodzaj dokumentu Odoo), któremu odpowiada ten alias. Każda "
-"przychodząca wiadomość e-mail, która nie odpowiada istniejącemu zapisowi, "
-"spowoduje utworzenie nowego zapisu tego modelu (np. Zadanie projektu)"
+"przychodząca wiadomość e-mail, która nie odpowiada istniejącemu rekordowi, "
+"spowoduje utworzenie nowego rekordu tego modelu (np. Zadanie projektu)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_name
@@ -9884,7 +9886,7 @@ msgstr "Manager kolejki wyśle tą wiadomość po dacie "
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The records must belong to the same company."
-msgstr "Zapisy muszą należeć do tej samej firmy."
+msgstr "Rekordy muszą należeć do tej samej firmy."
 
 #. module: mail
 #. odoo-python
@@ -9901,7 +9903,7 @@ msgstr ""
 "\n"
 "(Rodzaj dokumentu: %(type)s, Operacja: %(operation)s)\n"
 "\n"
-"Rekody: %(records)s, Użytkownik: %(user)s"
+"Rekordy: %(records)s, Użytkownik: %(user)s"
 
 #. module: mail
 #. odoo-python
@@ -10061,7 +10063,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/activity_exception/activity_exception.xml:0
 msgid "This record has an exception activity."
-msgstr "Ten zapis ma wyjątkową czynność."
+msgstr "Ten rekord ma wyjątkową czynność."
 
 #. module: mail
 #. odoo-javascript
@@ -10377,11 +10379,11 @@ msgid ""
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
 "Typ akcji serwera. Dostępne są następujące wartości:\n"
-"- „Update a Record”: aktualizacja wartości zapisu.\n"
+"- „Update a Record”: aktualizacja wartości rekordu.\n"
 "- „Create Activity” (Utwórz aktywność): tworzenie aktywności (Omówienie)\n"
 "- „Send Email”: opublikuj wiadomość, notatkę lub wyślij e-mail (Omówienie)\n"
-"- „Send SMS”: wysyłanie wiadomości SMS, rejestrowanie ich w dokumentach (SMS)- „Add/Remove Followers”: dodawanie lub usuwanie obserwujących do zapisu (Omów)\n"
-"- „Create Record” (Utwórz zapis): tworzenie nowego zapisu z nowymi wartościami\n"
+"- „Send SMS”: wysyłanie wiadomości SMS, rejestrowanie ich w dokumentach (SMS)- „Add/Remove Followers”: dodawanie lub usuwanie obserwujących do rekordu (Omów)\n"
+"- „Create Record” (Utwórz rekord): tworzenie nowego rekordu z nowymi wartościami\n"
 "- „Execute Code”: blok kodu Python, który zostanie wykonany.\n"
 "- „Send Webhook Notification”: wysyłanie żądania POST do zewnętrznego systemu, znanego również jako Webhook.\n"
 "- „Execute Existing Actions”: definiuje akcję, która uruchamia kilka innych akcji serwera.\n"
@@ -10392,7 +10394,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,help:mail.field_res_users__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Typ wyjątku działania na zapisie."
+msgstr "Typ wyjątku działania na rekordzie."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_ice_server__uri
@@ -10649,7 +10651,7 @@ msgid ""
 msgstr ""
 "Użyj opcji „Specific User”, aby zawsze przypisywać tego samego użytkownika "
 "do następnej aktywności. Użyj opcji „Dynamic User”, aby określić nazwę pola "
-"użytkownika, który ma zostać wybrany w zapisie."
+"użytkownika, który ma zostać wybrany w rekordzie."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__external_email_server_default
@@ -10677,7 +10679,7 @@ msgstr "Korzystanie z serwera Gmail"
 #: code:addons/mail/models/fetchmail.py:0
 msgid "Use a local script to fetch your emails and create new records."
 msgstr ""
-"Używaj lokalnego skryptu do pobierania emaili i tworzenia nowych zapisów."
+"Używaj lokalnego skryptu do pobierania emaili i tworzenia nowych rekordów."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -11247,7 +11249,7 @@ msgstr "Nie śledzisz już \"%(thread_name)s\"."
 #: code:addons/mail/models/mail_scheduled_message.py:0
 msgid ""
 "You are not allowed to change the target record of a scheduled message."
-msgstr "Nie możesz zmieniać zapisu docelowego zaplanowanej wiadomości."
+msgstr "Nie możesz zmieniać rekordu docelowego zaplanowanej wiadomości."
 
 #. module: mail
 #. odoo-python
@@ -11630,7 +11632,7 @@ msgstr "dokument"
 #: code:addons/mail/static/src/views/web/activity/activity_renderer.js:0
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "done"
-msgstr "gotowe"
+msgstr "wykonano"
 
 #. module: mail
 #. odoo-javascript
@@ -11812,7 +11814,7 @@ msgstr "niepoprawnie skonfigurowany alias"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "niepoprawnie skonfigurowany alias (nieznany zapis referencyjny)"
+msgstr "niepoprawnie skonfigurowany alias (nieznany rekord referencyjny)"
 
 #. module: mail
 #. odoo-python

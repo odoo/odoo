@@ -3,9 +3,9 @@
 # 	* crm
 # 
 # Translators:
-# Wil Odoo, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-06 13:57+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,8 +361,8 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hei <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
-"                            Tervetuloa <t t-out=\"object.company_id.name or ''\">My Companyyn (Kerava)</t>.\n"
-"                            Hauska tavata! Nyt, kun olet mukana, voit tutustua siihen, mitä <t t-out=\"object.company_id.name or ''\">My Company</t> tarjoaa. Minä olen <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja autan sinua saamaan kaiken irti Odoosta. Voisimmeko järjestää pikaisen esittelyn pian?<br/>\n"
+"                            Tervetuloa <t t-out=\"object.company_id.name or ''\">yritykseni (Kerava)</t>.\n"
+"                            On hienoa tavata! Nyt kun olet mukana, voit tutustua siihen, mitä <t t-out=\"object.company_id.name or ''\">Yritys (Kerava)</t> tarjoaa. Minä olen <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja autan sinua saamaan kaiken irti Odoosta. Voisimmeko järjestää pikaisen demon pian?<br/>\n"
 "                            Ota rohkeasti yhteyttä milloin tahansa!<br/><br/>\n"
 "                            Parhain terveisin,<br/>\n"
 "                           <t t-if=\"object.user_id\"> \n"
@@ -371,7 +371,7 @@ msgstr ""
 "                               <br/>Puhelin: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                           </t>\n"
 "                            <t t-else=\"\">\n"
-"                                <t t-out=\"object.company_id.name or ''\">My Company (Kerava)</t>\n"
+"                                <t t-out=\"object.company_id.name or ''\">Yritykseni (Kerava)</t>\n"
 "                            </t>\n"
 "                        </div>\n"
 "                    </td>\n"
@@ -383,7 +383,7 @@ msgstr ""
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
 "            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
-"            <b t-out=\"object.company_id.name or ''\">My Company (Kerava)</b><br/>\n"
+"            <b t-out=\"object.company_id.name or ''\">Oma yritys (Kerava)</b><br/>\n"
 "            <div style=\"color: #999999;\">\n"
 "                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
 "                <t t-if=\"object.company_id.email\">\n"
@@ -400,7 +400,7 @@ msgstr ""
 "</td></tr>\n"
 "<!-- POWERED BY -->\n"
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
-"    Palvelun tarjoaa <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"    Palvelinta pyörittää <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
 "</td></tr>\n"
 "</table>\n"
 "        "
@@ -662,8 +662,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should <a name=\"%d\" type=\"action\" tabindex=\"-1\">join a team.</a>"
 msgstr ""
-"Koska et kuulu mihinkään myyntitiimiin, sinulle näytetään <b>oletuksena ensimmäisen tiimin</b>myyntiputki.\n"
-"                                        Jotta voisit työskennellä CRM:ssä, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\">liityttävä tiimiin</a>"
+"Koska et ole minkään myyntitiimin jäsen, sinulle näytetään <b>oletusarvoisesti ensimmäisen tiimin</b>myyntiputki.\n"
+"                                        Jotta voisit työskennellä CRM:n kanssa, sinun on <a name=\"%d\" type=\"action\" tabindex=\"-1\">liityttävä tiimiin</a>"
 
 #. module: crm
 #. odoo-python
@@ -672,8 +672,8 @@ msgid ""
 "As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>\n"
 "                                        To work with the CRM, you should join a team."
 msgstr ""
-"Koska et kuulu mihinkään myyntitiimiin, sinulle näytetään <b>oletuksena ensimmäisen tiimin</b>myyntiputki.\n"
-"                                        Jotta voisit työskennellä CRM:ssä, sinun on liityttävä tiimiin."
+"Koska et ole minkään myyntitiimin jäsen, sinulle näytetään <b>oletusarvoisesti ensimmäisen tiimin</b>myyntiputki.\n"
+"                                        Jotta voisit työskennellä CRM:n kanssa, sinun on liityttävä tiimiin."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -1313,8 +1313,8 @@ msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
 msgstr ""
-"Tiesitkö, että myyntitiimin aliakselle lähetetyt sähköpostit luovat "
-"myyntimahdollisuuksia myyntiputkelle?"
+"Tiesitkö, että myyntitiimin aliakselle lähetetyt sähköpostiviestit luovat "
+"myyntimahdollisuuksia myyntiputkeen?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1806,8 +1806,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Jos siistitty puhelinnumero on mustalla listalla, yhteyshenkilö ei enää saa "
-"massatekstiviestejä miltään listalta"
+"Jos puhdistettu puhelinnumero on mustalla listalla, yhteyshenkilö ei enää "
+"saa massatekstiviestejä miltään listalta"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -2336,8 +2336,9 @@ msgid ""
 "Make and receive calls from Odoo with Ringover's dialer. Track calls, SMS "
 "messages, and get AI-powered transcripts of your conversations."
 msgstr ""
-"Soita ja vastaanota puheluita Odoosta Ringoverin avulla. Seuraa puheluita, "
-"tekstiviestejä ja saat tekoälypohjaiset transkriptiot keskusteluistasi."
+"Soita ja vastaanota puheluita Odoosta Ringoverin soittimen avulla. Seuraa "
+"puheluita, tekstiviestejä ja saat tekoälypohjaiset transkriptiot "
+"keskusteluistasi."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2763,10 +2764,10 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
-"Odoon tekoälymoduuli ennustaa jokaisen myyntitilaisuuden onnistumisprosentin"
-" historiasi perusteella. Voit aina päivittää onnistumisprosentin "
+"Odoon tekoälymoottori ennustaa jokaisen tilaisuuden onnistumisprosentin "
+"historiasi perusteella. Voit aina päivittää onnistumisprosentin "
 "manuaalisesti, mutta jos annat Odoon tehdä työn, pisteet päivittyvät "
-"samalla, kun myyntitilaisuus etenee myyntiprosessissasi."
+"samalla, kun tilaisuus etenee myyntisyklissäsi."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -2822,11 +2823,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the"
 " channels of the sales pipeline."
 msgstr ""
-"Myyntimahdollisuuksien analyysi antaa välittömän pääsyn mahdollisuuksien "
-"erilaisiin tietoihin, kuten odotettu tuotto, odotetut kustannukset, ohitetut"
-" määräajat tai mahdollisuuden sisäisten vuorovaikutuksen määrä. Useimmiten "
-"myynnin esimies käyttää tätä raporttia tehdäkseen jaksottaisarvion "
-"myyntiputkesta myyntitiimien kanssa."
+"Mahdollisuusanalyysi antaa välittömän pääsyn mahdollisuuksien erilaisiin "
+"tietoihin, kuten odotettu tuotto, suunniteltu kustannus, ohitetut määräajat "
+"tai mahdollisuuden sisäisten vuorovaikutteisten tapahtumien määrä. "
+"Useimmiten myynnin esimies käyttää tätä raporttia tehdäkseen "
+"jaksottaisarvion myyntiputkesta myyntitiimien kanssa."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_graph_forecast
@@ -3164,8 +3165,7 @@ msgstr "Arviointi"
 #. odoo-javascript
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Ready to boost your sales? Let's have a look at your <b>Pipeline</b>."
-msgstr ""
-"Oletko valmis kasvattamaan myyntiäsi? Katsotaanpa <b>myyntiputkeasi</b>."
+msgstr "Oletko valmis lisäämään myyntiäsi? Katsotaanpa <b>myyntiputkeasi</b>."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -3754,8 +3754,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Tämä puhelinnumero on Tekstiviestimarkkinoinnin markkinointikieltolistalla. "
-"Klikkaa poistaaksesi markkinointikiellon."
+"Tämä puhelinnumero on markkinointikieltolistalla tekstiviestimarkkinointia "
+"varten. Klikkaa poistaaksesi markkinointikiellon."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -4162,9 +4162,9 @@ msgid ""
 "                    opportunities, convert them into quotations, attach related\n"
 "                    documents, track all discussions, and much more."
 msgstr ""
-"Voit suunnitella tapaamisia ja puheluita\n"
-"                myyntimahdollisuuksilta, muuntaa niitä tarjouksiksi, liittää dokumentteja,\n"
-"                seurata kaikkea käytyä keskustelua ja paljon muuta."
+"Voit suunnitella tapaamisia ja kirjata toimenpiteitä\n"
+"                mahdollisuuksiin, muuttaa niitä tarjouksiksi, liittää dokumentteja,\n"
+"                seurata kaikkea keskustelua ja paljon muuta."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form

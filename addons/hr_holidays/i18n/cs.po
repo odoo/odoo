@@ -3,10 +3,10 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Wil Odoo, 2025
 # Stanislav Kurinec, 2025
 # Vojtěch Olšan, 2025
 # Denis Gobin, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Denis Gobin, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,7 +106,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "%(name)s (%(duration)s day(s))"
-msgstr "%(name)s (%(duration)s Dnů)"
+msgstr "%(name)s (%(duration)s dnů)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -136,7 +136,7 @@ msgstr "%(name)s%(duration)s"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(person)s on %(leave_type)s: %(duration)s (%(start)s)"
-msgstr "%(person)s na %(leave_type)s: %(duration)s (%(start)s)"
+msgstr "%(person)s - %(leave_type)s: %(duration)s (%(start)s)"
 
 #. module: hr_holidays
 #. odoo-python
@@ -309,7 +309,7 @@ msgstr "<span class=\"o_stat_text\">Časové rozlišení</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Allocations</span>"
-msgstr "<span class=\"o_stat_text\">Přidělení</span>"
+msgstr "<span class=\"o_stat_text\">Alokace</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -632,7 +632,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__duration_display
 msgid "Allocated (Days/Hours)"
-msgstr "Přiděleno (Dní / Hodin)"
+msgstr "Alokováno (Dní / Hodin)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__allocation_ids
@@ -640,13 +640,13 @@ msgstr "Přiděleno (Dní / Hodin)"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Allocation"
-msgstr "Přidělení"
+msgstr "Alokace"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_holiday_status_normal_tree
 msgid "Allocation Approval"
-msgstr "Schválení přidělení"
+msgstr "Schválení alokace"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -654,18 +654,18 @@ msgstr "Schválení přidělení"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr "Zobrazení přidělení"
+msgstr "Zobrazení alokace"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_mode
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__allocation_mode
 msgid "Allocation Mode"
-msgstr "Režim přidělení"
+msgstr "Režim alokace"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr "Podtyp oznámení o přidělení"
+msgstr "Podtyp oznámení o alokaci"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_remaining_display
@@ -673,7 +673,7 @@ msgstr "Podtyp oznámení o přidělení"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_remaining_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_remaining_display
 msgid "Allocation Remaining Display"
-msgstr "Zobrazení zbývajícího přidělení"
+msgstr "Zobrazení zbývající alokace"
 
 #. module: hr_holidays
 #. odoo-python
@@ -684,7 +684,7 @@ msgstr "Zobrazení zbývajícího přidělení"
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Allocation Request"
-msgstr "Žádost o přidělení"
+msgstr "Žádost o alokaci"
 
 #. module: hr_holidays
 #. odoo-python
@@ -694,7 +694,7 @@ msgstr "Žádost o přidělení"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Allocation Requests"
-msgstr "Žádosti o přidělení"
+msgstr "Žádosti o alokace"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
@@ -706,7 +706,7 @@ msgstr "Druhé schválení alokace"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_type
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Allocation Type"
-msgstr "Typ přidělení"
+msgstr "Typ alokace"
 
 #. module: hr_holidays
 #. odoo-python
@@ -720,12 +720,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s"
-msgstr "Alokace %(leave_type)s: %(amount).2f %(unit)s na %(target)s"
+msgstr "Alokace %(leave_type)s: %(amount).2f %(unit)s pro %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
 msgid "Allocation on"
-msgstr "Přidělení na"
+msgstr "Alokace na"
 
 #. module: hr_holidays
 #. odoo-python
@@ -744,7 +744,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr "Přidělení ke Schválení"
+msgstr "Alokace ke Schválení"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_allocation_action_approve_department
@@ -827,7 +827,7 @@ msgstr "Schválit"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr "Schválit přidělení"
+msgstr "Schválit alokace"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1329,13 +1329,13 @@ msgstr "Vytvořit alokace"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Vytvořit nové přidělení volna"
+msgstr "Vytvořit nové alokace volna"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "Vytvořte nový požadavek na přidělení volných dní"
+msgstr "Vytvořte nový požadavek na alokaci volných dní"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1671,6 +1671,12 @@ msgid "Employee accrue"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban_approve_department
+msgid "Employee's image"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
 msgid "Employee(s)"
 msgstr "Zaměstnanci"
@@ -1718,9 +1724,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
-"Povolené žádosti o další dny: Uživatel může požádat o přidělení pro sebe.\n"
+"Povolené žádosti o další dny: Uživatel může požádat o alokaci pro sebe.\n"
 "\n"
-"        Nepovoleno: Uživatel nemůže požádat o přidělení."
+"        Nepovoleno: Uživatel nemůže požádat o alokaci."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -1735,8 +1741,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
-"Pole umožňující zobrazit dobu přidělení ve dnech nebo hodinách v závislosti "
-"na type_request_unit"
+"Pole umožňující zobrazit dobu alokace ve dnech nebo hodinách v závislosti na"
+" type_request_unit"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -2494,7 +2500,7 @@ msgstr "Nová alokace"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "New Allocation Request"
-msgstr "Nová žádost o přidělení"
+msgstr "Nová žádost o alokaci"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2940,7 +2946,7 @@ msgstr "Odmítnuté volné dny"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__regular
 msgid "Regular Allocation"
-msgstr "Pravidelné přidělování"
+msgstr "Pravidelné alokace"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_tree
@@ -2966,7 +2972,7 @@ msgstr "Výkazy"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 msgid "Request Allocation"
-msgstr "Žádost o přidělení"
+msgstr "Žádost o alokaci"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_date_to
@@ -2996,7 +3002,7 @@ msgstr "Požadováno (dny / hodiny)"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__requires_allocation
 msgid "Requires allocation"
-msgstr "Vyžaduje přidělení"
+msgstr "Vyžaduje alokaci"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -3576,6 +3582,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+msgid "This company does not have any employees."
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type
 msgid "This field defines the unit of time after which the accrual ends."
 msgstr ""
@@ -3909,7 +3922,7 @@ msgstr "Ke schválení"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "To Approve or Approved Allocations"
-msgstr "Schválit nebo Schválené přidělení"
+msgstr "Alokace ke schválení nebo schválené"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -3936,7 +3949,7 @@ msgstr "Dnešní aktivity"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__allocations_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocations_count
 msgid "Total number of allocations"
-msgstr "Celkový počet přidělení"
+msgstr "Celkový počet alokací"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_count
@@ -3944,7 +3957,7 @@ msgstr "Celkový počet přidělení"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_count
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_count
 msgid "Total number of days allocated."
-msgstr "Celkový počet přidělených dnů."
+msgstr "Celkový počet alokovaných dnů."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_employee__remaining_leaves
@@ -4254,9 +4267,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
-"Ano: Požadavky o volno musí mít platné přidělení.\n"
+"Ano: Požadavky o volno musí mít platné alokace.\n"
 "\n"
-"              Bez omezení: Požadavky o volno lze přijímat bez předchozího přidělení."
+"              Bez omezení: Požadavky o volno lze přijímat bez předchozí alokace."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4302,13 +4315,13 @@ msgstr "Nemůžete smazat volno, které je v minulosti"
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid ""
 "You cannot delete an allocation request which has some validated leaves."
-msgstr "Nelze odstranit žádost o přidělení, která má nějaké ověřené listy."
+msgstr "Nelze odstranit žádost o alokaci, která má nějaké ověřené listy."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "You cannot delete an allocation request which is in %s state."
-msgstr "Nelze odstranit žádost o přidělení, která je v %s Stát."
+msgstr "Nelze odstranit žádost o alokaci, která je ve stavu %s."
 
 #. module: hr_holidays
 #. odoo-python

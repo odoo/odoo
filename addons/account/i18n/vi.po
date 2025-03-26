@@ -3342,6 +3342,8 @@ msgid ""
 "Auto-post was disabled on this invoice because a potential duplicate was "
 "detected."
 msgstr ""
+"Tính năng tự động ghi sổ đã bị tắt trên hóa đơn này do phát hiện có khả năng"
+" trùng lặp."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__auto_reconcile
@@ -3781,17 +3783,17 @@ msgstr "Cơ bản"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Batch Payment Number Sequence"
-msgstr "Số thứ tự thanh toán hàng loạt"
+msgstr "Số thứ tự thanh toán theo lô"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
-msgstr "Thứ tự thanh toán hàng loạt"
+msgstr "Thứ tự thanh toán theo lô"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr "Thanh toán hàng loạt"
+msgstr "Thanh toán theo lô"
 
 #. module: account
 #. odoo-javascript
@@ -8741,7 +8743,7 @@ msgstr "Incoterm"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__incoterm_location
 #: model:ir.model.fields,field_description:account.field_account_move__incoterm_location
 msgid "Incoterm Location"
-msgstr "Vị trí Incoterm"
+msgstr "Địa điểm Incoterm"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__code
@@ -10325,7 +10327,7 @@ msgid ""
 msgstr ""
 "Thủ công: Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp dịch vụ thanh toán: Mỗi Nhà cung cấp dịch vụ thanh toán có phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh toán do đối tác lưu khi mua hoặc đăng ký online.\n"
-"Gửi hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Gửi theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và nộp theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
 "Ghi nợ trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy quyền mà đối tác sẽ cấp cho bạn. Cần có phân hệ account_sepa.\n"
 
 #. module: account
@@ -10353,7 +10355,7 @@ msgstr ""
 "Thủ công: Thanh toán hoặc nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp dịch vụ thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh toán do đối tác lưu khi mua hoặc đăng ký online.\n"
 "Séc: Thanh toán hóa đơn bằng séc và in từ Odoo.\n"
-"Gửi hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Gửi theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và nộp theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
 "Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Cần có phân hệ account_sepa.\n"
 "Ghi nợ trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy quyền mà đối tác sẽ cấp cho bạn. Cần có phân hệ account_sepa.\n"
 
@@ -14215,7 +14217,7 @@ msgstr "Thiết lập tài khoản ngân hàng"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Setup Credit Card Account"
-msgstr "Thiết lập tài khoản ghi nợ"
+msgstr "Thiết lập tài khoản thẻ tín dụng"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
@@ -16449,7 +16451,7 @@ msgstr "Quý này"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Lỗi này đã xảy ra trong quá trình nhập:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
@@ -16514,7 +16516,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Việc này cho phép bạn nhóm các khoản thanh toán vào một loạt duy nhất và giúp việc đối chiếu trở nên dễ dàng.\n"
+"Việc này cho phép bạn nhóm các khoản thanh toán vào một lô duy nhất và giúp việc đối chiếu trở nên dễ dàng.\n"
 "- Phân hệ account_batch_payment cần được cài đặt."
 
 #. module: account
@@ -17509,7 +17511,7 @@ msgstr "Sử dụng kế toán anglo-saxon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr "Sử dụng thanh toán hàng loạt"
+msgstr "Sử dụng thanh toán theo lô"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -18505,6 +18507,7 @@ msgstr ""
 #, python-format
 msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr ""
+"Bạn không thể hủy bỏ một tài khoản đang được sử dụng trong phân bổ thuế."
 
 #. module: account
 #. odoo-python

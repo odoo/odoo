@@ -3,9 +3,9 @@
 # 	* spreadsheet
 # 
 # Translators:
-# Wil Odoo, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:42+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgid ""
 "text will be simply concatenated."
 msgstr ""
 " Merkkijono, mahdollisesti tyhjä, tai viittaus kelvolliseen merkkijonoon. "
-"Jos merkkijono on tyhjä, teksti yksinkertaisesti ketjutetaan."
+"Jos merkkijono on tyhjä, teksti yhdistetään samaan ketjuun."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -232,7 +232,8 @@ msgstr "%s ei ole kelvollinen kuukausi (sen pitäisi olla numero väliltä 1-12)
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s is not a valid quarter (it should be a number between 1 and 4)"
-msgstr "%s ei ole kelvollinen kvartaali (sen pitäisi olla numero väliltä 1-4)"
+msgstr ""
+"%s ei ole kelvollinen vuosineljännes (sen pitäisi olla numero väliltä 1-4)"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3507,7 +3508,7 @@ msgstr "Päivää edeltävän kuukauden ensimmäinen päivä."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "First day of the quarter of the year a specific date falls in."
-msgstr "Tietyn päivämäärän kvartaalin ensimmäinen päivä."
+msgstr "Tietyn päivämäärän vuosineljänneksen ensimmäinen päivä."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3676,7 +3677,7 @@ msgstr "Koko kuukausi"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Full quarter"
-msgstr "Koko kvartaali"
+msgstr "Koko neljännesvuosi"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4810,7 +4811,7 @@ msgstr "Päivää seuraavan kuukauden viimeinen päivä."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Last day of the quarter of the year a specific date falls in."
-msgstr "Tietyn päivämäärän kvartaalin viimeinen päivä."
+msgstr "Tietyn päivämäärän vuosineljänneksen viimeinen päivä."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6085,25 +6086,25 @@ msgstr "Kvartaali"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Quarter %(quarter)s"
-msgstr "Kvartaali %(quarter)s"
+msgstr "Neljännes %(quarter)s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Quarter %s"
-msgstr "Kvartaali %s "
+msgstr "Neljännes kohteesta %s"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Quarter & Year"
-msgstr "Kvartaali & vuosi"
+msgstr "Neljännes ja vuosi"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Quarter of the year a specific date falls in"
-msgstr "Vuoden kvartaali, johon tietty päivämäärä osuu"
+msgstr "Vuoden neljännes, johon tietty päivämäärä osuu"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7906,7 +7907,7 @@ msgstr "Päivämäärä, josta laskenta aloitetaan."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The date from which to calculate the end of quarter."
-msgstr "Päivämäärä, josta alkaen kvartaalin loppu lasketaan."
+msgstr "Päivämäärä, josta alkaen vuosineljänneksen loppu lasketaan."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7924,7 +7925,7 @@ msgstr "Päivämäärä, josta tulos lasketaan."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The date from which to calculate the start of quarter."
-msgstr "Päivämäärä, josta kvartaalin alku lasketaan."
+msgstr "Päivämäärä, josta neljännesvuoden alku lasketaan."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7948,7 +7949,7 @@ msgstr "Päivämäärä, josta kuukausi otetaan."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The date from which to extract the quarter."
-msgstr "Päivämäärä, josta kvartaali otetaan."
+msgstr "Päivämäärä, josta neljännesvuosi otetaan."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8822,7 +8823,7 @@ msgstr "Ajan minuuttikomponentti."
 #: code:addons/spreadsheet/static/src/data_sources/data_source.js:0
 #: code:addons/spreadsheet/static/src/pivot/odoo_pivot_loader.js:0
 msgid "The model \"%(model)s\" does not exist."
-msgstr "Many2one %(field)s mallissa %(model)s ei ole olemassa."
+msgstr "Mallia \"%(model)s\" ei ole olemassa."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11063,7 +11064,7 @@ msgstr "Otsikko"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Top"
-msgstr "Ylin"
+msgstr "Parhaat"
 
 #. module: spreadsheet
 #. odoo-javascript

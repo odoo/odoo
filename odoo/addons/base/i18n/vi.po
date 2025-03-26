@@ -943,7 +943,7 @@ msgstr ""
 "Chuyển khoản Tín dụng ABA\n"
 "===================\n"
 "\n"
-"Phân hệ này cho phép tạo các đợt thanh toán hàng loạt dưới dạng tệp văn bản ABA (Hiệp hội\n"
+"Phân hệ này cho phép tạo các đợt thanh toán theo lô dưới dạng tệp văn bản ABA (Hiệp hội\n"
 "Ngân hàng Úc). Tệp 'aba' được tạo có thể được tải lên \n"
 " nhiều ngân hàng của Úc.\n"
 "\n"
@@ -1028,11 +1028,11 @@ msgstr ""
 "    Sau khi (các) khoản thanh toán được xác nhận, chúng sẽ hiển thị trong danh sách thanh toán.\n"
 "\n"
 "    Sử dụng bộ lọc hoặc sắp xếp, chọn các khoản thanh toán cần thiết. \n"
-"    **Tác vụ* chọn *Tạo thanh toán hàng loạt*.\n"
+"    **Tác vụ* chọn *Tạo thanh toán theo lô*.\n"
 "\n"
-"- *Nhà cung cấp > Thanh toán hàng loạt*\n"
+"- *Nhà cung cấp > Thanh toán theo lô*\n"
 "\n"
-"    Khi xác thực thanh toán hàng loạt, tệp ABA sẽ được tạo. Tệp này có thể \n"
+"    Khi xác thực thanh toán theo lô, tệp ABA sẽ được tạo. Tệp này có thể \n"
 "    được tái tạo. Sau đó, bạn có thể tải tệp lên ngân hàng.\n"
 
 #. module: base
@@ -2707,10 +2707,10 @@ msgid ""
 "When creating invoices from picking, the system is able to add and compute the shipping line.\n"
 msgstr ""
 "\n"
-"Cho phép bạn thêm phương thức giao hàng vào phiếu lấy hàng.\n"
+"Cho phép bạn thêm phương thức giao hàng vào phiếu xuất kho.\n"
 "====================================================\n"
 "\n"
-"Khi tạo hóa đơn từ phiếu lấy hàng, hệ thống có thể thêm và tính toán phí vận chuyển.\n"
+"Khi tạo hóa đơn từ phiếu xuất kho, hệ thống có thể thêm và tính toán phí vận chuyển.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery
@@ -3306,13 +3306,13 @@ msgid ""
 "When you reconcile, simply select the corresponding batch payment to reconcile all the payments in the batch.\n"
 msgstr ""
 "\n"
-"Thanh toán Hàng loạt\n"
+"Thanh toán theo lô\n"
 "=======================================\n"
-"Thanh toán hàng loạt cho phép nhóm các khoản thanh toán.\n"
+"Thanh toán theo lô cho phép nhóm các khoản thanh toán.\n"
 "\n"
 "Chúng được sử dụng cụ thể, nhưng không chỉ để nhóm một số séc trước khi gửi chúng cho ngân hàng vào một đợt duy nhất.\n"
 "Sau đó, tổng số tiền gửi sẽ xuất hiện dưới dạng một giao dịch trên bảng sao kê ngân hàng của bạn.\n"
-"Khi bạn đối chiếu, chỉ cần chọn khoản thanh toán hàng loạt tương ứng để đối chiếu tất cả các khoản thanh toán trong đợt.\n"
+"Khi bạn đối chiếu, chỉ cần chọn khoản thanh toán theo lô tương ứng để đối chiếu tất cả các khoản thanh toán trong đợt.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -4497,7 +4497,7 @@ msgstr ""
 "Bất cứ khi nào hàng hóa được chuyển giao giữa A và B, DDT là\n"
 "tài liệu hợp pháp hóa, ví dụ: khi cảnh sát yêu cầu.\n"
 "\n"
-"Khi bạn muốn in phiếu lấy hàng gửi đi ở một công ty Ý,\n"
+"Khi bạn muốn in phiếu xuất kho gửi đi ở một công ty Ý,\n"
 "công ty này sẽ in DDT cho bạn. Đây giống như phiếu giao \n"
 "hàng, nhưng cũng bao gồm giá trị của sản phẩm,\n"
 "lý do vận chuyển, đơn vị vận chuyển,… hình thành nên một DDT.\n"
@@ -4842,7 +4842,7 @@ msgid ""
 "=================\n"
 msgstr ""
 "\n"
-"Thanh toán hàng loạt EFT\n"
+"Thanh toán theo lô EFT\n"
 "=================\n"
 
 #. module: base
@@ -5881,7 +5881,7 @@ msgid ""
 "Generate csv files for vendor batch payments,which can be uploaded to the bank for ENet payments.\n"
 msgstr ""
 "\n"
-"Tạo tệp csv cho các khoản thanh toán hàng loạt cho nhà cung cấp, có thể tải lên ngân hàng để thanh toán ENet.\n"
+"Tạo tệp csv cho các khoản thanh toán theo lô cho nhà cung cấp, có thể tải lên ngân hàng để thanh toán ENet.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_links
@@ -8520,14 +8520,14 @@ msgid ""
 "For more information about RIBA standards, refer to the guidelines issued by the Italian Bankers Association (CBI).\n"
 msgstr ""
 "\n"
-"Ri.Ba. Xuất để thanh toán hàng loạt\n"
+"Ri.Ba. Xuất để thanh toán theo lô\n"
 "==============================\n"
 "\n"
-"Phân hệ này cho phép tạo tệp Ri.Ba. (Ricevute Bancarie) từ các khoản thanh toán hàng loạt trong Odoo.\n"
+"Phân hệ này cho phép tạo tệp Ri.Ba. (Ricevute Bancarie) từ các khoản thanh toán theo lô trong Odoo.\n"
 "Nó hỗ trợ khả năng tuân thủ tiêu chuẩn ngân hàng Ý để quản lý các khoản phải thu.\n"
 "\n"
-"- Nhóm nhiều khoản phải thu thành một loạt duy nhất để quản lý và đối chiếu hợp lý.\n"
-"- Xuất các khoản thanh toán hàng loạt dưới dạng tệp tuân thủ RIBA để gửi đến ngân hàng của bạn xử lý.\n"
+"- Nhóm nhiều khoản phải thu thành một lô duy nhất để quản lý và đối chiếu hợp lý.\n"
+"- Xuất các khoản thanh toán theo lô dưới dạng tệp tuân thủ RIBA để gửi đến ngân hàng của bạn xử lý.\n"
 "\n"
 "Để biết thêm thông tin về các tiêu chuẩn RIBA, hãy tham khảo hướng dẫn do Hiệp hội Ngân hàng Ý (CBI) ban hành.\n"
 
@@ -10502,7 +10502,7 @@ msgid ""
 "==================================================================\n"
 msgstr ""
 "\n"
-"Phân hệ này bổ sung tùy chọn chuyển hàng loạt trong quản lý kho\n"
+"Phân hệ này bổ sung tùy chọn chuyển theo lô trong quản lý kho\n"
 "==================================================================\n"
 
 #. module: base
@@ -11866,7 +11866,7 @@ msgid ""
 "Allows to prepare batches depending on their carrier\n"
 msgstr ""
 "\n"
-"Phân hệ này tạo liên kết giữa các ứng dụng lấy hàng theo loạt và vận chuyển.\n"
+"Phân hệ này tạo liên kết giữa các ứng dụng lấy hàng theo lô và vận chuyển.\n"
 "\n"
 "Cho phép chuẩn bị các lô dựa vào đơn vị vận chuyển chúng\n"
 
@@ -14354,7 +14354,7 @@ msgstr "Nhập sao kê ngân hàng của tài khoản"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant_batch_payment
 msgid "Account Batch Payment Reconciliation"
-msgstr "Tài khoản Đối chiếu Thanh toán Hàng loạt"
+msgstr "Tài khoản Đối chiếu Thanh toán theo lô"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
@@ -14758,7 +14758,7 @@ msgstr ""
 #: model:ir.module.module,description:base.module_project_purchase_stock
 msgid "Add a project link between POs and their generated stock pickings."
 msgstr ""
-"Thêm liên kết dự án giữa các PO và phiếu lấy hàng tài khoản được tạo ra của "
+"Thêm liên kết dự án giữa các PO và phiếu xuất kho tài khoản được tạo ra của "
 "chúng."
 
 #. module: base
@@ -14871,7 +14871,7 @@ msgstr "Bổ sung hỗ trợ Định danh itsme® khi ký tài liệu (chỉ ở
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_picking_batch
 msgid "Add the support of batch transfers into the barcode view"
-msgstr "Thêm hỗ trợ chuyển hàng loạt vào chế độ xem mã vạch"
+msgstr "Thêm hỗ trợ chuyển theo lô vào chế độ xem mã vạch"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_product_matrix
@@ -15763,7 +15763,7 @@ msgstr "Cho phép sử dụng ứng dụng kho để quản lý tồn kho cho th
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_batch_payment
 msgid "Allows using Reconciliation with the Batch Payment feature."
-msgstr "Cho phép sử dụng Đối chiếu với tính năng Thanh toán Hàng loạt."
+msgstr "Cho phép sử dụng Đối chiếu với tính năng Thanh toán theo lô."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_accountant_check_printing
@@ -18444,7 +18444,7 @@ msgstr "Phân hệ cầu nối Chất lượng Mã vạch"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_picking_batch
 msgid "Barcode for Batch Transfer"
-msgstr "Mã vạch cho Chuyển Hàng loạt"
+msgstr "Mã vạch cho Chuyển theo lô"
 
 #. module: base
 #. odoo-python
@@ -18461,7 +18461,7 @@ msgstr "Loại mã vạch, ví dụ: UPCA, EAN13, Code128"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control_picking_batch
 msgid "Barcode/Quality/Batch Transfer bridge module"
-msgstr "Phân hệ cầu nối Mã vạch/Chất lượng/Chuyển Hàng loạt"
+msgstr "Phân hệ cầu nối Mã vạch/Chất lượng/Chuyển theo lô"
 
 #. module: base
 #: model:ir.model,name:base.model_base
@@ -18572,12 +18572,12 @@ msgstr "Các đối tượng cơ bản và trình trợ giúp để hỗ trợ I
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr "Thanh toán Hàng loạt"
+msgstr "Thanh toán theo lô"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
 msgid "Batch Transfer, Carrier"
-msgstr "Chuyển Hàng loạt, Đơn vị vận chuyển"
+msgstr "Chuyển theo lô, Đơn vị vận chuyển"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
@@ -20474,7 +20474,7 @@ msgstr "Tỷ lệ Công ty"
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry_placeholder
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Phần giữ chỗ cho số đăng ký công ty"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -23074,7 +23074,7 @@ msgstr "EET"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nz_eft
 msgid "EFT Batch Payment"
-msgstr "Thanh toán hàng loạt EFT"
+msgstr "Thanh toán theo lô EFT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__est
@@ -24541,7 +24541,7 @@ msgstr "Xuất công thành UCM"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_enet_batch_payment
 msgid "Export batch payments as ENet files"
-msgstr "Xuất thanh toán hàng loạt dưới dạng tệp ENet"
+msgstr "Xuất thanh toán theo lô dưới dạng tệp ENet"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_aba
@@ -25960,7 +25960,7 @@ msgstr "Đi đến người dùng"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_address_autocomplete
 msgid "Google Address Autocomplete"
-msgstr ""
+msgstr "Tự động hoàn thành địa chỉ Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_google_calendar
@@ -26319,7 +26319,7 @@ msgstr "Xử lý giá Hóa đơn Nguyên vật liệu để tính biên lợi nh
 #. module: base
 #: model:ir.module.module,summary:base.module_project_stock_account
 msgid "Handle analytics in Stock pickings with Project"
-msgstr "Xử lý phân tích trong các phiếu lấy hàng Tồn kho với Dự án"
+msgstr "Xử lý phân tích trong các phiếu xuất kho Tồn kho với Dự án"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
@@ -27537,7 +27537,7 @@ msgstr "Ấn Độ - Ngày nghỉ"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_enet_batch_payment
 msgid "India ENet Batch Payment CSV Generator"
-msgstr "Trình tạo CSV thanh toán hàng loạt ENet của Ấn Độ"
+msgstr "Trình tạo CSV thanh toán theo lô ENet của Ấn Độ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_purchase_stock
@@ -29484,7 +29484,7 @@ msgstr "Trường Liên kết"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_stock
 msgid "Link Stock pickings to Project"
-msgstr "Liên kết phiếu lấy hàng Tồn kho với Dự án"
+msgstr "Liên kết phiếu xuất kho Tồn kho với Dự án"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -31285,7 +31285,7 @@ msgid ""
 "   For example, this allows you to have a delivery receipt created automatically in the receiving company when another company of the system confirms a delivery order.\n"
 msgstr ""
 "Phân hệ để đồng bộ hóa Tài liệu Tồn kho giữa nhiều công ty.\n"
-"  Ví dụ, phân hệ này cho phép bạn tạo phiếu nhập kho tự động trong công ty nhận hàng khi một công ty khác trong hệ thống xác nhận phiếu xuất kho.\n"
+"  Ví dụ, phân hệ này cho phép bạn tạo phiếu nhập kho tự động trong công ty nhận hàng khi một công ty khác trong hệ thống xác nhận lệnh giao hàng.\n"
 
 #. module: base
 #. odoo-python
@@ -36974,7 +36974,7 @@ msgstr "Chất lượng"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_picking_batch
 msgid "Quality - Batch Transfer"
-msgstr "Chất lượng - Chuyển Hàng loạt"
+msgstr "Chất lượng - Chuyển hàng theo lô"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
@@ -38344,10 +38344,10 @@ msgid ""
 msgstr ""
 "Bán tồn kho đăng ký\n"
 "\n"
-"Bán tồn kho đăng ký là một phân hệ cầu nối giữa sale_subscription và sale_stock. Mục đích của phân hệ này là cho phép người dùng tạo đơn đặt hàng đăng ký sản phẩm lưu kho, dẫn đến việc tạo phiếu xuất kho định kỳ và lập hóa đơn cho những sản phẩm đó.\n"
+"Bán tồn kho đăng ký là một phân hệ cầu nối giữa sale_subscription và sale_stock. Mục đích của phân hệ này là cho phép người dùng tạo đơn đặt hàng đăng ký sản phẩm lưu kho, dẫn đến việc tạo lệnh giao hàng định kỳ và lập hóa đơn cho những sản phẩm đó.\n"
 "Tính năng:\n"
 "- Cho phép tạo sản phẩm lưu kho định kỳ\n"
-"- Tự động tạo phiếu xuất kho cho sản phẩm lưu kho định kỳ\n"
+"- Tự động tạo lệnh giao hàng cho sản phẩm lưu kho định kỳ\n"
 "- Lập hóa đơn cho sản phẩm định kỳ đã giao vào cuối kỳ lập hóa đơn\n"
 "- Báo cáo xuất kho dự kiến cho các gói đăng ký hoạt động\n"
 
@@ -40397,7 +40397,7 @@ msgstr "Hỗ trợ nội dung trực tiếp: phát online, tham gia, youtube"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
 msgid "Support of quality control into batch transfers"
-msgstr "Hỗ trợ kiểm soát chất lượng khi chuyển kho hàng loạt"
+msgstr "Hỗ trợ kiểm soát chất lượng khi chuyển kho theo lô"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_online_payment_self_order
@@ -44402,7 +44402,7 @@ msgstr "Wallis và Futuna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Transfer"
-msgstr "Quản lý kho: Chuyển hàng loạt"
+msgstr "Quản lý kho: Chuyển theo lô"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_stock_account
