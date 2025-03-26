@@ -15,8 +15,7 @@ class TestImLivechatCommon(HttpCase):
             'password': cls.password,
             'livechat_username': "Michel Operator",
             'email': 'michel@example.com',
-            # TODO: im_livechat should imply group_user ?
-            'group_ids': cls.env.ref('im_livechat.im_livechat_group_user') | cls.env.ref('base.group_user'),
+            'group_ids': cls.env.ref('im_livechat.im_livechat_group_user'),
         }, {
             'name': 'Paul',
             'login': 'paul'
