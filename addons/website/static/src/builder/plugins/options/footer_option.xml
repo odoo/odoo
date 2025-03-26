@@ -72,6 +72,13 @@
     </BuilderRow>
 </t>
 
+<t t-name="website.ToggleFooterCookiePolicyLinkOption">
+    <BuilderRow label.translate="Cookie Policy Link">
+        <BuilderCheckbox action="'websiteConfig'" preview="false"
+                actionParam="{ views: ['website.footer_cookie_policy_link'], resetViewArch: true }"/>
+    </BuilderRow>
+</t>
+
 <t t-name="website.FooterBorder">
     <BorderConfigurator label.translate="Border"/>
     <ShadowOption/>

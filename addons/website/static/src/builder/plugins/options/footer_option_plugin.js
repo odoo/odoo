@@ -35,10 +35,11 @@ const [
     FOOTER_WIDTH,
     FOOTER_SLIDEOUT,
     FOOTER_SCROLL_TO,
+    FOOTER_COOKIE_POLICY_LINK,
     FOOTER_COPYRIGHT,
     FOOTER_BORDER,
     ...__ERROR_CHECK__
-] = splitBetween(SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, 7);
+] = splitBetween(SNIPPET_SPECIFIC_NEXT, SNIPPET_SPECIFIC_END, 8);
 if (__ERROR_CHECK__.length > 0) {
     console.error("Wrong count in footer option split");
 }
@@ -49,6 +50,7 @@ export {
     FOOTER_WIDTH,
     FOOTER_SLIDEOUT,
     FOOTER_SCROLL_TO,
+    FOOTER_COOKIE_POLICY_LINK,
     FOOTER_COPYRIGHT,
     FOOTER_BORDER,
 };
@@ -83,6 +85,13 @@ export class ToggleFooterCopyrightOption extends BaseOptionComponent {
     static groups = ["website.group_website_designer"];
 }
 
+export class ToggleFooterCookiePolicyLinkOption extends BaseOptionComponent {
+    static template = "website.ToggleFooterCookiePolicyLinkOption";
+    static selector = "#wrapwrap:has(#website_cookies_bar) > footer";
+    static editableOnly = false;
+    static groups = ["website.group_website_designer"];
+}
+
 export class FooterBorder extends BaseOptionComponent {
     static template = "website.FooterBorder";
     static selector = "#wrapwrap > footer";
@@ -112,6 +121,7 @@ class FooterOptionPlugin extends Plugin {
             withSequence(FOOTER_COLORS, FooterColorsOption),
             withSequence(FOOTER_SLIDEOUT, FooterSlideoutOption),
             withSequence(FOOTER_COPYRIGHT, ToggleFooterCopyrightOption),
+            withSequence(FOOTER_COOKIE_POLICY_LINK, ToggleFooterCookiePolicyLinkOption),
             withSequence(FOOTER_BORDER, FooterBorder),
             withSequence(FOOTER_SCROLL_TO, FooterScrollToTopOption),
         ],
