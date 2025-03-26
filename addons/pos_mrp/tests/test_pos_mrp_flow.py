@@ -4,11 +4,66 @@
 import odoo
 
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
-from odoo import fields
+from odoo import fields, exceptions
 from odoo.tests import Form
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosMrp(TestPointOfSaleCommon):
+
+    def test_pos_user_can_access_kit_product_info(self):
+        """ Ensure POS users can access product info on kit (phantom BoM) products without AccessError. """
+        category = self.env['product.category'].create({
+            'name': 'Category for kit',
+            'property_cost_method': 'fifo',
+        })
+
+        kit = self.env['product.product'].create({
+            'name': 'Kit Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'lst_price': 10.0,
+            'categ_id': category.id,
+        })
+
+        component = self.env['product.product'].create({
+            'name': 'Comp A',
+            'is_storable': True,
+            'available_in_pos': True,
+            'lst_price': 10.0,
+            'standard_price': 5.0,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': kit.id,
+            'type': 'phantom',
+            'product_uom_id': kit.uom_id.id,
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'bom_line_ids': [
+                (0, 0, {
+                    'product_id': component.id,
+                    'product_qty': 1.0,
+                    'product_uom_id': component.uom_id.id,
+                }),
+            ],
+        })
+
+        pos_only_user = self.env['res.users'].create({
+            'name': 'POS Kit User',
+            'login': 'pos_kit_user',
+            'email': 'kituser@test.com',
+            'groups_id': [(6, 0, [
+                self.env.ref('point_of_sale.group_pos_user').id,
+                self.env.ref('base.group_user').id,
+            ])],
+        })
+
+        try:
+            kit.with_user(pos_only_user).get_product_info_pos(price=10, quantity=1, pos_config_id=self.pos_config.id)
+        except exceptions.AccessError:
+            self.fail("POS user should be able to read phantom BoM product info without AccessError.")
+
+
+
     def test_bom_kit_order_total_cost(self):
         #create a product category that use fifo
         category = self.env['product.category'].create({
