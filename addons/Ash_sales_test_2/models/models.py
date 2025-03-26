@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
         ('unpicked', 'Unpicked'),
         ('released', 'Released'),
         ('unreleased', 'Unreleased')
-    ], string="Is Released", default='unpicked')
+    ], string="Is Released", default='unreleased')
 
     pick_status = fields.Selection([
         ('picked', 'Picked'),

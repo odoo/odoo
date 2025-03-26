@@ -4,8 +4,8 @@ class ProductTemplate(models.Model):
     _inherit = 'product.template'  # Inherit from product.template
 
     # Define new fields
-    tenant_id = fields.Char('Tenant ID')
-    site_code = fields.Char('Site Code')
+    tenant_id = fields.Char('Tenant ID', required=True)
+    site_code = fields.Char('Site Code', required=True)
 
     sku = fields.Char('SKU', unique=True)
     outer_gtin = fields.Char('Outer GTIN')

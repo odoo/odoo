@@ -12,19 +12,51 @@ class StockMoveLine(models.Model):
                                               string='Delivery Receipt Status', default='draft')
     packed = fields.Boolean('Packed', default=False)
     released_manual = fields.Boolean('Released', default=False)
-    xdock_qty = fields.Float(string='XDOCk Quantity')
-    xdock_remaining_qty = fields.Float(string='XDOCk Remaining Quantity')
+    xdock_packaging_qty = fields.Float(
+        string="Xdock Packaging Quantity")
 
-    @api.depends('quantity')
-    def _compute_remaining_qty(self):
+    xdock_qty = fields.Float(
+        string='XDOCk Quantity',
+        compute='_compute_xdock_packaging_quantity',
+        inverse='_inverse_xdock_qty',
+        store=False  # Do not store since it could be manual or computed
+    )
+    xdock_remaining_qty = fields.Float(string='XDOCk Remaining Quantity')
+    show_xdock_qty_editable = fields.Boolean(
+        string='Show XDock Qty Editable', compute='_compute_show_xdock_qty_editable')
+
+    @api.depends('product_packaging_id')
+    def _compute_show_xdock_qty_editable(self):
+        for move in self:
+            move.show_xdock_qty_editable = not bool(move.product_packaging_id)
+
+    @api.depends('product_packaging_id', 'xdock_packaging_qty')
+    def _compute_xdock_packaging_quantity(self):
         """
-        Compute remaining quantity based on the quantity ordered (product_uom_qty)
-        and the quantity done (quantity). Remaining qty is initially equal to available qty.
+        Computes xdock_qty by converting the xdock_packaging_qty using the packaging's conversion factor.
+        If no packaging is selected, user can enter xdock_qty manually (handled via inverse).
         """
         for move in self:
-            # Initial remaining qty is the product_uom_qty (expected qty)
-            move.remaining_qty = move.quantity
-            # move.is_remaining_qty = move.remaining_qty > 0
+            if move.product_packaging_id and move.xdock_packaging_qty:
+                move.xdock_qty = move.product_packaging_id.qty * move.xdock_packaging_qty
+            elif not move.product_packaging_id:
+                # If no packaging, keep whatever value the user entered manually
+                move.xdock_qty = move.xdock_qty or 0.0
+            else:
+                move.xdock_qty = 0.0
+
+    def _inverse_xdock_qty(self):
+        """
+        Allow manual entry of xdock_qty when no packaging is selected.
+        """
+        # No logic required unless you want to reverse-compute xdock_packaging_qty
+        # Not needed unless you want to update packaging_qty from manually set xdock_qty
+        pass
+
+    @api.depends('xdock_qty')
+    def _compute_xdock_qty_remaining_qty(self):
+        for move in self:
+            move.xdock_remaining_qty = move.xdock_qty
 
     @api.depends('remaining_qty')
     def _compute_delivery_receipt_state(self):
