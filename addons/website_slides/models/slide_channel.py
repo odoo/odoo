@@ -293,12 +293,9 @@ class SlideChannel(models.Model):
         res = super()._default_cover_properties()
         res.update({
             "background_color_class": "o_cc3",
-            'background_color_style': (
-                'background-color: rgba(0, 0, 0, 0); '
-                'background-image: linear-gradient(120deg, #875A7B, #78516F);'
-            ),
-            'opacity': '0',
-            'resize_class': 'cover_auto'
+            "background-image": "url('/website_slides/static/src/img/channel-default.jpg')",
+            "opacity": "0.4",
+            "resize_class": "o_half_screen_height",
         })
         return res
 

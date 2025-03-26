@@ -21,7 +21,7 @@
             <div t-foreach="line.product_id.channel_ids" t-as="course" class="row mx-0 my-2 border">
                 <div class="col-5 d-flex justify-content-center my-auto">
                     <span t-if="course.image_1920" t-field="course.image_1920" t-options="{'widget': 'image', 'class': 'my-2'}"/>
-                    <img t-else="" class="img img-fluid my-2" src="/website_slides/static/src/img/channel-training-default.jpg"/>
+                    <img t-else="" class="img img-fluid my-2" src="/website_slides/static/src/img/channel-default.jpg"/>
                 </div>
                 <t t-set="invitation_link" t-value="course_memberships[course].invitation_link if course in course_memberships else ''"/>
                 <div class="col-7">
