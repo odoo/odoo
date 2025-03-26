@@ -11,7 +11,7 @@ class MailNotification(models.Model):
         ('sms', 'SMS')
     ], ondelete={'sms': 'cascade'})
     sms_id = fields.Many2one('sms.sms', string='SMS', index='btree_not_null', ondelete='set null')
-    sms_number = fields.Char('SMS Number')
+    sms_number = fields.Char('SMS Number', groups='base.group_user')
     failure_type = fields.Selection(selection_add=[
         ('sms_number_missing', 'Missing Number'),
         ('sms_number_format', 'Wrong Number Format'),
