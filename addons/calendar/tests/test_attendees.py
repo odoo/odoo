@@ -37,7 +37,7 @@ class TestEventNotifications(TransactionCase):
         })
         self.assertTrue(event.attendee_ids, "It should have created an attendee")
         self.assertEqual(event.attendee_ids.partner_id, self.partner, "It should be linked to the partner")
-        self.assertIn(self.partner, event.message_follower_ids.partner_id, "He should be follower of the event")
+        self.assertNotIn(self.partner, event.message_follower_ids.partner_id, "He should not be automatically added in followers, no need")
 
     def test_attendee_added_create_with_specific_states(self):
         """
