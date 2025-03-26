@@ -4622,7 +4622,7 @@ test("user without permission cannot drag and drop a record thus sequence remain
 });
 
 test.tags("desktop");
-test("drag and drop highlight on hover", async () => {
+test("drag and drop highlight on hover and has visible placeholder", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -4642,11 +4642,16 @@ test("drag and drop highlight on hover", async () => {
     // first record of first column moved to the bottom of second column
     const { drop, moveTo } = await contains(".o_kanban_group:first-child .o_kanban_record").drag();
     await moveTo(".o_kanban_group:nth-child(2)");
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3); // includes the placeholder
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record:eq(2)").toBeVisible();
 
     expect(getKanbanColumn(1)).toHaveClass("o_kanban_hover");
 
     await drop();
 
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(1);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(3);
     expect(".o_kanban_group:nth-child(2).o_kanban_hover").toHaveCount(0);
 });
 
