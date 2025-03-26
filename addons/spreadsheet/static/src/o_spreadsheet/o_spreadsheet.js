@@ -7383,7 +7383,8 @@
             }
         }
         else if (dataSets.length === 1) {
-            for (let i = 0; i < getData(getters, dataSets[0]).length; i++) {
+            const dataLength = getData(getters, dataSets[0]).length;
+            for (let i = 0; i < dataLength; i++) {
                 labels.formattedValues.push("");
                 labels.values.push("");
             }
@@ -23728,9 +23729,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     /** In XLSX color format (no #)  */
     const AUTO_COLOR = "000000";
     const XLSX_ICONSET_MAP = {
-        arrow: "3Arrows",
+        arrows: "3Arrows",
         smiley: "3Symbols",
-        dot: "3TrafficLights1",
+        dots: "3TrafficLights1",
     };
     const NAMESPACE = {
         styleSheet: "http://schemas.openxmlformats.org/spreadsheetml/2006/main",
@@ -24119,6 +24120,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     /** Map between legend position in XLSX file and human readable position  */
     const DRAWING_LEGEND_POSITION_CONVERSION_MAP = {
+        none: "none",
         b: "bottom",
         t: "top",
         l: "left",
@@ -26296,7 +26298,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         ? "right"
                         : "left",
                     legendPosition: DRAWING_LEGEND_POSITION_CONVERSION_MAP[this.extractChildAttr(rootChartElement, "c:legendPos", "val", {
-                        default: "b",
+                        default: "none",
                     }).asString()],
                     stacked: barChartGrouping === "stacked",
                     fontColor: "000000",
@@ -42461,10 +42463,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 continue;
             }
             const cfValueObjectNodes = cfValueObject.map((attrs) => escapeXml /*xml*/ `<cfvo ${formatAttributes(attrs)} />`);
+            const iconSetAttrs = [["iconSet", getIconSet(rule.icons)]];
+            if (isIconSetReversed(rule.icons)) {
+                iconSetAttrs.push(["reverse", "1"]);
+            }
             conditionalFormats.push(escapeXml /*xml*/ `
       <conditionalFormatting sqref="${range}">
         <cfRule ${formatAttributes(ruleAttributes)}>
-          <iconSet iconSet="${getIconSet(rule.icons)}">
+          <iconSet ${formatAttributes(iconSetAttrs)}>
             ${joinXmlNodes(cfValueObjectNodes)}
           </iconSet>
         </cfRule>
@@ -42482,9 +42488,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             ["stopIfTrue", cf.stopIfTrue ? 1 : 0],
         ];
     }
+    function isIconSetReversed(iconSet) {
+        const defaultIconSet = ICON_SETS[detectIconsType(iconSet)];
+        return iconSet.upper === defaultIconSet.bad && iconSet.lower === defaultIconSet.good;
+    }
     function getIconSet(iconSet) {
-        return XLSX_ICONSET_MAP[Object.keys(XLSX_ICONSET_MAP).find((key) => iconSet.upper.toLowerCase().startsWith(key)) ||
-            "dots"];
+        return XLSX_ICONSET_MAP[detectIconsType(iconSet)];
+    }
+    /**
+     * Partial detection based on "upper" point only.
+     * We support any arbitrary icon in the set, while excel doesn't allow
+     * mixing icons from different types.
+     */
+    function detectIconsType(iconSet) {
+        const type = Object.keys(ICON_SETS).find((type) => Object.values(ICON_SETS[type]).includes(iconSet.upper)) || "dots";
+        return type;
     }
     function thresholdAttributes(threshold, position) {
         const type = getExcelThresholdType(threshold.type, position);
@@ -43759,9 +43777,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.65';
-    __info__.date = '2025-03-19T08:28:40.534Z';
-    __info__.hash = '4e495e9';
+    __info__.version = '16.0.66';
+    __info__.date = '2025-03-26T12:54:26.409Z';
+    __info__.hash = 'e2c1da2';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
