@@ -332,52 +332,37 @@
 
     <template id="profile_next_rank_card" name="Profile Next Rank Card">
         <div class="o_wprofile_progress_circle">
-            <svg viewBox="0 0 36 36" class="o_pc_circular_chart">
-                <t t-set="next_rank_id" t-value="next_rank_id or user._get_next_rank()"/>
-                <t t-if="next_rank_id and user.rank_id">
-                    <t t-if="(next_rank_id.karma_min - user.rank_id.karma_min) > 0">
-                        <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(next_rank_id.karma_min - user.rank_id.karma_min))"/>
-                    </t>
-                    <t t-else="">
-                        <t t-set="user_points" t-value="0"/>
-                    </t>
-                </t>
-                <t t-elif="user.rank_id">
-                    <t t-set="user_points" t-value="100"/>
+            <t t-set="next_rank_id" t-value="next_rank_id or user._get_next_rank()"/>
+            <a href="/profile/ranks_badges" t-field="user.rank_id"/>
+            <t t-if="next_rank_id and user.rank_id">
+                <t t-if="(next_rank_id.karma_min - user.rank_id.karma_min) > 0">
+                    <t t-set="user_points" t-value="int(100*(user.karma - user.rank_id.karma_min)/(next_rank_id.karma_min - user.rank_id.karma_min))"/>
                 </t>
                 <t t-else="">
                     <t t-set="user_points" t-value="0"/>
                 </t>
-                <g data-bs-toggle="tooltip" data-bs-delay="0"
-                    t-attf-title="{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else ''}}">
-                    <path class="o_pc_circle_bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <path class="o_pc_circle" t-attf-stroke-dasharray="#{user_points}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" stroke="url(#gradient)" mask="url(#mask)"/>
-                </g>
-                <mask id="mask">
-                    <polygon points="0,0 17.2,0 17.2,10 18,10 18,0 36,0 36,36 0,36" fill="white"/>
-                </mask>
-                <linearGradient id="gradient">
-                    <stop offset="0%" stop-color="var(--o-pc-color-stop-1)"/>
-                    <stop offset="100%" stop-color="var(--o-pc-color-stop-2)"/>
-                </linearGradient>
-            </svg>
-            <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center p-4">
+            </t>
+            <t t-elif="user.rank_id">
+                <t t-set="user_points" t-value="100"/>
+            </t>
+            <t t-else="">
+                <t t-set="user_points" t-value="0"/>
+            </t>
+            <div class="d-flex align-items-center gap-2">
+                <div class="progress flex-grow-1" role="progressbar" aria-label="Example 1px high" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: .5rem;">
+                    <div class="progress-bar" t-attf-style="width: #{user_points}%"></div>
+                </div>
+                <small><t t-out="user_points"/>%</small>
+            </div>
+        </div>
+        <div t-if="next_rank_id and user.rank_id">
+            <span class="fw-bold">Next rank:</span>
+            <div class="d-flex gap-2">
                 <t t-set="rank_id" t-value="next_rank_id if next_rank_id else user.rank_id"/>
                 <div t-field="rank_id.image_1920"
                     t-attf-style="max-width: {{img_max_width or '50%'}};"
-                    t-options="{'widget': 'image', 'preview_image': 'image_128'}"/>
-                <h4 class="text-center" t-field="rank_id.name"/>
-                <small class="w-50 text-center">
-                    <t t-set="karma_value" t-value="next_rank_id.karma_min - user.karma if next_rank_id else user.karma"/>
-                    <t t-if="next_rank_id">
-                        Get
-                        <span class="fw-bold text-primary" t-out="karma_value" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> xp
-                        to level up!
-                    </t>
-                    <t t-else="">
-                        <span class="fw-bold text-primary" t-out="karma_value" t-options="{'widget': 'integer', 'format_decimalized_number': True, 'precision_digits': 2}"/> xp
-                    </t>
-                </small>
+                    t-options="{'widget': 'image', 'preview_image': 'image_128', 'width': 24, 'height': 24}"/>
+                    <a href="/profile/ranks_badges" t-field="rank_id.name"/>
             </div>
         </div>
     </template>
@@ -678,24 +663,24 @@
     </template>
 
     <template id="email_validation_banner">
-        <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissable'"/>
-        <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
+        <t t-set="send_alert_classes" t-value="send_alert_classes if send_alert_classes else 'alert alert-danger alert-dismissible fade show'"/>
+        <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissible fade show'"/>
         <t t-set="my_account_redirect" t-value="'/my/account?redirect='+redirect_url"/>
 
         <div t-if="not is_public_user and not user.email" t-att-class="send_alert_classes" role="alert">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             Your account does not have an email set up. Please set it up on <a class="alert-link" t-att-href="my_account_redirect">your account settings</a>.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <div t-elif="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
-            <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             Your Account has not yet been verified.<br/>
             Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-esc="additional_validation_email_message"/>!
+            <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
         </div>
         <div t-elif="validation_email_sent and not validation_email_done" t-att-class="done_alert_classes">
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             Verification Email sent to <t t-out="user.email"/>!<br/>
             Did not receive it? <a class="alert-link" t-att-href="my_account_redirect"><u>Correct your email address</u></a> 
             or <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>Send Again</u></a>.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
             <button type="button" class="btn-close validated_email_close" data-bs-dismiss="alert" aria-label="Close"/>
