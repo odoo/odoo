@@ -1918,7 +1918,7 @@ class MailCommon(MailCase):
         """
         for data in channels_data:
             if "im_livechat.channel" not in self.env:
-                data.pop("anonymous_country", None)
+                data.pop("country_id", None)
                 data.pop("livechat_channel_id", None)
                 data.pop("operator", None)
             if "whatsapp.message" not in self.env:

@@ -103,7 +103,7 @@ export class Thread extends Record {
     correspondentCountry = fields.One("res.country", {
         /** @this {import("models").Thread} */
         compute() {
-            return this.correspondent?.persona?.country ?? this.anonymous_country;
+            return this.correspondent?.persona?.country ?? this.country_id;
         },
     });
     get showCorrespondentCountry() {

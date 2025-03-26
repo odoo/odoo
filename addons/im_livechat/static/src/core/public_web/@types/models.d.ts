@@ -11,8 +11,8 @@ declare module "models" {
         threads: Thread[];
     }
     export interface Thread {
-        anonymous_country: Country;
         appAsLivechats: DiscussApp;
+        country_id: Country;
         livechat_channel_id: LivechatChannel;
     }
 }

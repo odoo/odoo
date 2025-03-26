@@ -117,7 +117,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search group_ids (group_based_subscription)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
-    #       - fetch country (anonymous_country)
+    #       - fetch country (country_id)
     #   - _get_last_messages
     #   14: message _to_store:
     #       - search mail_message_schedule
@@ -572,11 +572,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
+                "country_id": False,
                 "create_uid": self.user_root.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -604,11 +604,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -636,11 +636,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -668,11 +668,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -703,11 +703,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": self.group_user.full_name,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -735,11 +735,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "group",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -767,11 +767,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_1:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -799,11 +799,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_2:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -831,11 +831,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_3:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -863,11 +863,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_chat_4:
             return {
-                "anonymous_country": False,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "chat",
+                "country_id": False,
                 "create_uid": self.env.user.id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -895,11 +895,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_1:
             return {
-                "anonymous_country": self.env.ref("base.in").id,
                 "anonymous_name": False,
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "livechat",
+                "country_id": self.env.ref("base.in").id,
                 "create_uid": self.users[1].id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
@@ -927,11 +927,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_livechat_2:
             return {
-                "anonymous_country": self.env.ref("base.be").id,
                 "anonymous_name": "anon 2",
                 "authorizedGroupFullName": False,
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "livechat",
+                "country_id": self.env.ref("base.be").id,
                 "create_uid": self.env.ref("base.public_user").id,
                 "custom_channel_name": False,
                 "custom_notifications": False,
