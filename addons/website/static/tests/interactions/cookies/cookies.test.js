@@ -54,7 +54,7 @@ test("consent for optional cookies not given if click on #cookies-consent-essent
     await waitFor(cookiesBarEl, { visible: true });
     await click("#cookies-consent-essential");
     expect(cookiesBarEl).not.toBeVisible();
-    expect(cookie.get("website_cookies_bar")).toBe('{"required": true, "optional": false}');
+    expect(cookie.get("website_cookies_bar")).toMatch(/^\{"required": true, "optional": false, "ts": \d+\}$/);
 });
 
 test("consent for optional cookies not given if no click", async () => {
@@ -79,8 +79,8 @@ test("consent for optional cookies given if click on #cookies-consent-all", asyn
     expect(cookiesBarEl).toBeVisible();
     await click("#cookies-consent-all");
     expect(cookiesBarEl).not.toBeVisible();
-    expect(cookie.get("website_cookies_bar")).toBe('{"required": true, "optional": true}');
-})
+    expect(cookie.get("website_cookies_bar")).toMatch(/^\{"required": true, "optional": true, "ts": \d+\}$/);
+});
 
 test("show warning instead of iframe if no consent", async () => {
     const { core } = await startInteractions(cookiesApprovalTemplate);
