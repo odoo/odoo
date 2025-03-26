@@ -12,9 +12,16 @@
                     <field name="tenant_code_id" string="Tenant ID"/>
                     <field name="site_code_id" string="Site Code"/>
                 </xpath>
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="is_error_found"/>
+                    <field name="is_error_found_message"
+                           widget="html"
+                           invisible="not is_error_found"/>
+                </xpath>
                 <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
                        position="after">
                     <field name="remaining_qty"/>
+                    <field name="xdock_packaging_qty" optional="hide"/>
                     <field name="xdock_qty" optional="hide"/>
                     <field name="xdock_remaining_qty" optional="hide"/>
                     <field name="delivery_receipt_state"/>
