@@ -353,35 +353,22 @@ class ImageGalleryOption extends Plugin {
     }
 
     async transformImagesToWebp(images) {
-        const imagePromises = [];
-        for (const imgEl of images) {
-            imagePromises.push(
-                new Promise((resolve) => {
-                    loadImageInfo(imgEl).then((newDataset) => {
-                        Object.assign(imgEl.dataset, newDataset);
-                        if (
-                            imgEl.dataset.mimetype &&
-                            !["image/gif", "image/svg+xml", "image/webp"].includes(
-                                imgEl.dataset.mimetype
-                            )
-                        ) {
-                            // Convert to webp but keep original width.
-                            this.dependencies.imagePostProcess
-                                .processImage(imgEl, {
-                                    mimetype: "image/webp",
-                                })
-                                .then((updateImgAttributes) => {
-                                    updateImgAttributes();
-                                    resolve();
-                                });
-                        } else {
-                            resolve();
-                        }
-                    });
-                })
-            );
-        }
-        return Promise.all(imagePromises);
+        const process = async (img) => {
+            const newDataset = await loadImageInfo(img);
+            const { mimetypeBeforeConversion } = { ...img.dataset, ...newDataset };
+            if (
+                mimetypeBeforeConversion &&
+                !["image/gif", "image/svg+xml", "image/webp"].includes(mimetypeBeforeConversion)
+            ) {
+                // Convert to webp but keep original width.
+                const update = await this.dependencies.imagePostProcess.processImage(img, {
+                    formatMimetype: "image/webp",
+                    ...newDataset,
+                });
+                update();
+            }
+        };
+        return await Promise.all(images.map(process));
     }
 
     async cloneContainerImages(imageGalleryElement) {
