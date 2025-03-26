@@ -22,40 +22,42 @@
                 <div t-if="'unsubscribe' in request.params" class="offset-lg-9 col-lg-3 alert alert-info" role="status">
                     <h5>Need to unsubscribe? <br/>It's right here! <span class="oi fa-2x oi-arrow-down float-end" role="img" aria-label="" title="Read this !"/></h5>
                 </div>
-                <div class="row mb-4" t-foreach="mail_groups" t-as="group_data">
+                <t t-foreach="mail_groups" t-as="group_data">
                     <t t-set="group" t-value="group_data['group']"/>
                     <t t-set="is_member" t-value="group_data['is_member']"/>
-                    <div class="col-lg-5">
-                        <img t-if="group.image_128" t-attf-src="/web/image/mail.group/#{group.id}/image_128" class="o_image_64_cover float-start me-3" alt="Group"/>
-                        <div t-else="" class="o_image_64_cover float-start me-3 d-lg-block d-md-none"/>
-                        <div class="d-flex flex-row">
-                            <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong>
-                            <div t-if="group.alias_email and not group.is_closed"
-                                class="d-flex align-items-center ms-3">
-                                <i class="fa fa-envelope-o me-1" role="img" aria-label="Alias" title="Alias"/>
-                                <a class="text-break" t-attf-href="mailto:#{group.alias_email}" t-field="group.alias_email"/>
+                    <div class="row mb-4 o_mail_group" t-att-data-id="group.id">
+                        <div class="col-lg-5">
+                            <img t-if="group.image_128" t-attf-src="/web/image/mail.group/#{group.id}/image_128" class="o_image_64_cover float-start me-3" alt="Group"/>
+                            <div t-else="" class="o_image_64_cover o_mg_mail_group_default_image float-start me-3 d-lg-block d-md-none"/>
+                            <div class="d-flex flex-row">
+                                <strong><a t-attf-href="/groups/#{ slug(group) }" t-esc="group.name"/></strong>
+                                <div t-if="group.alias_email and not group.is_closed"
+                                    class="d-flex align-items-center ms-3">
+                                    <i class="fa fa-envelope-o me-1" role="img" aria-label="Alias" title="Alias"/>
+                                    <a class="text-break" t-attf-href="mailto:#{group.alias_email}" t-field="group.alias_email"/>
+                                </div>
                             </div>
+                            <div t-field="group.description" class="text-muted d-flex"/>
                         </div>
-                        <div t-field="group.description" class="text-muted d-flex"/>
-                    </div>
-                    <div class="col-lg-3">
-                        <i class="fa fa-fw fa-user" role="img" aria-label="Recipients" title="Recipients"/> <t t-esc="group.member_count"/> members<br />
-                        <t t-if="not group.is_closed">
-                            <i class="fa fa-fw fa-envelope-o" role="img" aria-label="Traffic" title="Traffic"/> <t t-esc="group.mail_group_message_last_month_count"/> messages / month
-                        </t>
-                    </div>
-                    <div class="col-lg-4">
-                        <t t-set="force_unsubscribe" t-value="'unsubscribe' in request.params"/>
-                        <div t-if="not group.is_closed" class="o_mail_group" t-att-data-id="group.id" t-att-data-is-member="force_unsubscribe or is_member">
-                            <div class="input-group o_mg_subscribe_form">
-                                <input type="email" name="email" class="o_mg_subscribe_email form-control" t-att-value="email" placeholder="your email..." t-att-readonly="int(bool(email))"/>
-                               <button t-if="force_unsubscribe or is_member" href="#" class="btn btn-outline-primary o_mg_subscribe_btn">Unsubscribe</button>
-                               <button t-else="" href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
+                        <div class="col-lg-3">
+                            <i class="fa fa-fw fa-user" role="img" aria-label="Recipients" title="Recipients"/> <span class="o_mg_members_count" t-out="group.member_count"/> members<br />
+                            <t t-if="group.mail_group_message_last_month_count and not group.is_closed">
+                                <i class="fa fa-fw fa-envelope-o" role="img" aria-label="Traffic" title="Traffic"/> <t t-esc="group.mail_group_message_last_month_count"/> messages / month
+                            </t>
+                        </div>
+                        <div class="col-lg-4">
+                            <t t-set="force_unsubscribe" t-value="'unsubscribe' in request.params"/>
+                            <div t-if="not group.is_closed" class="o_mg_subscribe_form d-flex justify-content-end" t-att-data-is-member="force_unsubscribe or is_member">
+                                <button href="#" t-attf-class="{{ 'd-none' if not (force_unsubscribe or is_member) else '' }} btn btn-outline-primary o_mg_subscribe_btn o_mg_unsubscribe_btn">Unsubscribe</button>
+                                <div t-attf-class="{{ 'd-none' if force_unsubscribe or is_member else '' }} {{ 'input-group' if not int(bool(email)) else '' }} o_mg_email_input_group">
+                                    <input type="email" name="email" t-attf-class="o_mg_subscribe_email form-control {{ 'd-none' if int(bool(email)) else '' }}" t-att-value="email" placeholder="your email..." t-att-readonly="int(bool(email))"/>
+                                    <button href="#" class="btn btn-primary o_mg_subscribe_btn">Subscribe</button>
+                                </div>
                             </div>
+                            <div t-else="" class="ms-2 float-end text-center text-muted">Closed</div>
                         </div>
-                        <div t-else="" class="ms-2 o_mg_subscribe_btn float-end text-center text-muted">Closed</div>
                     </div>
-                </div>
+                </t>
             </div>
             <div t-else="" class="container mt32">
                 <div class="alert alert-primary text-center">
@@ -160,7 +162,7 @@
 
     <template id="messages_short">
         <div>
-            <ul class="list-unstyled">
+            <ul t-if="messages" class="list-unstyled">
                 <li t-foreach="messages" t-as="message" class="d-flex mt-3">
                     <div class="flex-grow-1 o_mg_message mw-100">
                         <div class="card">
@@ -196,6 +198,13 @@
                     </div>
                 </li>
             </ul>
+            <p t-else="" class="text-center h4 mt-5">
+                Oops, there are no messages here.
+                <t t-if="group.alias_email">
+                    <br/>
+                    Get the conversation started by sending an email to <a t-attf-href="mailto:{{ group.alias_email }}" t-out="group.alias_email"></a>!
+                </t>
+            </p>
             <p t-if="messages and (msg_more_count or 0) > 0 and parent_message">
                 <button class="btn btn-link o_mg_read_more"
                     t-attf-data-href="/groups/#{slug(group)}/#{slug(parent_message)}/get_replies"

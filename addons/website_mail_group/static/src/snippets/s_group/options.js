@@ -26,17 +26,18 @@ options.registry.Group = options.Class.extend({
             this.$target[0].dataset.id = this.mailGroups[0][0];
         } else {
             const widget = this._requestUserValueWidgets('create_mail_group_opt')[0];
-            widget.$el.click();
+            widget.el.click();
         }
     },
 
     cleanForSave: function () {
         // TODO: this should probably be done by the public widget, not the
         // option code, not important enough to try and fix in stable though.
-        const emailInput = this.$target.find('.o_mg_subscribe_email');
-        emailInput.val('');
-        emailInput.removeAttr('readonly');
-        this.$target.find('.o_mg_subscribe_btn').text(_t('Subscribe'));
+        const emailInput = this.$target[0].querySelector(".o_mg_subscribe_email");
+        emailInput.value = "";
+        emailInput.classList.remove("d-none");
+        this.$target[0].querySelector(".o_mg_unsubscribe_btn").classList.add("d-none");
+        this.$target[0].querySelector(".o_mg_email_input_group").classList.add("input-group");
     },
 
     //--------------------------------------------------------------------------
@@ -62,7 +63,7 @@ options.registry.Group = options.Class.extend({
 
         const groupId = await this.orm.create("mail.group", [{ name: name }]);
 
-        this.$target.attr("data-id", groupId);
+        this.$target[0].setAttribute("data-id", groupId);
         return this._rerenderXML();
     },
 

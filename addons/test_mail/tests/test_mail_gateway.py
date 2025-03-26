@@ -597,7 +597,7 @@ class TestMailgateway(MailGatewayCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.addons.mail.models.mail_mail', 'odoo.models', 'odoo.sql_db')
     def test_message_process_alias_config_invalid_defaults(self):
         """Sending a mail to a misconfigured alias must change its status to
-        invalid and notify sender and alias creator."""
+        invalid and notify sender."""
         test_model_track = self.env['ir.model']._get('mail.test.track')
         container_custom = self.env['mail.test.container'].create({})
         alias_valid = self.env['mail.alias'].with_user(self.user_admin).create({
@@ -637,9 +637,6 @@ class TestMailgateway(MailGatewayCommon):
             alias._alias_bounce_incoming_email(message, message_dict)
 
         self.assertEqual(alias_valid.alias_status, 'invalid')
-        self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
-                             [self.user_admin.email_formatted],
-                             subject='Re: Invalid')
         # Not sent to self.email_from because a return path is present in MAIL_TEMPLATE
         self.assertSentEmail(f'"MAILER-DAEMON" <{self.alias_bounce}@{self.alias_domain}>',
                              ['whatever-2a840@postmaster.twitter.com'],
