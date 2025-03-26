@@ -16,6 +16,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { url } from "@web/core/utils/urls";
 import { defineLivechatModels } from "./livechat_test_helpers";
+import { browser } from "@web/core/browser/browser";
 
 describe.current.tags("desktop");
 defineLivechatModels();
@@ -415,4 +416,27 @@ test("Local sidebar category state is shared between tabs", async () => {
     await click(".o-mail-DiscussSidebarCategory-livechat .btn", { target: env1 });
     await contains(".o-mail-DiscussSidebarCategory-livechat .oi-chevron-right", { target: env1 });
     await contains(".o-mail-DiscussSidebarCategory-livechat .oi-chevron-right", { target: env2 });
+});
+
+test("live chat is displayed below its category", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = pyEnv["im_livechat.channel"].create({ name: "Helpdesk" });
+    browser.localStorage.setItem(
+        `discuss_sidebar_category_im_livechat.category_${livechatChannelId}_open`,
+        false
+    );
+    pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor #12" }) }),
+        ],
+    });
+    await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussSidebarCategory .btn", { text: "Helpdesk" });
+    await contains(
+        ".o-mail-DiscussSidebarCategory:contains(Helpdesk) + .o-mail-DiscussSidebarChannel:contains(Visitor #12)"
+    );
 });
