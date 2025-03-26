@@ -28,7 +28,7 @@ declare module "models" {
         hadSelfSession: boolean;
         lastSessionIds: Set<number>;
         rtcInvitingSession: RtcSession;
-        rtcSessions: RtcSession[];
+        rtc_session_ids: RtcSession[];
         videoCount: Readonly<number>;
     }
 

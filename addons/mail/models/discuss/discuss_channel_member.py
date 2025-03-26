@@ -304,11 +304,11 @@ class DiscussChannelMember(models.Model):
         self._join_sfu(ice_servers)
         if store:
             store.add(
-                self.channel_id, {"rtcSessions": Store.Many(current_rtc_sessions, mode="ADD")}
+                self.channel_id, {"rtc_session_ids": Store.Many(current_rtc_sessions, mode="ADD")}
             )
             store.add(
                 self.channel_id,
-                {"rtcSessions": Store.Many(outdated_rtc_sessions, [], mode="DELETE")},
+                {"rtc_session_ids": Store.Many(outdated_rtc_sessions, [], mode="DELETE")},
             )
             store.add_singleton_values(
                 "Rtc",

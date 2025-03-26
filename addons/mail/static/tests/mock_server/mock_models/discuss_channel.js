@@ -441,7 +441,7 @@ export class DiscussChannel extends models.ServerModel {
                 );
                 store.add(otherMembers.map((member) => member.id));
             }
-            res.rtcSessions = mailDataHelpers.Store.many(
+            res.rtc_session_ids = mailDataHelpers.Store.many(
                 DiscussChannelRtcSession.browse(channel.rtc_session_ids),
                 "ADD",
                 makeKwArgs({ extra: true })
