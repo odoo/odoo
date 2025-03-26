@@ -31,6 +31,7 @@ export class VideoSelector extends Component {
     static mediaSpecificStyles = [];
     static mediaExtraClasses = [];
     static tagNames = ["IFRAME", "DIV"];
+    static isVertical = false;
     static template = "html_editor.VideoSelector";
     static components = {
         VideoIframe,
@@ -57,7 +58,10 @@ export class VideoSelector extends Component {
             dailymotion: "dailymotion",
             vimeo: "vimeo",
             youku: "youku",
+            instagram: "instagram",
         };
+
+        this.verticalSupported = [this.PLATFORMS.youtube, this.PLATFORMS.instagram];
 
         this.OPTIONS = {
             autoplay: {
@@ -110,6 +114,7 @@ export class VideoSelector extends Component {
             platform: null,
             vimeoPreviews: [],
             errorMessage: "",
+            isVertical: false,
         });
         this.urlInputRef = useRef("url-input");
 
@@ -121,6 +126,7 @@ export class VideoSelector extends Component {
                     (this.props.media.tagName === "IFRAME" &&
                         this.props.media.getAttribute("src")) ||
                     "";
+                VideoSelector.isVertical = this.props.media.dataset.isVertical === 'true'? true : false;
                 if (src) {
                     this.state.urlInput = src;
                     if (!src.includes("https:") && !src.includes("http:")) {
@@ -128,6 +134,7 @@ export class VideoSelector extends Component {
                     }
                     await this.updateVideo();
 
+                    this.state.isVertical = VideoSelector.isVertical;
                     this.state.options = this.state.options.map((option) => {
                         const { urlParameter } = this.OPTIONS[option.id];
                         return { ...option, value: src.indexOf(urlParameter) >= 0 };
@@ -159,6 +166,12 @@ export class VideoSelector extends Component {
             }
             return option;
         });
+        await this.updateVideo();
+    }
+
+    async onChangeIsVertical() {
+        this.state.isVertical = !this.state.isVertical;
+        VideoSelector.isVertical = this.state.isVertical;
         await this.updateVideo();
     }
 
@@ -258,10 +271,13 @@ export class VideoSelector extends Component {
         return selectedMedia.map((video) => {
             const div = document.createElement("div");
             div.dataset.oeExpression = video.src;
-            div.innerHTML =
-                '<div class="css_editable_mode_display"></div>' +
-                '<div class="media_iframe_video_size" contenteditable="false"></div>' +
-                '<iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>';
+            div.dataset.isVertical = VideoSelector.isVertical;
+            const isVerticalClass = VideoSelector.isVertical ? "media_iframe_video_size_for_vertical" : "media_iframe_video_size";
+            div.innerHTML = `
+                <div class="css_editable_mode_display"></div>
+                <div class="${isVerticalClass}" contenteditable="false"></div>
+                <iframe loading="lazy" frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+            `;
 
             div.querySelector("iframe").src = video.src;
             return div;
