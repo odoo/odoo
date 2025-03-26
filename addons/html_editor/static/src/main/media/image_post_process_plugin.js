@@ -27,7 +27,9 @@ export class ImagePostProcessPlugin extends Plugin {
      */
     async processImage(img, newDataset = {}) {
         const processContext = {};
-        Object.assign(newDataset, await loadImageInfo(img));
+        if (!newDataset.originalSrc || !newDataset.mimetypeBeforeConversion) {
+            Object.assign(newDataset, await loadImageInfo(img));
+        }
         for (const cb of this.getResource("process_image_warmup_handlers")) {
             const addedContext = await cb(img, newDataset);
             if (addedContext) {

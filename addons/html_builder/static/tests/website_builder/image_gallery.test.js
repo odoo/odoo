@@ -80,7 +80,7 @@ test("Add image in gallery", async () => {
     expect(columnImgs).toEqual([["1", "3", "4", "5", "6"], ["2"]]);
     expect.verifySteps(["get_image_info"]);
     expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
-        "data-mimetype",
+        "data-computed-mimetype",
         "image/webp"
     );
     expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
