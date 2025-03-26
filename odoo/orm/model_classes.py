@@ -18,7 +18,6 @@ from odoo.tools import (
     frozendict,
     sql,
 )
-from odoo.tools.misc import ReadonlyDict
 
 if typing.TYPE_CHECKING:
     from odoo.api import Environment
@@ -183,7 +182,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_inherit_module': {},                  # map parent to introducing module
             '_inherit_children': OrderedSet(),      # names of children models
             '_inherits_children': set(),            # names of children models
-            '_fields': ReadonlyDict({}),            # populated in _setup()
+            '_fields': {},                          # populated in _setup()
             '_table_objects': frozendict(),         # populated in _setup()
         })
 
@@ -360,7 +359,7 @@ def _setup(model: BaseModel):
     # avoid clashes with inheritance between different models
     for name in model_cls._fields:
         discardattr(model_cls, name)
-    model_cls._fields = ReadonlyDict({})
+    model_cls._fields.clear()
 
     # collect the definitions of each field (base definition + overrides)
     definitions = defaultdict(list)
@@ -376,17 +375,17 @@ def _setup(model: BaseModel):
             # field is translated to avoid converting its column to varchar
             # and losing data
             translate = next((
-                field._args__['translate'] for field in reversed(fields_) if 'translate' in field._args__
+                field.args['translate'] for field in reversed(fields_) if 'translate' in field.args
             ), False)
             if not translate:
                 # patch the field definition by adding an override
                 _logger.debug("Patching %s.%s with translate=True", model_cls._name, name)
                 fields_.append(type(fields_[0])(translate=True))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
-            model_cls._fields = ReadonlyDict({**model_cls._fields, name: fields_[0]})
+            model_cls._fields[name] = fields_[0]
         else:
             Field = type(fields_[-1])
-            add_field(model, name, Field(_base_fields__=tuple(fields_)))
+            add_field(model, name, Field(_base_fields=fields_))
 
     # 2. add manual fields
     if model.pool._init_modules:
@@ -554,7 +553,7 @@ def _add_manual_fields(model: BaseModel):
             try:
                 attrs = IrModelFields._instanciate_attrs(field_data)
                 if attrs:
-                    field = fields.Field._by_type__[field_data['ttype']](**attrs)
+                    field = fields.Field.by_type[field_data['ttype']](**attrs)
                     add_field(model, name, field)
             except Exception:
                 _logger.exception("Failed to load field %s.%s: skipped", model._name, field_data['name'])
@@ -585,15 +584,13 @@ def add_field(model: BaseModel, name: str, field: Field):
     field._toplevel = True
     field.__set_name__(model_cls, name)
     # add field as an attribute and in model_cls._fields (for reflection)
-    model_cls._fields = ReadonlyDict({**model_cls._fields, name: field})
+    model_cls._fields[name] = field
 
 
 def pop_field(model: BaseModel, name: str) -> Field | None:
     """ Remove the field with the given ``name`` from the model class of ``model``. """
     model_cls = model.env.registry[model._name]
-    fields_dict = dict(model_cls._fields)
-    field = fields_dict.pop(name, None)
-    model_cls._fields = ReadonlyDict(fields_dict)
+    field = model_cls._fields.pop(name, None)
     discardattr(model_cls, name)
     if model_cls._rec_name == name:
         # fixup _rec_name and display_name's dependencies
