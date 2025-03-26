@@ -17,13 +17,16 @@ export class BuilderCheckbox extends Component {
     };
 
     setup() {
-        const { operation, isApplied } = useClickableBuilderComponent();
+        const { operation, isApplied, onReady } = useClickableBuilderComponent();
         if (this.props.id) {
             useDependencyDefinition(this.props.id, { isActive: isApplied });
         }
-        this.state = useDomState(() => ({
-            isActive: isApplied(),
-        }));
+        this.state = useDomState(
+            () => ({
+                isActive: isApplied(),
+            }),
+            { onReady }
+        );
         this.onChange = operation.commit;
     }
 

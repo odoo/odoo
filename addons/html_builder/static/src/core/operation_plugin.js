@@ -10,8 +10,15 @@ export class OperationPlugin extends Plugin {
     setup() {
         this.operation = new Operation();
     }
-    next(...args) {
-        return this.operation.next(...args);
+    next(fn, ...args) {
+        // this code nullify every operation if the iframe
+        // has been reloaded, and does not have a browsing context anymore
+        const f = (result) => {
+            if (fn && this.editable.ownerDocument.defaultView) {
+                fn(result);
+            }
+        };
+        return this.operation.next(f, ...args);
     }
 }
 
