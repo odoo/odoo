@@ -665,7 +665,7 @@ class PaymentTransaction(models.Model):
         """
         self.ensure_one()
 
-    def _set_pending(self, state_message=None, extra_allowed_states=()):
+    def _set_pending(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `pending`.
 
         :param str state_message: The reason for setting the transactions in the state `pending`.
@@ -682,7 +682,7 @@ class PaymentTransaction(models.Model):
         txs_to_process._log_received_message()
         return txs_to_process
 
-    def _set_authorized(self, state_message=None, extra_allowed_states=()):
+    def _set_authorized(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `authorized`.
 
         :param str state_message: The reason for setting the transactions in the state `authorized`.
@@ -699,7 +699,7 @@ class PaymentTransaction(models.Model):
         txs_to_process._log_received_message()
         return txs_to_process
 
-    def _set_done(self, state_message=None, extra_allowed_states=()):
+    def _set_done(self, *, state_message=None, extra_allowed_states=()):
         """ Update the transactions' state to `done`.
 
         :param str state_message: The reason for setting the transactions in the state `done`.

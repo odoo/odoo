@@ -2898,13 +2898,13 @@ class MrpProduction(models.Model):
     def _get_product_price_and_data(self, product):
         return {'price': product.standard_price}
 
-    def _get_product_catalog_record_lines(self, product_ids, child_field=False, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, *, child_field=False, **kwargs):
         if not child_field:
             return {}
         lines = self[child_field].filtered(lambda line: line.product_id.id in product_ids)
         return lines.grouped(lambda line: line.product_id)
 
-    def _update_order_line_info(self, product_id, quantity, child_field=False, **kwargs):
+    def _update_order_line_info(self, product_id, quantity, *, child_field=False, **kwargs):
         if not child_field:
             return 0
         entity = self[child_field].filtered(lambda line: line.product_id.id == product_id)

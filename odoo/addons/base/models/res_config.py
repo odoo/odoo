@@ -248,6 +248,7 @@ class ResConfigSettings(models.TransientModel):
 
         return {'default': defaults, 'group': groups, 'module': modules, 'config': configs, 'other': others}
 
+    @api.model
     def get_values(self):
         """
         Return values for the fields other that `default`, `group` and `module`

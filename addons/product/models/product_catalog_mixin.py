@@ -43,7 +43,7 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         return [('company_id', 'in', [self.company_id.id, False]), ('type', '!=', 'combo')]
 
-    def _get_product_catalog_record_lines(self, product_ids, child_field=False, **kwargs):
+    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         """ Returns the record's lines grouped by product.
         Must be overrided by each model using this mixin.
 

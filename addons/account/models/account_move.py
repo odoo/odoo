@@ -2577,7 +2577,7 @@ class AccountMove(models.Model):
                 )
         return product_infos
 
-    def _get_product_catalog_record_lines(self, product_ids, child_field=False):
+    def _get_product_catalog_record_lines(self, product_ids, **kwargs):
         grouped_lines = defaultdict(lambda: self.env['account.move.line'])
         for line in self.line_ids:
             if line.display_type == 'product' and line.product_id.id in product_ids:

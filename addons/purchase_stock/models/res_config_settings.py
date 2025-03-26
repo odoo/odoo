@@ -12,6 +12,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.days_to_purchase', readonly=False)
     is_installed_sale = fields.Boolean(string="Is the Sale Module Installed")
 
+    @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(

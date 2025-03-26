@@ -34,7 +34,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
                     res['bom_cost'] += res['subcontracting']['bom_cost']
         return res
 
-    def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded):
+    def _get_bom_array_lines(self, data, level, unfolded_ids, unfolded, parent_unfolded=True):
         lines = super()._get_bom_array_lines(data, level, unfolded_ids, unfolded, parent_unfolded)
 
         if data.get('subcontracting'):

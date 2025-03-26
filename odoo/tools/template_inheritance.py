@@ -104,7 +104,7 @@ def locate_node(arch, spec):
     return None
 
 
-def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_locate=lambda s: True):
+def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_locate=None):
     """ Apply an inheriting view (a descendant of the base view)
 
     Apply to a source architecture all the spec nodes (i.e. nodes
@@ -123,6 +123,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
     # Queue of specification nodes (i.e. nodes describing where and
     # changes to apply to some parent architecture).
     specs = specs_tree if isinstance(specs_tree, list) else [specs_tree]
+    pre_locate = pre_locate or (lambda _: True)
 
     def extract(spec):
         """
