@@ -108,7 +108,7 @@ const threadPatch = {
             },
             inverse: "threadAsFirstUnread",
         });
-        this.invitedMembers = fields.Many("discuss.channel.member");
+        this.invited_member_ids = fields.Many("discuss.channel.member");
         this.last_interest_dt = fields.Datetime();
         this.lastInterestDt = fields.Datetime({
             /** @this {import("models").Thread} */
