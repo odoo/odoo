@@ -30,13 +30,6 @@ class AccountMove(models.Model):
         help="Internal warning for the partner or the products as set by the user.",
         compute='_compute_purchase_warning_text')
 
-    def _get_invoice_reference(self):
-        self.ensure_one()
-        vendor_refs = [ref for ref in set(self.invoice_line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
-        if self.ref:
-            return [ref for ref in self.ref.split(', ') if ref and ref not in vendor_refs] + vendor_refs
-        return vendor_refs
-
     @api.onchange('purchase_vendor_bill_id', 'purchase_id')
     def _onchange_purchase_auto_complete(self):
         r''' Load from either an old purchase order, either an old vendor bill.
@@ -61,7 +54,6 @@ class AccountMove(models.Model):
         invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
         has_invoice_lines = bool(self.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')))
         new_currency_id = self.currency_id if has_invoice_lines else invoice_vals.get('currency_id')
-        del invoice_vals['ref'], invoice_vals['payment_reference']
         del invoice_vals['company_id']  # avoid recomputing the currency
         if self.move_type == invoice_vals['move_type']:
             del invoice_vals['move_type'] # no need to be updated if it's same value, to avoid recomputes
@@ -75,17 +67,6 @@ class AccountMove(models.Model):
         # Compute invoice_origin.
         origins = set(self.invoice_line_ids.mapped('purchase_line_id.order_id.name'))
         self.invoice_origin = ','.join(list(origins))
-
-        # Compute ref.
-        refs = self._get_invoice_reference()
-        self.ref = ', '.join(refs)
-
-        # Compute payment_reference.
-        if not self.payment_reference:
-            if len(refs) == 1:
-                self.payment_reference = refs[0]
-            elif len(refs) > 1:
-                self.payment_reference = refs[-1]
 
         # Copy company_id (only changes if the id is of a child company (branch))
         if self.company_id != self.purchase_id.company_id:
