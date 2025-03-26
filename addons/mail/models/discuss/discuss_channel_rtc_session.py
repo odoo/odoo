@@ -43,7 +43,7 @@ class DiscussChannelRtcSession(models.Model):
         for rtc_session in rtc_sessions:
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
-            channel._bus_send_store(channel, {"rtcSessions": Store.Many(rtc_sessions, mode="ADD")})
+            channel._bus_send_store(channel, {"rtc_session_ids": Store.Many(rtc_sessions, mode="ADD")})
         return rtc_sessions
 
     def unlink(self):
@@ -64,7 +64,7 @@ class DiscussChannelRtcSession(models.Model):
             rtc_sessions_by_channel[rtc_session.channel_id] += rtc_session
         for channel, rtc_sessions in rtc_sessions_by_channel.items():
             channel._bus_send_store(
-                channel, {"rtcSessions": Store.Many(rtc_sessions, [], mode="DELETE")}
+                channel, {"rtc_session_ids": Store.Many(rtc_sessions, [], mode="DELETE")}
             )
         for rtc_session in self:
             rtc_session._bus_send(

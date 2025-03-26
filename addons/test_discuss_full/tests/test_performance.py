@@ -599,7 +599,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "general",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_1:
@@ -631,7 +631,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "public channel 1",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_public_2:
@@ -663,7 +663,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "public channel 2",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_1:
@@ -698,7 +698,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
                 "rtcInvitingSession": member_2.sudo().rtc_session_ids.id,
                 # sudo: discuss.channel.rtc.session - reading a session in a test file
-                "rtcSessions": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
+                "rtc_session_ids": [["ADD", [member_2.sudo().rtc_session_ids.id]]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_channel_group_2:
@@ -730,7 +730,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "group restricted channel 2",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_group_1:
@@ -762,7 +762,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_1:
@@ -794,7 +794,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "Ernest Employee, test14",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_2:
@@ -826,7 +826,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "Ernest Employee, test15",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_3:
@@ -858,7 +858,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "Ernest Employee, test2",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_chat_4:
@@ -890,7 +890,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "Ernest Employee, test3",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_1:
@@ -922,7 +922,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "test1 Ernest Employee",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         if channel == self.channel_livechat_2:
@@ -954,7 +954,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "anon 2 Ernest Employee",
                 "parent_channel_id": False,
-                "rtcSessions": [["ADD", []]],
+                "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
         return {}

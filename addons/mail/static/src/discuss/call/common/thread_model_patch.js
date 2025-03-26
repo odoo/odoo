@@ -26,7 +26,7 @@ const ThreadPatch = {
         this.rtcInvitingSession = fields.One("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onAdd(r) {
-                this.rtcSessions.add(r);
+                this.rtc_session_ids.add(r);
                 this.store.ringingThreads.add(this);
                 this.cancelRtcInvitationTimeout = browser.setTimeout(() => {
                     this.store.env.services["discuss.rtc"].leaveCall(this);
@@ -38,7 +38,7 @@ const ThreadPatch = {
                 this.store.ringingThreads.delete(this);
             },
         });
-        this.rtcSessions = fields.Many("discuss.channel.rtc.session", {
+        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
             /** @this {import("models").Thread} */
             onDelete(r) {
                 this.store.env.services["discuss.rtc"].deleteSession(r.id);
@@ -47,8 +47,8 @@ const ThreadPatch = {
             onUpdate() {
                 const hadSelfSession = this.hadSelfSession;
                 const lastSessionIds = this.lastSessionIds;
-                this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtcSessions));
-                this.lastSessionIds = new Set(this.rtcSessions.map((s) => s.id));
+                this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtc_session_ids));
+                this.lastSessionIds = new Set(this.rtc_session_ids.map((s) => s.id));
                 if (
                     !hadSelfSession || // sound for self-join is played instead
                     !this.hadSelfSession || // sound for self-leave is played instead

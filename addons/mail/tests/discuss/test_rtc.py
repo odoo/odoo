@@ -48,7 +48,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                                "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -59,7 +59,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [channel_member.rtc_session_ids.id + 1])],
+                                "rtc_session_ids": [("ADD", [channel_member.rtc_session_ids.id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -123,7 +123,7 @@ class TestChannelRTC(MailCommon):
                 "discuss.channel": [
                     {
                         "id": channel.id,
-                        "rtcSessions": [
+                        "rtc_session_ids": [
                             ("ADD", [channel_member.rtc_session_ids.id]),
                             ("DELETE", [channel_member.rtc_session_ids.id - 1]),
                         ],
@@ -202,7 +202,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [last_rtc_session_id + 1])],
+                                "rtc_session_ids": [("ADD", [last_rtc_session_id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -320,7 +320,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [last_rtc_session_id + 1])],
+                                "rtc_session_ids": [("ADD", [last_rtc_session_id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -360,7 +360,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [last_rtc_session_id + 1])],
+                                "rtc_session_ids": [("ADD", [last_rtc_session_id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -537,7 +537,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [channel_member.rtc_session_ids.id + 1])],
+                                "rtc_session_ids": [("ADD", [channel_member.rtc_session_ids.id + 1])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -639,7 +639,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("ADD", [channel_member.rtc_session_ids.id + 2])],
+                                "rtc_session_ids": [("ADD", [channel_member.rtc_session_ids.id + 2])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -921,7 +921,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                                "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1182,7 +1182,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                                "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1240,7 +1240,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                                "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1275,7 +1275,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "rtcSessions": [("DELETE", [channel_member.rtc_session_ids.id])],
+                                "rtc_session_ids": [("DELETE", [channel_member.rtc_session_ids.id])],
                             },
                         ],
                     },
@@ -1319,7 +1319,7 @@ class TestChannelRTC(MailCommon):
                     "type": "mail.record/insert",
                     "payload": {
                         "discuss.channel": [
-                            {"id": channel.id, "rtcSessions": [("DELETE", [test_session.id])]},
+                            {"id": channel.id, "rtc_session_ids": [("DELETE", [test_session.id])]},
                         ],
                     },
                 },

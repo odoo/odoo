@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//Thread" position="before">
-            <Call t-if="thread.rtcSessions.length > 0" thread="thread" compact="true"/>
+            <Call t-if="thread.rtc_session_ids.length > 0" thread="thread" compact="true"/>
         </xpath>
     </t>
 </templates>

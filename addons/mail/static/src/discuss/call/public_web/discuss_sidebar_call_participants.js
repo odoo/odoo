@@ -53,7 +53,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get lastActiveSession() {
-        const sessions = [...this.props.thread.rtcSessions];
+        const sessions = [...this.props.thread.rtc_session_ids];
         sessions?.sort((s1, s2) => {
             if (s1.isActuallyTalking && !s2.isActuallyTalking) {
                 return -1;
@@ -73,7 +73,7 @@ export class DiscussSidebarCallParticipants extends Component {
     }
 
     get sessions() {
-        const sessions = [...this.props.thread.rtcSessions];
+        const sessions = [...this.props.thread.rtc_session_ids];
         return sessions.sort((s1, s2) => {
             const persona1 = s1.channel_member_id?.persona;
             const persona2 = s2.channel_member_id?.persona;

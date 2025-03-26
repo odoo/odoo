@@ -197,7 +197,7 @@ async function channel_call_join(request) {
         ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
     ]);
     return new mailDataHelpers.Store(DiscussChannel.browse(channel_id), {
-        rtcSessions: mailDataHelpers.Store.many(rtcSessions, "ADD"),
+        rtc_session_ids: mailDataHelpers.Store.many(rtcSessions, "ADD"),
     })
         .add("Rtc", {
             iceServers: false,
@@ -242,7 +242,7 @@ async function channel_call_leave(request) {
             channel,
             "mail.record/insert",
             new mailDataHelpers.Store(DiscussChannel.browse(Number(channelId)), {
-                rtcSessions: mailDataHelpers.Store.many(
+                rtc_session_ids: mailDataHelpers.Store.many(
                     DiscussChannelRtcSession.browse(sessions.map((session) => session.id)),
                     "DELETE",
                     makeKwArgs({ only_id: true })

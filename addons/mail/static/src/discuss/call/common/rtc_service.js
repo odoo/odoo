@@ -400,7 +400,7 @@ export class Rtc extends Record {
             if (!channel) {
                 return;
             }
-            for (const session of channel.rtcSessions) {
+            for (const session of channel.rtc_session_ids) {
                 session.playAudio();
             }
         });
@@ -1153,10 +1153,10 @@ export class Rtc extends Record {
             }
             return;
         }
-        if (this.state.channel.rtcSessions.length === 0) {
+        if (this.state.channel.rtc_session_ids.length === 0) {
             return;
         }
-        for (const session of this.state.channel.rtcSessions) {
+        for (const session of this.state.channel.rtc_session_ids) {
             if (session.eq(this.localSession)) {
                 continue;
             }
@@ -1198,7 +1198,7 @@ export class Rtc extends Record {
             {
                 camera,
                 channel_id: channel.id,
-                check_rtc_session_ids: channel.rtcSessions.map((session) => session.id),
+                check_rtc_session_ids: channel.rtc_session_ids.map((session) => session.id),
             },
             { silent: true }
         );
@@ -1295,7 +1295,7 @@ export class Rtc extends Record {
             server.state = this.sfuClient?.state;
             server.errors = this.sfuClient?.errors.map((error) => error.message);
         }
-        const sessions = this.state.channel.rtcSessions.map((session) => {
+        const sessions = this.state.channel.rtc_session_ids.map((session) => {
             const sessionInfo = {
                 id: session.id,
                 channelMemberId: session.channel_member_id?.id,
@@ -1364,7 +1364,9 @@ export class Rtc extends Record {
             "/discuss/channel/ping",
             {
                 channel_id: this.state.channel.id,
-                check_rtc_session_ids: this.state.channel.rtcSessions.map((session) => session.id),
+                check_rtc_session_ids: this.state.channel.rtc_session_ids.map(
+                    (session) => session.id
+                ),
                 rtc_session_id: this.localSession.id,
             },
             { silent: true }
@@ -1394,7 +1396,7 @@ export class Rtc extends Record {
 
     clear() {
         if (this.state.channel) {
-            for (const session of this.state.channel.rtcSessions) {
+            for (const session of this.state.channel.rtc_session_ids) {
                 this.removeAudioFromSession(session);
                 this.removeVideoFromSession(session);
                 session.isTalking = false;
@@ -1451,7 +1453,7 @@ export class Rtc extends Record {
      */
     async setDeaf(is_deaf) {
         this.updateAndBroadcast({ is_deaf });
-        for (const session of this.state.channel.rtcSessions) {
+        for (const session of this.state.channel.rtc_session_ids) {
             if (!session.audioElement) {
                 continue;
             }
