@@ -69,7 +69,7 @@ def _predict_nextval(self, seq_id):
             (SELECT increment_by FROM pg_sequences WHERE sequencename = %s),
             is_called
         FROM %s""", seqname, seqtable)
-    if self.env.cr._cnx.server_version < 100000:
+    if self.env.cr.server_version < 100000:
         query = SQL("SELECT last_value, increment_by, is_called FROM %s", seqtable)
     [(last_value, increment_by, is_called)] = self.env.execute_query(query)
     if is_called:

@@ -42,11 +42,6 @@ if typing.TYPE_CHECKING:
 
     T = typing.TypeVar('T')
 
-    # when type checking, the BaseCursor exposes methods of the psycopg cursor
-    _CursorProtocol = psycopg2.extensions.cursor
-else:
-    _CursorProtocol = object
-
 
 def undecimalize(value, cr) -> float | None:
     if value is None:
@@ -103,7 +98,7 @@ class Savepoint:
     :param BaseCursor cr: the cursor to execute the `SAVEPOINT` queries on
     """
 
-    def __init__(self, cr: _CursorProtocol):
+    def __init__(self, cr):
         self.name = str(uuid.uuid1())
         self._cr = cr
         self.closed: bool = False
@@ -151,9 +146,7 @@ class _FlushingSavepoint(Savepoint):
             super()._close(rollback)
 
 
-# _CursorProtocol declares the available methods and type information,
-# at runtime, it is just an `object`
-class BaseCursor(_CursorProtocol):
+class BaseCursor(object):
     """ Base class for cursors that manage pre/post commit hooks. """
     IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
 
@@ -270,6 +263,19 @@ class BaseCursor(_CursorProtocol):
             self._now = row[0]
         return self._now
 
+    def set_session(self, isolation_level=None, readonly=None, deferrable=None, autocommit=None) -> None:
+        """ Set one or more parameters for the next transactions or statements in the current session. """
+        raise NotImplementedError
+
+    @property
+    def server_version(self) -> int:
+        """ A read-only integer representing the backend version. """
+        raise NotImplementedError
+
+    @property
+    def encoding(self) -> str:
+        raise NotImplementedError
+
 
 class Cursor(BaseCursor):
     """Represents an open transaction to the PostgreSQL DB backend,
@@ -355,34 +361,49 @@ class Cursor(BaseCursor):
         self.__pool: ConnectionPool = pool
         self.dbname = dbname
 
-        self._cnx: PsycoConnection = pool.borrow(dsn)
-        self._obj: psycopg2.extensions.cursor = self._cnx.cursor()
+        self._cnx__: PsycoConnection = pool.borrow(dsn)
+        self._obj__: psycopg2.extensions.cursor = self._cnx__.cursor()
         if _logger.isEnabledFor(logging.DEBUG):
             self.__caller = frame_codeinfo(currentframe(), 2)
         else:
             self.__caller = False
         self._closed = False   # real initialization value
         # See the docstring of this class.
-        self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
-        self.connection.set_session(readonly=pool.readonly)
+        self._cnx__.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
+        self._cnx__.set_session(readonly=pool.readonly)
 
     def __build_dict(self, row: tuple) -> dict[str, typing.Any]:
-        description = self._obj.description
+        description = self._obj__.description
         assert description, "Query does not have results"
         return {column.name: row[index] for index, column in enumerate(description)}
 
+    def copy_expert(self, sql, file, size=8192) -> None:
+        return self._obj__.copy_expert(sql, file, size)
+
+    def copy_from(self, file, table, sep="\t", null="\\N", size=8192, columns=None):
+        return self._obj__.copy_from(file, table, sep, null, size, columns)
+
     def dictfetchone(self) -> dict[str, typing.Any] | None:
-        row = self._obj.fetchone()
+        row = self._obj__.fetchone()
         return self.__build_dict(row) if row else None
 
     def dictfetchmany(self, size) -> list[dict[str, typing.Any]]:
-        return [self.__build_dict(row) for row in self._obj.fetchmany(size)]
+        return [self.__build_dict(row) for row in self._obj__.fetchmany(size)]
 
     def dictfetchall(self) -> list[dict[str, typing.Any]]:
-        return [self.__build_dict(row) for row in self._obj.fetchall()]
+        return [self.__build_dict(row) for row in self._obj__.fetchall()]
+
+    def fetchone(self):
+        return self._obj__.fetchone()
+
+    def fetchmany(self, size=None):
+        return self._obj__.fetchmany(size)
+
+    def fetchall(self):
+        return self._obj__.fetchall()
 
     def __del__(self):
-        if not self._closed and not self._cnx.closed:
+        if not self._closed and not self._cnx__.closed:
             # Oops. 'self' has not been closed explicitly.
             # The cursor will be deleted by the garbage collector,
             # but the database connection is not put back into the connection
@@ -397,14 +418,14 @@ class Cursor(BaseCursor):
             self._close(True)
 
     def _format(self, query, params=None) -> str:
-        encoding = psycopg2.extensions.encodings[self.connection.encoding]
+        encoding = psycopg2.extensions.encodings[self.encoding]
         return self.mogrify(query, params).decode(encoding, 'replace')
 
     def mogrify(self, query, params=None) -> bytes:
         if isinstance(query, SQL):
             assert params is None, "Unexpected parameters for SQL query object"
             query, params = query.code, query.params
-        return self._obj.mogrify(query, params)
+        return self._obj__.mogrify(query, params)
 
     def execute(self, query, params=None, log_exceptions: bool = True) -> None:
         global sql_counter
@@ -419,10 +440,10 @@ class Cursor(BaseCursor):
 
         start = real_time()
         try:
-            self._obj.execute(query, params)
+            self._obj__.execute(query, params)
         except Exception as e:
             if log_exceptions:
-                _logger.error("bad query: %s\nERROR: %s", self._obj.query or query, e)
+                _logger.error("bad query: %s\nERROR: %s", self._obj__.query or query, e)
             raise
         finally:
             delay = real_time() - start
@@ -445,7 +466,7 @@ class Cursor(BaseCursor):
 
         # advanced stats
         if _logger.isEnabledFor(logging.DEBUG):
-            if obj_query := self._obj.query:
+            if obj_query := self._obj__.query:
                 query = obj_query.decode()
             query_type, table = categorize_query(query)
             log_target = None
@@ -458,16 +479,19 @@ class Cursor(BaseCursor):
                 log_target[table or ''] = (stat_count + 1, stat_time + delay * 1E6)
         return None
 
+    def executemany(self, query, vars_list):
+        return self._obj__.executemany(query, vars_list)
+
     def execute_values(self, query, argslist, template=None, page_size=100, fetch=False):
         """
         A proxy for psycopg2.extras.execute_values which can log all queries like execute.
         But this method cannot set log_exceptions=False like execute
         """
         # Odoo Cursor only proxies all methods of psycopg2 Cursor. This is a patch for problems caused by passing
-        # self instead of self._obj to the first parameter of psycopg2.extras.execute_values.
+        # self instead of self._obj__ to the first parameter of psycopg2.extras.execute_values.
         if isinstance(query, Composable):
-            query = query.as_string(self._obj)
-        return psycopg2.extras.execute_values(self, query, argslist, template=template, page_size=page_size, fetch=fetch)
+            query = query.as_string(self._obj__)
+        return psycopg2.extras.execute_values(self._obj__, query, argslist, template=template, page_size=page_size, fetch=fetch)
 
     def print_log(self) -> None:
         global sql_counter
@@ -511,7 +535,7 @@ class Cursor(BaseCursor):
             return self._close(False)
 
     def _close(self, leak: bool = False) -> None:
-        if not self._obj:
+        if not self._obj__:
             return
 
         del self.cache
@@ -519,14 +543,14 @@ class Cursor(BaseCursor):
         # advanced stats only at logging.DEBUG level
         self.print_log()
 
-        self._obj.close()
+        self._obj__.close()
 
         # This force the cursor to be freed, and thus, available again. It is
         # important because otherwise we can overload the server very easily
         # because of a cursor shortage (because cursors are not garbage
         # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
-        del self._obj
+        del self._obj__
 
         # Clean the underlying connection, and run rollback hooks.
         self.rollback()
@@ -534,16 +558,16 @@ class Cursor(BaseCursor):
         self._closed = True
 
         if leak:
-            self._cnx.leaked = True  # type: ignore
+            self._cnx__.leaked = True  # type: ignore
         else:
             chosen_template = tools.config['db_template']
             keep_in_pool = self.dbname not in ('template0', 'template1', 'postgres', chosen_template)
-            self.__pool.give_back(self._cnx, keep_in_pool=keep_in_pool)
+            self.__pool.give_back(self._cnx__, keep_in_pool=keep_in_pool)
 
     def commit(self) -> None:
         """ Perform an SQL `COMMIT` """
         self.flush()
-        self._cnx.commit()
+        self._cnx__.commit()
         self.clear()
         self._now = None
         self.prerollback.clear()
@@ -555,22 +579,47 @@ class Cursor(BaseCursor):
         self.clear()
         self.postcommit.clear()
         self.prerollback.run()
-        self._cnx.rollback()
+        self._cnx__.rollback()
         self._now = None
         self.postrollback.run()
 
+    def set_session(self, isolation_level=None, readonly=None, deferrable=None, autocommit=None) -> None:
+        return self._cnx__.set_session(
+            isolation_level=isolation_level, readonly=readonly, deferrable=deferrable, autocommit=autocommit
+        )
+
     def __getattr__(self, name):
-        if self._closed and name == '_obj':
+        if self._closed and name == '_obj__':
             raise psycopg2.InterfaceError("Cursor already closed")
-        return getattr(self._obj, name)
+        raise AttributeError
 
     @property
     def closed(self) -> bool:
-        return self._closed or bool(self._cnx.closed)
+        return self._closed or bool(self._cnx__.closed)
+
+    @property
+    def description(self) -> tuple[psycopg2.extensions.Column, ...]:
+        return self._obj__.description
+
+    @property
+    def encoding(self) -> str:
+        return self._cnx__.encoding
 
     @property
     def readonly(self) -> bool:
-        return bool(self._cnx.readonly)
+        return bool(self._cnx__.readonly)
+
+    @property
+    def rowcount(self) -> int:
+        return self._obj__.rowcount
+
+    @property
+    def rownumber(self) -> int:
+        return self._obj__.rownumber
+
+    @property
+    def server_version(self) -> int:
+        return self._cnx__.server_version
 
 
 class PsycoConnection(psycopg2.extensions.connection):

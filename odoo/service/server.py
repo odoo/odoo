@@ -503,7 +503,7 @@ class ThreadedServer(CommonServer):
         from odoo.addons.base.models.ir_cron import IrCron  # noqa: PLC0415
 
         def _run_cron(cr):
-            pg_conn = cr._cnx
+            pg_conn = cr._cnx__
             # LISTEN / NOTIFY doesn't work in recovery mode
             cr.execute("SELECT pg_is_in_recovery()")
             in_recovery = cr.fetchone()[0]
@@ -562,7 +562,7 @@ class ThreadedServer(CommonServer):
             conn = sql_db.db_connect('postgres')
             with contextlib.closing(conn.cursor()) as cr:
                 _run_cron(cr)
-                cr._cnx.close()
+                cr._cnx__.close()
             _logger.info('cron%d max age (%ss) reached, releasing connection.', number, config['limit_time_worker_cron'])
 
     def cron_spawn(self):
@@ -1262,10 +1262,10 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                select.select([self.wakeup_fd_r, self.dbcursor._cnx], [], [], interval)
+                select.select([self.wakeup_fd_r, self.dbcursor._cnx__], [], [], interval)
                 # clear pg_conn/wakeup pipe if we were interrupted
                 time.sleep(self.pid / 100 % .1)
-                self.dbcursor._cnx.poll()
+                self.dbcursor._cnx__.poll()
                 empty_pipe(self.wakeup_fd_r)
             except select.error as e:
                 if e.args[0] != errno.EINTR:
@@ -1285,7 +1285,7 @@ class WorkerCron(Worker):
         if not self.db_queue:
             # list databases
             db_names = OrderedSet(cron_database_list())
-            pg_conn = self.dbcursor._cnx
+            pg_conn = self.dbcursor._cnx__
             notified = OrderedSet(
                 notif.payload
                 for notif in pg_conn.notifies
@@ -1337,7 +1337,7 @@ class WorkerCron(Worker):
 
     def stop(self):
         super().stop()
-        self.dbcursor._cnx.close()
+        self.dbcursor._cnx__.close()
         self.dbcursor.close()
 
 #----------------------------------------------------------

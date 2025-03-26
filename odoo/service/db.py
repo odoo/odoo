@@ -37,7 +37,7 @@ def database_identifier(cr, name: str) -> SQL:
 
     Use instead of `SQL.identifier` to accept all kinds of identifiers.
     """
-    name = quote_ident(name, cr._cnx)
+    name = quote_ident(name, cr._cnx__)
     return SQL(name)
 
 
@@ -107,7 +107,7 @@ def _create_empty_database(name):
         else:
             # database-altering operations cannot be executed inside a transaction
             cr.rollback()
-            cr._cnx.autocommit = True
+            cr._cnx__.autocommit = True
 
             # 'C' collate is only safe with template0, but provides more useful indexes
             cr.execute(SQL(
@@ -157,7 +157,7 @@ def exp_duplicate_database(db_original_name, db_name, neutralize_database=False)
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
-        cr._cnx.autocommit = True
+        cr._cnx__.autocommit = True
         _drop_conn(cr, db_original_name)
         cr.execute(SQL(
             "CREATE DATABASE %s ENCODING 'unicode' TEMPLATE %s",
@@ -185,7 +185,7 @@ def _drop_conn(cr, db_name):
     try:
         # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
         # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
-        pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
+        pid_col = 'pid' if cr.server_version >= 90200 else 'procpid'
 
         cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
                       FROM pg_stat_activity
@@ -205,7 +205,7 @@ def exp_drop(db_name):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
-        cr._cnx.autocommit = True
+        cr._cnx__.autocommit = True
         _drop_conn(cr, db_name)
 
         try:
@@ -230,7 +230,7 @@ def exp_dump(db_name, format):
 
 @check_db_management_enabled
 def dump_db_manifest(cr):
-    pg_version = "%d.%d" % divmod(cr._obj.connection.server_version / 100, 100)
+    pg_version = "%d.%d" % divmod(cr.server_version / 100, 100)
     cr.execute("SELECT name, latest_version FROM ir_module_module WHERE state = 'installed'")
     modules = dict(cr.fetchall())
     manifest = {
@@ -357,7 +357,7 @@ def exp_rename(old_name, new_name):
     db = odoo.sql_db.db_connect('postgres')
     with closing(db.cursor()) as cr:
         # database-altering operations cannot be executed inside a transaction
-        cr._cnx.autocommit = True
+        cr._cnx__.autocommit = True
         _drop_conn(cr, old_name)
         try:
             cr.execute(SQL('ALTER DATABASE %s RENAME TO %s', database_identifier(cr, old_name), database_identifier(cr, new_name)))

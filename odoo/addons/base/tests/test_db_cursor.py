@@ -50,7 +50,7 @@ class TestRealCursor(BaseCase):
 
     def test_transaction_isolation_cursor(self):
         with registry().cursor() as cr:
-            self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
+            self.assertEqual(cr._cnx__.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
     def test_connection_readonly(self):
         # even without db_replica, we expect the connection to be readonly for consistency
@@ -58,12 +58,12 @@ class TestRealCursor(BaseCase):
         with registry_.cursor(readonly=False) as cr:
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('off',))
-            self.assertFalse(cr._cnx.readonly)
+            self.assertFalse(cr.readonly)
 
         with registry_.cursor(readonly=True) as cr:
             cr.execute('SHOW transaction_read_only')
             self.assertEqual(cr.fetchone(), ('on',))
-            self.assertTrue(cr._cnx.readonly)
+            self.assertTrue(cr.readonly)
 
 
 class TestHTTPCursor(HttpCase):
@@ -231,7 +231,7 @@ class TestTestCursor(common.TransactionCase):
     def test_borrow_connection(self):
         """Tests the behavior of the postgresql connection pool recycling/borrowing"""
         origin_db_port = config['db_port']
-        if not origin_db_port and hasattr(self.env.cr._cnx, 'info'):
+        if not origin_db_port and hasattr(self.env.cr._cnx__, 'info'):
             # Check the edge case of the db port set,
             # which is set as an integer in our DSN/connection_info
             # but as string in the DSN of psycopg2
@@ -240,9 +240,9 @@ class TestTestCursor(common.TransactionCase):
             # `connection.dsn`
             # {'database': '14.0', 'port': 5432, 'sslmode': 'prefer'}
             # must match
-            # `cr._cnx.dsn`
+            # `cr._cnx__.dsn`
             # 'port=5432 sslmode=prefer dbname=14.0'
-            config['db_port'] = self.env.cr._cnx.info.port
+            config['db_port'] = self.env.cr._cnx__.info.port
 
         cursors = []
         try:
@@ -255,16 +255,16 @@ class TestTestCursor(common.TransactionCase):
             # Ensure the port is within psycopg's dsn, as explained in an above comment,
             # we want to test the behavior of the connections borrowing including the port provided in the dsn.
             if config['db_port']:
-                self.assertTrue('port=' in cursors[0]._cnx.dsn)
+                self.assertTrue('port=' in cursors[0]._cnx__.dsn)
             # Check the connection of the 1st cursor is different than the connection of the 2nd cursor.
-            self.assertNotEqual(id(cursors[0]._cnx), id(cursors[1]._cnx))
+            self.assertNotEqual(id(cursors[0]._cnx__), id(cursors[1]._cnx__))
 
             # Case #2: Close 1st cursor, open 3rd cursor, must recycle/borrow.
             # The 3rd must recycle/borrow the connection of the 1st one.
             cursors[0].close()
             cursors.append(connection.cursor())
             # Check the connection of this 3rd cursor uses the connection of the 1st cursor that has been closed.
-            self.assertEqual(id(cursors[0]._cnx), id(cursors[2]._cnx))
+            self.assertEqual(id(cursors[0]._cnx__), id(cursors[2]._cnx__))
 
         finally:
             # Cleanups:
