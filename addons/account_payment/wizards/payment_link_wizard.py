@@ -9,6 +9,14 @@ from odoo.addons.payment import utils as payment_utils
 class PaymentLinkWizard(models.TransientModel):
     _inherit = 'payment.link.wizard'
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super().default_get(fields_list)
+        if res.get('res_model') == 'account.move':
+            invoice = self.env['account.move'].browse(self.env.context.get('active_id'))
+            res['invoice_state'] = invoice.state
+        return res
+
     invoice_amount_due = fields.Monetary(
         string="Amount Due",
         compute='_compute_invoice_amount_due',
@@ -25,6 +33,14 @@ class PaymentLinkWizard(models.TransientModel):
         string="Early Payment Discount Information",
         compute='_compute_epd_info',
     )
+    invoice_auto_post = fields.Boolean("Auto post", default=True)
+    invoice_state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('posted', 'Posted'),
+            ('cancel', 'Cancelled'),
+        ],
+        string="invoice State")
 
     @api.depends('amount_max')
     def _compute_invoice_amount_due(self):
@@ -66,6 +82,10 @@ class PaymentLinkWizard(models.TransientModel):
             installments = wizard.open_installments or []
             wizard.display_open_installments = len(installments) > 1
 
+    @api.depends('amount', 'currency_id', 'partner_id', 'company_id', 'invoice_auto_post')
+    def _compute_link(self):
+        super()._compute_link()
+
     def _prepare_url(self, base_url, related_document):
         """ Override of `payment` to use the portal page URL. """
         res = super()._prepare_url(base_url, related_document)
@@ -85,6 +105,7 @@ class PaymentLinkWizard(models.TransientModel):
             'amount': self.amount,
             'payment_token': self._prepare_access_token(),
             'payment': True,
+            'invoice_auto_post': self.invoice_auto_post and 1 or 0
         }
 
     def _prepare_access_token(self):

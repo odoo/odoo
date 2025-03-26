@@ -15,6 +15,9 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         # EXTENDS account
 
         values = super()._invoice_get_page_view_values(invoice, access_token, **kwargs)
+        invoice_auto_post = kwargs.get('invoice_auto_post')
+        if invoice_auto_post:
+            invoice.write({'is_invoice_auto_post': int(invoice_auto_post)})
 
         if not invoice._has_to_be_paid():
             # Do not compute payment-related stuff if given invoice doesn't have to be paid.

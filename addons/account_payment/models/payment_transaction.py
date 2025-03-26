@@ -106,7 +106,7 @@ class PaymentTransaction(models.Model):
         super()._post_process()
         for tx in self.filtered(lambda t: t.state == 'done'):
             # Validate invoices automatically once the transaction is confirmed.
-            self.invoice_ids.filtered(lambda inv: inv.state == 'draft').action_post()
+            self.invoice_ids.filtered(lambda inv: inv.state == 'draft' and inv.is_invoice_auto_post).action_post()
 
             # Create and post missing payments.
             # As there is nothing to reconcile for validation transactions, no payment is created
@@ -201,7 +201,7 @@ class PaymentTransaction(models.Model):
         else:
             invoices = self.invoice_ids
         if invoices:
-            invoices.filtered(lambda inv: inv.state == 'draft').action_post()
+            invoices.filtered(lambda inv: inv.state == 'draft' and inv.is_invoice_auto_post).action_post()
 
             (payment.move_id.line_ids + invoices.line_ids).filtered(
                 lambda line: line.account_id == payment.destination_account_id
