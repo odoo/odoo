@@ -751,7 +751,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
         # Step 1: Use the popover delete wizard to delete the next occurrence of the event.
         wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'record': event.id})
+            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.delete = 'next'
         form.save()
@@ -761,7 +761,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         wizard_delete = self.env['calendar.popover.delete.wizard'].with_context(
             form_view_ref='calendar.view_event_delete_wizard_form',
             default_recurrence='next'
-        ).create({'record': event.id})
+        ).create({'calendar_event_id': event.id})
         form_delete = Form(wizard_delete)
         form_delete.save()
 
@@ -778,7 +778,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
         # Step 1: Use the popover delete wizard to delete all occurrences of the event.
         wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'record': event.id})
+            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.delete = 'all'
         form.save()
@@ -788,7 +788,7 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         wizard_delete = self.env['calendar.popover.delete.wizard'].with_context(
             form_view_ref='calendar.view_event_delete_wizard_form',
             default_recurrence='all'
-        ).create({'record': event.id})
+        ).create({'calendar_event_id': event.id})
         form_delete = Form(wizard_delete)
         form_delete.save()
 

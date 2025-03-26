@@ -881,7 +881,7 @@ class CalendarEvent(models.Model):
                 'default_use_template': bool(template),
                 'default_template_id': template.id,
                 'default_attendee_id': attendee_id,
-                'default_record': self.id,
+                'default_calendar_event_id': self.id,
                 'default_recurrence': recurrence,
                 'model_description': self.with_context(lang=lang),
             }
