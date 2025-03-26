@@ -913,6 +913,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                   Αφήστε το κενό για να δημιουργήσετε νέο ημερολόγιο για αυτούς τους τραπεζικούς λογαριασμούς, ή επιλέξτε ένα ημερολόγιο για να το συνδέσετε με τους τραπεζικούς λογαριασμούς.\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -967,6 +970,9 @@ msgid ""
 "                                        A second payment will be created in the destination journal.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"paired_internal_transfer_payment_id or not is_internal_transfer or state != 'draft'\" class=\"fst-italic\">\n"
+"                                        Μια δεύτερη πληρωμή θα δημιουργηθεί στο προορισμένο ημερολόγιο.\n"
+"                                    </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -992,6 +998,8 @@ msgid ""
 "<span invisible=\"state != 'draft' or name != '/' or posted_before or "
 "quick_edit_mode\">Draft</span>"
 msgstr ""
+"<span invisible=\"state != 'draft' or name != '/' or posted_before or "
+"quick_edit_mode\">Προσχέδιο</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1011,7 +1019,7 @@ msgstr "<span title=\"Latest Statement\">Τελευταία Κατάσταση</
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Outstanding Payments/Receipts\">Payments</span>"
-msgstr ""
+msgstr "<span title=\"Outstanding Payments/Receipts\">Πληρωμές</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1403,6 +1411,8 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
+"Η ανοχή πληρωμής, που ορίζεται ως ποσοστό, θα πρέπει πάντα να κυμαίνεται "
+"μεταξύ 0 και 100"
 
 #. module: account
 #. odoo-python
@@ -1411,16 +1421,18 @@ msgstr ""
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
 msgstr ""
+"Η ανοχή πληρωμής, που ορίζεται ως ποσό, θα πρέπει πάντα να είναι μεγαλύτερη "
+"από 0"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr ""
+msgstr "Ένα μοντέλο συμφιλίωσης ήδη φέρει αυτό το όνομα."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
 msgid "A report line with the same code already exists."
-msgstr ""
+msgstr "Μια γραμμή αναφοράς με τον ίδιο κωδικό υπάρχει ήδη."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1437,12 +1449,12 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created:"
-msgstr ""
+msgstr "Μια δεύτερη πληρωμή έχει δημιουργηθεί:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A section title"
-msgstr ""
+msgstr "Τίτλος ενότητας"
 
 #. module: account
 #. odoo-python
@@ -1498,7 +1510,7 @@ msgstr "Προειδοποίηση πρόσβασης"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__normal
 msgid "According to each type of account"
-msgstr ""
+msgstr "Σύμφωνα με κάθε τύπο λογαριασμού"
 
 #. module: account
 #. odoo-python
@@ -1524,6 +1536,8 @@ msgid ""
 "Account %s does not allow reconciliation. First change the configuration of "
 "this account to allow it."
 msgstr ""
+"Ο λογαριασμός %s δεν επιτρέπει συμφιλίωση. Αρχικά, αλλάξτε τη διαμόρφωση "
+"αυτού του λογαριασμού για να το επιτρέψετε."
 
 #. module: account
 #. odoo-python
@@ -1531,6 +1545,8 @@ msgstr ""
 #, python-format
 msgid "Account %s is of payable type, but is used in a sale operation."
 msgstr ""
+"Ο λογαριασμός %s είναι τύπου προς πληρωμή, αλλά χρησιμοποιείται σε μια "
+"ενέργεια πώλησης."
 
 #. module: account
 #. odoo-python
@@ -1538,16 +1554,18 @@ msgstr ""
 #, python-format
 msgid "Account %s is of receivable type, but is used in a purchase operation."
 msgstr ""
+"Ο λογαριασμός %s είναι τύπου προς είσπραξη, αλλά χρησιμοποιείται σε μια "
+"ενέργεια αγοράς."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_avatax
 msgid "Account Avatax"
-msgstr ""
+msgstr "Λογαριασμός Avatax"
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr ""
+msgstr "Λογαριασμός Στρογγυλοποίησης Μετρητών"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -1557,7 +1575,7 @@ msgstr "Πρότυπο γραφήματος λογαριασμού"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
-msgstr ""
+msgstr "Λογαριασμός Συντόμευσης Φόρμουλας Κωδικών"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
@@ -1593,6 +1611,7 @@ msgstr "Ομάδες Λογαριασμού"
 #, python-format
 msgid "Account Groups with the same granularity can't overlap"
 msgstr ""
+"Οι Ομάδες Λογαριασμών με την ίδια λεπτομέρεια δεν μπορούν να επικαλύπτονται."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -1605,7 +1624,7 @@ msgstr "Κάτοχος λογαριασμού"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__acc_holder_name
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
-msgstr ""
+msgstr "Όνομα Κατόχου Λογαριασμού"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1618,7 +1637,7 @@ msgstr "Ημερολόγιο Λογαριασμού"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr ""
+msgstr "Ομάδα Ημερολογίου Λογαριασμού"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
@@ -1634,7 +1653,7 @@ msgstr "Αντιλογισμός Κίνησης Λογαριασμού"
 #. module: account
 #: model:ir.model,name:account.model_account_move_send
 msgid "Account Move Send"
-msgstr ""
+msgstr "Αποστολή Κίνησης Λογαριασμού"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
@@ -1672,12 +1691,12 @@ msgstr "Λογαριασμός Εισπρακτέος"
 #. module: account
 #: model:account.account,name:account.1_pos_receivable
 msgid "Account Receivable (PoS)"
-msgstr ""
+msgstr "Λογαριασμός Είσπραξης (PoS)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr ""
+msgstr "Συμφιλίωση Λογαριασμού"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1723,7 +1742,7 @@ msgstr "Λογαριασμός  TaxCloud"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
 msgid "Account Templates"
-msgstr ""
+msgstr "Πρότυπα Λογαριασμών"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
@@ -1756,20 +1775,20 @@ msgstr "Μη συμψηφιστικός λογαριασμός"
 #. module: account
 #: model:ir.model,name:account.model_account_root
 msgid "Account codes first 2 digits"
-msgstr ""
+msgstr "Πρώτα 2 ψηφία κωδικών λογαριασμού"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
 msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
-msgstr ""
+msgstr "Λογαριασμός για τη διαφορά ποσού μετά την παραχώρηση έκπτωσης εξόδων"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr ""
+msgstr "Λογαριασμός για τη διαφορά ποσού μετά την παραχώρηση έκπτωσης εσόδων"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1788,6 +1807,8 @@ msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
 msgstr ""
+"Όνομα κατόχου λογαριασμού, σε περίπτωση που είναι διαφορετικό από το όνομα "
+"του Κατόχου του Λογαριασμού"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
@@ -1797,22 +1818,22 @@ msgstr "Λογαριασμός στο Είδος"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
 msgid "Account on which to post the tax amount"
-msgstr ""
+msgstr "Λογαριασμός στον οποίο θα καταχωρηθεί το ποσό του φόρου"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr ""
+msgstr "Τα προθέματα λογαριασμών μπορούν να καθορίζουν ομάδες λογαριασμών."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
 msgid "Account report with payment lines"
-msgstr ""
+msgstr "Αναφορά λογαριασμού με γραμμές πληρωμής"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice
 msgid "Account report without payment lines"
-msgstr ""
+msgstr "Αναφορά λογαριασμού χωρίς γραμμές πληρωμής"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_cash_basis_base_account_id
@@ -1821,6 +1842,9 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
+"Λογαριασμός που θα οριστεί στις γραμμές που δημιουργούνται στην καταχώρηση "
+"ημερολογίου με βάση τα μετρητά και χρησιμοποιείται για την παρακολούθηση του"
+" ποσού της φορολογικής βάσης."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_dest_id
@@ -1830,7 +1854,7 @@ msgstr "Εναλλακτικός Λογαριασμός για Χρήση"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__destination_account_id
 msgid "Account to transfer to."
-msgstr ""
+msgstr "Λογαριασμός για μεταφορά."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tour_upload_bill
@@ -1846,11 +1870,13 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__revenue_accrual_account_id
 msgid "Account used to move the period of a revenue"
 msgstr ""
+"Λογαριασμός που χρησιμοποιείται για τη μετακίνηση της περιόδου ενός εσόδου."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__expense_accrual_account_id
 msgid "Account used to move the period of an expense"
 msgstr ""
+"Λογαριασμός που χρησιμοποιείται για τη μετακίνηση της περιόδου ενός εξόδου."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -1860,11 +1886,15 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"Λογαριασμός που χρησιμοποιείται για τη μετάβαση του ποσού του φόρου για "
+"φόρους με βάση τα μετρητά. Θα περιέχει το ποσό του φόρου όσο η αρχική "
+"τιμολόγηση δεν έχει συμφωνηθεί. Κατά τη συμφωνία, το ποσό αυτό ακυρώνεται "
+"από αυτόν τον λογαριασμό και μεταφέρεται στον κανονικό λογαριασμό φόρου."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr ""
+msgstr "Λογαριασμός με Εγγραφές"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -1872,6 +1902,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
+"Λογαριασμός: Δημοσίευση προσχεδίων εγγραφών με ενεργοποιημένο το auto_post "
+"και λογιστική ημερομηνία μέχρι σήμερα."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1905,7 +1937,7 @@ msgstr "Λογιστικές Εγγραφές"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr ""
+msgstr "Λειτουργία Λογιστικών Εταιρειών"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1918,7 +1950,7 @@ msgstr "Λογιστική Πληροφόρηση"
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
 #, python-format
 msgid "Accounting Periods"
-msgstr ""
+msgstr "Λογιστικές Περίοδοι"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report
@@ -1928,7 +1960,7 @@ msgstr "Λογιστική αναφορά"
 #. module: account
 #: model:ir.model,name:account.model_account_report_column
 msgid "Accounting Report Column"
-msgstr ""
+msgstr "Στήλη Λογιστικής Αναφοράς"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_expression
@@ -2235,21 +2267,21 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Adjusting Amount"
-msgstr ""
+msgstr "Προσαρμοστικό Ποσό"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entries have been created for this invoice:"
-msgstr ""
+msgstr "Έχουν δημιουργηθεί προσαρμοστικές εγγραφές για αυτό το τιμολόγιο:"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry"
-msgstr ""
+msgstr "Προσαρμοστική Εγγραφή"
 
 #. module: account
 #. odoo-python
@@ -2336,14 +2368,14 @@ msgstr "Ημερομηνία Κλειδώματος Όλων των Χρηστώ
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "All accounts on the lines must be of the same type."
-msgstr ""
+msgstr "Όλοι οι λογαριασμοί στις γραμμές πρέπει να είναι του ίδιου τύπου."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "All entries are hashed."
-msgstr ""
+msgstr "Όλες οι εγγραφές είναι κωδικοποιημένες."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

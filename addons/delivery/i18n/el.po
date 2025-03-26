@@ -6,6 +6,7 @@
 # Kostas Goutoudis <goutoudis@gmail.com>, 2024
 # George Tarasidis <george_tarasidis@yahoo.com>, 2024
 # Martin Trigaux, 2025
+# Agapi Psyllou, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:34+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2025\n"
+"Last-Translator: Agapi Psyllou, 2025\n"
 "Language-Team: Greek (https://app.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #: code:addons/delivery/wizard/choose_delivery_carrier.py:0
 #, python-format
 msgid "%(carrier)s Error"
-msgstr ""
+msgstr "%(carrier)s Σφάλμα"
 
 #. module: delivery
 #. odoo-python
@@ -56,6 +57,8 @@ msgid ""
 "<span class=\"o_stat_text o_warning_text fw-bold\">Test</span>\n"
 "                                <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
+"<span class=\"o_stat_text o_warning_text fw-bold\">Δοκιμαστικό</span>\n"
+"                                <span class=\"o_stat_text\">Περιβάλλον</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -86,6 +89,9 @@ msgid ""
 "customers on the Sales Order and sales confirmation email.E.g. instructions "
 "for customers to follow."
 msgstr ""
+"Μία περιγραφή του τρόπου παράδοσης που θέλετε να επικοινωνήσετε στους "
+"πελάτες σας στην Παραγγελία Πώλησης και στο email επιβεβαίωσης πώλησης. Π.χ."
+" οδηγίες για να ακολουθήσουν οι πελάτες."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -143,7 +149,7 @@ msgstr "Αρχειοθετημένα"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
 msgid "Available Carriers"
-msgstr ""
+msgstr "Διαθέσιμοι Μεταφορείς"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
@@ -166,7 +172,7 @@ msgstr "Μεταφορέας"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__carrier_description
 msgid "Carrier Description"
-msgstr ""
+msgstr "Περιγραφή Μεταφορέα"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
@@ -251,13 +257,13 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 msgid "Delivery Cost"
-msgstr ""
+msgstr "Κόστος Παράδοσης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_message
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "Μήνυμα Παράδοσης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__name
@@ -270,7 +276,7 @@ msgstr "Μέθοδος Παράδοσης"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__delivery_price
 msgid "Delivery Price"
-msgstr ""
+msgstr "Τιμή Παράδοσης"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
@@ -301,7 +307,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_sale_order__recompute_delivery_price
 #: model:ir.model.fields,field_description:delivery.field_sale_order_line__recompute_delivery_price
 msgid "Delivery cost should be recomputed"
-msgstr ""
+msgstr "Το κόστος παράδοσης θα έπρεπε να επανυπολογιστεί"
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_zip_prefix_list
@@ -358,13 +364,14 @@ msgstr "Περιβάλλον"
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr ""
+"Σφάλμα: αυτή η μέθοδος παράδοσης δεν είναι διαθέσιμη για αυτλη τη διεύθυνση."
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available."
-msgstr ""
+msgstr "Σφάλμα: αυτός ο τρόπος παράδοσης δεν είναι διαθέσιμος."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -372,11 +379,13 @@ msgid ""
 "Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
 "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of theshipping will be updated on the SO after the delivery."
 msgstr ""
+"Εκτιμώμενο Κόστος: ο πελάτης θα τιμολογηθεί το εκτιμώμενο κόστος αποστολής.\n"
+"Πραγματικό Κόστος: ο πελάτης θα τιμολογηθεί το πραγματικό κόστος της αποστολής, το κόστος αποστολής θα ενημρωθεί στην Παραγγελία Πώλησης μετά την παράδοση."
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__invoice_policy__estimated
 msgid "Estimated cost"
-msgstr ""
+msgstr "Εκτιμώμενο κόστος"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
@@ -418,7 +427,7 @@ msgstr "Δωρεάν εάν το ποσό παραγγελίας είναι πα
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
 msgid "Generate Return Label"
-msgstr ""
+msgstr "Δημιουργία Ετικέτας Επιστροφής"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
@@ -461,7 +470,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__shipping_insurance
 msgid "Insurance Percentage"
-msgstr ""
+msgstr "Ποσοστό Ασφάλισης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
@@ -471,7 +480,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message
 msgid "Invoicing Message"
-msgstr ""
+msgstr "Μήνυμα Τιμολόγησης"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__invoice_policy
@@ -552,7 +561,7 @@ msgstr ""
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "Not available for current order"
-msgstr ""
+msgstr "Μη διαθέσιμο για τρέχουσα παραγγελία"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__operator
@@ -577,7 +586,7 @@ msgstr "Πρόθεμα"
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_zip_prefix_name_uniq
 msgid "Prefix already exists!"
-msgstr ""
+msgstr "Το πρόθεμα υπάρχει ήδη!"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
@@ -678,7 +687,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__carrier_id
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Shipping Method"
-msgstr ""
+msgstr "Τρόπος Αποστολής"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
@@ -686,12 +695,12 @@ msgstr ""
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Τρόποι Αποστολής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__shipping_weight
 msgid "Shipping Weight"
-msgstr ""
+msgstr "Βάρος Αποστολής"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
@@ -744,13 +753,14 @@ msgstr ""
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
 msgstr ""
+"Η ασφάλεια αποστολής πρέπει να είναι ένα ποσοστό ανάμεσα σε 0 και 100."
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr ""
+msgstr "Η αποστολή είναι δωρεάν αφού το ποσό της πραγγελίας υπερβαίνει %.2f."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -759,21 +769,24 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Αυτές οι μέθοδοι επιτρέπουν τον αυτόματο υπολογισμό της αξίας παράδοσης  \n"
+"            σύμφωνα με τις ρυθμίσεις: στην παραγγελία πώλησης (βάσει της  \n"
+"            προσφοράς) ή το τιμολόγιο (βάσει των παραγγελιών παράδοσης)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__fixed_margin
 msgid "This fixed amount will be added to the shipping price."
-msgstr ""
+msgstr "Αυτό το σταθερό ποσό θα προστεθεί  στην τιμή αποστολής."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__margin
 msgid "This percentage will be added to the shipping price."
-msgstr ""
+msgstr "Αυτό το ποσοστό θα προστεθεί στην αξία αποστολής."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__total_weight
 msgid "Total Order Weight"
-msgstr ""
+msgstr "Συνολικό Βάρος Παραγγελίας"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -786,7 +799,7 @@ msgstr "Ενημέρωση"
 #: model_terms:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 #, python-format
 msgid "Update shipping cost"
-msgstr ""
+msgstr "Ενημέρωση κόστους αποστολής"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__variable

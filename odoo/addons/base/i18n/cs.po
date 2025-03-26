@@ -11,9 +11,9 @@
 # Tomáš Píšek, 2024
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Tereza Mokrá, 2024
-# Marta Wacławek, 2024
 # Wil Odoo, 2025
 # Aleš Fiala <f.ales1@seznam.cz>, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 11:26+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -272,6 +272,86 @@ msgid ""
 ".\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Lokalizační modul pro Dánsko\n"
+"===============================\n"
+"\n"
+"oto je modul pro správu **účetní osnovy pro Dánsko**. Pokrývá jak podnikání jednoho člověka, tak i I/S, IVS, ApS a A/S\n"
+"\n"
+"**Modulet opsætter:**\n"
+"\n"
+"- **Dansk kontoplan**\n"
+"\n"
+"- Dansk moms\n"
+"        - 25% moms\n"
+"        - Resturationsmoms 6,25%\n"
+"        - Omvendt betalingspligt\n"
+"\n"
+"- Konteringsgrupper\n"
+"        - EU (Virksomhed)\n"
+"        - EU (Privat)\n"
+"        - 3.lande\n"
+"\n"
+"- Finans raporter\n"
+"        - Resulttopgørelse\n"
+"        - Balance\n"
+"        - Momsafregning\n"
+"            - Afregning\n"
+"            - Rubrik A, B og C\n"
+"\n"
+"- **Anglo-Saxon regnskabsmetode**\n"
+"\n"
+".\n"
+"\n"
+"Produkt setup:\n"
+"==============\n"
+"\n"
+"**Vare**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%\n"
+"\n"
+"**Salgskonto:**     1010 Salg af vare, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%\n"
+"\n"
+"**Købskonto:**      2010 Direkte omkostninger vare, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Ydelse**\n"
+"\n"
+"**Salgsmoms:**      Salgmoms 25%, ydelser\n"
+"\n"
+"**Salgskonto:**     1011 Salg af ydelser, m/moms\n"
+"\n"
+"**Købsmoms:**       Købsmoms 25%, ydelser\n"
+"\n"
+"**Købskonto:**      2011 Direkte omkostninger ydelser, m/moms\n"
+"\n"
+".\n"
+"\n"
+"**Vare med omvendt betalingspligt**\n"
+"\n"
+"**Salgsmoms:**      Salg omvendt betalingspligt\n"
+"\n"
+"**Salgskonto:**     1012 Salg af vare, u/moms\n"
+"\n"
+"**Købsmoms:**       Køb omvendt betalingspligt\n"
+"\n"
+"**Købskonto:**      2012 Direkte omkostninger vare, u/moms\n"
+"\n"
+"\n"
+".\n"
+"\n"
+"**Restauration**\n"
+"\n"
+"**Købsmoms:**       Restaurationsmoms 6,25%, købsmoms\n"
+"\n"
+"**Købskonto:**      4010 Restaurationsbesøg\n"
+"\n"
+".\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_do
@@ -343,6 +423,72 @@ msgid ""
 "110101- Caja\n"
 "11010101 Caja General\n"
 msgstr ""
+"\n"
+"\n"
+"Lokalizační modul pro Dominikánskou republiku\n"
+"===========================================\n"
+"\n"
+"Catálogo de Cuentas e Impuestos para República Dominicana, Compatible para\n"
+"**Internacionalización** con **NIIF** y alineado a las normas y regulaciones\n"
+"de la Dirección General de Impuestos Internos (**DGII**).\n"
+"\n"
+"**Este módulo consiste de:**\n"
+"\n"
+"- Catálogo de Cuentas Estándar (alineado a DGII y NIIF)\n"
+"- Catálogo de Impuestos con la mayoría de Impuestos Preconfigurados\n"
+"        - ITBIS para compras y ventas\n"
+"        - Retenciones de ITBIS\n"
+"        - Retenciones de ISR\n"
+"        - Grupos de Impuestos y Retenciones:\n"
+"                - Telecomunicaiones\n"
+"                - Proveedores de Materiales de Construcción\n"
+"                - Personas Físicas Proveedoras de Servicios\n"
+"        - Otros impuestos\n"
+"- Secuencias Preconfiguradas para manejo de todos los NCF\n"
+"        - Facturas con Valor Fiscal (para Ventas)\n"
+"        - Facturas para Consumidores Finales\n"
+"        - Notas de Débito y Crédito\n"
+"        - Registro de Proveedores Informales\n"
+"        - Registro de Ingreso Único\n"
+"        - Registro de Gastos Menores\n"
+"        - Gubernamentales\n"
+"- Posiciones Fiscales para automatización de impuestos y retenciones\n"
+"        - Cambios de Impuestos a Exenciones (Ej. Ventas al Estado)\n"
+"        - Cambios de Impuestos a Retenciones (Ej. Compra Servicios al Exterior)\n"
+"        - Entre otros\n"
+"\n"
+"**Nota:**\n"
+"Esta localización, aunque posee las secuencias para NCF, las mismas no pueden\n"
+"ser utilizadas sin la instalación de módulos de terceros o desarrollo\n"
+"adicional.\n"
+"\n"
+"Estructura de Codificación del Catálogo de Cuentas:\n"
+"===================================================\n"
+"\n"
+"**Un dígito** representa la categoría/tipo de cuenta del del estado financiero.\n"
+"**1** - Activo        **4** - Cuentas de Ingresos y Ganancias\n"
+"**2** - Pasivo        **5** - Costos, Gastos y Pérdidas\n"
+"**3** - Capital       **6** - Cuentas Liquidadoras de Resultados\n"
+"\n"
+"**Dos dígitos** representan los rubros de agrupación:\n"
+"11- Activo Corriente\n"
+"21- Pasivo Corriente\n"
+"31- Capital Contable\n"
+"\n"
+"**Cuatro dígitos** se asignan a las cuentas de mayor: cuentas de primer orden\n"
+"1101- Efectivo y Equivalentes de Efectivo\n"
+"2101- Cuentas y Documentos por pagar\n"
+"3101- Capital Social\n"
+"\n"
+"**Seis dígitos** se asignan a las sub-cuentas: cuentas de segundo orden\n"
+"110101 - Caja\n"
+"210101 - Proveedores locales\n"
+"\n"
+"**Ocho dígitos** son para las cuentas de tercer orden (las visualizadas\n"
+"en Odoo):\n"
+"1101- Efectivo y Equivalentes\n"
+"110101- Caja\n"
+"11010101 Caja General\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp
@@ -363,6 +509,20 @@ msgid ""
 "[1] See https://github.com/odoo/odoo/pull/6470 for detail.\n"
 "\n"
 msgstr ""
+"\n"
+"Přehled:\n"
+"---------\n"
+"\n"
+"* Účtová osnova a daní pro společnosti v Japonsku.\n"
+"* To pravděpodobně nepokrývá všechny potřebné účty pro společnost. Očekává se, že na základě této šablony přidáte / odstraníte / upravíte účty.\n"
+"\n"
+"Poznámka:\n"
+"-----\n"
+"\n"
+"* Mapování daní „内 税“ a „外 税“ byly přidány ke zpracování zvláštních požadavků, které by mohly vyplynout z implementace POS. [1] Za normálních okolností je možná nebudete muset použít.\n"
+"\n"
+"[1] Podrobnosti viz https://github.com/odoo/odoo/pull/6470.\n"
+"\n"
 
 #. module: base
 #. odoo-python
@@ -453,6 +613,9 @@ msgid ""
 "            Kenya eTIMS Device EDI Integration\n"
 "        "
 msgstr ""
+"\n"
+"            Integrace zařízení EDI do systému eTIMS v Keni\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_oscu_stock
@@ -461,6 +624,9 @@ msgid ""
 "            Kenya eTIMS Device EDI Stock Integration\n"
 "        "
 msgstr ""
+"\n"
+"            Integrace skladu EDI do systému eTIMS v Keni\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
@@ -480,6 +646,9 @@ msgid ""
 "        Kenya eTIMS Device EDI Manufacturing Integration\n"
 "    "
 msgstr ""
+"\n"
+"         Keňa eTIMS Zařízení EDI Integrace Výroby\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi_pos
@@ -537,6 +706,9 @@ msgid ""
 "* Electronically report invoices to the NAV (Hungarian Tax Agency) when issuing physical (paper) invoices.\n"
 "* Perform the Tax Audit Export (Adóhatósági Ellenőrzési Adatszolgáltatás) in NAV 3.0 format.\n"
 msgstr ""
+"\n"
+"*  Elektronické hlášení faktur maďarské daňové agentuře (NAV) při vystavování fyzických (papírových) faktur.\n"
+"* Provádět export daňového auditu (Adóhatósági Ellenőrzési Adatszolgáltatás) ve formátu NAV 3.0.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -860,6 +1032,8 @@ msgid ""
 "\n"
 "ATS Report for Ecuador\n"
 msgstr ""
+"\n"
+"Výkaz ATS pro Ekvádor\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -909,6 +1083,9 @@ msgid ""
 "Accounting Asset for India\n"
 "================================\n"
 msgstr ""
+"\n"
+"Účetní aktiva pro Indii\n"
+"================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_hr_payroll_account
@@ -1061,6 +1238,10 @@ msgid ""
 "=======================================================\n"
 "\n"
 msgstr ""
+"\n"
+"Účetní údaje pro mzdová pravidla Saúdské Arábie.\n"
+"=======================================================\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sk_hr_payroll_account
@@ -1169,6 +1350,8 @@ msgid ""
 "\n"
 "Accounting Reports for Pakistan (Profit and Loss report and Balance Sheet)\n"
 msgstr ""
+"\n"
+"Účetní výkazy pro Pákistán (výkaz o zisku a ztrátě a rozvaha)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hu
@@ -1651,6 +1834,11 @@ msgid ""
 "- Balance Sheet\n"
 "- Profit and Loss\n"
 msgstr ""
+"\n"
+"Účetní výkazy pro Turecko\n"
+"\n"
+"- Rozvaha\n"
+"- Výkaz zisků a ztrát\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_uk_reports
@@ -1684,6 +1872,10 @@ msgid ""
 "================================\n"
 "    - Financial Reports (Balance Sheet & Profit and Loss & Tax Report)\n"
 msgstr ""
+"\n"
+"Účetní výkazy pro Zambiu\n"
+"================================\n"
+"    - Finanční výkazy (Rozvaha & Výkaz zisků a ztrát & Daňový výkaz)\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ph_reports
@@ -1924,6 +2116,8 @@ msgid ""
 "\n"
 "Add support for the Declaration of Intent (Dichiarazione di Intento) to the Italian localization.\n"
 msgstr ""
+"\n"
+"Přidejte podporu pro Prohlášení o záměru (Dichiarazione di Intento) do italské lokalizace.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -1931,6 +2125,8 @@ msgid ""
 "\n"
 "Add support to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Přidejte možnost vyplňování tří volitelných polí v případě použití Chorus Pro, zvláště při fakturaci veřejných služeb.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -1966,6 +2162,8 @@ msgid ""
 "\n"
 "Additional module to support the debit notes (nota di debito - NDD) by adding payment method and document types\n"
 msgstr ""
+"\n"
+"Dodatečný modul pro podporu vrubopisů (nota di debito - NDD) přidáním platební metody a typů dokumentů\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_iot
@@ -2104,6 +2302,15 @@ msgid ""
 "* Fast payment by just swiping/scanning a credit/debit card or a QR code while on the payment screen\n"
 "* Supported cards: Visa, MasterCard, Rupay, UPI\n"
 msgstr ""
+"\n"
+"Umožňuje Razorpay platby v PoS\n"
+"===================================\n"
+"\n"
+"Tento modul umožňuje zákazníkům platit za své objednávky debetní/kreditní \n"
+"kartou a UPI. Transakce je zpracována prostřednictvím Razorpay POS. Je nezbytný Razorpay účet obchodníka. Umožňuje následující:\n"
+"\n"
+"* Rychlou platbu pouhým přiložením/nasnímáním kreditní/debetní karty nebo QR kódu z platební obrazovky\n"
+"* Podporované karty: Visa, MasterCard, Rupay, UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment
@@ -2667,6 +2874,42 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "\n"
 msgstr ""
+"\n"
+"Automatické deklarace DIMONA\n"
+"=============================\n"
+"\n"
+"Předpoklady:\n"
+"--------------\n"
+"\n"
+"- Potřebujete digitální certifikát vyhovující belgické vládě od společnosti Global\n"
+" Sign. Viz: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- Vygenerujte soubory certifikátů z vašeho certifikátu SSL (soubor .pfx), které jsou\n"
+" potřebné k vytvoření technického uživatele (soubor .cer) a vzdálené autentizaci\n"
+" k souboru ONSS (.pem). V systému UNIX můžete použít následující příkazy:\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"- Než budete moci používat webovou službu sociálního zabezpečení REST, musíte\n"
+"  si vytvořit účet pro sebe nebo svého klienta a nakonfigurovat zabezpečení. (Celý\n"
+"  postup je k dispozici na https://www.socialsecurity.be/site_fr/employer/applics/dimona/introduction/webservice.htm)\n"
+"\n"
+"  - Správa uživatelského účtu: Postupujte podle postupu https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/procedure_pour_gestion_des_acces_UMan_FR.pdf\n"
+"\n"
+"  - Vytvořte technického uživatele: Váš klient nyní musí vytvořit technického uživatele v online službě\n"
+"    Správa přístupu. Postupujte podle tohoto postupu: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - Aktivujte kanál webové služby: Jakmile bude technický uživatel vytvořen, váš klient musí\n"
+"    aktivovat kanál webové služby v aplikaci Správa přístupu. Následující příručka vysvětluje, jak\n"
+"    postupovat při aktivaci kanálu: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_ajouter_le_canal_FR.pdf\n"
+"\n"
+"  - Na konci procedury byste měli obdržet \"Číslo expeditora ONSS\", které můžete zakódovat\n"
+"    v Nastavení mezd pomocí souboru .pem a souvisejícího hesla, pokud existuje.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_accountant
@@ -2741,6 +2984,8 @@ msgid ""
 "\n"
 "Base module containing core functionalities required by other Nilvera modules.\n"
 msgstr ""
+"\n"
+"Základní modul obsahující základní funkce požadované jinými moduly Nilvera.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo_reports
@@ -2766,6 +3011,8 @@ msgid ""
 "\n"
 "Base module for Malaysian reports\n"
 msgstr ""
+"\n"
+"Základní modul pro malajské výkazy\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mz_reports
@@ -2835,6 +3082,48 @@ msgid ""
 "-------------------------------------------------\n"
 "Create electronic sales invoices with Avatax.\n"
 msgstr ""
+"\n"
+"Základní modul pro brazilskou lokalizaci\n"
+"==========================================\n"
+"\n"
+"Tento modul obsahuje:\n"
+"\n"
+"- Generickou brazilskou účtovou osnovu\n"
+"- Brazilské daně:\n"
+"\n"
+"  - IPI\n"
+"  - ICMS\n"
+"  - PIS\n"
+"  - COFINS\n"
+"  - ISS\n"
+"  - IR\n"
+"  - CSLL\n"
+"\n"
+"- Typy dokumentů jako NFC-e, NFS-e atd.\n"
+"- Identifikační dokumenty jako CNPJ a CPF\n"
+"\n"
+"Kromě tohoto modulu, brazilská lokalizace je také\n"
+"rozšířená a doplněná několika jinými moduly.\n"
+"\n"
+"Brazílie - Účetní výkazy (l10n_br_reports)\n"
+"---------------------------------------------\n"
+"Přidává jednoduchý daňový výkaz, který umožňuje kontrolovat výši daně pro daňovou skupinu\n"
+"v konkrétním časovým období. Přidává také P&L a BS přizpůsobené pro\n"
+"brazilský trh.\n"
+"\n"
+"Avatax Brazil (l10n_br_avatax)\n"
+"------------------------------\n"
+"Přidává brazilský daňový výpočet prostřednictvím Avatax a všechna potřebná pole pro\n"
+"konfiguraci Odoo z účelem správného použití Avatax a odesílání nutných daňových\n"
+"informací pro načtení správných daní.\n"
+"\n"
+"Avatax pro SO v Brazílii (l10n_br_avatax_sale)\n"
+"----------------------------------------------\n"
+"Stejně jako v modulu l10n_br_avatax s rozšířením na modul prodejní objednávky.\n"
+"\n"
+"Elektronické fakturování prostřednictvím Avatax (l10n_br_edi)\n"
+"-------------------------------------------------\n"
+"Vytvářejte elektronické prodejní faktury s Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cy
@@ -2842,6 +3131,8 @@ msgid ""
 "\n"
 "Basic package for Cyprus that contains the chart of accounts, taxes, tax reports,...\n"
 msgstr ""
+"\n"
+"Základní balíček pro Kypr, který obsahuje účtovou osnovu, daně, daňové výkazy,...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_batch_payment
@@ -2983,6 +3274,24 @@ msgid ""
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
 msgstr ""
+"\n"
+"Belgická registrovaná pokladna\n"
+"=================================\n"
+"\n"
+"Tento modul mění modul Pokladní systém na certifikovanou belgickou registrační pokladnu.\n"
+"\n"
+"Více informací:\n"
+"  * http://www.systemedecaisseenregistreuse.be/\n"
+"  * http://www.geregistreerdkassasysteem.be/\n"
+"\n"
+"Právní\n"
+"-----\n"
+"**Použití zdrojů pos_blackbox_be je certifikováno pouze na platformě SaaS odoo.com\n"
+"pro verzi 17.0.** Před instalací modulu pos_blackbox_be kontaktujte Odoo SA.\n"
+"\n"
+"Na webu může být uvedena zamlžená a certifikovaná verze pos_blackbox_be\n"
+"při požadavku na místní instalace.\n"
+"Žádná upravená verze není certifikována ani podporována společností Odoo SA\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_timesheet
@@ -3015,6 +3324,10 @@ msgid ""
 "========================\n"
 "Provides electronic invoicing for Brazil through Avatax.\n"
 msgstr ""
+"\n"
+"Brazilské účetní EDI \n"
+"========================\n"
+"Poskytuje elektronickou fakturaci pro Brazílii prostřednictvím Avatax.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_services
@@ -3033,6 +3346,10 @@ msgid ""
 "=================================\n"
 "Adds some fields to sale orders that will be carried over the invoice.\n"
 msgstr ""
+"\n"
+"Brazilské účetní EDI pro Prodej\n"
+"=================================\n"
+"Přidává některá pole k prodejním objednávkám, která budou přenesena na fakturu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_livechat
@@ -3464,6 +3781,8 @@ msgid ""
 "\n"
 "Colombian Localization for e-commerce.\n"
 msgstr ""
+"\n"
+"Kolumbijská lokalizace pro elektronický obchod.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -3531,6 +3850,8 @@ msgid ""
 "\n"
 "Contains features for Italian eCommerce eInvoicing\n"
 msgstr ""
+"\n"
+"Obsahuje funkce pro italskou elektronickou fakturaci e-shopu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account_enterprise
@@ -3872,6 +4193,11 @@ msgid ""
 "- Profit and Loss\n"
 "- Balance sheet\n"
 msgstr ""
+"\n"
+"Účetní výkazy pro Kypr\n"
+"=========================\n"
+"- Zisky a ztráty\n"
+"- Rozvaha\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cz
@@ -3906,6 +4232,10 @@ msgid ""
 "========================\n"
 "This is help to show case the documents OCR for India.\n"
 msgstr ""
+"\n"
+"Demo Dokumenty pro Indii\n"
+"========================\n"
+"Tento modul pomáhá ukazovat dokumenty OCR pro Indii.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_themes
@@ -3926,6 +4256,12 @@ msgid ""
 "German accounting chart and localization.\n"
 "By default, the audit trail is enabled for GoBD compliance.\n"
 msgstr ""
+"\n"
+"Dieses Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03 oder SKR04.\n"
+"=========================================================================================\n"
+"\n"
+"Německá účetní osnova a lokalizace.\n"
+"Ve výchozím nastavení je auditní záznam povolen pro soulad s GoBD.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_disallowed_expenses
@@ -4123,6 +4459,8 @@ msgid ""
 "\n"
 "E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)\n"
 msgstr ""
+"\n"
+"Implementace elektronické faktury pro Saúdskou Arábii; Integrace se ZATCA (POS)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_oioubl
@@ -4208,6 +4546,12 @@ msgid ""
 "\n"
 "This module allows the creation of the EDI documents and the communication with the Mexican certification providers (PACs) to sign/cancel them.\n"
 msgstr ""
+"\n"
+"EDI mexická lokalizace\n"
+"=========================\n"
+"Umožněte uživateli vygenerovat dokument EDI pro mexickou fakturaci.\n"
+"\n"
+"Tento modul umožňuje vytváření dokumentů EDI a komunikaci s mexickými poskytovateli certifikace (PAC) k jejich podpisu / zrušení.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi
@@ -4226,6 +4570,16 @@ msgid ""
 "\n"
 "We support sending and cancelling of customer invoices.\n"
 msgstr ""
+"\n"
+"Lokalizace EDI Peru\n"
+"======================\n"
+"Umožňuje uživateli vygenerovat dokument EDI pro peruánskou fakturaci.\n"
+"\n"
+"Ve výchozím nastavení systém používá proxy server IAP. To má tu výhodu, že systém můžete používat hned v okamžiku, kdy si na portálu SUNAT zvolíte Digiflow jako OSE.\n"
+"\n"
+"Můžete jej také přímo odeslat společnosti Digiflow, pokud jste si od ní zakoupili účet, a v případě nepředvídaných událostí i společnosti SUNAT.\n"
+"\n"
+"Podporujeme zasílání a rušení zákaznických faktur.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nz_eft
@@ -4234,6 +4588,9 @@ msgid ""
 "EFT Batch Payment\n"
 "=================\n"
 msgstr ""
+"\n"
+"EFT Hromadná platba\n"
+"=================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_escpos
@@ -4444,6 +4801,10 @@ msgid ""
 "    - PLE 12.1: Permanent Inventory Record in Physical Units\n"
 "    - PLE 13.1: Permanent Valued Inventory Record\n"
 msgstr ""
+"\n"
+"Elektronické skladové správy \n"
+"    - PLE 12.1: Stálá evidence zásob ve fyzických jednotkách\n"
+"    - PLE 13.1: Záznam trvalého oceňování zásob\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_l10n_be_hr_payroll
@@ -4655,6 +5016,8 @@ msgid ""
 "\n"
 "For sending and receiving electronic invoices to Nilvera.\n"
 msgstr ""
+"\n"
+"Pro odesílání a přijímání elektronických faktur v Nilvera.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_hr_payroll
@@ -5196,6 +5559,31 @@ msgid ""
 "   * Consumidor Final Anónimo Uruguayo.\n"
 "\n"
 msgstr ""
+"\n"
+"Obecná účtová osnova.\n"
+"==========================\n"
+"\n"
+"Tento modul přidává účetní funkce k uruguayské lokalizaci, což představuje minimální vyžadovanou konfiguraci pro firmu působící v Uruguayi v souladu s regulacemi a pokyny poskytnutými DGI (Dirección General Impositiva).\n"
+"\n"
+"Mezi funkcionality patří:\n"
+"\n"
+"* Obecná uruguayská účtová osnova\n"
+"* Přednastavené daně DPH a daňové skupiny\n"
+"* Typy právních dokumentů v Uruguayi\n"
+"* Nastavení a aktivace Uruguayských měn (UYU, UYI - Unidad Indexada Uruguaya).\n"
+"* Často používané výchozí kontakty již nakonfigurované: DGI, Consumidor Final Uruguayo.\n"
+"\n"
+"Konfigurace\n"
+"-------------\n"
+"\n"
+"Demo data pro účely testování:\n"
+"\n"
+"* Nainstalovaná uruguayská společnost s názvem \"UY Company\" s uruguayskou účtovou osnovou, přednastavenými daněmi, typy dokumentů a typy identifikací\n"
+"* Uruguayské kontakty pro testování:\n"
+"\n"
+"   * IEB Internacional\n"
+"   * Consumidor Final Anónimo Uruguayo.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_sale_loyalty
@@ -5522,6 +5910,29 @@ msgid ""
 "print the amount in words (special Chinese characters for numbers)\n"
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 msgstr ""
+"\n"
+"Zahrnuje následující data pro čínskou lokalizaci \n"
+"========================================================\n"
+"\n"
+"Typ účtu/科目类型\n"
+"\n"
+"Státní data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    增加大企业会计科目表\n"
+"\n"
+"Přidali jsme možnost vytisknout voucher, na kterém bude\n"
+"částka vytištěná také slovy (speciální čínské znaky pro čísla)\n"
+"správně, pokud je nainstalována knihovna cn2an (např. pomocí pip3 install cn2an)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -5628,6 +6039,11 @@ msgid ""
 "\n"
 "This module enables users to create E-waybill from Inventory App without generating an invoice\n"
 msgstr ""
+"\n"
+"Indický E-waybill pro Zásoby\n"
+"==========================\n"
+"\n"
+"Tento modul umožňuje uživatelům vytvářet E-waybill z aplikace Sklady, aniž by museli generovat fakturu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll
@@ -5682,6 +6098,9 @@ msgid ""
 "Intrastat for Denmark\n"
 "=====================\n"
 msgstr ""
+"\n"
+"Intrastat pro Dánsko\n"
+"=====================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_avatax_stock
@@ -5859,6 +6278,11 @@ msgid ""
 "The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
 "Necessary master data is also included.\n"
 msgstr ""
+"\n"
+"Litevský SAF-T je standardní formát souboru pro export různých typů účetních transakčních dat ve formátu XML.\n"
+"Použitá verze XSD je v2.01 (od roku 2019), což je nejnovější verze, kterou používají litevské úřady.\n"
+"První verze SAF-T Financial je omezena na úroveň hlavní účetní knihy, včetně transakcí se zákazníky a dodavateli.\n"
+"Zahrnuta jsou také nezbytná kmenová data.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_im_livechat
@@ -5873,6 +6297,13 @@ msgid ""
 "Help your customers with this chat, and analyse their feedback.\n"
 "\n"
 msgstr ""
+"\n"
+"Podpora živého chatu\n"
+"==========================\n"
+"\n"
+"Umožněte použití widgetu pro okamžité zprávy na jakékoli webové stránce, která bude komunikovat\n"
+"s aktuálním serverem, a rozešlete požadavky návštěvníků mezi několik operátorů živého chatu.\n"
+"Pomozte svým zákazníkům prostřednictvím tohoto chatu a analyzujte jejich zpětnou vazbu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_hr_payroll
@@ -5889,6 +6320,17 @@ msgid ""
 "    * Employee Payslip\n"
 "    * Integrated with Leaves Management\n"
 msgstr ""
+"\n"
+"Lucemburská mzdová pravidla.\n"
+"===========================\n"
+"\n"
+"* Údaje o zaměstnanci\n"
+"* Zaměstnanecké smlouvy\n"
+"* Smlouvy na základě pasu\n"
+"* Přískpěvky / odpočty\n"
+"* Povolit konfiguraci základního / hrubého / čistého platu\n"
+"* Výplatní páska zaměstnance\n"
+"* Integrováno s řízením dovolených\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_mobile
@@ -5901,6 +6343,13 @@ msgid ""
 "* Push notifications to registered devices for direct messages, chatter messages and channel.\n"
 "* Redirection to the Android/iOS mobile app when you click on an Odoo URL.\n"
 msgstr ""
+"\n"
+"Mail Mobile\n"
+"===========\n"
+"Tento modul upravuje doplněk pošty tak, aby poskytoval:\n"
+"\n"
+"* Zasílání oznámení push registrovaným zařízením o přímých zprávách, zprávách na chatu a kanálech.\n"
+"* Přesměrování na mobilní aplikaci pro Android / iOS, když kliknete na Odoo URL.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -5914,6 +6363,14 @@ msgid ""
 "* Equipment related to workcenters\n"
 "* MTBF, MTTR, ...\n"
 msgstr ""
+"\n"
+"Údržba v MRP\n"
+"===================\n"
+"* Preventivní vs. opravná údržba\n"
+"* Definujte různé fáze vašich požadavků na údržbu\n"
+"* Plánujte požadavky na údržbu (také opakující se preventivní)\n"
+"* Zařízení související s pracovními centry\n"
+"* MTBF, MTTR, ...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter_wall
@@ -5958,6 +6415,11 @@ msgid ""
 "-Profit and Loss\n"
 "-Balance Sheet\n"
 msgstr ""
+"\n"
+"Účetní výkazy pro Maltu\n"
+"====================================================\n"
+"-Zisky a ztráty\n"
+"-Rozvaha\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mt
@@ -5965,6 +6427,8 @@ msgid ""
 "\n"
 "Malta basic package that contains the chart of accounts, the taxes, tax reports, etc.\n"
 msgstr ""
+"\n"
+"Základní balíček pro Maltu, který obsahuje účtovou osnovu, daně, daňové výkazy,...\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_3way_match
@@ -5990,6 +6454,21 @@ msgid ""
 "    - No (The bill cannot be paid, nothing has been delivered yet)\n"
 "    - Exception (Received and invoiced quantities differ)\n"
 msgstr ""
+"\n"
+"Spravujte 3-cestné porovnávání na účtech dodavatelů\n"
+"=====================================\n"
+"\n"
+"Ve výrobním průmyslu lidé často dostávají účty od dodavatelů dříve, než obdrží nákup, ale nechtějí zaplatit účet, dokud nebude zboží doručeno.\n"
+"\n"
+"Řešením této situace je vytvoření faktury dodavatele, když ji obdržíte (na základě objednaných množství), ale fakturu zaplatíte pouze tehdy, když přijatá množství (na řádcích objednávky) odpovídají zaznamenané fakturaci dodavatele.\n"
+"\n"
+"Tento modul zavádí mechanismus „uvolnění k zaplacení“, který u každé faktury prodávajícího označuje, zda může být zaplacena, nebo ne.\n"
+"\n"
+"Každý účet dodavatele obdrží jeden z následujících tří stavů:\n"
+"\n"
+"- Ano (účet může být zaplacen)\n"
+"- Ne (účet nemůže být zaplacen, zatím nebylo nic doručeno)\n"
+"- Výjimka (přijatá a fakturovaná množství se liší)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_stock
@@ -6010,6 +6489,11 @@ msgid ""
 "\n"
 "This application allows you to integrate time off in payslips.\n"
 msgstr ""
+"\n"
+"Spravujte volno ve výplatních páskách\n"
+"============================\n"
+"\n"
+"Tato aplikace umožňuje integrovat volno do výplatních pásek.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_taxcloud
@@ -7409,6 +7893,9 @@ msgid ""
 "Saudi Arabia POS Localization\n"
 "===========================================================\n"
 msgstr ""
+"\n"
+"Lokalizace PoS pro Saúdskou Arábii\n"
+"===========================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
@@ -25086,6 +25573,74 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Minimální sada účtů pro zahájení práce v Peru.\n"
+"=================================================\n"
+"\n"
+"Použití tohoto CoA musí odkazovat na oficiální dokumentaci k MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Všechny právní odkazy najdete zde.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Úvahy.\n"
+"===============\n"
+"\n"
+"Účtová osnova:\n"
+"-----------------\n"
+"\n"
+"Strom CoA se provádí pomocí skupin účtů, nejběžnější účty jsou dostupné\n"
+"v rámci jejich skupiny, pokud chcete vytvořit nový účet, použijte\n"
+"skupiny jako reference.\n"
+"\n"
+"Daně:\n"
+"------\n"
+"\n"
+"\"IGV\": {\"name\": \"VAT\", \"code\": \"S\"},\n"
+"\"IVAP\": {\"name\": \"VAT\", \"code\": ''},\n"
+"\"ISC\": {\"name\": \"EXC\", \"code\": \"S\"},\n"
+"\"ICBPER\": {\"name\": \"OTH\", \"code\": ''},\n"
+"\"EXP\": {\"name\": \"FRE\", \"code\": \"G\"},\n"
+"\"GRA\": {\"name\": \"FRE\", \"code\": \"Z\"},\n"
+"\"EXO\": {\"name\": \"VAT\", \"code\": \"E\"},\n"
+"\"INA\": {\"name\": \"FRE\", \"code\": \"O\"},\n"
+"\"OTHERS\": {\"name\": \"OTH\", \"code\": \"S\"},\n"
+"\n"
+"Do tohoto modulu jsme přidali 3 pojmy z oblasti daní (nezbytné pro EDI\n"
+"podpis)\n"
+"\n"
+"EDI peruánský kód: používá se k výběru typu daně z kódu SUNAT\n"
+"EDI UNECE: používá se k výběru typu daně na základě EDI vlivu Hospodářské\n"
+"komise Organizace\n"
+"spojených národů. Důvod: typ ovlivnění IGV na základě katalogu 07\n"
+"\n"
+"Produkty:\n"
+"---------\n"
+"\n"
+"Kód produktů, které mají být použity v EDI, je k dispozici zde, aby bylo možné\n"
+"rozhodnout, které daňové použití je způsobeno tímto odkazem a python kódem:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Poznámka:**\n"
+"---------\n"
+"\n"
+"**RELACIÓN ENTRE EL PCGE Y LA LEGISLACIÓN TRIBUTARIA:**\n"
+"\n"
+"Este PCGE ha sido preparado como una herramienta de carácter contable, para acumular información que\n"
+"requiere ser expuesta en el cuerpo de los estados financieros o en las notas a dichos estados. Esa acumulación se\n"
+"efectúa en los libros o registros contables, cuya denominación y naturaleza depende de las actividades que se\n"
+"efectúen, y que permiten acciones de verificación, control y seguimiento. Las NIIF completas y la NIIF PYMES no\n"
+"contienen prescripciones sobre teneduría de libros, y consecuentemente, sobre los libros y otros registros\n"
+"de naturaleza contable. Por otro lado, si bien es cierto la contabilidad es también un insumo, dentro de otros, para\n"
+"labores de cumplimiento tributario, este PCGE no ha sido elaborado para satisfacer prescripciones tributarias ni su\n"
+"verificación. No obstante ello, donde no hubo oposición entre la contabilidad financiera prescrita por las NIIF y\n"
+"la legislación tributaria, este PCGE ha incluido subcuentas, divisionarias y sub divisionarias, para\n"
+"distinguir componentes con validez tributaria, dentro del conjunto de componentes que corresponden a una\n"
+"perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
+"como una guía con propósitos distintos del contable.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25751,12 +26306,12 @@ msgstr "Nizozemí - SBR ICP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_ob_nummer
 msgid "Netherlands - SBR OB Nummer"
-msgstr ""
+msgstr "Nizozemí - SBR ICP Nummer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_status_info
 msgid "Netherlands - SBR Status information service"
-msgstr ""
+msgstr "Nizozemí – SBR Stavová informační služba"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -30030,7 +30585,7 @@ msgstr "Soukromé metody (například %s) nelze volat vzdáleně."
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Problematic record(s)"
-msgstr ""
+msgstr "Problematické záznam(y)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
@@ -32105,12 +32660,12 @@ msgstr "Saúdská Arábie - E-fakturace (zjednodušená)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
 msgid "Saudi Arabia - Payroll"
-msgstr ""
+msgstr "Saúdská Arábie - Mzdy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "Saudi Arabia - Payroll with Accounting"
-msgstr ""
+msgstr "Saúdská Arábie - Účtování mezd"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -33206,7 +33761,7 @@ msgstr "Španělsko - účetnictví (PGCE 2008) Reporty"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Španělsko – účetní výkazy (aktualizace z roku 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -33913,7 +34468,7 @@ msgstr "Švédsko Registrační pokladna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_pos
 msgid "Swiss - Point of Sale"
-msgstr ""
+msgstr "Švýcarsko - prodejní místo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission
@@ -34159,7 +34714,7 @@ msgstr "DIČ"
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii_tax_extension
 #: model:ir.module.module,summary:base.module_account_edi_ubl_cii_tax_extension
 msgid "Tax extension for UBL/CII"
-msgstr ""
+msgstr "Prodloužení daně pro UBL/CII"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_taxcloud
@@ -35526,6 +36081,9 @@ msgid ""
 "         Please install the new \"Fedex Shipping\" module and uninstall this"
 " one as soon as possible. This integration will stop working in 2024."
 msgstr ""
+"Toto je starší integrace s FedEx, která již není podporována.         "
+"Nainstalujte prosím nový modul „Přeprava FedEx“ a odinstalujte jej co "
+"nejdříve. Tato integrace přestane fungovat v roce 2024."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
@@ -35545,6 +36103,8 @@ msgid ""
 "States Postal Service (USPS) Shipping\" module and uninstall this one as "
 "soon as possible."
 msgstr ""
+"Toto je starší integrace s USPS. Nainstalujte si prosím nový modul „United "
+"States Postal Service (USPS) Shipping“ a odinstalujte jej co nejdříve."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -36758,12 +37318,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "United Arab Emirates - Payroll"
-msgstr ""
+msgstr "Spojené arabské emiráty - Mzdy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "United Arab Emirates - Payroll with Accounting"
-msgstr ""
+msgstr "Spojené arabské emiráty - Účtování mezd"
 
 #. module: base
 #: model:res.country,name:base.uk
@@ -36808,7 +37368,7 @@ msgstr "Poštovní služba Spojených států amerických (USPS)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping (Legacy)"
-msgstr ""
+msgstr "Poštovní služba Spojených států amerických (USPS) (starší)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -37512,7 +38072,7 @@ msgstr "Venezuela - Účetnictví"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_30
 msgid "Version 3.0 of the delivery guide (Complemento XML Carta de Porte)."
-msgstr ""
+msgstr "Verze 3.0 průvodce doručením (Complemento XML Carta de Porte)."
 
 #. module: base
 #. odoo-python
