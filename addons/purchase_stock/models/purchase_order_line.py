@@ -29,6 +29,7 @@ class PurchaseOrderLine(models.Model):
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
+    is_storable = fields.Boolean(related='product_id.is_storable')
     location_final_id = fields.Many2one('stock.location', 'Location from procurement')
     group_id = fields.Many2one('procurement.group', 'Procurement group that generated this line', index='btree_not_null')
 
