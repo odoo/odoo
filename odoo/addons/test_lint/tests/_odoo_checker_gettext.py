@@ -55,7 +55,7 @@ class OdooBaseChecker(BaseChecker):
     def visit_call(self, node):
         if not isinstance(node.func, astroid.Name) or node.func.name not in ("_", "_lt"):
             return
-        first_arg = node.args[0]
+        first_arg = node.args[0] if node.args else None
         if not (isinstance(first_arg, astroid.Const) and isinstance(first_arg.value, str)):
             self.add_message("gettext-variable", node=node)
             return
