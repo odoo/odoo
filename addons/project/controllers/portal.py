@@ -364,8 +364,14 @@ class ProjectCustomerPortal(CustomerPortal):
                 return [('priority', 'in', priority_selections.mapped('value'))]
             return Domain.FALSE
         elif search_in == 'status':
-            state_dict = dict(map(reversed, request.env['project.task']._fields['state']._description_selection(request.env)))
-            return [('state', 'ilike', state_dict.get(search, search))]
+            state_selections = request.env['ir.model.fields.selection'].sudo().search([
+                ('field_id.model', '=', 'project.task'),
+                ('field_id.name', '=', 'state'),
+                ('name', 'ilike', search),
+            ])
+            if state_selections:
+                return [('state', 'in', state_selections.mapped('value'))]
+            return Domain.FALSE
         elif search_in in self._task_get_searchbar_inputs(milestones_allowed, project):
             return [(search_in, 'ilike', search)]
         else:
