@@ -709,6 +709,63 @@ odoo.define('website.tour.form_editor', function (require) {
         },
     ]));
 
+    wTourUtils.registerWebsitePreviewTour('website_form_m2m_field', {
+        url: '/contactus',
+        edition: true,
+        test: true,
+    }, [
+        {
+            content: "Modify form to have many2many field",
+            trigger: 'iframe section.s_website_form',
+            run: function () {
+                const FormEditorRegistry = odoo.__DEBUG__.services['website.form_editor_registry'];
+                FormEditorRegistry.map['send_mail'].formFields = [{
+                    name: 'recipient_ids',
+                    relation: 'res.partner',
+                    domain: [['name', '=', 'testuserA']],
+                    modelRequired: true,
+                    string: 'recipients',
+                    type: 'many2many',
+                    fieldName: "email",
+                }];
+            },
+        },
+        {
+            content: "Select the contact us form by clicking on an input field",
+            trigger: 'iframe .s_website_form input',
+            extra_trigger: '#oe_snippets .oe_snippet_thumbnail',
+            run: 'click',
+        },
+        {
+            content: "Open action selector",
+            trigger: '[class="snippet-option-WebsiteFormEditor"] we-toggler',
+            run: 'click',
+        },
+        {
+            content: "Reset form action",
+            trigger: '[class="snippet-option-WebsiteFormEditor"] we-button[data-select-action].active div',
+            run: 'click',
+        },
+        {
+            content: "Check that the domain and fieldName is applied to the form",
+            trigger: 'iframe div[data-name="recipient_ids"] div.checkbox:last-child:first-child label:containsExact(testA@example.com)',
+        },
+        {
+            content: "Activate one2many field",
+            trigger: 'iframe div[data-name="recipient_ids"]',
+            run: 'click',
+        },
+        {
+            content: "Open 'add new checkbox' list",
+            trigger: '[class="snippet-option-WebsiteFieldEditor"] we-select.o_we_add_list_item',
+            run: 'click',
+        },
+        {
+            content: "Check that the domain and fieldName is applied to 'add new checkbox' list",
+            trigger: 'we-selection-items we-button.o_we_list_add_existing:last-child:first-child div:containsExact(testA@example.com)',
+        },
+    ]);
+
     wTourUtils.registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         test: true,
         url: '/',

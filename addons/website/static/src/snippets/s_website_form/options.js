@@ -473,6 +473,11 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.trigger_up('activate_snippet', {
                 $snippet: $(fieldEl),
             });
+        } else if (name === 'get_form_fields') {
+            const formKey = this.activeForm && this.activeForm.website_form_key;
+            if (formKey) {
+                data.onSuccess(FormEditorRegistry.get(formKey).formFields || []);
+            }
         }
     },
 
@@ -899,6 +904,22 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.fields = _.each(fields, function (field, fieldName) {
                 field.name = fieldName;
                 field.domain = field.domain || [];
+            });
+            // Copy field attributes from the form
+            this.trigger_up('option_update', {
+                optionName: 'WebsiteFormEditor',
+                name: 'get_form_fields',
+                data: {
+                    onSuccess: formFields => formFields.forEach(formField => {
+                        const field = this.fields[formField.name];
+                        if (formField.fieldName) {
+                            field.fieldName = formField.fieldName;
+                        }
+                        if (formField.domain) {
+                            field.domain = formField.domain
+                        }
+                    }),
+                },
             });
             // Create the buttons for the type we-select
             return Object.keys(fields).map(key => {
