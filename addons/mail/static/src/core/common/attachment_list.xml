@@ -62,13 +62,19 @@
                     </t>
                     <div class="flex-grow-1"/>
                     <div class="o-mail-AttachmentCard-aside position-relative rounded-end overflow-hidden d-flex" t-att-class="{ 'o-hasMultipleActions d-flex flex-column': showDelete and !env.inComposer }">
-                        <div t-if="attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
+                        <div t-if="!isMobileOS() and attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
                             <i class="fa fa-circle-o-notch fa-spin"/>
+                        </div>
+                        <div t-if="isMobileOS() and attachment.uploading" class="d-flex justify-content-center align-items-center w-100 h-100" title="Uploading">
+                            <button class="o-mail-AttachmentCard-CancelUpload position-relative btn border-0 bg-transparent p-0 d-flex align-items-center justify-content-center text-black-50" t-on-click.stop="() => this.onClickUnlink(attachment)" title="Cancel Upload">
+                                <i class="fa fa-times position-absolute" aria-hidden="true"/>
+                                <i class="fa fa-circle-o-notch fa-spin position-absolute"/>
+                            </button>
                         </div>
                         <div t-if="!attachment.uploading and env.inComposer" class="d-flex justify-content-center me-2 align-items-center w-100 h-100 text-primary" title="Uploaded">
                             <i class="fa fa-check"/>
                         </div>
-                        <button t-if="showDelete"
+                        <button t-if="!(isMobileOS() and attachment.uploading) and showDelete"
                                 class="o-mail-AttachmentCard-unlink btn top-0 align-items-center justify-content-center d-flex w-100 h-100 rounded-0 border-0"
                                 t-attf-class="{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base justify-content-center' : 'bg-300' }}"
                                 t-on-click.stop="() => this.onClickUnlink(attachment)" title="Remove"
