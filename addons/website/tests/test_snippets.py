@@ -151,3 +151,9 @@ class TestSnippets(HttpCase):
 
     def test_snippet_faq_horizontal(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_faq_horizontal', login='admin')
+
+    def test_cookies_consent(self):
+        website = self.env.ref('website.default_website')
+        website.google_analytics_key = 'G-XXXXXXXXXXX'
+        website.cookies_bar = True
+        self.start_tour(website.get_client_action_url('/'), 'cookies_consent')
