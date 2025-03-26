@@ -1,7 +1,7 @@
 import { test } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { clickCheckbox } from "../_helpers/user_actions";
+import { clickCheckbox, pasteHtml } from "../_helpers/user_actions";
 import { click } from "@odoo/hoot-dom";
 
 test("should do nothing if do not click on the checkbox", async () => {
@@ -425,5 +425,20 @@ test("should uncheck all nested checklist items and update wrapper title", async
                     </ul>
                 </li>
             </ul>`),
+    });
+});
+
+test("should preserve list type on paste", async () => {
+    await testEditor({
+        contentBefore: unformat(`<div></div>`),
+        stepFunction: async (editor) => {
+            pasteHtml(
+                editor,
+                `<ul><li>a</li></ul><ul class="o_checklist"><li>b</li><li>c</li><li>d</li></ul>`
+            );
+        },
+        contentAfter: unformat(
+            `<ul><li>a</li></ul><ul class="o_checklist"><li>b</li><li>c</li><li>d[]</li></ul><div><br></div>`
+        ),
     });
 });
