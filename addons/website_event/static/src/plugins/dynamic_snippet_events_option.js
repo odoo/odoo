@@ -1,4 +1,4 @@
-import { DynamicSnippetOption } from "@html_builder/plugins/dynamic_snippet_option";
+import { DynamicSnippetOption } from "@html_builder/website_builder/plugins/options/dynamic_snippet_option";
 
 export class DynamicSnippetEventsOption extends DynamicSnippetOption {
     static template = "website_event.DynamicSnippetEventsOption";
