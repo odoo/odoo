@@ -594,8 +594,8 @@ actual arch.
         self.env.registry.clear_cache('templates')
         return super().unlink()
 
-    def _update_field_translations(self, fname, translations, digest=None, source_lang=None):
-        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest=digest, source_lang=source_lang)
+    def _update_field_translations(self, field_name, translations, digest=None, source_lang=''):
+        return super(IrUiView, self.with_context(no_save_prev=True))._update_field_translations(field_name, translations, digest=digest, source_lang=source_lang)
 
     def copy_data(self, default=None):
         has_default_without_key = default and 'key' not in default
@@ -855,7 +855,7 @@ actual arch.
                 node.append(E.attribute('1', name='__validate__'))
 
     @api.model
-    def apply_inheritance_specs(self, source, specs_tree, pre_locate=lambda s: True):
+    def apply_inheritance_specs(self, source, specs_tree, pre_locate=None):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -2484,7 +2484,7 @@ class Base(models.AbstractModel):
     # Override this method if you need a window title that depends on the context
     #
     @api.model
-    def view_header_get(self, view_id=None, view_type='form'):
+    def view_header_get(self, view_id, view_type):
         return False
 
     @api.model

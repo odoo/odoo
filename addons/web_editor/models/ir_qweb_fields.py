@@ -169,7 +169,7 @@ class IrQwebField(models.AbstractModel):
     _inherit = ['ir.qweb.field']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         field = record._fields[field_name]
 
@@ -228,7 +228,7 @@ class IrQwebFieldMany2one(models.AbstractModel):
     _inherit = ['ir.qweb.field.many2one']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             many2one = record[field_name]
@@ -269,7 +269,7 @@ class IrQwebFieldContact(models.AbstractModel):
     _inherit = ['ir.qweb.field.contact']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-contact-options'] = json.dumps(options)
@@ -287,7 +287,7 @@ class IrQwebFieldDate(models.AbstractModel):
     _inherit = ['ir.qweb.field.date']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-original'] = record[field_name]
@@ -325,7 +325,7 @@ class IrQwebFieldDatetime(models.AbstractModel):
     _inherit = ['ir.qweb.field.datetime']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
 
         if options.get('inherit_branding'):
@@ -560,7 +560,7 @@ class IrQwebFieldDuration(models.AbstractModel):
     _inherit = ['ir.qweb.field.duration']
 
     @api.model
-    def attributes(self, record, field_name, options, values):
+    def attributes(self, record, field_name, options, values=None):
         attrs = super().attributes(record, field_name, options, values)
         if options.get('inherit_branding'):
             attrs['data-oe-original'] = record[field_name]
