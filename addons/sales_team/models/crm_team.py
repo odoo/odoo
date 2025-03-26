@@ -124,6 +124,19 @@ class CrmTeam(models.Model):
         help="Favorite teams to display them in the dashboard and access them easily.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
 
+    @api.constrains('company_id')
+    def _constrains_company_members(self):
+        for team in self.filtered('company_id'):
+            invalid_members = team.crm_team_member_ids.filtered(
+                lambda m: team.company_id not in m.user_id.company_ids
+            )
+            if invalid_members:
+                raise UserError(_("The following team members are not allowed in company '%(company)s' of the Sales Team '%(team)s': %(users)s",
+                    company=team.company_id.display_name,
+                    team=team.name,
+                    users=", ".join(invalid_members.mapped('user_id.name'))
+                ))
+
     @api.depends('sequence')  # TDE FIXME: force compute in new mode
     def _compute_is_membership_multi(self):
         multi_enabled = self.env['ir.config_parameter'].sudo().get_param('sales_team.membership_multi', False)
@@ -212,9 +225,9 @@ class CrmTeam(models.Model):
 
     def write(self, values):
         res = super(CrmTeam, self).write(values)
-        # manually launch company sanity check
-        if values.get('company_id'):
-            self.crm_team_member_ids._check_company(fnames=['crm_team_id'])
+
+        if values.get('company_id'):  # Force re-check of memberships constraint for this team
+            self.crm_team_member_ids._constrains_membership()
 
         if values.get('member_ids'):
             self._add_members_to_favorites()
