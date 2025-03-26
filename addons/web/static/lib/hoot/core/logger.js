@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { formatTime, stringify } from "../hoot_utils";
+import { stringify } from "../hoot_utils";
 import { urlParams } from "./url";
 
 //-----------------------------------------------------------------------------
@@ -160,7 +160,7 @@ export const logger = {
             ...styledArguments([
                 `Test ${stringify(fullName)} passed`,
                 lastResults.counts.assertion || 0,
-                `assertions (time: ${formatTime(lastResults.duration)})`,
+                `assertions (time: ${lastResults.duration})`,
             ])
         );
     },
@@ -183,6 +183,8 @@ export const logger = {
             withArgs.push(suite.reporting.skipped, "skipped");
         }
         if (withArgs.length) {
+            const totalDuration = suite.jobs.reduce((acc, job) => acc + (job.duration || 0), 0);
+            withArgs.push(`ms: ${totalDuration}`);
             args.push("(", ...withArgs, ")");
         }
         $log(...styledArguments(args));
