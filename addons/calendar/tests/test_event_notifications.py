@@ -80,7 +80,6 @@ class TestCalendarMail(CalendarMailCommon):
         cls.event.write({
             'partner_ids': [(4, p.id) for p in cls.user_employee_2.partner_id + cls.customers],
         })
-        cls.event.message_unsubscribe(partner_ids=cls.event.message_partner_ids.ids)
 
     def test_assert_initial_values(self):
         self.assertFalse(self.event.message_partner_ids)
