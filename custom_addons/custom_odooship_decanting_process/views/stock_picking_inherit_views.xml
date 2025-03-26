@@ -21,8 +21,9 @@
                 <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
                        position="after">
                     <field name="remaining_qty"/>
-                    <field name="xdock_packaging_qty" optional="hide"/>
-                    <field name="xdock_qty" optional="hide"/>
+                    <field name="show_xdock_qty_editable" column_invisible="1"/>
+                    <field name="xdock_packaging_qty" optional="hide" readonly="show_xdock_qty_editable"/>
+                    <field name="xdock_qty" optional="hide" readonly="not show_xdock_qty_editable"/>
                     <field name="xdock_remaining_qty" optional="hide"/>
                     <field name="delivery_receipt_state"/>
                     <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
