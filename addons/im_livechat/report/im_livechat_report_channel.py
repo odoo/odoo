@@ -23,7 +23,7 @@ class Im_LivechatReportChannel(models.Model):
     day_number = fields.Char('Day Number', readonly=True, help="1 is Monday, 7 is Sunday")
     time_to_answer = fields.Float('Time to answer (sec)', digits=(16, 2), readonly=True, aggregator="avg", help="Average time in seconds to give the first answer to the visitor")
     start_date_hour = fields.Char('Hour of start Date of session', readonly=True)
-    duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
+    duration = fields.Float('Session Duration (minutes)', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
     nbr_speaker = fields.Integer('# of speakers', readonly=True, aggregator="avg", help="Number of different speakers")
     nbr_channel = fields.Integer("# of Sessions", readonly=True, aggregator="sum")
     nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
@@ -37,8 +37,15 @@ class Im_LivechatReportChannel(models.Model):
     rating = fields.Integer('Rating', aggregator="avg", readonly=True)
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
+    day_name = fields.Char('Day Name', help="Day of the Week", readonly=True)
     is_unrated = fields.Integer('Session not rated', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
+    chatbot_partner_id = fields.Many2one('res.partner', string="Bot Operator", readonly=True)
+    visitor_partner_id = fields.Many2one('res.partner', string="Visitor Partner", readonly=True)
+    res_user_settings_id = fields.Many2one('res.users.settings', help="Settings related to the User")
+    operator_expertise_id = fields.Many2many(related="res_user_settings_id.livechat_expertise_ids")
+    chatbot_answer = fields.Char('Chatbot Answer path', readonly=True)
+    partner_name = fields.Char(related="partner_id.name")
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -49,7 +56,7 @@ class Im_LivechatReportChannel(models.Model):
         ))
 
     def _query(self) -> SQL:
-        return SQL("%s %s %s %s", self._select(), self._from(), self._where(), self._group_by())
+        return SQL("%s %s %s", self._select(), self._from(), self._group_by())
 
     def _select(self) -> SQL:
         return SQL(
@@ -60,16 +67,30 @@ class Im_LivechatReportChannel(models.Model):
                 C.id as channel_id,
                 C.name as channel_name,
                 COUNT(DISTINCT C.id) AS nbr_channel,
+                USS.res_user_settings_id AS res_user_settings_id,
                 CONCAT(L.name, ' / ', C.id) as technical_name,
                 C.livechat_channel_id as livechat_channel_id,
                 C.create_date as start_date,
                 to_char(date_trunc('hour', C.create_date), 'YYYY-MM-DD HH24:MI:SS') as start_date_hour,
                 to_char(date_trunc('hour', C.create_date), 'HH24') as start_hour,
-                extract(dow from  C.create_date) as day_number, 
+                extract(dow from  C.create_date) as day_number,
+                CR.script_operator_partner_id AS chatbot_partner_id,
+                V.visitor_partner_id,
+                answers_path.chatbot_answer AS chatbot_answer,
+                CASE
+                    WHEN extract(dow from C.create_date) = 1 THEN 'Monday'
+                    WHEN extract(dow from C.create_date) = 2 THEN 'Tuesday'
+                    WHEN extract(dow from C.create_date) = 3 THEN 'Wednesday'
+                    WHEN extract(dow from C.create_date) = 4 THEN 'Thursday'
+                    WHEN extract(dow from C.create_date) = 5 THEN 'Friday'
+                    WHEN extract(dow from C.create_date) = 6 THEN 'Saturday'
+                    WHEN extract(dow from C.create_date) = 0 THEN 'Sunday'
+                END as day_name,
                 EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date))/60 AS duration,
                 EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
                 count(distinct C.livechat_operator_id) as nbr_speaker,
                 count(distinct M.id) as nbr_message,
+                count(distinct DCM.partner_id) as member_count,
                 CASE 
                     WHEN EXISTS (select distinct M.author_id FROM mail_message M
                                     WHERE M.author_id=C.livechat_operator_id
@@ -112,23 +133,55 @@ class Im_LivechatReportChannel(models.Model):
                 JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
                 LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
                 LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
+                LEFT JOIN discuss_channel_member DCM ON DCM.channel_id = C.id
+                LEFT JOIN res_users U ON U.partner_id = C.livechat_operator_id
+                LEFT JOIN LATERAL (
+                    SELECT STRING_AGG(SA.name->>'en_US', ' > ' ORDER BY M.create_date) AS chatbot_answer
+                      FROM chatbot_message CM
+                      JOIN chatbot_script_answer SA ON SA.id = CM.user_script_answer_id
+                      JOIN mail_message M ON M.id = CM.mail_message_id
+                     WHERE CM.discuss_channel_id = C.id
+                ) AS answers_path ON TRUE
+                LEFT JOIN LATERAL (
+                    SELECT US.id AS res_user_settings_id
+                      FROM res_users_settings US
+                     WHERE US.user_id = U.id
+                     ORDER BY US.id ASC
+                     LIMIT 1
+                ) USS ON TRUE
+                LEFT JOIN (
+                    SELECT rule.channel_id, script.operator_partner_id AS script_operator_partner_id
+                      FROM im_livechat_channel_rule rule
+                      JOIN chatbot_script script ON script.id = rule.chatbot_script_id
+                     WHERE rule.chatbot_script_id IS NOT NULL
+                ) CR ON CR.channel_id = C.livechat_channel_id
+                LEFT JOIN LATERAL (
+                    SELECT DCM.partner_id AS visitor_partner_id
+                      FROM discuss_channel_member DCM
+                     WHERE DCM.channel_id = C.id
+                       AND DCM.partner_id IS NOT NULL
+                       AND DCM.partner_id != C.livechat_operator_id
+                     ORDER BY DCM.id ASC
+                     LIMIT 1
+                ) V ON TRUE
             """,
         )
-
-    def _where(self) -> SQL:
-        return SQL("WHERE C.livechat_operator_id is not null")
 
     def _group_by(self) -> SQL:
         return SQL(
             """
             GROUP BY
-                C.livechat_operator_id,
                 C.id,
-                C.name,
-                C.livechat_channel_id,
-                L.name,
-                C.create_date,
                 C.uuid,
-                Rate.rating
+                C.create_date,
+                C.livechat_operator_id,
+                C.livechat_channel_id,
+                C.name,
+                CR.script_operator_partner_id,
+                answers_path.chatbot_answer,
+                L.name,
+                Rate.rating,
+                USS.res_user_settings_id,
+                V.visitor_partner_id
             """,
         )
