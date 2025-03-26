@@ -37,7 +37,7 @@ class CalendarPopoverDeleteWizard(models.TransientModel):
     def _compute_recipient_ids(self):
         """ Compute the recipients by combining the record's partner and message partners. """
         for wizard in self:
-            wizard.recipient_ids = wizard.record.partner_id | wizard.record.message_partner_ids
+            wizard.recipient_ids = wizard.record.partner_id | wizard.record.attendee_ids.partner_id
 
     @api.depends('record')
     def _compute_subject(self):
