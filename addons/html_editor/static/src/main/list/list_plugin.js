@@ -703,11 +703,11 @@ export class ListPlugin extends Plugin {
             return nodeToInsert;
         }
         const mode = container && this.getListMode(listEl);
-        if (
-            (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) ||
-            isListElement(nodeToInsert)
-        ) {
+        if (isListItemElement(nodeToInsert) && nodeToInsert.classList.contains("oe-nested")) {
             return this.convertList(nodeToInsert, mode);
+        }
+        if (isListElement(nodeToInsert)) {
+            return this.convertList(nodeToInsert, this.getListMode(nodeToInsert));
         }
         return nodeToInsert;
     }
