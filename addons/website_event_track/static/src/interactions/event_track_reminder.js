@@ -72,14 +72,11 @@ export class WebsiteEventTrackReminder extends Interaction {
                 this.reminderOn = reminderOnValue;
                 if (this.reminderOn) {
                     this.favoriteAddedConfirmation = _t("Track successfully added to your favorites.");
-                    Component.env.bus.trigger("open_notification_request", [
-                        "add_track_to_favorite",
-                        {
-                            title: _t("Allow push notifications?"),
-                            body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
-                            delay: 0
-                        },
-                    ]);
+                    Component.env.bus.trigger("open-push-notification-request-popup", {
+                        title: _t("Allow push notifications?"),
+                        body: _t("You have to enable push notifications to get reminders for your favorite tracks."),
+                        delay: 0,
+                    });
                     this.bellSelectorEl.classList.replace("fa-bell-o", "fa-bell");
                     this.bellSelectorEl.setAttribute("title", _t("Favorite On"));
                 } else {
