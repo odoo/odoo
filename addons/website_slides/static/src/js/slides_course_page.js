@@ -173,3 +173,23 @@ export const SlideCoursePage = publicWidget.Widget.extend({
         }
     }
 });
+
+publicWidget.registry.WebsiteSlidesSearchModal = publicWidget.Widget.extend({
+    selector: '#o_wslides_search_modal',
+    disabledInEditableMode: true,
+
+    //--------------------------------------------------------------------------
+    // Overrides
+    //--------------------------------------------------------------------------
+    start() {
+        this._super(...arguments);
+
+        this.el.addEventListener("shown.bs.modal", (ev) => {
+            ev.target.querySelector('.oe_search_box').focus();
+        });
+    },
+});
+
+export default {
+    WebsiteSlidesSearchModal: publicWidget.registry.WebsiteSlidesSearchModal
+};
