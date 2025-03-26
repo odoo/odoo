@@ -58,6 +58,16 @@ class StockMoveLine(models.Model):
         for move in self:
             move.xdock_remaining_qty = move.xdock_qty
 
+    @api.depends('quantity')
+    def _compute_remaining_qty(self):
+        """
+        Compute remaining quantity based on the quantity ordered (product_uom_qty)
+        and the quantity done (quantity). Remaining qty is initially equal to available qty.
+        """
+        for move in self:
+            # Initial remaining qty is the product_uom_qty (expected qty)
+            move.remaining_qty = move.quantity
+
     @api.depends('remaining_qty')
     def _compute_delivery_receipt_state(self):
         """
