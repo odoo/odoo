@@ -68,7 +68,7 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
-    @api.depends('l10n_in_state_id')
+    @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
         def _get_fiscal_state(move, foreign_state):
