@@ -8,9 +8,10 @@
             <field name="arch" type="xml">
                 <pivot string="Livechat Support Statistics" disable_linking="1" sample="1">
                     <field name="technical_name" type="row"/>
-                    <field name="duration" type="measure" string="Duration of Session (min)"/>
-                    <field name="nbr_message" type="measure" string="Messages per session"/>
-                    <field name="is_without_answer" invisible="True"/>
+                    <field name="duration" type="measure" string="Duration (min)"/>
+                    <field name="nbr_message" type="measure" string="Messages per Session"/>
+                    <field name="call_duration" widget="float_time"/>
+                    <field name="nbr_speaker" invisible="True"/>
                 </pivot>
             </field>
         </record>
@@ -21,9 +22,10 @@
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" sample="1" disable_linking="1">
                     <field name="technical_name"/>
-                    <field name="nbr_message" type="measure" string="Messages per session"/>
-                    <field name="duration" string="Duration of Session (min)"/>
-                    <field name="is_without_answer" invisible="True"/>
+                    <field name="nbr_message" type="measure" string="Messages per Session"/>
+                    <field name="duration" string="Duration (min)"/>
+                    <field name="call_duration" widget="float_time"/>
+                    <field name="nbr_speaker" invisible="True"/>
                 </graph>
             </field>
         </record>

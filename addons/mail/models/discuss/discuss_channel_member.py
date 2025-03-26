@@ -320,8 +320,7 @@ class DiscussChannelMember(models.Model):
             )
         if len(self.channel_id.rtc_session_ids) == 1:
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
-            message = self.channel_id.message_post(body=body, message_type="notification")
-            self.channel_id.last_call_message_id = message
+            self.channel_id.message_post(body=body, message_type="notification", call_channel_id=self.channel_id.id)
             if self.channel_id.channel_type != "channel":
                 self._rtc_invite_members()
 
@@ -388,11 +387,11 @@ class DiscussChannelMember(models.Model):
             self.rtc_session_ids.unlink()
         else:
             self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
-        if not self.channel_id.rtc_session_ids and self.channel_id.last_call_message_id:
+        if not self.channel_id.rtc_session_ids and len(self.channel_id.call_message_ids):
             # deducing information about the end of call through write_date
             self.channel_id._message_update_content(
-                self.channel_id.last_call_message_id,
-                self.channel_id.last_call_message_id.body,
+                self.channel_id.call_message_ids[0],
+                self.channel_id.call_message_ids[0].body,
                 strict=False
             )
 

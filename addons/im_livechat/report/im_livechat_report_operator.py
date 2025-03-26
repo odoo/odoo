@@ -14,7 +14,6 @@ class Im_LivechatReportOperator(models.Model):
 
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
-    nbr_channel = fields.Integer('# of Sessions', readonly=True, aggregator="sum")
     channel_id = fields.Many2one('discuss.channel', 'Conversation', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True)
     time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, aggregator="avg", help="Average time to give the first answer to the visitor")
@@ -30,7 +29,6 @@ class Im_LivechatReportOperator(models.Model):
                     row_number() OVER () AS id,
                     C.livechat_operator_id AS partner_id,
                     C.livechat_channel_id AS livechat_channel_id,
-                    COUNT(DISTINCT C.id) AS nbr_channel,
                     C.id AS channel_id,
                     C.create_date AS start_date,
                     C.rating_last_value as rating,

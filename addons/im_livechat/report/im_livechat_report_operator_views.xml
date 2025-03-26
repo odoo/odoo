@@ -9,7 +9,6 @@
                 <pivot string="Livechat Support Statistics" disable_linking="1" sample="1">
                     <field name="partner_id" type="row"/>
                     <field name="duration" type="measure"/>
-                    <field name="nbr_channel" type="measure"/>
                 </pivot>
             </field>
         </record>
@@ -20,7 +19,6 @@
             <field name="arch" type="xml">
                 <graph string="Livechat Support Statistics" sample="1" disable_linking="1">
                     <field name="partner_id"/>
-                    <field name="nbr_channel" type="measure"/>
                 </graph>
             </field>
         </record>
