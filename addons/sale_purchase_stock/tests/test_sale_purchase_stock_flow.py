@@ -317,3 +317,22 @@ class TestSalePurchaseStockFlow(TransactionCase):
             groupby=['date:day', 'product_id'],
         )
         self.assertEqual(forecasted_qty[0][2], 0)
+
+    def test_mtso_buy_without_supplier(self):
+        self.mto_route.rule_ids.procure_method = "mts_else_mto"
+
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'route_ids': [Command.set((self.mto_route + self.buy_route).ids)],
+            'is_storable': True,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                (0, 0, {'product_id': product.id, 'price_unit': 100}),
+            ],
+        })
+        sale_order.action_confirm()
+        self.assertFalse(sale_order.order_line.move_ids.move_orig_ids)
+        self.assertEqual(sale_order.order_line.move_ids.state, 'confirmed')

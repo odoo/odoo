@@ -78,7 +78,7 @@ class StockRule(models.Model):
                 errors.append((procurement, msg))
             elif not supplier:
                 # If the supplier is not set, we cannot create a PO.
-                moves = procurement.values.get('move_dest_ids', self.env['stock.move'])
+                moves = procurement.values.get('move_dest_ids') or self.env['stock.move']
                 if moves.propagate_cancel:
                     moves._action_cancel()
                 moves.procure_method = 'make_to_stock'
