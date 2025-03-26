@@ -27,6 +27,10 @@ class ImageGalleryOption extends Plugin {
         on_reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
         after_remove_handlers: this.afterRemove.bind(this),
+        on_add_element_handlers: (element) => {
+            const carousels = element.elementToAdd.querySelectorAll(".s_image_gallery .carousel");
+            this.addCarouselListener(carousels);
+        },
     };
 
     getActions() {
@@ -82,10 +86,15 @@ class ImageGalleryOption extends Plugin {
 
     setup() {
         const slideshowCarousels = this.document.querySelectorAll(".s_image_gallery .carousel");
+        this.addCarouselListener(slideshowCarousels);
+    }
+
+    addCarouselListener(slideshowCarousels) {
         for (const carousel of slideshowCarousels) {
             this.addDomListener(carousel, "slid.bs.carousel", this.onCarouselSlid);
         }
     }
+
     restoreSelection(imageToSelect) {
         if (imageToSelect && !this.dependencies.history.getIsPreviewing()) {
             // We want to update the container to the equivalent cloned image.
