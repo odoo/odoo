@@ -63,6 +63,10 @@ class TestHrAttendanceOvertime(TransactionCase):
             'tz': 'UTC',
             'resource_calendar_id': cls.calendar_flex_40h.id,
         })
+        cls.new_employee = cls.env['hr.employee'].create({
+            'name': 'Ninja',
+            'company_id': cls.company.id,
+        })
 
     def test_overtime_company_settings(self):
         self.company.write({
@@ -528,6 +532,14 @@ class TestHrAttendanceOvertime(TransactionCase):
             'check_out': datetime(2024, 2, 1, 17, 0)
         })
 
+        self.env['resource.calendar.leaves'].create({
+            'name': 'scheduled leave',
+            'date_from': datetime(2024, 1, 31, 00),
+            'date_to': datetime(2024, 1, 31, 23, 59),
+            'resource_id': self.flexible_employee.resource_id.id,
+            'time_type': 'leave',
+        })
+
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
         self.assertAlmostEqual(self.other_employee.total_overtime, 0, 2)
         self.assertAlmostEqual(self.jpn_employee.total_overtime, 0, 2)
@@ -543,6 +555,9 @@ class TestHrAttendanceOvertime(TransactionCase):
 
         # Employee Checked in yesterday, no absence found
         self.assertAlmostEqual(self.employee.total_overtime, 0, 2)
+
+        # Employee on leave yesterday, no absence found
+        self.assertAlmostEqual(self.flexible_employee.total_overtime, 0, 2)
 
         # Other company with setting disabled
         self.assertAlmostEqual(self.europe_employee.total_overtime, 0, 2)

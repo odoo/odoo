@@ -327,10 +327,6 @@ class ResourceCalendar(models.Model):
             tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
             for tz in resources_per_tz.keys()
         }
-        # Use the outer bounds from the requested timezones
-        for tz, bounds in bounds_per_tz.items():
-            start = min(start, bounds[0].replace(tzinfo=utc))
-            end = max(end, bounds[1].replace(tzinfo=utc))
         # Generate once with utc as timezone
         days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
         ResourceCalendarAttendance = self.env['resource.calendar.attendance']
@@ -391,7 +387,7 @@ class ResourceCalendar(models.Model):
         """Hook method to handle flexible leave intervals. Can be overridden in other modules."""
         tz = dt0.tzinfo  # Get the timezone information from dt0
         dt0 = datetime.combine(dt0.date(), time.min).replace(tzinfo=tz)
-        dt1 = datetime.combine(dt1.date(), time.max).replace(tzinfo=tz)
+        dt1 = datetime.combine(dt1.date() + relativedelta(days=1), time.min).replace(tzinfo=tz)
         return dt0, dt1
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
