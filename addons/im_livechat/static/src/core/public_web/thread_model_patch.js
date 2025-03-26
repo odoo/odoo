@@ -12,14 +12,16 @@ patch(Thread.prototype, {
                 return this.channel_type === "livechat" ? this.store.discuss : null;
             },
         });
-        this.livechatChannel = fields.One("im_livechat.channel", { inverse: "threads" });
+        this.livechat_channel_id = fields.One("im_livechat.channel", { inverse: "threads" });
         this.anonymous_country = fields.One("res.country");
     },
     _computeDiscussAppCategory() {
         if (this.channel_type !== "livechat") {
             return super._computeDiscussAppCategory();
         }
-        return this.livechatChannel?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory;
+        return (
+            this.livechat_channel_id?.appCategory ?? this.appAsLivechats?.defaultLivechatCategory
+        );
     },
     get hasMemberList() {
         return this.channel_type === "livechat" || super.hasMemberList;

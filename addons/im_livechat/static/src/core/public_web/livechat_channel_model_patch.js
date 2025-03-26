@@ -18,9 +18,9 @@ const livechatChannelPatch = {
                 };
             },
             eager: true,
-            inverse: "livechatChannel",
+            inverse: "livechat_channel_id",
         });
-        this.threads = fields.Many("Thread", { inverse: "livechatChannel" });
+        this.threads = fields.Many("Thread", { inverse: "livechat_channel_id" });
     },
 };
 patch(LivechatChannel.prototype, livechatChannelPatch);

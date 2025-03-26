@@ -4,7 +4,7 @@ declare module "models" {
         livechats: Thread[];
     }
     export interface DiscussAppCategory {
-        livechatChannel: LivechatChannel;
+        livechat_channel_id: LivechatChannel;
     }
     export interface LivechatChannel {
         appCategory: DiscussAppCategory;
@@ -13,6 +13,6 @@ declare module "models" {
     export interface Thread {
         anonymous_country: Country;
         appAsLivechats: DiscussApp;
-        livechatChannel: LivechatChannel;
+        livechat_channel_id: LivechatChannel;
     }
 }
