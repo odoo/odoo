@@ -593,7 +593,7 @@ class DiscussChannel(models.Model):
             self._bus_send_store(
                 self,
                 {
-                    "invitedMembers": Store.Many(
+                    "invited_member_ids": Store.Many(
                         members,
                         [
                             Store.One("channel_id", [], as_thread=True, rename="thread"),
@@ -1037,7 +1037,6 @@ class DiscussChannel(models.Model):
                     *self.env["discuss.channel.member"]._to_store_persona("avatar_card"),
                 ],
                 mode="ADD",
-                rename="invitedMembers",
             ),
             "last_interest_dt",
             "member_count",

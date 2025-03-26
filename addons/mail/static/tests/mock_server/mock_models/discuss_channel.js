@@ -169,12 +169,12 @@ export class DiscussChannel extends models.ServerModel {
                 channel,
                 "mail.record/insert",
                 new mailDataHelpers.Store(this.browse(channel.id), {
+                    invited_member_ids: kwargs.invite_to_rtc_call
+                        ? [["ADD", insertedChannelMembers]]
+                        : false,
                     member_count: DiscussChannelMember.search_count([
                         ["channel_id", "=", channel.id],
                     ]),
-                    invitedMembers: kwargs.invite_to_rtc_call
-                        ? [["ADD", insertedChannelMembers]]
-                        : false,
                 })
                     .add(DiscussChannelMember.browse(insertedChannelMembers))
                     .get_result()

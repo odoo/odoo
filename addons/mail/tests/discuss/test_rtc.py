@@ -242,7 +242,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [("ADD", [channel_member_test_user.id])],
+                                "invited_member_ids": [("ADD", [channel_member_test_user.id])],
                             }
                         ],
                         "discuss.channel.member": [
@@ -400,7 +400,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
+                                "invited_member_ids": [
                                     (
                                         "ADD",
                                         [channel_member_test_user.id, channel_member_test_guest.id],
@@ -500,7 +500,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [("DELETE", [channel_member_test_user.id])],
+                                "invited_member_ids": [("DELETE", [channel_member_test_user.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -602,7 +602,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [("DELETE", [channel_member_test_guest.id])],
+                                "invited_member_ids": [("DELETE", [channel_member_test_guest.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -712,7 +712,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [("DELETE", [channel_member_test_user.id])],
+                                "invited_member_ids": [("DELETE", [channel_member_test_user.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -769,7 +769,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [("DELETE", [channel_member_test_guest.id])],
+                                "invited_member_ids": [("DELETE", [channel_member_test_guest.id])],
                             },
                         ],
                         "discuss.channel.member": [
@@ -855,7 +855,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
+                                "invited_member_ids": [
                                     (
                                         "DELETE",
                                         [channel_member_test_user.id, channel_member_test_guest.id],
@@ -993,7 +993,7 @@ class TestChannelRTC(MailCommon):
                 (self.cr.dbname, "res.partner", test_user.partner_id.id),
                 # mail.record/insert - discuss.channel (rtcInvitingSession), discuss.channel.member
                 (self.cr.dbname, "mail.guest", test_guest.id),
-                # mail.record/insert - discuss.channel (invitedMembers), discuss.channel.member
+                # mail.record/insert - discuss.channel (invited_member_ids), discuss.channel.member
                 (self.cr.dbname, "discuss.channel", channel.id),
             ],
             message_items=[
@@ -1091,7 +1091,7 @@ class TestChannelRTC(MailCommon):
                         "discuss.channel": [
                             {
                                 "id": channel.id,
-                                "invitedMembers": [
+                                "invited_member_ids": [
                                     (
                                         "ADD",
                                         [channel_member_test_user.id, channel_member_test_guest.id],
