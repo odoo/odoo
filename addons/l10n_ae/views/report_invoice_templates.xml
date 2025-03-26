@@ -34,7 +34,7 @@
 
         <xpath expr="//div[hasclass('clearfix')]" position="after">
             <div t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_id.currency_id"
-                 id="aed_amounts" class="row clearfix ms-auto my-3 text-nowrap table">
+                 id="aed_amounts" class="row clearfix ms-auto my-3 text-nowrap table table-borderless border-dark border-top border-2 pt-2 text-center">
                 <t t-set="aed_rate"
                    t-value="o.env['res.currency']._get_conversion_rate(o.currency_id, o.company_id.currency_id, o.company_id, o.invoice_date or datetime.date.today())"/>
                 <div name="exchange_rate" class="col-auto">
@@ -54,10 +54,24 @@
                 </div>
                 <div name="aed_total" class="col-auto">
                     <strong>Total (AED)</strong>
-                    <p class="m-0" t-esc="o.amount_total_signed"
+                    <p class="m-0" t-out="o.amount_total_signed"
                        t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'/>
                 </div>
             </div>
+        </xpath>
+
+        <xpath expr="//th[@name='th_subtotal']" position="after">
+            <th class="text-end" t-if="o.currency_id != o.company_currency_id">
+                <span groups="account.group_show_line_subtotals_tax_excluded">Amount (AED)</span>
+                <span groups="account.group_show_line_subtotals_tax_included">Total Price (AED)</span>
+            </th>
+        </xpath>
+
+        <xpath expr="//td[hasclass('o_price_total')]" position="after">
+            <td class="text-end o_price_total" t-if="o.currency_id != o.company_currency_id">
+                <span groups="account.group_show_line_subtotals_tax_excluded" class="text-nowrap" t-out="line.currency_id._convert(line.price_subtotal, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+                <span groups="account.group_show_line_subtotals_tax_included" class="text-nowrap" t-out="line.currency_id._convert(line.price_total, o.company_currency_id, o.company_id, o.invoice_date or datetime.date.today())" t-options="{'widget': 'monetary', 'display_currency': o.company_currency_id}"/>
+            </td>
         </xpath>
     </template>
 </odoo>
