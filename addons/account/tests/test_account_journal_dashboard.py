@@ -322,3 +322,84 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
 
         self.assertEqual(dashboard_data.get('misc_operations_balance', 0), None)
         self.assertEqual(dashboard_data.get('misc_class', ''), 'text-warning')
+
+    def test_to_check_posted(self):
+        """We want to only have the information on posted moves"""
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': self.currency.id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'checked': False,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [],
+                })
+            ]
+        })
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(0))
+
+        move.action_post()
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(100))
+
+    def test_to_check_amount_different_currency(self):
+        """
+        We want the to_check amount to be displayed in the journal currency
+        Company currency = $
+        Journal's currency = €
+        Inv01 of 100 EUR; rate: 2€/1$
+        Inv02 of 100 CHF; rate: 4CHF/1$
+
+        => to check = 150 €
+        """
+        self.env.ref('base.CHF').write({'active': True})
+        self.env['res.currency.rate'].create({
+            'currency_id': self.env.ref('base.EUR').id,
+            'name': '2024-12-01',
+            'rate': 2.0,
+        })
+        self.env['res.currency.rate'].create({
+            'currency_id': self.env.ref('base.CHF').id,
+            'name': '2024-12-01',
+            'rate': 4.0,
+        })
+        journal = self.env['account.journal'].create({
+            'name': 'Test Foreign Currency Journal',
+            'type': 'sale',
+            'code': 'TEST',
+            'currency_id': self.env.ref('base.EUR').id,
+            'company_id': self.env.company.id,
+            'autocheck_on_post': False,
+        })
+        self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'currency_id': currency.id,
+            'checked': False,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [],
+                })
+            ]
+        } for currency in (self.env.ref('base.EUR'), self.env.ref('base.CHF'))]).action_post()
+
+        dashboard_data = journal._get_journal_dashboard_data_batched()[journal.id]
+        self.assertEqual(dashboard_data['to_check_balance'], journal.currency_id.format(150))
