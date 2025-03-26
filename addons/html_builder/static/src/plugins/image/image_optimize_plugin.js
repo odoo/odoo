@@ -1,3 +1,4 @@
+import { DEFAULT_IMAGE_QUALITY } from "@html_editor/main/media/image_post_process_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { loadImage } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";
@@ -20,6 +21,17 @@ class ImageOptimizePlugin extends Plugin {
                     this.dependencies.imagePostProcess.processImage(img, {
                         resizeWidth: width,
                         formatMimetype: mimetype,
+                    }),
+                apply: ({ loadResult: updateImageAttributes }) => {
+                    updateImageAttributes();
+                },
+            },
+            setImageQuality: {
+                getValue: ({ editingElement: img }) =>
+                    ("quality" in img.dataset && img.dataset.quality) || DEFAULT_IMAGE_QUALITY,
+                load: async ({ editingElement: img, value: quality }) =>
+                    this.dependencies.imagePostProcess.processImage(img, {
+                        quality,
                     }),
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();

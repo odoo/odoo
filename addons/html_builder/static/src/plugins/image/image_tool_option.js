@@ -2,6 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { ImageShapeOption } from "./image_shape_option";
 import { clamp } from "@web/core/utils/numbers";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { getMimetype } from "@html_editor/utils/image";
 
 export class ImageToolOption extends BaseOptionComponent {
     static template = "html_builder.ImageToolOption";
@@ -26,6 +27,7 @@ export class ImageToolOption extends BaseOptionComponent {
                 });
             return {
                 isCustomFilter: editingElement.dataset.glFilter === "custom",
+                showQuality: ["image/jpeg", "image/webp"].includes(getMimetype(editingElement)),
                 formats: [],
             };
         });

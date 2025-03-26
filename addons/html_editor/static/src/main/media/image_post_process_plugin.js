@@ -11,7 +11,7 @@ import {
 import { Plugin } from "../../plugin";
 import { getAffineApproximation, getProjective } from "@html_editor/utils/perspective_utils";
 
-const DEFAULT_IMAGE_QUALITY = "75";
+export const DEFAULT_IMAGE_QUALITY = "75";
 
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";

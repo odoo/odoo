@@ -24,7 +24,7 @@ test("Should set a shape on an image", async () => {
 
     const img = queryFirst(":iframe .test-options-target img");
     expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
-    expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/png");
+    expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/jpeg");
     expect(img.src.startsWith("data:image/svg+xml;base64,")).toBe(true);
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-original-src",

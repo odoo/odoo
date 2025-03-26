@@ -3,7 +3,7 @@ import { registry } from "@web/core/registry";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { isCSSColor } from "@web/core/utils/colors";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
-import { getImageMimetype, getShapeURL } from "./image_helpers";
+import { getShapeURL } from "./image_helpers";
 import { activateCropper, createDataURL, loadImage } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "./image_shapes_definition";

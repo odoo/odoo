@@ -31,7 +31,6 @@ export class ImageCrop extends Component {
     static props = {
         document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
         media: { optional: true },
-        mimetype: { type: String, optional: true },
         onClose: { type: Function, optional: true },
         onSave: { type: Function, optional: true },
     };
@@ -106,8 +105,6 @@ export class ImageCrop extends Component {
         const data = { ...this.media.dataset };
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
-        const mimetype = getMimetype(this.media);
-        this.mimetype = this.props.mimetype || mimetype;
 
         // todo: there is probably a problem mutating this.media this moment at
         // it will make a mutation in the currentStep of the history.
@@ -212,7 +209,6 @@ export class ImageCrop extends Component {
     async save() {
         const cropperData = this.getCropperData(this.cropper);
         this.props.onSave?.({
-            mimetype: this.mimetype,
             aspectRatio: this.aspectRatio,
             ...cropperData,
             // todo nby: what about `delete image.dataset.resizeWidth;` ? (see previously `processImageCrop`)
@@ -330,20 +326,4 @@ export class ImageCrop extends Component {
         await new Promise((res) => setTimeout(res, 0));
         this.resetCropBox();
     }
-}
-
-/**
- * @param {HTMLImageElement} image
- * @returns {string|null} The mimetype of the image.
- */
-export function getMimetype(image) {
-    const src = image.getAttribute("src");
-    return (
-        image.dataset.mimetype ||
-        (src.endsWith(".png") && "image/png") ||
-        (src.endsWith(".webp") && "image/webp") ||
-        (src.endsWith(".jpg") && "image/jpeg") ||
-        (src.endsWith(".jpeg") && "image/jpeg") ||
-        null
-    );
 }

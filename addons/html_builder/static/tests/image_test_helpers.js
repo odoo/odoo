@@ -9,7 +9,7 @@ export const testImg = `
     <img src='/web/image/website.s_text_image_default_image'
         data-original-id="1"
         data-original-src="/website/static/src/img/snippets_demo/s_text_image.jpg"
-        data-mimetype-before-conversion="image/png"
+        data-mimetype-before-conversion="image/jpeg"
         >
     `;
 
