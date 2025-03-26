@@ -29,7 +29,6 @@ class TestCalendarWithRecurrence(HttpCase):
             'repeat_until': datetime.now() + relativedelta(days=+8),
             'repeat_interval': 1,
             'repeat_unit': 'day',
-            'duration': 1,
         }])
         request = requests[2]
 
@@ -37,7 +36,7 @@ class TestCalendarWithRecurrence(HttpCase):
         self.start_tour(url, 'test_dblclick_event_from_calendar', login='admin')
 
         self.assertEqual(request.name, 'make your bed', "The event modification should update the request")
-        self.assertEqual(request.duration, 2, "The event modification should update the request")
+        self.assertAlmostEqual(request.duration, 2, 2, "The event modification should update the request")
 
     def test_drag_and_drop_calendar_event(self):
         """
@@ -61,7 +60,6 @@ class TestCalendarWithRecurrence(HttpCase):
             'repeat_interval': 1,
             'repeat_until': datetime.now() + relativedelta(weeks=+2),
             'repeat_unit': 'week',
-            'duration': 1,
         }])
         request = requests[2]
 
