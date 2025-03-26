@@ -117,7 +117,7 @@ export class Call extends Component {
             }
         }
         if (!filterVideos) {
-            for (const member of this.props.thread.invitedMembers) {
+            for (const member of this.props.thread.invited_member_ids) {
                 invitationCards.push({
                     key: "member_" + member.id,
                     member,

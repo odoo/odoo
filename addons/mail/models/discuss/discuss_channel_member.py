@@ -445,7 +445,7 @@ class DiscussChannelMember(models.Model):
             self.channel_id._bus_send_store(
                 self.channel_id,
                 {
-                    "invitedMembers": Store.Many(
+                    "invited_member_ids": Store.Many(
                         members,
                         [
                             Store.One("channel_id", [], as_thread=True, rename="thread"),
