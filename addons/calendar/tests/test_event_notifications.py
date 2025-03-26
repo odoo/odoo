@@ -623,7 +623,7 @@ class TestEventNotifications(CalendarMailCommon):
 
         # Deleting the next occurrence of the event using the delete wizard.
         wizard = self.env['calendar.popover.delete.wizard'].with_context(
-            form_view_ref='calendar.calendar_popover_delete_view').create({'record': event.id})
+            form_view_ref='calendar.calendar_popover_delete_view').create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.delete = 'next'
         form.save()
@@ -632,7 +632,7 @@ class TestEventNotifications(CalendarMailCommon):
         # Unlink the event and send a cancellation notification.
         event.action_unlink_event()
         wizard = self.env['calendar.popover.delete.wizard'].create({
-            'record': event.id,
+            'calendar_event_id': event.id,
             'subject': 'Event Cancellation',
             'body': 'The event has been cancelled.',
             'recipient_ids': [(6, 0, [user_admin.partner_id.id])],
