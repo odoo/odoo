@@ -13,7 +13,7 @@ export class FormArchParser {
         const widgetNodes = {};
         let widgetNextId = 0;
         const fieldNextIds = {};
-        let autofocusFieldId = null;
+        const autofocusFieldIds = [];
         visitXML(xmlDoc, (node) => {
             if (node.tagName === "field") {
                 const fieldInfo = Field.parseFieldNode(node, models, modelName, "form", jsClass);
@@ -24,7 +24,7 @@ export class FormArchParser {
                 fieldNodes[fieldId] = fieldInfo;
                 node.setAttribute("field_id", fieldId);
                 if (exprToBoolean(node.getAttribute("default_focus") || "")) {
-                    autofocusFieldId = fieldId;
+                    autofocusFieldIds.push(fieldId);
                 }
                 if (fieldInfo.type === "properties") {
                     activeActions.addPropertyFieldValue = true;
@@ -39,7 +39,7 @@ export class FormArchParser {
         });
         return {
             activeActions,
-            autofocusFieldId,
+            autofocusFieldIds,
             disableAutofocus,
             fieldNodes,
             widgetNodes,

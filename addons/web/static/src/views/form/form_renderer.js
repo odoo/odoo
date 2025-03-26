@@ -71,7 +71,7 @@ export class FormRenderer extends Component {
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));
 
-        const { autofocusFieldId } = archInfo;
+        const { autofocusFieldIds } = archInfo;
         const rootRef = useRef("compiled_view_root");
         if (this.shouldAutoFocus) {
             useEffect(
@@ -86,13 +86,17 @@ export class FormRenderer extends Component {
                             "textarea",
                             "[contenteditable]",
                         ];
-                        elementToFocus =
-                            (autofocusFieldId && rootEl.querySelector(`#${autofocusFieldId}`)) ||
-                            rootEl.querySelector(
-                                focusableSelectors
-                                    .map((sel) => `.o_content .o_field_widget ${sel}`)
-                                    .join(", ")
-                            );
+                        for (const id of autofocusFieldIds) {
+                            elementToFocus = rootEl.querySelector(`#${id}`);
+                            if (elementToFocus) {
+                                break;
+                            };
+                        };
+                        elementToFocus = elementToFocus || rootEl.querySelector(
+                            focusableSelectors
+                                .map((sel) => `.o_content .o_field_widget ${sel}`)
+                                .join(", ")
+                        );
                     }
                     if (elementToFocus) {
                         elementToFocus.focus();
