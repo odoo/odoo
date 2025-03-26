@@ -242,7 +242,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # Company-dependent fields are stored as jsonb (see column_type).
     _column_type: typing.Tuple[str, str] | None = None
 
-    _args__ = None                      # the parameters given to __init__()
+    args = None                         # the parameters given to __init__()
     _module = None                      # the field's module name
     _modules = None                     # modules that define this field
     _setup_done = True                  # whether the field is completely set up
@@ -295,7 +295,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     def __init__(self, string: str | Sentinel = SENTINEL, **kwargs):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
-        self.args = self._args__ = {key: val for key, val in kwargs.items() if val is not SENTINEL}
+        self.args = {key: val for key, val in kwargs.items() if val is not SENTINEL}
 
     def __str__(self):
         if self.name is None:
@@ -314,7 +314,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # The base field setup is done by field.__set_name__(), which determines the
     # field's name, model name, module and its parameters.
     #
-    # The dictionary field._args__ gives the parameters passed to the field's
+    # The dictionary field.args gives the parameters passed to the field's
     # constructor.  Most parameters have an attribute of the same name on the
     # field.  The parameters as attributes are assigned by the field setup.
     #
@@ -324,7 +324,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # are given to the new field as the parameter '_base_fields'; it is a list
     # of fields in override order (or reverse MRO).
     #
-    # In order to save memory, a field should avoid having field._args__ and/or
+    # In order to save memory, a field should avoid having field.args and/or
     # many attributes when possible.  We call "direct" a field that can be set
     # up directly from its definition class.  Direct fields are non-related
     # fields defined on models, and can be shared across registries.  We call
@@ -332,15 +332,15 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
     # therefore specific to the registry.
     #
     # Toplevel field are set up once, and are no longer set up from scratch
-    # after that.  Those fields can save memory by discarding field._args__ and
+    # after that.  Those fields can save memory by discarding field.args and
     # field._base_fields once set up, because those are no longer necessary.
     #
     # Non-toplevel non-direct fields are the fields on definition classes that
     # may not be shared.  In other words, those fields are never used directly,
     # and are always recreated as toplevel fields.  On those fields, the base
-    # setup is useless, because only field._args__ is used for setting up other
+    # setup is useless, because only field.args is used for setting up other
     # fields.  We therefore skip the base setup for those fields.  The only
-    # attributes of those fields are: '_sequence', '_args__', 'model_name', 'name'
+    # attributes of those fields are: '_sequence', 'args', 'model_name', 'name'
     # and '_module', which makes their __dict__'s size minimal.
 
     def __set_name__(self, owner, name):
@@ -357,13 +357,13 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
             self._module = owner._module
             owner._field_definitions.append(self)
 
-        if not self._args__.get('related'):
+        if not self.args.get('related'):
             self._direct = True
         if self._direct or self._toplevel:
             self._setup_attrs(owner, name)
             if self._toplevel:
-                # free memory, self._args__ and self._base_fields are no longer useful
-                self.__dict__.pop('_args__', None)
+                # free memory, self.args and self._base_fields are no longer useful
+                self.__dict__.pop('args', None)
                 self.__dict__.pop('_base_fields', None)
 
     #
@@ -375,21 +375,21 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         # determine all inherited field attributes
         attrs = {}
         modules = []
-        for field in self._args__.get('_base_fields', ()):
+        for field in self.args.get('_base_fields', ()):
             if not isinstance(self, type(field)):
                 # 'self' overrides 'field' and their types are not compatible;
                 # so we ignore all the parameters collected so far
                 attrs.clear()
                 modules.clear()
                 continue
-            attrs.update(field._args__)
+            attrs.update(field.args)
             if field._module:
                 modules.append(field._module)
-        attrs.update(self._args__)
+        attrs.update(self.args)
         if self._module:
             modules.append(self._module)
 
-        attrs['_args__'] = dict(self._args__)
+        attrs['args'] = self.args
         attrs['model_name'] = model_class._name
         attrs['name'] = name
         attrs['_module'] = modules[-1] if modules else None
@@ -452,7 +452,7 @@ class Field(MetaField('DummyField', (object,), {}), typing.Generic[T]):
         attrs = self._get_attrs(model_class, name)
 
         # determine parameters that must be validated
-        extra_keys = tuple(key for key in attrs if not hasattr(self, key))
+        extra_keys = [key for key in attrs if not hasattr(self, key)]
         if extra_keys:
             attrs['_extra_keys'] = extra_keys
 
