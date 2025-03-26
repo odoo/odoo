@@ -1,4 +1,4 @@
-import { DynamicSnippetCarouselOption } from "@html_builder/plugins/dynamic_snippet_carousel_option";
+import { DynamicSnippetCarouselOption } from "@html_builder/website_builder/plugins/options/dynamic_snippet_carousel_option";
 import { onWillStart, useState } from "@odoo/owl";
 
 export class DynamicSnippetProductsOption extends DynamicSnippetCarouselOption {
