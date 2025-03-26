@@ -7635,6 +7635,26 @@ test(`in create mode, autofocus fields are focused`, async () => {
 });
 
 test.tags("desktop");
+test(`in create mode, if two fields have default focus, the first gets the focus`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="int_field" default_focus="1"/><field name="foo" default_focus="1"/></form>`,
+    });
+    expect(`.o_field_widget[name="int_field"] input`).toBeFocused();
+});
+
+test.tags("desktop");
+test(`in create mode, if two fields have default focus but the first is invisible, the second gets the focus`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="int_field" default_focus="1" invisible="1"/><field name="foo" default_focus="1"/></form>`,
+    });
+    expect(`.o_field_widget[name="foo"] input`).toBeFocused();
+});
+
+test.tags("desktop");
 test(`autofocus first visible field`, async () => {
     await mountView({
         resModel: "partner",

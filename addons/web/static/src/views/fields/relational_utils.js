@@ -618,17 +618,22 @@ export class X2ManyFieldDialog extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        const { autofocusFieldId, disableAutofocus } = this.archInfo;
+        const { autofocusFieldIds, disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             // to simplify
             useEffect(
                 (isInEdition) => {
                     let elementToFocus;
                     if (isInEdition) {
-                        elementToFocus =
-                            (autofocusFieldId &&
-                                this.modalRef.el.querySelector(`#${autofocusFieldId}`)) ||
-                            this.modalRef.el.querySelector(".o_field_widget input");
+                        for (const id of autofocusFieldIds) {
+                            elementToFocus = this.modalRef.el.querySelector(`#${id}`);
+                            if (elementToFocus) {
+                                break;
+                            };
+                        };
+                        elementToFocus = elementToFocus || this.modalRef.el.querySelector(
+                            ".o_field_widget input"
+                        );
                     } else {
                         elementToFocus = this.modalRef.el.querySelector("button.btn-primary");
                     }
