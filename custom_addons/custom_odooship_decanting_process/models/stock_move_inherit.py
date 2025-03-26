@@ -24,26 +24,38 @@ class StockMoveLine(models.Model):
     xdock_remaining_qty = fields.Float(string='XDOCk Remaining Quantity')
     show_xdock_qty_editable = fields.Boolean(
         string='Show XDock Qty Editable', compute='_compute_show_xdock_qty_editable')
+    product_packaging_qty = fields.Float(string="Packaging Quantity", store=True)
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        """Ensure proper packaging selection based on Product."""
+        super(StockMoveLine, self)._onchange_product_id()
+        if self.product_id:
+            self.product_packaging_id = self.product_id.packaging_ids[:1] if self.product_id.packaging_ids else False
 
     @api.depends('product_packaging_id')
     def _compute_show_xdock_qty_editable(self):
         for move in self:
             move.show_xdock_qty_editable = not bool(move.product_packaging_id)
 
-    @api.depends('product_packaging_id', 'xdock_packaging_qty')
+    @api.depends('product_packaging_id', 'xdock_packaging_qty','product_packaging_qty')
     def _compute_xdock_packaging_quantity(self):
         """
         Computes xdock_qty by converting the xdock_packaging_qty using the packaging's conversion factor.
         If no packaging is selected, user can enter xdock_qty manually (handled via inverse).
         """
         for move in self:
-            if move.product_packaging_id and move.xdock_packaging_qty:
-                move.xdock_qty = move.product_packaging_id.qty * move.xdock_packaging_qty
+            if move.product_packaging_id:
+                if move.xdock_packaging_qty:
+                    move.xdock_qty = move.product_packaging_id.qty * move.xdock_packaging_qty
+                if move.product_packaging_qty:
+                    move.product_uom_qty = move.product_packaging_id.qty * move.product_packaging_qty
             elif not move.product_packaging_id:
                 # If no packaging, keep whatever value the user entered manually
-                move.xdock_qty = move.xdock_qty or 0.0
+                move.xdock_qty = move.xdock_qty or 0.00
+                move.product_packaging_qty = move.product_packaging_qty or 0.00
             else:
-                move.xdock_qty = 0.0
+                move.xdock_qty =  move.product_packaging_qty =0.0
 
     def _inverse_xdock_qty(self):
         """

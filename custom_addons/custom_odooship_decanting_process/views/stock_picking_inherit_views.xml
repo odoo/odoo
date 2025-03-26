@@ -20,6 +20,7 @@
                 </xpath>
                 <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']"
                        position="after">
+                    <field name="product_packaging_qty" readonly="show_xdock_qty_editable"/>
                     <field name="remaining_qty"/>
                     <field name="show_xdock_qty_editable" column_invisible="1"/>
                     <field name="xdock_packaging_qty" optional="hide" readonly="show_xdock_qty_editable"/>
