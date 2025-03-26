@@ -30,6 +30,8 @@ class MailFollowersEdit(models.TransientModel):
         for wizard in self:
             res_ids = parse_res_ids(wizard.res_ids, self.env)
             documents = self.env[wizard.res_model].browse(res_ids)
+            if not documents:
+                raise UserError(self.env._("No documents found for the selected records."))
             if wizard.operation == "remove":
                 documents.message_unsubscribe(partner_ids=wizard.partner_ids.ids)
             else:
@@ -44,7 +46,7 @@ class MailFollowersEdit(models.TransientModel):
                     model_name = self.env["ir.model"]._get(wizard.res_model).display_name
                     message_values = wizard._prepare_message_values(documents, model_name)
                     message_values["partner_ids"] = wizard.partner_ids.ids
-                    self.env[wizard.res_model].message_notify(**message_values)
+                    documents[0].message_notify(**message_values)
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
