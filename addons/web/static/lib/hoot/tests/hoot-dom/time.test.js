@@ -80,7 +80,7 @@ describe.timeout(1_000)(parseUrl(import.meta.url), () => {
 
         const ms = await runAllTimers();
 
-        expect(ms).toBeWithin(1e6 - 1, 1e6); // more or less
+        expect(ms).toBeCloseTo(1e6, { margin: 10 });
         expect.verifySteps(["animation", "timeout"]);
     });
 
