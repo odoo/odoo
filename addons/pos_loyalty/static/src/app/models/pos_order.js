@@ -69,6 +69,18 @@ patch(PosOrder.prototype, {
         // Always start with invalid coupons so that coupon for this
         // order is properly assigned. @see _checkMissingCoupons
         this.invalidCoupons = true;
+
+        if (!this.uiState.couponPointChanges) {
+            this.uiState.couponPointChanges = {};
+        }
+
+        if (!this.uiState.codeActivatedProgramRules) {
+            this.uiState.codeActivatedProgramRules = [];
+        }
+
+        if (!this.uiState.disabledRewards) {
+            this.uiState.disabledRewards = new Set();
+        }
     },
     initState() {
         super.initState();

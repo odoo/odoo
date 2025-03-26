@@ -7,7 +7,7 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "restaurant.order.course": {
                 key: "uuid",
-                condition: (record) =>
+                skipSaving: (record) =>
                     record.order_id?.finalized && typeof record.order_id.id === "number",
             },
         };

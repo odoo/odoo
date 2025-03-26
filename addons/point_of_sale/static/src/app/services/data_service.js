@@ -1,18 +1,16 @@
 import { Reactive } from "@web/core/utils/reactive";
-import { Base, createRelatedModels } from "@point_of_sale/app/models/related_models";
+import { createRelatedModels } from "@point_of_sale/app/models/related_models";
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
-import { batched } from "@web/core/utils/timing";
-import IndexedDB from "../models/utils/indexed_db";
 import { DataServiceOptions } from "../models/data_service_options";
 import { getOnNotified, uuidv4 } from "@point_of_sale/utils";
 import { browser } from "@web/core/browser/browser";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { IndexedDBWrapper } from "../models/utils/indexed_db";
 
 const { DateTime } = luxon;
-const INDEXED_DB_VERSION = 1;
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
@@ -85,7 +83,7 @@ export class PosData extends Reactive {
     }
 
     get databaseName() {
-        return `config-id_${odoo.pos_config_id}_${odoo.access_token}`;
+        return `config-${odoo.pos_config_id}-${odoo.info?.db}`;
     }
 
     get serverDateKey() {
@@ -110,67 +108,23 @@ export class PosData extends Reactive {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, INDEXED_DB_VERSION, models, resolve);
+            this.indexedDB = new IndexedDBWrapper(this.databaseName, models, resolve);
         });
-    }
-
-    async synchronizeLocalDataInIndexedDB() {
-        // This methods will synchronize local data and state in indexedDB. This methods is mostly
-        // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
-        // in the frontend and are not loaded from the backend.
-        const modelsParams = Object.entries(this.opts.databaseTable);
-        for (const [model, params] of modelsParams) {
-            const put = [];
-            const remove = [];
-            const data = this.models[model].getAll();
-
-            for (const record of data) {
-                const isToRemove = params.condition(record);
-
-                if (isToRemove === undefined || isToRemove === true) {
-                    if (record[params.key]) {
-                        remove.push(record[params.key]);
-                    }
-                } else {
-                    put.push(record.serializeForIndexedDB());
-                }
-            }
-
-            await this.indexedDB.delete(model, remove);
-            await this.indexedDB.create(model, put);
-        }
-    }
-
-    async synchronizeServerDataInIndexedDB(serverData = {}) {
-        for (const [model, data] of Object.entries(serverData)) {
-            try {
-                await this.indexedDB.create(model, data);
-            } catch {
-                console.info(`Error while updating ${model} in indexedDB.`);
-            }
-        }
     }
 
     async getLocalDataFromIndexedDB() {
         // Used to retrieve models containing states from the indexedDB.
         // This method will load the records directly via loadData.
         const models = Object.keys(this.opts.databaseTable);
-        const data = await this.indexedDB.readAll(models);
-
-        if (!data) {
-            return;
-        }
-
         const newData = {};
         for (const model of models) {
-            const rawRec = data[model];
-
+            const rawRec = await this.indexedDB.getStoreData(model);
             if (rawRec) {
                 newData[model] = rawRec.filter((r) => !this.models[model].get(r.id));
             }
         }
 
-        const preLoadData = await this.preLoadData(data);
+        const preLoadData = await this.preLoadData(newData);
         const missing = await this.missingRecursive(preLoadData);
         const results = this.models.loadConnectedData(missing, []);
 
@@ -182,15 +136,15 @@ export class PosData extends Reactive {
     async getCachedServerDataFromIndexedDB() {
         // Used to load models that have not yet been loaded into related_models.
         // These models have been sent to the indexedDB directly after the RPC load_data.
-        const data = await this.indexedDB.readAll();
         const modelToIgnore = Object.keys(this.opts.databaseTable);
+        const models = Object.keys(this.models).filter((m) => !modelToIgnore.includes(m));
         const results = {};
 
-        for (const name in data) {
-            if (name in modelToIgnore) {
-                continue;
+        for (const model of models) {
+            const rawRec = await this.indexedDB.getStoreData(model);
+            if (rawRec) {
+                results[model] = rawRec;
             }
-            results[name] = data[name];
         }
 
         return results;
@@ -242,8 +196,6 @@ export class PosData extends Reactive {
                         localData[model] = local.concat(values);
                     }
                 }
-
-                this.synchronizeServerDataInIndexedDB(localData);
             } catch (error) {
                 let message = _t("An error occurred while loading the Point of Sale: \n");
                 if (error instanceof RPCError) {
@@ -320,42 +272,52 @@ export class PosData extends Reactive {
         this.relations = relations;
         this.models = models;
 
+        this.initListeners();
         await this.initData();
         await this.getLocalDataFromIndexedDB();
-        this.initListeners();
         this.network.loading = false;
     }
 
     initListeners() {
-        this.models["pos.order"].addEventListener(
-            "update",
-            batched(this.synchronizeLocalDataInIndexedDB.bind(this))
-        );
+        const modelsParams = this.opts.databaseTable;
+        const listenerCb = (ids, model) => {
+            const [toPut, toRemove] = ids.reduce(
+                (acc, id) => {
+                    const record = this.models[model].get(id);
+                    const skipSaving = modelsParams[model]?.skipSaving;
+                    const isValid = !skipSaving || !skipSaving(record);
 
-        const ignore = Object.keys(this.opts.databaseTable);
-        for (const model of Object.keys(this.relations)) {
-            if (ignore.includes(model)) {
-                continue;
+                    if (isValid) {
+                        acc[0].push(record.serializeForIndexedDB());
+                    } else {
+                        acc[1].push(record[modelsParams[model].key]);
+                    }
+
+                    return acc;
+                },
+                [[], []]
+            );
+
+            if (toPut.length > 0) {
+                this.indexedDB.put(model, toPut);
             }
 
+            if (toRemove.length > 0) {
+                this.indexedDB.delete(model, toRemove);
+            }
+        };
+
+        for (const model of Object.keys(this.models.commands)) {
             this.models[model].addEventListener("delete", (params) => {
                 this.indexedDB.delete(model, [params.key]);
             });
 
-            this.models[model].addEventListener("update", (params) => {
-                const record = this.models[model].get(params.id)?.raw;
-                if (!record) {
-                    return; // the record may be deleted
-                }
-                for (const [key, value] of Object.entries(record)) {
-                    if (value instanceof Base) {
-                        record[key] = value.id;
-                    } else if (Array.isArray(value) && value[0] instanceof Base) {
-                        record[key] = value.map((v) => v.id);
-                    }
-                }
+            this.models[model].addEventListener("create", (params) => {
+                listenerCb(params.ids, model);
+            });
 
-                this.synchronizeServerDataInIndexedDB({ [model]: [record] });
+            this.models[model].addEventListener("update", (params) => {
+                listenerCb([params.id], model);
             });
         }
     }
@@ -461,7 +423,6 @@ export class PosData extends Reactive {
                         }
 
                         localRecord.update(formattedForUpdate, { omitUnknownField: true });
-                        this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
                     } else {
                         nonExistentRecords.push(record);
                     }
@@ -481,14 +442,12 @@ export class PosData extends Reactive {
                 (!limitedFields || nonExistentRecords.length)
             ) {
                 const data = await this.missingRecursive({ [model]: result });
-                this.synchronizeServerDataInIndexedDB(data);
                 const results = this.models.connectNewData(data);
                 result = results[model];
             } else if (type === "write") {
                 const localRecord = this.models[model].get(ids[0]);
                 if (localRecord) {
                     localRecord.update(values, { omitUnknownField: true });
-                    this.synchronizeServerDataInIndexedDB({ [model]: [localRecord.raw] });
                 }
             }
 

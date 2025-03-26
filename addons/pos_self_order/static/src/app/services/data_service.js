@@ -28,11 +28,6 @@ patch(PosData.prototype, {
             ? super.initListeners(...arguments)
             : true;
     },
-    synchronizeLocalDataInIndexedDB() {
-        return session.data.self_ordering_mode === "mobile"
-            ? super.synchronizeLocalDataInIndexedDB(...arguments)
-            : true;
-    },
     async getCachedServerDataFromIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
             ? await super.getCachedServerDataFromIndexedDB(...arguments)

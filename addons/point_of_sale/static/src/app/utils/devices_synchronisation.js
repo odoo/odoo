@@ -179,7 +179,7 @@ export default class DevicesSynchronisation {
 
         this.dynamicModels.forEach((model) => {
             recordIds[model] = this.models[model]
-                .filter((r) => typeof r.id === "number" && !databaseTable[model]?.condition(r))
+                .filter((r) => typeof r.id === "number" && !databaseTable[model]?.skipSaving(r))
                 .map((r) => r.id);
         });
 

@@ -7,12 +7,12 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "event.registration": {
                 key: "id",
-                condition: (record) =>
+                skipSaving: (record) =>
                     !record.pos_order_line_id || record.pos_order_line_id?.order_id?.finalized,
             },
             "event.registration.answer": {
                 key: "id",
-                condition: (record) =>
+                skipSaving: (record) =>
                     !record.registration_id ||
                     record.registration_id?.pos_order_line_id?.order_id?.finalized,
             },

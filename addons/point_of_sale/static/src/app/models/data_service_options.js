@@ -5,16 +5,16 @@ export class DataServiceOptions {
         return {
             "pos.order": {
                 key: "uuid",
-                condition: (record) => record.finalized && typeof record.id === "number",
+                skipSaving: (record) => Boolean(record.finalized && typeof record.id === "number"),
             },
             "pos.order.line": {
                 key: "uuid",
-                condition: (record) =>
+                skipSaving: (record) =>
                     record.order_id?.finalized && typeof record.order_id.id === "number",
             },
             "pos.payment": {
                 key: "uuid",
-                condition: (record) =>
+                skipSaving: (record) =>
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
         };

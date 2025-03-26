@@ -1,134 +1,253 @@
-import { _t } from "@web/core/l10n/translation";
+const DB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-export default class IndexedDB {
-    constructor(dbName, dbVersion, dbStores, whenReady) {
+export class IndexedDBWrapper {
+    /**
+     * Helper to get the function to be called when the spreadsheet is opened
+     * in order to insert the link.
+     *
+     * @param {string} dbName - The unique name of the database.
+     * @param {Array<[id, name]>} dbStores - An array of tuples where each tuple contains an id and table name.
+     * @param {Function} whenReady - A callback function to execute when the database is ready.
+     */
+    constructor(dbName, dbStores, whenReady) {
         this.db = null;
         this.dbName = dbName;
-        this.dbVersion = dbVersion;
         this.dbStores = dbStores;
-        this.dbInstance = null;
-        this.databaseEventListener(whenReady);
-    }
+        this.whenReady = whenReady;
 
-    databaseEventListener(whenReady) {
-        const indexedDB =
-            window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-
-        if (!indexedDB) {
-            console.error(
-                _t(
-                    "Warning: Your browser doesn't support IndexedDB. The data won't be saved. Please use a modern browser."
-                )
-            );
+        if (!DB) {
+            console.error("Warning: Your browser doesn't support IndexedDB");
+            return;
         }
 
-        this.dbInstance = indexedDB;
-        const dbInstance = indexedDB.open(this.dbName, this.dbVersion);
-        dbInstance.onerror = (event) => {
+        this.open();
+    }
+
+    /**
+     * Get all records from all stores.
+     *
+     * @param {Array} storeNames - (Optional) Array of store names to get data from.
+     **/
+    getData(storeNames = []) {
+        if (!storeNames.length) {
+            storeNames = this.dbStores.map(([_, name]) => name);
+        }
+
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(storeNames, "readonly");
+                const data = {};
+                storeNames.forEach((storeName) => {
+                    const store = transaction.objectStore(storeName);
+                    const request = store.getAll();
+                    request.onsuccess = (event) => {
+                        data[storeName] = event.target.result;
+                    };
+                });
+                this.resolver(transaction, resolve, reject);
+            } catch (error) {
+                resolve(error);
+            }
+        });
+    }
+
+    /**
+     * Get all the records from a store.
+     *
+     * @param {string} storeName - Store name.
+     **/
+    getStoreData(storeName) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(storeName, "readonly");
+                const store = transaction.objectStore(storeName);
+                const request = store.getAll();
+                this.resolver(request, resolve, reject);
+            } catch (error) {
+                resolve(error);
+            }
+        });
+    }
+
+    /**
+     * Get a record by its id.
+     *
+     * @param {string} storeName - Store name.
+     * @param {string} id - Record id.
+     **/
+    getById(storeName, id) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(storeName, "readonly");
+                const store = transaction.objectStore(storeName);
+                const request = store.get(id);
+                this.resolver(request, resolve, reject);
+            } catch (error) {
+                resolve(error);
+            }
+        });
+    }
+
+    /**
+     * Update several records in a store.
+     *
+     * @param {string} storeName - Store name.
+     * @param {Array} data - Array of records to update.
+     **/
+    put(storeName, data) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(storeName, "readwrite");
+                const store = transaction.objectStore(storeName);
+                data.forEach((item) => {
+                    const data = this.dataSanityCheck(store.keyPath, item);
+                    store.put(data);
+                });
+                this.resolver(transaction, resolve, reject);
+            } catch (error) {
+                resolve(error);
+            }
+        });
+    }
+
+    /**
+     * Delete a record by its id.
+     *
+     * @param {string} storeName - Store name.
+     * @param {Array} id - Array of record ids to delete.
+     **/
+    delete(storeName, id) {
+        return new Promise((resolve, reject) => {
+            try {
+                const transaction = this.db.transaction(storeName, "readwrite");
+                const store = transaction.objectStore(storeName);
+                id.forEach((item) => {
+                    store.delete(item);
+                });
+                this.resolver(transaction, resolve, reject);
+            } catch (error) {
+                resolve(error);
+            }
+        });
+    }
+
+    /**
+     * Wrapper for the onsuccess and onerror events of the IDBRequest object.
+     * This method is used to resolve or reject a promise based on the result
+     *
+     * @param {IDBRequest} instance - The IDBRequest instance.
+     * @param {Function} resolve - The resolve function of the promise.
+     * @param {Function} reject - The reject function of the promise.
+     **/
+    resolver(instance, resolve, reject) {
+        instance.oncomplete = (event) => {
+            resolve(event.target.result);
+        };
+        instance.onsuccess = (event) => {
+            resolve(event.target.result);
+        };
+        instance.onerror = (event) => {
+            reject(event.target.error);
+        };
+    }
+
+    /**
+     * This method ensure that the data that will be inserted in the database
+     * is clonable and has the correct structure.
+     *
+     * @param {string} keyPath - The keyPath of the object store.
+     * @param {Object} data - The data to be inserted in the database.
+     **/
+    dataSanityCheck(keyPath, data) {
+        if (!data || typeof data !== "object") {
+            throw new Error("Data must be an object");
+        }
+
+        if (!data[keyPath]) {
+            throw new Error("Data must have a valid keyPath");
+        }
+
+        return JSON.parse(JSON.stringify(data));
+    }
+
+    /**
+     * Open the database and create the object stores if they don't exist.
+     *
+     * If a change in the schema is detected, the database is closed and reopened
+     * with its version incremented by 1, that way the onupgradeneeded event is
+     * triggered and the schema is updated.
+     *
+     * The version system is automatically handled by the checkSchemaChange method,
+     * so we don't need to worry about it.
+     */
+    open(version = false) {
+        const instance = version ? DB.open(this.dbName, version) : DB.open(this.dbName);
+
+        instance.onerror = (event) => {
             console.error("Database error: " + event.target.errorCode);
         };
-        dbInstance.onsuccess = (event) => {
+
+        instance.onsuccess = (event) => {
             this.db = event.target.result;
-            console.info(`IndexedDB ${this.dbVersion} Ready`);
-            whenReady();
+            const upgradeNeeded = this.checkSchemaChange();
+
+            if (upgradeNeeded) {
+                console.warn("Database schema changed, upgrading...");
+                this.db.close();
+                this.open(this.db.version + 1);
+                return;
+            }
+
+            this.whenReady();
         };
-        dbInstance.onupgradeneeded = (event) => {
+
+        instance.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            const transaciton = event.target.transaction;
+            const stores = Object.values(db.objectStoreNames);
+
             for (const [id, storeName] of this.dbStores) {
-                if (!event.target.result.objectStoreNames.contains(storeName)) {
-                    event.target.result.createObjectStore(storeName, { keyPath: id });
+                if (!stores.includes(storeName)) {
+                    db.createObjectStore(storeName, { keyPath: id });
+                    continue;
+                }
+
+                const IDBStore = transaciton.objectStore(storeName);
+                if (IDBStore.keyPath !== id) {
+                    db.deleteObjectStore(storeName);
+                    db.createObjectStore(storeName, { keyPath: id });
+                }
+            }
+
+            // Check if there are any object stores that need to be removed
+            for (const store of stores) {
+                if (!this.dbStores.some(([_, name]) => name === store)) {
+                    db.deleteObjectStore(store);
                 }
             }
         };
     }
 
-    async promises(storeName, arrData, method) {
-        const transaction = this.getNewTransaction([storeName], "readwrite");
-        if (!transaction) {
-            return false;
-        }
+    /**
+     * Check if the schema of the database has changed.
+     * This is done by comparing the keyPath of each object store with the
+     * keyPath of the model.
+     **/
+    checkSchemaChange() {
+        const stores = Object.values(this.db.objectStoreNames);
+        const dbStoreKeyPathByModel = this.dbStores.reduce((acc, [id, name]) => {
+            acc[name] = id;
+            return acc;
+        }, {});
 
-        const promises = arrData.map((data) => {
-            data = JSON.parse(JSON.stringify(data));
-            return new Promise((resolve, reject) => {
-                const request = transaction.objectStore(storeName)[method](data);
-                request.onsuccess = () => resolve();
-                request.onerror = () => reject();
-            });
-        });
+        const upgradeNeeded =
+            stores.some((store) => {
+                const IDBStore = this.db.transaction(store, "readwrite").objectStore(store);
+                const keyPath = IDBStore.keyPath;
+                const name = IDBStore.name;
+                return keyPath !== dbStoreKeyPathByModel[name];
+            }) || this.dbStores.some(([id, name]) => !stores.includes(name));
 
-        return Promise.allSettled(promises).then((results) => results);
-    }
-    getNewTransaction(dbStore) {
-        try {
-            if (!this.db) {
-                return false;
-            }
-
-            return this.db.transaction(dbStore, "readwrite");
-        } catch (e) {
-            console.info("DATABASE is not ready yet", e);
-            return false;
-        }
-    }
-
-    reset() {
-        if (!this.dbInstance) {
-            return false;
-        }
-        this.dbInstance.deleteDatabase(this.dbName);
-        return true;
-    }
-
-    create(storeName, arrData) {
-        if (!arrData?.length) {
-            return;
-        }
-        return this.promises(storeName, arrData, "put");
-    }
-
-    readAll(storeName = [], retry = 0) {
-        const storeNames =
-            storeName.length > 0 ? storeName : this.dbStores.map((store) => store[1]);
-        const transaction = this.getNewTransaction(storeNames, "readonly");
-
-        if (!transaction && retry < 5) {
-            return this.readAll(storeName, retry + 1);
-        } else if (!transaction) {
-            return new Promise((reject) => reject(false));
-        }
-
-        const promises = storeNames.map(
-            (store) =>
-                new Promise((resolve, reject) => {
-                    const objectStore = transaction.objectStore(store);
-                    const request = objectStore.getAll();
-
-                    request.onerror = () => {
-                        console.warn("Internal error reading data from the indexed database.");
-                        reject();
-                    };
-                    request.onsuccess = (event) => {
-                        const result = event.target.result;
-                        resolve({ [store]: result });
-                    };
-                })
-        );
-
-        return Promise.allSettled(promises).then((results) =>
-            results.reduce((acc, result) => {
-                if (result.status === "fulfilled") {
-                    return { ...acc, ...result.value };
-                } else {
-                    return acc;
-                }
-            }, {})
-        );
-    }
-
-    delete(storeName, uuids) {
-        if (!uuids?.length) {
-            return;
-        }
-        return this.promises(storeName, uuids, "delete");
+        return upgradeNeeded;
     }
 }

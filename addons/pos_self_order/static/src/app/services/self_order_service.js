@@ -680,7 +680,6 @@ export class SelfOrder extends Reactive {
                 }
             );
             this.models.connectNewData(data);
-            this.data.synchronizeLocalDataInIndexedDB();
             for (const order of data["pos.order"]) {
                 this.subscribeToOrderChannel(order);
             }

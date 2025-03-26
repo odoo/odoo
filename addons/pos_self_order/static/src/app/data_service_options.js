@@ -6,11 +6,11 @@ patch(DataServiceOptions.prototype, {
         return {
             "pos.order": {
                 key: "uuid",
-                condition: (record) => false,
+                skipSaving: (record) => false,
             },
             "pos.order.line": {
                 key: "uuid",
-                condition: (record) => false,
+                skipSaving: (record) => false,
             },
         };
     },

@@ -7,7 +7,7 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "loyalty.card": {
                 key: "id",
-                condition: (record) =>
+                skipSaving: (record) =>
                     record
                         .backLink("<-pos.order.line.coupon_id")
                         .find((l) => !(l.order_id?.finalized && typeof l.order_id.id === "number")),

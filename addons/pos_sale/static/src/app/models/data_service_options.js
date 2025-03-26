@@ -7,14 +7,14 @@ patch(DataServiceOptions.prototype, {
             ...super.databaseTable,
             "sale.order": {
                 key: "id",
-                condition: (record) =>
+                skipSaving: (record) =>
                     record.models["pos.order.line"].find(
                         (l) => l.sale_order_origin_id?.id === record.id
                     ),
             },
             "sale.order.line": {
                 key: "id",
-                condition: (record) =>
+                skipSaving: (record) =>
                     record.models["pos.order.line"].find(
                         (l) => l.sale_order_line_id?.id === record.id
                     ),
