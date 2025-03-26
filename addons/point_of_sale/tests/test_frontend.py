@@ -1828,6 +1828,28 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
 
+    def test_product_create_update_from_frontend(self):
+        ''' This test verifies product creation and updates product details from the POS frontend. '''
+        self.pos_admin.write({
+            'groups_id': [Command.link(self.env.ref('base.group_system').id)],
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour('/pos/ui?config_id=%d' % self.main_pos_config.id, 'test_product_create_update_from_frontend', login='pos_admin')
+
+        # In the frontend, a product was created during the tour with the following details:
+        # - Product name: Test Frontend Product
+        # - Barcode: 710535977349
+        # - List price: 20.0
+
+        #  Ensure that the original product created in the frontend ('Test Frontend Product') has been edited to ('Test Frontend Product Edited').
+        frontend_created_product = self.env['product.product'].search_count([('name', '=', 'Test Frontend Product')])
+        frontend_created_product_edited = self.env['product.product'].search([('name', '=', 'Test Frontend Product Edited')])
+
+        self.assertEqual(frontend_created_product, 0)
+        self.assertEqual(frontend_created_product_edited.name, 'Test Frontend Product Edited')
+        self.assertEqual(frontend_created_product_edited.barcode, '710535977348')
+        self.assertEqual(frontend_created_product_edited.list_price, 50.0)
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

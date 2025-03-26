@@ -595,3 +595,56 @@ registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_create_update_from_frontend", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.clickMenuOption("Create Product"),
+
+            // Verify that the "New Product" dialog is displayed.
+            Dialog.is({ title: "New Product" }),
+
+            // Create a new product from frontend.
+            ProductScreen.createProductFromFrontend(
+                "Test Frontend Product",
+                "710535977349",
+                "20.0",
+                "Chairs"
+            ),
+            Dialog.confirm(),
+
+            // Click on the category button for "Chairs" to verify the product's addition.
+            ProductScreen.clickSubcategory("Chairs"),
+            ProductScreen.clickDisplayedProduct("Test Frontend Product"),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Test Frontend Product", "1", "20.0"),
+            ]),
+
+            // Open the product's information popup.
+            ProductScreen.clickInfoProduct("Test Frontend Product"),
+            Dialog.confirm("Edit", ".btn-secondary"),
+
+            // Verify that the "Edit Product" dialog is displayed.
+            Dialog.is({ title: "Edit Product" }),
+
+            // Edit the product with new details.
+            ProductScreen.editProductFromFrontend(
+                "Test Frontend Product Edited",
+                "710535977348",
+                "50.0"
+            ),
+            Dialog.confirm(),
+            ProductScreen.clickSubcategory("Chairs"),
+            ProductScreen.clickDisplayedProduct("Test Frontend Product Edited"),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect(
+                    "Test Frontend Product Edited",
+                    "1",
+                    "50.0"
+                ),
+            ]),
+            Chrome.endTour(),
+        ].flat(),
+});
