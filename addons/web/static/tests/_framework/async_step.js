@@ -27,10 +27,7 @@ const checkStepState = (forceVerifySteps) => {
     }
 
     const { expectedSteps, steps } = currentStepState;
-    if (
-        forceVerifySteps ||
-        (expectedSteps.length === steps.length && expectedSteps.every((s, i) => s === steps[i]))
-    ) {
+    if (forceVerifySteps || expect(steps).toEqual(expectedSteps, { silent: true })) {
         expect.verifySteps(expectedSteps);
         clearStepState();
     }
