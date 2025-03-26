@@ -34,13 +34,15 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         },
         {
             content: "Change equipment",
-            trigger: "input#duration_0",
-            run: "edit 2:00",
-        },
-        {
-            content: "Save duration change",
-            trigger: 'button[data-hotkey="s"]',
-            run: "click",
+            trigger: "input#schedule_end_0",
+            run() {
+                const input = document.querySelector("input#schedule_end_0");
+                input.value = luxon.DateTime
+                    .fromFormat(input.value, "MM/dd/yyyy HH:mm")
+                    .plus({ hours: 1 })
+                    .toFormat("MM/dd/yyyy HH:mm");
+                input.dispatchEvent(new Event("change"));
+            },
         },
         {
             content: "Return to calendar",

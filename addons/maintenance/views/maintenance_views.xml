@@ -114,12 +114,7 @@
                             <field name="maintenance_team_id" options="{'no_create': True, 'no_open': True}"/>
                             <field name="user_id" string="Responsible"/>
                             <field name="schedule_date"/>
-                            <label for="duration"/>
-                            <div>
-                                <field name="duration"
-                                       widget="float_time"
-                                       class="oe_inline"/> <span class="ml8">hours</span>
-                            </div>
+                            <field name="schedule_end"/>
                             <label for="recurring_maintenance" invisible="maintenance_type == 'corrective'"/>
                             <div class="d-inline-flex" invisible="maintenance_type == 'corrective'">
                                 <field name="recurring_maintenance" nolabel="1" class="ms-0" style="width: fit-content;"/>
@@ -238,7 +233,7 @@
         <field name="name">equipment.request.calendar</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <calendar date_start="schedule_date" date_delay="duration" color="user_id" event_limit="5" js_class="calendar_with_recurrence">
+            <calendar date_start="schedule_date" date_stop="schedule_end" color="user_id" event_limit="5" js_class="calendar_with_recurrence">
                 <field name="user_id" filters="1"/>
                 <field name="priority"/>
                 <field name="maintenance_type"/>
