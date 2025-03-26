@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="im_livechat_report_channel_view_search" model="ir.ui.view">
+        <field name="name">im_livechat.report.channel.search</field>
+        <field name="model">im_livechat.report.channel</field>
+        <field name="inherit_id" ref="im_livechat.im_livechat_report_channel_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//*[@name='my_session']" position="after">
+                <filter name="my_team" domain="[('partner_id.user_ids.employee_id.member_of_department', '=', True)]" string="My Team"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
