@@ -1126,7 +1126,7 @@ export class ListRenderer extends Component {
      * @param { import('@web/model/relational_model/group').Group | null } group
      * @param { import('@web/model/relational_model/record').Record | null } record
      */
-    onCellKeydown(ev, group = null, record = null) {
+    async onCellKeydown(ev, group = null, record = null) {
         if (this.props.list.model.useSampleModel) {
             return;
         }
@@ -1142,6 +1142,9 @@ export class ListRenderer extends Component {
         if (this.toggleFocusInsideCell(hotkey, closestCell)) {
             return;
         }
+
+        // Wait potential update being performed on record by "change" event
+        await this.env.model.mutex.getUnlockedDef();
 
         const handled = this.editedRecord
             ? this.onCellKeydownEditMode(hotkey, closestCell, group, record)
