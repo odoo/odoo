@@ -5,19 +5,23 @@ import { patch } from "@web/core/utils/patch";
 const DiscussSidebarCategoryPatch = {
     get actions() {
         const actions = super.actions;
-        if (this.store.has_access_livechat && this.category.livechatChannel && this.category.open) {
+        if (
+            this.store.has_access_livechat &&
+            this.category.livechat_channel_id &&
+            this.category.open
+        ) {
             actions.push({
                 onSelect: () => {
-                    if (this.category.livechatChannel.are_you_inside) {
-                        this.category.livechatChannel.leave({ notify: false });
+                    if (this.category.livechat_channel_id.are_you_inside) {
+                        this.category.livechat_channel_id.leave({ notify: false });
                     } else {
-                        this.category.livechatChannel.join({ notify: false });
+                        this.category.livechat_channel_id.join({ notify: false });
                     }
                 },
-                label: this.category.livechatChannel.are_you_inside
-                    ? this.category.livechatChannel.leaveTitle
-                    : this.category.livechatChannel.joinTitle,
-                icon: this.category.livechatChannel.are_you_inside
+                label: this.category.livechat_channel_id.are_you_inside
+                    ? this.category.livechat_channel_id.leaveTitle
+                    : this.category.livechat_channel_id.joinTitle,
+                icon: this.category.livechat_channel_id.are_you_inside
                     ? "fa fa-sign-out text-danger"
                     : "fa fa-sign-in text-success",
             });
