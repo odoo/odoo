@@ -14,7 +14,6 @@ const macroSchema = {
             type: Object,
             shape: {
                 action: { type: [Function, String], optional: true },
-                initialDelay: { type: Function, optional: true },
                 timeout: { type: Number, optional: true },
                 trigger: { type: [Function, String], optional: true },
                 value: { type: [String, Number], optional: true },
@@ -94,10 +93,6 @@ export class Macro {
         if (!this.stepHasStarted[this.currentIndex]) {
             delay = this.currentIndex === 0 ? 0 : 50;
             this.stepHasStarted[this.currentIndex] = true;
-            if (this.currentStep?.initialDelay) {
-                const initialDelay = parseFloat(this.currentStep.initialDelay());
-                delay = initialDelay >= 0 ? initialDelay : delay;
-            }
         }
         return delay;
     }
