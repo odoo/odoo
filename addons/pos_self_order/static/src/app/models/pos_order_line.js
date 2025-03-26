@@ -38,4 +38,13 @@ patch(PosOrderline.prototype, {
     isLotTracked() {
         return false;
     },
+    getDisplayPriceWithQty(qty) {
+        const prices = this.getAllPrices(qty);
+
+        if (this.config.iface_tax_included === "total") {
+            return prices.priceWithTax;
+        } else {
+            return prices.priceWithoutTax;
+        }
+    },
 });
