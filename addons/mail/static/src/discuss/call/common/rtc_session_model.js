@@ -8,7 +8,7 @@ export class RtcSession extends Record {
     static _insert() {
         /** @type {import("models").RtcSession} */
         const session = super._insert(...arguments);
-        session.channel?.rtcSessions.add(session);
+        session.channel?.rtc_session_ids.add(session);
         return session;
     }
     /** @returns {Promise<import("models").RtcSession>} */

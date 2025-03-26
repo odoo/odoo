@@ -31,7 +31,7 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                 channel,
                 "mail.record/insert",
                 new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                    rtcSessions: mailDataHelpers.Store.many(
+                    rtc_session_ids: mailDataHelpers.Store.many(
                         this.browse(sessions.map((session) => session.id)),
                         "ADD"
                     ),
