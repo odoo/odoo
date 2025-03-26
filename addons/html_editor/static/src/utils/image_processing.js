@@ -199,11 +199,6 @@ export async function loadImageInfo(img, attachmentSrc = "") {
         original.image_src &&
         !/\/web\/image\/\d+-redirect\//.test(original.image_src)
     ) {
-        if (!img.dataset.mimetype) {
-            // The mimetype has to be added only if it is not already present as
-            // we want to avoid to reset a mimetype set by the user.
-            newDataset.mimetype = original.mimetype;
-        }
         newDataset.originalId = original.id;
         newDataset.originalSrc = original.image_src;
         newDataset.mimetypeBeforeConversion = original.mimetype;

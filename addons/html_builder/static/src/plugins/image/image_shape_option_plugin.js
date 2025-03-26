@@ -165,8 +165,6 @@ class ImageShapeOptionPlugin extends Plugin {
         newDataset.shapeColors =
             newDataset.shapeColors ??
             (isNewShape ? defaultShapeColors : img.dataset.shapeColors ?? defaultShapeColors);
-        // Get mimetype.
-        newDataset.mimetype = getImageMimetype(img);
 
         const getNaturalWidth = async () => {
             if (img.naturalWidth) {
@@ -229,7 +227,7 @@ class ImageShapeOptionPlugin extends Plugin {
             svgWidth,
         };
     }
-    async processImagePost(b64url, processContext) {
+    async processImagePost(b64url, handlerDataset, processContext) {
         const { svg, svgAspectRatio, svgWidth } = processContext;
         if (!svg) {
             return;
@@ -258,7 +256,7 @@ class ImageShapeOptionPlugin extends Plugin {
             type: "image/svg+xml",
         });
         const dataURL = await createDataURL(blob);
-        return dataURL;
+        return [dataURL, { ...handlerDataset, computedMimetype: "image/svg+xml" }];
     }
 
     /**

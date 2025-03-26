@@ -11,6 +11,8 @@ import {
 import { Plugin } from "../../plugin";
 import { getAffineApproximation, getProjective } from "@html_editor/utils/perspective_utils";
 
+const DEFAULT_IMAGE_QUALITY = "75";
+
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static shared = ["processImage"];
@@ -40,19 +42,18 @@ export class ImagePostProcessPlugin extends Plugin {
             {
                 glFilter: "",
                 filter: "#0000",
-                quality: "75",
                 forceModification: false,
             },
             img.dataset,
             newDataset
         );
         let {
+            mimetypeBeforeConversion,
+            formatMimetype,
             width,
             height,
             resizeWidth,
-            quality,
             filter,
-            mimetype,
             originalSrc,
             glFilter,
             filterOptions,
@@ -63,14 +64,17 @@ export class ImagePostProcessPlugin extends Plugin {
         const { postProcessCroppedCanvas, perspective, getHeight } = processContext;
 
         [width, height, resizeWidth] = [width, height, resizeWidth].map((s) => parseFloat(s));
-        quality = parseInt(quality);
+        const quality = parseInt("quality" in data ? data.quality : DEFAULT_IMAGE_QUALITY);
+        // todo: 1) rename mimetypeBeforeConversion to originalMimetype in all the dataset
+        //       2) handle migration of the previous odoo versions (either in js or python)
+        const originalMimetype = mimetypeBeforeConversion;
         // todo: maybe it should be in params and not saved in the dataset as
         // this information could be inferred from x/y/width/height dataset
         // properties.
         aspectRatio = aspectRatio ? getAspectRatio(aspectRatio) : 0;
 
         // Skip modifications (required to add shapes on animated GIFs).
-        if (isGif(mimetype) && !forceModification) {
+        if (isGif(originalMimetype) && !forceModification) {
             const url = await loadImageDataURL(originalSrc);
             return () => updateImageAttributes(url);
         }
@@ -207,7 +211,8 @@ export class ImagePostProcessPlugin extends Plugin {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Quality
-        const dataURL = canvas.toDataURL(mimetype, quality / 100);
+        newDataset.computedMimetype = formatMimetype || originalMimetype;
+        const dataURL = canvas.toDataURL(newDataset.computedMimetype, quality / 100);
         const newSize = getDataURLBinarySize(dataURL);
         const originalSize = getImageSizeFromCache(originalSrc);
         const isChanged =
@@ -222,8 +227,9 @@ export class ImagePostProcessPlugin extends Plugin {
             isChanged || originalSize >= newSize ? dataURL : await loadImageDataURL(originalSrc);
 
         for (const cb of this.getResource("process_image_post_handlers")) {
-            const newUrl = await cb(b64url, processContext);
+            const [newUrl, handlerDataset] = (await cb(b64url, newDataset, processContext)) || [];
             b64url = newUrl || b64url;
+            newDataset = handlerDataset || newDataset;
         }
 
         function updateImageAttributes(url) {
