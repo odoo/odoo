@@ -7,6 +7,7 @@ import { Deferred } from "@odoo/hoot-dom";
  *  expectedSteps: any[] | null;
  *  deferred: Deferred | null;
  *  timeout: number;
+ *  ignoreOrder: boolean;
  * }} StepState
  *
  * @typedef {{
@@ -29,14 +30,10 @@ const checkStepState = (forceVerifySteps) => {
 
     const { expectedSteps, ignoreOrder, steps } = currentStepState;
     if (ignoreOrder) {
-        expectedSteps.sort(function (a, b) {
-            return steps.indexOf(a) - steps.indexOf(b);
-        });
+        expectedSteps.sort();
+        steps.sort();
     }
-    if (
-        forceVerifySteps ||
-        (expectedSteps.length === steps.length && expectedSteps.every((s, i) => s === steps[i]))
-    ) {
+    if (forceVerifySteps || expect(steps).toEqual(expectedSteps, { silent: true })) {
         expect.verifySteps(expectedSteps);
         clearStepState();
     }
