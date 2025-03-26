@@ -1,11 +1,10 @@
-import { getMimetype } from "@html_editor/main/media/image_crop";
 import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { isImageCorsProtected, normalizeColor } from "@html_builder/utils/utils_css";
-import { getImageMimetype } from "./image_helpers";
 import { ImageToolOption } from "./image_tool_option";
 import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
+import { getMimetype } from "@html_editor/utils/image";
 
 class ImageToolOptionPlugin extends Plugin {
     static id = "imageToolOption";
@@ -88,8 +87,6 @@ class ImageToolOptionPlugin extends Plugin {
                 },
                 load: async ({ editingElement: img, param: { mainParam: glFilterName } }) =>
                     await this.dependencies.imagePostProcess.processImage(img, {
-                        // todo: is it still needed to get the mimetype?
-                        mimetype: getImageMimetype(img),
                         glFilter: glFilterName,
                     }),
                 apply: ({ loadResult: updateImageAttributes }) => {

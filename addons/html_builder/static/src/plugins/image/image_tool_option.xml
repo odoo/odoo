@@ -112,6 +112,12 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
+    <BuilderRow label.translate="Quality" t-if="state.showQuality">
+        <BuilderRange
+            action="'setImageQuality'"
+            min="0"
+            max="100" />
+    </BuilderRow>
 </t>
 
 <t t-name="html_builder.ImageAndFaOption">

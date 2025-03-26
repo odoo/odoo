@@ -34,3 +34,21 @@ export function backgroundImagePartsToCss(parts) {
     }
     return css || "none";
 }
+
+/**
+ * @param {HTMLImageElement} image
+ * @returns {string|null} The mimetype of the image.
+ */
+export function getMimetype(image) {
+    const src = image.getAttribute("src");
+
+    return (
+        image.dataset.computedMimetype ||
+        image.dataset.mimetypeBeforeConversion ||
+        (src.endsWith(".png") && "image/png") ||
+        (src.endsWith(".webp") && "image/webp") ||
+        (src.endsWith(".jpg") && "image/jpeg") ||
+        (src.endsWith(".jpeg") && "image/jpeg") ||
+        null
+    );
+}
