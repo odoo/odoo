@@ -166,7 +166,7 @@ export class CallParticipantCard extends Component {
     }
 
     get isActiveRtcSession() {
-        return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel.activeRtcSession);
+        return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession);
     }
 
     async onClick(ev) {
