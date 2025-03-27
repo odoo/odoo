@@ -4,11 +4,10 @@ import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
 
-// TODO FIX HOOT toHaveStyle
-test.todo("test parallax zoom", async () => {
+test("test parallax zoom", async () => {
     await setupWebsiteAndOpenParallaxOptions();
     await contains("[data-action-value='zoom_in']").click();
-    expect(":iframe section").not.toHaveStyle("background-image");
+    expect(":iframe section").not.toHaveStyle("background-image", { inline: true });
     expect("[data-label='Intensity'] input").toBeVisible();
 });
 test("add parallax changes editing element", async () => {
