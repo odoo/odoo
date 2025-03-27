@@ -1,5 +1,5 @@
 /**
- * Small tool that returns common colors for survey session widgets.
+ * Small tool that returns common colors for survey session interactions.
  */
 export default [
     // the same colors as those used in odoo reporting

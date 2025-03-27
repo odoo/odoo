@@ -1,95 +1,166 @@
-import publicWidget from "@web/legacy/js/public/public_widget";
-import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
-import SurveySessionChart from "@survey/interactions/survey_session_chart";
-import SurveySessionTextAnswers from "@survey/interactions/survey_session_text_answers";
-import SurveySessionLeaderBoard from "@survey/interactions/survey_session_leaderboard";
+import { preloadBackground } from "@survey/js/survey_preload_image_mixin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
+import { fadeIn, fadeOut } from "@survey/utils";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 const nextPageTooltips = {
-    closingWords: _t('End of Survey'),
-    leaderboard: _t('Show Leaderboard'),
-    leaderboardFinal: _t('Show Final Leaderboard'),
-    nextQuestion: _t('Next'),
-    results: _t('Show Correct Answer(s)'),
-    startScreen: _t('Start'),
-    userInputs: _t('Show Results'),
+    closingWords: _t("End of Survey"),
+    leaderboard: _t("Show Leaderboard"),
+    leaderboardFinal: _t("Show Final Leaderboard"),
+    nextQuestion: _t("Next"),
+    results: _t("Show Correct Answer(s)"),
+    startScreen: _t("Start"),
+    userInputs: _t("Show Results"),
 };
 
-publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPreloadImageMixin, {
-    selector: '.o_survey_session_manage',
-    events: {
-        'click .o_survey_session_copy': '_onCopySessionLink',
-        'click .o_survey_session_navigation_next, .o_survey_session_start': '_onNext',
-        'click .o_survey_session_navigation_previous': '_onBack',
-        'click .o_survey_session_close': '_onEndSessionClick',
-    },
+export class SurveySessionManage extends Interaction {
+    static selector = ".o_survey_session_manage";
 
-    init() {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
+    dynamicContent = {
+        _document: {
+            "t-on-keydown": this.onKeyDown,
+        },
+        ".o_survey_session_copy": {
+            "t-on-click.prevent": this.onCopySessionLink,
+        },
+        ".o_survey_session_navigation_next": {
+            "t-on-click.prevent": this.onNext,
+            "t-att-class": () => ({
+                "d-none":
+                    this.isSessionClosed ||
+                    (this.isLastQuestion && this.currentScreen === "leaderboardFinal"),
+            }),
+        },
+        ".o_survey_session_navigation_previous": {
+            "t-on-click.prevent": this.onBack,
+            "t-att-class": () => ({ "d-none": this.isFirstQuestion || this.isSessionClosed }),
+        },
+        ".o_survey_session_close": {
+            "t-on-click.prevent": this.onEndSessionClick,
+        },
+        ".o_survey_session_attendees_count": {
+            "t-out": () => this.sessionAttendeesCountText,
+        },
+        ".o_survey_session_navigation_next_label": {
+            "t-out": () => this.sessionNavigationNextLabel,
+        },
+        ".o_survey_session_results": {
+            "t-att-class": () => ({
+                "d-none": this.isSessionClosed || this.leaderboardIsFadingOut || this.hideResults,
+            }),
+            "t-on-setDisplayNone": () => {
+                // The leaderboard interaction will send a setDisplayNone event
+                // after finishing its fade-in animation.
+                this.hideResults = true;
+            },
+        },
+        ".o_survey_session_description_done": {
+            "t-att-class": () => ({ "d-none": !this.isSessionClosed }),
+        },
+    };
 
-    /**
-     * Overridden to set a few properties that come from the python template rendering.
-     *
-     * We also handle the timer IF we're not "transitioning", meaning a fade out of the previous
-     * $el to the next question (the fact that we're transitioning is in the isRpcCall data).
-     * If we're transitioning, the timer is handled manually at the end of the transition.
-     */
-    start: function () {
-        var self = this;
+    setup() {
+        if (this.el.dataset.isSessionClosed) {
+            this.isSessionClosed = true;
+            this.el.classList.remove("invisible");
+            return;
+        }
         this.fadeInOutTime = 500;
-        return this._super.apply(this, arguments).then(function () {
-            if (self.$el.data('isSessionClosed')) {
-                self._displaySessionClosedPage();
-                self.$el.removeClass('invisible');
-                return;
+        this.answersRefreshDelay = 2000;
+        // Flags used in dynamicContent
+        this.isSessionClosed = false;
+        this.leaderboardIsFadingOut = false;
+        this.hideResults = false;
+        // Elements related to other interactions
+        this.chartEl = this.el.querySelector(".o_survey_session_chart");
+        this.leaderboardEl = this.el.querySelector(".o_survey_session_leaderboard");
+        this.timerEl = this.el.querySelector(".o_survey_timer_container .o_survey_timer");
+        this.textAnswersEl = this.el.querySelector(".o_survey_session_text_answers_container");
+        // General survey props
+        this.surveyId = parseInt(this.el.dataset.surveyId);
+        this.attendeesCount = this.el.dataset.attendeesCount
+            ? parseInt(this.el.dataset.attendeesCount, 10)
+            : 0;
+        this.surveyHasConditionalQuestions = this.el.dataset.surveyHasConditionalQuestions;
+        this.surveyAccessToken = this.el.dataset.surveyAccessToken;
+        this.isStartScreen = this.el.dataset.isStartScreen;
+        this.isFirstQuestion = this.el.dataset.isFirstQuestion;
+        this.isLastQuestion = this.el.dataset.isLastQuestion;
+        this.surveyLastTriggeringAnswers = JSON.parse(
+            this.el.dataset.surveyLastTriggeringAnswers || "[]"
+        );
+        // Scoring props
+        this.isScoredQuestion = this.el.dataset.isScoredQuestion;
+        this.sessionShowLeaderboard = this.el.dataset.sessionShowLeaderboard;
+        this.hasCorrectAnswers = this.el.dataset.hasCorrectAnswers;
+        // Display props
+        this.showBarChart = this.el.dataset.showBarChart;
+        this.showTextAnswers = this.el.dataset.showTextAnswers;
+        // Question transition
+        this.stopNextQuestion = false;
+        // Background Management
+        this.refreshBackground = this.el.dataset.refreshBackground;
+        // Prepare the copy link tooltip
+        this.copyBtnTooltip = window.Tooltip.getOrCreateInstance(
+            this.el.querySelector(".o_survey_session_copy"),
+            {
+                title: _t("Click to copy link"),
+                placement: "right",
+                container: "body",
+                trigger: "hover",
+                offset: "0, 3",
+                delay: 0,
             }
-            // general survey props
-            self.surveyId = self.$el.data('surveyId');
-            self.surveyHasConditionalQuestions = self.$el.data('surveyHasConditionalQuestions');
-            self.surveyAccessToken = self.$el.data('surveyAccessToken');
-            self.isStartScreen = self.$el.data('isStartScreen');
-            self.isFirstQuestion = self.$el.data('isFirstQuestion');
-            self.isLastQuestion = self.$el.data('isLastQuestion');
-            self.surveyLastTriggeringAnswers = self.$el.data('surveyLastTriggeringAnswers');
-            // scoring props
-            self.isScoredQuestion = self.$el.data('isScoredQuestion');
-            self.sessionShowLeaderboard = self.$el.data('sessionShowLeaderboard');
-            self.hasCorrectAnswers = self.$el.data('hasCorrectAnswers');
-            // display props
-            self.showBarChart = self.$el.data('showBarChart');
-            self.showTextAnswers = self.$el.data('showTextAnswers');
-            // Question transition
-            self.stopNextQuestion = false;
-            // Background Management
-            self.refreshBackground = self.$el.data('refreshBackground');
-            // Copy link tooltip
-            self.$('.o_survey_session_copy').tooltip({delay: 0, title: 'Click to copy link', placement: 'right'});
+        );
+        this.registerCleanup(() => this.copyBtnTooltip?.dispose());
+        // Attendees count & navigation label
+        this.sessionAttendeesCountText = "";
+        this.sessionNavigationNextLabel = "";
+        // Show the page and start the timer
+        this.el.classList.remove("invisible");
+        this.setupIntervals();
+    }
 
-            var isRpcCall = self.$el.data('isRpcCall');
-            if (!isRpcCall) {
-                self._startTimer();
-                $(document).on('keydown', self._onKeyDown.bind(self));
+    async willStart() {
+        // If a chart is present, we wait for the chart interaction to be ready.
+        // The presence of the class `chart_is_ready` means that the chart was
+        // ready before us, so we don't need to wait (see survey_session_chart)
+        if (this.chartEl && !this.chartEl.classList.contains("chart_is_ready")) {
+            let resolveChartPromise;
+            const chartPromise = new Promise(function (resolve) {
+                resolveChartPromise = resolve;
+            });
+            this.env.bus.addEventListener("SURVEY:CHART_INTERACTION_STARTED", resolveChartPromise);
+            await chartPromise;
+        }
+    }
+
+    start() {
+        this.setupCurrentScreen();
+        this.startTimer();
+        // Check if we are loading this page because the user clicked on 'previous'
+        if (this.el.dataset.goingBack) {
+            this.chartUpdateState({ showInputs: true, showAnswers: true });
+            if (this.sessionShowLeaderboard && this.isScoredQuestion) {
+                this.currentScreen = "leaderboard";
+                this.leaderboardEl.dispatchEvent(
+                    new CustomEvent("showLeaderboard", {
+                        detail: {
+                            fadeOut: false,
+                            isScoredQuestion: this.isScoredQuestion,
+                        },
+                    })
+                );
+            } else {
+                this.currentScreen = "results";
             }
-
-            self._setupIntervals();
-            self._setupCurrentScreen();
-            var setupPromises = [];
-            setupPromises.push(self._setupTextAnswers());
-            setupPromises.push(self._setupChart());
-            setupPromises.push(self._setupLeaderboard());
-
-            self.$el.removeClass('invisible');
-            return Promise.all(setupPromises);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+            this.refreshResults();
+        }
+    }
 
     /**
      * Copies the survey URL link to the clipboard.
@@ -97,38 +168,24 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
      *
      * @param {MouseEvent} ev
      */
-    _onCopySessionLink: async function (ev) {
-        ev.preventDefault();
-
-        var $clipboardBtn = this.$('.o_survey_session_copy');
-        $clipboardBtn.tooltip('dispose');
-
-        $clipboardBtn.popover({
-            placement: 'right',
-            container: 'body',
-            offset: '0, 3',
-            content: function () {
-                return _t("Copied!");
-            }
+    async onCopySessionLink(ev) {
+        const copyBtnTooltipHideDelay = 800;
+        this.copyBtnTooltip?.dispose();
+        delete this.copyBtnTooltip;
+        const copyBtnPopover = window.Popover.getOrCreateInstance(ev.currentTarget, {
+            content: _t("Copied!"),
+            trigger: "manual",
+            placement: "right",
+            container: "body",
+            offset: "0, 3",
         });
-
-        await browser.navigator.clipboard.writeText(this.target.querySelector('.o_survey_session_copy_url').textContent);
-        $clipboardBtn.popover('show');
-        setTimeout(() => $clipboardBtn.popover('dispose'), 800);
-    },
-
-    /**
-     * Listeners for keyboard arrow / spacebar keys.
-     *
-     * @param {KeyboardEvent} ev
-     */
-    _onKeyDown: function (ev) {
-        if (ev.key === "ArrowRight" || ev.key === " ") {
-            this._onNext(ev);
-        } else if (ev.key === "ArrowLeft") {
-            this._onBack(ev);
-        }
-    },
+        this.registerCleanup(() => copyBtnPopover.dispose());
+        await this.waitFor(browser.navigator.clipboard.writeText(ev.target.textContent));
+        this.protectSyncAfterAsync(() => {
+            copyBtnPopover.show();
+            this.waitForTimeout(() => copyBtnPopover.hide(), copyBtnTooltipHideDelay);
+        })();
+    }
 
     /**
      * Handles the "next screen" behavior.
@@ -145,106 +202,92 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
      * - If it's not one of the above: we go to the next question, or end the session if we're on
      *   the last question of this session.
      *
-     * See '_getNextScreen' for a detailed logic.
+     * See 'getNextScreen' for a detailed logic.
      *
      * @param {Event} ev
      */
-    _onNext: function (ev) {
-        ev.preventDefault();
-
-        var screenToDisplay = this._getNextScreen();
-
-        if (screenToDisplay === 'userInputs') {
-            this._setShowInputs(true);
-        } else if (screenToDisplay === 'results') {
-            this._setShowAnswers(true);
-            // when showing results, stop refreshing answers
-            clearInterval(this.resultsRefreshInterval);
-            delete this.resultsRefreshInterval;
-        } else if (['leaderboard', 'leaderboardFinal'].includes(screenToDisplay)
-                   && !['leaderboard', 'leaderboardFinal'].includes(this.currentScreen)) {
-            if (this.isLastQuestion) {
-                this.$('.o_survey_session_navigation_next').addClass('d-none');
-            }
-            this.leaderBoard.showLeaderboard(true, this.isScoredQuestion);
-        } else if (!this.isLastQuestion || !this.sessionShowLeaderboard) {
-            this._nextQuestion();
+    onNext(ev) {
+        const screenToDisplay = this.getNextScreen();
+        switch (screenToDisplay) {
+            case "userInputs":
+                this.chartUpdateState({ showInputs: true });
+                break;
+            case "results":
+                this.chartUpdateState({ showAnswers: true });
+                // when showing results, stop refreshing answers
+                clearInterval(this.resultsRefreshInterval);
+                delete this.resultsRefreshInterval;
+                break;
+            case "leaderboard":
+            case "leaderboardFinal":
+                if (!this.currentScreen.startsWith("leaderboard")) {
+                    this.leaderboardEl.dispatchEvent(
+                        new CustomEvent("showLeaderboard", {
+                            detail: {
+                                fadeOut: true,
+                                isScoredQuestion: this.isScoredQuestion,
+                            },
+                        })
+                    );
+                }
+                break;
+            default:
+                if (!this.isLastQuestion || !this.sessionShowLeaderboard) {
+                    this.goToNextQuestion();
+                }
+                break;
         }
-
         this.currentScreen = screenToDisplay;
-        // To avoid a flicker, we do not update the tooltip when going to the next question,
-        // as it will be done in "_setupCurrentScreen"
-        if (!['question', 'nextQuestion'].includes(screenToDisplay)) {
-            this._updateNextScreenTooltip();
+        // To avoid a flicker, we do not update the tooltip when going to the
+        // next question, as it will be done anyway in "setupCurrentScreen"
+        if (!["question", "nextQuestion"].includes(screenToDisplay)) {
+            this.updateNextScreenTooltip();
         }
-    },
+    }
 
     /**
-     * Reverse behavior of '_onNext'.
+     * Reverse behavior of 'onNext'.
      *
      * @param {Event} ev
      */
-    _onBack: function (ev) {
-        ev.preventDefault();
-
-        var screenToDisplay = this._getPreviousScreen();
-
-        if (screenToDisplay === 'question') {
-            this._setShowInputs(false);
-        } else if (screenToDisplay === 'userInputs') {
-            this._setShowAnswers(false);
-            // resume refreshing answers if necessary
-            if (!this.resultsRefreshInterval) {
-                this.resultsRefreshInterval = setInterval(this._refreshResults.bind(this), 2000);
-            }
-        } else if (screenToDisplay === 'results') {
-            if (this.leaderBoard) {
-                this.leaderBoard.hideLeaderboard();
-            }
-            // when showing results, stop refreshing answers
-            clearInterval(this.resultsRefreshInterval);
-            delete this.resultsRefreshInterval;
-        } else if (screenToDisplay === 'previousQuestion') {
-            if (this.isFirstQuestion) {
-                return;  // nothing to go back to, we're on the first question
-            }
-            this._nextQuestion(true);
+    onBack(ev) {
+        const screenToDisplay = this.getPreviousScreen();
+        switch (screenToDisplay) {
+            case "question":
+                this.chartUpdateState({ showInputs: false });
+                break;
+            case "userInputs":
+                this.chartUpdateState({ showAnswers: false });
+                // resume refreshing answers if necessary
+                if (!this.resultsRefreshInterval) {
+                    this.resultsRefreshInterval = setInterval(
+                        this.refreshResults.bind(this),
+                        this.answersRefreshDelay
+                    );
+                }
+                break;
+            case "results":
+                if (this.isScoredQuestion || this.isLastQuestion) {
+                    this.leaderboardEl.dispatchEvent(new Event("hideLeaderboard"));
+                }
+                // when showing results, stop refreshing answers
+                clearInterval(this.resultsRefreshInterval);
+                delete this.resultsRefreshInterval;
+                break;
+            case "previousQuestion":
+                if (this.isFirstQuestion) {
+                    return; // nothing to go back to, we're on the first question
+                }
+                this.goToNextQuestion(true);
+                break;
         }
-
         this.currentScreen = screenToDisplay;
-        // To avoid a flicker, we do not update the tooltip when going to the next question,
-        // as it will be done in "_setupCurrentScreen"
-        if (!['question', 'nextQuestion'].includes(screenToDisplay)) {
-            this._updateNextScreenTooltip();
+        // To avoid a flicker, we do not update the tooltip when going to the
+        // next question, as it will be done anyway in "setupCurrentScreen"
+        if (!["question", "nextQuestion"].includes(screenToDisplay)) {
+            this.updateNextScreenTooltip();
         }
-    },
-
-    /**
-     * Marks this session as 'done' and redirects the user to the results based on the clicked link.
-     *
-     * @param {MouseEvent} ev
-     * @private
-    */
-    _onEndSessionClick: function (ev) {
-        var self = this;
-        ev.preventDefault();
-
-        this.orm.call(
-            "survey.survey",
-            "action_end_session",
-            [[this.surveyId]]
-        ).then(function () {
-            if ($(ev.currentTarget).data('showResults')) {
-                document.location = `/survey/results/${encodeURIComponent(self.surveyId)}`;
-            } else {
-                document.location.reload();
-            }
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    }
 
     /**
      * Business logic that determines the 'next screen' based on the current screen and the question
@@ -261,160 +304,272 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
      * - In all other cases, we show the next question
      * - (Small exception for the last question: we show the "final leaderboard")
      *
-     * (For details about which screen shows what, see '_onNext')
+     * (For details about which screen shows what, see 'onNext')
      */
-    _getNextScreen: function () {
-        if (this.currentScreen === 'question' && this.isScoredQuestion) {
-            return 'userInputs';
-        } else if (this.hasCorrectAnswers && ['question', 'userInputs'].includes(this.currentScreen)) {
-            return 'results';
+    getNextScreen() {
+        if (this.currentScreen === "question" && this.isScoredQuestion) {
+            return "userInputs";
+        } else if (
+            this.hasCorrectAnswers &&
+            ["question", "userInputs"].includes(this.currentScreen)
+        ) {
+            return "results";
         } else if (this.sessionShowLeaderboard) {
-            if (['question', 'userInputs', 'results'].includes(this.currentScreen) && this.isScoredQuestion) {
-                return 'leaderboard';
-            } else if (this.isLastQuestion) {
-                return 'leaderboardFinal';
+            if (this.isLastQuestion) {
+                return "leaderboardFinal";
+            } else if (
+                ["question", "userInputs", "results"].includes(this.currentScreen) &&
+                this.isScoredQuestion
+            ) {
+                return "leaderboard";
             }
         }
-        return 'nextQuestion';
-    },
+        return "nextQuestion";
+    }
 
     /**
-     * Reverse behavior of '_getNextScreen'.
+     * Reverse behavior of 'getNextScreen'.
      *
      * @param {Event} ev
      */
-    _getPreviousScreen: function () {
-        if (this.currentScreen === 'userInputs' && this.isScoredQuestion) {
-            return 'question';
-        } else if ((this.currentScreen === 'results' && this.isScoredQuestion) ||
-                  (this.currentScreen === 'leaderboard' && !this.isScoredQuestion) ||
-                  (this.currentScreen === 'leaderboardFinal' && this.isScoredQuestion)) {
-            return 'userInputs';
-        } else if ((this.currentScreen === 'leaderboard' && this.isScoredQuestion) ||
-                  (this.currentScreen === 'leaderboardFinal' && !this.isScoredQuestion)){
-            return 'results';
+    getPreviousScreen() {
+        if (this.currentScreen === "userInputs" && this.isScoredQuestion) {
+            return "question";
+        } else if (
+            (this.currentScreen === "results" && this.isScoredQuestion) ||
+            (this.currentScreen === "leaderboard" && !this.isScoredQuestion) ||
+            (this.currentScreen === "leaderboardFinal" && this.isScoredQuestion)
+        ) {
+            return "userInputs";
+        } else if (
+            (this.currentScreen === "leaderboard" && this.isScoredQuestion) ||
+            (this.currentScreen === "leaderboardFinal" && !this.isScoredQuestion)
+        ) {
+            return "results";
         }
-
-        return 'previousQuestion';
-    },
+        return "previousQuestion";
+    }
 
     /**
-    * We use a fade in/out mechanism to display the next question of the session.
-    *
-    * The fade out happens at the same moment as the _rpc to get the new question template.
-    * When they're both finished, we update the HTML of this widget with the new template and then
-    * fade in the updated question to the user.
-    *
-    * The timer (if configured) starts at the end of the fade in animation.
-    *
-    * @param {MouseEvent} ev
-    * @private
-    */
-    _nextQuestion: function (goBack) {
-        var self = this;
-
-        // stop calling multiple times "get next question" process until next question is fully loaded.
+     * We use a fade in/out mechanism to display the next question of the session.
+     *
+     * The fade out happens at the same moment as the RPC to get the new question
+     * template. When they're both finished, we update the HTML of this interaction
+     * with the new template and then fade in the updated question to the user.
+     *
+     * The timer (if configured) starts at the end of the fade in animation.
+     *
+     * @param {MouseEvent} ev
+     * @private
+     */
+    async goToNextQuestion(goBack) {
+        // The following lines prevent calling multiple times "get next question"
+        // process until next question is fully loaded.
         if (this.stopNextQuestion) {
             return;
         }
         this.stopNextQuestion = true;
-
+        // Prevent the results to appear before the leaderboard is out
+        this.leaderboardIsFadingOut = true;
         this.isStartScreen = false;
-        if (this.surveyTimerWidget) {
-            this.surveyTimerWidget.destroy();
-        }
-
-        var resolveFadeOut;
-        var fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
-        this.$el.fadeOut(this.fadeInOutTime, function () {
+        // start the fadeout animation
+        let resolveFadeOut;
+        const fadeOutPromise = new Promise(function (resolve) {
+            resolveFadeOut = resolve;
+        });
+        fadeOut(this.el, this.fadeInOutTime, () => {
+            this.leaderboardIsFadingOut = false;
             resolveFadeOut();
         });
-
+        // background management
         if (this.refreshBackground) {
-            $('div.o_survey_background').addClass('o_survey_background_transition');
+            document
+                .querySelector("div.o_survey_background")
+                .classList.add("o_survey_background_transition");
         }
-
         // avoid refreshing results while transitioning
         if (this.resultsRefreshInterval) {
             clearInterval(this.resultsRefreshInterval);
             delete this.resultsRefreshInterval;
         }
-
-        var nextQuestionPromise = rpc(
-            `/survey/session/next_question/${self.surveyAccessToken}`,
-            {
-                'go_back': goBack,
-            }
-        ).then(function (result) {
-            self.nextQuestion = result;
-            if (self.refreshBackground && result.background_image_url) {
-                return self._preloadBackground(result.background_image_url);
-            } else {
-                return Promise.resolve();
-            }
-        });
-
-        Promise.all([fadeOutPromise, nextQuestionPromise]).then(function () {
-            return self._onNextQuestionDone(goBack);
-        });
-    },
-
-    _displaySessionClosedPage:function () {
-        this.$('.o_survey_question_header').addClass('invisible');
-        this.$('.o_survey_session_results, .o_survey_session_navigation_previous, .o_survey_session_navigation_next')
-            .addClass('d-none');
-        this.$('.o_survey_session_description_done').removeClass('d-none');
-    },
+        // rpc call to get the next question
+        this.nextQuestion = await this.waitFor(
+            rpc(`/survey/session/next_question/${this.surveyAccessToken}`, {
+                go_back: goBack,
+            })
+        );
+        let preloadBgPromise;
+        if (this.refreshBackground && this.nextQuestion.background_image_url) {
+            preloadBgPromise = preloadBackground(this.nextQuestion.background_image_url);
+        } else {
+            preloadBgPromise = Promise.resolve();
+        }
+        // await both the fadeout and the rpc
+        await this.waitFor(Promise.all([fadeOutPromise, preloadBgPromise]));
+        this.protectSyncAfterAsync(() => this.onNextQuestionDone(goBack))();
+    }
 
     /**
      * Refresh the screen with the next question's rendered template.
      *
      * @param {boolean} goBack Whether we are going back to the previous question or not
      */
-    _onNextQuestionDone: async function (goBack) {
-        var self = this;
+    async onNextQuestionDone(goBack) {
+        if (!this.nextQuestion.question_html) {
+            this.isSessionClosed = true;
+            this.onEndSessionClick();
+            return;
+        }
 
-        if (this.nextQuestion.question_html) {
-            var $renderedTemplate = $(this.nextQuestion.question_html);
-            this.$el.replaceWith($renderedTemplate);
+        const parser = new DOMParser();
+        const newContent = parser.parseFromString(this.nextQuestion.question_html, "text/html").body
+            .firstChild;
+        newContent.style.opacity = 0;
 
-            // Ensure new question is fully loaded before force loading previous question screen.
-            await this.attachTo($renderedTemplate);
-            if (goBack) {
-                // As we arrive on "question" screen, simulate going to the results screen or leaderboard.
-                this._setShowInputs(true);
-                this._setShowAnswers(true);
-                if (this.sessionShowLeaderboard && this.isScoredQuestion) {
-                    this.currentScreen = 'leaderboard';
-                    this.leaderBoard.showLeaderboard(false, this.isScoredQuestion);
-                } else {
-                    this.currentScreen = 'results';
-                    this._refreshResults();
-                }
-            } else {
-                this._startTimer();
-            }
-            this.$el.fadeIn(this.fadeInOutTime);
-        } else if (this.sessionShowLeaderboard) {
-            // Display last screen if leaderboard activated
-            this.isLastQuestion = true;
-            this._setupLeaderboard().then(function () {
-                self.$('.o_survey_session_leaderboard_title').text(_t('Final Leaderboard'));
-                self.$('.o_survey_session_navigation_next').addClass('d-none');
-                self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
-                self.leaderBoard.showLeaderboard(false, false);
-            });
-        } else {
-            self.$('.o_survey_session_close').first().click();
-            self._displaySessionClosedPage();
+        if (goBack) {
+            // If the question is loaded with goBack flag, we need to start
+            // from the leaderboard screen. This is achieved by adding a
+            // data-going-back attribute to the newContentChild
+            newContent.dataset.goingBack = true;
         }
 
         // Background Management
         if (this.refreshBackground) {
-            $('div.o_survey_background').css("background-image", "url(" + this.nextQuestion.background_image_url + ")");
-            $('div.o_survey_background').removeClass('o_survey_background_transition');
+            const surveyBackground = newContent.querySelector("div.o_survey_background");
+            if (surveyBackground) {
+                surveyBackground.style.backgroundImage = `url(${this.nextQuestion.background_image_url})`;
+                surveyBackground.classList.remove("o_survey_background_transition");
+            }
         }
-    },
+
+        this.el.parentNode.replaceChild(newContent, this.el);
+
+        // Fade in the new content, wait for the interactions to be ready and then
+        // stop the interaction on the old content (the one execuing this code)
+        fadeIn(newContent, this.fadeInOutTime);
+        await this.services["public.interactions"].startInteractions(newContent);
+        this.services["public.interactions"].stopInteractions(this.el);
+    }
+
+    /**
+     * Marks this session as 'done' and redirects the user to the results based on the clicked link.
+     *
+     * @private
+     */
+    async onEndSessionClick(ev) {
+        await this.waitFor(
+            this.services.orm.call("survey.survey", "action_end_session", [[this.surveyId]])
+        );
+        this.protectSyncAfterAsync(() => {
+            // ev could not exist (onNextQuestionDone )
+            if (ev?.currentTarget.dataset.showResults) {
+                window.location.href = `/survey/results/${encodeURIComponent(this.surveyId)}`;
+            } else {
+                window.location.reload();
+            }
+        })();
+    }
+
+    /**
+     * Listeners for keyboard arrow / spacebar keys.
+     *
+     * @param {KeyboardEvent} ev
+     */
+    onKeyDown(ev) {
+        const hotkey = getActiveHotkey(ev);
+        if (hotkey === "arrowright" || hotkey === "space") {
+            this.onNext(ev);
+        } else if (hotkey === "arrowleft") {
+            this.onBack(ev);
+        }
+    }
+
+    /**
+     * Setup current screen based on question properties.
+     * If it's a non-scored question with a chart, we directly display the user inputs.
+     */
+    setupCurrentScreen() {
+        if (this.isStartScreen) {
+            this.currentScreen = "startScreen";
+        } else if (!this.isScoredQuestion && this.showBarChart) {
+            this.currentScreen = "userInputs";
+        } else {
+            this.currentScreen = "question";
+        }
+        this.chartUpdateState({ showInputs: this.currentScreen === "userInputs" });
+        this.updateNextScreenTooltip();
+    }
+
+    /**
+     * Send a CustomEvent to the chart interaction to update its state.
+     * Possible options are:
+     *  - showInputs: boolean, show attendees survey.user_input.lines
+     *  - showAnswers: boolean, show the question survey.question.answers
+     *  - questionStatistics: object, chart data (counts / labels / ...)
+     */
+    chartUpdateState(options) {
+        this.chartEl?.dispatchEvent(
+            new CustomEvent("updateState", {
+                detail: options,
+            })
+        );
+    }
+
+    /**
+     * Updates the tooltip for current page (on right arrow icon for 'Next' content).
+     * this method will be called on Clicking of Next and Previous Arrow to show the
+     * tooltip for the Next Content.
+     */
+    updateNextScreenTooltip() {
+        let tooltip;
+        if (this.currentScreen === "startScreen") {
+            tooltip = nextPageTooltips.startScreen;
+        } else if (
+            this.isLastQuestion &&
+            !this.surveyHasConditionalQuestions &&
+            !this.isScoredQuestion &&
+            !this.sessionShowLeaderboard
+        ) {
+            tooltip = nextPageTooltips.closingWords;
+        } else {
+            const nextScreen = this.getNextScreen();
+            if (nextScreen === "nextQuestion" || this.surveyHasConditionalQuestions) {
+                tooltip = nextPageTooltips.nextQuestion;
+            }
+            tooltip = nextPageTooltips[nextScreen];
+        }
+        const sessionNavigationNextEl = this.el.querySelector(
+            ".o_survey_session_navigation_next_label"
+        );
+        if (sessionNavigationNextEl && tooltip) {
+            this.sessionNavigationNextLabel = tooltip;
+            this.updateContent();
+        }
+    }
+
+    /**
+     * Setup the two refresh intervals of 2 seconds for our interaction:
+     * - The refresh of attendees count (only on the start screen)
+     * - The refresh of results (used for chart/text answers/progress bar)
+     */
+    setupIntervals() {
+        if (this.isStartScreen) {
+            this.attendeesRefreshInterval = setInterval(
+                this.refreshAttendeesCount.bind(this),
+                this.answersRefreshDelay
+            );
+        } else {
+            if (this.attendeesRefreshInterval) {
+                clearInterval(this.attendeesRefreshInterval);
+            }
+            if (!this.resultsRefreshInterval) {
+                this.resultsRefreshInterval = setInterval(
+                    this.refreshResults.bind(this),
+                    this.answersRefreshDelay
+                );
+            }
+        }
+    }
 
     /**
      * Will start the question timer so that the host may know when the question is done to display
@@ -422,25 +577,28 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
      *
      * If the question is scored, the timer ending triggers the display of attendees inputs.
      */
-    _startTimer: function () {
-        var self = this;
-        var $timer = this.$('.o_survey_timer');
-
-        if ($timer.length) {
-            var timeLimitMinutes = this.$el.data('timeLimitMinutes');
-            var timer = this.$el.data('timer');
-            this.surveyTimerWidget = new publicWidget.registry.SurveyTimerWidget(this, {
-                'timer': timer,
-                'timeLimitMinutes': timeLimitMinutes
-            });
-            this.surveyTimerWidget.attachTo($timer);
-            this.surveyTimerWidget.on('time_up', this, function () {
-                if (self.currentScreen === 'question' && this.isScoredQuestion) {
-                    self.$('.o_survey_session_navigation_next').click();
+    startTimer(el) {
+        const surveyManagerEl = el || this.el;
+        const timerData = surveyManagerEl.dataset;
+        const questionTimeLimitReached = !!timerData.questionTimeLimitReached;
+        const timeLimitMinutes = Number(timerData.timeLimitMinutes);
+        const hasAnswered = !!timerData.hasAnswered;
+        if (this.timerEl && !questionTimeLimitReached && !hasAnswered && timeLimitMinutes) {
+            this.addListener(surveyManagerEl, "time_up", async () => {
+                if (this.currentScreen === "question" && this.isScoredQuestion) {
+                    this.onNext();
                 }
             });
+            this.timerEl.dispatchEvent(
+                new CustomEvent("start_timer", {
+                    detail: {
+                        timeLimitMinutes: timeLimitMinutes,
+                        timer: timerData.timer,
+                    },
+                })
+            );
         }
-    },
+    }
 
     /**
      * Refreshes the question results.
@@ -450,250 +608,104 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
      * - The 'user input lines' that are used to display text/date/datetime answers on the screen
      * - The number of answers, useful for refreshing the progress bar
      */
-    _refreshResults: function () {
-        var self = this;
+    refreshResults() {
+        this.waitFor(rpc(`/survey/session/results/${this.surveyAccessToken}`)).then(
+            this.protectSyncAfterAsync((questionResults) => {
+                if (questionResults) {
+                    this.attendeesCount = questionResults.attendees_count;
 
-        return rpc(
-            `/survey/session/results/${self.surveyAccessToken}`
-        ).then(function (questionResults) {
-            if (questionResults) {
-                self.attendeesCount = questionResults.attendees_count;
+                    if (
+                        !this.isStartScreen &&
+                        this.showBarChart &&
+                        questionResults.question_statistics_graph
+                    ) {
+                        const parsedStatistics = JSON.parse(
+                            questionResults.question_statistics_graph
+                        );
+                        if (parsedStatistics.length > 0) {
+                            this.chartUpdateState({ questionStatistics: parsedStatistics });
+                        }
+                    } else if (!this.isStartScreen && this.showTextAnswers) {
+                        this.textAnswersEl.dispatchEvent(
+                            new CustomEvent("updateTextAnswers", {
+                                detail: {
+                                    questionType: this.el.dataset.questionType,
+                                    inputLineValues: questionResults.input_line_values,
+                                },
+                            })
+                        );
+                    }
 
-                // Update the last question next screen tooltip depending on the selected answers.
-                // Because if a selected answer triggers a conditional question, the last question
-                // may no longer be the last.
-                if (self.surveyLastTriggeringAnswers) {
-                    self.isLastQuestion =
-                        !questionResults.answer_count ||
-                        !self.surveyLastTriggeringAnswers.some(answerId => questionResults.selected_answers.includes(answerId));
-                    self._updateNextScreenTooltip();
+                    // Update the last question next screen tooltip depending on
+                    // the selected answers. If a selected answer triggers a
+                    // conditional question, the last question may no longer be
+                    // the last (see PR odoo/odoo#212890).
+                    if (this.surveyLastTriggeringAnswers.length) {
+                        this.isLastQuestion =
+                            !questionResults.answer_count ||
+                            !this.surveyLastTriggeringAnswers.some((answerId) =>
+                                questionResults.selected_answers.includes(answerId)
+                            );
+                        this.updateNextScreenTooltip();
+                    }
+
+                    const progressBar = this.el.querySelector(".progress-bar");
+                    if (progressBar) {
+                        const max = this.attendeesCount > 0 ? this.attendeesCount : 1;
+                        const percentage = Math.min(
+                            Math.round((questionResults.answer_count / max) * 100),
+                            100
+                        );
+                        progressBar.style.width = `${percentage}%`;
+                    }
+
+                    if (this.attendeesCount && this.attendeesCount > 0) {
+                        const answerCount = Math.min(
+                            questionResults.answer_count,
+                            this.attendeesCount
+                        );
+                        const answerCountElement = this.el.querySelector(
+                            ".o_survey_session_answer_count"
+                        );
+                        const progressBarTextElement = this.el.querySelector(
+                            ".progress-bar.o_survey_session_progress_small span"
+                        );
+                        if (answerCountElement) {
+                            answerCountElement.textContent = answerCount;
+                        }
+                        if (progressBarTextElement) {
+                            progressBarTextElement.textContent = `${answerCount} / ${this.attendeesCount}`;
+                        }
+                    }
                 }
-
-                if (self.resultsChart && questionResults.question_statistics_graph) {
-                    self.resultsChart.updateChart(JSON.parse(questionResults.question_statistics_graph));
-                } else if (self.textAnswers) {
-                    self.textAnswers.updateTextAnswers(questionResults.input_line_values);
-                }
-
-                var max = self.attendeesCount > 0 ? self.attendeesCount : 1;
-                var percentage = Math.min(Math.round((questionResults.answer_count / max) * 100), 100);
-                self.$('.progress-bar').css('width', `${percentage}%`);
-
-                if (self.attendeesCount && self.attendeesCount > 0) {
-                    var answerCount = Math.min(questionResults.answer_count, self.attendeesCount);
-                    self.$('.o_survey_session_answer_count').text(answerCount);
-                    self.$('.progress-bar.o_survey_session_progress_small span').text(
-                        `${answerCount} / ${self.attendeesCount}`
-                    );
-                }
-            }
-
-            return Promise.resolve();
-        }, function () {
-            // on failure, stop refreshing
-            clearInterval(self.resultsRefreshInterval);
-            delete self.resultsRefreshInterval;
-        });
-    },
+            }),
+            this.protectSyncAfterAsync(() => {
+                // onRejected, stop refreshing
+                clearInterval(this.resultsRefreshInterval);
+                delete this.resultsRefreshInterval;
+            })
+        );
+    }
 
     /**
      * We refresh the attendees count every 2 seconds while the user is on the start screen.
-     *
      */
-    _refreshAttendeesCount: function () {
-        var self = this;
-
-        return self.orm.read(
-            "survey.survey",
-            [self.surveyId],
-            ['session_answer_count'],
-        ).then(function (result) {
-            if (result && result.length === 1){
-                self.$('.o_survey_session_attendees_count').text(
-                    result[0].session_answer_count
-                );
-            }
-        }, function (err) {
-            // on failure, stop refreshing
-            clearInterval(self.attendeesRefreshInterval);
-            console.error(err);
-        });
-    },
-
-    /**
-     * For simple/multiple choice questions, we display a bar chart with:
-     *
-     * - answers of attendees
-     * - correct / incorrect answers when relevant
-     *
-     * see SurveySessionChart widget doc for more information.
-     *
-     */
-    _setupChart: function () {
-        if (this.resultsChart) {
-            this.resultsChart.setElement(null);
-            this.resultsChart.destroy();
-            delete this.resultsChart;
-        }
-
-        if (!this.isStartScreen && this.showBarChart) {
-            this.resultsChart = new SurveySessionChart(this, {
-                questionType: this.$el.data('questionType'),
-                answersValidity: this.$el.data('answersValidity'),
-                hasCorrectAnswers: this.hasCorrectAnswers,
-                questionStatistics: this.$el.data('questionStatistics'),
-                showInputs: this.showInputs
-            });
-
-            return this.resultsChart.attachTo(this.$('.o_survey_session_chart'));
-        } else {
-            return Promise.resolve();
-        }
-    },
-
-    /**
-     * Leaderboard of all the attendees based on their score.
-     * see SurveySessionLeaderBoard widget doc for more information.
-     *
-     */
-    _setupLeaderboard: function () {
-        if (this.leaderBoard) {
-            this.leaderBoard.setElement(null);
-            this.leaderBoard.destroy();
-            delete this.leaderBoard;
-        }
-
-        if (this.isScoredQuestion || this.isLastQuestion) {
-            this.leaderBoard = new SurveySessionLeaderBoard(this, {
-                surveyAccessToken: this.surveyAccessToken,
-                sessionResults: this.$('.o_survey_session_results')
-            });
-
-            return this.leaderBoard.attachTo(this.$('.o_survey_session_leaderboard'));
-        } else {
-            return Promise.resolve();
-        }
-    },
-
-    /**
-     * Shows attendees answers for char_box/date and datetime questions.
-     * see SurveySessionTextAnswers widget doc for more information.
-     *
-     */
-    _setupTextAnswers: function () {
-        if (this.textAnswers) {
-            this.textAnswers.setElement(null);
-            this.textAnswers.destroy();
-            delete this.textAnswers;
-        }
-
-        if (!this.isStartScreen && this.showTextAnswers) {
-            this.textAnswers = new SurveySessionTextAnswers(this, {
-                questionType: this.$el.data('questionType')
-            });
-
-            return this.textAnswers.attachTo(this.$('.o_survey_session_text_answers_container'));
-        } else {
-            return Promise.resolve();
-        }
-    },
-
-    /**
-     * Setup the 2 refresh intervals of 2 seconds for our widget:
-     * - The refresh of attendees count (only on the start screen)
-     * - The refresh of results (used for chart/text answers/progress bar)
-     */
-    _setupIntervals: function () {
-        this.attendeesCount = this.$el.data('attendeesCount') ? this.$el.data('attendeesCount') : 0;
-
-        if (this.isStartScreen) {
-            this.attendeesRefreshInterval = setInterval(this._refreshAttendeesCount.bind(this), 2000);
-        } else {
-            if (this.attendeesRefreshInterval) {
+    refreshAttendeesCount() {
+        this.waitFor(
+            this.services.orm.read("survey.survey", [this.surveyId], ["session_answer_count"])
+        ).then(
+            this.protectSyncAfterAsync((result) => {
+                if (result && result.length === 1) {
+                    this.sessionAttendeesCountText = String(result[0].session_answer_count);
+                }
+            }),
+            this.protectSyncAfterAsync((err) => {
+                // on failure, stop refreshing
                 clearInterval(this.attendeesRefreshInterval);
-            }
-
-            if (!this.resultsRefreshInterval) {
-                this.resultsRefreshInterval = setInterval(this._refreshResults.bind(this), 2000);
-            }
-        }
-    },
-
-    /**
-     * Setup current screen based on question properties.
-     * If it's a non-scored question with a chart, we directly display the user inputs.
-     */
-    _setupCurrentScreen: function () {
-        if (this.isStartScreen) {
-            this.currentScreen = 'startScreen';
-        } else if (!this.isScoredQuestion && this.showBarChart) {
-            this.currentScreen = 'userInputs';
-        } else {
-            this.currentScreen = 'question';
-        }
-
-        this.$('.o_survey_session_navigation_previous').toggleClass('d-none', !!this.isFirstQuestion);
-
-        this._setShowInputs(this.currentScreen === 'userInputs');
-        this._updateNextScreenTooltip();
-    },
-
-    /**
-     * When we go from the 'question' screen to the 'userInputs' screen, we toggle this boolean
-     * and send the information to the chart.
-     * The chart will show attendees survey.user_input.lines.
-     *
-     * @param {Boolean} showInputs
-     */
-    _setShowInputs(showInputs) {
-        this.showInputs = showInputs;
-
-        if (this.resultsChart) {
-            this.resultsChart.setShowInputs(showInputs);
-            this.resultsChart.updateChart();
-        }
-    },
-
-    /**
-     * When we go from the 'userInputs' screen to the 'results' screen, we toggle this boolean
-     * and send the information to the chart.
-     * The chart will show the question survey.question.answers.
-     * (Only used for simple / multiple choice questions).
-     *
-     * @param {Boolean} showAnswers
-     */
-    _setShowAnswers(showAnswers) {
-        this.showAnswers = showAnswers;
-
-        if (this.resultsChart) {
-            this.resultsChart.setShowAnswers(showAnswers);
-            this.resultsChart.updateChart();
-        }
-    },
-    /**
-     * @private
-     * Updates the tooltip for current page (on right arrow icon for 'Next' content).
-     * this method will be called on Clicking of Next and Previous Arrow to show the
-     * tooltip for the Next Content.
-     */
-    _updateNextScreenTooltip() {
-        let tooltip;
-        if (this.currentScreen === 'startScreen') {
-            tooltip = nextPageTooltips['startScreen'];
-        } else if (this.isLastQuestion && !this.surveyHasConditionalQuestions && !this.isScoredQuestion && !this.sessionShowLeaderboard) {
-            tooltip = nextPageTooltips['closingWords'];
-        } else {
-            const nextScreen = this._getNextScreen();
-            if (nextScreen === 'nextQuestion' || this.surveyHasConditionalQuestions) {
-                tooltip = nextPageTooltips['nextQuestion'];
-            }
-            tooltip = nextPageTooltips[nextScreen];
-        }
-        const sessionNavigationNextEl = this.el.querySelector('.o_survey_session_navigation_next_label');
-        if (sessionNavigationNextEl && tooltip) {
-            sessionNavigationNextEl.textContent = tooltip;
-        }
+                console.error(err);
+            })
+        );
     }
-});
+}
 
-export default publicWidget.registry.SurveySessionManage;
+registry.category("public.interactions").add("survey.survey_session_manage", SurveySessionManage);
