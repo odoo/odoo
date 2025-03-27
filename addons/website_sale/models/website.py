@@ -153,6 +153,8 @@ class Website(models.Model):
         default="Not Available For Sale",
     )
 
+    enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
+
     currency_id = fields.Many2one(
         string="Default Currency",
         comodel_name='res.currency',
@@ -162,6 +164,11 @@ class Website(models.Model):
         string="Price list available for this Ecommerce/Website",
         comodel_name='product.pricelist',
         compute="_compute_pricelist_ids",
+    )
+
+    _check_gmc_ecommerce_access = models.Constraint(
+        'CHECK (NOT enabled_gmc_src OR ecommerce_access = \'everyone\')',
+        "eCommerce must be accessible to all users for Google Merchant Center to operate properly.",
     )
 
     #=== COMPUTE METHODS ===#
