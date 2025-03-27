@@ -682,18 +682,19 @@ class IrActionsServer(models.Model):
 
         if self.state == 'webhook' and self.model_id:
             restricted_fields = []
-            Model = self.env[self.model_id.model]
-            for model_field in self.webhook_field_ids:
-                # you might think that the ir.model.field record holds references
-                # to the groups, but that's not the case - we need to field object itself
-                field = Model._fields[model_field.name]
-                if field.groups:
-                    restricted_fields.append(f"- {model_field.field_description}")
-            if restricted_fields:
-                warnings.append(_("Group-restricted fields cannot be included in "
-                                "webhook payloads, as it could allow any user to "
-                                "accidentally leak sensitive information. You will "
-                                "have to remove the following fields from the webhook payload:\n%(restricted_fields)s", restricted_fields="\n".join(restricted_fields)))
+            if Model := self.model_id.model and self.env[self.model_id.model]:
+                # This block purpose is to display a warning, which is not needed if no model is selected.
+                for model_field in self.webhook_field_ids:
+                    # you might think that the ir.model.field record holds references
+                    # to the groups, but that's not the case - we need to field object itself
+                    field = Model._fields[model_field.name]
+                    if field.groups:
+                        restricted_fields.append(f"- {model_field.field_description}")
+                if restricted_fields:
+                    warnings.append(_("Group-restricted fields cannot be included in "
+                                    "webhook payloads, as it could allow any user to "
+                                    "accidentally leak sensitive information. You will "
+                                    "have to remove the following fields from the webhook payload:\n%(restricted_fields)s", restricted_fields="\n".join(restricted_fields)))
 
         return warnings
 
