@@ -9,7 +9,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
     _inherit = 'report.mrp.report_bom_structure'
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
-        ratio_uom_seller = seller.product_uom_id.factor / bom.product_uom_id.factor
+        ratio_uom_seller = (seller.product_uom_id or seller.product_tmpl_id.uom_id).factor / bom.product_uom_id.factor
         price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.today())
         return {
             'name': seller.partner_id.display_name,
@@ -86,7 +86,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             # for subcontracting, we can't decide the lead time without component's resupply availability
             # we only return necessary info and calculate the lead time late when we have component's data
             if supplier:
-                qty_supplier_uom = product.uom_id._compute_quantity(quantity, supplier.product_uom_id)
+                qty_supplier_uom = product.uom_id._compute_quantity(quantity, supplier.product_uom_id or supplier.product_tmpl_id.uom_id)
                 return {
                     'route_type': 'subcontract',
                     'route_name': subcontract_rules[0].route_id.display_name,

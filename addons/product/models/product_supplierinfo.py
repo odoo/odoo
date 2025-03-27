@@ -70,7 +70,7 @@ class ProductSupplierinfo(models.Model):
     @api.depends('discount', 'price')
     def _compute_price_discounted(self):
         for rec in self:
-            rec.price_discounted = rec.product_uom_id._compute_price(rec.price, rec.product_id.uom_id) * (1 - rec.discount / 100)
+            rec.price_discounted = (rec.product_uom_id or rec.product_tmpl_id.uom_id)._compute_price(rec.price, rec.product_id.uom_id) * (1 - rec.discount / 100)
 
     @api.depends('product_id', 'product_tmpl_id', 'product_variant_count')
     def _compute_product_id(self):
@@ -104,11 +104,19 @@ class ProductSupplierinfo(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             self._sanitize_vals(vals)
+            if not vals.get('product_uom_id') and vals.get('product_tmpl_id'):
+                vals['product_uom_id'] = self.env['product.template'].browse(vals['product_tmpl_id']).uom_id.id
         return super().create(vals_list)
 
     def write(self, vals):
+        if 'product_uom_id' in vals and not vals['product_uom_id']:
+            del vals['product_uom_id']
         self._sanitize_vals(vals)
-        return super().write(vals)
+        res = super().write(vals)
+        for supplier in self:
+            if not supplier.product_uom_id:
+                supplier.product_uom_id = supplier.product_tmpl_id.uom_id
+        return res
 
     def _get_filtered_supplier(self, company_id, product_id, params=False):
         return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.active and (not s.product_id or s.product_id == product_id)))
