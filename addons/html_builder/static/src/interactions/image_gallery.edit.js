@@ -9,10 +9,7 @@ export class ImageGalleryEdit extends Interaction {
         },
     };
     setup() {
-        const containerEl = this.el.querySelector(
-            ".container, .container-fluid, .o_container_small"
-        );
-        this.renderAt("html_builder.empty_image_gallery_alert", {}, containerEl);
+        this.renderAt("html_builder.empty_image_gallery_alert", {}, this.el);
     }
     onAddImage() {
         const applySpec = { editingElement: this.el };
