@@ -5,7 +5,7 @@ patch(PosOrderline.prototype, {
     setup(vals) {
         return super.setup(...arguments);
     },
-    get l10n_in_hsn_code() {
+    get l10n_in_hsn_code_display() {
         return this.product_id?.l10n_in_hsn_code || "";
     },
 });

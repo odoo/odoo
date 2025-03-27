@@ -941,16 +941,9 @@ class PosSession(models.Model):
                 total_amount_currency = 0.0
                 for base_line, to_update in tax_results['base_lines_to_update']:
                     # Combine sales/refund lines
-                    sale_key = (
-                        # account
-                        base_line['account_id'].id,
-                        # sign
-                        -1 if base_line['is_refund'] else 1,
-                        # for taxes
-                        tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
-                        tuple(base_line['tax_tag_ids'].ids),
-                        base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
-                    )
+                    sale_vals_dict = self._get_sale_key(base_line)
+                    sale_key = tuple(sale_vals_dict.values())
+                    sales[sale_key].update(**sale_vals_dict)
                     total_amount_currency += to_update['amount_currency']
                     sales[sale_key] = self._update_amounts(
                         sales[sale_key],
@@ -960,8 +953,7 @@ class PosSession(models.Model):
                         },
                         order.date_order,
                     )
-                    if self.config_id.is_closing_entry_by_product:
-                        sales[sale_key] = self._update_quantities(sales[sale_key], base_line['quantity'])
+                    sales[sale_key] = self._update_quantities(sales[sale_key], base_line['quantity'])
 
                 # Combine tax lines
                 for tax_line in tax_results['tax_lines_to_add']:
@@ -1067,7 +1059,7 @@ class PosSession(models.Model):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
         MoveLine.create(tax_vals)
-        move_line_ids = MoveLine.create(list(starmap(self._get_sale_vals, sales.items())))
+        move_line_ids = MoveLine.create([self._get_sale_vals(val) for val in sales.values()])
         for key, ml_id in zip(sales.keys(), move_line_ids.ids):
             sales[key]['move_line_id'] = ml_id
         MoveLine.create(
@@ -1411,8 +1403,23 @@ class PosSession(models.Model):
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
-    def _get_sale_vals(self, key, sale_vals):
-        account_id, sign, tax_ids, base_tag_ids, product_id = key
+    def _get_sale_key(self, base_line):
+        return {
+            # account
+            'account_id': base_line['account_id'].id,
+            # sign
+            'sign': -1 if base_line['is_refund'] else 1,
+            # for taxes
+            'tax_ids': tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
+            'base_tag_ids': tuple(base_line['tax_tag_ids'].ids),
+            'product_id': base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
+        }
+
+    def _get_sale_vals(self, sale_vals):
+        tax_ids = sale_vals['tax_ids']
+        product_id = sale_vals['product_id']
+        sign = sale_vals['sign']
+        base_tag_ids = sale_vals['base_tag_ids']
         amount = sale_vals['amount']
         amount_converted = sale_vals['amount_converted']
         applied_taxes = self.env['account.tax'].browse(tax_ids)
@@ -1429,7 +1436,7 @@ class PosSession(models.Model):
             name = '%s %s with %s' % (title, product_name, ', '.join([tax.name for tax in applied_taxes]))
         partial_vals = {
             'name': name,
-            'account_id': account_id,
+            'account_id': sale_vals['account_id'],
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
             'tax_tag_ids': [(6, 0, base_tag_ids)],
@@ -1504,9 +1511,10 @@ class PosSession(models.Model):
         }
 
     def _update_quantities(self, vals, qty_to_add):
-        vals.setdefault('quantity', 0)
-        # update quantity
-        vals['quantity'] += qty_to_add
+        if self.config_id.is_closing_entry_by_product:
+            vals.setdefault('quantity', 0)
+            # update quantity
+            vals['quantity'] += qty_to_add
         return vals
 
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):
