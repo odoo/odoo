@@ -4,6 +4,7 @@ import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { Component, useEffect, useRef } from "@odoo/owl";
+import { charField, CharField } from "@web/views/fields/char/char_field";
 
 /**
  * Displays website page dependencies and URL redirect options when the page URL
@@ -111,3 +112,30 @@ export const imageRadioField = {
 };
 
 registry.category("fields").add("image_radio", imageRadioField);
+
+/**
+ * A Char field that updates its value on input.
+ */
+export class UrlWarningBannerVisibilityCharField extends CharField {
+    static template = "website.UrlWarningBannerVisibilityCharField";
+
+    onFocus(ev) {
+        if (this.props.record.data.is_url_from_exist) {
+            this.props.record.update({ is_url_from_exist: false });
+        }
+    }
+
+    onBlur() {
+        this.props.record.update({ [this.props.name]: this.input.el.value });
+        super.onBlur();
+    }
+}
+
+export const urlWarningBannerVisibilityCharField = {
+    ...charField,
+    component: UrlWarningBannerVisibilityCharField,
+};
+
+registry
+    .category("fields")
+    .add("url_warning_banner_visibility", urlWarningBannerVisibilityCharField);
