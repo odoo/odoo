@@ -116,11 +116,6 @@ class ProjectTask(models.Model):
         return self.stage_find(project_id, order="fold, sequence, id")
 
     @api.model
-    def _default_personal_stage_type_id(self):
-        default_id = self.env.context.get('default_personal_stage_type_ids')
-        return (default_id or self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).ids or [False])[0]
-
-    @api.model
     def _default_user_ids(self):
         return self.env.user.ids if any(key in self.env.context for key in ('default_personal_stage_type_ids', 'default_personal_stage_type_id')) else ()
 
@@ -199,14 +194,13 @@ class ProjectTask(models.Model):
         domain="[('user_id', '=', uid)]", string='Personal Stages', export_string_translation=False)
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
-        compute='_compute_personal_stage_id', group_expand='_read_group_personal_stage_type_ids',
+        compute='_compute_personal_stage_id',
+        search='_search_personal_stage_id',
+        group_expand='_read_group_personal_stage_type_ids',
         help="The current user's personal stage.")
-    # This field is actually a related field on personal_stage_id.stage_id
-    # However due to the fact that personal_stage_id is computed, the orm throws out errors
-    # saying the field cannot be searched.
     personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
-        compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
-        search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
+        related='personal_stage_id.stage_id',
+        readonly=False, store=False,
         help="The current user's personal task stage.", domain="[('user_id', '=', uid)]",
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
@@ -416,18 +410,14 @@ class ProjectTask(models.Model):
         for personal_stage in personal_stages:
             personal_stage.task_id.personal_stage_id = personal_stage
 
-    @api.depends('personal_stage_id')
-    def _compute_personal_stage_type_id(self):
-        for task in self:
-            task.personal_stage_type_id = task.personal_stage_id.stage_id
-
-    def _inverse_personal_stage_type_id(self):
-        for task in self:
-            task.personal_stage_id.stage_id = task.personal_stage_type_id
-
     @api.model
-    def _search_personal_stage_type_id(self, operator, value):
-        return [('personal_stage_type_ids', operator, value)]
+    def _search_personal_stage_id(self, operator, value):
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            return NotImplemented
+        field_name = 'display_name' if any(isinstance(v, str) for v in value) or value == '' else 'id'  # noqa: PLC1901
+        domain = [(field_name, operator, value), ('user_id', '=', self.env.uid)]
+        personal_stages = self.env['project.task.stage.personal']._search(domain)
+        return [('id', 'in', personal_stages.subselect('task_id'))]
 
     @api.model
     def _get_default_personal_stage_create_vals(self, user_id):
