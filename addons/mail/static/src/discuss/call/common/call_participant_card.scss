@@ -2,6 +2,10 @@
     color: white;
     aspect-ratio: 16/9;
 
+    .o-small-Label {
+        font-size: xx-small;
+    }
+
     &.o-isTalking {
         outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
         outline-offset: -4px;
@@ -68,6 +72,11 @@
         outline-offset: -4px;
     }
 
+    &.o-isTalking-collapsed {
+        outline: 2px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
+        outline-offset: -1px;
+    }
+
     &.o-isInvitation:not(:hover) {
         animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
     }
@@ -100,6 +109,10 @@
             &.o-video-text {
                 font-size: 5cqw;
             }
+        }
+
+        &.o-isCollapsed {
+            font-size: 0.5rem !important;
         }
     }
 }
