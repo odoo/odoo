@@ -13,7 +13,7 @@
             <input class="form-control rounded-3 border-0 bg-inherit" t-att-class="{ 'lh-1': !ui.isSmall }" disabled="true" placeholder="Find or start a conversation" tabindex="0"/>
             <div class="o-mail-DiscussSidebarCategories-searchClickable position-absolute z-1 opacity-0 cursor-pointer w-100 h-100"/>
         </div>
-        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat_index">
+        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat.id">
             <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
                 <t t-set="category" t-value="cat"/>
             </t>
