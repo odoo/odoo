@@ -452,10 +452,20 @@ class WebsiteSale(payment_portal.PaymentPortal):
         values.update(self._get_additional_extra_shop_values(values, **post))
         return request.render("website_sale.products", values)
 
-    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products, readonly=True)
-    def product(self, product, category='', search='', **kwargs):
+    @route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=sitemap_products)
+    def product(self, product, category='', search='', pricelist=None, **kwargs):
         if not request.website.has_ecommerce_access():
             return request.redirect('/web/login')
+
+        if pricelist is not None:
+            try:
+                pricelist_id = int(pricelist)
+            except ValueError:
+                raise ValidationError(request.env._(
+                    "Wrong format: got `pricelist=%s`, expected an integer", pricelist,
+                ))
+            if not self._apply_selectable_pricelist(pricelist_id):
+                return request.redirect('/shop')
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
@@ -742,36 +752,43 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def pricelist_change(self, pricelist, **post):
         website = request.env['website'].get_current_website()
         redirect_url = request.httprequest.referrer
+        prev_pricelist = request.pricelist
         if (
-            website.is_pricelist_available(pricelist.id)
-            and (
-                pricelist.selectable
-                or pricelist == request.env.user.partner_id.property_product_pricelist
-            )
+            self._apply_selectable_pricelist(pricelist.id)
+            and redirect_url
+            and website.is_view_active('website_sale.filter_products_price')
+            and prev_pricelist != pricelist
         ):
-            if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
-                decoded_url = url_parse(redirect_url)
-                args = url_decode(decoded_url.query)
-                min_price = args.get('min_price')
-                max_price = args.get('max_price')
-                if min_price or max_price:
-                    previous_price_list = request.pricelist
-                    try:
-                        min_price = float(min_price)
-                        args['min_price'] = min_price and str(
-                            previous_price_list.currency_id._convert(min_price, pricelist.currency_id, request.website.company_id, fields.Date.today(), round=False)
-                        )
-                    except (ValueError, TypeError):
-                        pass
-                    try:
-                        max_price = float(max_price)
-                        args['max_price'] = max_price and str(
-                            previous_price_list.currency_id._convert(max_price, pricelist.currency_id, request.website.company_id, fields.Date.today(), round=False)
-                        )
-                    except (ValueError, TypeError):
-                        pass
-                    redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
-            self._apply_pricelist(pricelist)
+            # Convert prices to the new priceslist currency in the query params of the referrer
+            decoded_url = url_parse(redirect_url)
+            args = url_decode(decoded_url.query)
+            min_price = args.get('min_price')
+            max_price = args.get('max_price')
+            if min_price or max_price:
+                try:
+                    min_price = float(min_price)
+                    args['min_price'] = min_price and str(prev_pricelist.currency_id._convert(
+                        min_price,
+                        pricelist.currency_id,
+                        request.website.company_id,
+                        fields.Date.today(),
+                        round=False,
+                    ))
+                except (ValueError, TypeError):
+                    pass
+                try:
+                    max_price = float(max_price)
+                    args['max_price'] = max_price and str(prev_pricelist.currency_id._convert(
+                        max_price,
+                        pricelist.currency_id,
+                        request.website.company_id,
+                        fields.Date.today(),
+                        round=False,
+                    ))
+                except (ValueError, TypeError):
+                    pass
+            redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
+
         return request.redirect(redirect_url or '/shop')
 
     @route('/shop/pricelist', type='http', auth='public', website=True, sitemap=False)
@@ -782,9 +799,42 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
-            self._apply_pricelist(pricelist_sudo)
+            self._apply_pricelist(pricelist=pricelist_sudo)
         else:
             # Reset the pricelist if empty promo code is given
+            self._apply_pricelist(pricelist=None)
+
+        return request.redirect(redirect)
+
+    def _apply_selectable_pricelist(self, pricelist_id):
+        """ Change the request pricelist if selectable on the website.
+
+        A pricelist is applied if:
+        - it is available on the current website
+        - it is selectable or on the current partner
+
+        :param int pricelist_id: the pricelist ID
+        :return: True or False if the pricelist was applied or not
+        :rtype: bool
+        """
+        if (
+            request.env['website'].get_current_website().is_pricelist_available(pricelist_id)
+            and (pricelist := request.env['product.pricelist'].browse(pricelist_id))
+            and (
+                pricelist.selectable
+                or pricelist == request.env.user.partner_id.property_product_pricelist
+            )
+        ):
+            self._apply_pricelist(pricelist=pricelist)
+            return True
+        return False
+
+    def _apply_pricelist(self, pricelist=None):
+        """ Changes the pricelist of the request and recomputes the current cart prices.
+
+        :param 'product.pricelist'|None pricelist: The new pricelist. If None resets the pricelist.
+        """
+        if pricelist is None:  # Reset the pricelist
             request.session.pop(PRICELIST_SESSION_CACHE_KEY, None)
             request.session.pop(PRICELIST_SELECTED_SESSION_CACHE_KEY, None)
             request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
@@ -794,10 +844,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 order_sudo._compute_pricelist_id()
                 if order_sudo.pricelist_id != pl_before:
                     order_sudo._recompute_prices()
+            return
 
-        return request.redirect(redirect)
-
-    def _apply_pricelist(self, pricelist):
         pricelist.ensure_one()
 
         if pricelist.id == request.pricelist.id:
