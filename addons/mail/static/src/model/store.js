@@ -38,6 +38,9 @@ export class Store extends Record {
         });
         this.delete();
         this._[IS_DELETED_SYM] = true;
+        if (window.aku) {
+            debugger;
+        }
     }
 
     /** @param {() => any} fn */
@@ -163,6 +166,11 @@ export class Store extends Record {
                     /** @type {Record} */
                     const record = RHD_QUEUE.keys().next().value;
                     RHD_QUEUE.delete(record);
+                    if (!record._[IS_DELETED_SYM]) {
+                        window.aku ??= 0;
+                        window.aku--;
+                        console.log(window.aku);
+                    }
                     record._[IS_DELETED_SYM] = true;
                     delete record.Model.records[record.localId];
                     this.recordByLocalId.delete(record.localId);

@@ -180,6 +180,9 @@ export class Record {
      * @returns {Record}
      */
     static new(data, ids) {
+        window.aku ??= 0;
+        window.aku++;
+        console.log(window.aku);
         const Model = toRaw(this);
         const store = Model._rawStore;
         return store.MAKE_UPDATE(function RecordNew() {

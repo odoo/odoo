@@ -1,4 +1,4 @@
-import { toRaw, useComponent, useState } from "@odoo/owl";
+import { onWillDestroy, onWillUnmount, toRaw, useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";

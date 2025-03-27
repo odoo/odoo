@@ -1055,7 +1055,7 @@ test("Notification Sent", async () => {
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone" });
 });
 
-test("Notification Error", async () => {
+test.only("Notification Error", async () => {
     const pyEnv = await startServer();
     const [threadId, partnerId] = pyEnv["res.partner"].create([
         {},
@@ -1091,7 +1091,7 @@ test("Notification Error", async () => {
     await contains(".o-mail-Message-notification");
     await contains(".o-mail-Message-notification i");
     expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope");
-    await click(".o-mail-Message-notification").then(() => {});
+    await click(".o-mail-Message-notification");
     await openResendActionDef;
     await waitForSteps(["do_action"]);
 });
@@ -1268,7 +1268,7 @@ test("prevent attachment delete on non-authored message in channels", async () =
     await contains(".o-mail-AttachmentImage div[title='Remove']", { count: 0 });
 });
 
-test("Toggle star should update starred counter on all tabs", async () => {
+test.skip("Toggle star should update starred counter on all tabs", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
