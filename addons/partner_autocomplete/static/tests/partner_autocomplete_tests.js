@@ -2,7 +2,6 @@ import { browser } from "@web/core/browser/browser";
 import {
     click,
     editInput,
-    editSelect,
     getFixture,
     patchWithCleanup,
     triggerEvent,
@@ -186,7 +185,8 @@ QUnit.module('partner_autocomplete', {
         await makeView(makeViewParams);
 
         // Set company type to Individual
-        await editSelect(target, "[name='company_type'] > select", '"individual"');
+        await click(target.querySelector("[name='company_type'] input"));
+        await click(target, ".o_select_menu_item:nth-of-type(2)");
 
         const nameInput = target.querySelector("[name='name'] input");
         assert.doesNotHaveClass(nameInput, 'o-autocomplete--input', "The input for field 'name' should be a regular input");
@@ -241,7 +241,8 @@ QUnit.module('partner_autocomplete', {
         await makeView(makeViewParams);
 
         // Set company type to Company
-        await editSelect(target, "[name='company_type'] > select", '"company"');
+        await click(target.querySelector("[name='company_type'] input"));
+        await click(target, ".o_select_menu_item:nth-of-type(1)");
 
         const input = target.querySelector("[name='name'] .dropdown input");
         const autocompleteContainer = input.parentElement;
@@ -293,7 +294,8 @@ QUnit.module('partner_autocomplete', {
         await makeView(makeViewParams);
 
         // Set company type to Company
-        await editSelect(target, "[name='company_type'] > select", '"company"');
+        await click(target.querySelector("[name='company_type'] input"));
+        await click(target, ".o_select_menu_item:nth-of-type(1)");
 
         const input = target.querySelector("[name='vat'] .dropdown input");
         const autocompleteContainer = input.parentElement;
@@ -422,7 +424,8 @@ QUnit.module('partner_autocomplete', {
         await makeView(makeViewParams);
 
         // Set company type to Company
-        await editSelect(target, "[name='company_type'] > select", '"company"');
+        await click(target.querySelector("[name='company_type'] input"));
+        await click(target, ".o_select_menu_item:nth-of-type(1)");
 
         const input = target.querySelector("[name='name'] .dropdown input");
         const autocompleteContainer = input.parentElement;

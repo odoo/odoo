@@ -1,5 +1,12 @@
 import { after, expect, getFixture } from "@odoo/hoot";
-import { click, formatXml, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import {
+    click,
+    formatXml,
+    queryAll,
+    queryAllTexts,
+    queryFirst,
+    runAllTimers,
+} from "@odoo/hoot-dom";
 import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -29,6 +36,11 @@ import { registerInlineViewArchs } from "./mock_server/mock_model";
  *  target?: string;
  *  text?: string;
  * }} SelectorOptions
+ *
+ *  * @typedef {{
+ *  value?: string;
+ *  index?: number;
+ * }} EditSelectMenuParams
  *
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("@web/views/view").ViewProps} ViewProps
@@ -298,4 +310,34 @@ export async function hideTab() {
     document.dispatchEvent(new Event("visibilitychange"));
     await tick();
     Object.defineProperty(document, "visibilityState", prop);
+}
+
+/**
+ * Changes or clearing the value in a SelectMenu component, supporting when
+ * the input is displayed in the toggler and in the dropdown menu as well.
+ * @param {string} selector
+ * @param {EditSelectMenuParams} [params]
+ */
+export async function editSelectMenu(selector, { value, index }) {
+    let inputSelector = buildSelector(selector);
+    const selectMenuId = queryFirst(inputSelector).dataset.id;
+    if (!queryFirst(`.o_select_menu_menu [data-name='${selectMenuId}']`)) {
+        await contains(inputSelector).click();
+    }
+    if (queryFirst(".o_select_menu_menu input")) {
+        inputSelector = ".o_select_menu_menu input";
+        await contains(inputSelector).click();
+    }
+    if (index !== undefined) {
+        return await contains(`.o_select_menu_item:nth-of-type(${index + 1})`).click();
+    }
+    await contains(inputSelector).edit(value, { confirm: false });
+    await runAllTimers();
+    if (value.length) {
+        await contains(`.o_select_menu_item:contains(${value})`).click();
+    } else {
+        queryFirst(inputSelector).dispatchEvent(new Event("blur"));
+        await contains(buildSelector(selector)).click();
+    }
+    await animationFrame();
 }

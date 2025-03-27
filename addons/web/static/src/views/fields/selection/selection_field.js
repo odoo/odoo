@@ -1,11 +1,15 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 
 export class SelectionField extends Component {
+    static components = {
+        SelectMenu,
+    };
     static template = "web.SelectionField";
     static props = {
         ...standardFieldProps,
@@ -27,6 +31,10 @@ export class SelectionField extends Component {
                 return orm.call(relation, "name_search", ["", domain]);
             });
         }
+    }
+
+    get choices() {
+        return this.options.map(([value, label]) => ({ value, label: label.toString() }));
     }
 
     get options() {
@@ -64,14 +72,10 @@ export class SelectionField extends Component {
         return JSON.stringify(value);
     }
 
-    /**
-     * @param {Event} ev
-     */
-    onChange(ev) {
-        const value = JSON.parse(ev.target.value);
+    onChange(value) {
         switch (this.type) {
             case "many2one":
-                if (value === false) {
+                if (value === null) {
                     this.props.record.update(
                         { [this.props.name]: false },
                         { save: this.props.autosave }
