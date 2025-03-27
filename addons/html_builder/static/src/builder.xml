@@ -9,6 +9,10 @@
                 <button type="button"  t-on-click="() => this.redo()" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
             <div class="d-flex">
+                <div class="mt-2" title="Mysterious Egg">
+                    <!-- remove this before merge, otherwise people will see this egg -->
+                    <svg width="1.1em" height="1.5em" viewBox="0 0 100 140" xmlns="http://www.w3.org/2000/svg"><ellipse cx="50" cy="80" rx="40" ry="55" fill="#F4E1C6" stroke="#E0C4A8" stroke-width="4"/></svg>
+                </div>
                 <button t-on-click="onMobilePreviewClick" type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile"/></button>
                 <button type="button"  t-on-click="discard" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
                 <button type="button" t-on-click="save" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
