@@ -5,6 +5,7 @@ import {
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { _t } from "@web/core/l10n/translation";
+import { onMounted } from "@odoo/owl";
 
 export class FieldMany2ManyTagsBanksTagsList extends TagsList {
     static template = "FieldMany2ManyTagsBanksTagsList";
@@ -18,9 +19,14 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
 
     setup() {
         super.setup();
-        // Needed when you create a partner (from a move for example), we want the partner to be saved to be able
-        // to have it as account holder
-        this.props.record.model.root.save();
+        onMounted(async () => {
+            // Needed when you create a partner (from a move for example), we want the partner to be saved to be able
+            // to have it as account holder
+            const isDirty = await this.props.record.model.root.isDirty();
+            if (isDirty) {
+                this.props.record.model.root.save();
+            }
+        });
     }
 
     getTagProps(record) {
