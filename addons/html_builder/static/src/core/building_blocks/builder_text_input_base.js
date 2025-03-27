@@ -1,5 +1,6 @@
 import { Component } from "@odoo/owl";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
+import { useActionInfo } from "../utils";
 
 // Props given to the builder input components that are then passed to the
 // BuilderTextInputBase.
@@ -26,6 +27,7 @@ export class BuilderTextInputBase extends Component {
     };
 
     setup() {
+        this.info = useActionInfo();
         this.inputRef = useForwardRefToParent("inputRef");
     }
 

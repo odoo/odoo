@@ -3,7 +3,15 @@
 
 <t t-name="html_builder.BuilderRange">
     <BuilderComponent>
-        <div class="d-flex flex-row flex-nowrap align-items-center" t-att-data-action-id="props.action">
+        <div class="d-flex flex-row flex-nowrap align-items-center" 
+            t-att-data-action-id="info.actionId"
+            t-att-data-action-param="info.actionParam"
+            t-att-data-action-value="info.actionValue"
+            t-att-data-class-action="info.classAction"
+            t-att-data-style-action="info.styleAction"
+            t-att-data-style-action-value="info.styleActionValue"
+            t-att-data-attribute-action="info.attributeAction"
+            t-att-data-attribute-action-value="info.attributeActionValue">
             <input
             type="range"
             t-att-class="className"
