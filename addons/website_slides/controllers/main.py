@@ -486,13 +486,10 @@ class WebsiteSlides(WebsiteProfile):
         status = 'authorized'
         try:
             slide = request.env['slide.slide'].browse(slide_id)
-            slide.check_access('read')
-        except (AccessError, MissingError):
-            try:
-                slide = request.env['slide.slide'].sudo().browse([slide_id])
-            except MissingError:
-                return {'status': 'not_found'}
-            status = 'not_authorized'
+            if not slide.has_access('read'):
+                status = 'not_authorized'
+        except MissingError:
+            return {'status': 'not_found'}
         return {'status': status, 'slide': slide, 'channel_id': slide.sudo().channel_id.id}
 
     @http.route([

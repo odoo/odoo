@@ -31,11 +31,8 @@ class SaleOrderLine(models.Model):
         if self.env.context.get('form_view_ref') == 'sale_project.sale_order_line_view_form_editable':
             default_values = dict()
             # If we can't add order lines to the default order, discard it
-            if 'order_id' in res:
-                try:
-                    self.env['sale.order'].browse(res['order_id']).check_access('write')
-                except AccessError:
-                    del res['order_id']
+            if 'order_id' in res and not self.env['sale.order'].browse(res['order_id']).has_access('write'):
+                del res['order_id']
 
             if 'order_id' in fields and not res.get('order_id'):
                 assert (partner_id := self.env.context.get('default_partner_id'))
