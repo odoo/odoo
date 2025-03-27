@@ -99,8 +99,18 @@ class ResCompany(models.Model):
                 ]
                 self._activate_l10n_in_taxes(gst_group_refs, company)
                 # Set sale and purchase tax accounts when user registered under GST.
-                company.account_sale_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_sale_5').id
-                company.account_purchase_tax_id = self.env['account.chart.template'].with_company(company).ref('sgst_purchase_5').id
+                if (
+                    account_sale_tax := self.env["account.chart.template"]
+                    .with_company(company)
+                    .ref("sgst_sale_5", raise_if_not_found=False)
+                ):
+                    company.account_sale_tax_id = account_sale_tax.id
+                if (
+                    account_purchase_tax := self.env["account.chart.template"]
+                    .with_company(company)
+                    .ref("sgst_purchase_5", raise_if_not_found=False)
+                ):
+                    company.account_purchase_tax_id = account_purchase_tax.id
 
     @api.depends('parent_id.l10n_in_tds_feature', 'parent_id.l10n_in_tcs_feature', 'parent_id.l10n_in_is_gst_registered')
     def _compute_l10n_in_parent_based_features(self):
@@ -112,9 +122,11 @@ class ResCompany(models.Model):
 
     def _activate_l10n_in_taxes(self, group_refs, company):
         for group_ref in group_refs:
-            tax_group_id = self.env['account.chart.template'].with_company(company).ref(group_ref).id
+            tax_group_id = self.env['account.chart.template'].with_company(company).ref(group_ref, raise_if_not_found=False)
+            if not tax_group_id:
+                continue
             taxes = self.env['account.tax'].with_company(company).with_context(active_test=False).search([
-                ('tax_group_id', '=', tax_group_id),
+                ('tax_group_id', '=', tax_group_id.id),
             ])
             taxes.write({'active': True})
 
