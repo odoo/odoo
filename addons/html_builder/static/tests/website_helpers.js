@@ -144,7 +144,7 @@ export async function setupWebsiteBuilder(
     });
     await getService("action").doAction({
         name: "Website Builder",
-        tag: "egg_website_preview",
+        tag: "website_preview",
         type: "ir.actions.client",
     });
 
