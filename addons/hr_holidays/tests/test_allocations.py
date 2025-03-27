@@ -16,7 +16,7 @@ class TestAllocations(TestHrHolidaysCommon):
         super(TestAllocations, cls).setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Time Off with no validation for approval',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
         })
@@ -345,7 +345,7 @@ class TestAllocations(TestHrHolidaysCommon):
 
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Hourly Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
@@ -366,7 +366,7 @@ class TestAllocations(TestHrHolidaysCommon):
         """
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Hourly Leave Type',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
@@ -403,7 +403,6 @@ class TestAllocations(TestHrHolidaysCommon):
         new_company = self.env['res.company'].create({'name': 'Test company 2'})
         new_leave_type = self.env['hr.leave.type'].create({
             'name': 'Time Off with no validation for approval',
-            'time_type': 'leave',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'company_id': new_company.id,

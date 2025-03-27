@@ -48,6 +48,7 @@
 
     <record id="leave_type_unpaid" model="hr.leave.type">
         <field name="name">Unpaid</field>
+        <field name="time_type">unpaid</field>
         <field name="requires_allocation">no</field>
         <field name="leave_validation_type">both</field>
         <field name="allocation_validation_type">hr</field>
@@ -231,6 +232,7 @@
 
     <record id="l10n_ch_swissdec_unpaid_lt" model="hr.leave.type">
         <field name="name">Unpaid leave</field>
+        <field name="time_type">unpaid</field>
         <field name="employee_requests">no</field>
         <field name="requires_allocation">no</field>
         <field name="leave_validation_type">no_validation</field>
@@ -342,6 +344,7 @@
 
     <record id="l10n_hk_leave_type_unpaid_leave" model="hr.leave.type">
         <field name="name">HK Unpaid Leaves</field>
+        <field name="time_type">unpaid</field>
         <field name="requires_allocation">no</field>
         <field name="request_unit">half_day</field>
         <field name="company_id" eval="False" />
@@ -413,6 +416,7 @@
 
     <record id="l10n_id_leave_type_unpaid_leave" model="hr.leave.type">
         <field name="name">ID Unpaid Leaves</field>
+        <field name="time_type">unpaid</field>
         <field name="requires_allocation">no</field>
         <field name="request_unit">half_day</field>
         <field name="company_id" eval="False" />
@@ -451,6 +455,7 @@
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_leave_type_situational_unemployment" model="hr.leave.type">
         <field name="name">Unemployment (Weather / Situational)</field>
+        <field name="time_type">unpaid</field>
         <field name="name@fr">Chômage (intempéries / conjoncturel)</field>
         <field name="requires_allocation">no</field>
         <field name="leave_validation_type">no_validation</field>
@@ -468,6 +473,7 @@
 <!-- MX : Mexico -->
     <record id="l10n_mx_leave_type_work_risk_imss" model="hr.leave.type">
         <field name="name">Work risk (IMSS)</field>
+        <field name="time_type">unpaid</field>
         <field name="requires_allocation">no</field>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
@@ -483,6 +489,7 @@
 
     <record id="l10n_mx_leave_type_maternity_imss" model="hr.leave.type">
         <field name="name">Maternity (IMSS)</field>
+        <field name="time_type">unpaid</field>
         <field name="requires_allocation">no</field>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
@@ -498,6 +505,7 @@
 
     <record id="l10n_mx_leave_type_disability_due_to_illness_imss" model="hr.leave.type">
         <field name="name">Disability due to illness (IMSS)</field>
+        <field name="time_type">unpaid</field>
         <field name="requires_allocation">no</field>
         <field name="leave_validation_type">no_validation</field>
         <field name="allocation_validation_type">hr</field>
