@@ -389,7 +389,7 @@ class StockMoveLine(models.Model):
                 reservation = not move._should_bypass_reservation()
             else:
                 reservation = product.type == 'product' and not location.should_bypass_reservation()
-            if move_line.quantity and reservation:
+            if move_line.quantity_product_uom and reservation:
                 self.env['stock.quant']._update_reserved_quantity(
                     product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
 
