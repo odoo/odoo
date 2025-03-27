@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="view_event_slot_form" model="ir.ui.view">
+        <field name="name">event.slot.form</field>
+        <field name="model">event.slot</field>
+        <field name="inherit_id" ref="event.view_event_type_slot_form"/>
+        <field name="mode">primary</field>
+    </record>
+
+    <record id="act_event_slot_from_event" model="ir.actions.act_window">
+        <field name="name">Slots</field>
+        <field name="res_model">event.slot</field>
+        <field name="view_mode">calendar,list</field>
+        <field name="domain">[('event_id', '=', active_id)]</field>
+        <field name="context">{ 'default_event_id': active_id }</field>
+        <field name="view_ids"
+            eval="[(5, 0, 0),
+                    (0, 0, {'view_mode': 'calendar', 'view_id': ref('event.view_event_type_slot_calendar')}),
+                    (0, 0, {'view_mode': 'list', 'view_id': ref('event.view_event_type_slot_tree')})]"/>
+    </record>
+
+</data></odoo>

@@ -37,7 +37,10 @@ class EventType(models.Model):
     name = fields.Char('Event Template', required=True, translate=True)
     note = fields.Html(string='Note')
     sequence = fields.Integer(default=10)
-    # tickets
+    # slots & tickets
+    is_multi_slots = fields.Boolean("Is Multi Slots", default=False, help="Allow multiple time slots.")
+    event_type_slot_ids = fields.One2many('event.type.slot', 'event_type_id', string='Slots')
+    event_type_slot_count = fields.Integer("Slots Count", compute="_compute_event_type_slot_count")
     event_type_ticket_ids = fields.One2many('event.type.ticket', 'event_type_id', string='Tickets')
     tag_ids = fields.Many2many('event.tag', string="Tags")
     # registration
@@ -64,3 +67,8 @@ class EventType(models.Model):
         for template in self:
             if not template.has_seats_limitation:
                 template.seats_max = 0
+
+    @api.depends("event_type_slot_ids")
+    def _compute_event_type_slot_count(self):
+        for template in self:
+            template.event_type_slot_count = len(template.event_type_slot_ids)

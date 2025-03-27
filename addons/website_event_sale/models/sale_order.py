@@ -27,7 +27,12 @@ class SaleOrder(models.Model):
                 return order_line.product_uom_qty, _("You cannot raise manually the event ticket quantity in your cart")
 
         # Adding new ticket to the cart (might be automatically linked to an existing line)
-        ticket = self.env['event.event.ticket'].browse(event_ticket_id).exists()
+        if kwargs.get('slot_id'):
+            ticket = self.env['event.slot.ticket'].search([('slot_id', '=', kwargs['slot_id']), ('ticket_id', '=', event_ticket_id)]).exists()
+            ticket_seats_limited = ticket.ticket_id.seats_limited
+        else:
+            ticket = self.env['event.event.ticket'].browse(event_ticket_id).exists()
+            ticket_seats_limited = ticket.seats_limited
         if not ticket:
             raise UserError(_("The provided ticket doesn't exist"))
 
@@ -39,7 +44,7 @@ class SaleOrder(models.Model):
         existing_qty = order_line.product_uom_qty if order_line else 0
         qty_added = new_qty - existing_qty
         warning = ''
-        if ticket.seats_limited and ticket.seats_available <= 0:
+        if ticket_seats_limited and ticket.seats_available <= 0:
             # Remove existing line if exists and do not add a new one
             # if no ticket is available anymore
             new_qty = existing_qty
@@ -48,7 +53,7 @@ class SaleOrder(models.Model):
                 ticket=ticket.name,
                 event=ticket.event_id.name,
             )
-        elif ticket.seats_limited and qty_added > ticket.seats_available:
+        elif ticket_seats_limited and qty_added > ticket.seats_available:
             new_qty = existing_qty + ticket.seats_available
             warning = _(
                 'Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s ticket for the %(event)s event.',

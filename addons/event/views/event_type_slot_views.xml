@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="view_event_type_slot_form" model="ir.ui.view">
+        <field name="name">event.type.slot.form</field>
+        <field name="model">event.type.slot</field>
+        <field name="arch" type="xml">
+            <form>
+                <h4>Add a slot:</h4>
+                <div class="row">
+                    <label class="col-4" for="start_hour" string="From"/>
+                    <field class="col-8" name="start_hour" nolabel="1" widget="float_time"/>
+                </div>
+                <div class="row">
+                    <label class="col-4" for="end_hour" string="To"/>
+                    <field class="col-8" name="end_hour" nolabel="1" widget="float_time"/>
+                </div>
+                <div class="row">
+                    <label class="col-4" for="color" string="Color"/>
+                    <field class="col-8" name="color" widget="color_picker"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_event_type_slot_tree" model="ir.ui.view">
+        <field name="name">event.type.slot.list</field>
+        <field name="model">event.type.slot</field>
+        <field name="arch" type="xml">
+            <list string="Slots" multi_edit="1">
+                <field name="date"/>
+                <field name="start_hour" string="From" widget="float_time"/>
+                <button name="durationArrow" width="20px" class="fa fa-long-arrow-right text-center" title="Until"/>
+                <field name="end_hour" string="To" widget="float_time"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_event_type_slot_calendar" model="ir.ui.view">
+        <field name="name">event.type.slot.calendar</field>
+        <field name="model">event.type.slot</field>
+        <field name="arch" type="xml">
+            <calendar js_class="event_slot_calendar" date_start="start_datetime" date_stop="end_datetime" string="Slots"
+                mode="month" multi_create_view="1" color="color">
+                <field name="start_datetime" invisible="1"/>
+                <field name="end_datetime" invisible="1"/>
+                <field name="date_tz" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="act_event_type_slot_from_event_type" model="ir.actions.act_window">
+        <field name="name">Slots</field>
+        <field name="res_model">event.type.slot</field>
+        <field name="view_mode">calendar,list</field>
+        <field name="domain">[('event_type_id', '=', active_id)]</field>
+        <field name="context">{ 'default_event_type_id': active_id }</field>
+    </record>
+
+</data></odoo>

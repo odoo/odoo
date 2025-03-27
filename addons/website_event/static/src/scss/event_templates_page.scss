@@ -87,6 +87,15 @@
     }
 }
 
+.o_wevent_slot_selection {
+    &[aria-expanded="true"] i.fa-caret-right {
+        display: none;
+    }
+    &[aria-expanded="false"] i.fa-caret-down {
+        display: none;
+    }
+}
+
 #modal_ticket_registration {
     // Handle overflow behaviors.
     #registration_form, #o_wevent_tickets, #o_wevent_tickets_collapse {

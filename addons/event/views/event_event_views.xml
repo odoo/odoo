@@ -23,6 +23,16 @@
                     <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
+                    <!-- Force the event type slots (and their values) to be correctly synced and saved on the event.
+                    Fields need to be declared in the form to be present in the event write method. -->
+                    <field name="slot_ids" invisible="1">
+                        <list>
+                            <field name="color"/>
+                            <field name="date"/>
+                            <field name="start_hour"/>
+                            <field name="end_hour"/>
+                        </list>
+                    </field>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button name="%(event.event_registration_action_stats_from_event)d"
                                 type="action" class="oe_stat_button" icon="fa-line-chart">
@@ -39,6 +49,13 @@
                                 icon="fa-users"
                                 help="Total Registrations for this Event">
                             <field name="seats_taken" widget="statinfo" string="Attendees"/>
+                        </button>
+                        <button name="%(event.act_event_slot_from_event)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-calendar"
+                                invisible="not is_multi_slots">
+                            <field name="event_slot_count" widget="statinfo" string="Slots"/>
                         </button>
                     </div>
                     <field name="active" invisible="1"/>
@@ -58,6 +75,7 @@
                             <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
                             <field name="date_end" invisible="1" />
                             <field name="date_tz"/>
+                            <field name="is_multi_slots" string="Multiple Slots" invisible="not date_begin or not date_end"/>
                             <field name="lang"/>
                             <field name="event_type_id" string="Template"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
@@ -71,7 +89,9 @@
                             <label for="seats_limited" string="Limit Registrations"/>
                             <div>
                                 <field name="seats_limited"/>
-                                <span invisible="not seats_limited" required="not seats_limited">to <field name="seats_max" class="oe_inline o_input_9ch"/> Attendees</span>
+                                <span invisible="not seats_limited" required="not seats_limited">to <field name="seats_max" class="oe_inline o_input_9ch"/> Attendees
+                                    <span invisible="not is_multi_slots"> per slot</span>
+                                </span>
                             </div>
                         </group>
                     </group>
@@ -79,6 +99,7 @@
                         <page string="Tickets" name="tickets">
                             <field name="event_ticket_ids" context="{
                                 'default_event_name': name,
+                                'default_is_multi_slots': is_multi_slots,
                                 'list_view_ref': 'event.event_event_ticket_view_tree_from_event',
                                 'form_view_ref': 'event.event_event_ticket_view_form_from_event',
                                 'kanban_view_ref': 'event.event_event_ticket_view_kanban_from_event'}" mode="list,kanban"/>

@@ -474,9 +474,14 @@ class EventEvent(models.Model):
             return self.env.ref('website_event.mt_event_unpublished', raise_if_not_found=False)
         return super()._track_subtype(init_values)
 
-    def _get_event_resource_urls(self):
-        url_date_start = self.date_begin.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
-        url_date_stop = self.date_end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+    def _get_event_resource_urls(self, slot=False):
+        """ Prepare the Google and iCal urls for the event.
+        :param slot: If a slot is given, prepare the urls for the given slot.
+        """
+        start = slot.start_datetime if slot else self.date_begin
+        end = slot.end_datetime if slot else self.date_end
+        url_date_start = start.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
+        url_date_stop = end.astimezone(timezone(self.date_tz)).strftime('%Y%m%dT%H%M%S')
         params = {
             'action': 'TEMPLATE',
             'text': self.name,
@@ -486,6 +491,8 @@ class EventEvent(models.Model):
         }
         if self.address_id:
             params.update(location=self.address_inline)
+        if slot:
+            params.update(slot_id=slot.id)
         encoded_params = werkzeug.urls.url_encode(params)
         google_url = GOOGLE_CALENDAR_URL + encoded_params
         iCal_url = f'/event/{self.id:d}/ics?{encoded_params}'

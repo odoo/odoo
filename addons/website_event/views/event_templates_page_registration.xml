@@ -186,9 +186,32 @@
 
 <!-- Event - Description Dates -->
 <template id="event_description_dates" name="Event Description Dates">
-    <div t-attf-class="o_wevent_dates_block mb-3 {{event.is_one_day and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
+    <t t-set="is_one_day_without_slots" t-value="not event.is_multi_slots and event.is_one_day"/>
+    <div t-attf-class="o_wevent_dates_block mb-3 {{is_one_day_without_slots and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
         <div class="flex-wrap gap-3 w-lg-100">
-            <div t-if="event.is_one_day" class="card bg-transparent d-inline-flex align-items-end flex-row flex-grow-1 w-lg-100 gap-2 p-2 p-md-3">
+            <div t-if="event.is_multi_slots" class="flex-grow-1 w-lg-100">
+                <small class="fw-bold">Next Dates</small>
+                <div t-if="slots" class="card bg-transparent py-3 px-2 px-md-3">
+                    <!-- Display slots for the next 7 days or the closest date if there is none -->
+                    <t t-set="dates_next_7_days" t-value="[dt for dt in slots.keys() if datetime.date.today() &lt;= dt and dt &lt;= datetime.date.today() + datetime.timedelta(days=7)]"/>
+                    <t t-set="closest_date" t-value="min(slots, key=lambda dt: abs(dt - datetime.date.today()))"/>
+                    <div t-foreach="slots" t-as="date" t-if="date in dates_next_7_days if dates_next_7_days else date == closest_date"
+                        class="d-flex flex-column flex-sm-row flex-lg-column justify-content-between justify-content-lg-start pb-2">
+                        <span t-esc="date" class="text-nowrap" t-options="{'widget': 'date', 'format': 'MMM dd YYYY, EEEE'}"/>
+                        <div class="d-flex flex-wrap gap-2 justify-content-start justify-content-sm-end justify-content-lg-start">
+                            <button t-foreach="slots[date]" t-as="slot" t-attf-class="btn btn-sm text-nowrap pe-none #{'bg-danger text-white' if slot.is_sold_out else 'btn-light'}">
+                                <span t-if="slot.is_sold_out">Sold Out</span>
+                                <time t-else="" t-out="slot.start_datetime" t-att-datetime="slot.start_datetime" class="lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                            </button>
+                        </div>
+                    </div>
+                    <button t-if="event.event_registrations_open" type="button" data-bs-toggle="modal" data-bs-target="#modal_ticket_registration" t-attf-class="btn btn-link text-decoration-none {{cta_additional_classes}}">View More</button>
+                </div>
+                <div t-else="" class="card bg-transparent py-3 px-2 px-md-3">
+                    No Future Dates Available
+                </div>
+            </div>
+            <div t-elif="event.is_one_day" class="card bg-transparent d-inline-flex align-items-end flex-row flex-grow-1 w-lg-100 gap-2 p-2 p-md-3">
                 <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
                 <div class="small">
                     <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
@@ -227,9 +250,9 @@
             </t>
         </div>
 
-        <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else 'mt-3'}}">
+        <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if is_one_day_without_slots else 'mt-3'}}">
             <small class="text-muted">Add to calendar:</small>
-            <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
+            <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if is_one_day_without_slots else 'gap-2'}}">
                 <a t-att-href="iCal_url" class="btn btn-light o_wevent_add_to_ical" title="Add to iCal">
                     <i role="img" class="fa fa-apple"/>
                 </a>
@@ -250,6 +273,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="selected_slot" t-att-value="selected_slot"/>
                 <div class="modal-content">
                     <div class="modal-header align-items-center">
                         <h4 class="modal-title">Attendees</h4>
@@ -358,7 +382,9 @@
                             <b>Start</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="event.date_begin"
+                            <span t-if="event.is_multi_slots" t-out="slot.start_datetime"
+                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                            <span t-else="" t-out="event.date_begin"
                                 t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
@@ -367,7 +393,9 @@
                             <b>End</b>
                         </div>
                         <div class="col-auto ps-0">
-                            <span t-out="event.date_end"
+                            <span t-if="event.is_multi_slots" t-out="slot.end_datetime"
+                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                            <span t-else="" t-out="event.date_end"
                                 t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
                         </div>
                     </div>
@@ -430,7 +458,7 @@
 
             <form t-if="event.event_registrations_open and (not event.event_ticket_ids or any(not ticket.is_expired for ticket in event.event_ticket_ids))"
                 id="registration_form"
-                t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+                t-attf-action="{{'/event/%s/registration/slot' % slug(event) if event.is_multi_slots else '/event/%s/registration/new' % slug(event)}}" method="post"
                 itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div id="o_wevent_tickets" class="shadow-sm o_wevent_js_ticket_details">
@@ -492,7 +520,8 @@
                         <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary a-submit" disabled="" t-attf-id="#{event.id}">
-                                Register
+                                <t t-if="event.is_multi_slots">Next</t>
+                                <t t-else="">Register</t>
                                 <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                     (only <t t-out="event.seats_available"/> available)
                                 </t>
@@ -542,7 +571,8 @@
                         <div class="modal-footer flex-lg-row border-top">
                             <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary a-submit" t-attf-id="#{event.id}" disabled="disabled">
-                                Register
+                                <t t-if="event.is_multi_slots">Next</t>
+                                <t t-else="">Register</t>
                                 <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
                                     (only <t t-out="event.seats_available"/> available)
                                 </t>
@@ -556,6 +586,75 @@
     </div>
 </template>
 
+<template id="registration_slot_details">
+    <div id="modal_slots_registration" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg o_wevent_js_slot_details" role="document">
+            <form id="slot_registration_form" t-attf-action="/event/#{slug(event)}/registration/new" method="post"
+                itemscope="itemscope" itemprop="offers" itemtype="http://schema.org/AggregateOffer">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="selected_tickets" t-att-value="selected_tickets"/>
+                <input type="hidden" name="availability_check" t-att-value="availability_check"/>
+                <div class="modal-content">
+                    <div class="modal-header align-items-center">
+                        <h4 class="modal-title">Slots</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </div>
+                    <div class="modal-body">
+                        <div t-if="availability_check and available_slots">
+                            <div class="d-flex flex-nowrap gap-3">
+                                <h5 class="o_wevent_selected_slot_title">Select a Date:</h5>
+                                <span class="o_wevent_selected_slot text-primary fw-bold"/>
+                            </div>
+                            <nav class="mt-2">
+                                <ul class="pagination d-flex flex-nowrap gap-3 user-select-none">
+                                    <li class="o_wevent_slot_previous page-item">
+                                        <button class="btn btn-link text-decoration-none p-1">
+                                            <i class="fa fa-caret-left me-2"/><small>Previous</small>
+                                        </button>
+                                    </li>
+                                    <li class="o_wevent_slot_next page-item">
+                                        <button class="btn btn-link text-decoration-none p-1">
+                                            <small>Next</small><i class="fa fa-caret-right ms-2"/>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <div class="o_wevent_slot_dates d-flex flex-wrap">
+                                <div t-foreach="available_slots" t-as="date" t-attf-class="o_wevent_slot_date w-100 w-sm-50 d-flex flex-column flex-lg-row mb-3 gap-1 #{'pe-5' if date_index % 2 == 0 else ''}">
+                                    <small t-esc="date" class="w-lg-50 text-nowrap" t-options="{'widget': 'date', 'format': 'MMM dd YYYY, EEEE'}"/>
+                                    <div class="w-lg-50 d-flex flex-wrap gap-2 align-items-start">
+                                        <button t-foreach="available_slots[date]" t-as="slot" type="button"
+                                            t-att-data-slot-id="slot.id" t-att-data-slot-start="slot.start_datetime" t-att-data-event-tz="event.date_tz"
+                                            t-attf-class="o_wevent_slot_btn user-select-none btn btn-sm btn-light #{'pe-none' if slot.is_sold_out else ''}
+                                            #{'text-decoration-line-through text-danger' if slot.is_sold_out else ''}">
+                                            <time t-out="slot.start_datetime" t-att-datetime="slot.start_datetime" class="lh-1"
+                                                t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-elif="not availability_check">
+                            <strong>You ordered more tickets than available seats</strong>
+                        </t>
+                        <t t-elif="not available_slots">
+                            <strong>No available time slots for the selected tickets</strong>
+                        </t>
+                    </div>
+                    <div class="modal-footer flex-lg-row border-top">
+                        <button type="button" class="btn btn-light js_goto_event" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary a-submit" disabled="" t-attf-id="#{event.id}">
+                            Register
+                            <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                (only <t t-out="event.seats_available"/> available)
+                            </t>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
 
 <!-- Cover Options -->
 <template id="opt_event_description_cover_hidden" name="Event Description Cover Hidden Option" inherit_id="website_event.event_description_full" active="False"/>
