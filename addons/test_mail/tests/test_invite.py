@@ -31,6 +31,7 @@ class TestInvite(MailCommon):
                          test_partner | self.user_admin.partner_id)
         self.assertEqual(len(self._new_msgs), 1)
         self.assertEqual(len(self._mails), 1)
+        self.assertEqual(self._new_msgs.res_id, test_record.id)
         self.assertSentEmail(self.partner_employee, [test_partner])
         self.assertNotSentEmail([self.partner_admin])
         self.assertNotified(

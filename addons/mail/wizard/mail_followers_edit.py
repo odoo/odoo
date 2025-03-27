@@ -44,7 +44,10 @@ class MailFollowersEdit(models.TransientModel):
                     model_name = self.env["ir.model"]._get(wizard.res_model).display_name
                     message_values = wizard._prepare_message_values(documents, model_name)
                     message_values["partner_ids"] = wizard.partner_ids.ids
-                    self.env[wizard.res_model].message_notify(**message_values)
+                    if len(documents) == 1:
+                        documents.message_notify(**message_values)
+                    else:
+                        self.env[wizard.res_model].message_notify(**message_values)
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
