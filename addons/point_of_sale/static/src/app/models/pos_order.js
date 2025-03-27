@@ -608,9 +608,18 @@ export class PosOrder extends Base {
             this.lines.reduce((sum, orderLine) => {
                 if (!ignored_product_ids.includes(orderLine.product_id.id)) {
                     sum +=
+<<<<<<< eb25a353389b96637072b6c69ea380e76da8e1a4
                         orderLine.getUnitDisplayPriceBeforeDiscount() *
                         (orderLine.getDiscount() / 100) *
                         orderLine.getQuantity();
+||||||| ffd1b073c5ba7f902d12be555d30eab93506f3b6
+                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
+                        orderLine.getAllPrices().priceWithTax;
+                    if (orderLine.displayDiscountPolicy() === "without_discount") {
+=======
+                        orderLine.getAllPrices().priceWithTaxBeforeDiscount -
+                        orderLine.getAllPrices().priceWithTax;
+>>>>>>> fdabcccf9870faad8f4aa3312637bb16a1998c5a
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
                         !(orderLine.price_type === "manual")
