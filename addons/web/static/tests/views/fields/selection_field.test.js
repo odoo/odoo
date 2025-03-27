@@ -1,17 +1,11 @@
 import { expect, test } from "@odoo/hoot";
-import {
-    click,
-    pointerDown,
-    queryAll,
-    queryAllValues,
-    queryFirst,
-    queryOne,
-    select,
-} from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
+    contains,
     defineModels,
+    editSelectMenu,
     fields,
     models,
     mountView,
@@ -57,11 +51,11 @@ class Product extends models.Model {
     _records = [
         {
             id: 37,
-            display_name: "xphone",
+            name: "xphone",
         },
         {
             id: 41,
-            display_name: "xpad",
+            name: "xpad",
         },
     ];
 }
@@ -86,7 +80,7 @@ test("SelectionField in a list view", async () => {
     await click(".o_data_cell");
     await animationFrame();
     const td = queryFirst("tbody tr.o_selected_row td:not(.o_list_record_selector)");
-    expect(queryOne("select", { root: td })).toHaveCount(1, {
+    expect(queryOne(".o_select_menu input", { root: td })).toHaveCount(1, {
         message: "td should have a child 'select'",
     });
     expect(td.children).toHaveCount(1, { message: "select tag should be only child of td" });
@@ -108,31 +102,13 @@ test("SelectionField, edition and on many2one field", async () => {
                 <field name="color" widget="selection" />
             </form>`,
     });
-    expect("select").toHaveCount(3);
-    expect(".o_field_widget[name='product_id'] select option[value='37']").toHaveCount(1, {
-        message: "should have fetched xphone option",
-    });
-    expect(".o_field_widget[name='product_id'] select option[value='41']").toHaveCount(1, {
-        message: "should have fetched xpad option",
-    });
-    expect(".o_field_widget[name='product_id'] select").toHaveValue("37", {
-        message: "should have correct product_id value",
-    });
-    expect(".o_field_widget[name='trululu'] select").toHaveValue("false", {
-        message: "should not have any value in trululu field",
-    });
-
-    await click(".o_field_widget[name='product_id'] select");
-    await select("41");
-    await animationFrame();
-
-    expect(".o_field_widget[name='product_id'] select").toHaveValue("41", {
-        message: "should have a value of xphone",
-    });
-    expect(".o_field_widget[name='color'] select").toHaveValue('"red"', {
-        message: "should have correct value in color field",
-    });
-
+    expect(".o_select_menu").toHaveCount(3);
+    await contains(".o_field_widget[name='product_id'] input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["xphone", "xpad"]);
+    expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
+    expect(".o_field_widget[name='trululu'] input").toHaveValue("");
+    await editSelectMenu(".o_field_widget[name='product_id'] input", { value: "xpad" });
+    expect(".o_field_widget[name='color'] input").toHaveValue("Red");
     expect.verifySteps(["get_views", "web_read", "name_search", "name_search", "onchange"]);
 });
 
@@ -200,8 +176,7 @@ test("unset selection on a many2one field", async () => {
         arch: /* xml */ '<form><field name="trululu" widget="selection" /></form>',
     });
 
-    await click(".o_form_view select");
-    await select("false");
+    await editSelectMenu(".o_field_widget[name='trululu'] input", { value: "" });
     await animationFrame();
     await clickSave();
     await animationFrame();
@@ -218,7 +193,8 @@ test("field selection with many2ones and special characters", async () => {
         arch: /* xml */ '<form><field name="trululu" widget="selection" /></form>',
     });
 
-    expect("select option[value='4']").toHaveText("<span>hey</span>");
+    await contains(".o_field_widget[name='trululu'] input").click();
+    expect(".o_select_menu_item:contains(<span>hey</span>)").toHaveCount(1);
 });
 
 test("required selection widget should not have blank option", async () => {
@@ -242,25 +218,13 @@ test("required selection widget should not have blank option", async () => {
                 </form>`,
     });
 
-    expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.value)).toEqual([
-        "false",
-        '"red"',
-        '"black"',
-    ]);
-
-    expect(queryAll(".o_field_widget[name='feedback_value'] option").map((n) => n.value)).toEqual([
-        '"good"',
-        '"bad"',
-    ]);
+    await contains(".o_field_widget[name='feedback_value'] input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Good", "Bad"]);
 
     // change value to update widget modifier values
-    await click(".o_field_widget[name='feedback_value'] select");
-    await select('"bad"');
-    await animationFrame();
-    expect(queryAll(".o_field_widget[name='color'] option").map((n) => n.value)).toEqual([
-        '"red"',
-        '"black"',
-    ]);
+    await editSelectMenu(".o_field_widget[name='feedback_value'] input", { value: "Bad" });
+    await contains(".o_field_widget[name='color'] input").click();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Red", "Black"]);
 });
 
 test("selection field with placeholder", async () => {
@@ -270,13 +234,7 @@ test("selection field with placeholder", async () => {
         arch: /* xml */ `<form><field name="trululu" widget="selection" placeholder="Placeholder"/></form>`,
     });
 
-    expect(".o_field_widget[name='trululu'] select option:first").toHaveText("Placeholder");
-    expect(".o_field_widget[name='trululu'] select option:first").toHaveValue("false");
-    expect(".o_field_widget[name='trululu'] select option:first").toHaveClass("d-none");
-    await click(".o_field_widget[name='trululu'] select");
-    await select(1);
-    await animationFrame();
-    expect(".o_field_widget[name='trululu'] select option:first").not.toHaveClass("d-none");
+    expect(`.o_field_widget[name='trululu'] input`).toHaveAttribute("placeholder", "Placeholder");
 });
 
 test("placeholder_field shows as placeholder", async () => {
@@ -291,7 +249,10 @@ test("placeholder_field shows as placeholder", async () => {
             <field name="char"/>
         </form>`,
     });
-    expect(`.o_field_widget[name='trululu'] select option:first`).toHaveText("My Placeholder");
+    expect(`.o_field_widget[name='trululu'] input`).toHaveAttribute(
+        "placeholder",
+        "My Placeholder"
+    );
 });
 
 test("SelectionField in kanban view", async () => {
@@ -309,19 +270,11 @@ test("SelectionField in kanban view", async () => {
         domain: [["id", "=", 1]],
     });
 
-    expect(".o_field_widget[name='color'] select").toHaveCount(1, {
-        message: "SelectionKanbanField widget applied to selection field",
+    await contains(".o_field_widget[name='color'] input").click();
+    expect(".o_select_menu_item").toHaveCount(2, {
+        message: "Two options are displayed",
     });
-
-    expect(".o_field_widget[name='color'] option").toHaveCount(3, {
-        message: "Three options are displayed (one blank option)",
-    });
-
-    expect(queryAllValues(".o_field_widget[name='color'] option")).toEqual([
-        "false",
-        '"red"',
-        '"black"',
-    ]);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Red", "Black"]);
 });
 
 test("SelectionField - auto save record in kanban view", async () => {
@@ -339,9 +292,7 @@ test("SelectionField - auto save record in kanban view", async () => {
                 </kanban>`,
         domain: [["id", "=", 1]],
     });
-    await click(".o_field_widget[name='color'] select");
-    await select('"black"');
-    await animationFrame();
+    await editSelectMenu(".o_field_widget[name='color'] input", { value: "Black" });
     expect.verifySteps(["web_save"]);
 });
 
@@ -363,8 +314,7 @@ test("SelectionField don't open form view on click in kanban view", async functi
         },
     });
 
-    await click(".o_field_widget[name='color'] select");
-    await animationFrame();
+    await contains(".o_field_widget[name='color'] input").click();
     expect.verifySteps([]);
 });
 
@@ -420,12 +370,8 @@ test("SelectionField is disabled with a readonly attribute", async () => {
     });
 });
 
-test("SelectionField in kanban view with handle widget", async () => {
-    // When records are draggable, most pointerdown events are default prevented. This test
-    // comes with a fix that blacklists "select" elements, i.e. pointerdown events on such
-    // elements aren't default prevented, because if they were, the select element can't be
-    // opened. The test is a bit artificial but there's no other way to test the scenario, as
-    // using editSelect simply triggers a "change" event, which obviously always works.
+test.tags("mobile");
+test("SelectionField search is disabled in BottomSheet", async function (assert) {
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -433,13 +379,13 @@ test("SelectionField in kanban view with handle widget", async () => {
                 <kanban>
                     <templates>
                         <t t-name="card">
-                            <field name="color" widget="selection"/>
+                            <field name="color" widget="selection" />
                         </t>
                     </templates>
                 </kanban>`,
+        domain: [["id", "=", 1]],
     });
 
-    const events = await pointerDown(".o_kanban_record .o_field_widget[name=color] select");
-    await animationFrame();
-    expect(events.get("pointerdown").defaultPrevented).toBe(false);
+    await contains(".o_field_widget[name='color'] input").click();
+    expect(".o_bottom_sheet input").toHaveCount(0);
 });
