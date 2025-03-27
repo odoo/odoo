@@ -95,3 +95,14 @@ registry.category("web_tour.tours").add("BarcodeScanPartnerTour", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_quantity_package_of_non_basic_unit", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("555555"),
+            ProductScreen.selectedOrderlineHas("Cord", 12),
+            Chrome.endTour(),
+        ].flat(),
+});

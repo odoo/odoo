@@ -1958,6 +1958,32 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
 
+    def test_quantity_package_of_non_basic_unit(self):
+        inch = self.env.ref('uom.product_uom_inch')
+        inch.write({'active': True})
+        pack_of_12_inch = self.env['uom.uom'].create({
+            'name': 'Pack of 12_inch',
+            'relative_factor': 12,
+            'relative_uom_id': inch.id,
+            'is_pos_groupable': True,
+        })
+        product_cord = self.env['product.product'].create({
+            'name': 'Cord',
+            'is_storable': True,
+            'available_in_pos': True,
+            'uom_id': inch.id,
+            'uom_ids': [pack_of_12_inch.id],
+            'lst_price': 10.0,
+        })
+        self.env['product.uom'].create({
+            'barcode': '555555',
+            'product_id': product_cord.id,
+            'uom_id': pack_of_12_inch.id,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_quantity_package_of_non_basic_unit', login="pos_user")
+
+
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'
