@@ -320,6 +320,14 @@ class SequenceMixin(models.AbstractModel):
             format_values['year_end'] = self._truncate_year_to_length(forced_year_end or date_end.year, format_values['year_end_length'])
             format_values['month'] = self[self._sequence_date_field].month
 
+        registry = self.env.registry
+        triggers = registry._field_triggers[self._fields[self._sequence_field]]
+        for inverse_field, triggered_fields in triggers.items():
+            for triggered_field in triggered_fields:
+                if not triggered_field.store or not triggered_field.compute:
+                    continue
+                for field in registry.field_inverses[inverse_field[0]] if inverse_field else [None]:
+                    self.env.add_to_compute(triggered_field, self[field.name] if field else self)
         self.flush_recordset()
         with self.env.cr.savepoint(flush=False) as sp:
             while True:
@@ -332,13 +340,6 @@ class SequenceMixin(models.AbstractModel):
                         break
                 except (pgerrors.ExclusionViolation, pgerrors.UniqueViolation):
                     sp.rollback()
-
-        # because we are flushing, and because the business code might be flushing elsewhere (i.e. to
-        # validate constraints), the fields depending on the sequence field might be protected by the
-        # ORM. This is not desired, so we already reset them here.
-        self._compute_split_sequence()
-        self.flush_recordset(['sequence_prefix', 'sequence_number'])
-        self.modified([self._sequence_field])
 
     def _is_last_from_seq_chain(self):
         """Tells whether or not this element is the last one of the sequence chain.
