@@ -1143,9 +1143,6 @@ export class ListRenderer extends Component {
             return;
         }
 
-        // Wait potential update being performed on record by "change" event
-        await this.env.model.mutex.getUnlockedDef();
-
         const handled = this.editedRecord
             ? this.onCellKeydownEditMode(hotkey, closestCell, group, record)
             : this.onCellKeydownReadOnlyMode(hotkey, closestCell, group, record); // record is supposed to be not null here

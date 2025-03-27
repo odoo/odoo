@@ -167,7 +167,9 @@ export function useInputField(params) {
 
             if ((val || false) !== (component.props.record.data[component.props.name] || false)) {
                 lastSetValue = inputRef.el.value;
-                await component.props.record.update({ [component.props.name]: val });
+                component.props.record.model._urgentSave = true;
+                component.props.record.update({ [component.props.name]: val });
+                component.props.record.model._urgentSave = false;
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
                 inputRef.el.value = params.getValue();
