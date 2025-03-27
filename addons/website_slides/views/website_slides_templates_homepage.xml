@@ -306,10 +306,10 @@
     <a t-attf-href="/slides/#{slug(channel)}" t-title="channel.name" t-attf-class="text-decoration-none text-reset #{opt_slide_size}">
         <div t-attf-class="o_wslides_course_card #{'o_wslides_course_unpublished' if not channel.is_published else ''} #{'card h-100' if opt_slides_list_columns else 'row mx-0'}" t-cache="channel if is_public_user and not search_tags else None">
             <t t-set="channel_frontend_tags" t-value="channel.tag_ids.filtered(lambda tag: tag.color)"/>
-            <div t-if="channel.is_member and channel.completed" class="o_ribbon o_ribbon_right text-bg-success z-1">
+            <div t-if="channel.is_member and channel.completed" class="o_ribbon o_ribbon_left text-bg-success z-1">
                 Completed
             </div>
-            <div t-elif="not channel.is_published" class="o_ribbon o_ribbon_right text-bg-danger z-1">
+            <div t-elif="not channel.is_published" class="o_ribbon o_ribbon_left text-bg-danger z-1">
                 Unpublished
             </div>
             <t t-if="channel.partner_has_new_content" t-call="website_slides.course_card_information"/>
@@ -352,7 +352,7 @@
 <template id="course_card_information_arrow" inherit_id="website_slides.course_card_information"
     active="True" name='New Content Ribbon'>
     <xpath expr="//t[@id='course_card_information_content']" position="inside">
-        <span class="o_ribbon o_ribbon_right text-bg-info z-1">New Content</span>
+        <span class="o_ribbon o_ribbon_left text-bg-info z-1">New Content</span>
     </xpath>
 </template>
 

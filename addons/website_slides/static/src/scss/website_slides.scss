@@ -75,10 +75,78 @@ $line-height-truncate: 1.5em;
 }
 
 .o_wslides_fs_sidebar_section {
-    a[aria-expanded="true"] i.fa-caret-left{
+    a[aria-expanded="true"] i.fa-caret-down{
         display: none;
     }
-    a[aria-expanded="false"] i.fa-caret-down{
+    a[aria-expanded="false"] i.fa-caret-up{
         display: none;
     }
 }
+
+// Embed PDFViewer
+// **************************************************
+#PDFViewer.o_wslides_fs_pdf_viewer {
+    background-image: linear-gradient(120deg, $o-wslides-color-dark2, $o-wslides-color-dark3);
+
+    #PDFViewerNav {
+        background-image: linear-gradient(120deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
+    }
+
+    .oe_slides_panel_footer span[role="button"],
+    .oe_slides_panel_footer a,
+    .oe_slides_share_bar span[role="button"],
+    .oe_slides_share_bar a {
+        cursor: pointer;
+        user-select: none;
+        @include o-hover-text-color(rgba(white, 0.7), white);
+
+        &.disabled {
+            @include o-hover-text-color(rgba(white, 0.2), rgba(white, 0.2));
+            cursor: default;
+        }
+    }
+
+    .oe_slide_embed_option {
+        @include o-position-absolute(0,0,0,0);
+    }
+
+    .disabled {
+        // remove JS events for disabled elements
+        pointer-events: none;
+    }
+
+    .o_slide_navigation_buttons {
+        user-select: none;
+    }
+}
+
+.oe_slides_share_bar{
+    padding: 10px 0;
+}
+
+.o_wslides_js_lesson_quiz_question {
+    .list-group-item  {
+        @include font-size(1rem);
+
+        input:checked + i.fa-circle {
+            color: $primary !important;
+        }
+    }
+
+    &.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    &.completed-disabled{
+        pointer-events: none;
+    }
+}
+
+a.o_wslides_js_quiz_is_correct {
+    color: black;
+    input:checked + i.fa-check-circle-o {
+        color: $success !important;
+    }
+}
+
