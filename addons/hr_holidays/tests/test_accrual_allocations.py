@@ -20,13 +20,13 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         super(TestAccrualAllocations, cls).setUpClass()
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'hr',
         })
         cls.leave_type_hour = cls.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'hr',
             'request_unit': 'hour',
@@ -168,7 +168,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Paid Time Off',
                 'requires_allocation': 'no',
                 'responsible_ids': [(4, self.user_hrmanager_id)],
-                'time_type': 'leave',
+                'time_type': 'paid',
                 'request_unit': 'half_day',
             })
             leave = self.env['hr.leave'].create({
@@ -522,7 +522,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': 'Paid Time Off',
                 'requires_allocation': 'no',
                 'responsible_ids': [Command.link(self.user_hrmanager_id)],
-                'time_type': 'leave',
+                'time_type': 'paid',
             })
             leave = self.env['hr.leave'].create({
                 'name': 'leave',
@@ -546,7 +546,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             # 3.75 -> starts 1 day after allocation date -> 31/08-3/09 => 4 days - 1 days time off => (3 / 4) * 5 days
             # ^ result without prorata
             # Prorated
-            self.assertAlmostEqual(allocation_worked_time.number_of_days, 3, 4, 'There should be 3 days allocated.')
+            self.assertAlmostEqual(allocation_worked_time.number_of_days, 3.75, 4, 'There should be 3.75 days allocated.')
             self.assertEqual(allocation_not_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
             self.assertEqual(allocation_worked_time.nextcall, datetime.date(2021, 9, 13), 'The next call date of the cron should be the September 13th')
 
@@ -555,7 +555,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.env['hr.leave.allocation']._update_accrual()
             self.assertAlmostEqual(allocation_not_worked_time.number_of_days, 9.2857, 4, 'There should be 9.2857 days allocated.')
             self.assertEqual(allocation_not_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
-            self.assertAlmostEqual(allocation_worked_time.number_of_days, 8, 4, 'There should be 8 days allocated.')
+            self.assertAlmostEqual(allocation_worked_time.number_of_days, 8.75, 4, 'There should be 8.75 days allocated.')
             self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
 
     def test_check_max_value(self):
@@ -1376,7 +1376,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_yearly_cap(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Hour Time Off',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'leave_validation_type': 'no_validation',
@@ -1833,7 +1833,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_future_accural_time(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'request_unit': 'hour',
@@ -2086,7 +2086,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_leaves_cancel_cron(self):
         leave_type_no_negative = self.env['hr.leave.type'].create({
             'name': 'Test Accrual - No negative',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'leave_validation_type': 'no_validation',
@@ -2094,7 +2094,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         leave_type_negative = self.env['hr.leave.type'].create({
             'name': 'Test Accrual - Negative',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
             'leave_validation_type': 'no_validation',
@@ -2210,7 +2210,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_accrual_allocation_data_persists(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'unpaid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
         })
@@ -2252,7 +2252,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
     def test_future_accural_time_with_leaves_taken_in_the_past(self):
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': 'yes',
             'allocation_validation_type': 'no_validation',
         })
@@ -3738,7 +3738,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
-            'time_type': 'leave',
+            'time_type': 'paid',
             'requires_allocation': 'yes',
             'leave_validation_type': 'hr',
             'allocation_validation_type': 'hr',
