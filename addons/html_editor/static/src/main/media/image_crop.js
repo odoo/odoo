@@ -43,7 +43,7 @@ export class ImageCrop extends Component {
         this.elRef = useRef("el");
         this.cropperWrapper = useRef("cropperWrapper");
         this.imageRef = useRef("imageRef");
-        this.cropperOpen = false;
+        this.isCropperActive = false;
 
         // We use capture so that the handler is called before other editor handlers
         // like save, such that we can restore the src before a save.
@@ -66,19 +66,18 @@ export class ImageCrop extends Component {
     }
 
     closeCropper() {
-        if (!this.cropperOpen) {
-            return;
-        }
-        this.cropper?.destroy?.();
-        this.media.setAttribute("src", this.initialSrc);
-        if (
-            this.hasModifiedImageClass &&
-            !this.media.classList.contains("o_modified_image_to_save")
-        ) {
-            this.media.classList.add("o_modified_image_to_save");
+        if (this.isCropperActive) {
+            this.cropper?.destroy?.();
+            this.media.setAttribute("src", this.initialSrc);
+            if (
+                this.hasModifiedImageClass &&
+                !this.media.classList.contains("o_modified_image_to_save")
+            ) {
+                this.media.classList.add("o_modified_image_to_save");
+            }
         }
         this.props?.onClose?.();
-        this.cropperOpen = false;
+        this.isCropperActive = false;
     }
 
     /**
@@ -96,7 +95,7 @@ export class ImageCrop extends Component {
     }
 
     async show() {
-        if (this.cropperOpen) {
+        if (this.isCropperActive) {
             return;
         }
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
@@ -183,13 +182,16 @@ export class ImageCrop extends Component {
         this.cropperWrapper.el.style.top = `${offset.top}px`;
 
         await loadImage(this.originalSrc, cropperImage);
+        if (status(this) !== "mounted") {
+            return;
+        }
 
         this.cropper = await activateCropper(
             cropperImage,
             this.aspectRatios[this.aspectRatio].value,
             this.media.dataset
         );
-        this.cropperOpen = true;
+        this.isCropperActive = true;
     }
     /**
      * Updates the DOM image with cropped data and associates required
