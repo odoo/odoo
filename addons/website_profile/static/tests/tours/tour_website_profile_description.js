@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('website_profile_description', {
         run: "editor content <p>code here</p>",
     }, {
         content: "Save changes",
-        trigger: "button:contains('Update')",
+        trigger: "button:contains('Save changes')",
         run: "click",
     }, {
         content: "Check the content is saved",
