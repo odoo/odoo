@@ -1,22 +1,35 @@
+import { setDatasetIfUndefined } from "@html_builder/website_builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BlogPostsOption } from "./dynamic_snippet_blog_posts_option";
+import { DynamicSnippetBlogPostsOption } from "./dynamic_snippet_blog_posts_option";
 
-class BlogPostsOptionPlugin extends Plugin {
-    static id = "blogPostsOption";
+class DynamicSnippetBlogPostsOptionPlugin extends Plugin {
+    static id = "dynamicSnippetBlogPostsOption";
     static dependencies = ["dynamicSnippetOption"];
+    modelNameFilter = "blog.post";
+    selector = ".s_dynamic_snippet_blog_posts";
     resources = {
         builder_options: {
-            OptionComponent: BlogPostsOption,
+            OptionComponent: DynamicSnippetBlogPostsOption,
             props: {
-                ...this.dependencies.dynamicSnippetOption.getComponentProps(),
+                modelNameFilter: this.modelNameFilter,
                 fetchBlogs: this.fetchBlogs.bind(this),
             },
-            selector: ".s_dynamic_snippet_blog_posts",
+            selector: this.selector,
         },
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {
         this.blogs = undefined;
+    }
+    async onSnippetDropped({ snippetEl }) {
+        if (snippetEl.matches(this.selector)) {
+            setDatasetIfUndefined(snippetEl, "filterByBlogId", -1);
+            await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
+                snippetEl,
+                this.modelNameFilter
+            );
+        }
     }
     async fetchBlogs() {
         if (!this.blogs) {
@@ -35,4 +48,6 @@ class BlogPostsOptionPlugin extends Plugin {
     }
 }
 
-registry.category("website-plugins").add(BlogPostsOptionPlugin.id, BlogPostsOptionPlugin);
+registry
+    .category("website-plugins")
+    .add(DynamicSnippetBlogPostsOptionPlugin.id, DynamicSnippetBlogPostsOptionPlugin);

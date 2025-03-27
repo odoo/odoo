@@ -1,33 +1,24 @@
-export function applyFunDependOnSelectorAndExclude(fn, rootEl, { selector, exclude, applyTo }) {
-    const closestSelector = rootEl.closest(selector);
-    let editingEls = closestSelector ? [closestSelector] : [...rootEl.querySelectorAll(selector)];
-    if (exclude) {
-        editingEls = editingEls.filter((selectorEl) => !selectorEl.matches(exclude));
+export function applyFunDependOnSelectorAndExclude(fn, rootEl, selectorParams) {
+    const editingEls = getEditingEls(rootEl, selectorParams);
+    if (!editingEls.length) {
+        return false;
     }
-    for (const editingEl of editingEls) {
-        const targetEls = applyTo ? editingEl.querySelectorAll(applyTo) : [editingEl];
-        for (const targetEl of targetEls) {
-            fn(targetEl);
-        }
-    }
+    return Promise.all(editingEls.map((el) => fn(el)));
 }
 
-export async function applyAsyncFunDependOnSelectorAndExclude(
-    fn,
-    rootEl,
-    { selector, exclude, applyTo }
-) {
+export function getEditingEls(rootEl, { selector, exclude, applyTo }) {
     const closestSelector = rootEl.closest(selector);
     let editingEls = closestSelector ? [closestSelector] : [...rootEl.querySelectorAll(selector)];
     if (exclude) {
         editingEls = editingEls.filter((selectorEl) => !selectorEl.matches(exclude));
     }
-    const proms = [];
-    for (const editingEl of editingEls) {
-        const targetEls = applyTo ? editingEl.querySelectorAll(applyTo) : [editingEl];
-        for (const targetEl of targetEls) {
-            proms.push(fn(targetEl));
-        }
+    if (!applyTo) {
+        return editingEls;
     }
-    await Promise.all(proms);
+    const targetEls = [];
+    for (const editingEl of editingEls) {
+        const applyToEls = applyTo ? editingEl.querySelectorAll(applyTo) : [editingEl];
+        targetEls.push(...applyToEls);
+    }
+    return targetEls;
 }
