@@ -1,12 +1,12 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { Plugin } from "../../plugin";
-import { _t } from "@web/core/l10n/translation";
 import { ImageCrop } from "./image_crop";
-import { loadBundle } from "@web/core/assets";
 
 export class ImageCropPlugin extends Plugin {
     static id = "imageCrop";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["selection", "history", "imagePostProcess"];
+    static shared = ["openCropImage"];
     resources = {
         user_commands: [
             {
@@ -25,39 +25,37 @@ export class ImageCropPlugin extends Plugin {
         ],
     };
 
-    setup() {
-        this.imageCropProps = {
-            media: undefined,
-            mimetype: undefined,
-        };
-    }
-
     getSelectedImage() {
         const selectedNodes = this.dependencies.selection.getSelectedNodes();
         return selectedNodes.find((node) => node.tagName === "IMG");
     }
 
-    async openCropImage() {
-        const selectedImg = this.getSelectedImage();
+    async openCropImage(selectedImg, imageCropProps) {
+        selectedImg = selectedImg || this.getSelectedImage();
         if (!selectedImg) {
             return;
         }
-
-        this.imageCropProps.media = selectedImg;
-
-        const onClose = () => {
-            registry.category("main_components").remove("ImageCropping");
-        };
-
-        const onSave = () => {
-            this.dependencies.history.addStep();
-        };
-
-        await loadBundle("html_editor.assets_image_cropper");
-
-        registry.category("main_components").add("ImageCropping", {
+        return registry.category("main_components").add("ImageCropping", {
             Component: ImageCrop,
-            props: { ...this.imageCropProps, onClose, onSave, document: this.document },
+            props: {
+                media: selectedImg,
+                onSave: async (newDataset) => {
+                    // todo: should use the mutex if there is one?
+                    const updateImageAttributes =
+                        await this.dependencies.imagePostProcess.processImage(
+                            selectedImg,
+                            newDataset
+                        );
+                    updateImageAttributes();
+                    this.dependencies.history.addStep();
+                },
+                document: this.document,
+                ...imageCropProps,
+                onClose: () => {
+                    registry.category("main_components").remove("ImageCropping");
+                    imageCropProps.onClose?.();
+                },
+            },
         });
     }
 }

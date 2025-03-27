@@ -27,9 +27,7 @@ export class SharedPopup extends Interaction {
             },
             "t-on-shown.bs.modal": () => this.popupShown = true,
             "t-on-hidden.bs.modal": this.onModalHidden,
-            "t-att-class": () => ({
-                "d-none": !this.popupShown,
-            }),
+            "t-att-class": () => ({ "d-none": !this.popupShown }),
         },
     };
 

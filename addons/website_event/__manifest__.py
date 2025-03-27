@@ -13,6 +13,7 @@
         'website',
         'website_partner',
         'website_mail',
+        'html_builder',
     ],
     'data': [
         'data/event_data.xml',
@@ -70,6 +71,9 @@
             'website_event/static/src/interactions/*.js',
             'website_event/static/src/snippets/**/*.js',
             ('remove', 'website_event/static/src/snippets/**/options.js'),
+        ],
+        'html_builder.assets': [
+            'website_event/static/src/plugins/**/*',
         ],
         'website.assets_wysiwyg': [
             'website_event/static/src/snippets/s_events/options.js',

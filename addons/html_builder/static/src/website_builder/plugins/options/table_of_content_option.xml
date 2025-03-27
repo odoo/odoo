@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.TableOfContentOption">
+    <BuilderRow label.translate="Content">
+        <BuilderButton
+            action="'addItem'"
+            actionParam="'.s_table_of_content_main > section:last-of-type'"
+            preview="false"
+            className="'o_we_bg_brand_primary'">
+            Add Item
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-name="html_builder.TableOfContentNavbarOption">
+    <BuilderRow label.translate="Position">
+        <BuilderButtonGroup>
+            <BuilderButton icon="'fa-long-arrow-left'" title.translate="Left" action="'navbarPosition'" actionParam="'left'"/>
+            <BuilderButton icon="'fa-long-arrow-up'" title.translate="Top" action="'navbarPosition'" actionParam="'top'"/>
+            <BuilderButton icon="'fa-long-arrow-right'" title.translate="Right" action="'navbarPosition'" actionParam="'right'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+    <BuilderRow label.translate="Sticky">
+        <BuilderCheckbox classAction="'s_table_of_content_navbar_sticky'" preview="false"/>
+    </BuilderRow>
+</t>
+
+</templates>

@@ -17,7 +17,6 @@ export class Popup extends Interaction {
         },
         "_root": {
             "t-on-hide.bs.modal": this.onHideModal,
-            "t-on-show.bs.modal": this.onShowModal,
             "t-on-shown.bs.modal": this.trapFocus,
         },
         "_window": {
@@ -202,21 +201,6 @@ export class Popup extends Interaction {
         const nbDays = this.modalEl.dataset.consentsDuration;
         cookie.set(this.el.id, this.cookieValue, nbDays * 24 * 60 * 60, "required");
         this.popupAlreadyShown = !this.modalShownOnClickEl;
-
-        const iframeEls = this.el.querySelectorAll(".media_iframe_video iframe");
-        for (const iframeEl of iframeEls) {
-            iframeEl.src = "";
-        }
-    }
-
-    onShowModal() {
-        this.el.querySelectorAll(".media_iframe_video").forEach((mediaEl) => {
-            // TODO still oeExpression to remove someday
-            this.services.website_cookies.manageIframeSrc(
-                mediaEl.querySelector("iframe"),
-                mediaEl.dataset.oeExpression || mediaEl.dataset.src
-            );
-        });
     }
 
     /**

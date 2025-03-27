@@ -15,14 +15,17 @@ import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url
 function loadAnchors(url, body) {
     return new Promise(function (resolve, reject) {
         if (url === window.location.pathname || url[0] === '#') {
-            resolve(body ? body : document.body.outerHTML);
+            resolve(body ? body.outerHTML : document.body.outerHTML);
         } else if (url.length && !url.startsWith("http")) {
+            // TODO: Might be broken with ReplaceMedia (NBY) and LinkTools
             $.get(window.location.origin + url).then(resolve, reject);
         } else { // avoid useless query
             resolve();
         }
     }).then(function (response) {
-        const anchors = $(response).find('[id][data-anchor=true], .modal[id][data-display="onClick"]').toArray().map((el) => {
+        const fragment = new DOMParser().parseFromString(response, "text/html");
+        const anchorEls = fragment.querySelectorAll(`[id][data-anchor="true"], .modal[id][data-display="onClick"]`);
+        const anchors = Array.from(anchorEls).map((el) => {
             return '#' + el.id;
         });
         // Always suggest the top and the bottom of the page as internal link
@@ -47,10 +50,10 @@ function loadAnchors(url, body) {
  *
  * @param {HTMLInputElement} input
  */
-function autocompleteWithPages(input, options= {}) {
+function autocompleteWithPages(input, options= {}, env = undefined) {
     const owlApp = new App(UrlAutoComplete, {
-        env: Component.env,
-        dev: Component.env.debug,
+        env: env || Component.env,
+        dev: env ? env.debug : Component.env.debug,
         getTemplate,
         props: {
             options,

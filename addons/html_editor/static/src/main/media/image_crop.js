@@ -1,9 +1,8 @@
 import {
-    applyModifications,
-    cropperDataFields,
     activateCropper,
     loadImage,
     loadImageInfo,
+    cropperDataFieldsWithAspectRatio,
 } from "@html_editor/utils/image_processing";
 import { IMAGE_SHAPES } from "./image_plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -18,6 +17,14 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { scrollTo, closestScrollableY } from "@web/core/utils/scrolling";
 
+export const cropperAspectRatios = {
+    "0/0": { label: _t("Flexible"), value: 0 },
+    "16/9": { label: "16:9", value: 16 / 9 },
+    "4/3": { label: "4:3", value: 4 / 3 },
+    "1/1": { label: "1:1", value: 1 },
+    "2/3": { label: "2:3", value: 2 / 3 },
+};
+
 export class ImageCrop extends Component {
     static template = "html_editor.ImageCrop";
     static props = {
@@ -29,13 +36,7 @@ export class ImageCrop extends Component {
     };
 
     setup() {
-        this.aspectRatios = {
-            "0/0": { label: _t("Flexible"), value: 0 },
-            "16/9": { label: "16:9", value: 16 / 9 },
-            "4/3": { label: "4:3", value: 4 / 3 },
-            "1/1": { label: "1:1", value: 1 },
-            "2/3": { label: "2:3", value: 2 / 3 },
-        };
+        this.aspectRatios = cropperAspectRatios;
         this.notification = useService("notification");
         this.media = this.props.media;
         this.document = this.props.document;
@@ -84,9 +85,9 @@ export class ImageCrop extends Component {
             this.cropper.reset();
             if (this.aspectRatio !== "0/0") {
                 this.aspectRatio = "0/0";
-                this.cropper.setAspectRatio(this.aspectRatios[this.aspectRatio].value);
+                this.cropper.setAspectRatio(cropperAspectRatios[this.aspectRatio].value);
             }
-            await this.save(false);
+            await this.save();
         }
     }
 
@@ -96,15 +97,12 @@ export class ImageCrop extends Component {
         const data = { ...this.media.dataset };
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
-        const mimetype =
-            data.mimetype || src.endsWith(".png")
-                ? "image/png"
-                : src.endsWith(".webp")
-                ? "image/webp"
-                : "image/jpeg";
+        const mimetype = getMimetype(this.media);
         this.mimetype = this.props.mimetype || mimetype;
 
-        await loadImageInfo(this.media);
+        // todo: there is probably a problem mutating this.media this moment at
+        // it will make a mutation in the currentStep of the history.
+        Object.assign(this.media, await loadImageInfo(this.media));
         const isIllustration = /^\/(?:html|web)_editor\/shape\/illustration\//.test(
             this.media.dataset.originalSrc
         );
@@ -173,7 +171,7 @@ export class ImageCrop extends Component {
 
         this.cropper = await activateCropper(
             cropperImage,
-            this.aspectRatios[this.aspectRatio].value,
+            cropperAspectRatios[this.aspectRatio]?.value || 0,
             this.media.dataset
         );
 
@@ -196,36 +194,16 @@ export class ImageCrop extends Component {
      * @private
      * @param {boolean} [cropped=true]
      */
-    async save(cropped = true) {
-        // Mark the media for later creation of cropped attachment
-        this.media.classList.add("o_modified_image_to_save");
-
-        [...cropperDataFields, "aspectRatio"].forEach((attr) => {
-            delete this.media.dataset[attr];
-            const value = this.getAttributeValue(attr);
-            if (value) {
-                this.media.dataset[attr] = value;
-            }
-        });
-        delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media, this.cropper, {
-            forceModification: true,
+    async save() {
+        const cropperData = this.getCropperData(this.cropper);
+        this.props.onSave?.({
             mimetype: this.mimetype,
+            aspectRatio: this.aspectRatio,
+            ...cropperData,
+            // todo nby: what about `delete image.dataset.resizeWidth;` ? (see previously `processImageCrop`)
+            // todo nby: what about `forceModification: true,`? (see previously `processImageCrop`)
         });
-        this.media.classList.toggle("o_we_image_cropped", cropped);
         this.closeCropper();
-        this.props.onSave?.();
-    }
-    /**
-     * Returns an attribute's value for saving.
-     *
-     * @private
-     */
-    getAttributeValue(attr) {
-        if (cropperDataFields.includes(attr)) {
-            return this.cropper.getData()[attr];
-        }
-        return this[attr];
     }
     /**
      * Resets the crop box to prevent it going outside the image.
@@ -286,7 +264,7 @@ export class ImageCrop extends Component {
     setAspectRatio(ratio) {
         this.cropper.reset();
         this.aspectRatio = ratio;
-        this.cropper.setAspectRatio(this.aspectRatios[this.aspectRatio].value);
+        this.cropper.setAspectRatio(cropperAspectRatios[this.aspectRatio].value);
     }
 
     /**
@@ -319,6 +297,16 @@ export class ImageCrop extends Component {
         }
     }
     /**
+     * @param {Cropper} cropper
+     */
+    getCropperData(cropper) {
+        return Object.fromEntries(
+            cropperDataFieldsWithAspectRatio
+                .map((field) => [field, cropper.getData()[field]])
+                .filter(([, value]) => value)
+        );
+    }
+    /**
      * Resets the cropbox on zoom to prevent crop box overflowing.
      *
      * @private
@@ -328,4 +316,20 @@ export class ImageCrop extends Component {
         await new Promise((res) => setTimeout(res, 0));
         this.resetCropBox();
     }
+}
+
+/**
+ * @param {HTMLImageElement} image
+ * @returns {string|null} The mimetype of the image.
+ */
+export function getMimetype(image) {
+    const src = image.getAttribute("src");
+    return (
+        image.dataset.mimetype ||
+        (src.endsWith(".png") && "image/png") ||
+        (src.endsWith(".webp") && "image/webp") ||
+        (src.endsWith(".jpg") && "image/jpeg") ||
+        (src.endsWith(".jpeg") && "image/jpeg") ||
+        null
+    );
 }
