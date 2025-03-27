@@ -31,8 +31,9 @@ export class BuilderSelect extends Component {
         const buttonRef = useRef("button");
         let currentLabel;
         const updateCurrentLabel = () => {
-            if (buttonRef.el) {
-                buttonRef.el.innerHTML = currentLabel || _t("None");
+            const newHtml = currentLabel || _t("None");
+            if (buttonRef.el && buttonRef.el.innerHTML !== newHtml) {
+                buttonRef.el.innerHTML = newHtml;
             }
         };
         useSelectableComponent(this.props.id, {
