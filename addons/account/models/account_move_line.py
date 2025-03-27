@@ -592,6 +592,7 @@ class AccountMoveLine(models.Model):
                     company_id=line.company_id.id,
                     partner_id=line.partner_id.id,
                     move_type=line.move_id.move_type,
+                    journal_id=line.journal_id.id,
                 )
         for line in self:
             if not line.account_id and line.display_type not in ('line_section', 'line_note'):
