@@ -1803,6 +1803,87 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertAlmostEqual(order.amount_total, invoice.amount_total, places=2, msg="Order and Invoice amounts do not match.")
 
+<<<<<<< caecc6d8532f6bfe1cc3253932bad7ceefa80747
+||||||| 2647fdffd906db831a956346abfdbb36143e2c4a
+    def test_zero_decimal_places_currency(self):
+        zero_decimal_currency = self.env['res.currency'].create({
+            'name': 'ZeroDecimalCurrency',
+            'symbol': 'ZDC',
+            'rounding': 1.0,
+            'decimal_places': 0,
+        })
+
+        self.env.user.company_id.currency_id = zero_decimal_currency
+        self.main_pos_config.available_pricelist_ids.write({'currency_id': zero_decimal_currency.id})
+
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
+
+=======
+    def test_zero_decimal_places_currency(self):
+        zero_decimal_currency = self.env['res.currency'].create({
+            'name': 'ZeroDecimalCurrency',
+            'symbol': 'ZDC',
+            'rounding': 1.0,
+            'decimal_places': 0,
+        })
+
+        self.env.user.company_id.currency_id = zero_decimal_currency
+        self.main_pos_config.available_pricelist_ids.write({'currency_id': zero_decimal_currency.id})
+
+        self.env['product.product'].create({
+            'name': 'Test Product',
+            'list_price': 100,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
+
+    def test_limited_categories(self):
+        parent_category = self.env['pos.category'].create({
+            'name': 'Parent',
+        })
+        child_category_1 = self.env['pos.category'].create({
+            'name': 'Child 1',
+            'parent_id': parent_category.id,
+        })
+        child_category_2 = self.env['pos.category'].create({
+            'name': 'Child 2',
+            'parent_id': parent_category.id,
+        })
+        self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 1.20,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category_1.id)],
+        })
+        self.env['product.product'].create({
+            'name': 'Product 2',
+            'available_in_pos': True,
+            'list_price': 2.30,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category_2.id)],
+        })
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_category.id, child_category_1.id, child_category_2.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
+
+
+>>>>>>> b1243ce6eec1ab5650c19742c68dbfc630375890
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
     browser_size = '375x667'

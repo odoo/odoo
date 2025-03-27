@@ -6,7 +6,13 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
+<<<<<<< caecc6d8532f6bfe1cc3253932bad7ceefa80747:addons/point_of_sale/static/tests/pos/tours/chrome_tour.js
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+||||||| 2647fdffd906db831a956346abfdbb36143e2c4a:addons/point_of_sale/static/tests/tours/chrome_tour.js
+import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+=======
+import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
+>>>>>>> b1243ce6eec1ab5650c19742c68dbfc630375890:addons/point_of_sale/static/tests/tours/chrome_tour.js
 
 registry.category("web_tour.tours").add("ChromeTour", {
     checkDelay: 50,
@@ -191,3 +197,55 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             PaymentScreen.clickValidate(),
         ].flat(),
 });
+<<<<<<< caecc6d8532f6bfe1cc3253932bad7ceefa80747:addons/point_of_sale/static/tests/pos/tours/chrome_tour.js
+||||||| 2647fdffd906db831a956346abfdbb36143e2c4a:addons/point_of_sale/static/tests/tours/chrome_tour.js
+
+registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_limited_categories", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickSubcategory("Parent"),
+            ProductScreen.productIsDisplayed("Product 1"),
+            ProductScreen.productIsDisplayed("Product 2"),
+            ProductScreen.clickSubcategory("Child 1"),
+            ProductScreen.productIsDisplayed("Product 1"),
+            ProductScreen.productIsDisplayed("Product 2").map(negateStep),
+            ProductScreen.clickSubcategory("Child 2"),
+            ProductScreen.productIsDisplayed("Product 1").map(negateStep),
+            ProductScreen.productIsDisplayed("Product 2"),
+        ].flat(),
+});
+>>>>>>> b1243ce6eec1ab5650c19742c68dbfc630375890:addons/point_of_sale/static/tests/tours/chrome_tour.js
