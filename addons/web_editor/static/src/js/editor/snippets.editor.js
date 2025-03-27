@@ -4407,9 +4407,26 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetClick() {
         const $els = this.getEditableArea().find('.oe_structure.oe_empty').addBack('.oe_structure.oe_empty');
+        this.options.wysiwyg.odooEditor.observerUnactive();
         for (const el of $els) {
             if (!el.children.length) {
                 $(el).odooBounce('o_we_snippet_area_animation');
+                const observer = new MutationObserver((mutationsList) => {
+                    for (const mutation of mutationsList) {
+                        if (
+                            mutation.type === "attributes" &&
+                            mutation.attributeName === "class" &&
+                            !el.classList.contains("o_catch_attention")
+                        ) {
+                            this.options.wysiwyg.odooEditor.observerActive();
+                            observer.disconnect();
+                        }
+                    }
+                });
+                observer.observe(el, {
+                    attributes: true,
+                    attributeFilter: ["class"],
+                });
             }
         }
     },
