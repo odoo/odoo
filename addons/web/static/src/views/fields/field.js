@@ -153,7 +153,7 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
         required,
         invalid: field.isValid
             ? !field.isValid(record, fieldName, fieldInfo)
-            : record.isFieldInvalid(fieldName),
+            : record.isFieldInvalid(fieldName) || !record.isNew && required && !record.data[fieldName],
         empty,
     };
 }
