@@ -1,8 +1,8 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import SurveyPreloadImageMixin from "@survey/js/survey_preload_image_mixin";
-import SurveySessionChart from "@survey/js/survey_session_chart";
-import SurveySessionTextAnswers from "@survey/js/survey_session_text_answers";
-import SurveySessionLeaderBoard from "@survey/js/survey_session_leaderboard";
+import SurveySessionChart from "@survey/interactions/survey_session_chart";
+import SurveySessionTextAnswers from "@survey/interactions/survey_session_text_answers";
+import SurveySessionLeaderBoard from "@survey/interactions/survey_session_leaderboard";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
