@@ -494,13 +494,7 @@ export class SurveyForm extends Interaction {
      * @param {boolean} isFinish Whether the survey is done or not
      */
     goToNextPage(isFinish = false) {
-        fadeOut(
-            [
-                this.el.querySelector(".o_survey_main_title"),
-                this.el.querySelector(".o_lang_selector"),
-            ],
-            400
-        );
+        fadeOut(this.el.querySelectorAll(".o_survey_main_title, .o_lang_selector"), 400);
         this.preventEnterSubmit = false;
         this.readonly = false;
         this.nextScreen(
@@ -550,9 +544,9 @@ export class SurveyForm extends Interaction {
             route = "/survey/begin";
             // Hide survey title in 'page_per_question' layout: it takes too much space
             if (this.options.questionsLayout === "page_per_question") {
-                fadeOut([this.el.querySelector(".o_survey_main_title")], 400);
+                fadeOut(this.el.querySelector(".o_survey_main_title"), 400);
             }
-            fadeOut([this.el.querySelector(".o_survey_lang_selector")], 400);
+            fadeOut(this.el.querySelector(".o_survey_lang_selector"), 400);
         } else {
             const formData = new FormData(this.formEl);
             if (!options.skipValidation) {
@@ -644,7 +638,7 @@ export class SurveyForm extends Interaction {
             this.preventEnterSubmit = false;
         }
         if (result && result.fields && result.error === "validation") {
-            fadeIn([this.el.querySelector(".o_survey_form_content")], 0);
+            fadeIn(this.el.querySelector(".o_survey_form_content"), 0);
             this.showErrors(result.fields);
             return;
         }
@@ -716,7 +710,7 @@ export class SurveyForm extends Interaction {
             this.background.image = result.background_image_url;
             this.background.shouldUpdate = true;
         }
-        fadeIn([formContentEl], this.fadeInOutDelay);
+        fadeIn(formContentEl, this.fadeInOutDelay);
         this.enableSubmitButtons();
         this.focusOnFirstInput();
         this.scrollTop(); // must be after focus

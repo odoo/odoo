@@ -30,7 +30,7 @@ export class SurveyResultPagination extends Interaction {
     };
 
     setup() {
-        this.limit = this.el.dataset["record_limit"];
+        this.limit = this.el.dataset.record_limit;
         this.questionData = this.parseAnswersJSON();
         this.elCount = this.questionData.length;
         this.paginationState = {
@@ -38,7 +38,7 @@ export class SurveyResultPagination extends Interaction {
             minIdx: 0,
             maxIdx: Math.min(this.elCount, this.limit),
             showAll: false,
-            hideFilter: this.el.dataset["hideFilter"],
+            hideFilter: this.el.dataset.hideFilter,
         };
 
         // The following two events are dispatched by survey_result when user
@@ -58,7 +58,7 @@ export class SurveyResultPagination extends Interaction {
 
     parseAnswersJSON() {
         const keys = ["id", "value", "url"];
-        return JSON.parse(this.el.dataset["answersJson"]).map((entry, index) => {
+        return JSON.parse(this.el.dataset.answersJson).map((entry, index) => {
             const content = Object.fromEntries(entry.map((value, index) => [keys[index], value]));
             return { index: index, ...content };
         });

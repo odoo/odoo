@@ -74,7 +74,6 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/scss/survey_templates_results.scss',
             'survey/static/src/interactions/survey_breadcrumb_templates.xml',
             'survey/static/src/xml/survey_paginated_results_rows_template.xml',
-            'survey/static/src/js/survey_timer.js',  # TODO: remove once session_manage has been translated into interaction
             'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [

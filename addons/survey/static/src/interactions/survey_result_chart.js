@@ -39,10 +39,10 @@ export class SurveyResultChart extends Interaction {
      *
      */
     start() {
-        this.graphData = JSON.parse(this.el.dataset["graphData"]);
-        this.rightAnswers = this.el.dataset["rightAnswers"] || [];
+        this.graphData = JSON.parse(this.el.dataset.graphData);
+        this.rightAnswers = this.el.dataset.rightAnswers || [];
         if (this.graphData && this.graphData.length !== 0) {
-            switch (this.el.dataset["graphType"]) {
+            switch (this.el.dataset.graphType) {
                 case "multi_bar":
                     this.chartConfig = this.getMultibarChartConfig();
                     break;

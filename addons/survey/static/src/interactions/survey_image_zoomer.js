@@ -29,8 +29,8 @@ export class SurveyImageZoomer extends Interaction {
     }
 
     async willStart() {
-        await fadeOut([this.el], 0);
-        fadeIn([this.el], this.fadeInOutDelay);
+        await fadeOut(this.el, 0);
+        fadeIn(this.el, this.fadeInOutDelay);
     }
 
     //--------------------------------------------------------------------------
@@ -55,7 +55,7 @@ export class SurveyImageZoomer extends Interaction {
      * without using 'hide' would leave a modal-open in the view.
      */
     async onZoomerClick() {
-        await this.waitFor(fadeOut([this.el], this.fadeInOutDelay));
+        await this.waitFor(fadeOut(this.el, this.fadeInOutDelay));
         this.el.remove();
     }
 
