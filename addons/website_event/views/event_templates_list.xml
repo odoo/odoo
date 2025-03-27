@@ -12,6 +12,8 @@
             <!-- Options -->
             <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
             <t t-set="opt_events_list_columns" t-value="is_view_active('website_event.opt_events_list_columns')"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_we_index_0" class="oe_structure oe_empty"/>
             <!-- Topbar -->
             <t t-call="website_event.index_topbar">
                 <t t-set="search" t-value="original_search or search or searches['search']"/>
