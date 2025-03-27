@@ -11,7 +11,7 @@ export class Signup extends Interaction {
 
     onSubmit() {
         const submitEl = this.el.querySelector('.oe_login_buttons > button[type="submit"]');
-        if (!submitEl.disabled) {
+        if (submitEl && !submitEl.disabled) {
             const removeLoadingEffect = addLoadingEffect(submitEl);
             this.registerCleanup(removeLoadingEffect);
         }
