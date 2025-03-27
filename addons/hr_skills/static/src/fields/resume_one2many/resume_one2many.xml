@@ -35,6 +35,11 @@
         <xpath expr="//th[hasclass('o_group_name')]" position="after">
             <th></th>
         </xpath>
+        <xpath expr="//th//button" position="attributes">
+            <attribute name="t-on-click">
+                () => props.onAdd({ context: {default_line_type_id: section_group[1].id}})
+            </attribute>
+        </xpath>
     </t>
 
     <t t-name="hr_skills.ResumeListRenderer.RecordRow" t-inherit-mode="primary" t-inherit="web.ListRenderer.RecordRow">
