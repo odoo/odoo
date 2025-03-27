@@ -414,7 +414,7 @@ class StockQuant(models.Model):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
         action = {
-            'name': _('Inventory Adjustments'),
+            'name': _('Physical Inventory'),
             'view_mode': 'list',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
