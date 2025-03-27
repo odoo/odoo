@@ -268,11 +268,17 @@ def set_tx_error_from_response(tx, response_content):
     """
     if error_msg := get_request_error(response_content):
         tx._set_error(error_msg)  # Log the error message on linked documents' chatter.
-        return True
-    return False
+    return bool(error_msg)
 
 
 def get_user_notification_action(message, notification_type='danger'):
+    """ Return a notification action to notify the user with the provided message.
+
+    :param str message: The message to display in the notification.
+    :param str notification_type: The type of notification to display.
+    :return: The notification with the provided message.
+    :rtype: dict
+    """
     return {
         'type': 'ir.actions.client',
         'tag': 'display_notification',

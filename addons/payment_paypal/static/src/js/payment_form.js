@@ -155,6 +155,7 @@ paymentForm.include({
      */
     async _paypalOnApprove(data) {
         const orderID = data.orderID;
+        const { provider_id } = this.inlineFormValues;
 
         const response = await rpc('/payment/paypal/complete_order', {
             'provider_id': provider_id,

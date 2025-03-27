@@ -261,12 +261,10 @@ class PaymentTransaction(models.Model):
                     'ref': self.reference,
                 },
             )
-            self._set_error(
-                "Authorize.Net: " + _(
-                    "Received data with status code \"%(status)s\" and error code \"%(error)s\"",
-                    status=status_code, error=error_code
-                )
-            )
+            self._set_error(_(
+                "Received data with status code \"%(status)s\" and error code \"%(error)s\"",
+                status=status_code, error=error_code
+            ))
 
     def _authorize_tokenize(self):
         """ Create a token for the current transaction.

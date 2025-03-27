@@ -315,6 +315,11 @@ class PaymentTransaction(models.Model):
             return refund_tx._get_failed_tx_notification_action()
 
     def _get_failed_tx_notification_action(self):
+        """ Return the action to notify the user that the transaction failed.
+
+        :return: The action with an error message.
+        :rtype: dict
+        """
         msg = _(
             "Transaction with reference: %(ref)s failed.\nError: %(msg)s",
             ref=self.reference, msg=self.state_message
