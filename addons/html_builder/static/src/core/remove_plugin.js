@@ -12,6 +12,7 @@ const unremovableSelectors = [
     ".s_carousel .carousel-item",
     ".s_quotes_carousel .carousel-item",
     ".s_carousel_intro .carousel-item",
+    ".o_mega_menu",
     ".o_mega_menu > section",
     ".s_dynamic_snippet_title",
     ".s_table_of_content_navbar_wrap",

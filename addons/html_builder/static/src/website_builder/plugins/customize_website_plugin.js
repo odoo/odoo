@@ -1,5 +1,6 @@
 import { getCSSVariableValue, isColorCombinationName } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
+import { parseHTML } from "@html_editor/utils/html";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -9,7 +10,13 @@ import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = ["builderActions", "history", "savePlugin"];
-    static shared = ["customizeWebsiteColors", "makeSCSSCusto", "withHistoryFromLoad"];
+    static shared = [
+        "customizeWebsiteColors",
+        "loadTemplateKey",
+        "makeSCSSCusto",
+        "toggleTemplate",
+        "withHistoryFromLoad",
+    ];
 
     resources = {
         builder_actions: this.getActions(),
@@ -17,6 +24,7 @@ export class CustomizeWebsitePlugin extends Plugin {
 
     cache = {};
     activeRecords = {};
+    activeTemplateViews = {};
     pendingViewRequests = new Set();
     pendingAssetRequests = new Set();
     resolves = {};
@@ -96,6 +104,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     // TODO doAction in savePlugin.save ?
                     this.services.action.doAction("website.theme_install_kanban_action", {});
                 },
+                apply: () => {},
             },
             addLanguage: {
                 load: async () => {
@@ -122,6 +131,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                         url_return: "[land]",
                     });
                 },
+                apply: () => {},
             },
             customizeBodyBgType: {
                 isApplied: ({ value }) => {
@@ -212,6 +222,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                         },
                     });
                 },
+                apply: () => {},
             },
             customizeButtonStyle: this.withHistoryFromLoad({
                 isApplied: ({ param, value }) => {
@@ -250,6 +261,19 @@ export class CustomizeWebsitePlugin extends Plugin {
                 },
                 apply: (action) => this.toggleConfig(action, true),
                 clean: (action) => this.toggleConfig(action, false),
+            },
+            selectTemplate: {
+                prepare: async ({ actionParam }) => {
+                    await this.loadTemplateKey(actionParam.view);
+                },
+                isApplied: ({ editingElement, param: { templateClass } }) => {
+                    if (templateClass) {
+                        return !!editingElement.querySelector(`.${templateClass}`);
+                    }
+                    return true;
+                },
+                apply: (action) => this.toggleTemplate(action, true),
+                clean: (action) => this.toggleTemplate(action, false),
             },
         };
     }
@@ -487,6 +511,40 @@ export class CustomizeWebsitePlugin extends Plugin {
             });
         };
         return { ...action, load, apply };
+    }
+
+    async loadTemplateKey(key) {
+        if (!this.getTemplateKey(key)) {
+            // TODO: make a python method that can return several templates at
+            // once and batch the ORM call.
+            this.activeTemplateViews[key] = await this.services.orm.call(
+                "ir.ui.view",
+                "render_public_asset",
+                [`${key}`, {}]
+            );
+        }
+        return this.getTemplateKey(key);
+    }
+    toggleTemplate(action, apply) {
+        if (!apply) {
+            // Empty the container and restore the original content
+            action.editingElement.replaceChildren(this.beforePreviewNodes);
+            this.beforePreviewNodes = null;
+            return;
+        }
+
+        if (!this.beforePreviewNodes) {
+            // We are about to apply a template on non-previewed content,
+            // save that content's nodes.
+            this.beforePreviewNodes = [...action.editingElement.childNodes];
+        }
+
+        // Empty the container and add the template content
+        const templateFragment = parseHTML(this.document, this.getTemplateKey(action.param.view));
+        action.editingElement.replaceChildren(templateFragment.firstElementChild);
+    }
+    getTemplateKey(key) {
+        return this.activeTemplateViews[key];
     }
 }
 

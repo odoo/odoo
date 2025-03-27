@@ -29,11 +29,6 @@ export class DropZoneSelectorPlugin extends Plugin {
                     ":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section:not(.s_snippet_group), > div:not(.o_hook_drop_zone)))", // TODO not duplicate
             },
             {
-                selector: ".o_mega_menu .nav > .nav-link",
-                dropIn: ".o_mega_menu nav",
-                dropNear: ".o_mega_menu .nav-link",
-            },
-            {
                 selector: ".s_website_form_field",
                 exclude: ".s_website_form_dnone",
                 dropNear: ".s_website_form_field",
