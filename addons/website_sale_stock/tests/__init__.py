@@ -6,6 +6,7 @@ from . import test_website_sale_stock_multilang
 from . import test_website_sale_stock_product_template
 from . import test_website_sale_stock_product_warehouse
 from . import test_website_sale_stock_delivery
+from . import test_website_sale_stock_gmc
 from . import test_website_sale_stock_stock_notification
 from . import test_website_sale_stock_reorder_from_portal
 from . import test_website_sale_stock_stock_message

@@ -504,6 +504,8 @@ class ProductTemplate(models.Model):
             'list_price': max(pricelist_price, price_before_discount),
             'price': pricelist_price,
             'has_discounted_price': has_discounted_price,
+            'discount_start_date': pricelist_item.date_start,
+            'discount_end_date': pricelist_item.date_end,
         }
 
         if (

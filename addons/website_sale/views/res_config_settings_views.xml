@@ -297,7 +297,21 @@
                     <field name="module_website_sale_autocomplete"/>
                 </setting>
             </setting>
-
+            <setting id="robots_setting" position="after">
+                <setting
+                    id="google_merchant_center_setting"
+                    help="Connect your eCommerce to Google Merchant Center via a product file."
+                    documentation="/applications/websites/ecommerce/products/catalog.html#multi-channel-promotion"
+                >
+                    <field name="enabled_gmc_src"/>
+                    <field
+                        name="gmc_xml_url"
+                        string="Copy file link"
+                        widget="CopyClipboardButton"
+                        invisible="not enabled_gmc_src"
+                    />
+                </setting>
+            </setting>
         </field>
     </record>
 </odoo>
