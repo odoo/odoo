@@ -108,15 +108,21 @@
                     Potential duplicates:
                     <span invisible="not same_vat_partner_id or same_company_registry_partner_id">
                         <field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>
-                        (Same Tax ID <field name="vat_label"/>)
+                        (Same <field name="vat_label"/>)
                     </span>
                     <span invisible="same_vat_partner_id or not same_company_registry_partner_id">
                         <field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>
-                        (Same Company Registry <field name="company_registry_label"/>)
+                        (Same <field name="company_registry_label"/>)
                     </span>
-                    <span invisible="not same_vat_partner_id or not same_company_registry_partner_id">
+                    <span invisible="not (same_vat_partner_id and same_company_registry_partner_id and same_vat_partner_id == same_company_registry_partner_id)">
                         <field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>
-                        (Same Tax ID <field name="vat_label"/> and Company Registry <field name="company_registry_label"/>)
+                        (Same <field name="vat_label"/> and <field name="company_registry_label"/>)
+                    </span>
+                    <span invisible="not (same_vat_partner_id and same_company_registry_partner_id and same_vat_partner_id != same_company_registry_partner_id)">
+                        <field name="same_vat_partner_id" context="{'show_address': False, 'show_vat': False}"/>
+                        (Same <field name="vat_label"/>) and
+                        <field name="same_company_registry_partner_id" context="{'show_address': False, 'show_vat': False}"/>
+                        (Same <field name="company_registry_label"/>)
                     </span>
                 </div>
                 <sheet>
