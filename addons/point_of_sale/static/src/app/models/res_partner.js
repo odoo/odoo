@@ -17,7 +17,7 @@ export class ResPartner extends Base {
         return fields
             .map((field) => {
                 if (field === "phone" && this[field]) {
-                    return this[field].split(" ").join("");
+                    return this[field].replace(/[+\s()-]/g, "");
                 }
                 return this[field] || "";
             })
