@@ -128,6 +128,7 @@ export class CalendarCommonRenderer extends Component {
             weekNumbers: true,
             dayHeaderContent: this.getHeaderHtml,
             eventDisplay: "block", // Restore old render in daygrid view for single-day timed events
+            eventTimeFormat: is24HourFormat() ? HOUR_FORMATS[24] : HOUR_FORMATS[12],
             viewDidMount: this.viewDidMount,
             moreLinkDidMount: this.wrapMoreLink,
             fixedWeekCount: false,
