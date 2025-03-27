@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import screeninfo
+import subprocess
 
 from odoo.addons.hw_drivers.interface import Interface
 from odoo.addons.hw_drivers.tools import helpers
