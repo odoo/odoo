@@ -2256,7 +2256,7 @@ const ListUserValueWidget = UserValueWidget.extend({
         }
         currentValues.forEach(value => {
             if (typeof value === 'object') {
-                const recordData = value;
+                const recordData = { ...value };
                 const { id, display_name } = recordData;
                 delete recordData.id;
                 delete recordData.display_name;
