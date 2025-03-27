@@ -1831,7 +1831,7 @@ class CrmLead(models.Model):
 
         return True
 
-    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
+    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True, with_parent=None):
         """ Update customer (partner_id) of leads. Purpose is to set the same
         partner on most leads; either through a newly created partner either
         through a given partner_id.
@@ -1844,7 +1844,7 @@ class CrmLead(models.Model):
             if force_partner_id:
                 lead.partner_id = force_partner_id
             if not lead.partner_id and create_missing:
-                partner = lead._create_customer()
+                partner = lead._create_customer(with_parent=with_parent)
                 lead.partner_id = partner.id
 
     def _handle_salesmen_assignment(self, user_ids=False, team_id=False):
@@ -1952,7 +1952,7 @@ class CrmLead(models.Model):
             )
         return partner
 
-    def _create_customer(self):
+    def _create_customer(self, with_parent=None):
         """ Create a partner from lead data and link it to the lead.
 
         :return: newly-created partner browse record
@@ -1962,15 +1962,17 @@ class CrmLead(models.Model):
         if not contact_name:
             contact_name = parse_contact_from_email(self.email_from)[0] if self.email_from else False
 
-        if self.partner_name:
+        if with_parent:
+            partner_company = with_parent
+        elif self.partner_name:
             partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
         elif self.partner_id:
             partner_company = self.partner_id
         else:
-            partner_company = None
+            partner_company = self.env['res.partner']
 
         if contact_name:
-            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
+            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id))
 
         if partner_company:
             return partner_company

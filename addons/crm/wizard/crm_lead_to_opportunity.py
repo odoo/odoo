@@ -32,12 +32,16 @@ class CrmLead2opportunityPartner(models.TransientModel):
     action = fields.Selection([
         ('create', 'Create a new customer'),
         ('exist', 'Link to an existing customer'),
-        ('nothing', 'Do not link to a customer')
-    ], string='Related Customer', compute='_compute_action', readonly=False, store=True, compute_sudo=False)
+    ], string='Related Customer', compute='_compute_action',
+    precompute=True, readonly=False, required=True, store=True, compute_sudo=False)
     lead_id = fields.Many2one('crm.lead', 'Associated Lead', required=True)
+    lead_company_name = fields.Char(related='lead_id.partner_name', help=False)
     duplicated_lead_ids = fields.Many2many(
         'crm.lead', string='Opportunities', context={'active_test': False},
         compute='_compute_duplicated_lead_ids', readonly=False, store=True, compute_sudo=False)
+    company_partner_id = fields.Many2one(
+        'res.partner', 'Company', domain=[('is_company', '=', True)],
+        compute='_compute_company_partner_id', readonly=False, store=True, compute_sudo=False)
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
         compute='_compute_partner_id', readonly=False, store=True, compute_sudo=False)
@@ -60,16 +64,11 @@ class CrmLead2opportunityPartner(models.TransientModel):
     @api.depends('lead_id')
     def _compute_action(self):
         for convert in self:
-            if not convert.lead_id:
-                convert.action = 'nothing'
+            partner = convert.lead_id and convert.lead_id._find_matching_partner()
+            if partner:
+                convert.action = 'exist'
             else:
-                partner = convert.lead_id._find_matching_partner()
-                if partner:
-                    convert.action = 'exist'
-                elif convert.lead_id.contact_name:
-                    convert.action = 'create'
-                else:
-                    convert.action = 'nothing'
+                convert.action = 'create'
 
     @api.depends('lead_id', 'partner_id')
     def _compute_duplicated_lead_ids(self):
@@ -81,6 +80,12 @@ class CrmLead2opportunityPartner(models.TransientModel):
                 convert.partner_id,
                 convert.lead_id.partner_id.email if convert.lead_id.partner_id.email else convert.lead_id.email_from,
                 include_lost=True).ids
+
+    @api.depends('partner_id')
+    def _compute_company_partner_id(self):
+        for convert in self.filtered('partner_id'):
+            if convert.company_partner_id and convert.partner_id.parent_id and not convert.company_partner_id.filtered_domain([('id', 'parent_of', convert.partner_id)]):
+                convert.company_partner_id = convert.partner_id.parent_id
 
     @api.depends('action', 'lead_id')
     def _compute_partner_id(self):
@@ -143,7 +148,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
         self.ensure_one()
 
         for lead in leads:
-            if lead.active and self.action != 'nothing':
+            if lead.active:
                 self._convert_handle_partner(
                     lead, self.action, self.partner_id.id or lead.partner_id.id)
 
@@ -160,5 +165,6 @@ class CrmLead2opportunityPartner(models.TransientModel):
         # used to propagate user_id (salesman) on created partners during conversion
         lead.with_context(default_user_id=self.user_id.id)._handle_partner_assignment(
             force_partner_id=partner_id,
-            create_missing=(action == 'create')
+            create_missing=action == 'create',
+            with_parent=self.company_partner_id,
         )

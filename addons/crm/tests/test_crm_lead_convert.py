@@ -334,24 +334,6 @@ class TestLeadConvert(crm_common.TestLeadConvertCommon):
         self.assertEqual(self.lead_1.partner_id, self.contact_1)
 
     @users('user_sales_manager')
-    def test_lead_convert_action_nothing(self):
-        """ Test specific use case of 'nothing' action in conver wizard """
-        self.lead_1.write({'contact_name': False})
-
-        convert = self.env['crm.lead2opportunity.partner'].with_context({
-            'active_model': 'crm.lead',
-            'active_id': self.lead_1.id,
-            'active_ids': self.lead_1.ids,
-        }).create({})
-        self.assertEqual(convert.action, 'nothing')
-        convert.action_apply()
-        self.assertEqual(self.lead_1.type, 'opportunity')
-        self.assertEqual(self.lead_1.user_id, self.user_sales_leads)
-        self.assertEqual(self.lead_1.team_id, self.sales_team_1)
-        self.assertEqual(self.lead_1.stage_id, self.stage_team1_1)
-        self.assertEqual(self.lead_1.partner_id, self.env['res.partner'])
-
-    @users('user_sales_manager')
     def test_lead_convert_contact_mutlicompany(self):
         """ Check the wizard convert to opp don't find contact
         You are not able to see because they belong to another company """
