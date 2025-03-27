@@ -2,7 +2,7 @@
 
 import { loadJS } from "@web/core/assets";
 import publicWidget from "@web/legacy/js/public/public_widget";
-import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
+import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
 
 publicWidget.registry.SurveySessionChart = publicWidget.Widget.extend({
     init: function (parent, options) {
