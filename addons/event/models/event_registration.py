@@ -190,7 +190,7 @@ class EventRegistration(models.Model):
 
     @api.model
     def _search_event_end_date(self, operator, value):
-        return expression.OR([
+        return Domain.OR([
             ["&", ("event_slot_id", "!=", False), ("event_slot_id.end_datetime", operator, value)],
             ["&", ("event_slot_id", "=", False), ("event_id.date_end", operator, value)],
         ])
