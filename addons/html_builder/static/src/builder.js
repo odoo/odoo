@@ -62,7 +62,10 @@ export class Builder extends Component {
 
         const editorBus = new EventBus();
 
-        const mainPlugins = removePlugins([...MAIN_PLUGINS], ["PowerButtonsPlugin"]);
+        const mainPlugins = removePlugins(
+            [...MAIN_PLUGINS],
+            ["PowerButtonsPlugin", "DoubleClickImagePreviewPlugin"]
+        );
         const Plugins = [...mainPlugins, ...CORE_PLUGINS, ...(this.props.Plugins || [])];
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
