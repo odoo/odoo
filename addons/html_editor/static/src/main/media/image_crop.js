@@ -137,7 +137,7 @@ export class ImageCrop extends Component {
                     type: "warning",
                 }
             );
-            return this.closeCropper();
+            return this.props?.onClose?.();
         }
 
         await this.scrollToInvisibleImage();
