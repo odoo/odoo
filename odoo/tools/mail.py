@@ -477,7 +477,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
         for img in tree.findall('.//img'):
             if src := img.get('src'):
                 img.tag = 'span'
-                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                if src.startswith('data:'):
+                    img_name = None  # base64 image
+                else:
+                    img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
                 img.text = '%s [%s]' % (img_name[0] if img_name else 'Image', next(linkrefs))
                 url_index.append(src)
 
