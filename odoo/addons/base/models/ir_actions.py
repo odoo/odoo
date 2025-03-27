@@ -1051,16 +1051,7 @@ class IrActionsServer(models.Model):
             eval_context = self._get_eval_context(action)
             records = eval_context.get('record') or eval_context['model']
             records |= eval_context.get('records') or eval_context['model']
-            if not action_groups and records.ids:
-                # check access rules on real records only; base automations of
-                # type 'onchange' can run server actions on new records
-                try:
-                    records.check_access('write')
-                except AccessError:
-                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
-                        action.name, self.env.user.login, records,
-                    )
-                    raise
+            self._can_execute_action_on_records(records)
 
             if action.warning:
                 raise ServerActionWithWarningsError(_("Server action %(action_name)s has one or more warnings, address them first.", action_name=action.name))
@@ -1090,6 +1081,19 @@ class IrActionsServer(models.Model):
                     action.name, action.state
                 )
         return res or False
+
+    def _can_execute_action_on_records(self, records):
+        self.ensure_one()
+        if not self.group_ids and records.ids:
+            # check access rules on real records only; base automations of
+            # type 'onchange' can run server actions on new records
+            try:
+                records.check_access('write')
+            except AccessError:
+                _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                    self.name, self.env.user.login, records,
+                )
+                raise
 
     @api.depends('evaluation_type', 'update_field_id')
     def _compute_value_field_to_show(self):  # check if value_field_to_show can be removed and use ttype in xml view instead
