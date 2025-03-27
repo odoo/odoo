@@ -39,11 +39,11 @@ except ImportError:
 
 
 class Orientation(Enum):
-    """xrandr screen orientation for kiosk mode"""
+    """xrandr/wlr-randr screen orientation for kiosk mode"""
     NORMAL = 'normal'
-    INVERTED = 'inverted'
-    LEFT = 'left'
-    RIGHT = 'right'
+    INVERTED = '180'
+    LEFT = '90'
+    RIGHT = '270'
 
 
 class CertificateStatus(Enum):
@@ -614,7 +614,7 @@ def save_browser_state(url=None, orientation=None):
     """
     update_conf({
         'browser-url': url,
-        'screen-orientation': orientation.value if orientation else None,
+        'screen-orientation': orientation.name.lower() if orientation else None,
     })
 
 
@@ -624,8 +624,8 @@ def load_browser_state():
     :return: The URL the browser is on and the orientation of the screen (default to NORMAL)
     """
     url = get_conf('browser-url')
-    orientation = get_conf('screen-orientation') or Orientation.NORMAL
-    return url, Orientation(orientation)
+    orientation = get_conf('screen-orientation') or Orientation.NORMAL.name
+    return url, Orientation[orientation.upper()]
 
 
 def url_is_valid(url):

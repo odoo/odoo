@@ -111,6 +111,24 @@ function getUnselectedEdgeNodes(selection) {
 }
 
 /**
+ * Check if an element is in the viewport.
+ *
+ * @param {HTMLElement} element - The element to check.
+ * @param {Object} [options] - Options for the observer.
+ * @param {number} [options.threshold=0.5] - The intersection observer threshold.
+ * @returns {Promise<boolean>} - A promise that resolves with a boolean indicating whether the element is in the viewport.
+ */
+function isElementInViewport(element, options = { threshold: 0.5 }) {
+    return new Promise((resolve) => {
+        const observer = new IntersectionObserver(([entry]) => {
+            resolve(entry.isIntersecting);
+            observer.disconnect();
+        }, options);
+        observer.observe(element);
+    });
+}
+
+/**
  * @typedef { Object } SelectionShared
  * @property { SelectionPlugin['extractContent'] } extractContent
  * @property { SelectionPlugin['focusEditable'] } focusEditable
@@ -158,11 +176,15 @@ export class SelectionPlugin extends Plugin {
 
     setup() {
         this.resetSelection();
-        this.addDomListener(this.document, "selectionchange", () => {
+        this.addDomListener(this.document, "selectionchange", async () => {
             this.updateActiveSelection();
             const selection = this.document.getSelection();
             if (selection.isCollapsed && this.isSelectionInEditable(selection)) {
-                scrollTo(closestElement(selection.focusNode));
+                const element = closestElement(selection.focusNode);
+                const isInViewport = await isElementInViewport(element);
+                if (!isInViewport) {
+                    scrollTo(element);
+                }
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {

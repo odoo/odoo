@@ -381,7 +381,7 @@ class AccountMoveSend(models.AbstractModel):
         if not attachment_to_create:
             return
 
-        attachments = self.env['ir.attachment'].create(attachment_to_create)
+        attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
         for invoice, invoice_data in invoices_data.items():
@@ -681,7 +681,7 @@ class AccountMoveSend(models.AbstractModel):
         """
         self._check_sending_data(moves, **custom_settings)
         moves_data = {
-            move: {
+            move.sudo(): {
                 **self._get_default_sending_settings(move, from_cron=from_cron, **custom_settings),
             }
             for move in moves

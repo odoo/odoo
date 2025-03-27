@@ -260,11 +260,9 @@ describe("Link creation", () => {
             await animationFrame();
             expect(".active .o-we-command-name").toHaveText("Link");
             await click(".o-we-command-name:first");
-            await waitFor(".o-we-linkpopover");
-            await fill("test.com");
-            await click(".o_we_apply_link");
+            await contains(".o-we-linkpopover input.o_we_href_input_link").fill("test.com");
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p><a href="https://test.com">test.com[]</a></p>'
+                '<p><a href="http://test.com">test.com[]</a></p>'
             );
         });
 

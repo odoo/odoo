@@ -29,5 +29,28 @@ registry.category("web_tour.tours").add("course_reviews_reaction_public", {
                 }
             },
         },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-core",
+            run: () => {
+                const reactionButton = document.querySelector("#chatterRoot").shadowRoot.querySelector(".o-mail-MessageReaction")
+                reactionButton.dispatchEvent(new Event("mouseenter"));
+            },
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-MessageReactionList-preview",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-MessageReactionMenu",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-core",
+            run: () => {
+                const addReaction = document.querySelector("#chatterRoot").shadowRoot.querySelector(".o-mail-MessageReactions-add")
+                if (addReaction) {
+                    throw new Error("Non-authenticated user should not be able to add a reaction to a message");
+                }
+            },
+        },
     ],
 });

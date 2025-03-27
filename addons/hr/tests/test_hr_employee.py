@@ -442,3 +442,19 @@ class TestHrEmployee(TestHrCommon):
         employee_form.save()
 
         self.assertEqual(employee_form.barcode, 'Testbadge2')
+
+    def test_is_flexible(self):
+        employee = self.env['hr.employee'].create({
+            'name': 'Employee',
+        })
+        self.assertTrue(employee.resource_calendar_id)
+        self.assertFalse(employee.is_flexible)
+        self.assertFalse(employee.is_fully_flexible)
+
+        employee.resource_calendar_id.flexible_hours = True
+        self.assertTrue(employee.is_flexible)
+        self.assertFalse(employee.is_fully_flexible)
+
+        employee.resource_calendar_id = False
+        self.assertTrue(employee.is_flexible)
+        self.assertTrue(employee.is_fully_flexible)

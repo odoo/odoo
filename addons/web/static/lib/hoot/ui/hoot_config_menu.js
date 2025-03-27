@@ -71,30 +71,7 @@ export class HootConfigMenu extends Component {
                     </button>
                 </t>
             </div>
-            <label
-                class="flex items-center gap-3"
-                title="Sets test timeout value (in milliseconds)"
-            >
-                <span>Timeout</span>
-                <input
-                    type="text"
-                    class="outline-none border-b border-primary px-1 w-full"
-                    t-model.number="config.timeout"
-                />
-            </label>
-            <label
-                class="cursor-pointer flex items-center gap-1 hover:bg-gray-300 dark:hover:bg-gray-700"
-                title="Sets the seed of the random generator"
-            >
-                <input
-                    type="checkbox"
-                    class="appearance-none border border-primary rounded-sm w-4 h-4"
-                    t-att-checked="config.random"
-                    t-on-change="onRandomChange"
-                />
-                <span>Random seed</span>
-            </label>
-            <t t-if="config.random">
+            <t t-if="config.order === 'random'">
                 <small class="flex items-center p-1 pt-0 gap-1">
                     <span class="text-gray whitespace-nowrap ms-1">Seed:</span>
                     <input
@@ -114,6 +91,28 @@ export class HootConfigMenu extends Component {
                 </small>
             </t>
             <label
+                class="flex items-center gap-3"
+                title="Sets test timeout value (in milliseconds)"
+            >
+                <span class="shrink-0">Test timeout</span>
+                <input
+                    type="text"
+                    class="outline-none border-b border-primary px-1 w-full"
+                    t-model.number="config.timeout"
+                />
+            </label>
+            <label
+                class="flex items-center gap-3"
+                title="Sets network delay (in milliseconds)"
+            >
+                <span class="shrink-0">Network delay</span>
+                <input
+                    type="text"
+                    class="outline-none border-b border-primary px-1 w-full"
+                    t-model="config.networkDelay"
+                />
+            </label>
+            <label
                 class="cursor-pointer flex items-center gap-1 hover:bg-gray-300 dark:hover:bg-gray-700"
                 title="Awaits user input before running the tests"
             >
@@ -122,7 +121,7 @@ export class HootConfigMenu extends Component {
                     class="appearance-none border border-primary rounded-sm w-4 h-4"
                     t-model="config.manual"
                 />
-                <span>Manual</span>
+                <span>Run tests manually</span>
             </label>
             <label
                 class="cursor-pointer flex items-center gap-1 hover:bg-gray-300 dark:hover:bg-gray-700"
@@ -328,17 +327,6 @@ export class HootConfigMenu extends Component {
         this.config.preset = this.config.preset === presetId ? "" : presetId;
     }
 
-    /**
-     * @param {Event & { currentTarget: HTMLInputElement }} ev
-     */
-    onRandomChange(ev) {
-        if (ev.currentTarget.checked) {
-            this.resetSeed();
-        } else {
-            this.config.random = 0;
-        }
-    }
-
     resetSeed() {
         const newSeed = generateSeed();
         this.config.random = newSeed;
@@ -350,6 +338,12 @@ export class HootConfigMenu extends Component {
      */
     setExecutionOrder(order) {
         this.config.order = order;
+
+        if (order === "random" && !this.config.random) {
+            this.resetSeed();
+        } else if (this.config.random) {
+            this.config.random = 0;
+        }
     }
 
     /**

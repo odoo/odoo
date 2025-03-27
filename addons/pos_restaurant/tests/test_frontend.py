@@ -499,3 +499,7 @@ class TestFrontend(TestFrontendCommon):
         orders = self.env['pos.order'].search([])
         self.assertEqual(orders[0].user_id.id, self.pos_user.id, "Pos user not registered on order")
         self.assertEqual(orders[1].user_id.id, self.pos_admin.id, "Pos admin not registered on order")
+
+    def test_15_pos_refund_qty(self):
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('RefundQtyTour')

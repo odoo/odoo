@@ -314,6 +314,16 @@ class PurchaseOrderLine(models.Model):
             'sequence': self.sequence,
         }
 
+    def _prepare_account_move_line(self, move=False):
+        res = super()._prepare_account_move_line(move=move)
+        if 'balance' not in res:
+            res['balance'] = self.currency_id._convert(
+                self.price_unit_discounted * (self.qty_received or 1),
+                self.company_id.currency_id,
+                round=False,
+            )
+        return res
+
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):
         line_description = ''

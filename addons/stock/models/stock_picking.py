@@ -1784,7 +1784,7 @@ class Picking(models.Model):
             'result_package_id': package.id,
         })
         if len(self) == 1:
-            self.env['stock.package_level'].create({
+            self.env['stock.package_level'].with_context(from_put_in_pack=True).create({
                 'package_id': package.id,
                 'picking_id': self.id,
                 'location_id': False,

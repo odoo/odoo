@@ -18,6 +18,7 @@ patch(PosStore.prototype, {
             {
                 timeout: 180000, // 3 minutes
                 action: () =>
+                    this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
                     this.mainScreen.component.name !== "PaymentScreen" &&
                     this.showScreen("FloorScreen"),
@@ -360,5 +361,8 @@ patch(PosStore.prototype, {
     },
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.config.module_pos_restaurant;
+    },
+    get showSaveOrderButton() {
+        return super.showSaveOrderButton && !this.config.module_pos_restaurant;
     },
 });
