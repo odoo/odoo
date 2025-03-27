@@ -112,6 +112,10 @@ export class FormOptionPlugin extends Plugin {
                 formEl.removeAttribute("contenteditable");
             }
         },
+        dropzone_selector: {
+            selector: ".s_website_form",
+            excludeAncestor: "form",
+        },
     };
     getActions() {
         return {

@@ -1,3 +1,44 @@
+// TODO define these variables elsewhere.
+$o-we-overlay-zindex: ($zindex-fixed + $zindex-modal-backdrop) / 2 !default;
+$o-we-zindex: $o-we-overlay-zindex + 1 !default;
+
+.o_snippet {
+    // No root because can be dragged and dropped and the helper is in the body.
+    position: relative;
+    z-index: $o-we-zindex;
+    width: 77px;
+    background-color: $o-we-sidebar-blocks-content-snippet-bg;
+
+    &.o_draggable_dragging {
+        transform: rotate(-3deg) scale(1.2);
+        box-shadow: 0 5px 25px -10px black;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .o_snippet_thumbnail {
+        width: 100%;
+        overflow: hidden;
+
+        .o_snippet_thumbnail_img {
+            width: 100%;
+            padding-top: 75%;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: top center;
+            overflow: hidden;
+        }
+    }
+
+    &:not(:hover):not(.o_disabled):not(.o_to_install) {
+        background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
+
+        .o_snippet_thumbnail {
+            filter: saturate(.7);
+            opacity: .9;
+        }
+    }
+}
+
 .o_block_tab {
     background-color: $o-we-sidebar-blocks-content-bg;
     padding: 0 $o-we-sidebar-blocks-content-spacing;
@@ -15,10 +56,8 @@
         margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
 
         .o_snippet {
-            position: relative;
             flex: 0 0 auto;
             width: percentage(1 / 3);
-            background-color: $o-we-sidebar-blocks-content-snippet-bg;
             background-clip: padding-box;
             border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
             margin-bottom: $o-we-sidebar-blocks-content-snippet-spacing;
@@ -32,29 +71,15 @@
                 text-align: center;
             }
 
-            .o_snippet_thumbnail {
-                width: 100%;
-                overflow: hidden;
+            .o_snippet_thumbnail_area {
+                position: absolute;
+                inset: 0;
+                background: transparent;
+                border: none;
+                cursor: inherit;
 
-                .o_snippet_thumbnail_img {
-                    width: 100%;
-                    padding-top: 75%;
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                    background-position: top center;
-                    overflow: hidden;
-                }
-
-                .o_snippet_thumbnail_area {
-                    position: absolute;
-                    inset: 0;
-                    background: transparent;
-                    border: none;
-                    cursor: inherit;
-
-                    &:focus-visible {
-                        border: 2px solid $o-brand-primary;
-                    }
+                &:focus-visible {
+                    border: 2px solid $o-brand-primary;
                 }
             }
 
@@ -80,15 +105,6 @@
                 .o_snippet_thumbnail_img {
                     opacity: .4;
                     filter: saturate(0) blur(1px);
-                }
-            }
-
-            &:not(:hover):not(.o_disabled):not(.o_to_install) {
-                background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
-
-                .o_snippet_thumbnail {
-                    filter: saturate(.7);
-                    opacity: .9;
                 }
             }
         }

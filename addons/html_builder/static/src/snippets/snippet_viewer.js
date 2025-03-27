@@ -64,7 +64,9 @@ export class SnippetViewer extends Component {
     }
 
     getSelectedSnippets() {
-        const snippetStructures = this.props.snippetModel.snippetStructures;
+        const snippetStructures = this.props.snippetModel.snippetStructures.filter(
+            (snippet) => !snippet.isExcluded && !snippet.isDisabled
+        );
         if (this.props.state.search) {
             const strMatches = (str) =>
                 str.toLowerCase().includes(this.props.state.search.toLowerCase());

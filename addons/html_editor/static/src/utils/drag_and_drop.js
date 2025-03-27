@@ -19,8 +19,8 @@ import { closest, touching } from "@web/core/utils/ui";
  * @property {(() => Array)} dropzones a function that returns the available dropzones
  * @property {(() => HTMLElement)} helper a function that returns a helper element
  * that will follow the cursor when dragging
- * @property {HTMLElement || (() => HTMLElement)} scrollingElement the element on
- * which a scroll should be triggered
+ * @property {(() => HTMLElement)} scrollingElement a function that returns the
+ * element on which a scroll should be triggered
  *
  * HANDLERS (Optional)
  * @property {(params: DragAndDropStartParams) => any} [onDragStart]
@@ -99,7 +99,7 @@ const dragAndDropHookParams = {
     name: "useDragAndDrop",
     acceptedParams: {
         dropzones: [Function],
-        scrollingElement: [Object, Function],
+        scrollingElement: [Function],
         helper: [Function],
         extraWindow: [Object, Function],
     },
@@ -107,22 +107,21 @@ const dragAndDropHookParams = {
     onComputeParams({ ctx, params }) {
         // The helper is mandatory and will follow the cursor instead
         ctx.followCursor = false;
-        ctx.scrollingElement = params.scrollingElement;
+        ctx.getScrollingElement = params.scrollingElement;
         ctx.getHelper = params.helper;
         ctx.getDropZones = params.dropzones;
     },
     onWillStartDrag: ({ ctx }) => {
-        ctx.current.container = ctx.scrollingElement;
+        ctx.current.container = ctx.getScrollingElement();
         ctx.current.helperOffset = { x: 0, y: 0 };
     },
     onDragStart: ({ ctx, addStyle, addCleanup }) => {
         // Use the helper as the tracking element to properly update scroll values.
-        ctx.current.element = ctx.getHelper({ ...ctx.current, ...ctx.pointer });
-        ctx.current.helper = ctx.current.element;
+        ctx.current.helper = ctx.getHelper({ ...ctx.current, ...ctx.pointer });
         ctx.current.helper.style.position = "fixed";
         // We want the pointer events on the helper so that the cursor
         // is properly displayed.
-        ctx.current.helper.classList.remove("o_dragged");
+        ctx.current.element.classList.remove("o_dragged");
         ctx.current.helper.style.cursor = ctx.cursor;
         ctx.current.helper.style.pointerEvents = "auto";
 
@@ -172,7 +171,10 @@ const dragAndDropHookParams = {
         }
 
         if (ctx.current.dropzone && dropzoneEl !== ctx.current.dropzone.el) {
-            callHandler("dropzoneOut", { dropzone: ctx.current.dropzone });
+            callHandler("dropzoneOut", {
+                dropzone: ctx.current.dropzone,
+                helper: ctx.current.helper,
+            });
             delete ctx.current.dropzone;
         }
 
@@ -189,7 +191,10 @@ const dragAndDropHookParams = {
                     height: rect.height,
                 },
             };
-            callHandler("dropzoneOver", { dropzone: ctx.current.dropzone });
+            callHandler("dropzoneOver", {
+                dropzone: ctx.current.dropzone,
+                helper: ctx.current.helper,
+            });
         }
         return pick(ctx.current, "element", "dropzone", "helper");
     },
