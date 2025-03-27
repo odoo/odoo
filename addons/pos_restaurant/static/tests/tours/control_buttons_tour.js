@@ -98,5 +98,13 @@ registry.category("web_tour.tours").add("ControlButtonsTour", {
             Dialog.confirm(),
             Order.doesNotHaveLine(),
             FloorScreen.isShown(),
+
+            // Test moving order to a table on a different floor
+            FloorScreen.clickTable("5"),
+            ProductScreen.addOrderline("Water", "5", "2", "10.0"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickFloor("Second Floor"),
+            FloorScreen.clickTable("1"),
+            Order.hasLine({ productName: "Water", quantity: "5" }),
         ].flat(),
 });
