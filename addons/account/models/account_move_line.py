@@ -6,6 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError, RedirectWarning
+from odoo.models import regex_field_agg
 from odoo.tools import frozendict, formatLang, format_date, float_compare, Query
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
@@ -118,7 +119,6 @@ class AccountMoveLine(models.Model):
     )
     amount_currency = fields.Monetary(
         string='Amount in Currency',
-        group_operator=None,
         compute='_compute_amount_currency', inverse='_inverse_amount_currency', store=True, readonly=False, precompute=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one(
@@ -1687,6 +1687,19 @@ class AccountMoveLine(models.Model):
                     }
                     tracking_value_ids.insert(i, Command.create(vals))
         return changes, tracking_value_ids
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if 'currency_id' in groupby or 'amount_currency' not in fields:
+            return super().read_group(domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True)
+
+        fields.append('currency_id:count_distinct')
+        res = super().read_group(domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True)
+        for group_line in res:
+            if group_line['currency_id'] != 1:
+                group_line['amount_currency'] = False
+
+        return res
 
     # -------------------------------------------------------------------------
     # RECONCILIATION
