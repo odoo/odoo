@@ -1,6 +1,7 @@
 from base64 import b64encode
+from datetime import timedelta
 
-from odoo import models, _
+from odoo import fields, models, _
 from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
@@ -16,17 +17,17 @@ class AccountMoveSend(models.AbstractModel):
         def peppol_partner(moves):
             return moves.partner_id.commercial_partner_id
 
-        def filter_peppol_state(moves, state):
+        def filter_peppol_state(moves, states):
             return peppol_partner(moves.filtered(
                 lambda m: self.env['res.partner']._get_peppol_verification_state(
                     peppol_partner(m).peppol_endpoint,
                     peppol_partner(m).peppol_eas,
-                    moves_data[m]['invoice_edi_format']) == state))
+                    moves_data[m]['invoice_edi_format']) in states))
 
         alerts = super()._get_alerts(moves, moves_data)
         # Check for invalid peppol partners.
         peppol_moves = moves.filtered(lambda m: 'peppol' in moves_data[m]['sending_methods'])
-        invalid_partners = filter_peppol_state(peppol_moves, 'not_valid_format')
+        invalid_partners = filter_peppol_state(peppol_moves, ['not_valid_format'])
         if invalid_partners and not 'account_edi_ubl_cii_configure_partner' in alerts:
             alerts['account_peppol_warning_partner'] = {
                 'message': _("Customer is on Peppol but did not enable receiving documents."),
@@ -55,13 +56,13 @@ class AccountMoveSend(models.AbstractModel):
         always_on_companies = moves.company_id.filtered(
             lambda c: c.country_code in info_always_on_countries and c.account_peppol_proxy_state not in can_send
         )
-        if always_on_companies and any_moves_not_sent_peppol and not filter_peppol_state(moves, 'not_valid'):
+        if always_on_companies and any_moves_not_sent_peppol and not filter_peppol_state(moves, ['not_valid', 'not_verified']):
             alerts.pop('account_edi_ubl_cii_configure_company', False)
-            alerts['account_peppol_partner_want_peppol'] = {
+            alerts['account_peppol_what_is_peppol'] = {
                 'message': _("You can send this invoice electronically via Peppol."),
                 **what_is_peppol_alert,
             }
-        elif (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, 'valid')) and any_moves_not_sent_peppol:
+        elif (peppol_not_selected_partners := filter_peppol_state(not_peppol_moves, ['valid'])) and any_moves_not_sent_peppol:
             # Check for not peppol partners that are on the network.
             if len(peppol_not_selected_partners) == 1:
                 alerts['account_peppol_partner_want_peppol'] = {
@@ -199,6 +200,7 @@ class AccountMoveSend(models.AbstractModel):
                     invoices |= invoice
                 log_message = _('The document has been sent to the Peppol Access Point for processing')
                 invoices._message_log_batch(bodies={invoice.id: log_message for invoice in invoices})
+                self.env.ref('account_peppol.ir_cron_peppol_get_message_status')._trigger(at=fields.Datetime.now() + timedelta(minutes=5))
 
         if self._can_commit():
             self._cr.commit()

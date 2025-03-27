@@ -216,6 +216,14 @@ class PosConfig(models.Model):
             'records': records
         })
 
+        for config in self.trusted_config_ids:
+            config._notify('SYNCHRONISATION', {
+                'static_records': static_records,
+                'session_id': config.current_session_id.id,
+                'login_number': 0,
+                'records': records
+            })
+
     def read_config_open_orders(self, domain, record_ids):
         all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
         all_orders = self.env['pos.order'].search(all_domain)
@@ -719,6 +727,7 @@ class PosConfig(models.Model):
     def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
+            ('active', '=', True),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]

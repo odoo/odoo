@@ -248,6 +248,7 @@ export class ClipboardPlugin extends Plugin {
             this.handlePasteHtml(selection, ev.clipboardData) ||
             this.handlePasteText(selection, ev.clipboardData);
 
+        this.dispatchTo("after_paste_handlers", selection);
         this.dependencies.history.addStep();
     }
     /**

@@ -501,7 +501,7 @@ class StockWarehouseOrderpoint(models.Model):
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         # Group orderpoint by product-location
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint']._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id'],
             ['id:recordset'])
         orderpoint_by_product_location = {
@@ -520,7 +520,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         # With archived ones to avoid `product_location_check` SQL constraints
         orderpoint_by_product_location = self.env['stock.warehouse.orderpoint'].with_context(active_test=False)._read_group(
-            [('id', 'in', orderpoints.ids)],
+            [('id', 'in', orderpoints.ids), ('product_id', 'in', product_ids)],
             ['product_id', 'location_id'],
             ['id:recordset'])
         orderpoint_by_product_location = {
@@ -597,11 +597,11 @@ class StockWarehouseOrderpoint(models.Model):
         domain = [
             ('create_uid', '=', SUPERUSER_ID),
             ('trigger', '=', 'manual'),
-            ('qty_to_order', '<=', 0)
         ]
         if self.ids:
             expression.AND([domain, [('ids', 'in', self.ids)]])
-        orderpoints_to_remove = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
+        manual_orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
+        orderpoints_to_remove = manual_orderpoints.filtered(lambda o: o.qty_to_order <= 0.0)
         # Remove previous automatically created orderpoint that has been refilled.
         orderpoints_to_remove.unlink()
         return orderpoints_to_remove

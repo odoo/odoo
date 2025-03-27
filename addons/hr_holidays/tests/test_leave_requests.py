@@ -1386,3 +1386,49 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(modified_leave.request_date_from, two_days_after)
         self.assertEqual(modified_leave.request_date_to, two_days_after)
+
+    def test_leave_default_employee(self):
+        """
+        Make sure that the default employee is set on the leave
+        """
+        with Form(self.env['hr.leave']
+                  .with_user(self.user_hrmanager)
+                  .with_context({"default_holiday_status_id": self.holidays_type_1.id})) as leave_form:
+            self.assertEqual(leave_form.employee_id, self.user_hrmanager.employee_id)
+
+        new_company = self.env['res.company'].create({'name': 'Test company 2'})
+        new_leave_type = self.env['hr.leave.type'].create({
+            'name': 'Time Off with no validation for approval',
+            'requires_allocation': 'no',
+            'company_id': new_company.id,
+        })
+        with self.assertRaises(UserError, msg="This company does not have any employees."):
+            Form(self.env['hr.leave']
+                    .with_company(new_company)
+                    .with_context({"default_holiday_status_id": new_leave_type.id}))
+
+        new_employee = self.env['hr.employee'].create({
+            'name': 'My Employee',
+            'company_id': new_company.id,
+        })
+        with Form(self.env['hr.leave']
+                .with_company(new_company)
+                .with_context({"default_holiday_status_id": new_leave_type.id})) as leave_form:
+            self.assertEqual(leave_form.employee_id, new_employee)
+
+    def test_time_off_hours_when_flexible(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'hours_per_day': 8.5,
+            'flexible_hours': True
+        })
+
+        self.employee_emp.resource_calendar_id = calendar
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'date_from': (datetime.today() - relativedelta(days=2)),
+            'date_to': datetime.today()
+        })
+        self.assertEqual(leave.number_of_hours, 8.5)

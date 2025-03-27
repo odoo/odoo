@@ -323,73 +323,6 @@ class TestItEdiExport(TestItEdi):
         with self.subTest('credit note'):
             self._assert_export_invoice(credit_note, 'credit_note_negative_price.xml')
 
-        invoice = self.env['account.move'].with_company(self.company).create({
-            'move_type': 'out_invoice',
-            'invoice_date': '2022-03-24',
-            'invoice_date_due': '2022-03-24',
-            'partner_id': self.italian_partner_a.id,
-            'partner_bank_id': self.test_bank.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'name': 'standard_line',
-                    'price_unit': 800.40,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                Command.create({
-                    'name': 'negative_line',
-                    'price_unit': -100.0,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                # This negative line can't be dispatched, rejeted.
-                Command.create({
-                    'name': 'negative_line_different_tax',
-                    'price_unit': -50.0,
-                    'tax_ids': [Command.set(tax_10.ids)],
-                    }),
-            ],
-        })
-        invoice.action_post()
-        with self.subTest('invoice_different_taxes'):
-            self._assert_export_invoice(invoice, 'invoice_negative_price_different_taxes.xml')
-
-    def test_invoice_negative_price_2(self):
-        invoice = self.env['account.move'].with_company(self.company).create({
-            'move_type': 'out_invoice',
-            'invoice_date': '2022-03-24',
-            'invoice_date_due': '2022-03-24',
-            'partner_id': self.italian_partner_a.id,
-            'partner_bank_id': self.test_bank.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'name': 'void line',
-                    'quantity': 1,
-                    'price_unit': 0.0,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                Command.create({
-                    'name': 'standard line 1',
-                    'quantity': 1,
-                    'price_unit': 150.00,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                Command.create({
-                    'name': 'standard line 2',
-                    'quantity': 1,
-                    'price_unit': 100.00,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-                Command.create({
-                    'name': 'negative line',
-                    'price_unit': -200.0,
-                    'tax_ids': [Command.set(self.default_tax.ids)],
-                }),
-            ],
-        })
-        invoice.action_post()
-
-        with self.subTest('invoice'):
-            self._assert_export_invoice(invoice, 'invoice_negative_price_2.xml')
-
     def test_invoice_more_decimal_price_unit(self):
         decimal_precision_name = self.env['account.move.line']._fields['price_unit']._digits
         decimal_precision = self.env['decimal.precision'].search([('name', '=', decimal_precision_name)])
@@ -565,3 +498,29 @@ class TestItEdiExport(TestItEdi):
         )
         invoice.action_post()
         self._assert_export_invoice(invoice, 'test_export_invoice_with_two_downpayments.xml')
+
+    @freeze_time('2025-03-07')
+    def test_send_prezzo_unitario_converted_to_company_currency(self):
+        """
+        Test that the prezzo unitario is converted to the company currency when the invoice is in a foreign currency
+        """
+        usd = self.env.ref('base.USD')
+        self.env['res.currency.rate'].create({
+            'name': '2025-01-01',
+            'rate': 2,
+            'currency_id': usd.id,
+            'company_id': self.company.id,
+        })
+
+        invoice = self.init_invoice(
+            move_type='out_invoice',
+            partner=self.italian_partner_a,
+            invoice_date='2025-02-24',
+            post=True,
+            amounts=[100],
+            taxes=[self.default_tax],
+            company=self.company,
+            currency=usd,
+        )
+
+        self._assert_export_invoice(invoice, 'prezzio_unitario_converted_company_currency.xml')

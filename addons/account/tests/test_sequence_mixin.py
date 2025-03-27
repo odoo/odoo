@@ -234,6 +234,15 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.assertMoveName(new_multiple_move_1, 'AJ/15-16/01/0001')
             move_form.date = fields.Date.to_date('2016-01-10')
 
+    def test_sequence_draft_change_date_with_new_sequence(self):
+        invoice_1 = self.test_move.copy({'date': '2016-02-01', 'journal_id': self.company_data['default_journal_sale'].id})
+        invoice_2 = invoice_1.copy({'date': '2016-02-02'})
+
+        self.assertMoveName(invoice_2, 'INV/15-16/0001')
+        invoice_1.name = 'INV/15-16/02/001'
+        invoice_2.date = '2016-03-01'
+        self.assertMoveName(invoice_2, 'INV/15-16/03/001')
+
     def test_sequence_draft_first_of_period(self):
         """
         | Step | Move | Action      | Date       | Name           |
@@ -930,6 +939,8 @@ class TestSequenceMixinConcurrency(TransactionCase):
         # check the values
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
+        self.assertEqual(moves.mapped('sequence_prefix'), ['CT/2016/01/', 'CT/2016/01/', 'CT/2016/01/'])
+        self.assertEqual(moves.mapped('sequence_number'), [1, 2, 3])
 
     def test_sequence_concurency_no_useless_lock(self):
         """Do not lock needlessly when the sequence is not computed"""
