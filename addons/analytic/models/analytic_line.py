@@ -63,9 +63,12 @@ class AnalyticPlanFields(models.AbstractModel):
             if self[fname]
         ])
 
+    def _get_distribution_key(self):
+        return ",".join(str(account_id) for account_id in self._get_analytic_accounts().ids)
+
     def _get_analytic_distribution(self):
-        account_ids = self._get_analytic_accounts().ids
-        return {} if not account_ids else {",".join(str(account_id) for account_id in account_ids): 100}
+        accounts = self._get_distribution_key()
+        return {} if not accounts else {accounts: 100}
 
     def _get_mandatory_plans(self, company, business_domain):
         return [
