@@ -248,6 +248,15 @@ export class LinkPlugin extends Plugin {
         this.addDomListener(this.editable, "keydown", () => {
             delete this._isNavigatingByMouse;
         });
+        this.addDomListener(this.editable, "auxclick", (ev) => {
+            if (ev.button === 1) {
+                const link = closestElement(ev.target, "a");
+                if (link?.href) {
+                    window.open(link.href, "_blank");
+                    ev.preventDefault();
+                }
+            }
+        });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
         this.unregisterLinkCommandCallback = this.services.command.add(
