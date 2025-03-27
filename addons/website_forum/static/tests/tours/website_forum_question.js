@@ -30,11 +30,8 @@ registry.category("web_tour.tours").add('forum_question', {
         run: 'click',
     },
     {
-        trigger: '.o_popover input.o_select_menu_sticky',
+        trigger: '.o_select_menu_toggler',
         run: 'edit Tag',
-    },
-    {
-        trigger: "#wrap:not(:has(.o_popover input.o_select_menu_sticky:not(:contains(''))))",
     },
     {
         content: "Click to post your question.",

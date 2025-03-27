@@ -1,6 +1,6 @@
 import {
-    click,
     contains,
+    click,
     insertText,
     openFormView,
     registerArchs,
@@ -9,8 +9,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { mockDate, mockTimeZone } from "@odoo/hoot-mock";
-import { defineTestMailModels, editSelect } from "@test_mail/../tests/test_mail_test_helpers";
-import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
+import { editSelectMenu, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { currencies } from "@web/core/currency";
 
 const archs = {
@@ -302,7 +302,7 @@ test("rendering of tracked field of type selection: from a selection to no selec
     await start();
     registerArchs(archs);
     await openFormView("mail.test.track.all", mailTestTrackAllId1);
-    await editSelect("div[name=selection_field] select", "false");
+    await editSelectMenu("div[name=selection_field] input", { value: "" });
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "firstNone(Selection)" });
 });
@@ -313,7 +313,7 @@ test("rendering of tracked field of type selection: from no selection to a selec
     await start();
     registerArchs(archs);
     await openFormView("mail.test.track.all", mailTestTrackAllId1);
-    await editSelect("div[name=selection_field] select", '"first"');
+    await editSelectMenu("div[name=selection_field] input", { value: "First" });
     await click(".o_form_button_save");
     await contains(".o-mail-Message-tracking", { text: "Nonefirst(Selection)" });
 });

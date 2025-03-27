@@ -123,6 +123,7 @@ export class Navigator {
             {
                 isNavigationAvailable: ({ target }) => this.contains(target),
                 shouldFocusChildInput: true,
+                shouldFocusFirstItem: false,
                 virtualFocus: false,
                 hotkeys: {
                     home: () => this.items[0]?.setActive(),
@@ -250,6 +251,10 @@ export class Navigator {
         }
 
         this._options.onUpdated?.(this);
+
+        if (this._options.shouldFocusFirstItem) {
+            this.items[0]?.setActive();
+        }
     }
 
     /**

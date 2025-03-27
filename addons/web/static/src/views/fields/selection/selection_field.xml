@@ -6,28 +6,7 @@
             <span t-esc="string" t-att-raw-value="value" />
         </t>
         <t t-else="">
-            <t t-set="isPlaceholder" t-value="false === value" />
-            <select
-                class="o_input pe-3"
-                t-on-change="onChange"
-                t-on-click.stop="() =&gt; {}"
-                t-att-id="props.id">
-                <option
-                    t-if="!props.required || !value"
-                    t-attf-class="o_select_placeholder {{isPlaceholder ? 'd-none' : ''}}"
-                    t-att-selected="isPlaceholder"
-                    t-att-value="stringify(false)"
-                    t-esc="isPlaceholder and this.props.placeholder || ''"
-                />
-                <t t-foreach="options" t-as="option" t-key="option[0]">
-                    <option
-                        class="text-black"
-                        t-att-selected="option[0] === value"
-                        t-att-value="stringify(option[0])"
-                        t-esc="option[1]"
-                    />
-                </t>
-            </select>
+            <SelectMenu autoSort="false" class="'border-0'" menuClass="'o_field_selection_menu w-auto'" value="value" choices="choices" onSelect.bind="onChange" placeholder="props.placeholder" id="props.id" searchable="!isBottomSheet" />
         </t>
     </t>
 

@@ -39,6 +39,7 @@ import {
     defineModels,
     defineParams,
     editFavoriteName,
+    editSelectMenu,
     fields,
     getFacetTexts,
     getMenuItemTexts,
@@ -8684,7 +8685,9 @@ test(`modifiers of other x2many rows a re-evaluated when a subrecord is updated`
 
     // Make a change in the list to trigger the onchange
     await contains(`.o_field_widget[name=o2m] .o_data_row .o_data_cell:eq(1)`).click();
-    await contains(`.o_field_widget[name=o2m] .o_data_row [name=stage] select`).select(`"open"`);
+    await editSelectMenu(".o_field_widget[name=o2m] .o_data_row [name=stage] input", {
+        value: "Open",
+    });
     expect(queryAllTexts(`.o_field_widget[name=o2m] .o_data_row .o_data_cell:first-child`)).toEqual(
         ["", "Value 2"]
     );
@@ -16867,7 +16870,7 @@ test(`Properties: selection`, async () => {
     expect(`.o_field_cell.o_selection_cell`).toHaveCount(3);
 
     await contains(`.o_field_cell.o_selection_cell`).click();
-    await contains(`.o_field_cell.o_selection_cell select`).select(`"a"`);
+    await editSelectMenu(".o_field_cell.o_selection_cell input", { value: "A" });
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_selection_cell:eq(0)`).toHaveText("A");
     expect.verifySteps(["web_save"]);
