@@ -30,7 +30,7 @@ class DiscussChannel(models.Model):
         lead_command = "/lead"
         if key.strip() == lead_command:
             msg = _(
-                "Create a new lead: "
+                "Create a new lead with: "
                 "%(pre_start)s%(lead_command)s %(i_start)slead title%(i_end)s%(pre_end)s",
                 lead_command=lead_command,
                 pre_start=Markup("<pre>"),
