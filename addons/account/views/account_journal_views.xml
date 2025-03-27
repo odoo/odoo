@@ -110,7 +110,7 @@
                                     </group>
                                     <group name="bank_source" invisible="type != 'credit'">
                                         <label for="bank_statements_source" string="Transaction Feeds" invisible="type != 'credit'" groups="account.group_account_readonly"/>
-                                        <field name="bank_statements_source" nolabel="1" widget="radio" required="type != 'credit'" groups="account.group_account_basic"/>
+                                        <field name="bank_statements_source" nolabel="1" widget="radio" required="type == 'credit'" groups="account.group_account_basic"/>
                                     </group>
                                 </group>
                             </page>
