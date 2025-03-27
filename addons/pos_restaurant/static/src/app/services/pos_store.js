@@ -631,7 +631,7 @@ patch(PosStore.prototype, {
             this.removeOrder(order);
         } else if (order) {
             if (!this.isOrderTransferMode) {
-                this.syncAllOrders({ orders: [order] });
+                this.syncAllOrders();
             } else if (order && this.previousScreen !== "ReceiptScreen") {
                 await this.syncAllOrders({ orders: [order] });
             }
