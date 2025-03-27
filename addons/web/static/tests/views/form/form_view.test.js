@@ -6000,6 +6000,46 @@ test(`empty required fields cannot be saved`, async () => {
     expect(`.o_field_invalid`).toHaveCount(0);
 });
 
+test("empty required fields in an existing record are highlighted", async () => {
+    Partner._fields.foo = fields.Char({ required: true });
+    Partner._records[0].foo = false;
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <group>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </group>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    expect(".o_field_widget[name=foo]").toHaveClass("o_field_invalid");
+    expect(".o_form_status_indicator_buttons").toHaveClass("invisible");
+
+    await contains(".o_field_widget[name=int_field] input").edit("25", { confirm: false });
+    expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
+    expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute("disabled");
+    expect(".o_form_status_indicator span.text-danger").toHaveCount(1);
+
+    await contains(".o_control_panel").click(); // blur the input
+    expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
+    expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute("disabled");
+    expect(".o_form_status_indicator span.text-danger").toHaveCount(1);
+
+    await contains(".o_form_button_cancel").click();
+    expect(".o_field_widget[name=foo]").toHaveClass("o_field_invalid");
+    expect(".o_form_status_indicator_buttons").toHaveClass("invisible");
+
+    await contains(".o_form_button_create").click();
+    expect(".o_field_widget[name=foo]").not.toHaveClass("o_field_invalid");
+    expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
+});
+
 test(`display a dialog if onchange result is a warning`, async () => {
     Partner._onChanges = { foo: true };
 
