@@ -299,7 +299,6 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_fsm_manager', # industry_fsm
                     'group_plm_manager', # mrp_plm
                     'group_planning_manager', # planning
-                    'group_sign_manager', # sign
                 ))
             ]).mapped('res_id')
         )
