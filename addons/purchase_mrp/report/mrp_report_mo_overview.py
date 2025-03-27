@@ -68,7 +68,7 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             if supplier:
                 return {
                     'delay': supplier.delay + rules_delay,
-                    'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom_id),
+                    'cost': supplier.price * uom_id._compute_quantity(quantity, supplier.product_uom_id or supplier.product_tmpl_id.uom_id),
                     'currency': supplier.currency_id,
                 }
         return res
