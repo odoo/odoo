@@ -234,11 +234,13 @@ class ResPartner(models.Model):
         readonly=False, store=True,
         help='The internal user in charge of this contact.')
     vat = fields.Char(string='Tax ID', index=True, help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.")
+    vat_value = fields.Char(compute='_compute_vat_value', readonly=True)
     vat_label = fields.Char(string='Tax ID Label', compute='_compute_vat_label')
     same_vat_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Tax ID', compute='_compute_same_vat_partner_id', store=False)
     same_company_registry_partner_id: ResPartner = fields.Many2one('res.partner', string='Partner with same Company Registry', compute='_compute_same_vat_partner_id', store=False)
     company_registry = fields.Char(string="Company ID", compute='_compute_company_registry', store=True, readonly=False,
        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country")
+    company_registry_value = fields.Char(compute='_compute_company_registry_value', readonly=True)
     company_registry_label = fields.Char(string='Company ID Label', compute='_compute_company_registry_label')
     company_registry_placeholder = fields.Char(compute='_compute_company_registry_placeholder')
     bank_ids: ResPartnerBank = fields.One2many('res.partner.bank', 'partner_id', string='Banks')
@@ -469,6 +471,16 @@ class ResPartner(models.Model):
 
     def _compute_company_registry_placeholder(self):
         self.company_registry_placeholder = False
+
+    @api.depends('vat')
+    def _compute_vat_value(self):
+        for partner in self:
+            partner.vat_value = partner.vat
+
+    @api.depends('company_registry')
+    def _compute_company_registry_value(self):
+        for partner in self:
+            partner.company_registry_value = partner.company_registry
 
     @api.constrains('parent_id')
     def _check_parent_id(self):
