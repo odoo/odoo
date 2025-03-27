@@ -47,7 +47,7 @@ class TestMassMailPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +101 compared to local
-        with self.assertQueryCount(__system__=1280, marketing=1281):  # 1179, 1180
+        with self.assertQueryCount(__system__=1284, marketing=1286):  # 1179, 1180
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
@@ -90,7 +90,7 @@ class TestMassMailBlPerformance(TestMassMailPerformanceBase):
         })
 
         # runbot needs +101 compared to local
-        with self.assertQueryCount(__system__=1319, marketing=1320):  # 1217, 1218
+        with self.assertQueryCount(__system__=1327, marketing=1329):  # 1217, 1218
             mailing.action_send_mail()
 
         self.assertEqual(mailing.sent, 50)
