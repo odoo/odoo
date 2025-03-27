@@ -21,7 +21,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
         cls.company_data_2 = cls.setup_other_company()
 
         cls.company_data['company'].write({
@@ -150,6 +150,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
 
         cls.company_data['company'].write({
             'point_of_sale_update_stock_quantities': 'real',
