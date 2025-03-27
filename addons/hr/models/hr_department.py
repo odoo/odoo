@@ -96,35 +96,14 @@ class HrDepartment(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        # TDE note: auto-subscription of manager done by hand, because currently
-        # the tracking allows to track+subscribe fields linked to a res.user record
-        # An update of the limited behavior should come, but not currently done.
-        departments = super(HrDepartment, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
-        for department, vals in zip(departments, vals_list):
-            manager = self.env['hr.employee'].browse(vals.get("manager_id"))
-            if manager.user_id:
-                department.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
-        return departments
+        return super(HrDepartment, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
 
     def write(self, vals):
         """ If updating manager of a department, we need to update all the employees
             of department hierarchy, and subscribe the new manager.
         """
-        # TDE note: auto-subscription of manager done by hand, because currently
-        # the tracking allows to track+subscribe fields linked to a res.user record
-        # An update of the limited behavior should come, but not currently done.
         if 'manager_id' in vals:
             manager_id = vals.get("manager_id")
-            if manager_id:
-                manager = self.env['hr.employee'].browse(manager_id)
-                # subscribe the manager user
-                if manager.user_id:
-                    self.message_subscribe(partner_ids=manager.user_id.partner_id.ids)
-            manager_to_unsubscribe = set()
-            for department in self:
-                if department.manager_id and department.manager_id.user_id:
-                    manager_to_unsubscribe.update(department.manager_id.user_id.partner_id.ids)
-            self.message_unsubscribe(partner_ids=list(manager_to_unsubscribe))
             # set the employees's parent to the new manager
             self._update_employee_manager(manager_id)
         return super().write(vals)
