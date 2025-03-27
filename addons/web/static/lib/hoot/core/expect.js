@@ -67,6 +67,7 @@ import { Test } from "./test";
  *  silent?: boolean;
  * }} ExpectOptions
  *
+ * @typedef {import("../hoot_utils").DeepEqualOptions} DeepEqualOptions
  * @typedef {import("../hoot_utils").Label} Label
  *
  * @typedef {import("@odoo/hoot-dom").Dimensions} Dimensions
@@ -326,6 +327,7 @@ const valueMatches = (value, matcher) => {
     return strictEqual(value, matcher);
 };
 
+const AMPERSAND = makeLabel("&", null);
 const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
 
 const R_LINE_RETURN = /\n+/g;
@@ -644,20 +646,22 @@ export function makeExpect(params) {
      * will reset the list of current steps.
      *
      * @param {any[]} steps
+     * @param {DeepEqualOptions} [options]
      * @example
      *  expect.verifySteps(["web_read_group", "web_search_read"]);
      */
-    function verifySteps(steps) {
+    function verifySteps(steps, options) {
         if (!currentResult) {
             throw scopeError("expect.verifySteps");
         }
-        ensureArguments(arguments, "any[]");
+        ensureArguments(arguments, "any[]", ["object", null]);
 
         const actualSteps = currentResult.consumeSteps();
-        const pass = deepEqual(actualSteps, steps);
+        const pass = deepEqual(actualSteps, steps, options);
+        const separator = options?.ignoreOrder ? AMPERSAND : ARROW_RIGHT;
         const message = pass
             ? steps.length
-                ? listJoin(steps, ARROW_RIGHT)
+                ? listJoin(steps, separator)
                 : "no steps"
             : "expected the following steps";
         const assertion = {
@@ -1176,7 +1180,7 @@ export class Matcher {
      * Expects the received value to be *deeply* equal to the `expected` value.
      *
      * @param {R} expected
-     * @param {ExpectOptions} [options]
+     * @param {ExpectOptions & DeepEqualOptions} [options]
      * @example
      *  expect(["foo"]).toEqual(["foo"]);
      * @example
@@ -1188,7 +1192,7 @@ export class Matcher {
         return this._resolve(() => ({
             name: "toEqual",
             acceptedType: "any",
-            predicate: () => deepEqual(this._received, expected),
+            predicate: () => deepEqual(this._received, expected, options),
             message:
                 options?.message ||
                 ((pass) =>
@@ -1598,7 +1602,7 @@ export class Matcher {
         this._ensureArguments(arguments, ["string", "string[]"]);
 
         const rawClassNames = ensureArray(className);
-        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE)).sort();
+        const classNames = rawClassNames.flatMap((cls) => cls.trim().split(R_WHITE_SPACE));
 
         return this._resolve(() => ({
             name: "toHaveClass",
@@ -1606,7 +1610,7 @@ export class Matcher {
             mapElements: (el) => [...el.classList].sort(),
             predicate: (classes) =>
                 options?.exact
-                    ? deepEqual(classNames, classes)
+                    ? deepEqual(classNames, classes, { ignoreOrder: true })
                     : classNames.every((cls) => classes.includes(cls)),
             message:
                 options?.message ||
@@ -1812,7 +1816,7 @@ export class Matcher {
         this._ensureArguments(arguments, ["string", "object"]);
 
         const styleDef = parseInlineStyle(style, S_ANY);
-        const styleKeys = $keys(styleDef).sort();
+        const styleKeys = $keys(styleDef);
 
         return this._resolve(() => ({
             name: "toHaveStyle",
@@ -1823,7 +1827,7 @@ export class Matcher {
                     : getStyleValues(el, $keys(styleDef)),
             predicate: (elStyle) =>
                 styleKeys.every((key) => valueMatches(elStyle[key], styleDef[key])) &&
-                (!options?.exact || deepEqual(styleKeys, $keys(elStyle))),
+                (!options?.exact || deepEqual(styleKeys, $keys(elStyle), { ignoreOrder: true })),
             message:
                 options?.message ||
                 ((pass) =>

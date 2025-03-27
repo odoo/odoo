@@ -29,12 +29,8 @@ const checkStepState = (forceVerifySteps) => {
     }
 
     const { expectedSteps, ignoreOrder, steps } = currentStepState;
-    if (ignoreOrder) {
-        expectedSteps.sort();
-        steps.sort();
-    }
-    if (forceVerifySteps || expect(steps).toEqual(expectedSteps, { silent: true })) {
-        expect.verifySteps(expectedSteps);
+    if (forceVerifySteps || expect(steps).toEqual(expectedSteps, { ignoreOrder, silent: true })) {
+        expect.verifySteps(expectedSteps, { ignoreOrder });
         clearStepState();
     }
 };

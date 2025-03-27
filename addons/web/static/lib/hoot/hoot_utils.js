@@ -27,6 +27,10 @@ import { getRunner } from "./main_runner";
  *  | "url"
  *  | "undefined"} ArgumentPrimitive
  *
+ * @typedef {{
+ *  ignoreOrder?: boolean;
+ * }} DeepEqualOptions
+ *
  * @typedef {[string, ArgumentType]} Label
  *
  * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
@@ -549,11 +553,12 @@ export function debounce(fn, delay) {
 /**
  * @param {unknown} a
  * @param {unknown} b
+ * @param {DeepEqualOptions} [options]
  * @param {Set<unknown>} [cache=new Set()]
  * @returns {boolean}
  */
-export function deepEqual(a, b, cache = new Set()) {
-    if (strictEqual(a, b) || cache.has(a)) {
+export function deepEqual(a, b, options, cache = new Set()) {
+    if (cache.has(a) || strictEqual(a, b)) {
         return true;
     }
     const aType = typeof a;
@@ -583,7 +588,7 @@ export function deepEqual(a, b, cache = new Set()) {
         const aKeys = $ownKeys(a);
         return (
             aKeys.length === $ownKeys(b).length &&
-            aKeys.every((key) => deepEqual(a[key], b[key], cache))
+            aKeys.every((key) => deepEqual(a[key], b[key], options, cache))
         );
     }
 
@@ -594,9 +599,28 @@ export function deepEqual(a, b, cache = new Set()) {
     }
     if (!aIsArray) {
         a = [...a];
-        b = [...b];
     }
-    return a.length === b.length && a.every((v, i) => deepEqual(v, b[i], cache));
+    b = [...b];
+    if (a.length !== b.length) {
+        return false;
+    }
+    if (options?.ignoreOrder) {
+        for (const aValue of a) {
+            // Needs a different cache since the deepEqual calls here are not "definitive",
+            // meaning that values may need to be re-evaluated later.
+            const comparisonCache = new Set();
+            const index = b.findIndex((bValue) =>
+                deepEqual(aValue, bValue, options, comparisonCache)
+            );
+            if (index < 0) {
+                return false;
+            }
+            b.splice(index, 1);
+        }
+        return true;
+    } else {
+        return a.every((v, i) => deepEqual(v, b[i], options, cache));
+    }
 }
 
 /**
