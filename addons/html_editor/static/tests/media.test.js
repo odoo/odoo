@@ -123,3 +123,23 @@ describe("Powerbox search keywords", () => {
         }
     });
 });
+
+test("cropper should not open for external image", async () => {
+    onRpc("/html_editor/get_image_info", () => {
+        return {
+            original: false,
+        };
+    });
+
+    await setupEditor(
+        `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
+    );
+    await waitFor('div[name="image_transform"]');
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await click('.btn[name="image_crop"]');
+    await waitFor(".o_notification_manager .o_notification");
+    expect("img.o_we_cropper_img").toHaveCount(0);
+});
