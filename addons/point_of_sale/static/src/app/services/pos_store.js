@@ -776,12 +776,14 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             // Product template of combo should not have more than 1 variant.
+            const [childLineConf, comboExtraLines] = payload;
             const comboPrices = computeComboItems(
                 values.product_tmpl_id.product_variant_ids[0],
-                payload,
+                childLineConf,
                 order.pricelist_id,
                 this.data.models["decimal.precision"].getAll(),
-                this.data.models["product.template.attribute.value"].getAllBy("id")
+                this.data.models["product.template.attribute.value"].getAllBy("id"),
+                comboExtraLines
             );
 
             values.combo_line_ids = comboPrices.map((comboItem) => [
@@ -796,7 +798,7 @@ export class PosStore extends WithLazyGetterTrap {
                     price_unit: comboItem.price_unit,
                     price_type: "manual",
                     order_id: order,
-                    qty: values.qty,
+                    qty: comboItem.qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,

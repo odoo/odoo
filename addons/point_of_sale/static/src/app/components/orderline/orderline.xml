@@ -2,14 +2,14 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.Orderline">
         <li t-if="line.order_id" class="orderline position-relative d-flex align-items-center lh-sm cursor-pointer"
-            t-attf-class="{{ line.combo_parent_id?.getFullProductName() ? 'orderline-combo fst-italic ms-4 border-start' : '' }}"
+            t-attf-class="{{ line.combo_parent_id ? 'orderline-combo fst-italic ms-4 border-start' : '' }}"
             t-att-class="{'selected' : line.isSelected() and this.props.mode === 'display', ...line.getDisplayClasses(), ...(props.class || [])}">
             <div class="product-order"></div>
             <div t-if="props.showImage and line.product_id.getImageUrl()" class="o_line_container d-flex align-items-center justify-content-center">
                 <img t-attf-style="border-radius: 1rem;" t-att-src="line.product_id.getImageUrl()"/>
             </div>
             <div class="d-flex flex-column w-100"
-                 t-attf-class="{{ line.combo_parent_id?.getFullProductName() ? 'px-2 py-1' : 'p-2' }}">
+                 t-attf-class="{{ line.combo_parent_id ? 'px-2 py-1' : 'p-2' }}">
                 <div class="line-details d-flex justify-content-between align-items-center">
                     <div class="product-name d-flex flex-grow-1 align-items-center pe-2 text-truncate">
                         <span class="qty d-inline-block px-1 fw-bolder">
@@ -34,7 +34,7 @@
                             <i class="fa fa-tag pe-1"/><em><t t-esc="discount" />% </em> discount off on <t t-esc="env.utils.formatCurrency(line.allPrices.priceWithTaxBeforeDiscount)"/>
                         </t>
                     </li>
-                    <li class="price-per-unit" t-if="!props.basic_receipt and (props.mode == 'receipt' || line.price_type !== 'original')">
+                    <li class="price-per-unit" t-if="!props.basic_receipt and (props.mode == 'receipt' || (line.price_type !== 'original' and !line.combo_parent_id))">
                         <t t-if="line.price !== 0">
                             <i class="fa fa-money center pe-1"/>
                             <t t-esc="formatCurrency(line.unitDisplayPrice)" />

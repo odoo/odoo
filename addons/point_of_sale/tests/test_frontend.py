@@ -1016,6 +1016,20 @@ class TestUi(TestPointOfSaleHttpCommon):
         #   - the combo lines are correctly stored in and restored from local storage
         #   - the combo lines are correctly shared between the pos configs ( in cross ordering )
 
+    def test_07_product_combo_max_free_qty(self):
+        """ Test the max free quantity of a product combo."""
+        setup_product_combo_items(self)
+        self.office_combo.combo_ids[0].write({
+            'qty_free': 2,
+            'qty_max': 2,
+        })
+        self.office_combo.combo_ids[1].write({
+            'qty_free': 2,
+            'qty_max': 5,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('ProductComboMaxFreeQtyTour')
+
     def test_07_pos_barcodes_scan(self):
         barcode_rule = self.env.ref("point_of_sale.barcode_rule_client")
         barcode_rule.pattern = barcode_rule.pattern + "|234"
