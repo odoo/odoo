@@ -428,3 +428,92 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
 
         # This invoice should not be blocked, as all lines have plans
         invoice.with_context({'validate_analytic': True}).action_post()
+
+    def test_synchronization_between_analytic_distribution_and_analytic_lines(self):
+        """ Test creating, updating, and deleting analytic lines and ensure the changes are reflected in move_line's analytic_distribution. """
+        
+        # Create analytic accounts for distribution
+        analytic_account_1 = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account 1',
+            'plan_id': 1,
+        })
+        analytic_account_2 = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account 2',
+            'plan_id': 1,
+        })
+        analytic_account_3 = self.env['account.analytic.account'].create({
+            'name': 'Analytic Account 3',
+            'plan_id': 1,
+        })
+        
+        # Create a product and a partner for the invoice
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'service',
+            'list_price': 100.0,
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Test Partner',
+        })
+        
+        # Create an invoice with analytic distribution
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': partner.id,
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': product.id,
+                    'price_unit': 100.0,
+                    'analytic_distribution': {
+                        analytic_account_1.id: 40,
+                        analytic_account_2.id: 60,
+                    },
+                })
+            ]
+        })
+        
+        # Post the invoice
+        invoice.action_post()
+
+        # Fetch the associated move line and analytic lines
+        analytic_lines = self.env['account.analytic.line'].search([
+                ('move_line_id', 'in', invoice.line_ids.ids)
+            ]).sorted('amount')
+        move_line = analytic_lines[0].move_line_id
+        
+        # Update the account of the first analytic line
+        analytic_lines[0].write({
+            'account_id': analytic_account_3.id,
+            'amount': 50,
+        })
+
+        # Verify that the analytic line was updated
+        self.assertEqual(analytic_lines[0].account_id, analytic_account_3, "The analytic line account should now be linked to Analytic Account 2.")
+        self.assertEqual(analytic_lines[0].amount, 50, "The amount of the first analytic line should be updated to 50.")
+
+        # Verify updated analytic_distribution
+        updated_analytic_distribution = move_line.analytic_distribution
+        self.assertIn(str(analytic_account_3.id), updated_analytic_distribution, "The analytic distribution should reflect the updated account.")
+        self.assertEqual(50, updated_analytic_distribution[str(analytic_account_3.id)], "The analytic distribution value should be updated.")
+        # Delete the first analytic line
+        analytic_lines[0].unlink()
+
+        # Verify that the analytic distribution is updated on the move line after deletion
+        updated_analytic_distribution = move_line.analytic_distribution
+        self.assertIn(str(analytic_account_2.id), updated_analytic_distribution, "The analytic distribution should reflect the remaining account.")
+        self.assertNotIn(str(analytic_account_3.id), updated_analytic_distribution, "The deleted account should not be present in the analytic distribution.")
+
+        # Create analytic line
+        self.env['account.analytic.line'].create({
+            'name': 'Extra Analytic Line',
+            'account_id': analytic_account_1.id,
+            'amount': 30,
+            'move_line_id': move_line.id,
+        })
+
+        #check if it ex
+        updated_distribution = move_line.analytic_distribution
+        self.assertIn(str(analytic_account_1.id), updated_distribution, "The analytic line should have been added to the analytic distribution.")
+        self.assertEqual(30, updated_distribution[str(analytic_account_1.id)], "The analytic distribution value should be added correctly.")
