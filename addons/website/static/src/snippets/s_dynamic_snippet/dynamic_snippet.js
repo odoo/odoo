@@ -91,7 +91,7 @@ export class DynamicSnippet extends Interaction {
                     "filter_id": parseInt(nodeData.filterId),
                     "template_key": nodeData.templateKey,
                     "limit": parseInt(nodeData.numberOfRecords),
-                    "search_domain": this.getSearchDomain(),
+                    "search_domain": await this.getSearchDomain(),
                     "with_sample": this.withSample,
                 },
                     this.getRpcParameters(),
