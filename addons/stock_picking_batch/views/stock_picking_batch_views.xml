@@ -80,18 +80,18 @@
                 <field name="is_wave" invisible="1"/>
                 <field name="show_lots_text" invisible="1"/>
                 <header>
-                    <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight"/>
+                    <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="oe_highlight" data-hotkey="q"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
-                        invisible="state != 'in_progress' or show_check_availability"/>
+                        invisible="state != 'in_progress' or show_check_availability" data-hotkey="v"/>
                     <button name="action_assign" string="Check Availability" type="object" class="oe_highlight"
-                        invisible="state != 'in_progress' or not show_check_availability"/>
+                        invisible="state != 'in_progress' or not show_check_availability" data-hotkey="w"/>
                     <button name="action_done" string="Validate" type="object"
-                        invisible="state != 'in_progress' or not show_check_availability"/>
+                        invisible="state != 'in_progress' or not show_check_availability" data-hotkey="v"/>
                     <button name="action_assign" string="Check Availability" type="object"
-                        invisible="state != 'draft' or not show_check_availability"/>
-                    <button name="action_print" invisible="state not in ('in_progress', 'done')" string="Print" type="object"/>
-                    <button string="Print Labels" type="object" name="action_open_label_layout"/>
-                    <button name="action_cancel" string="Cancel" type="object" invisible="state != 'in_progress'"/>
+                        invisible="state != 'draft' or not show_check_availability" data-hotkey="w"/>
+                    <button name="action_print" invisible="state not in ('in_progress', 'done')" string="Print" type="object" data-hotkey="o"/>
+                    <button string="Print Labels" type="object" name="action_open_label_layout" data-hotkey="shift+o"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state != 'in_progress'" data-hotkey="x"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                 </header>
                 <sheet>
