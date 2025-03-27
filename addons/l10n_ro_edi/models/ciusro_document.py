@@ -86,7 +86,7 @@ class L10nRoEdiDocument(models.Model):
         result = make_efactura_request(
             session=requests,
             company=company,
-            endpoint='upload',
+            endpoint='upload' if self.env.context.get('is_b2b') else 'uploadb2c',  # TODO: change the context value into a method parameter in master
             method='POST',
             params={'standard': 'UBL' if move_type == 'out_invoice' else 'CN',
                     'cif': company.vat.replace('RO', '')},
