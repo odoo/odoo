@@ -275,7 +275,6 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_hr_holidays_manager', # hr_holidays
                     'group_hr_recruitment_manager', # hr_recruitment
                     'group_timesheet_manager', # hr_timesheet
-                    'im_livechat_group_manager', # im_livechat
                     'group_lunch_manager', # lunch
                     'group_mrp_manager', # mrp
                     'group_pos_manager', # point_of_sale
