@@ -171,7 +171,6 @@ class TestConsumeComponentCommon(common.TransactionCase):
         for _ in range(count):
             vals.append(copy.deepcopy(template))
         mos = cls.env['mrp.production'].create(vals)
-        mos.move_raw_ids.mapped('manual_consumption')
         return mos
 
     def executeConsumptionTriggers(self, mrp_productions):
