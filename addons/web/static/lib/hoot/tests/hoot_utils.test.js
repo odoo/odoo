@@ -28,6 +28,7 @@ describe(parseUrl(import.meta.url), () => {
             ],
             [{ o: { a: [{ b: 1 }] } }, { o: { a: [{ b: 1 }] } }],
             [Symbol.for("a"), Symbol.for("a")],
+            [document.createElement("div"), document.createElement("div")],
             [
                 [1, 2, 3],
                 [1, 2, 3],
@@ -41,6 +42,8 @@ describe(parseUrl(import.meta.url), () => {
                 [3, 1, 2],
             ],
             [new Date(0), new Date(1_000)],
+            [{ a: new Date(0) }, { a: 0 }],
+            [document.createElement("a"), document.createElement("div")],
             [{ [Symbol("a")]: 1 }, { [Symbol("a")]: 1 }],
         ];
         const TRUTHY_IF_UNORDERED_CASES = [
