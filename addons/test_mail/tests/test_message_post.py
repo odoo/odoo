@@ -1160,14 +1160,18 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         partner_ids=self.user_admin.partner_id.ids,
                     )
                 self.assertEqual(internal_msg.parent_id, initial_msg)
+                if subtype:
+                    references = f'{initial_msg.message_id} {log_msg.message_id} {internal_msg.message_id}'
+                else:  # no subtype = pure log = not in references
+                    references = f'{log_msg.message_id} {internal_msg.message_id}'
                 self.assertSentEmail(
                     self.user_employee.partner_id,
                     [self.user_admin.partner_id],
                     body_content='<p>Blabla internal</p>',
                     reply_to=initial_msg.reply_to,
                     subject='Re: %s' % self.test_record_ticket.name,
-                    # parent being a log, contain only himself
-                    references=f'{internal_msg.message_id}',
+                    # references contain even 'internal' messages, to help thread formation
+                    references=references,
                 )
 
                 # post a first real reply
@@ -1184,16 +1188,22 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 self.assertEqual(msg.parent_id, initial_msg)
                 self.assertEqual(msg.partner_ids, self.partner_1)
                 self.assertFalse(initial_msg.partner_ids)
-
-                # check notification emails: references
+                if subtype:
+                    references = f'{initial_msg.message_id} {log_msg.message_id} {internal_msg.message_id} {msg.message_id}'
+                else:  # no subtype = pure log = not in references
+                    references = f'{log_msg.message_id} {internal_msg.message_id} {msg.message_id}'
                 self.assertSentEmail(
                     self.user_employee.partner_id,
                     [self.partner_1],
-                    # references contain only "public" message
-                    references=f'{msg.message_id}',
+                    # references contain even 'internal' messages, to help thread formation
+                    references=references,
                 )
 
-                # post a reply to the reply: check parent is the first one
+                # post a reply to the reply: we fill up with 'public' subtypes if possible
+                if subtype in [self.env.ref('test_mail.st_mail_test_ticket_container_mc_upd'), self.env.ref('mail.mt_comment')]:
+                    top_msg = initial_msg  # not internal subtype -> wins
+                else:
+                    top_msg = log_msg
                 with self.mock_mail_gateway():
                     new_msg = test_record.message_post(
                         body='<p>Test Answer Bis</p>',
@@ -1210,8 +1220,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                     body_content='<p>Test Answer Bis</p>',
                     reply_to=msg.reply_to,
                     subject='Re: %s' % self.test_record_ticket.name,
-                    # references contain only "public" messages, from oldest to newest
-                    references=f'{msg.message_id} {new_msg.message_id}',
+                    # references contain mainly 'public', then fill up with internal
+                    references=f'{top_msg.message_id} {internal_msg.message_id} {msg.message_id} {new_msg.message_id}',
                 )
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
