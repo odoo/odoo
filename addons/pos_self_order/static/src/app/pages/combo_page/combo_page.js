@@ -141,7 +141,10 @@ export class ComboPage extends Component {
             "",
             {},
             {},
-            this.state.selectedCombos
+            this.state.selectedCombos.map((combo) => ({
+                ...combo,
+                qty: 1,
+            }))
         );
         this.router.back();
     }
