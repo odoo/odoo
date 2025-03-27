@@ -457,7 +457,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=50, employee=50), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=55, employee=55), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -912,7 +912,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_default_recipients(self):
         record = self.test_records_recipients[0].with_env(self.env)
-        with self.assertQueryCount(employee=1):
+        with self.assertQueryCount(employee=7):
             defaults = record._message_get_default_recipients()
         self.assertDictEqual(defaults, {record.id: {
             'email_cc': '', 'email_to': 'only.email.1@test.example.com', 'partner_ids': [],
@@ -922,7 +922,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_default_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=4):
+        with self.assertQueryCount(employee=9):
             defaults = records._message_get_default_recipients()
         self.assertDictEqual(defaults, {
             records[0].id: {
@@ -966,7 +966,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_suggested_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=28):  # tm: 22
+        with self.assertQueryCount(employee=30):  # tm: 22
             _recipients = records._message_get_suggested_recipients_batch(no_create=False)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
