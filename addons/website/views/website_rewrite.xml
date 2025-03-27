@@ -11,6 +11,9 @@
                                 invisible="redirect_type != '308'"/>
                     </header>
                     <sheet>
+                        <div class="alert alert-warning" role="alert" invisible="not is_url_from_exist">
+                            This redirection will not have any effect since the URL '<field name="url_from" readonly="1"/>' is already in use.
+                        </div>
                         <group>
                             <group>
                                 <field name="name"/>
@@ -34,7 +37,7 @@
             <field name="name">website.rewrite.list</field>
             <field name="model">website.rewrite</field>
             <field name="arch" type="xml">
-                <list string="Website rewrites">
+                <list string="Website rewrites" decoration-warning="is_url_from_exist">
                     <field name="sequence" widget="handle" />
                     <field name="redirect_type"/>
                     <field name="name"/>
@@ -61,8 +64,7 @@
             id="menu_website_rewrite"
             action="action_website_rewrite_list"
             parent="menu_website_global_configuration"
-            sequence="30"
-            groups="base.group_no_one"/>
+            sequence="30"/>
 
         <record id="view_rewrite_search" model="ir.ui.view">
             <field name="name">website.rewrite.search</field>
