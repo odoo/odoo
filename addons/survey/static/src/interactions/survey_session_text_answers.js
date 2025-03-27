@@ -1,6 +1,6 @@
 import publicWidget from "@web/legacy/js/public/public_widget";
 import { renderToElement } from "@web/core/utils/render";
-import SESSION_CHART_COLORS from "@survey/js/survey_session_colors";
+import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 
