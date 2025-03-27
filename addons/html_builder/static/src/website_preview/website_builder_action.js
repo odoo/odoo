@@ -141,7 +141,7 @@ export class WebsiteBuilder extends Component {
     }
 
     onIframeLoad(ev) {
-        // history.pushState(null, "", ev.target.contentWindow.location.pathname);
+        history.pushState(null, "", ev.target.contentWindow.location.pathname);
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
@@ -260,4 +260,4 @@ function isTopWindowURL({ host, pathname }) {
     );
 }
 
-registry.category("actions").add("egg_website_preview", WebsiteBuilder);
+registry.category("actions").add("website_preview", WebsiteBuilder);
