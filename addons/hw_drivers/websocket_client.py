@@ -57,7 +57,7 @@ def on_message(ws, messages):
             else:
                 # likely intended as IoT share the same channel
                 _logger.debug("message ignored due to different iot mac: %s", iot_mac)
-        elif message_type != 'print_confirmation':  # intended to be ignored
+        else:
             _logger.warning("message type not supported: %s", message_type)
 
 
