@@ -567,15 +567,17 @@ class HrLeaveType(models.Model):
                                                                         )
                 if closest_expiration_date:
                     closest_allocation_expire = format_date(self.env, closest_expiration_date)
-                    calendar = employee.resource_calendar_id\
-                                or self.env.company.resource_calendar_id
-                    # closest_allocation_duration corresponds to the time remaining before the allocation expires
-                    calendar_attendance = calendar._work_intervals_batch(
-                        datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC),
-                        datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC),
-                        resources=employee.resource_id
-                    )
-                    closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
+                    calendar = employee.resource_calendar_id
+                    start_datetime = datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC)
+                    end_datetime = datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC)
+                    closest_allocation_dict = {}
+                    if not calendar:
+                        closest_allocation_dict['hours'] = float_round((end_datetime - start_datetime).total_seconds() / 3600, precision_rounding=0.001)
+                        closest_allocation_dict['days'] = (end_datetime - start_datetime).days + 1
+                    else:
+                        # closest_allocation_duration corresponds to the time remaining before the allocation expires
+                        calendar_attendance = calendar._work_intervals_batch(start_datetime, end_datetime, resources=employee.resource_id)
+                        closest_allocation_dict = calendar._get_attendance_intervals_days_data(calendar_attendance[employee.resource_id.id])
                     if leave_type.request_unit in ['hour']:
                         closest_allocation_duration = closest_allocation_dict['hours']
                     else:
