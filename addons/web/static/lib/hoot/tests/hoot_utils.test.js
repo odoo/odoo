@@ -17,20 +17,81 @@ import { parseUrl } from "./local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("deepEqual", () => {
-        expect(deepEqual(true, true)).toBe(true);
-        expect(deepEqual(false, false)).toBe(true);
-        expect(deepEqual(null, null)).toBe(true);
-        expect(deepEqual(new Date(0), new Date(0))).toBe(true);
-        expect(deepEqual({ b: 2, a: 1 }, { a: 1, b: 2 })).toBe(true);
-        expect(deepEqual({ o: { a: [{ b: 1 }] } }, { o: { a: [{ b: 1 }] } })).toBe(true);
-        expect(deepEqual(Symbol.for("a"), Symbol.for("a"))).toBe(true);
-        expect(deepEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+        const TRUTHY_CASES = [
+            [true, true],
+            [false, false],
+            [null, null],
+            [new Date(0), new Date(0)],
+            [
+                { b: 2, a: 1 },
+                { a: 1, b: 2 },
+            ],
+            [{ o: { a: [{ b: 1 }] } }, { o: { a: [{ b: 1 }] } }],
+            [Symbol.for("a"), Symbol.for("a")],
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ],
+        ];
+        const FALSY_CASES = [
+            [true, false],
+            [null, undefined],
+            [
+                [1, 2, 3],
+                [3, 1, 2],
+            ],
+            [new Date(0), new Date(1_000)],
+            [{ [Symbol("a")]: 1 }, { [Symbol("a")]: 1 }],
+        ];
+        const TRUTHY_IF_UNORDERED_CASES = [
+            [
+                [1, "2", 3],
+                ["2", 3, 1],
+            ],
+            [
+                [1, { a: [4, 2] }, "3"],
+                [{ a: [2, 4] }, "3", 1],
+            ],
+            [
+                new Set([
+                    "abc",
+                    new Map([
+                        ["b", 2],
+                        ["a", 1],
+                    ]),
+                ]),
+                new Set([
+                    new Map([
+                        ["a", 1],
+                        ["b", 2],
+                    ]),
+                    "abc",
+                ]),
+            ],
+        ];
 
-        expect(deepEqual(true, false)).toBe(false);
-        expect(deepEqual(null, undefined)).toBe(false);
-        expect(deepEqual([1, 2, 3], [3, 1, 2])).toBe(false);
-        expect(deepEqual(new Date(0), new Date(1_000))).toBe(false);
-        expect(deepEqual({ [Symbol("a")]: 1 }, { [Symbol("a")]: 1 })).toBe(false);
+        expect.assertions(
+            TRUTHY_CASES.length + FALSY_CASES.length + TRUTHY_IF_UNORDERED_CASES.length * 2
+        );
+
+        for (const [a, b] of TRUTHY_CASES) {
+            expect(deepEqual(a, b)).toBe(true, {
+                message: (_, r) => [a, r`==`, b],
+            });
+        }
+        for (const [a, b] of FALSY_CASES) {
+            expect(deepEqual(a, b)).toBe(false, {
+                message: (_, r) => [a, r`!=`, b],
+            });
+        }
+        for (const [a, b] of TRUTHY_IF_UNORDERED_CASES) {
+            expect(deepEqual(a, b)).toBe(false, {
+                message: (_, r) => [a, r`!=`, b],
+            });
+            expect(deepEqual(a, b, { ignoreOrder: true })).toBe(true, {
+                message: (_, r) => [a, r`==`, b, r`(unordered))`],
+            });
+        }
     });
 
     test("formatHumanReadable", () => {
