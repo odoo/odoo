@@ -26,14 +26,11 @@ export class BuilderRow extends Component {
         useVisibilityObserver("content", useApplyVisibility("root"));
 
         this.state = useState({
-            hasCollapseContent: false,
             expanded: this.props.expand,
         });
 
         if (this.props.slots.collapse) {
-            useVisibilityObserver("collapse-content", (hasContent) => {
-                this.state.hasCollapseContent = hasContent;
-            });
+            useVisibilityObserver("collapse-content", useApplyVisibility("collapse"));
 
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
@@ -44,8 +41,6 @@ export class BuilderRow extends Component {
     }
 
     toggleCollapseContent() {
-        if (this.state.hasCollapseContent) {
-            this.state.expanded = !this.state.expanded;
-        }
+        this.state.expanded = !this.state.expanded;
     }
 }

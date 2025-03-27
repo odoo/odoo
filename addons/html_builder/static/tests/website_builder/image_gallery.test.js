@@ -132,14 +132,14 @@ test("Change gallery layout", async () => {
     );
     await contains(":iframe .first_img").click();
     expect("[data-label='Mode']").toHaveCount(1);
-    expect(queryOne("[data-label='Mode'] button").textContent).toBe("Masonry");
-    await contains("[data-label='Mode'] button").click();
+    expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Masonry");
+    await contains("[data-label='Mode'] .dropdown-toggle").click();
 
     await contains("[data-action-param='grid']").click();
     await waitFor(":iframe .o_grid");
     expect(":iframe .o_grid").toHaveCount(1);
     expect(":iframe .o_masonry_col").toHaveCount(0);
-    expect(queryOne("[data-label='Mode'] button").textContent).toBe("Grid");
+    expect(queryOne("[data-label='Mode'] .dropdown-toggle").textContent).toBe("Grid");
 });
 
 test("Change gallery restore the container to the cloned equivalent image", async () => {

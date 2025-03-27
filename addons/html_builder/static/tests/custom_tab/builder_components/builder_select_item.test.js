@@ -212,33 +212,29 @@ test("use BuilderSelect with styleAction", async () => {
     );
     expect(".we-bg-options-container .dropdown").toHaveText("dotted");
 });
-//HOOT fix toHaveStyle
-test.todo(
-    "do not put inline style on an element which already has this style through css stylesheets",
-    async () => {
-        addOption({
-            selector: ".test",
-            template: xml`
+test("do not put inline style on an element which already has this style through css stylesheets", async () => {
+    addOption({
+        selector: ".test",
+        template: xml`
                 <BuilderSelect applyTo="'hr'" styleAction="'border-top-style'">
                     <BuilderSelectItem styleActionValue="'dotted'">dotted</BuilderSelectItem>
                     <BuilderSelectItem styleActionValue="'inset'">inset</BuilderSelectItem>
                 </BuilderSelect>`,
-        });
-        await setupWebsiteBuilder(`
+    });
+    await setupWebsiteBuilder(`
             <div class="test">
                 <hr class="w-100">
             </div>
     `);
-        await contains(":iframe .test").click();
-        expect(".we-bg-options-container .dropdown").toHaveText("inset");
-        await contains(".we-bg-options-container .dropdown").click();
-        await contains(".o-dropdown--menu  div:contains('dotted')").click();
-        expect(":iframe hr").toHaveStyle({ "border-top-style": "dotted" });
-        await contains(".we-bg-options-container .dropdown").click();
-        await contains(".o-dropdown--menu  div:contains('inset')").click();
-        expect(":iframe hr").not.toHaveStyle("border-top-style");
-    }
-);
+    await contains(":iframe .test").click();
+    expect(".we-bg-options-container .dropdown").toHaveText("inset");
+    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".o-dropdown--menu  div:contains('dotted')").click();
+    expect(":iframe hr").toHaveStyle({ "border-top-style": "dotted" });
+    await contains(".we-bg-options-container .dropdown").click();
+    await contains(".o-dropdown--menu  div:contains('inset')").click();
+    expect(":iframe hr").not.toHaveStyle("border-top-style", { inline: true });
+});
 test("revert a preview when cancelling a BuilderSelect by clicking outside of it", async () => {
     addOption({
         selector: ".test",

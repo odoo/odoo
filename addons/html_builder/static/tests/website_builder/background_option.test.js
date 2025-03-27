@@ -163,8 +163,7 @@ test("open the media dialog to toggle the image background but do not choose an 
     expect(".modal").toBeDisplayed();
 });
 
-// TODO FIX HOOT toHaveStyle
-test.todo("remove the background image of a snippet", async () => {
+test("remove the background image of a snippet", async () => {
     await setupWebsiteBuilder(`
         <section style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px">
             <div class="o_we_shape o_web_editor_Connections_01">
@@ -174,5 +173,5 @@ test.todo("remove the background image of a snippet", async () => {
     await contains(":iframe section").click();
     expect(":iframe section").toHaveStyle("backgroundImage");
     await contains("[data-action-id='toggleBgImage']").click();
-    expect(":iframe section").not.toHaveStyle("backgroundImage");
+    expect(":iframe section").not.toHaveStyle("backgroundImage", { inline: true });
 });

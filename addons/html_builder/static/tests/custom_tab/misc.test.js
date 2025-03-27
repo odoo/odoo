@@ -332,7 +332,7 @@ test("hide/display option container base on selector", async () => {
         </div>`);
     await contains(":iframe .sub-child-target").click();
     expect("[data-class-action='test']").not.toBeDisplayed();
-    const selectorRowLabel = ".options-container .hb-row:not(.d-none) > div:nth-child(1)";
+    const selectorRowLabel = ".options-container .hb-row:not(.d-none) .hb-row-label";
     expect(queryAllTexts(selectorRowLabel)).toEqual(["Row 1", "Row 3"]);
 
     await contains("[data-class-action='my-custom-class']").click();
@@ -388,7 +388,7 @@ test("no need to define 'isApplied' method for custom action if the widget alrea
         a
         </div>`);
     await contains(":iframe .s_test").click();
-    expect(".options-container .we-bg-options-container button").toHaveText("Info");
+    expect(".options-container [data-class-action='alert-info']").toHaveText("Info");
 });
 
 test("useDomState callback shouldn't be called when the editingElement is removed", async () => {
