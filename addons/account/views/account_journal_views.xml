@@ -180,7 +180,9 @@
                                     </group>
                                     <group string="Incoming E-Invoice Notifications" invisible="type != 'purchase'">
                                         <field name="notify_on_incoming_einvoice"/>
-                                        <field name="incoming_einvoice_notification_email" invisible="not notify_on_incoming_einvoice" required="True"/>
+                                        <field name="incoming_einvoice_notification_email"
+                                               invisible="not notify_on_incoming_einvoice"
+                                               required="notify_on_incoming_einvoice and type == 'purchase'"/>
                                     </group>
                                 </group>
                             </page>
