@@ -70,6 +70,47 @@ export function clickDisplayedProduct(
 
     return step;
 }
+/**
+ * Validates that the displayed tax amounts on the product info popup match the expected values.
+ * Just put what you see in the frontend in the `tax_amount_arr` array.
+ *
+ * @param {string[]} tax_amount_arr - An array of expected tax strings to compare against.
+ *
+ * @example
+ * productInfoTaxesAre(["VAT: Tax 15% (= $13.04)"]);
+ */
+export function productInfoTaxesAre(tax_amount_arr) {
+    return [
+        {
+            content: `Check if product tax information matches ${tax_amount_arr}`,
+            trigger: ".tax-name-amount",
+            run: function () {
+                const normalize = (str) => str.replace(/[^a-zA-Z0-9]/g, "");
+                const taxDivs = document.querySelectorAll(".tax-name-amount");
+                const extractedTaxes = Array.from(taxDivs).map((div) => normalize(div.textContent));
+                const expectedTaxes = tax_amount_arr.map(normalize);
+                const areEqual =
+                    extractedTaxes.length === expectedTaxes.length &&
+                    extractedTaxes.every((t, i) => t === expectedTaxes[i]);
+                if (!areEqual) {
+                    throw new Error(
+                        `Tax mismatch.\nExpected: ${JSON.stringify(
+                            expectedTaxes
+                        )}\nFound: ${JSON.stringify(extractedTaxes)}`
+                    );
+                }
+            },
+        },
+    ];
+}
+export function clickCloseProductInfo() {
+    return [
+        {
+            content: `close product info popup`,
+            trigger: `.product-info-popup .fa-times`,
+        },
+    ];
+}
 export function searchProduct(name) {
     return [
         {

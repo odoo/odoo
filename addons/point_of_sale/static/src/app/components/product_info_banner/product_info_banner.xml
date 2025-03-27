@@ -14,7 +14,7 @@
             </div>
             <div t-att-class="{ 'align-items-end': !this.ui.isSmall }" class="d-flex flex-column">
                 <span class="h4 section-product-info-title-price"><t t-esc="this.env.utils.formatCurrency(state.price_with_tax)"/></span>
-                <span class="h4">VAT: <t t-esc="state.tax_name || 0" /> (= <t t-esc="this.env.utils.formatCurrency(state.tax_amount)" />)</span>
+                <span class="h4 tax-name-amount">VAT: <t t-esc="state.tax_name || 0" /> (= <t t-esc="this.env.utils.formatCurrency(state.tax_amount)" />)</span>
             </div>
         </div>
     </t>

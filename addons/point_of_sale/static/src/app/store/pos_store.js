@@ -1167,12 +1167,21 @@ export class PosStore extends Reactive {
         const order = this.get_order();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
-        const productInfo = await this.data.call("product.product", "get_product_info_pos", [
-            [product.id],
-            product.get_price(order.pricelist_id, quantity, priceExtra),
-            quantity,
-            this.config.id,
-        ]);
+        const productInfo = await this.data.call(
+            "product.product",
+            "get_product_info_pos",
+            [
+                [product.id],
+                product.get_price(order.pricelist_id, quantity, priceExtra),
+                quantity,
+                this.config.id,
+            ],
+            {
+                context: {
+                    fiscal_position_id: order.fiscal_position_id?.id || false,
+                },
+            }
+        );
 
         const priceWithoutTax = productInfo["all_prices"]["price_without_tax"];
         const margin = priceWithoutTax - product.standard_price;

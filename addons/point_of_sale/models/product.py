@@ -213,7 +213,12 @@ class ProductProduct(models.Model):
         config = self.env['pos.config'].browse(pos_config_id)
 
         # Tax related
-        taxes = self.taxes_id.compute_all(self.product_tmpl_id.list_price, config.currency_id, quantity, self)
+        if fiscal_position_id := self.env.context.get("fiscal_position_id", None):
+            fpos = self.env['account.fiscal.position'].browse(fiscal_position_id)
+        else:
+            fpos = config.default_fiscal_position_id
+        mapped_taxes = fpos.map_tax(self.taxes_id) if fpos else self.taxes_id
+        taxes = mapped_taxes.compute_all(self.product_tmpl_id.list_price, config.currency_id, quantity, self)
         grouped_taxes = {}
         for tax in taxes['taxes']:
             if tax['id'] in grouped_taxes:
