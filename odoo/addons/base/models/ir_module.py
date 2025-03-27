@@ -564,6 +564,18 @@ class IrModuleModule(models.Model):
                 "is best to write it as a standalone script, and ask the runbot/metastorm team "
                 "for help."
             )
+
+        # raise error if database is updating for module operations
+        if self.search_count([('state', 'in', ('to install', 'to upgrade', 'to remove'))], limit=1):
+            raise UserError(_("Odoo is currently processing another module operation.\n"
+                               "Please try again later or contact your system administrator."))
+        try:
+            # raise error if another transaction is trying to schedule module operations concurrently
+            self.env.cr.execute("LOCK ir_module_module IN EXCLUSIVE MODE NOWAIT")
+        except psycopg2.OperationalError:
+            raise UserError(_("Odoo is currently processing another module operation.\n"
+                               "Please try again later or contact your system administrator."))
+
         try:
             # This is done because the installation/uninstallation/upgrade can modify a currently
             # running cron job and prevent it from finishing, and since the ir_cron table is locked
