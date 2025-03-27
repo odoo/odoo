@@ -114,6 +114,9 @@ export class Record extends DataPoint {
         this._initialTextValues = { ...this._textValues };
 
         this._invalidFields.clear();
+        if (!this.isNew) {
+            this._checkValidity();
+        }
         this._savePoint = undefined;
     }
 
@@ -642,6 +645,9 @@ export class Record extends DataPoint {
         this._savePoint = undefined;
         this._setEvalContext();
         this._invalidFields.clear();
+        if (!this.isNew) {
+            this._checkValidity();
+        }
         this._closeInvalidFieldsNotification();
         this._closeInvalidFieldsNotification = () => {};
         this._restoreActiveFields();
