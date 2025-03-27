@@ -19,6 +19,7 @@ export class PdfViewerField extends Component {
 
     setup() {
         this.notification = useService("notification");
+        this.action = useService("action");
         this.state = useState({
             isValid: true,
             objectUrl: "",
@@ -42,19 +43,23 @@ export class PdfViewerField extends Component {
         );
     }
 
+    get urlFile() {
+        return (
+            this.state.objectUrl ||
+            url("/web/content", {
+                model: this.props.record.resModel,
+                field: this.props.name,
+                id: this.props.record.resId,
+            })
+        );
+    }
+
     get url() {
         if (!this.state.isValid || !this.props.record.data[this.props.name]) {
             return null;
         }
         const page = this.props.record.data[`${this.props.name}_page`] || 1;
-        const file = encodeURIComponent(
-            this.state.objectUrl ||
-                url("/web/content", {
-                    model: this.props.record.resModel,
-                    field: this.props.name,
-                    id: this.props.record.resId,
-                })
-        );
+        const file = encodeURIComponent(this.urlFile);
         return `/web/static/lib/pdfjs/web/viewer.html?file=${file}#page=${page}`;
     }
 
@@ -66,6 +71,14 @@ export class PdfViewerField extends Component {
     onFileRemove() {
         this.state.isValid = true;
         this.update({});
+    }
+
+    onFileDownload() {
+        this.action.doAction({
+            type: "ir.actions.act_url",
+            url: this.urlFile,
+            target: "new",
+        });
     }
 
     onFileUploaded({ data, objectUrl }) {

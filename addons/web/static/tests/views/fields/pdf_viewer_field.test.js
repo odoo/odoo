@@ -2,12 +2,15 @@ import {
     clickSave,
     defineModels,
     fields,
+    mockService,
     models,
     mountView,
     onRpc,
+    patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 import { test, expect } from "@odoo/hoot";
 import { click, setInputFiles, queryOne, waitFor } from "@odoo/hoot-dom";
+import { browser } from "@web/core/browser/browser";
 
 const getIframeSrc = () => queryOne(".o_field_widget iframe.o_pdfview_iframe").dataset.src;
 
@@ -75,4 +78,32 @@ test("PdfViewerField: upload rendering", async () => {
     expect(getIframeProtocol()).toBe("blob");
     await clickSave();
     expect(getIframeProtocol()).toBe("blob");
+});
+
+test("PdfViewerField: upload file and download it", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: '<form><field name="document" widget="pdf_viewer"/></form>',
+    });
+    mockService("action", {
+        doAction({ type }) {
+            expect.step(type);
+            return super.doAction(...arguments);
+        },
+    });
+    patchWithCleanup(browser, {
+        open: (_url, type) => {
+            expect.step(`browser_open:${type}`);
+        },
+    });
+    expect("iframe.o_pdfview_iframe").toHaveCount(1);
+    const file = new File(["test"], "test.pdf", { type: "application/pdf" });
+    await click(".o_field_pdf_viewer input[type=file]");
+    await setInputFiles(file);
+    await waitFor("iframe.o_pdfview_iframe");
+    await clickSave();
+    await click(".fa-download");
+    expect.verifySteps(["ir.actions.act_url", "browser_open:_blank"]);
 });
