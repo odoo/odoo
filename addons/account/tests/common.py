@@ -284,7 +284,6 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_sale_manager', # sales_team
                     'group_stock_manager', # stock
                     'group_survey_user', # survey
-                    'group_website_designer', # website
                     'group_website_slides_manager', # website_slides
                     # enterprise groups
                     'group_appointment_manager', # appointment
