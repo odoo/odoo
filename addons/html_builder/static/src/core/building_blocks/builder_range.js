@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
+    useActionInfo,
     useBuilderComponent,
     useInputBuilderComponent,
 } from "../utils";
@@ -28,6 +29,7 @@ export class BuilderRange extends Component {
     static components = { BuilderComponent };
 
     setup() {
+        this.info = useActionInfo();
         useBuilderComponent();
         const { state, commit, preview } = useInputBuilderComponent({
             id: this.props.id,

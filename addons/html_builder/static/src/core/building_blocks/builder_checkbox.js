@@ -2,6 +2,7 @@ import { Component } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import {
     clickableBuilderComponentProps,
+    useActionInfo,
     useClickableBuilderComponent,
     useDependencyDefinition,
     useDomState,
@@ -17,6 +18,7 @@ export class BuilderCheckbox extends Component {
     };
 
     setup() {
+        this.info = useActionInfo();
         const { operation, isApplied, onReady } = useClickableBuilderComponent();
         if (this.props.id) {
             useDependencyDefinition(this.props.id, { isActive: isApplied });
