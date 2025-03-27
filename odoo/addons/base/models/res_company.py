@@ -3,10 +3,10 @@
 import base64
 import logging
 
-from odoo import api, fields, models, modules, tools, Command
+from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError, UserError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools import html2plaintext, file_open, ormcache
 
 _logger = logging.getLogger(__name__)
@@ -248,18 +248,18 @@ class ResCompany(models.Model):
     def _search_display_name(self, operator, value):
         context = dict(self.env.context)
         newself = self
-        constraint = []
+        constraint = Domain.TRUE
         if context.pop('user_preference', None):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
             companies = self.env.user.company_ids
-            constraint = [('id', 'in', companies.ids)]
+            constraint = Domain('id', 'in', companies.ids)
             newself = newself.sudo()
         newself = newself.with_context(context)
         domain = super(ResCompany, newself)._search_display_name(operator, value)
-        return expression.AND([domain, constraint])
+        return domain & constraint
 
     @api.depends('company_details')
     def _compute_empty_company_details(self):

@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
 import logging
 from odoo import api, fields, models, tools
-from odoo.osv import expression
 from odoo.exceptions import UserError
-from psycopg2 import IntegrityError
+from odoo.fields import Domain
 from odoo.tools.translate import _
+
 _logger = logging.getLogger(__name__)
 
 
@@ -88,12 +87,12 @@ class ResCountry(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         result = []
-        domain = domain or []
+        domain = Domain(domain or Domain.TRUE)
         # first search by code
-        if operator not in expression.NEGATIVE_TERM_OPERATORS and name and len(name) == 2:
-            countries = self.search_fetch(expression.AND([domain, [('code', operator, name)]]), ['display_name'], limit=limit)
+        if not Domain.is_negative_operator(operator) and name and len(name) == 2:
+            countries = self.search_fetch(domain & Domain('code', operator, name), ['display_name'], limit=limit)
             result.extend((country.id, country.display_name) for country in countries.sudo())
-            domain = expression.AND([domain, [('id', 'not in', countries.ids)]])
+            domain &= Domain('id', 'not in', countries.ids)
             if limit is not None:
                 limit -= len(countries)
                 if limit <= 0:
@@ -179,7 +178,7 @@ class ResCountryState(models.Model):
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         result = []
-        domain = domain or []
+        domain = Domain(domain or Domain.TRUE)
         # accepting 'in' as operator (see odoo/addons/base/tests/test_res_country.py)
         if operator == 'in':
             if limit is None:
@@ -190,10 +189,10 @@ class ResCountryState(models.Model):
                     break
             return result
         # first search by code (with =ilike)
-        if operator not in expression.NEGATIVE_TERM_OPERATORS and name:
-            states = self.search_fetch(expression.AND([domain, [('code', '=like', name)]]), ['display_name'], limit=limit)
+        if not Domain.is_negative_operator(operator) and name:
+            states = self.search_fetch(domain & Domain('code', '=like', name), ['display_name'], limit=limit)
             result.extend((state.id, state.display_name) for state in states.sudo())
-            domain = expression.AND([domain, [('id', 'not in', states.ids)]])
+            domain &= Domain('id', 'not in', states.ids)
             if limit is not None:
                 limit -= len(states)
                 if limit <= 0:
@@ -205,29 +204,26 @@ class ResCountryState(models.Model):
     @api.model
     def _search_display_name(self, operator, value):
         domain = super()._search_display_name(operator, value)
-        if value and operator not in expression.NEGATIVE_TERM_OPERATORS:
+        if value and not Domain.is_negative_operator(operator):
             if operator in ('ilike', '='):
-                domain = expression.OR([
-                    domain, self._get_name_search_domain(value, operator),
-                ])
+                domain |= self._get_name_search_domain(value, operator)
             elif operator == 'in':
-                domain = expression.OR([
-                    domain,
-                    *(self._get_name_search_domain(name, '=') for name in value),
-                ])
+                domain |= Domain.OR(
+                    self._get_name_search_domain(name, '=') for name in value
+                )
         if country_id := self.env.context.get('country_id'):
-            domain = expression.AND([domain, [('country_id', '=', country_id)]])
+            domain &= Domain('country_id', '=', country_id)
         return domain
 
     def _get_name_search_domain(self, name, operator):
         m = re.fullmatch(r"(?P<name>.+)\((?P<country>.+)\)", name)
         if m:
-            return [
+            return Domain([
                 ('name', operator, m['name'].strip()),
                 '|', ('country_id.name', 'ilike', m['country'].strip()),
                 ('country_id.code', '=', m['country'].strip()),
-            ]
-        return [expression.FALSE_LEAF]
+            ])
+        return Domain.FALSE
 
     @api.depends('country_id')
     def _compute_display_name(self):

@@ -20,7 +20,6 @@ from odoo.fields import Domain
 from odoo.http import Stream, root, request
 from odoo.tools import config, consteq, human_size, image, split_every, str2bool
 from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension
-from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -75,7 +74,7 @@ class IrAttachment(models.Model):
 
         # Migrate only binary attachments and bypass the res_field automatic
         # filter added in _search override
-        self.search(expression.AND([
+        self.search(Domain.AND([
             self._get_storage_domain(),
             ['&', ('type', '=', 'binary'), '|', ('res_field', '=', False), ('res_field', '!=', False)]
         ]))._migrate()

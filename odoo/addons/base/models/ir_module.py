@@ -1,20 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
 import warnings
 from collections import defaultdict, OrderedDict
 from decorator import decorator
-from operator import attrgetter
 from textwrap import dedent
-import io
 import logging
 import os
 import shutil
-import threading
-import zipfile
-
-import requests
-import werkzeug.urls
 
 from docutils import nodes
 from docutils.core import publish_string
@@ -27,7 +19,7 @@ import odoo
 from odoo import api, fields, models, modules, tools, _
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort, get_flag
 from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
@@ -482,7 +474,7 @@ class IrModuleModule(models.Model):
         It is important to remove these copies because using them will crash if
         they rely on data that don't exist anymore if the module is removed.
         """
-        domain = expression.OR([[('key', '=like', m.name + '.%')] for m in self])
+        domain = Domain.OR(Domain('key', '=like', m.name + '.%') for m in self)
         orphans = self.env['ir.ui.view'].with_context(**{'active_test': False, MODULE_UNINSTALL_FLAG: True}).search(domain)
         orphans.unlink()
 
@@ -885,12 +877,12 @@ class IrModuleModule(models.Model):
     def search_panel_select_range(self, field_name, **kwargs):
         if field_name == 'category_id':
             enable_counters = kwargs.get('enable_counters', False)
-            domain = [
+            domain = Domain([
                 ('parent_id', '=', False),
                 '|',
                 ('module_ids.application', '!=', False),
                 ('child_ids.module_ids', '!=', False),
-            ]
+            ])
 
             excluded_xmlids = [
                 'base.module_category_website_theme',
@@ -907,10 +899,7 @@ class IrModuleModule(models.Model):
                 excluded_category_ids.append(categ.id)
 
             if excluded_category_ids:
-                domain = expression.AND([
-                    domain,
-                    [('id', 'not in', excluded_category_ids)],
-                ])
+                domain &= Domain('id', 'not in', excluded_category_ids)
 
             records = self.env['ir.module.category'].search_read(domain, ['display_name'], order="sequence")
 
@@ -918,7 +907,7 @@ class IrModuleModule(models.Model):
             for record in records:
                 record_id = record['id']
                 if enable_counters:
-                    model_domain = expression.AND([
+                    model_domain = Domain.AND([
                         kwargs.get('search_domain', []),
                         kwargs.get('category_domain', []),
                         kwargs.get('filter_domain', []),

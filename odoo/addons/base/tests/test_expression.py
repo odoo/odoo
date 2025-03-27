@@ -7,7 +7,6 @@ from unittest.mock import patch
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 from odoo.fields import Command, Domain
-from odoo.osv import expression
 from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import mute_logger
 
@@ -753,26 +752,25 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(users, b2, '(x =? id) failed')
 
     def test_30_normalize_domain(self):
-        normalize_domain = expression.normalize_domain
         self.assertEqual(
-            normalize_domain([('a', '=', 1), ('b', '=', 2)]),
-            ['&', ('a', '=', 1), ('b', '=', 2)],
+            Domain([('a', '=', 1), ('b', '=', 2)]),
+            Domain(['&', ('a', '=', 1), ('b', '=', 2)]),
         )
         self.assertEqual(
-            normalize_domain(['|', ('a', '=', 1), ('b', '=', 2)]),
-            ['|', ('a', '=', 1), ('b', '=', 2)],
+            Domain(['|', ('a', '=', 1), ('b', '=', 2)]),
+            Domain(['|', ('a', '=', 1), ('b', '=', 2)]),
         )
         self.assertEqual(
-            normalize_domain(['|', ('a', '=', 1), ('b', '=', 2), ('c', '=', 3)]),
-            ['&', '|', ('a', '=', 1), ('b', '=', 2), ('c', '=', 3)],
+            Domain(['|', ('a', '=', 1), ('b', '=', 2), ('c', '=', 3)]),
+            Domain(['&', '|', ('a', '=', 1), ('b', '=', 2), ('c', '=', 3)]),
         )
         self.assertEqual(
-            normalize_domain([('a', '=', 1), '|', ('b', '=', 2), ('c', '=', 3)]),
-            ['&', ('a', '=', 1), '|', ('b', '=', 2), ('c', '=', 3)],
+            Domain([('a', '=', 1), '|', ('b', '=', 2), ('c', '=', 3)]),
+            Domain(['&', ('a', '=', 1), '|', ('b', '=', 2), ('c', '=', 3)]),
         )
         self.assertEqual(
-            normalize_domain(['&', expression.TRUE_LEAF, ('a', '=', 1)]),
-            ['&', expression.TRUE_LEAF, ('a', '=', 1)],
+            Domain(['&', *list(Domain.TRUE), ('a', '=', 1)]),
+            Domain(['&', *list(Domain.TRUE), ('a', '=', 1)]),
         )
         domain = [
             ('a', '=', 1),
@@ -780,19 +778,19 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
             '|', '|', ('c', '=', 3), '!', ('d', '=', 4), ('e', '=', 5),
             ('f', '=', 6),
         ]
-        self.assertEqual(normalize_domain(domain), ['&', '&', '&'] + domain)
+        self.assertEqual(Domain(domain), Domain(['&', '&', '&'] + domain))
 
         with self.assertRaises(ValueError):
-            normalize_domain(['&'])
+            Domain(['&'])
 
         with self.assertRaises(ValueError):
-            normalize_domain(['&', ('a', '=', 1)])
+            Domain(['&', ('a', '=', 1)])
 
         with self.assertRaises(ValueError):
-            normalize_domain([('a', '=', 1), '&', ('b', '=', 2)])
+            Domain([('a', '=', 1), '&', ('b', '=', 2)])
 
         with self.assertRaises(ValueError):
-            normalize_domain([('a', '=', 1), '!'])
+            Domain([('a', '=', 1), '!'])
 
     def test_30_instantiate_domain(self):
         simple = Domain('foo', '=', 'bar')
@@ -1053,37 +1051,6 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
             # what should not be called
             w().assert_not_called()
 
-    def test_pure_function(self):
-        orig_false = expression.FALSE_DOMAIN.copy()
-        orig_true = expression.TRUE_DOMAIN.copy()
-        false = orig_false.copy()
-        true = orig_true.copy()
-
-        domain = expression.AND([])
-        domain += [('id', '=', 1)]
-        domain = expression.AND([])
-        self.assertEqual(domain, orig_true)
-
-        domain = expression.AND([false])
-        domain += [('id', '=', 1)]
-        domain = expression.AND([false])
-        self.assertEqual(domain, orig_false)
-
-        domain = expression.OR([])
-        domain += [('id', '=', 1)]
-        domain = expression.OR([])
-        self.assertEqual(domain, orig_false)
-
-        domain = expression.OR([true])
-        domain += [('id', '=', 1)]
-        domain = expression.OR([true])
-        self.assertEqual(domain, orig_true)
-
-        domain = expression.normalize_domain([])
-        domain += [('id', '=', 1)]
-        domain = expression.normalize_domain([])
-        self.assertEqual(domain, orig_true)
-
     def test_like_wildcards(self):
         # check that =like/=ilike expressions are working on an untranslated field
         Partner = self.env['res.partner']
@@ -1274,46 +1241,48 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         d1 = [('foo', '=', 1), ('bar', '=', 1)]
         d2 = ['&', ('foo', '=', 2), ('bar', '=', 2)]
 
-        expected = ['|', '&', ('foo', '=', 1), ('bar', '=', 1),
-                         '&', ('foo', '=', 2), ('bar', '=', 2)]
-        self.assertEqual(expression.OR([d1, d2]), expected)
+        expected = Domain(
+            ['|', '&', ('foo', '=', 1), ('bar', '=', 1),
+                  '&', ('foo', '=', 2), ('bar', '=', 2)]
+        )
+        self.assertEqual(Domain.OR([d1, d2]), expected)
 
     def test_proper_combine_unit_leaves(self):
         # test that unit leaves (TRUE_LEAF, FALSE_LEAF) are properly handled in specific cases
-        false = expression.FALSE_DOMAIN
-        true = expression.TRUE_DOMAIN
-        normal = [('foo', '=', 'bar')]
+        false = Domain.FALSE
+        true = Domain.TRUE
+        normal = Domain('foo', '=', 'bar')
         # OR and AND with empty list should return their unit value
-        self.assertEqual(expression.OR([]), false)
-        self.assertEqual(expression.AND([]), true)
+        self.assertEqual(Domain.OR([]), false)
+        self.assertEqual(Domain.AND([]), true)
         # OR with single FALSE_LEAF
-        expr = expression.OR([false])
+        expr = Domain.OR([false])
         self.assertEqual(expr, false)
         # OR with multiple FALSE_LEAF
-        expr = expression.OR([false, false])
+        expr = Domain.OR([false, false])
         self.assertEqual(expr, false)
         # OR with FALSE_LEAF and a normal leaf
-        expr = expression.OR([false, normal])
+        expr = Domain.OR([false, normal])
         self.assertEqual(expr, normal)
         # OR with AND of single TRUE_LEAF and normal leaf
-        expr = expression.OR([expression.AND([true]), normal])
+        expr = Domain.OR([Domain.AND([true]), normal])
         self.assertEqual(expr, true)
         # AND with single TRUE_LEAF
-        expr = expression.AND([true])
+        expr = Domain.AND([true])
         self.assertEqual(expr, true)
         # AND with multiple TRUE_LEAF
-        expr = expression.AND([true, true])
+        expr = Domain.AND([true, true])
         self.assertEqual(expr, true)
         # AND with TRUE_LEAF and normal leaves
-        expr = expression.AND([true, normal])
+        expr = Domain.AND([true, normal])
         self.assertEqual(expr, normal)
         # AND with OR with single FALSE_LEAF and normal leaf
-        expr = expression.AND([expression.OR([false]), normal])
+        expr = Domain.AND([Domain.OR([false]), normal])
         self.assertEqual(expr, false)
         # empty domain inside the list should be treated as true
-        expr = expression.AND([[], normal])
+        expr = Domain.AND([[], normal])
         self.assertEqual(expr, normal)
-        expr = expression.OR([[], normal])
+        expr = Domain.OR([[], normal])
         self.assertEqual(expr, true)
 
     def test_combine_simple_conditions(self):

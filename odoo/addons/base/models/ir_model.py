@@ -12,9 +12,9 @@ from operator import itemgetter
 
 from psycopg2.extras import Json
 
-from odoo import api, fields, models, tools, Command
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.osv import expression
+from odoo.fields import Command, Domain
 from odoo.tools import lazy_property, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
@@ -922,7 +922,7 @@ class IrModelFields(models.Model):
                 self.env.cache.clear_dirty_field(field)
         # remove fields from registry, and check that views are not broken
         fields = [pop_field(self.env[record.model], record.name) for record in records]
-        domain = expression.OR([('arch_db', 'like', record.name)] for record in records)
+        domain = Domain.OR([('arch_db', 'like', record.name)] for record in records)
         views = self.env['ir.ui.view'].search(domain)
         try:
             for view in views:
