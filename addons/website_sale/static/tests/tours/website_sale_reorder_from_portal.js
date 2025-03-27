@@ -1,3 +1,4 @@
+import { queryAll, queryFirst, waitUntil } from '@odoo/hoot-dom';
 import { registry } from "@web/core/registry";
 import { clickOnElement } from '@website/js/tours/tour_utils';
 import { assertCartContains } from '@website_sale/js/tours/tour_utils';
@@ -70,15 +71,15 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             content: "Deleting All products from cart",
             trigger: 'div.js_cart_lines',
             run: async () => {
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-                $('a.js_delete_product:first').click();
-                await new Promise((r) => setTimeout(r, 1000));
-            }
+                let cartSize = queryAll('.o_cart_product').length;
+                while (cartSize) {
+                    queryFirst('.o_cart_product .js_delete_product').click();
+                    await waitUntil(
+                        () => queryAll('.o_cart_product').length === cartSize - 1, { timeout: 1000 }
+                    );
+                    cartSize--;
+                }
+            },
         },
         {
             content: "Go to my orders",

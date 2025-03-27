@@ -92,7 +92,6 @@
 
             'website_sale/static/src/scss/product_configurator.scss',
 
-            'website_sale/static/src/js/cart.js',
             'website_sale/static/src/js/cart_service.js',
             'website_sale/static/src/js/checkout.js',
             'website_sale/static/src/js/payment_button.js',
@@ -184,6 +183,7 @@
         'web.assets_unit_tests_setup': [
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/dynamic_snippet_products.js',
+            'website_sale/static/src/js/website_sale_utils.js',
             # TODO Find out why these do not work:
             #'website_sale/static/src/snippets/**/*.js',
             # ('remove', 'website_sale/static/src/snippets/**/options.js'),

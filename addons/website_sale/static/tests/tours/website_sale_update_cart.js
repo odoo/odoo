@@ -48,22 +48,22 @@ registry.category('web_tour.tours').add('shop_update_cart', {
             trigger: '#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")',
         },
         {
+            content: "remove Storage Box",
+            trigger:
+                '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) a:has(i.fa-minus)',
+            run: "click",
+        },
+        {
+            trigger: '#wrap:not(:has(#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
+        },
+        {
             content: "add one more",
-            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Steel")) a.js_add_cart_json:eq(1)',
+            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Steel")) a:has(i.fa-plus)',
             run: "click",
         },
         {
             trigger:
                 '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:value(2)',
-        },
-        {
-            content: "remove Storage Box",
-            trigger:
-                '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Storage Box")) a.js_add_cart_json:first',
-            run: "click",
-        },
-        {
-            trigger: '#wrap:not(:has(#cart_products a[name="o_cart_line_product_link"]>h6:contains("Storage Box")))',
         },
         {
             content: "set one",
