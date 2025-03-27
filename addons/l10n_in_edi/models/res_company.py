@@ -89,7 +89,10 @@ class ResCompany(models.Model):
         return {
             f"l10n_in_edi_{key}": {
                 'message': check['message'],
-                'action_text': _("View Company/ies"),
+                'action_text': (
+                    _("View Companies") if len(invalid_records) > 1
+                    else _("View %s", invalid_records.name)
+                ),
                 'action': invalid_records._get_records_action(name=_("Check Company Data")),
             }
             for key, check in checks.items()
