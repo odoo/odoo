@@ -13,6 +13,9 @@ class TestSaleOrderProductCatalog(HttpCase):
             'name': "Restricted Product",
             'company_id': self.env.company.id,
         })
+        self.env['res.partner'].create({
+            'name': "Test Partner",
+        })
         admin = self.env.ref('base.user_admin')
         branch = self.env['res.company'].with_user(admin).create({
             'name': "Branch Company",

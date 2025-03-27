@@ -17,5 +17,6 @@
         'wizard/account_move_send_views.xml',
     ],
     'installable': True,
+    'auto_install': ['l10n_jo'],
     'license': 'LGPL-3',
 }
