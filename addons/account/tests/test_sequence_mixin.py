@@ -932,6 +932,9 @@ class TestSequenceMixinConcurrency(TransactionCase):
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
         self.assertEqual(moves.mapped('sequence_prefix'), ['CT/2016/01/', 'CT/2016/01/', 'CT/2016/01/'])
         self.assertEqual(moves.mapped('sequence_number'), [1, 2, 3])
+        self.assertEqual(moves.mapped('made_sequence_gap'), [False, False, False])
+        for line in moves.line_ids:
+            self.assertEqual(line.move_name, line.move_id.name)
 
     def test_sequence_concurency_no_useless_lock(self):
         """Do not lock needlessly when the sequence is not computed"""
