@@ -38,8 +38,13 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
             });
         } else {
             fadeOutPromise = Promise.resolve();
-            self.$sessionResults.hide();
-            self.$('.o_survey_session_leaderboard_container').empty();
+            // self.$sessionResults.hide();
+            // self.$('.o_survey_session_leaderboard_container').empty();
+            self.$sessionResults.style.display = "none";
+            const leaderboardContainer = self.el.querySelector(".o_survey_session_leaderboard_container");
+            if (leaderboardContainer) {
+                leaderboardContainer.innerHTML = "";
+            }
         }
 
         var leaderboardPromise = rpc(`/survey/session/leaderboard/${this.surveyAccessToken}`);
@@ -74,11 +79,11 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      * Inverse the process, fading out our template to fade int the $sessionResults.
      */
     hideLeaderboard: function () {
-        var self = this;
-        this.$el.fadeOut(400, function () {
-            self.$('.o_survey_session_leaderboard_container').empty();
-            self.$sessionResults.fadeIn(400);
-        });
+        // TODO: restore the fadeIn when refactoring leaderboard
+        // this.$el.fadeOut(400, function () {
+        //     self.$('.o_survey_session_leaderboard_container').empty();
+        //     self.$sessionResults.fadeIn(400);
+        this.el.querySelector(".o_survey_session_leaderboard_container").innerHTML = "";
     },
 
     /**
