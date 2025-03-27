@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from freezegun import freeze_time
 
 from odoo import Command
@@ -121,11 +121,13 @@ class TestEventData(TestEventInternalsCommon):
             'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
             'event_mail_ids': False,
+            'is_multi_slots': True,
         })
         self.assertEqual(event.date_tz, self.env.user.tz)
         self.assertFalse(event.seats_limited)
         self.assertEqual(event.event_mail_ids, self.env['event.mail'])
         self.assertEqual(event.event_ticket_ids, self.env['event.event.ticket'])
+        self.assertEqual(event.slot_ids, self.env['event.slot'])
 
         registration = self._create_registrations(event, 1)
 
@@ -140,8 +142,15 @@ class TestEventData(TestEventInternalsCommon):
                 'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_reminder')})
             ],
             'event_type_ticket_ids': [(5, 0), (0, 0, {'name': 'TestRegistration'})],
+            'is_multi_slots': True,
+            'event_type_slot_ids': [(5, 0), (0, 0, {
+                'date': date.today() + timedelta(days=2),
+                'start_hour': 9.0,
+                'end_hour': 12.0
+            })],
         })
         event.write({'event_type_id': event_type.id})
+        self.assertTrue(event.is_multi_slots)
         self.assertEqual(event.date_tz, 'Europe/Paris')
         self.assertTrue(event.seats_limited)
         self.assertEqual(event.seats_max, event_type.seats_max)
@@ -152,6 +161,7 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(event.event_mail_ids.interval_type, 'before_event')
         self.assertEqual(event.event_mail_ids.template_ref, self.env.ref('event.event_reminder'))
         self.assertEqual(len(event.event_ticket_ids), 1)
+        self.assertEqual(len(event.slot_ids), 1)
 
         # update template, unlink from event -> should not impact event
         event_type.write({'has_seats_limitation': False})
@@ -159,7 +169,10 @@ class TestEventData(TestEventInternalsCommon):
         self.assertTrue(event.seats_limited)
         self.assertEqual(event.seats_max, 30)  # original template value
         event.write({'event_type_id': False})
+        self.assertFalse(event.is_multi_slots)
         self.assertEqual(event.event_type_id, self.env["event.type"])
+        self.assertEqual(event.event_ticket_ids, self.env['event.event.ticket'])
+        self.assertEqual(event.slot_ids, self.env['event.slot'])
 
         # set template back -> update event
         event.write({'event_type_id': event_type.id})
@@ -168,6 +181,12 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(len(event.event_ticket_ids), 1)
         event_ticket1 = event.event_ticket_ids[0]
         self.assertEqual(event_ticket1.name, 'TestRegistration')
+        self.assertTrue(event.is_multi_slots)
+        self.assertEqual(len(event.slot_ids), 1)
+        event_slot1 = event.slot_ids[0]
+        self.assertEqual(event_slot1.date, date.today() + timedelta(days=2))
+        self.assertEqual(event_slot1.start_hour, 9.0)
+        self.assertEqual(event_slot1.end_hour, 12.0)
 
     @users('user_eventmanager')
     def test_event_configuration_mails_from_type(self):
@@ -330,6 +349,71 @@ class TestEventData(TestEventInternalsCommon):
         self.assertEqual(
             set(map(lambda m: m.get('name', None), event_form.event_ticket_ids._records)),
             set(['Registration Ticket'])
+        )
+
+    @users('user_eventmanager')
+    def test_event_configuration_slots_from_type(self):
+        """ Test data computation (related to slots) of event coming from its event.type template. """
+        # setup test records
+        event_type_default = self.env['event.type'].create({
+            'name': 'Type Default',
+        })
+        event_type_w_slots = self.env['event.type'].create({
+            'name': 'Type with Slots',
+            'is_multi_slots': True,
+        })
+        event_type_w_slots.write({
+            'event_type_slot_ids': [
+                Command.clear(),
+                Command.create({
+                    'date': date.today() + timedelta(days=2),
+                    'start_hour': 9.0,
+                    'end_hour': 12.0,
+                })
+            ]
+        })
+        event = self.env['event.event'].create({
+            'name': 'Event',
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+            'event_type_id': event_type_default.id,
+        })
+        event.write({
+            'is_multi_slots': True,
+            'slot_ids': [
+                Command.clear(),
+                Command.create({
+                    'date': date.today() + timedelta(days=2),
+                    'start_hour': 14.0,
+                    'end_hour': 16.0,
+                })
+            ]
+        })
+        slot = event.slot_ids[0]
+        registration = self._create_registrations(event, 1)
+        # link the slot to the registration
+        registration.write({'slot_id': slot.id})
+        # check that only this slot is on the event
+        self.assertTrue(event.is_multi_slots)
+        self.assertEqual(
+            {(s.date, s.start_hour, s.end_hour) for s in event.slot_ids},
+            {(date.today() + timedelta(days=2), 14.0, 16.0)}
+        )
+        # switch to an event_type with a slot
+        event.event_type_id = event_type_w_slots
+        # verify that both slots are on the event
+        self.assertTrue(event.is_multi_slots)
+        self.assertEqual(
+            {(s.date, s.start_hour, s.end_hour) for s in event.slot_ids},
+            {(date.today() + timedelta(days=2), 9.0, 12.0), (date.today() + timedelta(days=2), 14.0, 16.0)}
+        )
+        # switch back to an event_type without default slots
+        event.event_type_id = event_type_default
+        # verify that the slot linked to the registration was kept, and the other removed
+        self.assertFalse(event.is_multi_slots)
+        self.assertEqual(
+            {(s.date, s.start_hour, s.end_hour) for s in event.slot_ids},
+            {(date.today() + timedelta(days=2), 14.0, 16.0)}
         )
 
     @users('user_eventmanager')
@@ -645,6 +729,275 @@ class TestEventData(TestEventInternalsCommon):
         self.env['event.registration'].create(new_open_registration)
         reg_draft.write({'state': 'open'})
 
+    @users('user_eventmanager')
+    def test_event_slots_seats(self):
+        """ Test slots seats availability for event (without tickets). """
+        event_type = self.event_type_complex.with_user(self.env.user)
+        event = self.env['event.event'].create({
+            'name': 'Event Update Type',
+            'event_type_id': event_type.id,
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+        event.write({
+            'is_multi_slots': True,
+            'slot_ids': [
+                Command.clear(),
+                Command.create({
+                    'date': date.today() + timedelta(days=2),
+                    'start_hour': 9.0,
+                    'end_hour': 12.0,
+                }),
+                Command.create({
+                    'date': date.today() + timedelta(days=2),
+                    'start_hour': 14.0,
+                    'end_hour': 16.0,
+                }),
+            ]
+        })
+        self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
+        # event seats (coming from event type configuration)
+        self.assertEqual(len(event.slot_ids), 2)
+        self.assertTrue(event.seats_limited)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max * len(event.slot_ids))
+        self.assertEqual(event.seats_reserved, 0)
+        self.assertEqual(event.seats_used, 0)
+        self.assertEqual(event.seats_taken, 0)
+        # slots seats (computed from event)
+        slot1 = event.slot_ids[0]
+        slot2 = event.slot_ids[1]
+        for slot in slot1 + slot2:
+            self.assertEqual(slot.seats_available, event.seats_max - (slot.seats_reserved + slot.seats_used))
+            self.assertEqual(slot.seats_reserved, 0)
+            self.assertEqual(slot.seats_used, 0)
+            self.assertEqual(slot.seats_taken, 0)
+
+        # # create registration in order to check the seats computation
+        reg_open_multiple_slot1 = self.env['event.registration'].create([{
+            'event_id': event.id,
+            'name': 'reg_open',
+            'slot_id': slot1.id,
+        } for _ in range(5)])
+        reg_open_multiple_slot2 = self.env['event.registration'].create([{
+            'event_id': event.id,
+            'name': 'reg_open',
+            'slot_id': slot2.id,
+        } for _ in range(10)])
+        self.assertEqual(set((reg_open_multiple_slot1 + reg_open_multiple_slot2).mapped('state')), {'open'})
+        reg_open_slot1 = reg_open_multiple_slot1[0]
+        reg_open_slot2 = reg_open_multiple_slot2[0]
+
+        reg_done = self.env['event.registration'].create({
+            'event_id': event.id,
+            'name': 'reg_done',
+            'slot_id': slot1.id,
+        })
+        reg_done.write({'state': 'done'})
+        reg_draft = self.env['event.registration'].create({
+            'event_id': event.id,
+            'name': 'reg_draft',
+            'slot_id': slot2.id,
+        })
+        reg_draft.write({'state': 'draft'})
+
+        # check event seats
+        self.assertEqual(event.seats_available, (event.event_type_id.seats_max * len(event.slot_ids)) - 16)  # 44
+        self.assertEqual(event.seats_reserved, 15)
+        self.assertEqual(event.seats_used, 1)
+        self.assertEqual(event.seats_taken, 16)
+        # check slots seats
+        self.assertEqual(slot1.seats_available, event.seats_max - 6)  # 24
+        self.assertEqual(slot1.seats_reserved, 5)
+        self.assertEqual(slot1.seats_used, 1)
+        self.assertEqual(slot1.seats_taken, 6)
+        self.assertEqual(slot2.seats_available, event.seats_max - 10)  # 20
+        self.assertEqual(slot2.seats_reserved, 10)
+        self.assertEqual(slot2.seats_used, 0)
+        self.assertEqual(slot2.seats_taken, 10)
+
+        # ------------------------------------------------------------
+        # SEATS AVAILABILITY AND (UN-)ARCHIVING REGISTRATIONS
+        # ------------------------------------------------------------
+
+        # Archiving and seats availability
+        reg_open_slot1.action_archive()
+        reg_open_slot2.action_archive()
+        self.assertEqual(event.seats_available, (event.event_type_id.seats_max * len(event.slot_ids)) - 14)  # 46, previously 44
+        self.assertEqual(event.seats_reserved, 13)  # previously 15
+        self.assertEqual(event.seats_used, 1)
+        self.assertEqual(event.seats_taken, 14)  # previously 16
+
+        self.assertEqual(slot1.seats_available, 25)  # previously 24
+        self.assertEqual(slot1.seats_reserved, 4)  # previously 5
+        self.assertEqual(slot1.seats_used, 1)
+        self.assertEqual(slot1.seats_taken, 5)  # previously 6
+
+        self.assertEqual(slot2.seats_available, 21)  # previously 20
+        self.assertEqual(slot2.seats_reserved, 9)  # previously 10
+        self.assertEqual(slot2.seats_used, 0)
+        self.assertEqual(slot2.seats_taken, 9)  # previously 10
+
+        reg_draft.action_archive()
+        self.assertEqual(event.seats_available, (event.event_type_id.seats_max * len(event.slot_ids)) - 14)  # 46
+        self.assertEqual(event.seats_taken, 14)
+
+        # It is not possible to set a seats_max value below current highest number of slot
+        # confirmed registrations. (9 "taken" in slot2)
+        max_slot_confirmed_registrations = max(slot1.seats_taken, slot2.seats_taken)
+        with self.assertRaises(exceptions.ValidationError):
+            event.write({'seats_max': max_slot_confirmed_registrations - 1})
+        event.write({'seats_max': max_slot_confirmed_registrations})  # 9
+        self.assertEqual(slot1.seats_taken, 5)
+        self.assertEqual(slot1.seats_available, 4)
+        self.assertEqual(slot2.seats_available, 0)
+        self.assertEqual(event.seats_available, 4)
+
+        # It is not possible to unarchive a confirmed seat if the slot is fully booked
+        with self.assertRaises(exceptions.ValidationError):
+            reg_open_slot2.action_unarchive()
+        reg_open_slot1.action_unarchive()
+
+        # raising the limit allows it
+        event.write({'seats_max': event.seats_max + 1})  # 10
+        self.assertEqual(reg_open_slot2.state, "open")
+        reg_open_slot2.action_unarchive()
+
+        # It is not possible to confirm a draft reservation if the slot is fully booked
+        reg_draft.action_unarchive()
+        with self.assertRaises(exceptions.ValidationError):
+            reg_draft.write({'state': 'open'})
+
+        # It is not possible to create an open registration (default value) when the slot is full
+        new_open_registration = {
+            'event_id': event.id,
+            'name': 'reg_open',
+            'slot_id': slot2.id,
+        }
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['event.registration'].create(new_open_registration)
+
+        # If the seats limitation is removed, it becomes possible of course
+        event.write({'seats_limited': 0})
+        self.env['event.registration'].create(new_open_registration)
+        reg_draft.write({'state': 'open'})
+
+    @users('user_eventmanager')
+    def test_event_slots_w_tickets_seats(self):
+        """ Test slots seats availability for event (with tickets). """
+        event_type = self.event_type_complex.with_user(self.env.user)
+        event = self.env['event.event'].create({
+            'name': 'Event Update Type',
+            'event_type_id': event_type.id,
+            'date_begin': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=15)),
+        })
+        event.write({
+            'is_multi_slots': True,
+            'slot_ids': [
+                Command.clear(),
+                Command.create({
+                    'date': date.today() + timedelta(days=2),
+                    'start_hour': 9.0,
+                    'end_hour': 12.0,
+                }),
+                Command.create({
+                    'date': date.today() + timedelta(days=2),
+                    'start_hour': 14.0,
+                    'end_hour': 16.0,
+                }),
+            ],
+            'event_ticket_ids': [
+                Command.clear(),
+                Command.create({
+                    'name': 'Standard Ticket',
+                    'seats_max': 20,
+                }),
+                Command.create({
+                    'name': 'VIP Ticket',
+                    'seats_max': 10,
+                })
+            ]
+        })
+        # event seats (coming from event type configuration)
+        self.assertEqual(len(event.slot_ids), 2)
+        self.assertTrue(event.seats_limited)
+        self.assertEqual(event.seats_available, event.event_type_id.seats_max * len(event.slot_ids))
+        self.assertEqual(event.seats_reserved, 0)
+        self.assertEqual(event.seats_used, 0)
+        self.assertEqual(event.seats_taken, 0)
+        # slots, tickets and slot tickets initial seats
+        slot1 = event.slot_ids[0]
+        slot2 = event.slot_ids[1]
+        ticket1 = event.event_ticket_ids[0]
+        ticket2 = event.event_ticket_ids[1]
+        self.assertEqual(len(event.event_slot_ticket_ids), 4)
+        slot_ticket1 = event.event_slot_ticket_ids[0]
+        slot_ticket2 = event.event_slot_ticket_ids[1]
+        slot_ticket3 = event.event_slot_ticket_ids[2]
+        slot_ticket4 = event.event_slot_ticket_ids[3]
+        for slot in slot1 + slot2:
+            self.assertEqual(slot.seats_available, event.seats_max)
+            self.assertEqual(slot.seats_reserved, 0)
+            self.assertEqual(slot.seats_used, 0)
+            self.assertEqual(slot.seats_taken, 0)
+        for ticket in ticket1 + ticket2:
+            self.assertEqual(ticket.seats_available, ticket.seats_max * len(event.slot_ids))
+            self.assertEqual(ticket.seats_reserved, 0)
+            self.assertEqual(ticket.seats_used, 0)
+            self.assertEqual(ticket.seats_taken, 0)
+        for slot_ticket in slot_ticket1 + slot_ticket2 + slot_ticket3 + slot_ticket4:
+            self.assertIn(slot_ticket.slot_id, slot1 + slot2)
+            self.assertIn(slot_ticket.ticket_id, ticket1 + ticket2)
+            self.assertEqual(slot_ticket.seats_available, min(event.seats_max, slot_ticket.ticket_id.seats_max))
+            self.assertEqual(slot_ticket.seats_reserved, 0)
+            self.assertEqual(slot_ticket.seats_used, 0)
+            self.assertEqual(slot_ticket.seats_taken, 0)
+
+        # Creating registrations
+        slot_ticket_reg_combinations = []
+        for _ in range(5):
+            # For slot1: 5 standard and 5 VIP tickets
+            slot_ticket_reg_combinations.extend(((slot1, ticket1), (slot1, ticket2)))
+        for _ in range(10):
+            # For slot2: 10 standard and 10 VIP tickets (max of VIP tickets)
+            slot_ticket_reg_combinations.extend(((slot2, ticket1), (slot2, ticket2)))
+
+        self.env['event.registration'].create([{
+            'event_id': event.id,
+            'name': 'reg_open',
+            'slot_id': slot.id,
+            'event_ticket_id': ticket.id,
+        } for (slot, ticket) in slot_ticket_reg_combinations])
+
+        # Check available seats
+        self.assertEqual(event.seats_available, event.seats_max * len(event.slot_ids) - (5 + 5 + 10 + 10))
+        self.assertEqual(slot1.seats_available, event.seats_max - (5 + 5))
+        self.assertEqual(slot2.seats_available, event.seats_max - (10 + 10))
+        self.assertEqual(ticket1.seats_available, ticket1.seats_max * len(event.slot_ids) - (5 + 10))
+        self.assertEqual(ticket2.seats_available, ticket2.seats_max * len(event.slot_ids) - (5 + 10))
+        self.assertEqual(slot_ticket1.seats_available, min(slot_ticket1.event_id.seats_max, slot_ticket1.ticket_id.seats_max) - 5)
+        self.assertEqual(slot_ticket2.seats_available, min(slot_ticket2.event_id.seats_max, slot_ticket2.ticket_id.seats_max) - 10)
+        self.assertEqual(slot_ticket3.seats_available, min(slot_ticket3.event_id.seats_max, slot_ticket3.ticket_id.seats_max) - 5)
+        self.assertEqual(slot_ticket4.seats_available, min(slot_ticket4.event_id.seats_max, slot_ticket4.ticket_id.seats_max) - 10)
+
+        # Check sold out status
+        self.assertFalse(event.event_registrations_sold_out)
+        for record in [slot1, slot2, ticket1, ticket2, slot_ticket1, slot_ticket2, slot_ticket3]:
+            self.assertNotEqual(record.seats_available, 0)
+            self.assertFalse(record.is_sold_out)
+        self.assertEqual(slot_ticket4.seats_available, 0)
+        self.assertTrue(slot_ticket4.is_sold_out)
+
+        # Can't register to a slot ticket if it's fully booked
+        self.assertEqual(slot_ticket4.slot_id, slot2)
+        self.assertEqual(slot_ticket4.ticket_id, ticket2)
+        with self.assertRaises(exceptions.ValidationError):
+            self.env['event.registration'].create({
+                'event_id': event.id,
+                'name': 'New Registration',
+                'slot_id': slot2.id,
+                'event_ticket_id': ticket2.id,
+            })
 
 @tagged('event_registration')
 class TestEventRegistrationData(TestEventInternalsCommon):

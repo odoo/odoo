@@ -48,7 +48,7 @@ class EventMailCommon(EventCase, MailCase, CronMixinCase):
         cls._setup_test_reports()
         with cls.mock_datetime_and_now(cls, cls.reference_now):
             # create with admin to force create_date
-            cls.test_event = cls.env['event.event'].create({
+            cls.test_event = cls.env['event.event'].with_user(cls.user_eventmanager).create({
                 'name': 'TestEventMail',
                 'user_id': cls.user_eventmanager.id,
                 'date_begin': cls.event_date_begin,
