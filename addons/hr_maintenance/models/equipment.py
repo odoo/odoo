@@ -45,6 +45,7 @@ class MaintenanceEquipment(models.Model):
     def create(self, vals_list):
         equipments = super().create(vals_list)
         for equipment in equipments:
+            # TDE FIXME: check if we can use suggested recipients for employee and department manager
             # subscribe employee or department manager when equipment assign to him.
             partner_ids = []
             if equipment.employee_id and equipment.employee_id.user_id:
@@ -99,6 +100,7 @@ class MaintenanceRequest(models.Model):
     def create(self, vals_list):
         requests = super().create(vals_list)
         for request in requests:
+            # TDE FIXME: check default recipients (master)
             if request.employee_id.user_id:
                 request.message_subscribe(partner_ids=[request.employee_id.user_id.partner_id.id])
         return requests
@@ -114,6 +116,7 @@ class MaintenanceRequest(models.Model):
     def message_new(self, msg, custom_values=None):
         if custom_values is None:
             custom_values = {}
+        # TDE FIXME: check author_id, should be set (master-)
         email = tools.email_normalize(msg.get('from'), strict=False)
         user = self.env['res.users'].search([('login', '=', email)], limit=1) if email else self.env['res.users']
         if user:

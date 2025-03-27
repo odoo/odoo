@@ -626,6 +626,7 @@ class HrEmployee(models.Model):
                             bank_account.partner_id = vals['work_contact_id']
             self.message_unsubscribe(self.work_contact_id.ids)
             if vals['work_contact_id']:
+                # TDE FIXME: should be suggested, to check in master
                 self._message_subscribe([vals['work_contact_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided

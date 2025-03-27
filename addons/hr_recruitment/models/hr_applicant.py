@@ -628,9 +628,6 @@ class HrApplicant(models.Model):
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
 
-        department_manager_partner = applicants.department_id.manager_id._get_related_partners()
-        applicants.message_unsubscribe(partner_ids=department_manager_partner.ids)
-
         if (applicants.interviewer_ids.partner_id - self.env.user.partner_id):
             for applicant in applicants:
                 interviewers_to_notify = applicant.interviewer_ids.partner_id - self.env.user.partner_id
@@ -685,7 +682,6 @@ class HrApplicant(models.Model):
             interviewers_to_clean = old_interviewers - self.interviewer_ids
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
-            self.message_unsubscribe(partner_ids=interviewers_to_clean.partner_id.ids)
 
             new_interviewers = self.interviewer_ids - old_interviewers - self.env.user
             if new_interviewers:
