@@ -81,6 +81,11 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
             combo.select("Combo Product 4"),
             combo.select("Combo Product 6"),
             Dialog.confirm(),
+            {
+                content: "The 'Combo Product 6' card should not display a quantity.",
+                trigger:
+                    "article.product .product-content:has(.product-name:contains('Combo Product 6')):not(:has(.product-cart-qty))",
+            },
             ...ProductScreen.totalAmountIs("59.17"),
             ...inLeftSide(Order.hasTax("10.56")),
             // the split screen is tested in `pos_restaurant`

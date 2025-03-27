@@ -105,9 +105,10 @@ export class ProductScreen extends Component {
         useEffect(
             () => {
                 this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
-                    acc[ol.product_id.product_tmpl_id.id]
-                        ? (acc[ol.product_id.product_tmpl_id.id] += ol.qty)
-                        : (acc[ol.product_id.product_tmpl_id.id] = ol.qty);
+                    if (!ol.combo_parent_id) {
+                        const productTmplId = ol.product_id.product_tmpl_id.id;
+                        acc[productTmplId] = (acc[productTmplId] || 0) + ol.qty;
+                    }
                     return acc;
                 }, {});
             },
