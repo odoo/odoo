@@ -6,8 +6,8 @@ from collections import defaultdict
 import itertools
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.http import request
-from odoo.osv import expression
 
 
 class UtmMixin(models.AbstractModel):
@@ -124,12 +124,9 @@ class UtmMixin(models.AbstractModel):
         names_without_counter = {self._split_name_and_count(name)[0] for name in names}
 
         # Retrieve existing similar names
-        search_domain = expression.OR([[('name', 'ilike', name)] for name in names_without_counter])
+        search_domain = Domain.OR(Domain('name', 'ilike', name) for name in names_without_counter)
         if skip_record_ids:
-            search_domain = expression.AND([
-                [('id', 'not in', skip_record_ids)],
-                search_domain
-            ])
+            search_domain &= Domain('id', 'not in', skip_record_ids)
         existing_names = {vals['name'] for vals in self.env[model_name].search_read(search_domain, ['name'])}
 
         # Counter for each names, based on the names list given in argument
