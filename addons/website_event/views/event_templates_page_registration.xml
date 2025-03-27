@@ -18,6 +18,13 @@
     <t t-set="hide_register_cta" t-value="True"/>
     <t t-set="opt_event_description_cover_hidden" t-value="is_view_active('website_event.opt_event_description_cover_hidden')"/>
     <t t-set="opt_event_description_cover_top" t-value="is_view_active('website_event.opt_event_description_cover_top')"/>
+    <t t-set="opt_event_fixed_sidebar" t-value="is_view_active('website_event.opt_event_fixed_sidebar')"/>
+    <t t-set="opt_event_registration_block" t-value="is_view_active('website_event.opt_event_registration_block')"/>
+    <t t-set="opt_event_dates_block" t-value="is_view_active('website_event.opt_event_dates_block')"/>
+    <t t-set="opt_event_calendar_block" t-value="is_view_active('website_event.opt_event_calendar_block')"/>
+    <t t-set="opt_event_location_block" t-value="is_view_active('website_event.opt_event_location_block')"/>
+    <t t-set="opt_event_organizer_block" t-value="is_view_active('website_event.opt_event_organizer_block')"/>
+    <t t-set="opt_event_share_block" t-value="is_view_active('website_event.opt_event_share_block')"/>
     <t t-set="edition_cover_only" t-value="opt_event_description_cover_hidden and request.env.user.has_group('event.group_event_manager')"/>
 
     <t t-call="website_event.event_details">
@@ -44,12 +51,12 @@
         </t>
 
         <section id="o_wevent_event_main" class="h-100" t-cache="event if not editable and event.website_published else None">
-            <div class="container overflow-hidden pb-5">
+            <div t-attf-class="container pb-5 {{'' if opt_event_fixed_sidebar else 'overflow-hidden'}}">
                 <div class="row">
                     <div class="col pe-xxl-5">
                         <t t-call="website_event.navbar"/>
                         <!-- Show the button tickets only on mobile -->
-                        <div class="o_wevent_event_main_cta_block d-lg-none mb-3">
+                        <div t-if="opt_event_registration_block" class="o_wevent_event_main_cta_block d-lg-none mb-3">
                             <t t-call="website_event.registration_template">
                                 <t t-set="cta_additional_classes">w-100 py-sm-3 mt-sm-2</t>
                             </t>
@@ -82,26 +89,29 @@
                     </div>
 
                     <!-- Sidebar -->
-                    <aside id="o_wevent_event_main_sidebar" class="col-lg-4 my-3 mb-lg-0 d-print-none">
+                    <aside t-if="opt_event_registration_block or opt_event_dates_block or opt_event_calendar_block or
+                        opt_event_location_block or opt_event_organizer_block or opt_event_share_block"
+                        id="o_wevent_event_main_sidebar"
+                        t-attf-class="col-lg-4 py-3 pb-lg-0 d-print-none {{'sticky-top align-self-start' if opt_event_fixed_sidebar else ''}}">
                         <!-- CTA (desktop only) -->
-                        <div class="d-none d-lg-block mb-3">
+                        <div t-if="opt_event_registration_block" class="d-none d-lg-block mb-3">
                             <t t-call="website_event.registration_template">
                                 <t t-set="cta_additional_classes">w-100</t>
                             </t>
                         </div>
                         <!-- Date & Time (desktop only) -->
-                        <div class="d-none d-lg-block border-bottom pb-2 mb-3">
+                        <div t-if="opt_event_dates_block or opt_event_calendar_block" class="o_wevent_bordered_block pb-3 mb-4 d-none d-lg-block">
                             <meta itemprop="startDate" t-att-content="event.date_begin.isoformat()" />
                             <meta itemprop="endDate" t-att-content="event.date_end.isoformat()" />
                             <t t-call="website_event.event_description_dates"/>
                         </div>
-                        <header class="d-lg-none mt-4 mb-2 py-3 border-top">
+                        <header t-if="opt_event_location_block or opt_event_organizer_block or opt_event_share_block" class="d-lg-none mt-4 mb-2 py-3 border-top">
                             <h5 class="my-0">Event Info</h5>
                             <meta itemprop="eventStatus" content="https://schema.org/EventScheduled" />
                         </header>
                         <!-- Location -->
                         <meta itemprop="eventAttendanceMode" t-attf-content="https://schema.org/{{'Offline' if event.address_id else 'Online'}}EventAttendanceMode"/>
-                        <div t-if="event.address_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4" itemprop="location" itemscope="itemscope" itemtype="https://schema.org/Place">
+                        <div t-if="opt_event_location_block and event.address_id" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4" itemprop="location" itemscope="itemscope" itemtype="https://schema.org/Place">
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Location</h6>
                             </div>
@@ -124,12 +134,12 @@
                                 Get directions
                             </a>
                         </div>
-                        <div t-else="" class="o_wevent_sidebar_block border-bottom pb-3 mb-4">
+                        <div t-elif="opt_event_location_block" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4">
                             <h6 class="o_wevent_sidebar_title">Location</h6>
                             <i class="fa fa-map-marker" title="Location"/> Online event
                         </div>
                         <!-- Organizer -->
-                        <div t-if="event.organizer_id" class="o_wevent_sidebar_block border-bottom pb-3 mb-4" itemprop="organizer" itemscope="itemscope" itemtype="http://schema.org/Organization">
+                        <div t-if="opt_event_organizer_block and event.organizer_id" class="o_wevent_sidebar_block o_wevent_bordered_block pb-3 mb-4" itemprop="organizer" itemscope="itemscope" itemtype="http://schema.org/Organization">
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Organizer</h6>
                             </div>
@@ -137,7 +147,7 @@
                             <small t-field="event.organizer_id" t-options="{'widget': 'contact', 'fields': ['phone', 'mobile', 'email'], 'with_microdata': True,}"/>
                         </div>
                         <!-- Social -->
-                        <div class="o_wevent_sidebar_block">
+                        <div t-if="opt_event_share_block" class="o_wevent_sidebar_block">
                             <div>
                                 <h6 class="o_wevent_sidebar_title">Share</h6>
                                 <p>Find out what people see and say about this event, and join the conversation.</p>
@@ -186,12 +196,12 @@
 
 <!-- Event - Description Dates -->
 <template id="event_description_dates" name="Event Description Dates">
-    <div t-attf-class="o_wevent_dates_block mb-3 {{event.is_one_day and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
-        <div class="flex-wrap gap-3 w-lg-100">
+    <div t-attf-class="o_wevent_dates_block {{event.is_one_day and 'd-flex flex-wrap justify-content-between align-items-center gap-2'}}">
+        <div t-if="opt_event_dates_block" class="pb-3 flex-wrap gap-3 w-lg-100">
             <div t-if="event.is_one_day" class="card bg-transparent d-inline-flex align-items-end flex-row flex-grow-1 w-lg-100 gap-2 p-2 p-md-3">
-                <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}"/>
                 <div class="small">
-                    <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                    <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="d-block lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}"/>
                     <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                     <i class="fa fa-long-arrow-right mx-1 text-muted" role="img"/>
                     <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
@@ -204,9 +214,9 @@
                     <div class="flex-grow-1 w-lg-100">
                         <small class="fw-bold">Starts</small>
                         <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
-                            <time t-field="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                            <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="o_wevent_day_header_number lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}"/>
                             <div class="small">
-                                <time t-field="event.date_begin" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_begin"/>
+                                <time t-out="event.date_begin" t-att-datetime="event.date_begin" class="d-block lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}"/>
                                 <time t-out="event.date_begin"  t-att-datetime="event.date_begin" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                                 <small t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                             </div>
@@ -215,9 +225,9 @@
                     <div class="flex-grow-1 w-lg-100">
                         <small class="fw-bold">Ends</small>
                         <div class="card bg-transparent d-flex align-items-end flex-row flex-grow-1 gap-2 py-3 px-2 px-md-3">
-                            <time t-field="event.date_end" class="o_wevent_day_header_number lh-1" t-options="{'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                            <time t-out="event.date_end" t-att-datetime="event.date_end" class="o_wevent_day_header_number lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'dd', 'date_only': 'true'}"/>
                             <div class="small">
-                                <time t-field="event.date_end" class="d-block lh-1" t-options="{'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}" t-att-datetime="event.date_end"/>
+                                <time t-out="event.date_end" t-att-datetime="event.date_end" class="d-block lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'MMMM Y', 'date_only': 'true'}"/>
                                 <time t-out="event.date_end"  t-att-datetime="event.date_end" class="fw-bold lh-1" t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'time_only': 'true', 'format': 'short'}"/>
                                 <small t-if="website_visitor_timezone != event.date_tz" class="d-block lh-1" t-out="event.date_tz"/>
                             </div>
@@ -227,7 +237,7 @@
             </t>
         </div>
 
-        <div t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else 'mt-3'}}">
+        <div t-if="opt_event_calendar_block" t-attf-class="d-flex align-items-center flex-wrap gap-2 {{'flex-basis-50 flex-basis-md-auto' if event.is_one_day else ''}}">
             <small class="text-muted">Add to calendar:</small>
             <div t-attf-class="d-flex align-items-center flex-shrink-0 flex-grow-1 {{'gap-1 gap-md-2' if event.is_one_day else 'gap-2'}}">
                 <a t-att-href="iCal_url" class="btn btn-light o_wevent_add_to_ical" title="Add to iCal">
@@ -560,5 +570,15 @@
 <!-- Cover Options -->
 <template id="opt_event_description_cover_hidden" name="Event Description Cover Hidden Option" inherit_id="website_event.event_description_full" active="False"/>
 <template id="opt_event_description_cover_top" name="Event Description Cover Top Option" inherit_id="website_event.event_description_full" active="False"/>
+
+<!-- Sidebar Blocks Visibility Options -->
+<template id="opt_event_registration_block" name="Registrations" inherit_id="website_event.event_description_full" active="True"/>
+<template id="opt_event_dates_block" name="Dates" inherit_id="website_event.event_description_full" active="True"/>
+<template id="opt_event_calendar_block" name="Calendar links" inherit_id="website_event.event_description_full" active="True"/>
+<template id="opt_event_location_block" name="Location" inherit_id="website_event.event_description_full" active="True"/>
+<template id="opt_event_organizer_block" name="Organizer" inherit_id="website_event.event_description_full" active="True"/>
+<template id="opt_event_share_block" name="Share" inherit_id="website_event.event_description_full" active="True"/>
+<!-- Sidebar Position Option -->
+<template id="opt_event_fixed_sidebar" name="Fixed Sidebar Option" inherit_id="website_event.event_description_full" active="False"/>
 
 </odoo>
