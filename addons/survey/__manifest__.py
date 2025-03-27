@@ -78,11 +78,11 @@ sent mails with personal token for the invitation of the survey.
             'survey/static/src/interactions/*',
         ],
         'survey.survey_user_input_session_assets': [
-            'survey/static/src/js/survey_session_colors.js',
-            'survey/static/src/js/survey_session_chart.js',
-            'survey/static/src/js/survey_session_text_answers.js',
-            'survey/static/src/js/survey_session_leaderboard.js',
-            'survey/static/src/js/survey_session_manage.js',
+            'survey/static/src/interactions/survey_session_colors.js',
+            'survey/static/src/interactions/survey_session_chart.js',
+            'survey/static/src/interactions/survey_session_text_answers.js',
+            'survey/static/src/interactions/survey_session_leaderboard.js',
+            'survey/static/src/interactions/survey_session_manage.js',
             'survey/static/src/xml/survey_session_text_answer_template.xml',
         ],
         'web.report_assets_common': [
