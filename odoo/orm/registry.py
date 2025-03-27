@@ -315,15 +315,17 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 queue.extend(func(model))
         return models
 
-    def load(self, cr: Cursor, module: module_graph.ModuleNode) -> OrderedSet[str]:
+    def load(self, module: module_graph.ModuleNode) -> list[str]:
         """ Load a given module in the registry, and return the names of the
-        modified models.
+        directly modified models.
 
         At the Python level, the modules are already loaded, but not yet on a
         per-registry level. This method populates a registry with the given
         modules, i.e. it instantiates all the classes of a the given module
         and registers them in the registry.
 
+        In order to determine all the impacted models, one should invoke method
+        :meth:`descendants` with `'_inherit'` and `'_inherits'`.
         """
         from . import models  # noqa: PLC0415
 
@@ -343,7 +345,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
             model_cls = model_classes.add_to_registry(self, model_def)
             model_names.append(model_cls._name)
 
-        return self.descendants(model_names, '_inherit', '_inherits')
+        return model_names
 
     @locked
     def _setup_models__(self, cr: BaseCursor) -> None:

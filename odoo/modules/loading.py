@@ -191,9 +191,10 @@ def load_module_graph(
                 registry._setup_models__(env.cr)
                 getattr(py_module, pre_init)(env)
 
-        model_names = registry.load(env.cr, package)
+        model_names = registry.load(package)
 
         if needs_update:
+            model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_updated |= set(model_names)
             models_to_check -= set(model_names)
             registry._setup_models__(env.cr)
@@ -204,16 +205,16 @@ def load_module_graph(
             # This is because the extension may have changed the model,
             # e.g. adding required=True to an existing field, but the schema has not been
             # updated by this module because it's not marked as 'to upgrade/to install'.
+            model_names = registry.descendants(model_names, '_inherit', '_inherits')
             models_to_check |= set(model_names) & models_updated
-
-        idref: dict = {}
 
         if needs_update:
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
-
             module._check()
+
+            idref: dict = {}
 
             if new_install:  # 'to install'
                 load_data(env, idref, 'init', kind='data', package=package)
