@@ -1,44 +1,20 @@
-import { scrollToWindow } from "@html_builder/utils/utils";
-import { Plugin } from "@html_editor/plugin";
-import { isBlock } from "@html_editor/utils/blocks";
 import { _t } from "@web/core/l10n/translation";
-import { closest, touching } from "@web/core/utils/ui";
+import { Plugin } from "@html_editor/plugin";
 
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history", "setup_editor_plugin"];
     static shared = [
-        "displayDropZone",
-        "dragElement",
-        "clearDropZone",
-        "getAddElement",
+        "activateDropzones",
+        "removeDropzones",
         "getDropRootElement",
         "getSelectorSiblings",
         "getSelectorChildren",
         "getSelectors",
     ];
 
-    resources = {
-        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
-    };
-
     setup() {
-        this.dropZoneElements = [];
         this.dropzoneSelectors = this.getResource("dropzone_selector");
-    }
-
-    /**
-     * @param {MutationRecord} record
-     * @return {boolean}
-     */
-    isMutationRecordSavable(record) {
-        if (record.type === "childList") {
-            const node = record.addedNodes[0] || record.removedNodes[0];
-            if (isBlock(node) && node.classList.contains("oe_drop_zone")) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -57,22 +33,22 @@ export class DropZonePlugin extends Plugin {
             ".o_editable.dropdown-menu.show, .dropdown-menu.show .o_editable.dropdown-menu"
         );
         if (openDropdownEl) {
-            return openDropdownEl.parentNode;
+            return openDropdownEl;
         }
         const openOffcanvasEl = this.editable.querySelector(".offcanvas.show");
         if (openOffcanvasEl) {
-            return openOffcanvasEl;
+            return openOffcanvasEl.querySelector(".offcanvas-body");
         }
     }
 
     /**
      * Gets the selectors that determine where the given snippet can be placed.
      *
-     * @param {Object} snippet
+     * @param {HTMLElement} snippetEl the element
+     * @param {Object} snippet the associated snippet object
      * @returns {Object} [selectorChildren, selectorSiblings]
      */
-    getSelectors(snippet) {
-        const snippetEl = snippet.content;
+    getSelectors(snippetEl, snippet) {
         let selectorChildren = [];
         let selectorSiblings = [];
         const selectorExcludeAncestor = [];
@@ -112,16 +88,40 @@ export class DropZonePlugin extends Plugin {
         // (E.g. ToC inside another ToC)
         if (selectorExcludeAncestor.length) {
             const excludeAncestor = selectorExcludeAncestor.join(",");
-            selectorChildren = selectorChildren.filter((el) => !el.closest(excludeAncestor));
             selectorSiblings = selectorSiblings.filter((el) => !el.closest(excludeAncestor));
+            selectorChildren = selectorChildren.filter((el) => !el.closest(excludeAncestor));
         }
 
-        // TODO add excludeAncestors in dropzone_selectors
-        // TODO checkSanitize here ?
+        // Prevent dropping sanitized elements in sanitized zones.
+        const forbidSanitize = snippet.forbidSanitize;
+        const selectorSanitized = new Set();
+        const filterSanitized = (el) => {
+            if (el.closest('[data-oe-sanitize="no_block"]')) {
+                return false;
+            }
+            let sanitizedZoneEl;
+            if (forbidSanitize === "form") {
+                sanitizedZoneEl = el.closest(
+                    '[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]):not([data-oe-sanitize="no_block"])'
+                );
+            } else if (forbidSanitize) {
+                sanitizedZoneEl = el.closest(
+                    '[data-oe-sanitize]:not([data-oe-sanitize="no_block"])'
+                );
+            }
+            if (sanitizedZoneEl) {
+                selectorSanitized.add(sanitizedZoneEl);
+                return false;
+            }
+            return true;
+        };
+        selectorSiblings = selectorSiblings.filter((el) => filterSanitized(el));
+        selectorChildren = selectorChildren.filter((el) => filterSanitized(el));
 
         return {
-            selectorChildren: new Set(selectorChildren),
             selectorSiblings: new Set(selectorSiblings),
+            selectorChildren: new Set(selectorChildren),
+            selectorSanitized,
         };
     }
 
@@ -207,108 +207,143 @@ export class DropZonePlugin extends Plugin {
         return dropAreaEls;
     }
 
-    createDropZone() {
-        const dropZoneEl = this.document.createElement("div");
-        dropZoneEl.className = "oe_drop_zone oe_insert";
-        dropZoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
-        this.dropZoneElements.push(dropZoneEl);
-        return dropZoneEl;
+    /**
+     * Creates a dropzone element.
+     * This allows to add data on the dropzone depending on the hook
+     * environment.
+     * TODO
+     *
+     * @param {boolean} [vertical=false]
+     * @param {Object} [style]
+     * @returns {HTMLElement}
+     */
+    createDropzone(isVertical, style) {
+        const dropzoneEl = this.document.createElement("div");
+        dropzoneEl.classList.add("oe_drop_zone", "oe_insert");
+        dropzoneEl.dataset.editorMessage = _t("DRAG BUILDING BLOCKS HERE");
+
+        if (isVertical) {
+            dropzoneEl.classList.add("oe_vertical");
+        }
+        if (style) {
+            Object.assign(dropzoneEl.style, style);
+        }
+        return dropzoneEl;
     }
 
-    displayDropZone(selectorSiblings, selectorChildren) {
-        this.clearDropZone();
+    /**
+     * Creates a dropzone covering the whole sanitized element in which we
+     * cannot drop.
+     *
+     * @returns {HTMLElement}
+     */
+    createSanitizedDropzone() {
+        const dropzoneEl = this.document.createElement("div");
+        dropzoneEl.classList.add(
+            "oe_drop_zone",
+            "oe_insert",
+            "oe_sanitized_drop_zone",
+            "text-center",
+            "text-uppercase"
+        );
+        const messageEl = this.document.createElement("p");
+        messageEl.textContent = _t("For technical reasons, this block cannot be dropped here");
+        dropzoneEl.prepend(messageEl);
+        return dropzoneEl;
+    }
 
+    /**
+     * Creates a dropzone taking the entire area of the given row in grid mode.
+     * It will allow to place the elements dragged over it inside the grid it
+     * belongs to.
+     *
+     * @param {Element} rowEl
+     * @returns {HTMLElement}
+     */
+    createGridDropzone(rowEl) {
+        const columnCount = 12;
+        const rowCount = parseInt(rowEl.dataset.rowCount);
+        const dropzoneEl = this.document.createElement("div");
+        dropzoneEl.classList.add("oe_drop_zone", "oe_insert", "oe_grid_zone");
+        Object.assign(dropzoneEl.style, {
+            gridArea: 1 + "/" + 1 + "/" + (rowCount + 1) + "/" + (columnCount + 1),
+            minHeight: window.getComputedStyle(rowEl).height,
+            width: window.getComputedStyle(rowEl).width,
+        });
+        return dropzoneEl;
+    }
+
+    /**
+     * @typedef Selectors
+     * @property {Set<HTMLElement>} selectorSiblings elements which must have
+     *   siblings drop zones
+     * @property {Set<HTMLElement>} selectorChildren elements which must have
+     *   child drop zones between each existing child
+     * @property {Set<HTMLElement>} selectorSanitized sanitized elements in
+     *   which an indicative drop zone preventing the drop must be inserted
+     * @property {Set<HTMLElement>|Array<HTMLElement>} selectorGrids elements
+     *   which are in grid mode and for which a grid drop zone must be inserted
+     */
+    /**
+     * @typedef Options
+     * @property {Boolean} toInsertInline true if the dragged element is inline
+     * @property {Boolean}fromIframe TODO
+     */
+    /**
+     * Creates drop zones in the DOM (= locations where dragged elements may be
+     * dropped).
+     *
+     * @param {Selectors} selectors
+     * @param {Options} options
+     * @returns
+     */
+    activateDropzones(
+        { selectorSiblings, selectorChildren, selectorSanitized, selectorGrids = [] },
+        { toInsertInline, fromIframe } = {}
+    ) {
+        // TODO improve this portion
         const targets = [];
         for (const el of selectorChildren) {
             targets.push(...el.children);
-            el.prepend(this.createDropZone());
+            el.prepend(this.createDropzone());
         }
         targets.push(...selectorSiblings);
 
         for (const target of targets) {
             if (!target.nextElementSibling?.classList.contains("oe_drop_zone")) {
-                target.after(this.createDropZone());
+                target.after(this.createDropzone());
             }
 
             if (!target.previousElementSibling?.classList.contains("oe_drop_zone")) {
-                target.before(this.createDropZone());
-            }
-        }
-    }
-
-    clearDropZone() {
-        if (this.dropZoneElements.length) {
-            for (const el of this.editable.querySelectorAll(".oe_drop_zone")) {
-                el.remove();
+                target.before(this.createDropzone());
             }
         }
 
-        this.dropZoneElements = [];
-    }
-
-    dragElement(element, x, y) {
-        const { height, width } = element.getClientRects()[0];
-        const position = { x, y, height, width };
-        const dropzoneEl = closest(touching(this.dropZoneElements, position), position);
-        if (this.currentDropzoneEl !== dropzoneEl) {
-            this.currentDropzoneEl?.classList.remove("o_dropzone_highlighted");
-            this.currentDropzoneEl = dropzoneEl;
-            if (dropzoneEl) {
-                dropzoneEl.classList.add("o_dropzone_highlighted");
-            }
+        // Inserting a sanitized dropzone for each sanitized area.
+        for (const sanitizedZoneEl of selectorSanitized) {
+            sanitizedZoneEl.style.position = "relative";
+            sanitizedZoneEl.prepend(this.createSanitizedDropzone());
         }
+        this.sanitizedZoneEls = selectorSanitized;
+
+        // Inserting a grid dropzone for each row in grid mode.
+        for (const rowEl of selectorGrids) {
+            rowEl.append(this.createGridDropzone(rowEl));
+        }
+
+        return [...this.editable.querySelectorAll(".oe_drop_zone:not(.oe_sanitized_drop_zone)")];
     }
 
     /**
-     * @param {Object} [position] - set if drag & drop, not set if click
-     * @param {Number} position.x
-     * @param {Number} position.y
-     * @returns {Function}
+     * Removes all the dropzones.
      */
-    getAddElement(position) {
-        // Drag & drop over sidebar: cancel the action.
-        if (position && !touching([this.document.body], position).length) {
-            // TODO: do we want that key with an empty function? Or should we
-            // check everytime we call getAddElement if the result is undefined
-            // before continuing?
-            this.clearDropZone();
-            return;
-        }
-        const dropZone = position
-            ? closest(touching(this.dropZoneElements, position), position) ||
-              closest(this.dropZoneElements, position)
-            : closest(this.dropZoneElements, {
-                  x: window.innerWidth / 2,
-                  y: window.innerHeight / 2,
-              });
-        if (!dropZone) {
-            this.clearDropZone();
-            return;
-        }
-
-        let target = dropZone.previousSibling;
-        let insertMethod = "after";
-        if (!target) {
-            target = dropZone.nextSibling;
-            insertMethod = "before";
-        }
-        if (!target) {
-            target = dropZone.parentElement;
-            insertMethod = "appendChild";
-        }
-        this.clearDropZone();
-        return async (elementToAdd) => {
-            // TODO: refactor if a new mutex system is implemented
-            target[insertMethod](elementToAdd);
-            const proms = [];
-            for (const handler of this.getResource("on_add_element_handlers")) {
-                proms.push(handler({ elementToAdd: elementToAdd }));
-            }
-            this.services.ui.block();
-            await Promise.all(proms);
-            this.services.ui.unblock();
-            scrollToWindow(elementToAdd, { behavior: "smooth", offset: 50 });
-            this.dependencies.history.addStep();
-        };
+    removeDropzones() {
+        this.editable.querySelectorAll(".oe_drop_zone").forEach((dropzoneEl) => {
+            dropzoneEl.remove();
+        });
+        this.sanitizedZoneEls.forEach((sanitizedZoneEl) =>
+            sanitizedZoneEl.style.removeProperty("position")
+        );
+        this.sanitizedZoneEls = [];
     }
 }

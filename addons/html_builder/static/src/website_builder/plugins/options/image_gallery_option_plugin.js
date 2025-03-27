@@ -27,8 +27,8 @@ class ImageGalleryOption extends Plugin {
         on_reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
         after_remove_handlers: this.afterRemove.bind(this),
-        on_add_element_handlers: (element) => {
-            const carousels = element.elementToAdd.querySelectorAll(".s_image_gallery .carousel");
+        on_snippet_dropped_handlers: ({ snippetEl }) => {
+            const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
             this.addCarouselListener(carousels);
         },
     };

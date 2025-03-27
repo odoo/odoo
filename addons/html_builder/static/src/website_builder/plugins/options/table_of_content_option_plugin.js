@@ -36,6 +36,10 @@ class TableOfContentOptionPlugin extends Plugin {
         ],
         builder_actions: this.getActions(),
         normalize_handlers: this.normalize.bind(this),
+        dropzone_selector: {
+            selector: ".s_table_of_content",
+            excludeAncestor: ".s_table_of_content",
+        },
     };
 
     getActions() {

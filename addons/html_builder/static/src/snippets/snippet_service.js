@@ -116,15 +116,25 @@ export class SnippetModel extends Reactive {
         });
     }
 
-    select(snippet, { onSelect, onClose }) {
+    /**
+     * Opens the snippet dialog on the group of the given snippet object and
+     * allows to specify its behaviour when selecting a snippet and when closing
+     * it.
+     *
+     * @param {Object} snippet the snippet object
+     * @param {Object} - `onSelect` called when a snippet is selected. Must return
+     *     an HTMLElement.
+     *                 - `onClose` called when the dialog is closed.
+     */
+    openSnippetDialog(snippet, { onSelect, onClose }) {
         this.dialog.add(
             AddSnippetDialog,
             {
                 selectedSnippet: snippet,
                 snippetModel: this,
                 selectSnippet: (...args) => {
-                    const newSnippet = onSelect(...args);
-                    this.cleanPreviewSnippet(newSnippet);
+                    const newSnippetEl = onSelect(...args);
+                    this.cleanSnippetPreview(newSnippetEl);
                 },
             },
             { onClose }
@@ -274,10 +284,11 @@ export class SnippetModel extends Reactive {
     }
 
     /**
-     * Returns the original snippet based on the given `data-snippet` attribute.
+     * Returns the original snippet object based on the given `data-snippet`
+     * attribute.
      *
      * @param {String} snippetKey the `data-snippet` attribute of the snippet.
-     * @returns
+     * @returns {Object}
      */
     getOriginalSnippet(snippetKey) {
         return [...this.snippetStructures, ...this.snippetInnerContents].find(
@@ -296,32 +307,48 @@ export class SnippetModel extends Reactive {
         return originalSnippet.thumbnailSrc;
     }
 
-    async replaceSnippet(snippetToReplace) {
+    /**
+     * Opens the snippet dialog in order to replace the given snippet by the
+     * selected one.
+     *
+     * @param {HTMLElement} snippetEl the snippet to replace
+     * @returns {HTMLElement}
+     */
+    async replaceSnippet(snippetEl) {
         // Find the original snippet to open the dialog on the same group.
-        const originalSnippet = this.getOriginalSnippet(snippetToReplace.dataset.snippet);
-        let newSnippet;
+        const originalSnippet = this.getOriginalSnippet(snippetEl.dataset.snippet);
+        let newSnippetEl;
         await new Promise((resolve) => {
-            this.dialog.add(
-                AddSnippetDialog,
-                {
-                    selectedSnippet: originalSnippet,
-                    snippetModel: this,
-                    selectSnippet: (selectedSnippet) => {
-                        newSnippet = selectedSnippet.content.cloneNode(true);
-                        snippetToReplace.replaceWith(newSnippet);
-                        this.cleanPreviewSnippet(newSnippet);
-                    },
+            this.openSnippetDialog(originalSnippet, {
+                onSelect: (selectedSnippet) => {
+                    newSnippetEl = selectedSnippet.content.cloneNode(true);
+                    snippetEl.replaceWith(newSnippetEl);
+                    return newSnippetEl;
                 },
-                { onClose: () => resolve() }
-            );
+                onClose: () => resolve(),
+            });
         });
-        return newSnippet;
+        return newSnippetEl;
     }
 
-    cleanPreviewSnippet(snippetEl) {
+    /**
+     * Removes the previews from the given snippet.
+     *
+     * @param {HTMLElement} snippetEl
+     */
+    cleanSnippetPreview(snippetEl) {
         snippetEl.querySelectorAll(".s_dialog_preview").forEach((el) => el.remove());
     }
 
+    /**
+     * Saves the given snippet as a custom one and reloads all the snippets
+     * to have access to it directly.
+     *
+     * @param {HTMLElement} snippetEl the snippet we want to save
+     * @param {Array<Function>} cleanForSaveHandlers all the hanlders of the
+     *     clean_for_save_handlers` resources
+     * @returns
+     */
     saveSnippet(snippetEl, cleanForSaveHandlers) {
         return new Promise((resolve) => {
             this.dialog.add(

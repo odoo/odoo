@@ -465,3 +465,10 @@ export async function insertStructureSnippet(editor, snippetName) {
     parentEl.append(snippetEl);
     editor.shared.history.addStep();
 }
+
+/**
+ * Returns the dragged helper when drag and dropping snippets.
+ */
+export function getDragHelper() {
+    return document.body.querySelector(".o_draggable_dragging .o_snippet_thumbnail");
+}

@@ -5,6 +5,7 @@ import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import {
     addDropZoneSelector,
     defineWebsiteModels,
+    getDragHelper,
     getSnippetStructure,
     setupWebsiteBuilder,
     setupWebsiteBuilderWithDummySnippet,
@@ -330,7 +331,7 @@ test("insert snippet structure", async () => {
     );
 });
 
-test("drag&drop snippet structure", async () => {
+test("Drag & drop snippet structure", async () => {
     const snippetsDescription = ({ withName, withColoredLevelClass = false }) => {
         const name = "Test";
         return [
@@ -366,13 +367,11 @@ test("drag&drop snippet structure", async () => {
     expect(":iframe .oe_drop_zone:nth-child(1)").toHaveCount(1);
     expect(":iframe .oe_drop_zone:nth-child(3)").toHaveCount(1);
 
-    await moveTo(editableContent.querySelector(".oe_drop_zone"));
+    await moveTo(":iframe .oe_drop_zone");
     expect(":iframe .oe_drop_zone.o_dropzone_highlighted:nth-child(1)").toHaveCount(1);
-    await drop();
+    await drop(getDragHelper());
+    expect(":iframe section[data-snippet='s_snippet_group']:nth-child(1)").toHaveCount(1);
     expect(".o_add_snippet_dialog").toHaveCount(1);
-    expect(editableContent).toHaveInnerHTML(
-        unformat(`<section class="o_colored_level"><p>Text</p></section>`)
-    );
 
     await waitForSnippetDialog();
     const previewSelector =
@@ -388,7 +387,7 @@ test("drag&drop snippet structure", async () => {
     );
 });
 
-test("cancel snippet drag & drop over sidebar", async () => {
+test("Cancel snippet drag & drop over sidebar", async () => {
     const { getEditableContent } = await setupWebsiteBuilderWithDummySnippet();
     const editableContent = getEditableContent();
 
@@ -397,12 +396,12 @@ test("cancel snippet drag & drop over sidebar", async () => {
     ).drag();
     expect(":iframe .oe_drop_zone").toHaveCount(1);
 
-    await moveTo(".o-website-builder_sidebar");
     // Specifying an explicit target should not be needed, but the test
     // sometimes fails, probably because the snippet is partially touching the
     // iframe. We drop on the "Save" button to be as far as possible from the
     // iframe.
-    await drop("button[data-action=save]");
+    await moveTo(".o-website-builder_sidebar button[data-action=save]");
+    await drop(getDragHelper());
     expect(".o_add_snippet_dialog").toHaveCount(0);
     expect(editableContent).toHaveInnerHTML("");
 });

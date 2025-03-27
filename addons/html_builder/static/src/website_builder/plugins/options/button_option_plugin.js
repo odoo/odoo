@@ -1,22 +1,25 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
+const selector = "a.btn";
+const exclude = ".s_donation_donate_btn, .s_website_form_send";
+
 class ButtonOptionPlugin extends Plugin {
     static id = "buttonOption";
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),
-        on_add_element_handlers: this.onAddElement.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
     onCloned({ cloneEl }) {
-        if (cloneEl.matches("a.btn[data-snippet='s_button']")) {
+        if (cloneEl.matches(selector) && !cloneEl.matches(exclude)) {
             this.adaptButtons(cloneEl, false);
         }
     }
 
-    onAddElement({ elementToAdd }) {
-        if (elementToAdd.matches("a.btn[data-snippet='s_button']")) {
-            this.adaptButtons(elementToAdd);
+    onSnippetDropped({ snippetEl }) {
+        if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
+            this.adaptButtons(snippetEl);
         }
     }
 

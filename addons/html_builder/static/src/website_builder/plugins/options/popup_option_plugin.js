@@ -26,7 +26,7 @@ class PopupOptionPlugin extends Plugin {
         },
         builder_actions: this.getActions(),
         on_cloned_handlers: this.onCloned.bind(this),
-        on_add_element_handlers: this.onAddElement.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -108,10 +108,10 @@ class PopupOptionPlugin extends Plugin {
         }
     }
 
-    onAddElement({ elementToAdd }) {
-        if (elementToAdd.matches(".s_popup")) {
-            this.assignUniqueID(elementToAdd);
-            this.window.Modal.getOrCreateInstance(elementToAdd.querySelector(".modal")).show();
+    onSnippetDropped({ snippetEl }) {
+        if (snippetEl.matches(".s_popup")) {
+            this.assignUniqueID(snippetEl);
+            this.window.Modal.getOrCreateInstance(snippetEl.querySelector(".modal")).show();
         }
     }
 

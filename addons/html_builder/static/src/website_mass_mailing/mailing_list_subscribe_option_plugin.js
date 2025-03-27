@@ -31,7 +31,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
                 },
             },
         ],
-        on_add_element_handlers: this.onAddElement.bind(this),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
 
@@ -51,14 +51,14 @@ class MailingListSubscribeOptionPlugin extends Plugin {
         toSubscribeEl.classList.toggle("o_disable_preview", isVisible);
     }
 
-    async onAddElement({ elementToAdd }) {
+    async onSnippetDropped({ snippetEl }) {
         const proms = [];
         for (const mailingListSubscribeOptionSelector of this
             .mailingListSubscribeOptionSelectorParams) {
             proms.push(
                 applyAsyncFunDependOnSelectorAndExclude(
                     this.addNewsletterListElement.bind(this),
-                    elementToAdd,
+                    snippetEl,
                     mailingListSubscribeOptionSelector
                 )
             );
