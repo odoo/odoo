@@ -1083,6 +1083,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'Sick Leave (days)',
             'request_unit': 'day',
             'leave_validation_type': 'hr',
+            'requires_allocation': 'no',
         })
         sick_leave = self.env['hr.leave'].create({
             'name': 'Sick 3 days',
@@ -1095,6 +1096,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'name': 'OT Compensation (hours)',
             'request_unit': 'hour',
             'leave_validation_type': 'manager',
+            'requires_allocation': 'no',
         })
         comp_leave = self.env['hr.leave'].create({
             'name': 'OT Comp (12 hours)',
@@ -1139,6 +1141,16 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         user_id = self.employee_emp.user_id
         employee_id = self.employee_emp.id
 
+        allocation = self.env['hr.leave.allocation'].create({
+            'name': 'Test Allocation',
+            'employee_id': employee_id,
+            'holiday_status_id': self.holidays_type_2.id,
+            'number_of_days': 5,
+            'state': 'confirm',
+            'date_from': datetime.today() - relativedelta(days=5),
+            'date_to': datetime.today() + relativedelta(days=5),
+        })
+        allocation.action_validate()
         leave = self.env['hr.leave'].with_user(user_id).create({
             'name': 'Test leave',
             'employee_id': employee_id,
@@ -1155,3 +1167,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         self.assertEqual(modified_leave.request_date_from, two_days_after)
         self.assertEqual(modified_leave.request_date_to, two_days_after)
+
+    def test_leave_creation_without_allocation(self):
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Restricted Leave',
+            'requires_allocation': 'yes',
+            'leave_validation_type': 'hr',
+        })
+        with self.assertRaises(UserError):
+            self.env['hr.leave'].create({
+                'name': 'Test Leave',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': leave_type.id,
+                'request_date_from': '2024-06-01',
+                'request_date_to': '2024-06-02',
+            })
