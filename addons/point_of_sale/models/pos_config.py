@@ -1101,3 +1101,6 @@ class PosConfig(models.Model):
 
         if not param_model.get_param("point_of_sale.limited_customer_count"):
             param_model.set_param("point_of_sale.limited_customer_count", DEFAULT_LIMIT_LOAD_PARTNER)
+
+    def _is_quantities_set(self):
+        return self.is_closing_entry_by_product

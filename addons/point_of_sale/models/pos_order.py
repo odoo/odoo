@@ -836,6 +836,24 @@ class PosOrder(models.Model):
 
         return vals
 
+    def _prepare_product_aml_dict(self, base_line_vals, update_base_line_vals, rate, sign):
+        amount_currency = update_base_line_vals['amount_currency']
+        balance = self.company_id.currency_id.round(amount_currency * rate)
+        order_line = base_line_vals['record']
+        return {
+            'name': order_line.full_product_name,
+            'product_id': order_line.product_id.id,
+            'quantity': order_line.qty * sign,
+            'account_id': base_line_vals['account_id'].id,
+            'partner_id': base_line_vals['partner_id'].id,
+            'currency_id': base_line_vals['currency_id'].id,
+            'tax_ids': [(6, 0, base_line_vals['tax_ids'].ids)],
+            'tax_tag_ids': update_base_line_vals['tax_tag_ids'],
+            'amount_currency': amount_currency,
+            'balance': balance,
+            'tax_tag_invert': not base_line_vals['is_refund'],
+        }
+
     def _prepare_aml_values_list_per_nature(self):
         AccountTax = self.env['account.tax']
         sign = 1 if self.amount_total < 0 else -1
@@ -866,24 +884,10 @@ class PosOrder(models.Model):
 
         # Create the aml values for order lines.
         for base_line_vals, update_base_line_vals in tax_results['base_lines_to_update']:
-            order_line = base_line_vals['record']
-            amount_currency = update_base_line_vals['amount_currency']
-            balance = company_currency.round(amount_currency * rate)
-            aml_vals_list_per_nature['product'].append({
-                'name': order_line.full_product_name,
-                'product_id': order_line.product_id.id,
-                'quantity': order_line.qty * sign,
-                'account_id': base_line_vals['account_id'].id,
-                'partner_id': base_line_vals['partner_id'].id,
-                'currency_id': base_line_vals['currency_id'].id,
-                'tax_ids': [(6, 0, base_line_vals['tax_ids'].ids)],
-                'tax_tag_ids': update_base_line_vals['tax_tag_ids'],
-                'amount_currency': amount_currency,
-                'balance': balance,
-                'tax_tag_invert': not base_line_vals['is_refund'],
-            })
-            total_amount_currency += amount_currency
-            total_balance += balance
+            product_dict = self._prepare_product_aml_dict(base_line_vals, update_base_line_vals, rate, sign)
+            aml_vals_list_per_nature['product'].append(product_dict)
+            total_amount_currency += product_dict['amount_currency']
+            total_balance += product_dict['balance']
 
         # Cash rounding.
         cash_rounding = self.config_id.rounding_method
