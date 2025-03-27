@@ -467,20 +467,21 @@ patch(PosStore.prototype, {
         const orderUuid = this.getOrder().uuid;
         this.getOrder().setBooked(true);
         this.showScreen("FloorScreen");
-        document.addEventListener(
-            "click",
-            async (ev) => {
-                this.isOrderTransferMode = false;
-                const tableElement = ev.target.closest(".table");
-                if (!tableElement) {
-                    return;
-                }
-                const table = this.getTableFromElement(tableElement);
-                await this.transferOrder(orderUuid, table);
-                this.setTableFromUi(table);
-            },
-            { once: true }
-        );
+        const onClickWhileTransfer = async (ev) => {
+            if (ev.target.closest(".button-floor")) {
+                return;
+            }
+            this.isOrderTransferMode = false;
+            const tableElement = ev.target.closest(".table");
+            if (!tableElement) {
+                return;
+            }
+            const table = this.getTableFromElement(tableElement);
+            await this.transferOrder(orderUuid, table);
+            this.setTableFromUi(table);
+            document.removeEventListener("click", onClickWhileTransfer);
+        };
+        document.addEventListener("click", onClickWhileTransfer);
     },
     prepareOrderTransfer(order, destinationTable) {
         const originalTable = order.table_id;
