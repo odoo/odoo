@@ -178,6 +178,37 @@ class TestAr(AccountTestInvoicingCommon):
         cls.tax_perc_iibb = cls._search_tax(cls, 'percepcion_iibb_ba')
         cls.tax_iva_exento = cls._search_tax(cls, 'iva_exento')
 
+        cls.tax_national = cls.env['account.tax'].create({
+            "name": "National Tax",
+            "description": "National Tax",
+            "amount": "4",
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            "country_id": cls.env.ref("base.ar").id,
+            "company_id": cls.company_ri.id,
+            "tax_group_id": cls.env.ref(f"account.{cls.company_ri.id}_tax_group_national_taxes").id,
+        })
+        cls.tax_internal = cls.env['account.tax'].create({
+            "name": "Internal Tax",
+            "description": "Internal Tax",
+            "amount": "3",
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            "country_id": cls.env.ref("base.ar").id,
+            "company_id": cls.company_ri.id,
+            "tax_group_id": cls.env.ref(f"account.{cls.company_ri.id}_tax_impuestos_internos").id,
+        })
+        cls.tax_other = cls.env['account.tax'].create({
+            "name": "Other Tax",
+            "description": "Other Tax",
+            "amount": "100",
+            "amount_type": "fixed",
+            "type_tax_use": "sale",
+            "country_id": cls.env.ref("base.ar").id,
+            "company_id": cls.company_ri.id,
+            "tax_group_id": cls.env.ref(f"account.{cls.company_ri.id}_tax_group_otros_impuestos").id,
+        })
+
         cls.tax_21_purchase = cls._search_tax(cls, 'iva_21', type_tax_use='purchase')
         cls.tax_no_gravado_purchase = cls._search_tax(cls, 'iva_no_gravado', type_tax_use='purchase')
 
@@ -594,6 +625,24 @@ class TestAr(AccountTestInvoicingCommon):
                         line_form.account_id = self.company_data['default_account_revenue']
             invoice = invoice_form.save()
             self.demo_invoices[key] = invoice
+
+    def _create_invoice_from_dict(self, values, use_current_date=True):
+        if not values.get('invoice_payment_term_id'):
+            values['invoice_payment_term_id'] = self.env.ref("account.account_payment_term_end_following_month")
+        if use_current_date:
+            values.pop('invoice_date', False)
+
+        for key, value in values.items():
+            if key.endswith("_id"):
+                values[key] = value.id
+
+        for line in values['invoice_line_ids']:
+            for key, value in line.items():
+                if key.endswith("_id"):
+                    line[key] = value.id
+
+        values['invoice_line_ids'] = [(0, 0, line_data) for line_data in values['invoice_line_ids']]
+        return self.env['account.move'].with_context(default_move_type=values['move_type']).create(values)
 
     # Helpers
 

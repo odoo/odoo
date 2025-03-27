@@ -72,6 +72,7 @@ QUnit.test("change icon on change partner im_status", async () => {
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: pyEnv.currentPartnerId,
         im_status: "offline",
+        presence_status: "offline",
     });
     await contains(".o-mail-ImStatus i[title='Offline']");
 
@@ -79,6 +80,7 @@ QUnit.test("change icon on change partner im_status", async () => {
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: pyEnv.currentPartnerId,
         im_status: "away",
+        presence_status: "away",
     });
     await contains(".o-mail-ImStatus i[title='Idle']");
 
@@ -86,6 +88,7 @@ QUnit.test("change icon on change partner im_status", async () => {
     pyEnv["bus.bus"]._sendone("broadcast", "bus.bus/im_status_updated", {
         partner_id: pyEnv.currentPartnerId,
         im_status: "online",
+        presence_status: "online",
     });
     await contains(".o-mail-ImStatus i[title='Online']");
 });

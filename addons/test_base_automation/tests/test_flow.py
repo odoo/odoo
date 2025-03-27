@@ -1161,6 +1161,39 @@ class TestCompute(common.TransactionCase):
         res_users_model = self.env["ir.model"]._get("res.users")
         self.assertEqual(f.update_related_model_id, res_users_model)
 
+    def test_01_form_object_write_o2m_field(self):
+        aks_partner = self.env["res.partner"].create({"name": "A Kind Shepherd"})
+        bs_partner = self.env["res.partner"].create({"name": "Black Sheep"})
+
+        # test the 'object_write' type shows a resource_ref field for o2many
+        f = Form(self.env['ir.actions.server'], view="base.view_server_action_form")
+        f.name = "Adopt The Black Sheep"
+        f.model_id = self.env["ir.model"]._get("res.partner")
+        f.state = "object_write"
+        f.evaluation_type = "value"
+        f.update_path = "child_ids"
+        self.assertEqual(f.update_m2m_operation, "add")
+        self.assertEqual(f.value_field_to_show, "resource_ref")
+        f.resource_ref = f"res.partner,{bs_partner.id}"
+        action = f.save()
+
+        # test the action runs correctly
+        action.with_context(
+            active_model="res.partner",
+            active_id=aks_partner.id,
+        ).run()
+        self.assertEqual(aks_partner.child_ids, bs_partner)
+        self.assertEqual(bs_partner.parent_id, aks_partner)
+
+        # also check with 'remove' operation
+        f.update_m2m_operation = "remove"
+        action = f.save()
+        action.with_context(
+            active_model="res.partner",
+            active_id=aks_partner.id,
+        ).run()
+        self.assertEqual(aks_partner.child_ids.ids, [])
+        self.assertEqual(bs_partner.parent_id.id, False)
 
 @common.tagged("post_install", "-at_install")
 class TestHttp(common.HttpCase):

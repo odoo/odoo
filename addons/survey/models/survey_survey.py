@@ -237,8 +237,8 @@ class Survey(models.Model):
 
         for survey_stats in stat.values():
             avg_total = survey_stats.pop('answer_score_avg_total')
-            survey_stats['answer_score_avg'] = avg_total / (survey_stats['answer_done_count'] or 1)
-            survey_stats['success_ratio'] = (survey_stats['success_count'] / (survey_stats['answer_done_count'] or 1.0))*100
+            survey_stats['answer_score_avg'] = avg_total / (survey_stats['answer_count'] or 1)
+            survey_stats['success_ratio'] = (survey_stats['success_count'] / (survey_stats['answer_count'] or 1.0))*100
 
         for survey in self:
             survey.update(stat.get(survey._origin.id, default_vals))

@@ -41,7 +41,7 @@ class AccountMove(models.Model):
             move.show_commercial_partner_warning = (
                     move.commercial_partner_id == self.env.company.partner_id
                     and move.move_type == 'in_invoice'
-                    and move.partner_id.employee_ids
+                    and move.partner_id.sudo().employee_ids
             )
 
     # Expenses can be written on journal other than purchase, hence don't include them in the constraint check

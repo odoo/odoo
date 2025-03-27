@@ -224,7 +224,7 @@ class AccountEdiProxyClientUser(models.Model):
                 )
 
     def _cron_peppol_get_participant_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['pending', 'not_verified', 'sent_verification'])])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', 'in', ['pending', 'not_verified', 'sent_verification']), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_participant_status()
 
     def _peppol_get_participant_status(self):

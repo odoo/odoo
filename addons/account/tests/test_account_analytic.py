@@ -218,6 +218,32 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
         invoice.action_post()
         self.assertEqual(invoice.state, 'posted')
 
+    def test_mandatory_plan_validation_mass_posting(self):
+        """
+        In case of mass posting, we should still check for mandatory analytic plans. This may raise a RedirectWarning,
+        if more than one entry was selected for posting, or a ValidationError if only one entry was selected.
+        """
+        invoice1 = self.create_invoice(self.partner_a, self.product_a)
+        invoice2 = self.create_invoice(self.partner_b, self.product_a)
+        self.default_plan.write({
+            'applicability_ids': [Command.create({
+                'business_domain': 'invoice',
+                'product_categ_id': self.product_a.categ_id.id,
+                'applicability': 'mandatory',
+            })]
+        })
+
+        vam = self.env['validate.account.move'].create({'force_post': True})
+        for invoices in [invoice1, invoice1 | invoice2]:
+            with self.subTest(invoices=invoices):
+                with self.assertRaises(Exception):
+                    vam.with_context({
+                        'active_model': 'account.move',
+                        'active_ids': [invoice1.id, invoice2.id],
+                        'validate_analytic': True,
+                    }).validate_move()
+                self.assertTrue('posted' not in invoices.mapped('state'))
+
     def test_cross_analytics_computing(self):
 
         out_invoice = self.env['account.move'].create([{

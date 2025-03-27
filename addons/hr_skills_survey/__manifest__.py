@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -22,6 +21,7 @@ This module adds certification to resume for employees.
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
+            'hr_skills_survey/static/src/fields/**/*',
             'hr_skills_survey/static/src/xml/**/*',
         ],
     },

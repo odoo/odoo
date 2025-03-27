@@ -219,6 +219,14 @@ class AccountMove(models.Model):
             return self.env['account.move.line']
         return super()._get_tax_lines_to_aggregate()
 
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        invoice_vals = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_vals(self)
+        return {
+            'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
+            'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
+        }
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

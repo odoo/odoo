@@ -64,14 +64,14 @@ class CalendarLeaves(models.Model):
         })
         self.env.add_to_compute(self.env['hr.leave']._fields['number_of_days'], leaves)
         self.env.add_to_compute(self.env['hr.leave']._fields['duration_display'], leaves)
-        sick_time_status = self.env.ref('hr_holidays.holiday_status_sl')
+        sick_time_status = self.env.ref('hr_holidays.holiday_status_sl', raise_if_not_found=False)
         for previous_duration, leave, state in zip(previous_durations, leaves, previous_states):
             duration_difference = previous_duration - leave.number_of_days
             message = False
             if duration_difference > 0 and leave.holiday_status_id.requires_allocation == 'yes':
                 message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
             if leave.number_of_days > previous_duration\
-                    and leave.holiday_status_id not in sick_time_status:
+                    and (not sick_time_status or leave.holiday_status_id not in sick_time_status):
                 message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
             try:
                 leave.write({'state': state})

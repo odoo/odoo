@@ -436,7 +436,8 @@ class AccountEdiFormat(models.Model):
     def _l10n_es_tbai_get_importe_desglose(self, invoice):
         com_partner = invoice.commercial_partner_id
         sign = -1 if invoice.move_type in ('out_refund', 'in_refund') else 1
-        if com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN"):
+        if (com_partner.country_id.code in ('ES', False) and not (com_partner.vat or '').startswith("ESN")) \
+                or invoice.l10n_es_is_simplified:
             tax_details_info_vals = self._l10n_es_edi_get_invoices_tax_details_info(invoice)
             tax_amount_retention = tax_details_info_vals['tax_amount_retention']
             desglose = {'DesgloseFactura': tax_details_info_vals['tax_details_info']}

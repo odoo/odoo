@@ -536,6 +536,9 @@ class ProductTemplate(models.Model):
             'taxes': taxes,  # taxes after fpos mapping
         })
 
+        if combination_info['prevent_zero_price_sale']:
+            combination_info['compare_list_price'] = 0
+
         if pricelist.discount_policy != 'without_discount':
             # Leftover from before cleanup, different behavior between ecommerce & backend configurator
             # probably to keep product sales price hidden from customers ?

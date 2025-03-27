@@ -2638,7 +2638,23 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move.action_switch_move_type()
 
         self.assertEqual(move.fiscal_position_id, self.fiscal_pos_a)
-        
+
+    def test_out_invoice_switch_out_refund_4(self):
+        # Test to check that when switching from out_invoice to out_refund the bank partner is changed accordingly
+        bank = self.env["res.partner.bank"].create({
+            "bank_name": "FAKE",
+            "acc_number": "1234567890",
+            "partner_id": self.partner_a.id,
+        })
+
+        move = self.env["account.move"].with_context(default_move_type="out_invoice").new({
+            "partner_id": self.partner_a.id,
+        })
+        move.action_switch_move_type()
+
+        self.assertEqual(move.bank_partner_id, self.partner_a)
+        self.assertEqual(move.partner_bank_id, bank)
+
     def test_out_invoice_reverse_move_tags(self):
         country = self.env.ref('base.us')
         tags = self.env['account.account.tag'].create([{

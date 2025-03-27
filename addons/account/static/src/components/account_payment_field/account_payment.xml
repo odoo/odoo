@@ -25,7 +25,7 @@
                                t-on-click.prevent="() => this.assignOutstandingCredit(info.moveId, line.id)">Add</a>
                         </td>
                         <td style="max-width: 11em;">
-                            <a t-att-title="line.date"
+                            <a t-att-title="line.formattedDate"
                                role="button"
                                class="oe_form_field btn btn-link open_account_move"
                                t-on-click="() => this.openMove(line.move_id)"
@@ -40,7 +40,7 @@
                            <a role="button" tabindex="0" class="js_payment_info fa fa-info-circle" t-att-index="line_index" style="margin-right:5px;" aria-label="Info" title="Journal Entry Info" data-bs-toggle="tooltip" t-on-click.stop="(ev) => this.onInfoClick(ev, line)"></a>
                         </td>
                         <td t-if="!line.is_exchange">
-                            <i class="o_field_widget text-start o_payment_label">Paid on <t t-out="line.date"></t></i>
+                            <i class="o_field_widget text-start o_payment_label">Paid on <t t-out="line.formattedDate"></t></i>
                         </td>
                         <td t-if="line.is_exchange" colspan="2">
                             <i class="o_field_widget text-start text-muted text-start">

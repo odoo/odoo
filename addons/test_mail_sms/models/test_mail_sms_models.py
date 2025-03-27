@@ -150,3 +150,20 @@ class MailTestSMSPartner2Many(models.Model):
             ('id', 'in', res_ids),
             ('opt_out', '=', True)
         ]).ids
+
+# ------------------------------------------------------------
+# OTHER
+# ------------------------------------------------------------
+
+class SMSTestNotMailThread(models.Model):
+    """ Models not inheriting from mail.thread but using some cross models
+    capabilities of mail. """
+    _name = 'sms.test.nothread'
+    _description = "NoThread Model"
+
+    name = fields.Char()
+    company_id = fields.Many2one('res.company')
+    customer_id = fields.Many2one('res.partner')
+
+    def _mail_get_partner_fields(self, introspect_fields=False):
+        return ['customer_id']
