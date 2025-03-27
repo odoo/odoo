@@ -355,7 +355,7 @@ class PurchaseOrderLine(models.Model):
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
                 price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                line.price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
+                line.price_unit = (seller.product_uom_id or seller.product_tmpl_id.uom_id)._compute_price(price_unit, line.product_uom_id)
                 line.discount = seller.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
@@ -527,13 +527,13 @@ class PurchaseOrderLine(models.Model):
             quantity=uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
             uom_id=product_id.uom_id)
-        if seller and seller.product_uom_id != product_uom:
-            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
+        if seller and (seller.product_uom_id or seller.product_tmpl_id.uom_id) != product_uom:
+            uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id or seller.product_tmpl_id.uom_id, rounding_method='HALF-UP')
 
         product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
         taxes = po.fiscal_position_id.map_tax(product_taxes)
 
-        price_unit = (seller.product_uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price) if seller else product_id.standard_price
+        price_unit = ((seller.product_uom_id or seller.product_tmpl_id.uom_id)._compute_price(seller.price, product_uom) if product_uom else seller.price) if seller else product_id.standard_price
         price_unit = self.env['account.tax']._fix_tax_included_price_company(
             price_unit, product_taxes, taxes, company_id)
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
