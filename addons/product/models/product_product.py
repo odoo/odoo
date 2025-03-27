@@ -717,8 +717,8 @@ class ProductProduct(models.Model):
         for seller in sellers_filtered:
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
-            if quantity_uom_seller and uom_id and uom_id != seller.product_uom_id:
-                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom_id)
+            if quantity_uom_seller and uom_id and uom_id != (seller.product_uom_id or seller.product_tmpl_id.uom_id):
+                quantity_uom_seller = uom_id._compute_quantity(quantity_uom_seller, seller.product_uom_id or seller.product_tmpl_id.uom_id)
 
             if seller.date_start and seller.date_start > date:
                 continue
