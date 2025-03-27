@@ -4,17 +4,42 @@ import { SelectionField, selectionField } from "@web/views/fields/selection/sele
 
 export class AccountTypeSelection extends SelectionField {
     static template = "account.AccountTypeSelection";
-    get hierarchyOptions() {
-        const opts = this.options;
-        return [
-            { name: _t('Balance Sheet') },
-            { name: _t('Assets'), children: opts.filter(x => x[0] && x[0].startsWith('asset')) },
-            { name: _t('Liabilities'), children: opts.filter(x => x[0] && x[0].startsWith('liability')) },
-            { name: _t('Equity'), children: opts.filter(x => x[0] && x[0].startsWith('equity')) },
-            { name: _t('Profit & Loss') },
-            { name: _t('Income'), children: opts.filter(x => x[0] && x[0].startsWith('income')) },
-            { name: _t('Expense'), children: opts.filter(x => x[0] && x[0].startsWith('expense')) },
-            { name: _t('Other'), children: opts.filter(x => x[0] && x[0] === 'off_balance') },
+    setup() {
+        super.setup();
+        const getChoicesForGroup = (group) => {
+            return this.choices.filter(x => x.value.startsWith(group));
+        }
+        this.groups = [
+            {
+                label: _t('Balance Sheet'),
+            },
+            {
+                label: _t('Assets'),
+                choices: getChoicesForGroup('asset'),
+            },
+            {
+                label: _t('Liabilities'),
+                choices: getChoicesForGroup('liability'),
+            },
+            {
+                label: _t('Equity'),
+                choices: getChoicesForGroup('equity'),
+            },
+            {
+                label: _t('Profit & Loss'),
+            },
+            {
+                label: _t('Income'),
+                choices: getChoicesForGroup('income'),
+            },
+            {
+                label: _t('Expense'),
+                choices: getChoicesForGroup('expense'),
+            },
+            {
+                label: _t('Other'),
+                choices: getChoicesForGroup('off_balance'),
+            },
         ];
     }
 }

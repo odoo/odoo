@@ -3780,7 +3780,7 @@ test("quick create record fails in grouped by selection", async () => {
     await validateKanbanRecord();
 
     expect(".modal .o_form_view .o_form_editable").toHaveCount(1);
-    expect(".modal .o_field_widget[name=state] select:first").toHaveValue('"abc"');
+    expect(".modal .o_field_widget[name=state] input").toHaveValue("ABC");
 
     await contains(".modal .o_form_button_save").click();
 
@@ -4128,7 +4128,7 @@ test("quick create record in grouped by selection field (within quick_create_vie
     });
 
     await quickCreateKanbanRecord();
-    expect(".o_kanban_quick_create select:first").toHaveValue('"abc"', {
+    expect(".o_kanban_quick_create input").toHaveValue("ABC", {
         message: "should have set the correct state value by default",
     });
 

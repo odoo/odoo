@@ -29,15 +29,20 @@ registerWebsitePreviewTour('blog_tags', {
         content: "Open tag dropdown",
         trigger: "[data-label='Tags'] button.o_select_menu_toggler",
         run: "click",
-    }, {
+    },
+    {
         content: "Enter tag name",
-        trigger: ".dropdown-menu input",
-        run: "edit testtag",
-    }, {
+        trigger: ".o_select_menu_input",
+        run: async function() {
+            this.anchor.value = "testtag";
+            this.anchor.dispatchEvent(new InputEvent("input"));
+        }
+    },
+    {
         content: "Save tag",
         trigger: ".dropdown-menu a.o_we_m2o_create",
         run: "click",
-    }, 
+    },
     {
         content: "Verify tag appears in options",
         trigger: "[data-label='Tags'] table input[data-name='testtag']",

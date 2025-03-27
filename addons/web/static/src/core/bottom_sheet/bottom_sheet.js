@@ -175,7 +175,6 @@ export class BottomSheet extends Component {
         const sheet = this.sheetRef.el;
         sheet.style.removeProperty("min-height");
         sheet.style.removeProperty("height");
-        sheet.style.maxHeight = "none";
 
         const naturalHeight = sheet.offsetHeight;
         const initialHeightPx = Math.min(naturalHeight, maxHeightPx);
@@ -205,7 +204,7 @@ export class BottomSheet extends Component {
 
         // Set CSS variables for heights
         rail.style.setProperty("--sheet-height", `${heightPercent}dvh`);
-        rail.style.setProperty("--sheet-max-height", `${this.maxHeightPercent}dvh`);
+        rail.style.setProperty("--sheet-max-height", `${this.measurements.viewportHeight}px`);
         rail.style.setProperty("--dismiss-height", `${this.measurements.initialHeight || 0}px`);
     }
 

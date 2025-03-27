@@ -4,6 +4,7 @@ import { advanceTime, queryOne } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
+    editSelectMenu,
     fields,
     models,
     mountView,
@@ -146,7 +147,9 @@ test("Partner autocomplete : Company type = Individual", async () => {
         type: "form",
     });
 
-    await contains("[name='company_type'] > select").select('"individual"');
+    await editSelectMenu("[name='company_type'] input", {
+        value: "Individual",
+    });
     expect("[name='name'] input").not.toHaveClass("o-autocomplete--input", {
         message: "The input for field 'name' should be a regular input",
     });
@@ -195,8 +198,9 @@ test("Partner autocomplete : Company type = Company / Name search", async () => 
         type: "form",
     });
 
-    // Set company type to Company
-    await contains("[name='company_type'] > select").select('"company"');
+    await editSelectMenu("[name='company_type'] input", {
+        value: "Company",
+    });
     await contains("[name='name'] .dropdown input").click();
     expect(
         "[name='name'] .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
@@ -240,8 +244,9 @@ test("Partner autocomplete : Company type = Company / VAT search", async () => {
         type: "form",
     });
 
-    // Set company type to Company
-    await contains("[name='company_type'] > select").select('"company"');
+    await editSelectMenu("[name='company_type'] input", {
+        value: "Company",
+    });
     await contains("[name='vat'] .dropdown input").click();
     expect(
         "[name='vat'] .o-autocomplete .o-autocomplete--dropdown-item.partner_autocomplete_dropdown_many2one"
@@ -354,8 +359,9 @@ test("Partner autocomplete : onChange should not disturb option selection", asyn
         type: "form",
     });
 
-    // Set company type to Company
-    await contains("[name='company_type'] > select").select('"company"');
+    await editSelectMenu("[name='company_type'] input", {
+        value: "Company",
+    });
     await contains("[name='name'] .dropdown input").click();
     await editAutocomplete("[name='name'] .dropdown input", "company");
     // 3 options + 1 for the worldwide option

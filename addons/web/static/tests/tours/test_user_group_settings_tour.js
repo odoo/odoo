@@ -114,9 +114,13 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
         },
         {
             trigger:
-                '.o_field_widget[name="group_ids"] .o_cell:has(label:contains("Privi Foo")) + .o_cell select',
+                '.o_field_widget[name="group_ids"] .o_cell:has(label:contains("Privi Foo")) + .o_cell .o_select_menu input',
             content: "Add 'Bar Manager' access to demo user",
-            run: `selectByLabel Bar Manager`,
+            run: `click`,
+        },
+        {
+            trigger: `.o-dropdown--menu .o_select_menu_item:contains("Bar Manager")`,
+            run: "click",
         },
         // open group information button (popover)
         {
