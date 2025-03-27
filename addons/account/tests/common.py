@@ -282,11 +282,8 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_purchase_manager', # purchase
                     'group_sale_manager', # sales_team
                     'group_stock_manager', # stock
-                    'group_survey_user', # survey
-                    'group_website_slides_manager', # website_slides
                     # enterprise groups
                     'group_approval_manager', # approval
-                    'group_documents_manager', # documents
                     'frontdesk_group_administrator', # frontdesk
                     'group_helpdesk_manager', # helpdesk
                     'group_hr_appraisal_manager', # hr_appraisal
