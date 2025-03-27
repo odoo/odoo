@@ -109,22 +109,22 @@ class TestPurchaseRequisitionStock(TestPurchaseRequisitionCommon):
         route_buy = self.ref('purchase_stock.route_warehouse0_buy')
         route_mto = warehouse1.mto_pull_id.route_id.id
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
-        supplier_info1 = self.env['product.supplierinfo'].create({
+        supplier_info_vals = {
             'partner_id': vendor1.id,
             'price': 50,
-        })
+        }
         product_1 = self.env['product.product'].create({
             'name': 'product1',
             'is_storable': True,
             'uom_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'seller_ids': [Command.create(supplier_info_vals)],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'product2',
             'is_storable': True,
             'uom_id': unit,
-            'seller_ids': [(6, 0, [supplier_info1.id])],
+            'seller_ids': [Command.create(supplier_info_vals)],
             'route_ids': [(6, 0, [route_buy, route_mto])]
         })
         # Blanket orders creation
