@@ -277,6 +277,7 @@ class PaymentTransaction(models.Model):
         )
         if payment_utils.set_tx_error_from_response(child_capture_tx, payment_intent):
             return child_capture_tx
+
         _logger.info(
             "capture request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payment_intent)

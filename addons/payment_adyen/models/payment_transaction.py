@@ -276,9 +276,9 @@ class PaymentTransaction(models.Model):
                 converted_notification_amount = payment_utils.to_major_currency_units(
                     notification_data_amount, source_tx.currency_id
                 )
-                if source_tx.state != 'authorized':  # if tx is cancelled by the user
+                if source_tx.state != 'authorized':  # The source tx is cancelled by the user.
                     tx = source_tx
-                else:  # if capture/void
+                else:  # Capture/void.
                     tx = self.search([
                         ('provider_reference', '=', provider_reference),
                         ('provider_code', '=', 'adyen'),

@@ -297,7 +297,8 @@ class PaymentTransaction(models.Model):
         status = payment_data.get('status')
         has_token_data = 'token' in payment_method_data
         if not status:
-            _logger.warning(payment_const.MISSING_PAYMENT_STATUS)
+            self._set_error(payment_const.MISSING_PAYMENT_STATUS)
+            return
 
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             if status == 'AUTHORIZATION_REQUESTED':

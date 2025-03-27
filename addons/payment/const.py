@@ -308,7 +308,8 @@ TX_NOT_LINKED_TO_TOKEN_ERROR = _lt("The transaction is not linked to a token.")
 NO_TX_FOUND_EXCEPTION = "No transaction found matching reference %s."
 UNABLE_TO_REACH_ENDPOINT = "Unable to reach the endpoint at %s."
 INVALID_API_REQUEST = "Invalid API request at %s with data %s: %s"
-INVALID_PAYMENT_STATUS = ("Received data with invalid payment status (%s) for transaction with"
-                          " reference %s")
+INVALID_PAYMENT_STATUS = (
+    "Received data with invalid payment status (%s) for transaction with reference %s"
+)
 
 TIMEOUT = 10

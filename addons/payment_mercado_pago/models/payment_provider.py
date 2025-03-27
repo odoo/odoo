@@ -72,11 +72,10 @@ class PaymentProvider(models.Model):
         except requests.exceptions.HTTPError as err:
             _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
             response_content = err.response.json()
-            response_error = payment_utils.format_error_response(
-                payment_const.API_COMMUNICATION_ERROR
-                + response_content.get("code") + ' ' + response_content.get("message")
+            return payment_utils.format_error_response(
+                f'{payment_const.API_COMMUNICATION_ERROR}{response_content.get("code")}'
+                f' {response_content.get("message")}'
             )
-            return response_error
         return response.json()
 
     def _get_default_payment_method_codes(self):
