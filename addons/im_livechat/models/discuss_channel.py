@@ -178,7 +178,8 @@ class DiscussChannel(models.Model):
             :1
         ].script_step_id.chatbot_script_id.operator_partner_id
         last_msg_from_chatbot = False
-        for message in (self.message_ids - self.message_ids._filter_empty()).sorted("id"):
+        # sudo - mail.message: getting empty messages to exclude them is allowed.
+        for message in (self.message_ids - self.message_ids.sudo()._filter_empty()).sorted("id"):
             if message.author_id == chatbot_op and not last_msg_from_chatbot:
                 parts.append(Markup("<br/>"))
             if message.author_id == chatbot_op:
