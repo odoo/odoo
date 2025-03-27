@@ -34,17 +34,17 @@ registerBackendAndFrontendTour("question", {
     content: _t("Insert tags related to your question."),
     tooltipPosition: "top",
     run: "click",
-}, 
-{
-    trigger: ".o_select_menu_sticky",
-    run: "edit Test",
 },
 {
-    trigger: `.o_popover input.o_select_menu_sticky:not(:contains(Please enter 2 or more characters))`,
+    trigger: ".o_select_menu input",
+    run: async function() {
+        this.anchor.value = "Test";
+        this.anchor.dispatchEvent(new InputEvent("input"));
+    }
 },
 {
     content: "Select found select menu item",
-    trigger: ".o_popover.o_select_menu_menu .o_select_menu_item span:contains('Test')",
+    trigger: ".o_popover.o_select_menu_menu .o_select_menu_item:contains('Test')",
     run: 'click',
 },
 {

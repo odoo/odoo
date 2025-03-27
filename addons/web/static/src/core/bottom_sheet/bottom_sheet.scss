@@ -40,7 +40,6 @@
         @include o-position-absolute(0, 0, 0, 0);
         overflow-y: auto;
         scrollbar-width: none;
-        -ms-overflow-style: none;
         touch-action: pan-y;
         pointer-events: auto;
 
@@ -99,7 +98,7 @@
 
         margin: 0 auto;
         min-height: var(--sheet-height);
-        max-height: var(--sheet-max-height, 90dvh);
+        max-height: var(--sheet-max-height);
         border-radius: $border-radius-xl $border-radius-xl 0 0;
         border-bottom-width: 0;
         visibility: visible;
@@ -111,9 +110,7 @@
         background-color: $dropdown-bg;
 
         .o_bottom_sheet_body {
-            overflow-y: hidden; // Initially hidden, will be 'auto' when extended
             scrollbar-width: none;
-            -ms-overflow-style: none;
             flex: 1;
         }
     }

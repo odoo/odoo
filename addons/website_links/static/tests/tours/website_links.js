@@ -10,18 +10,20 @@ function fillSelectMenu(inputID, search) {
         },
         {
             content: "Enter selectMenu search query",
-            trigger: ".o_popover input.o_select_menu_sticky",
-            run: `edit ${search}`,
+            trigger: `.o_website_links_utm_forms div#${inputID} .o_select_menu_input`,
+            run: async function() {
+                this.anchor.value = search;
+                this.anchor.dispatchEvent(new InputEvent("input"));
+            }
         },
         {
             content: "Select found selectMenu item",
-            trigger: `.o_popover span.o_select_menu_item div.o_select_menu_item_label:contains("/^${search}$/")`,
+            trigger: `.o_popover .o_select_menu_item:contains("${search}")`,
             run: "click",
         },
         {
             content: "Check that selectMenu is properly filled",
-            trigger: `#${inputID} .o_select_menu_toggler span.o_select_menu_toggler_slot:contains('/^${search}$/')`,
-            run: () => null,
+            trigger: `#${inputID} .o_select_menu_toggler:value('${search}')`,
         },
     ];
 }
@@ -47,25 +49,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
             },
         },
         // First try to create a new UTM campaign from the UI
-        {
-            content: "Click select menu form item",
-            trigger: ".o_website_links_utm_forms div#campaign-select-wrapper .o_select_menu_toggler",
-            run: "click",
-        },
-        {
-            content: "Enter select menu search query",
-            trigger: '.o_popover input.o_select_menu_sticky',
-            run: "edit Some new campaign",
-        },
-        {
-            content: "Select found select menu item",
-            trigger: ".o_popover.o_select_menu_menu .o_select_menu_item span:contains('Some new campaign')",
-            run: 'click',
-        },
-        {
-            content: "Check that select menu is properly filled",
-            trigger: "#campaign-select-wrapper .o_select_menu_toggler span.o_select_menu_toggler_slot:contains('Some new campaign')"
-        },
+        ...fillSelectMenu("campaign-select-wrapper", "Some new campaign"),
         // Then proceed by using existing ones
         ...fillSelectMenu("campaign-select-wrapper", campaignValue),
         ...fillSelectMenu("channel-select-wrapper", mediumValue),

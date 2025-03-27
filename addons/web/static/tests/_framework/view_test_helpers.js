@@ -1,5 +1,12 @@
 import { after, expect, getFixture } from "@odoo/hoot";
-import { click, formatXml, queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import {
+    click,
+    formatXml,
+    queryAll,
+    queryAllTexts,
+    queryFirst,
+    runAllTimers,
+} from "@odoo/hoot-dom";
 import { animationFrame, Deferred, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -29,6 +36,11 @@ import { registerInlineViewArchs } from "./mock_server/mock_model";
  *  target?: string;
  *  text?: string;
  * }} SelectorOptions
+ *
+ *  * @typedef {{
+ *  value?: string;
+ *  index?: number;
+ * }} EditSelectMenuParams
  *
  * @typedef {import("@odoo/hoot-dom").FormatXmlOptions} FormatXmlOptions
  * @typedef {import("@web/views/view").ViewProps} ViewProps
@@ -298,4 +310,54 @@ export async function hideTab() {
     document.dispatchEvent(new Event("visibilitychange"));
     await tick();
     Object.defineProperty(document, "visibilityState", prop);
+}
+
+/**
+ * Changes or clears the value in a SelectMenu component, supporting when
+ * the input is displayed in the toggler, in a Dropdown menu or in a
+ * BottomSheet as well. The helper can directly select a value if it's
+ * displayed or perform a search in the SelectMenu input if present.
+ * @param {string} selector
+ * @param {EditSelectMenuParams} [params]
+ */
+export async function editSelectMenu(selector, { value, index }) {
+    async function selectItem(value) {
+        const elementToSelect = queryFirst(`.o_select_menu_menu :contains(${value})`);
+        if (elementToSelect) {
+            await click(elementToSelect);
+            return;
+        } else {
+            await contains(inputSelector).edit(value, { confirm: false });
+            await runAllTimers();
+            return selectItem(value);
+        }
+    }
+    let inputSelector = buildSelector(selector);
+    const selectMenuId = queryFirst(inputSelector).closest(".o_select_menu").dataset.id;
+    if (!queryFirst(`.o_select_menu_menu [data-id='${selectMenuId}']`)) {
+        await contains(inputSelector).click();
+    }
+    if (queryFirst(".o_select_menu_menu input")) {
+        inputSelector = ".o_select_menu_menu input";
+        await contains(inputSelector).click();
+    }
+    if (index !== undefined) {
+        return await contains(`.o_select_menu_item:nth-of-type(${index + 1})`).click();
+    }
+    if (value === "") {
+        // Because this helper must work even when no input is editable (searchable=false),
+        // we unselect the currently selected value with the 'X' button
+        const clearButton = queryFirst(
+            `.o_select_menu[data-id='${selectMenuId}'] .o_select_menu_toggler_clear`
+        );
+        if (clearButton) {
+            await click(clearButton);
+        } else {
+            await contains(inputSelector).edit("", { confirm: false });
+            queryFirst(inputSelector).dispatchEvent(new Event("blur"));
+        }
+    } else {
+        await selectItem(value);
+    }
+    await animationFrame();
 }

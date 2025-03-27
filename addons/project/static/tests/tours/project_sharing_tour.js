@@ -22,9 +22,12 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: '.ui-autocomplete a.dropdown-item:contains("Georges")',
     run: "click",
 }, {
-    trigger: '.modal div[name="collaborator_ids"] div[name="access_mode"] select',
-    content: 'Select "Edit" as Access mode in the "Share Project" wizard.',
-    run: 'select "edit"',
+    trigger: '.modal div[name="collaborator_ids"] div[name="access_mode"] input',
+    content: 'Open Access mode selection dropdown.',
+    run: 'click',
+},{
+    trigger: '.o_select_menu_item:contains(Edit)',
+    run: 'click',
 }, {
     trigger: '.modal footer > button[name="action_share_record"]',
     content: 'Confirm the project sharing with this portal user.',

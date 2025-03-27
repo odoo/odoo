@@ -93,10 +93,10 @@
         <div t-if="!state.defaultCategoryID" class="mb-3">
             <label for="category_id" class="col-form-label">Section</label>
             <SelectMenu
+                togglerClass="'form-control'"
                 choices="state.choices.categories"
                 value="state.choices.categoryId"
                 onSelect.bind="onCategorySelect"
-                togglerClass="'text-dark pe-1'"
             >
                 <t t-out="displayCategoryValue"/>
                 <t t-set-slot="bottomArea" t-slot-scope="select">
@@ -117,7 +117,6 @@
                 multiSelect="true"
                 value="state.choices.tagIds"
                 onSelect.bind="onTagsSelect"
-                togglerClass="'text-dark pe-1'"
             >
                 <t t-set-slot="bottomArea" t-slot-scope="select">
                     <DropdownItem

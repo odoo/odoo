@@ -5,6 +5,7 @@
     <input t-att-name="props.model.split('.')[1]+'-select'" type="hidden" class="form-control" t-att-value="state.value"/>
     <SelectMenu
         t-props="state"
+        togglerClass="'form-control'"
         onInput.bind="loadChoice"
         onSelect.bind="onSelect">
         <t t-if="showCreateOption" t-set-slot="bottomArea" t-slot-scope="select">
