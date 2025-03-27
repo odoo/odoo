@@ -268,12 +268,6 @@ class HrJob(models.Model):
             } for job in jobs]
             self.env['hr.recruitment.source'].create(source_vals)
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
-        # Automatically subscribe the department manager and the recruiter to a job position.
-        for job in jobs:
-            job.message_subscribe(
-                job.manager_id._get_related_partners().ids + job.user_id.partner_id.ids
-            )
-
         return jobs
 
     def write(self, vals):
@@ -291,17 +285,6 @@ class HrJob(models.Model):
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
 
-        # Subscribe the department manager if the department has changed
-        if "department_id" in vals:
-            for job in self:
-                to_unsubscribe = [
-                    partner
-                    for partner in old_managers[job]._get_related_partners().ids
-                    if partner not in job.user_id.partner_id.ids
-                ]
-                job.message_unsubscribe(to_unsubscribe)
-                job.message_subscribe(job.manager_id._get_related_partners().ids)
-
         # Subscribe the recruiter if it has changed.
         if "user_id" in vals:
             for job in self:
@@ -311,7 +294,6 @@ class HrJob(models.Model):
                     if partner not in job.manager_id._get_related_partners().ids
                 ]
                 job.message_unsubscribe(to_unsubscribe)
-                job.message_subscribe(job.user_id.partner_id.ids)
                 application_ids = job.application_ids.filtered(lambda x: x.user_id == old_recruiters[job])
                 if application_ids:
                     application_ids.message_unsubscribe(to_unsubscribe)
