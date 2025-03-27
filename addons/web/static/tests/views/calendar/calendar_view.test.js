@@ -1455,7 +1455,7 @@ test(`create event with timezone in week mode European locale`, async () => {
     });
 
     await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
-    expect(`.fc-event-main .fc-event-time`).toHaveText("8:00 - 10:00");
+    expect(`.fc-event-main .fc-event-time`).toHaveText("08:00 - 10:00");
 
     await contains(`.o-calendar-quick-create--input`).edit("new event", { confirm: false });
     await contains(`.o-calendar-quick-create--create-btn`).click();
@@ -5643,4 +5643,29 @@ test(`calendar with dynamic filters and sum aggregate`, async () => {
         "partner 4",
         "2,700",
     ]);
+});
+
+test.tags("desktop");
+test(`Hour format mirror event`, async () => {
+    onRpc("create", ({ args }) => {
+        expect.step("create");
+    });
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `<calendar event_open_popup="1" date_start="start" date_stop="stop" all_day="is_all_day" mode="year"/>`,
+    });
+
+    await changeScale("week");
+
+    await selectTimeRange("2016-12-13 11:00:00", "2016-12-13 16:30:00");
+    // Verify highlighted event
+    expect(`.fc-event-mirror`).toHaveText("11:00 - 16:30");
+    await contains(`.o-calendar-quick-create--input`).edit("mirror_event", { confirm: false });
+    await contains(`.o-calendar-quick-create--create-btn`).click();
+
+    expect.verifySteps(["create"]);
+
+    expect(`.o_event[data-event-id="8"] .fc-event-main .o_event_title`).toHaveText("mirror_event");
+    expect(`.o_event[data-event-id="8"] .fc-event-main .fc-time`).toHaveText("11:00");
 });
