@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="create_from_user_wizard_action" model="ir.actions.act_window">
+        <field name="name">Create role from user</field>
+        <field name="res_model">wizard.create.role.from.user</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_users" />
+    </record>
+
+    <record id="create_from_user_wizard_view" model="ir.ui.view">
+        <field name="name">Create role from user</field>
+        <field name="model">wizard.create.role.from.user</field>
+        <field name="arch" type="xml">
+            <form string="Create role from user">
+                <group>
+                    <field name="name" />
+                    <field name="assign_to_user" />
+                </group>
+
+                <footer>
+                    <button
+                        name="create_from_user"
+                        string="Create"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button string="Close" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

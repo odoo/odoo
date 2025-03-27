@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Security group for user audit -->
+        <record id="user_audit_log" model="ir.module.category">
+            <field name="name">User Audit</field>
+            <field name="description">User Audit
+            </field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="user_audit_log_group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="user_audit_log"/>
+        </record>
+        <record id="user_audit_log_group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="user_audit_log"/>
+        </record>
+    </data>
+</odoo>

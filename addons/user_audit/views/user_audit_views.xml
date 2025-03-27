@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- User audit form view -->
+    <record id="user_audit_view_form" model="ir.ui.view">
+        <field name="name">user.audit.view.form</field>
+        <field name="model">user.audit</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="is_read"/>
+                            <field name="is_write"/>
+                            <field name="is_create"/>
+                            <field name="is_delete"/>
+                        </group>
+                    </group>
+                    <group name="user" string="Users">
+                        <field name="is_all_users"/>
+                        <field name="user_ids"
+                               attrs="{'invisible':[('is_all_users','!=',False)]}"/>
+                    </group>
+                    <group name="object" string="Object">
+                        <field name="model_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- User audit window action -->
+    <record id="user_audit_action"
+            model="ir.actions.act_window">
+        <field name="name">User Audit</field>
+        <field name="res_model">user.audit</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                User Audit
+            </p>
+        </field>
+    </record>
+</odoo>

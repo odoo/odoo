@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <template id="dashboard_salon_chairs" name="Chairs template">
+            <t t-foreach="s_chairs" t-as="chair">
+                <div class="salon_chair" t-att-id="chair['id']" t-att-value="chair['id']">
+                    <h4 class="chair_name" t-att-id="chair['id']">
+                        <t t-esc="chair['name']"></t>
+                    </h4>
+                    <h2 class="chair_orders" t-att-id="chair['id']">
+                        <t t-esc="chair['orders']"></t>
+                    </h2>
+                    <i class="fa fa-cog chair_setting" t-att-id="chair['name']"></i>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

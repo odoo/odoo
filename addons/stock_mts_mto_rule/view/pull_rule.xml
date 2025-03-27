@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="stock_location_route_form_view_mto_mto" model="ir.ui.view">
+        <field name="name">stock.route.form.mts.mto</field>
+        <field name="model">stock.route</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view" />
+        <field name="arch" type="xml">
+            <field name="action" position="after">
+                <field
+                    name="mts_rule_id"
+                    groups="stock.group_adv_location"
+                    attrs="{'invisible': [('action', '!=', 'split_procurement')]}"
+                />
+                <field
+                    name="mto_rule_id"
+                    groups="stock.group_adv_location"
+                    attrs="{'invisible': [('action', '!=', 'split_procurement')]}"
+                />
+            </field>
+        </field>
+    </record>
+    <record id="view_stock_rule_form_view_mto_mto" model="ir.ui.view">
+        <field name="name">stock.rule.form.mts.mto</field>
+        <field name="model">stock.rule</field>
+        <field name="inherit_id" ref="stock.view_stock_rule_form" />
+        <field name="arch" type="xml">
+            <field name="action" position="after">
+                <field
+                    name="mts_rule_id"
+                    groups="stock.group_adv_location"
+                    attrs="{'invisible': [('action', '!=', 'split_procurement')]}"
+                />
+                <field
+                    name="mto_rule_id"
+                    groups="stock.group_adv_location"
+                    attrs="{'invisible': [('action', '!=', 'split_procurement')]}"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

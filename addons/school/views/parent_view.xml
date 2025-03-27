@@ -1,0 +1,204 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- search View Of Parent's Profiles -->
+    <record id="view_school_parent_search" model="ir.ui.view">
+        <field name="name">school.parent.search</field>
+        <field name="model">school.parent</field>
+        <field name="arch" type="xml">
+            <search string="Search Parent">
+               <field
+                    name="name"
+                    filter_domain="['|','|',('display_name','ilike',self),('ref','=',self),('email','ilike',self)]"
+                />
+               <separator />
+               <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active','=',False)]"
+                />
+           </search>
+        </field>
+    </record>
+
+    <record id="school_parent_kanban_view" model="ir.ui.view">
+        <field name="name">Parent KANBAN</field>
+        <field name="model">school.parent</field>
+        <field name="arch" type="xml">
+            <kanban nocreate="1" create="false">
+                <field name="color" />
+                <templates>
+                    <t t-name="kanban-box">
+                    <div
+                            class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
+                        >
+                        <field
+                                name="avatar_128"
+                                widget="image"
+                                class="o_kanban_image_fill_left"
+                                options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"
+                            />
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong
+                                            class="o_kanban_record_title oe_partner_heading"
+                                        >
+                                        <field name="name" />
+                                    </strong>
+                                    <div
+                                            class="o_kanban_tags_section oe_kanban_partner_categories"
+                                        />
+                                    <ul>
+                                        <li t-if="record.relation_id.raw_value"><field
+                                                    name="relation_id"
+                                                /></li>
+                                        <li t-if="record.phone.raw_value"><field
+                                                    name="phone"
+                                                /></li>
+                                        <li t-if="record.email.raw_value"><field
+                                                    name="email"
+                                                /></li>
+                                        <li t-if="record.student_id.raw_value"><field
+                                                    name="student_id"
+                                                /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- tree View Of Parent's Profiles -->
+    <record id="view_school_parent_tree" model="ir.ui.view">
+        <field name="name">school.parent.tree</field>
+        <field name="model">school.parent</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="relation_id" />
+                <field name="phone" />
+                <field name="email" />
+                <field name="city" />
+                <field name="country_id" />
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View Of Parent's Profiles -->
+    <record id="view_school_parent_form" model="ir.ui.view">
+        <field name="name">school.parent.form</field>
+        <field name="model">school.parent</field>
+        <field name="arch" type="xml">
+            <form string="Parents">
+            <sheet>
+                <field name="type" invisible="1" />
+                <field
+                        name="image_1920"
+                        widget="image"
+                        class="oe_avatar"
+                        options="{&quot;preview_image&quot;: &quot;image_medium&quot;, &quot;size&quot;: [90, 90]}"
+                    />
+                <div class="oe_title">
+                    <h1>
+                        <field
+                                name="name"
+                                default_focus="1"
+                                placeholder="Name"
+                                attrs="{'required' : [('type', '=', 'contact')]}"
+                            />
+                    </h1>
+                </div>
+                <div>
+                    <label for="relation_id" />
+                    <field name="relation_id" />
+                </div>
+                <group>
+                    <group string="Postal Address" name="postal_address">
+                        <label for="street" string="Address" />
+                        <div class="o_address_format">
+                            <field
+                                    name="street"
+                                    placeholder="Street..."
+                                    class="o_address_street"
+                                />
+                            <field
+                                    name="street2"
+                                    placeholder="Street 2..."
+                                    class="o_address_street"
+                                />
+                            <field
+                                    name="city"
+                                    placeholder="City"
+                                    class="o_address_city"
+                                />
+                            <field
+                                    name="state_id"
+                                    class="o_address_state"
+                                    placeholder="State"
+                                    options="{&quot;no_open&quot;: True}"
+                                    context="{'country_id': country_id, 'zip': zip}"
+                                />
+                            <field name="zip" placeholder="ZIP" class="o_address_zip" />
+                            <field
+                                    name="country_id"
+                                    placeholder="Country"
+                                    class="o_address_country"
+                                    options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                />
+                        </div>
+                    </group>
+                    <group string="Communication" name="communication">
+                        <field name="phone" widget="phone" />
+                        <field name="mobile" widget="phone" />
+                        <field name="user_ids" invisible="1" />
+                        <field name="email" widget="email" required="1" />
+                        <field name="title" options="{&quot;no_open&quot;: True}" />
+                        <field name="lang" />
+                        <field
+                                name="category_id"
+                                widget="many2many_tags"
+                                placeholder="Tags..."
+                            />
+                        <field name="standard_id" invisible="1" />
+                        <field name="stand_id" invisible="1" />
+                    </group>
+                </group>
+                <notebook>
+                    <page name="children" string="Children">
+                        <field
+                                name="student_id"
+                                colspan="4"
+                                domain="[('state','=','done')]"
+                            />
+                    </page>
+                    <page name="internal_notes" string="Internal Notes">
+                        <field name="comment" placeholder="Internal note..." />
+                    </page>
+                </notebook>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action View Of school parent-->
+
+    <record id="action_school_parent_form" model="ir.actions.act_window">
+        <field name="name">Parent Profile</field>
+        <field name="res_model">school.parent</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_res_partner_form"
+        name="Parents"
+        parent="menu_students_parents"
+        action="action_school_parent_form"
+        sequence="33"
+        groups="school.group_school_administration,school.group_school_student,school.group_school_teacher,school.group_school_parent"
+    />
+</odoo>

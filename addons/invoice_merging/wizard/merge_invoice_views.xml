@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Form view for merge invoice wizard -->
+    <record id="merge_invoice_view_from" model="ir.ui.view">
+        <field name="name">merge.invoice.view.from</field>
+        <field name="model">merge.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Merge Invoice">
+                <sheet>
+                    <field name="invoice_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="invoice_partner_display_name"/>
+                            <field name="invoice_date"/>
+                            <field name="invoice_date_due"/>
+                            <field name="invoice_origin"/>
+                            <field name="invoice_user_id"/>
+                            <field name="amount_untaxed_signed"/>
+                            <field name="amount_total_signed"/>
+                        </tree>
+                    </field>
+                    <group string="MERGE TO">
+                        <field name="target_invoice_id"
+                               domain="[('id', 'in', invoice_ids)]"
+                               attrs="{'invisible': [('partner_id', '!=', False)]}"/>
+                        <field name="partner_id" attrs="{'invisible': [('target_invoice_id', '!=', False)]}"/>
+                        <field name="merge_type" widget="radio"/>
+                    </group>
+                    <footer>
+                        <button name="action_merge_invoice" string="Merge"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

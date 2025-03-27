@@ -1,0 +1,51 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept: ["*/*"]
+        Accept-Encoding: ["gzip, deflate, br"]
+        Connection: [keep-alive]
+        User-Agent: [python-requests/2.19.1]
+      method: GET
+      uri: https://localhost/wp-json/wc/v3/data/countries/bo
+    response:
+      body:
+        {
+          string:
+            '{
+              "code": "BO",
+              "name": "Bolivia",
+              "states": [
+                  {
+                    "code": "AL-01",
+                    "name": "Berat"
+                }
+              ],
+              "_links": {
+                  "self": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/data/countries/bo"
+                      }
+                  ],
+                  "collection": [
+                      {
+                          "href": "https://localhost/wp-json/wc/v3/data/countries"
+                      }
+                  ]
+              }
+          }',
+        }
+      headers:
+        Cache-Control: ["no-store, no-cache, must-revalidate"]
+        Connection: [keep-alive]
+        Content-Type: [application/json; charset=utf-8]
+        Date: ["Mon, 17 jul 2023 05:38:29 GMT"]
+        Expires: ["Jan 23 23:59:59 2023 GMT"]
+        Server: [nginx/1.14.0 (Ubuntu)]
+        Set-Cookie:
+          ["expires=Fri, 30-Jun-2017 15:27:02 GMT; path=/; domain=woocommerce; HttpOnly"]
+        Transfer-Encoding: [chunked]
+        Vary: [Accept-Encoding]
+        X-Frame-Options: [SAMEORIGIN]
+        content-length: ["1378"]
+      status: {code: 200, message: OK}

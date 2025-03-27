@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="report_visitor_report">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <t t-foreach="docs" t-as="o">
+                        <div class="page">
+                            <div class="oe_structure"/>
+
+                            <t t-if="o and 'company_id' in o">
+                                <t t-set="company" t-value="o.company_id"></t>
+                            </t>
+                            <t t-if="not o or not 'company_id' in o">
+                                <t t-set="company" t-value="res_company"></t>
+                            </t>
+                            <br/>
+                            <h3 style="text-align:center;margin-top:50;">
+                                <b>Visitor Report</b>
+                            </h3>
+                            <br/>
+                            <table width="100%"
+                                   style="margin-left:50px;margin-top:5px;border: None solid black;">
+                                <tr class="tr2">
+                                    <td style="width:50px;height:25px;">
+                                        <span>Visitor:</span>
+                                        <span t-att-style="style"
+                                              t-esc="o.visitor.name"/>
+                                    </td>
+                                    <td style="width:50px;height:25px;">
+                                        <span>Email:</span>
+                                        <span t-att-style="style"
+                                              t-esc="o.email"/>
+                                    </td>
+                                    <td style="width:50px;height:25px;">
+                                        <span>phone:</span>
+                                        <span t-att-style="style"
+                                              t-esc="o.phone"/>
+                                    </td>
+                                </tr>
+                                <tr class="tr2">
+                                    <t t-if="o.visiting_person">
+                                        <td style="width:50px;height:25px;">
+                                            <span>Meeting With :</span>
+                                            <span t-att-style="style"
+                                                  t-esc="o.visiting_person.name"/>
+                                        </td>
+                                    </t>
+                                    <t t-if="o.visiting_person">
+                                        <td style="width:50px;height:25px;">
+                                            <span>Department :</span>
+                                            <span t-att-style="style"
+                                                  t-esc="o.department.name"/>
+                                        </td>
+                                    </t>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                            <h4 style="margin-left:50px">
+                                <b>In Out Details</b>
+                            </h4>
+                            <table width="99%"
+                                   style="margin-left:50px;margin-top:5px;border: None solid black;">
+                                <tr class="tr2">
+                                    <td style="width:50px;height:25px;">
+                                        <span>Check In :</span>
+                                        <span t-att-style="style"
+                                              t-esc="o.check_in_date"/>
+                                    </td>
+                                    <td style="width:50px;height:25px;">
+                                        <span>Check Out :</span>
+                                        <span t-att-style="style"
+                                              t-esc="o.check_out_date"/>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <br/>
+                            <h4 style="margin-left:50px">
+                                <b>Personal Belongings</b>
+                            </h4>
+                            <table width="90%"
+                                   style="border:1px solid black;margin-left:50px">
+                                <thead>
+                                    <th style="border:1px solid black;"
+                                        width="13%">Name
+                                    </th>
+                                    <th style="border:1px solid black;"
+                                        width="13%">Count
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.visitor_belongings"
+                                       t-as="l">
+                                        <tr>
+                                            <td style="border:1px solid black;">
+                                                <span t-esc="l.property_name"
+                                                      style="font-size:16px;"/>
+                                            </td>
+                                            <td style="border:1px solid black;">
+                                                <span t-esc="l.property_count"
+                                                      style="font-size:16px;"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="page-break-after:always"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

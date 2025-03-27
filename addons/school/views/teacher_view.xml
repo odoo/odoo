@@ -1,0 +1,319 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- search View Of Teahcer's Profiles -->
+    <record id="view_school_teacher_search" model="ir.ui.view">
+        <field name="name">school.teacher.search</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <search string="Employees">
+                <field
+                    name="name"
+                    string="Employees"
+                    filter_domain="['|',('work_email','ilike',self),('name','ilike',self)]"
+                />
+                <field name="department_id" />
+                <field name="category_ids" groups="hr.group_hr_user" />
+                <field name="job_id" />
+                <filter
+                    string="Unread Messages"
+                    name="message_needaction"
+                    domain="[('message_needaction','=',True)]"
+                />
+                <filter
+                    string="Archived"
+                    name="inactive"
+                    domain="[('active','=',False)]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="class"
+                        string="Class"
+                        domain="[]"
+                        context="{'group_by':'standard_id'}"
+                    />
+                    <filter
+                        name="manager"
+                        string="Manager"
+                        domain="[]"
+                        context="{'group_by':'parent_id'}"
+                    />
+                    <filter
+                        name="coach"
+                        string="Coach"
+                        domain="[]"
+                        context="{'group_by':'coach_id'}"
+                    />
+                    <filter
+                        name="department"
+                        string="Department"
+                        domain="[]"
+                        context="{'group_by':'department_id'}"
+                    />
+                    <filter
+                        name="job"
+                        string="Job"
+                        domain="[]"
+                        context="{'group_by':'job_id'}"
+                    />
+                    <filter
+                        name="company"
+                        string="Company"
+                        domain="[]"
+                        context="{'group_by':'company_id'}"
+                        groups="base.group_multi_company"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="school_teacher_kanban_view" model="ir.ui.view">
+        <field name="name">Teacher KANBAN</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <kanban nocreate="1" create="false">
+                <field name="color" />
+                <field name="phone" />
+                <templates>
+                    <t t-name="kanban-box">
+                    <div
+                            class="oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record"
+                        >
+                        <field
+                                name="avatar_128"
+                                widget="image"
+                                class="o_kanban_image_fill_left"
+                                options="{'zoom': true, 'zoom_delay': 1000, 'background': true, 'preventClicks': false}"
+                            />
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong
+                                            class="o_kanban_record_title oe_partner_heading"
+                                        >
+                                        <field name="name" />
+                                    </strong>
+                                    <div
+                                            class="o_kanban_tags_section oe_kanban_partner_categories"
+                                        />
+                                    <ul>
+                                        <li t-if="record.school_id.raw_value"><field
+                                                    name="school_id"
+                                                /></li>
+                                        <li t-if="record.job_id.raw_value"><field
+                                                    name="job_id"
+                                                /></li>
+                                        <li t-if="record.phone"><field
+                                                    name="phone"
+                                                /></li>
+                                        <li t-if="record.work_email.raw_value"><field
+                                                    name="work_email"
+                                                /></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- tree View Of Teahcer's Profiles -->
+    <record id="view_school_teacher_tree" model="ir.ui.view">
+        <field name="name">school.teacher.tree</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <tree decoration-bf="message_needaction==True">
+                <field name="name" />
+                <field name="work_phone" invisible="1" />
+                <field name="phone_numbers" />
+                <field name="work_email" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="department_id" />
+                <field name="job_id" />
+                <field name="parent_id" />
+                <field name="coach_id" invisible="1" />
+                <field name="message_needaction" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View Of Teahcer's Profiles -->
+    <record id="view_school_teacher_form" model="ir.ui.view">
+        <field name="name">school.teacher.form</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <form string="Faculty">
+                <sheet>
+                    <field
+                        name="image_1920"
+                        widget="image"
+                        class="oe_avatar"
+                        options="{&quot;zoom&quot;: true, &quot;preview_image&quot;:&quot;avatar_128&quot;}"
+                    />
+                    <field name="company_id" invisible="1" />
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field
+                                name="name"
+                                placeholder="Teacher's Name"
+                                required='1'
+                            />
+                        </h1>
+                    </div>
+                    <field
+                        name="category_ids"
+                        widget="many2many_tags"
+                        placeholder="e.g. Part Time"
+                        groups="hr.group_hr_user"
+                    />
+                    <group>
+                        <field name="standard_id" />
+                        <!-- <field name="standard_ids" required="1" widget="many2many_tags"/> -->
+                        <field
+                            name="subject_id"
+                            required="1"
+                            widget="many2many_tags"
+                            options="{'no_create': True}"
+                        />
+                        <field name="school_id" required="1" />
+                    </group>
+                    <group>
+                        <field
+                            name="is_parent"
+                            widget="boolean_toggle"
+                            string='Is Parent'
+                        />
+                        <field
+                            name='stu_parent_id'
+                            attrs="{'invisible':[('is_parent','=',False)],'required': [('is_parent','!=',False)]}"
+                        />
+                    </group>
+                    <notebook>
+                        <page name="public" string="Public Information">
+                            <group>
+                                <group string="Contact Information">
+                                    <field
+                                        name="address_id"
+                                        context="{'show_address': 1}"
+                                        options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"
+                                        string="Work Address"
+                                    />
+                                    <field name="mobile_phone" />
+                                    <field name="work_location_id" />
+                                    <field
+                                        name="work_email"
+                                        widget="email"
+                                        required="1"
+                                    />
+                                    <field name="work_phone" invisible="1" />
+                                    <field name="phone_numbers" />
+                                </group>
+                                <group string="Position">
+                                    <field name="department_id" />
+                                    <field name="job_id" />
+                                    <field name="parent_id" />
+                                    <field name="coach_id" />
+                                </group>
+                            </group>
+                            <field
+                                name="notes"
+                                placeholder="Other Information ..."
+                                colspan="4"
+                            />
+                        </page>
+                        <page string="Personal Information" groups="hr.group_hr_user">
+                            <group>
+                                <group string="Citizenship &amp; Other Information">
+                                    <field
+                                        name="country_id"
+                                        options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"
+                                    />
+                                    <field
+                                        name="identification_id"
+                                        groups="hr.group_hr_user"
+                                    />
+                                    <field
+                                        name="passport_id"
+                                        groups="hr.group_hr_user"
+                                    />
+                                    <field name="bank_account_id" />
+                                </group>
+                                <group string="Contact Information">
+                                    <field
+                                        name="address_home_id"
+                                        context="{'show_address': 1}"
+                                        options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"
+                                    />
+                                </group>
+                                <group string="Status">
+                                    <field name="gender" />
+                                    <field name="marital" />
+                                </group>
+                                <group string="Birth">
+                                    <field name="birthday" />
+                                </group>
+                            </group>
+                        </page>
+                        <page
+                            string="Children"
+                            attrs="{'invisible': [('is_parent','=', False)]}"
+                        >
+                             <field
+                                name="student_id"
+                                domain="[('state', '=', 'done')]"
+                            />
+                        </page>
+                        <page
+                            string="HR Settings"
+                            groups="hr.group_hr_user"
+                            invisible="1"
+                        >
+                            <group>
+                                <group string="Status" name="active_group">
+                                    <field
+                                        name="company_id"
+                                        groups="base.group_multi_company"
+                                    />
+                                    <field
+                                        name="user_id"
+                                        string="Related User"
+                                        context="{'default_groups_ref': ['base.group_user']}"
+                                    />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field
+                        name="message_follower_ids"
+                        widget="mail_followers"
+                        groups="base.group_user"
+                    />
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action View Of school teacher-->
+
+    <record id="action_school_teacher_form" model="ir.actions.act_window">
+        <field name="name">Teacher Profile</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <menuitem
+        id="teacher_profile_menu"
+        name="Teachers"
+        action="action_school_teacher_form"
+        parent="menu_students_parents"
+        sequence="32"
+        groups="school.group_school_administration,school.group_school_teacher"
+    />
+</odoo>

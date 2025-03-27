@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+  Copyright 2019 Ecosoft Co., Ltd.
+  License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).-->
+<odoo>
+    <record id="view_xlsx_template_tree" model="ir.ui.view">
+        <field name="model">xlsx.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_xlsx_template_form" model="ir.ui.view">
+        <field name="model">xlsx.template</field>
+        <field name="arch" type="xml">
+            <form string="XLSX Template">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="add_report_menu"
+                            string="Add Report Menu"
+                            type="object"
+                            attrs="{'invisible': ['|', ('use_report_wizard', '=', False), ('report_menu_id', '!=', False)]}"
+                            icon="fa-plus-square"
+                            help="Add new report menu at root level"
+                            class="oe_stat_button"
+                        />
+                        <button
+                            name="remove_report_menu"
+                            string="Remove Report Menu"
+                            type="object"
+                            attrs="{'invisible': [('report_menu_id', '=', False)]}"
+                            icon="fa-minus-square"
+                            class="oe_stat_button"
+                        />
+                    </div>
+                    <h1>
+                        <field name="name" colspan="3" />
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="description" />
+                            <field name="to_csv" />
+                            <field
+                                name="csv_delimiter"
+                                attrs="{'invisible': [('to_csv', '=', False)]}"
+                            />
+                            <field
+                                name="csv_extension"
+                                attrs="{'invisible': [('to_csv', '=', False)]}"
+                            />
+                            <field
+                                name="csv_quote"
+                                attrs="{'invisible': [('to_csv', '=', False)]}"
+                            />
+                            <field name="use_report_wizard" />
+                            <field
+                                name="report_menu_id"
+                                attrs="{'invisible': [('report_menu_id', '=', False)]}"
+                            />
+                            <field
+                                name="result_model_id"
+                                attrs="{'invisible': [('use_report_wizard', '=', False)],
+                                        'required': [('use_report_wizard', '=', True)]}"
+                            />
+                            <field
+                                name="result_field"
+                                attrs="{'invisible': [('use_report_wizard', '=', False)]}"
+                            />
+                        </group>
+                        <group>
+                            <field name="fname" invisible="1" />
+                            <field name="datas" filename="fname" />
+                            <field name="gname" />
+                            <field name="res_model" />
+                            <field name="redirect_action" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Export">
+                            <div
+                                name="export_actions"
+                                attrs="{'invisible': [('use_report_wizard', '=', True)]}"
+                            >
+                                <button
+                                    name="add_export_action"
+                                    class="oe_highlight"
+                                    type="object"
+                                    string="Add Export Action"
+                                    attrs="{'invisible': [('export_action_id', '!=', False)]}"
+                                />
+                                <button
+                                    name="remove_export_action"
+                                    type="object"
+                                    string="Remove Export Action"
+                                    attrs="{'invisible': [('export_action_id', '=', False)]}"
+                                />
+                                <field name="export_action_id" invisible="1" />
+                            </div>
+                            <separator />
+                            <field name="export_ids">
+                                <tree name="export_instruction" editable="bottom">
+                                    <control>
+                                        <create
+                                            string="Add sheet section"
+                                            context="{'default_section_type': 'sheet'}"
+                                        />
+                                        <create
+                                            string="Add header section"
+                                            context="{'default_section_type': 'head', 'default_row_field': '_HEAD_'}"
+                                        />
+                                        <create
+                                            string="Add row section"
+                                            context="{'default_section_type': 'row'}"
+                                        />
+                                        <create
+                                            string="Add data column"
+                                            context="{'default_section_type': 'data'}"
+                                        />
+                                    </control>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="section_type" invisible="1" />
+                                    <field
+                                        name="sheet"
+                                        attrs="{'required': [('section_type', '=', 'sheet')],
+                                                                'invisible': [('section_type', '!=', 'sheet')]}"
+                                    />
+                                    <field
+                                        name="row_field"
+                                        attrs="{'required': [('section_type', 'in', ('head', 'row'))],
+                                                                    'invisible': [('section_type', 'not in', ('head', 'row'))]}"
+                                    />
+                                    <field
+                                        name="is_cont"
+                                        attrs="{'required': [('section_type', 'in', ('head', 'row'))],
+                                                                  'invisible': [('section_type', 'not in', ('head', 'row'))]}"
+                                    />
+                                    <field
+                                        name="is_extend"
+                                        attrs="{'required': [('section_type', 'in', ('head', 'row'))],
+                                                                  'invisible': [('section_type', 'not in', ('head', 'row'))]}"
+                                    />
+                                    <field
+                                        name="excel_cell"
+                                        attrs="{'required': [('section_type', '=', 'data')],
+                                                                     'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="field_name"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="field_cond"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="is_sum"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="style"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="style_cond"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                </tree>
+                            </field>
+                            <div style="margin-top: 4px;">
+                                <h3>Help with Export Instruction</h3>
+                                <p>
+                                  Export Instruction is how to write data from an active data record to specified cells in excel sheet.
+                                  For example, an active record can be a sale order that user want to export.
+                                  The record itself will be mapped to the header part of excel sheet. The record can contain multiple one2many fields, which will be written as data lines.
+                                  You can look at following instruction as Excel Sheet(s), each with 1 header section (_HEAD_) and multiple row sections (one2many fields).
+                                </p>
+                                <ul>
+                                    <li
+                                    >In header section part, map data fields (e.g., number, partner_id.name) into cells (e.g., B1, B2).</li>
+                                    <li
+                                    >In row section, data list will be rolled out from one2many row field (e.g., order_line), and map data field (i.e., product_id.name, uom_id.name, qty) into the first row cells to start rolling (e.g., A6, B6, C6).</li>
+                                </ul>
+                                <p>Following are more explaination on each column:</p>
+                                <ul>
+                                    <li><b
+                                        >Sheet</b>: Name (e.g., Sheet 1) or index (e.g., 1) of excel sheet to export data to</li>
+                                    <li><b
+                                        >Row Field</b>: Use _HEAD_ for the record itself, and one2many field (e.g., line_ids) for row data</li>
+                                    <li><b
+                                        >Continue</b>: If not selected, start rolling with specified first row cells. If selected, continue from previous one2many field</li>
+                                    <li><b
+                                        >Extend</b>: If selected, extend one row after one data row in order to preserve the sum line</li>
+                                    <li><b
+                                        >Cell</b>: Location of data in excel sheet (e.g., A1, B1, ...)</li>
+                                    <li><b
+                                        >Field</b>: Field of the record, e.g., product_id.uom_id.name. They are orm compliant.</li>
+                                    <li><b>Field Cond.</b>: Python code in <code
+                                        >$</code><code
+                                        >{...}</code> to manipulate field value, e.g., if field = product_id, <code
+                                        >value</code> will represent product object, e.g., <code
+                                        >$</code><code
+                                        >{value and value.uom_id.name or ""}</code></li>
+                                    <li><b>Sum</b>: Add sum value on last row, <code
+                                        >@{sum}</code></li>
+                                    <li><b>Style</b>: Default style in <code
+                                        >#{...}</code> that apply to each cell, e.g., <code
+                                        >#{align=left;style=text}</code>. See module's <b
+                                        >style.py</b> for available styles.</li>
+                                    <li><b
+                                        >Style w/Cond.</b>: Conditional style by python code in <code
+                                        >#?...?</code>, e.g., apply style for specific product, <code
+                                        >#?value.name == "ABC" and #{font=bold;fill=red} or None?</code></li>
+                                </ul>
+                                <p>
+                                    <b>Note:</b>
+                                </p>
+                                For code block <code>$</code><code
+                                >{...}</code> and <code
+                                >#?...?</code>, following object are available,
+                                <ul>
+                                    <li><code>value</code>: value from <b>Field</b></li>
+                                    <li><code
+                                        >object</code>: record object or line object depends on <b
+                                        >Row Field</b></li>
+                                    <li><code
+                                        >model</code>: active model, e.g., self.env['my.model']</li>
+                                    <li><code
+                                        >date, datetime, time</code>: some useful python classes</li>
+                                </ul>
+                            </div>
+                        </page>
+                        <page
+                            string="Import"
+                            attrs="{'invisible': [('use_report_wizard', '=', True)]}"
+                        >
+                            <div name="import_actions">
+                                <button
+                                    name="add_import_action"
+                                    class="oe_highlight"
+                                    type="object"
+                                    string="Add Import Action"
+                                    attrs="{'invisible': [('import_action_id', '!=', False)]}"
+                                />
+                                <button
+                                    name="remove_import_action"
+                                    type="object"
+                                    string="Remove Import Action"
+                                    attrs="{'invisible': [('import_action_id', '=', False)]}"
+                                />
+                                <field name="import_action_id" invisible="1" />
+                            </div>
+                            <separator />
+                            <field name="import_ids">
+                                <tree name="import_instruction" editable="bottom">
+                                    <control>
+                                        <create
+                                            string="Add sheet section"
+                                            context="{'default_section_type': 'sheet'}"
+                                        />
+                                        <create
+                                            string="Add header section"
+                                            context="{'default_section_type': 'head', 'default_row_field': '_HEAD_'}"
+                                        />
+                                        <create
+                                            string="Add row section"
+                                            context="{'default_section_type': 'row'}"
+                                        />
+                                        <create
+                                            string="Add data column"
+                                            context="{'default_section_type': 'data'}"
+                                        />
+                                    </control>
+                                    <field name="sequence" widget="handle" />
+                                    <field name="section_type" invisible="1" />
+                                    <field
+                                        name="sheet"
+                                        attrs="{'required': [('section_type', '=', 'sheet')],
+                                                                'invisible': [('section_type', '!=', 'sheet')]}"
+                                    />
+                                    <field
+                                        name="row_field"
+                                        attrs="{'required': [('section_type', 'in', ('head', 'row'))],
+                                                                    'invisible': [('section_type', 'not in', ('head', 'row'))]}"
+                                    />
+                                    <field
+                                        name="no_delete"
+                                        attrs="{'invisible': [('section_type', '!=', 'row')]}"
+                                    />
+                                    <field
+                                        name="excel_cell"
+                                        attrs="{'required': [('section_type', '=', 'data')],
+                                                                     'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="field_name"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                    <field
+                                        name="field_cond"
+                                        attrs="{'invisible': [('section_type', '!=', 'data')]}"
+                                    />
+                                </tree>
+                            </field>
+                            <group string="Post Import Hook">
+                                <field
+                                    name="post_import_hook"
+                                    placeholder="${object.post_import_do_something()}"
+                                />
+                            </group>
+                            <hr />
+                            <div style="margin-top: 4px;">
+                                <h3>Help with Import Instruction</h3>
+                                <p>
+                                  Import Instruction is how to get data from excel sheet and write them to an active record.
+                                  For example, user create a sales order document, and want to import order lines from excel.
+                                  In reverse direction to exporting, data from excel's cells will be mapped to record fields during import.
+                                  Cells can be mapped to record in header section (_HEAD_) and data table can be mapped to row section (one2many field, begins from specifed cells.
+                                </p>
+                                <ul>
+                                    <li
+                                    >In header section, map cells (e.g., B1, B2) into data fields (e.g., number, partner_id).</li>
+                                    <li
+                                    >In row section, data table from excel can be imported to one2many row field (e.g., order_line) by mapping cells on first row onwards (e.g., A6, B6, C6) to fields (e.g., product_id, uom_id, qty) </li>
+                                </ul>
+                                <p>Following are more explaination on each column:</p>
+                                <ul>
+                                    <li><b
+                                        >Sheet</b>: Name (e.g., Sheet 1) or index (e.g., 1) of excel sheet</li>
+                                    <li><b
+                                        >Row Field</b>: Use _HEAD_ for the record itself, and one2many field for row data, e.g., order_line, line_ids<code
+                                        >[max_row]</code> where <code
+                                        >[max_row]</code> is optional number of rows to import</li>
+                                    <li><b
+                                        >No Delete</b>: By default, all one2many lines will be deleted before import. Select this, to avoid deletion</li>
+                                    <li><b
+                                        >Cell</b>: Location of data in excel sheet (e.g., A1, B1, ...)</li>
+                                    <li><b
+                                        >Field</b>: Field of the record to be imported to, e.g., product_id</li>
+                                    <li><b>Field Cond.</b>: Python code in <code
+                                        >$</code><code
+                                        >{...}</code> value will represent data from excel cell, e.g., if A1 = 'ABC', <code
+                                        >value</code> will represent 'ABC', e.g., <code
+                                        >$</code><code
+                                        >{value == "ABC" and "X" or "Y"}</code> thus can change from cell value to other value for import.</li>
+                                </ul>
+                                <p>
+                                    <b>Note:</b>
+                                </p>
+                                For code block <code>$</code><code
+                                >{...}</code>, following object are available,
+                                <ul>
+                                    <li><code>value</code>: value from <b>Cell</b></li>
+                                    <li><code
+                                        >model</code>: active model, e.g., self.env['my.model']</li>
+                                    <li><code
+                                        >date, datetime, time</code>: some useful python classes</li>
+                                </ul>
+                            </div>
+                        </page>
+                        <page string="Input Instruction (Dict.)">
+                            <field name="input_instruction" />
+                            <field name="show_instruction" />
+                            <label for="show_instruction" />
+                            <field
+                                name="instruction"
+                                attrs="{'invisible': [('show_instruction', '=', False)]}"
+                            />
+                            <hr />
+                            <div style="margin-top: 4px;">
+                                <h3>Sample Input Instruction as Dictionary</h3>
+                                <p>
+                                    Following show very simple example of the dictionary construct.
+                                    Normally, this will be within templates.xml file within addons.
+                                </p>
+                                <pre>
+                                    <code class="oe_grey">
+{
+    '__EXPORT__': {
+        'sale_order': {  # sheet can be name (string) or index (integer)
+            '_HEAD_': {
+                'B2': 'partner_id.display_name<span
+                                        >$</span>{value or ""}#{align=left;style=text}',
+                'B3': 'name<span>$</span>{value or ""}#{align=left;style=text}',
+            },
+            'line_ids': {  # prefix with _CONT_ to continue rows from previous row field
+                'A6': 'product_id.display_name<span>$</span>{value or ""}#{style=text}',
+                'C6': 'product_uom_qty<span>$</span>{value or 0}#{style=number}',
+                'E6': 'price_unit<span>$</span>{value or 0}#{style=number}',
+                'G6': 'price_subtotal<span>$</span>{value or 0}#{style=number}',
+            },
+        },
+    },
+    '__IMPORT__': {
+        'sale_order': {  # sheet can be name (string) or index (integer)
+            'order_line': {  # prefix with _NODEL_ to not delete rows before import
+                'A6': 'product_id',
+                'C6': 'product_uom_qty',
+                'E6': 'price_unit<span>$</span>{value > 0 and value or 0}',
+            },
+        },
+    },
+    '__POST_IMPORT__': '<span>$</span>{object.post_import_do_something()}',
+}
+
+                                </code>
+                                </pre>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_xlsx_template" model="ir.actions.act_window">
+        <field name="name">XLSX Templates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">xlsx.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a XLSX Template Object.
+            </p>
+        </field>
+    </record>
+    <menuitem
+        id="menu_excel_import_export"
+        name="Excel Import/Export"
+        parent="base.menu_custom"
+        sequence="130"
+    />
+    <menuitem
+        id="menu_xlsx_template"
+        parent="menu_excel_import_export"
+        action="action_xlsx_template"
+        sequence="10"
+    />
+</odoo>

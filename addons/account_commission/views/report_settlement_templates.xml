@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="report_settlement_document"
+        inherit_id="commission.report_settlement_document"
+    >
+        <xpath expr="//div[@id='informations']" position="inside">
+            <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_id">
+                <strong>Settlement invoice:</strong>
+                <p t-field="o.invoice_id" />
+            </div>
+        </xpath>
+        <xpath expr="//th" position="after">
+            <t t-if="o.settlement_type == 'sale_invoice'">
+                <th class="text-start">Invoice</th>
+                <th class="text-start">Customer</th>
+                <th class="text-start">Description</th>
+                <th class="text-start">Quantity</th>
+                <th class="text-start">Amount</th>
+            </t>
+        </xpath>
+        <xpath expr="//table/tbody/tr/td" position="after">
+            <t t-if="o.settlement_type == 'sale_invoice'">
+                <td>
+                    <span t-field="l.invoice_line_id.move_id.name" />
+                </td>
+                <td>
+                    <span t-field="l.invoice_line_id.move_id.partner_id" />
+                </td>
+                <td>
+                    <span t-field="l.invoice_line_id.name" />
+                </td>
+                <td>
+                    <span t-field="l.invoice_line_id.quantity" />
+                </td>
+                <td>
+                    <span t-field="l.invoice_line_id.price_subtotal" />
+                </td>
+            </t>
+        </xpath>
+    </template>
+</odoo>

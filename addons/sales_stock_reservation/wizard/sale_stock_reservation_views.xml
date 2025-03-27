@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- It defines two records, one for an action and another for a view.
+The action record defines a new window action named "create_reservation",
+ which will be used to create a new stock reservation record.
+ The view record defines a new form view named "create.reservation.form"
+ for the "sale.stock.reservation" model. The view contains a group of fields
+ for the sale order ID and email notifications, and a tree view for displaying
+ information about the stock reservation. The tree view displays fields for
+ the order line name, product ID, quantity, unit of measure, and reserved
+ quantity. The view also includes a footer with a button named "Reserve",
+ which triggers the "reserve_stock" action when clicked. Overall, this code is
+ related to the previous code snippet and provides additional functionality
+ for creating and managing stock reservations for sale orders in Odoo.-->
+<odoo>
+	<record id="sale_stock_reservation_wizard_action" model="ir.actions.act_window">
+		<field name="name">Sale Stock Reservation Wizard</field>
+		<field name="res_model">sale.stock.reservation</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+	<record id="sale_stock_reservation_view_form" model="ir.ui.view">
+		<field name="name">sale.stock.reservation.view.form</field>
+		<field name="model">sale.stock.reservation</field>
+		<field name="arch" type="xml">
+			<form string="Decimal Precision">
+				<group>
+					<group>
+						<field name="sale_order_id"/>
+					</group>
+					<group>
+						<field name="mail_notification_ids" widget="many2many_tags"/>
+					</group>
+				</group>
+				<field name="stock_reservation_ids">
+					<tree create="false" editable="bottom">
+						<field name="order_line_name"/>
+						<field name="product_id"/>
+						<field name="quantity"/>
+						<field name="unit_of_measure_id"/>
+						<field name="reserve_quantity"/>
+					</tree>
+				</field>
+				<footer>
+					<button name="action_reserve_stock" string="Reserve" type="object" class="btn-primary"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+</odoo>

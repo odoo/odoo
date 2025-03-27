@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo noupdate="0">
+    <record id="kw_api_custom_endpoint_tree" model="ir.ui.view">
+        <field name="name">kw.api.custom.endpoint.tree (kw_api_custom_endpoint)</field>
+        <field name="model">kw.api.custom.endpoint</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="model_id" optional="hide"/>
+                <field name="model_model" optional="show"/>
+                <field name="api_name" optional="show"/>
+                <field name="url" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="kw_api_custom_endpoint_form" model="ir.ui.view">
+        <field name="name">kw.api.custom.endpoint.form (kw_api_custom_endpoint)</field>
+        <field name="model">kw.api.custom.endpoint</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object" class="oe_stat_button" icon="fa-sticky-note" attrs="{'invisible': [('logs_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <field name="logs_count" class="o_stat_value"/>
+                                <span class="o_stat_text" attrs="{'invisible': [('logs_count', '=', 1)]}">Logs</span>
+                                <span class="o_stat_text" attrs="{'invisible': [('logs_count', '>', 1)]}">Log</span>
+                            </div>
+                        </button>
+                    </div>
+                    <field name="url" widget="CopyClipboardChar"/>
+                    <group>
+                        <group>
+                            <field name="kind" widget="statusbar"
+                                   options="{'clickable': '1'}"/>
+                            <field name="model_id"/>
+                            <field name="model_id_field"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="api_name"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="model_model" invisible="1"/>
+                        <field name="domain" widget="domain"
+                               options="{'model': 'model_model'}"/>
+                    </group>
+                    <notebook>
+                        <page string="Fields" attrs="{'invisible': [('kind','!=', 'fields')]}">
+                            <field name="field_ids">
+                                <tree>
+                                    <field name="kind"/>
+                                    <field name="model_field_id"/>
+                                    <field name="outbound_name"/>
+                                    <field name="outbound_api_name" invisible="1"/>
+                                    <field name="is_searchable"/>
+                                    <field name="is_changeable"/>
+                                    <field name="inbound_name"/>
+                                    <field name="inbound_api_name" invisible="1"/>
+                                    <field name="ttype" readonly="1" optional="hide"/>
+                                    <field name="endpoint_id" invisible="1"/>
+                                    <field name="model_id" invisible="1"/>
+                                    <field name="relation" invisible="1"/>
+                                    <field name="relation_display"/>
+                                    <field name="data_endpoint_id"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Function" attrs="{'invisible': [('kind','!=', 'function')]}">
+                            <field name="response_function"/>
+                        </page>
+                        <page string="Requirements">
+                            <group>
+                                <field name="is_paginated"/>
+                                <field name="is_token_required"/>
+                                <field name="is_api_key_required"/>
+                                <field name="is_json_required"/>
+                                <field name="force_response_tz"/>
+                            </group>
+                        </page>
+                        <page string="Permits">
+                            <group>
+                                <field name="is_list_enabled"/>
+                                <field name="is_get_enabled"/>
+                                <field name="is_create_enabled"/>
+                                <field name="is_update_enabled"/>
+                                <field name="is_delete_enabled"/>
+                            </group>
+                        </page>
+                        <page string="Logging">
+                            <group>
+                                <field name="logging_is_required"/>
+                                <field name="log_expire_days"/>
+                            </group>
+                        </page>
+                        <page string="Description">
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="kw_api_custom_endpoint_search" model="ir.ui.view">
+        <field name="name">kw.api.custom.endpoint.search (kw_api_custom_endpoint)</field>
+        <field name="model">kw.api.custom.endpoint</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="model_model"/>
+                <field name="api_name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="kw_api_custom_endpoint_act_window"
+            model="ir.actions.act_window">
+        <field name="name">Custom Endpoint</field>
+        <field name="res_model">kw.api.custom.endpoint</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="kw_api_custom_endpoint_menu"
+              action="kw_api_custom_endpoint_act_window"
+              parent="kw_api.kw_api_main_menu"
+              name="Custom Endpoint" sequence="200"/>
+
+
+    <record id="kw_api_custom_endpoint_field_form" model="ir.ui.view">
+        <field name="name">kw.api.custom.endpoint.field.form (kw_api_custom_endpoint)</field>
+        <field name="model">kw.api.custom.endpoint.field</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="kind" widget="statusbar"
+                               options="{'clickable': '1'}"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="outbound_name"
+                                   attrs="{'required': [('kind','!=', 'field')]}"/>
+                            <field name="outbound_api_name" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="inbound_name"/>
+                            <field name="inbound_api_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Code"
+                              attrs="{'invisible': [('kind','!=', 'eval')]}">
+                            <field name="eval_source" widget="ace"
+                                   options="{'mode': 'python'}"/>
+                        </page>
+                        <page string="Help" name="help_info" attrs="{'invisible': [('kind','!=', 'eval')]}">
+                            <group>
+                                <div style="margin-top: 4px;">
+                                    <h3>Help with Python expressions</h3>
+                                    <p>Various fields may use Python code or Python expressions. The following variables can be used:</p>
+                                    <ul>
+                                        <li><code>env</code>: Odoo Environment on which the action is triggered</li>
+                                        <li><code>model</code>: Odoo Model of the record on which the action is triggered; is a void recordset</li>
+                                        <li><code>record</code>: record on which the action is triggered; may be void</li>
+                                        <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>pytz</code>: useful Python libraries</li>
+                                        <li><code>float_compare</code>, <code>round</code>, <code>is_zero</code>: Odoo
+                                function to compare floats based on
+                                specific precisions</li>
+
+                                    </ul>
+                                    <div>
+                                        <p>Example of Python code</p>
+                                        <code style="white-space: pre-wrap">
+partner_name = record.name + '_code'
+env['res.partner'].create({'name': partner_name})
+                                        </code>
+                                    </div>
+                                </div>
+                            </group>
+                        </page>
+                        <page string="Field"
+                              attrs="{'invisible': [('kind','!=', 'field')]}">
+
+                            <group>
+                                <field name="is_searchable"/>
+                                <field name="is_changeable"/>
+                                <field name="name"/>
+                                <field name="model_id" invisible="1"/>
+                                <field name="model_field_id"/>
+                                <field name="ttype" invisible="1"/>
+                                <field name="relation" invisible="1"/>
+                                <field name="relation_display"/>
+                                <field name="data_endpoint_id"/>
+
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

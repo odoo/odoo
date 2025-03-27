@@ -1,0 +1,58 @@
+.act_as_table {
+    display: table ;
+    background-color: white;
+}
+.act_as_row {
+    display: table-row ;
+    page-break-inside: avoid;
+}
+.act_as_cell {
+    display: table-cell ;
+    page-break-inside: avoid;
+}
+.act_as_thead {
+    display: table-header-group ;
+}
+.act_as_row.labels {
+    background-color: #f0f0f0;
+}
+.data_table {
+    width: 100% ;
+    border-left: 0px;
+    border-right: 0px;
+    text-align: center;
+    font-size: 10px;
+    padding-right: 3px;
+    padding-left: 3px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-collapse: collapse;
+}
+.data_table .act_as_cell {
+    border: 1px solid lightGrey;
+    text-align: center;
+}
+.data_table .act_as_cell {
+    word-wrap: break-word;
+}
+.data_table .act_as_row.labels {
+    font-weight: bold;
+}
+.act_as_cell.left {
+    text-align: left;
+}
+.act_as_cell.right {
+    text-align: right;
+}
+.custom_footer {
+    font-size: 7px ;
+}
+.button_row {
+    padding-bottom: 10px;
+}
+.o_inventory_reports_page {
+    padding-top: 10px;
+    width: 90%;
+    margin-right: auto;
+    margin-left: auto;
+}

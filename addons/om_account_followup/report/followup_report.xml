@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_om_account_followup_stat_graph" model="ir.ui.view">
+            <field name="name">followup.stat.graph</field>
+            <field name="model">followup.stat</field>
+            <field name="arch" type="xml">
+                <graph string="Follow-up lines">
+                    <field name="followup_id" type="row"/>
+                    <field name="date_followup" type="col"/>
+                    <field name="balance" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_om_account_followup_stat_search" model="ir.ui.view">
+            <field name="name">followup.stat.search</field>
+            <field name="model">followup.stat</field>
+            <field name="arch" type="xml">
+                <search string="Follow-ups Sent">
+                    <field name="date_move"/>
+                    <field name="date_move_last"/>
+                    <separator/>
+                    <filter string="Not Litigation" name="not_litigation"
+                            domain="[('blocked','=', False)]"
+                            help="Including journal entries marked as a litigation"/>
+                    <field name="partner_id"/>
+                    <field name="balance"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Partner" name="partner"
+                                context="{'group_by':'partner_id'}"/>
+                        <filter string="Litigation" name="litigation"
+                                context="{'group_by':'blocked'}"/>
+                        <filter string="Follow-up Level" name="followup_level"
+                                context="{'group_by':'followup_id'}"/>
+                        <filter string="Company" name="company"
+                                groups="base.group_multi_company"
+                                context="{'group_by':'company_id'}"/>
+                        <separator/>
+                        <filter string="Latest Follow-up Month" name="lastest_month"
+                                context="{'group_by':'date_followup:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_followup_stat" model="ir.actions.act_window">
+            <field name="name">Follow-ups Analysis</field>
+            <field name="res_model">followup.stat</field>
+            <field name="view_mode">graph</field>
+            <field name="context">{'search_default_followup_level':1}</field>
+            <field name="search_view_id" ref="view_om_account_followup_stat_search"/>
+        </record>
+
+        <menuitem action="action_followup_stat"
+                  id="menu_action_followup_stat_follow"
+                  parent="om_account_followup.menu_finance_followup"
+                  groups="account.group_account_invoice"
+                  name="Follow-ups Analysis"
+                  sequence="20"/>
+
+    </data>
+</odoo>

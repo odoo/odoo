@@ -1,0 +1,369 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_automatic_workflow
+#
+# Translators:
+# OCA Transbot <transbot@odoo-community.org>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-02 10:22+0000\n"
+"PO-Revision-Date: 2020-07-08 09:19+0000\n"
+"Last-Translator: 黎伟杰 <674416404@qq.com>\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/oca/teams/23907/"
+"zh_CN/)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.10\n"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_order__all_qty_delivered
+msgid "All quantities delivered"
+msgstr "所有已交货数量"
+
+#. module: sale_automatic_workflow
+#: model:ir.actions.act_window,name:sale_automatic_workflow.act_sale_workflow_process_form
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_order__workflow_process_id
+#: model:ir.ui.menu,name:sale_automatic_workflow.menu_act_sale_workflow_process_form
+#: model:ir.ui.menu,name:sale_automatic_workflow.menu_sale_workflow_parent
+#: model_terms:ir.ui.view,arch_db:sale_automatic_workflow.sale_workflow_process_view_form
+msgid "Automatic Workflow"
+msgstr "自动化工作流"
+
+#. module: sale_automatic_workflow
+#: model:ir.actions.server,name:sale_automatic_workflow.ir_cron_automatic_workflow_job_ir_actions_server
+#: model:ir.cron,cron_name:sale_automatic_workflow.ir_cron_automatic_workflow_job
+msgid "Automatic Workflow Job"
+msgstr "自动化工作流作业"
+
+#. module: sale_automatic_workflow
+#: model_terms:ir.ui.view,arch_db:sale_automatic_workflow.sale_order_view_form
+msgid "Automation Information"
+msgstr "自动化信息"
+
+#. module: sale_automatic_workflow
+#: model:sale.workflow.process,warning:sale_automatic_workflow.automatic_validation
+msgid ""
+"Be careful, if you save the order with this setting, it could be auto-"
+"confirmed, even if you are editing it."
+msgstr "请注意，如果您使用此设置保存订单，即使您正在编辑它，也可以自动确认。"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_picking
+msgid "Confirm and Transfer Picking"
+msgstr "确认并转移拣货"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__create_invoice
+msgid "Create Invoice"
+msgstr "创建发票"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__create_invoice_filter_id
+msgid "Create Invoice Filter"
+msgstr "创建发票筛选器"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__create_invoice_filter_domain
+msgid "Create Invoice Filter Domain"
+msgstr "创建发票筛选器"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job__create_uid
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__create_uid
+msgid "Created by"
+msgstr "创建者"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job__create_date
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__create_date
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields.selection,name:sale_automatic_workflow.selection__sale_workflow_process__picking_policy__one
+msgid "Deliver all products at once"
+msgstr "一次交付所有产品"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields.selection,name:sale_automatic_workflow.selection__sale_workflow_process__picking_policy__direct
+msgid "Deliver each product when available"
+msgstr "交付每个可用的产品"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job__display_name
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__payment_filter_domain
+msgid "Domain"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__invoice_date_is_order_date
+msgid "Force Invoice Date"
+msgstr "强制发票日期"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job__id
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__warning
+msgid ""
+"If set, displays the message when an userselects the process on a sale order"
+msgstr "如果设置，则在用户选择销售订单上的流程时显示消息"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__invoice_service_delivery
+msgid ""
+"If this box is checked, when the first invoice is created The service sale "
+"order lines will be included and will be marked as delivered"
+msgstr ""
+"如果选中此框，则在创建第一张发票时将包含服务销售订单行，并将其标记为已交付"
+
+#. module: sale_automatic_workflow
+#: model_terms:ir.ui.view,arch_db:sale_automatic_workflow.sale_workflow_process_view_form
+msgid "Invoice Options"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__invoice_service_delivery
+msgid "Invoice Service on delivery"
+msgstr "发货时发票服务"
+
+#. module: sale_automatic_workflow
+#: model:ir.model,name:sale_automatic_workflow.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job____last_update
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process____last_update
+msgid "Last Modified on"
+msgstr "最后修改时间"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job__write_uid
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__write_uid
+msgid "Last Updated by"
+msgstr "最后更新者"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_automatic_workflow_job__write_date
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__write_date
+msgid "Last Updated on"
+msgstr "最后更新时间"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__name
+msgid "Name"
+msgstr "名称"
+
+#. module: sale_automatic_workflow
+#: model_terms:ir.ui.view,arch_db:sale_automatic_workflow.sale_workflow_process_view_form
+msgid "Order Configuration"
+msgstr "订单配置"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__order_filter_id
+msgid "Order Filter"
+msgstr "订单筛选器"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__order_filter_domain
+msgid "Order Filter Domain"
+msgstr "订单筛选域"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__picking_filter_id
+msgid "Picking Filter"
+msgstr "拣货筛选器"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__picking_filter_domain
+msgid "Picking Filter Domain"
+msgstr "拣货筛选域"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__register_payment
+msgid "Register Payment"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__payment_filter_id
+msgid "Register Payment Invoice Filter"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__sale_done
+msgid "Sale Done"
+msgstr "销售完成"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__sale_done_filter_id
+msgid "Sale Done Filter"
+msgstr "销售完成筛选器"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__sale_done_filter_domain
+msgid "Sale Done Filter Domain"
+msgstr "销售完成筛选域"
+
+#. module: sale_automatic_workflow
+#: model:ir.model,name:sale_automatic_workflow.model_sale_workflow_process
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_account_bank_statement_line__workflow_process_id
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_account_move__workflow_process_id
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_account_payment__workflow_process_id
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_stock_picking__workflow_process_id
+msgid "Sale Workflow Process"
+msgstr "销售工作流程"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__property_journal_id
+msgid "Sales Journal"
+msgstr "销售日记账"
+
+#. module: sale_automatic_workflow
+#: model:ir.model,name:sale_automatic_workflow.model_sale_order
+#, fuzzy
+msgid "Sales Order"
+msgstr "销售订单"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__team_id
+msgid "Sales Team"
+msgstr "销售团队"
+
+#. module: sale_automatic_workflow
+#: model:ir.model,name:sale_automatic_workflow.model_automatic_workflow_job
+msgid ""
+"Scheduler that will play automatically the validation of invoices, "
+"pickings..."
+msgstr "调度程序将自动验证发票，验证拣货......"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__send_invoice
+msgid "Send Invoice"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__send_invoice_filter_id
+msgid "Send Invoice Filter"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__send_invoice_filter_domain
+msgid "Send Invoice Filter Domain"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__send_order_confirmation_mail
+msgid "Send Order Confirmation Mail"
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__property_journal_id
+msgid "Set default journal to use on invoice"
+msgstr "将默认日记帐设置为在发票上使用"
+
+#. module: sale_automatic_workflow
+#: model_terms:ir.ui.view,arch_db:sale_automatic_workflow.sale_workflow_process_view_form
+msgid "Set selection based on a search filter:"
+msgstr "根据搜索筛选器设置选择："
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__picking_policy
+msgid "Shipping Policy"
+msgstr "交货策略"
+
+#. module: sale_automatic_workflow
+#: model:ir.model,name:sale_automatic_workflow.model_stock_move
+msgid "Stock Move"
+msgstr "库存移动"
+
+#. module: sale_automatic_workflow
+#: model:ir.model,name:sale_automatic_workflow.model_stock_picking
+msgid "Transfer"
+msgstr "调拨"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_invoice
+msgid "Validate Invoice"
+msgstr "验证发票"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_invoice_filter_id
+msgid "Validate Invoice Filter"
+msgstr "验证发票筛选器"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_invoice_filter_domain
+msgid "Validate Invoice Filter Domain"
+msgstr "验证发票筛选域"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__validate_order
+msgid "Validate Order"
+msgstr "验证订单"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,field_description:sale_automatic_workflow.field_sale_workflow_process__warning
+msgid "Warning Message"
+msgstr "警告信息"
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__send_order_confirmation_mail
+msgid ""
+"When checked, after order confirmation, a confirmation email will be sent "
+"(if not already sent)."
+msgstr ""
+
+#. module: sale_automatic_workflow
+#: model:ir.model.fields,help:sale_automatic_workflow.field_sale_workflow_process__invoice_date_is_order_date
+msgid "When checked, the invoice date will be the same than the order's date"
+msgstr "选中后，发票日期将与订单日期相同"
+
+#. module: sale_automatic_workflow
+#: model_terms:ir.ui.view,arch_db:sale_automatic_workflow.sale_workflow_process_view_form
+msgid "Workflow Options"
+msgstr "工作流程选项"
+
+#. module: sale_automatic_workflow
+#. odoo-python
+#: code:addons/sale_automatic_workflow/models/sale_order.py:0
+#, python-format
+msgid "Workflow Warning"
+msgstr "工作流程警告"
+
+#~ msgid "Automatic Workflow Create Invoice Filter"
+#~ msgstr "自动化工作流创建发票筛选器"
+
+#~ msgid "Automatic Workflow Order Filter"
+#~ msgstr "自动化工作流订单筛选器"
+
+#~ msgid "Automatic Workflow Picking Filter"
+#~ msgstr "自动化工作流拣货筛选器"
+
+#~ msgid "Automatic Workflow Sale Done Filter"
+#~ msgstr "自动化工作流销售完成筛选器"
+
+#~ msgid "Automatic Workflow Validate Invoice Filter"
+#~ msgstr "自动化工作流验证发票筛选器"
+
+#~ msgid "Journal Entries"
+#~ msgstr "日记账"
+
+#~ msgid "Invoice"
+#~ msgstr "发票"
+
+#~ msgid "Quotation"
+#~ msgstr "Quotation"

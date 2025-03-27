@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_brand_o_wsale_offcanvas" inherit_id="website_sale.o_wsale_offcanvas">
+        <xpath expr="//div[hasclass('offcanvas-body')][last()]//a" position="replace">
+            <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice and not tags and not selected_brands) and 'disabled' }}"
+                   t-att-aria-disabled="(not attrib_values and not isFilteringByPrice and not tags and not selected_brands) and 'true' or 'false'"
+                   href="/shop"
+                   title="Clear Filters">
+                    Clear Filters
+            </a>
+        </xpath>
+        <xpath expr="//form//t[@t-foreach='attributes']" position="after">
+            <div t-if="brands" class="accordion-item border-top-0 order-2">
+                <t t-set="_status" t-value="'inactive'" />
+                <t t-foreach="brands" t-as="t" t-if="t.id in selected_brands" t-set="_status" t-value="'active'" />
+                <h2 class="accordion-header" id="heading_feature_id">
+                    <button t-attf-class="accordion-button fw-bold #{not selected_brands and 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#o_wsale_offcanvas_brands" aria-expanded="true" aria-controls="o_wsale_offcanvas_brands">
+                        Brands
+                    </button>
+                </h2>
+                <div id="o_wsale_offcanvas_brands" t-attf-class="accordion-collapse collapse #{selected_brands and 'show'}" aria-labelledby="heading_feature_id" data-bs-parent="#category_accordion">
+                    <t t-set="is_selected" t-value="selected_brands" />
+                    <t t-set="show_search" t-value="True" />
+                    <t t-set="name" t-value="'brand'" />
+                    <t t-set="items" t-value="brands" />
+                    <t t-set="selected" t-value="selected_brands" />
+                    <div class="accordion-body pt-0">
+                        <t t-foreach="items" t-as="item" t-if="not brand_values_ids or brand_values_ids and item.id in brand_values_ids">
+                            <div class="form-check mb-1">
+                                <input type="checkbox" t-att-name="'attrib' if is_attribute else name" class="form-check-input" t-attf-id="#{name}-#{item.id}" t-att-value="'%s-%s' % (is_attribute.id, item.id) if is_attribute else item.id" t-att-checked="'checked' if item.id in selected else None" />
+                                <label class="form-check-label fw-normal" t-attf-for="#{name}-#{item.id}" t-out="item.name" />
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+    <template id="products_attributes_inherit" inherit_id="website_sale.products_attributes">
+        <xpath expr="//form[hasclass('js_attributes')]/a" position="replace">
+                <a t-if="attrib_values or tags or selected_brands" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex align-items-center py-1 mb-2">
+                        <small class="mx-auto"><b>Clear Filters</b></small>
+                        <i class="oi oi-close"/>
+                 </a>
+        </xpath>
+        <xpath expr="//t[@t-foreach='attributes']" position="after">
+            <div t-if="brands" class="accordion-item nav-item brand_cl_main">
+                    <t t-set="_status" t-value="'inactive'" />
+                    <t t-foreach="brands" t-as="t" t-if="t.id in selected_brands" t-set="_status" t-value="'active'" />
+                    <h6 class="accordion-header" id="heading_feature_id">
+                        <!-- <button t-attf-class="accordion-button #{not selected_brands and 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#o_wsale_offcanvas_brands" aria-expanded="true" aria-controls="o_wsale_offcanvas_brands">
+                            Brands
+                        </button> -->
+                        <button 
+                            t-attf-class="accordion-button #{not selected_brands and 'collapsed'}" 
+                            type="button" 
+                            data-bs-toggle="collapse" 
+                            data-bs-target="#o_wsale_offcanvas_brands" 
+                            aria-expanded="true" 
+                            aria-controls="o_wsale_offcanvas_brands">
+                            Brands
+                        </button>
+                    </h6>
+                    <!-- <div id="o_wsale_offcanvas_brands" t-attf-class="accordion-collapse collapse #{selected_brands and 'show'}" aria-labelledby="heading_feature_id" data-bs-parent="#category_accordion"> -->
+                    <div id="o_wsale_offcanvas_brands" 
+                         t-attf-class="accordion-collapse collapse #{selected_brands and 'show'}" 
+                         aria-labelledby="heading_feature_id" 
+                         data-bs-parent="#category_accordion">
+
+                        <t t-set="is_selected" t-value="selected_brands" />
+                        <t t-set="show_search" t-value="True" />
+                        <t t-set="name" t-value="'brand'" />
+                        <t t-set="items" t-value="brands" />
+                        <t t-set="selected" t-value="selected_brands" />
+                        <div class="flex-column mb-3">
+                            <t t-foreach="items" t-as="item" t-if="not brand_values_ids or brand_values_ids and item.id in brand_values_ids">
+                                <div class="form-check mb-1">
+                                    <input type="checkbox" t-att-name="'attrib' if is_attribute else name" class="form-check-input" t-attf-id="#{name}-#{item.id}" t-att-value="'%s-%s' % (is_attribute.id, item.id) if is_attribute else item.id" t-att-checked="'checked' if item.id in selected else None" />
+                                    <label class="form-check-label fw-normal" t-attf-for="#{name}-#{item.id}" t-out="item.name" />
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+    </template>
+<template id="all_brands" name="Theme Prime: All Brands">
+        <t t-call="website.layout">
+            <div id="wrap">
+                <div class="oe_structure" id="oe_structure_all_brands"/>
+                <div class="container py-4 tp-all-brands-page">
+                    <div t-if="not is_disable_grouping" class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between tp-brand-range">
+                                <t t-foreach="grouped_brands" t-as="alphabet">
+                                    <h2 t-if="len(grouped_brands[alphabet])" class="mx-2 mb-0">
+                                        <a class="text-primary" t-att-href="'#brand-' + alphabet" t-esc="alphabet"/>
+                                    </h2>
+                                    <h2 t-else="" class="mx-2 mb-0 text-700" t-esc="alphabet"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div t-if="len(grouped_brands[alphabet])" class="col-12 py-3" t-foreach="grouped_brands" t-as="alphabet">
+
+                            <h3 t-if="not is_disable_grouping" t-attf-id="brand-#{alphabet}" t-esc="alphabet"/>
+                            <h3 t-else="">All Brands</h3>
+
+                            <hr/>
+                            <div class="row">
+                                <div class="col-12 col-md-6 col-lg-4 col-xl-3 mt-3" t-foreach="grouped_brands[alphabet]" t-as="brand">
+                                    <a class="tp-brand-wrapper d-block border" t-attf-href="/shop?brand=#{brand.id}">
+                                        <div class="row g-0">
+                                            <div class="col-4 pl-3 border-end p-3">
+                                                <img class="mx-auto o_image_64_contain" t-attf-src="/web/image/product.brand/#{brand.id}/logo"  t-att-alt="brand.name"/>
+                                            </div>
+                                            <div class="col-6 ps-3 pe-0 py-3 d-flex align-items-start justify-content-center flex-column">
+                                                <h6 t-field="brand.name" class="w-100 text-truncate"></h6>
+                                                <small class="d-block text-body"><t t-esc="brand.products_count"/> Products</small>
+                                            </div>
+                                            <div class="col-2 d-flex align-items-center justify-content-center">
+                                                <button class="btn btn-primary-soft px-2"><i class="fa fa-chevron-right"></i></button>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

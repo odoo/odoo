@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--Add image url field in product.product model-->
+    <record id="product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.only.form.view.inherit.product.import</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <label for="image_url"/>
+                <field name="image_url" placeholder="Image URL/Path"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

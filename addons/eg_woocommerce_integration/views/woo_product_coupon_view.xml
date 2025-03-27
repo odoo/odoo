@@ -1,0 +1,92 @@
+<odoo>
+    <record id="woo_product_coupon_tree_view" model="ir.ui.view">
+        <field name="name">woo.product.coupon.tree.view</field>
+        <field name="model">woo.product.coupon</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="coupon_code"/>
+                <field name="coupon_amount"/>
+                <field name="instance_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="woo_product_from_view" model="ir.ui.view">
+        <field name="name">woo.product.coupon.form.view</field>
+        <field name="model">woo.product.coupon</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="woo_coupon_id" readonly="1"/>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                            <field name="coupon_code"/>
+                            <field name="coupon_amount"/>
+                            <field name="discount_type"/>
+                            <field name="free_shipping"/>
+                        </group>
+                        <group>
+                            <field name="date_expires"/>
+                            <field name="usage_count"/>
+                            <field name="individual_use"/>
+                            <field name="usage_limit"/>
+                            <field name="usage_limit_per_user"/>
+                            <field name="limit_usage_to_x_items"/>
+                        </group>
+                        <group>
+                            <field name="exclude_sale_items"/>
+                            <field name="email_restrictions"/>
+                        </group>
+                        <group>
+                            <field name="minimum_amount"/>
+                            <field name="maximum_amount"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Product Template">
+                            <group>
+                                <group>
+                                    <field name="product_tmpl_ids" widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <field name="excluded_product_tmpl_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Product Categories">
+                            <group>
+                                <group>
+                                    <field name="woo_product_categories_ids" widget="many2many_tags"/>
+                                </group>
+                                <group>
+                                    <field name="excluded_product_categories_ids" widget="many2many_tags"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page>
+                            <group>
+                                <field name="woo_user_id"/>
+                            </group>
+                        </page>
+                        <page string="Description">
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_woo_product_coupon">
+        <field name="name">Woocommerce Product Coupon</field>
+        <field name="res_model">woo.product.coupon</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_woo_product_coupon" name="Product Coupon" parent="eg_ecommerce_base.product_mapping_id"
+              action="action_woo_product_coupon" sequence="9"/>
+</odoo>

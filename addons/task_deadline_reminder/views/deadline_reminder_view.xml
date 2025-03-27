@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+  <data>
+      <record model="ir.ui.view" id="task_deadline_reminder_form">
+          <field name="name">ProjectTaskRemainder</field>
+          <field name="model">project.task</field>
+          <field name="inherit_id" ref="project.view_task_form2"/>
+          <field name="arch" type="xml">
+                <field name="tag_ids" position="after">
+                    <field name="task_reminder"/>
+                </field>
+          </field>
+      </record>
+  </data>
+</odoo>

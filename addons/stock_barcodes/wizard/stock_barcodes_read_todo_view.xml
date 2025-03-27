@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_stock_barcodes_todo_kanban" model="ir.ui.view">
+        <field name="name">stock.barcodes.todo.kanban</field>
+        <field name="model">wiz.stock.barcodes.read.todo</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="picking_code" />
+                <field name="location_id" />
+                <field name="location_name" />
+                <field name="location_dest_id" />
+                <field name="location_dest_name" />
+                <field name="product_id" />
+                <field name="lot_id" />
+                <field name="uom_id" />
+                <field name="package_id" />
+                <field name="result_package_id" />
+                <field name="package_product_qty" />
+                <field name="product_uom_qty" />
+                <field name="qty_done" />
+                <field name="line_ids" invisible="1" />
+                <field name="state" />
+                <field name="is_extra_line" />
+                <field name="is_stock_move_line_origin" />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div
+                            t-attf-class="oe_kanban_content "
+                            t-attf-style="background-color: {{record.is_extra_line.raw_value == true and '#ffd683' or '#f0f9fb'}};"
+                        >
+                            <div class="row">
+                                <div class="col">
+                                    <span
+                                        class="fa fa-map-marker"
+                                        title="Location name"
+                                    />
+                                    <strong>
+                                        <span
+                                            attrs="{'invisible': [('picking_code', '!=', 'incoming')]}"
+                                        >
+                                            <field name="location_dest_name" />
+                                        </span>
+                                        <span
+                                            attrs="{'invisible': [('picking_code', '!=', 'internal')]}"
+                                        >
+                                            <field name="location_name" /> ⇨ <field
+                                                name="location_dest_name"
+                                            />
+                                        </span>
+                                        <span
+                                            attrs="{'invisible': [('picking_code', '!=', 'outgoing')]}"
+                                        >
+                                            <field name="location_name" />
+                                        </span>
+                                    </strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <strong>
+                                        <field name="product_id" />
+                                    </strong>
+                                </div>
+                            </div>
+                            <t
+                                t-if="record.lot_id or record.package_id or record.result_package_id"
+                            >
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <span>
+                                                <span
+                                                    class="fa fa-tags"
+                                                    title="Lot S/N"
+                                                />
+                                                <field
+                                                    name="lot_id"
+                                                    options="{'no_open': True}"
+                                                />
+                                            </span>
+                                        </td>
+                                        <td class="text-end">
+                                            <span class="fa fa-dropbox" />
+                                            <span>
+                                                <field name="package_id" />
+                                                <t t-if="record.package_id">(<span
+                                                        t-esc="record.package_product_qty.value"
+                                                    /> <t
+                                                        t-esc="record.uom_id.value.slice(0,3)"
+                                                    />)</t>
+                                            </span>
+                                            <span>
+                                                <field name="result_package_id" />
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </t>
+                            <div class="row">
+                                <div class="col-12">
+                                    <span>
+                                        <span class="fw-bold">
+                                            <t t-esc="record.qty_done.value" />
+                                        </span> / <t
+                                            t-esc="record.product_uom_qty.value"
+                                        /> <t t-esc="record.uom_id.value.slice(0,3)" />
+                                    </span>
+                                    <strong
+                                        class="bg-danger"
+                                        t-if="record.is_extra_line.raw_value == true"
+                                    >NOT AVAILABLE</strong>
+                                </div>
+                            </div>
+                            <div name="action" class="row">
+                                <div class="col-2">
+                                    <button
+                                        name="action_back_line"
+                                        type="object"
+                                        icon="fa-step-backward"
+                                        title="Previous"
+                                        class="btn-sm float-start btn btn-primary"
+                                        context="{'wiz_barcode_id': parent.id}"
+                                        data-hotkey="1"
+                                    />
+                                </div>
+                                <div class="col-4 p-0">
+                                    <button
+                                        name="action_reset_lines"
+                                        type="object"
+                                        icon="fa-trash"
+                                        title="Clean"
+                                        class="btn-sm btn mx-auto d-block btn-warning"
+                                        context="{'wiz_barcode_id': parent.id}"
+                                        data-hotkey="2"
+                                    />
+                                </div>
+                                <div class="col-4 p-0">
+                                    <button
+                                        name="action_todo_next"
+                                        type="object"
+                                        class="btn-sm mx-auto d-block btn-danger btn"
+                                        context="{'wiz_barcode_id': parent.id}"
+                                        data-hotkey="3"
+                                        attrs="{'invisible': ['|','|', ('qty_done', '=', 0.0), ('is_extra_line', '=', True), ('is_stock_move_line_origin', '=', False)]} "
+                                    >
+                                    Ignore rest
+                                    </button>
+                                    <!-- Ask for confirmation when we've got done quantities to avoid squashing quantities -->
+                                    <button
+                                        name="action_todo_next"
+                                        type="object"
+                                        class="btn-sm mx-auto d-block btn-danger btn"
+                                        context="{'wiz_barcode_id': parent.id}"
+                                        data-hotkey="3"
+                                        attrs="{'invisible': ['|', '|', ('qty_done', '!=', 0.0), ('is_extra_line', '=', True), ('is_stock_move_line_origin', '=', False)]} "
+                                        confirm="You have not set any quantity to this operation and it will be removed from pending moves. Are you sure?"
+                                    >Ignore rest
+                                    </button>
+                                </div>
+                                <div class="col-2">
+                                    <button
+                                        name="action_next_line"
+                                        type="object"
+                                        icon="fa-step-forward"
+                                        title="Next"
+                                        class="btn-sm float-end btn btn-primary"
+                                        context="{'wiz_barcode_id': parent.id}"
+                                        data-hotkey="4"
+                                    />
+                                </div>
+                            </div>
+                            <div name="action_extra" class="row mt-2">
+                                <div class="col-12">
+                                    <button
+                                        name="action_todo_next"
+                                        type="object"
+                                        class="btn btn-warning float-end btn-sm"
+                                        context="{'wiz_barcode_id': parent.id, 'barcode_backorder_action': 'pending'}"
+                                        data-hotkey="3"
+                                        attrs="{'invisible': [('is_extra_line', '=', False), ('is_stock_move_line_origin', '=', True)]} "
+                                        confirm="This move will be set to pending. Are you sure?"
+                                    >
+                                    Restore to pending
+                                    </button>
+                                    <button
+                                        name="action_todo_next"
+                                        type="object"
+                                        class="btn btn-danger float-end btn-sm me-5"
+                                        context="{'wiz_barcode_id': parent.id, 'barcode_backorder_action': 'skip_backorder'}"
+                                        data-hotkey="3"
+                                        attrs="{'invisible': [('is_extra_line', '=', False), ('is_stock_move_line_origin', '=', True)]} "
+                                        confirm="Odoo will not create a backorder for this move. Are you sure?"
+                                    >
+                                    No Backorder
+                                    </button>
+                                    <button
+                                        name="action_todo_next"
+                                        type="object"
+                                        class="btn btn-primary float-end btn-sm me-3"
+                                        context="{'wiz_barcode_id': parent.id, 'barcode_backorder_action': 'create_backorder'}"
+                                        data-hotkey="3"
+                                        attrs="{'invisible': [('is_extra_line', '=', False), ('is_stock_move_line_origin', '=', True)]} "
+                                    >
+                                    Create Backorder
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

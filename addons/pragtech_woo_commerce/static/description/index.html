@@ -1,0 +1,1415 @@
+<!doctype html>
+<html style="scroll-behavior: smooth;">
+<head>
+<meta charset="utf-8">
+<title>Untitled Document</title>
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet" />
+<link href="css/font-awesome.min.css" type="text/css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+.oe_hidden, .oe_transparent {
+	opacity: 0!important
+}
+.oe_button, .oe_pic_ctr {
+	position: relative
+}
+.oe_styling_v8 {
+	font-family: "Open Sans", Helvetica, Sans;
+	font-weight: 300;
+	color: #646464;
+	background: #fff;
+	font-size: 16px
+}
+.oe_styling_v8 .oe_slogan, .oe_styling_v8 .oe_title_font {
+	font-family: Lato, "Open Sans", Helvetica, Sans
+}
+.oe_styling_v8 .oe_website_contents {
+	background: #f5f5f5;
+	padding-bottom: 1px
+}
+.oe_styling_v8 b {
+	font-weight: 600
+}
+.oe_styling_v8 a {
+	color: #21B799;
+	text-decoration: none
+}
+.oe_button, .oe_styling_v8 a.btn {
+	color: #fff
+}
+.oe_styling_v8 .oe_page {
+	background: #fff;
+	overflow: hidden;
+	-webkit-border-radius: 1px;
+	-moz-border-radius: 1px;
+	-ms-border-radius: 1px;
+	-o-border-radius: 1px;
+	border-radius: 1px;
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,.35);
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,.35);
+	box-shadow: 0 1px 3px rgba(0,0,0,.35)
+}
+.oe_styling_v8 .oe_emph {
+	font-weight: 400
+}
+.oe_styling_v8 .oe_dark {
+	overflow: hidden;
+	background: #efefef;
+	box-shadow: none
+}
+.oe_page {
+	margin: 0 auto 64px;
+	max-width: 992px
+}
+.oe_row {
+	width: 928px;
+	margin: 16px auto
+}
+.oe_row.oe_fit {
+	width: auto
+}
+.oe_clearfix:after, .oe_row:after {
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0
+}
+[class*=oe_span] {
+	float: left;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 16px
+}
+.oe_span12 {
+	width: 928px
+}
+.oe_span10 {
+	width: 773px
+}
+.oe_span9 {
+	width: 696px
+}
+.oe_span8 {
+	width: 618px
+}
+.oe_span6 {
+	width: 464px
+}
+.oe_span4 {
+	width: 309px
+}
+.oe_span3 {
+	width: 232px
+}
+.oe_span2 {
+	width: 154px
+}
+[class*=oe_span].oe_fit {
+	padding-left: 0!important;
+	padding-right: 0!important
+}
+[class*=oe_span].oe_right {
+	float: right
+}
+.oe_row.oe_flex [class*=oe_span] {
+	display: inline-block;
+	float: none;
+	vertical-align: top;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 0 16px;
+	width: auto
+}
+.oe_row.oe_flex .oe_span12 {
+	max-width: 928px
+}
+.oe_row.oe_flex .oe_span10 {
+	max-width: 769px
+}
+.oe_row.oe_flex .oe_span9 {
+	max-width: 692px
+}
+.oe_row.oe_flex .oe_span8 {
+	max-width: 614px
+}
+.oe_row.oe_flex .oe_span6 {
+	max-width: 460px
+}
+.oe_row.oe_flex .oe_span4 {
+	max-width: 305px
+}
+.oe_row.oe_flex .oe_span3 {
+	max-width: 228px
+}
+.oe_row.oe_flex .oe_span2 {
+	max-width: 150px
+}
+.oe_mb48 {
+	margin-bottom: 48px!important
+}
+.oe_mt0 {
+	margin-top: 0!important
+}
+.oe_mt4 {
+	margin-top: 4px!important
+}
+.oe_mt8 {
+	margin-top: 8px!important
+}
+.oe_mt16 {
+	margin-top: 16px!important
+}
+.oe_mt32 {
+	margin-top: 32px!important
+}
+.oe_mt48 {
+	margin-top: 48px!important
+}
+.oe_mt64 {
+	margin-top: 64px!important
+}
+.oe_mb0 {
+	margin-bottom: 0!important
+}
+.oe_mb4 {
+	margin-bottom: 4px!important
+}
+.oe_mb8 {
+	margin-bottom: 8px!important
+}
+.oe_mb16 {
+	margin-bottom: 16px!important
+}
+.oe_mb32 {
+	margin-bottom: 32px!important
+}
+.oe_mb64 {
+	margin-bottom: 64px!important
+}
+.oe_rightfit {
+	padding-right: 0!important
+}
+.oe_leftfit {
+	padding-left: 0!important
+}
+.oe_leftalign {
+	text-align: left
+}
+.oe_rightalign {
+	text-align: right
+}
+.oe_centeralign {
+	text-align: center
+}
+.oe_centered {
+	margin-left: auto;
+	margin-right: auto
+}
+.oe_hidden {
+	display: none!important
+}
+.oe_invisible {
+	visibility: hidden!important
+}
+.oe_spaced {
+	margin-top: 32px;
+	margin-bottom: 32px
+}
+.oe_more_spaced {
+	margin-top: 64px;
+	margin-bottom: 64px
+}
+.oe_padded {
+	padding-top: 16px;
+	padding-bottom: 16px
+}
+.oe_more_padded {
+	padding-top: 32px;
+	padding-bottom: 32px
+}
+.oe_button {
+	bottom: 0;
+	display: inline-block;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none
+}
+.oe_styling_v8 .oe_button, .oe_styling_v8 a.oe_button {
+	padding: 8px 14px;
+	background: #21B799;
+	color: #fff;
+	-webkit-transition-property: bottom, background;
+	-moz-transition-property: bottom, background;
+	-o-transition-property: bottom, background;
+	transition-property: bottom, background;
+	-webkit-transition-duration: 250ms;
+	-moz-transition-duration: 250ms;
+	-o-transition-duration: 250ms;
+	transition-duration: 250ms
+}
+.oe_styling_v8 .oe_button:active, .oe_styling_v8 .oe_button:hover, .oe_styling_v8 a.oe_button:active, .oe_styling_v8 a.oe_button:hover {
+	background: #1b9f85
+}
+.oe_styling_v8 .oe_button.oe_big, .oe_styling_v8 a.oe_button.oe_big {
+	font-size: 24px
+}
+.oe_styling_v8 .oe_button.oe_bigger, .oe_styling_v8 a.oe_button.oe_bigger {
+	font-size: 32px
+}
+.oe_styling_v8 .oe_button.oe_small, .oe_styling_v8 a.oe_button.oe_small {
+	font-size: 13px;
+	padding: 2px 4px
+}
+.oe_styling_v8 .oe_button.oe_medium, .oe_styling_v8 a.oe_button.oe_medium {
+	padding: 5px 12px;
+	font-size: 16px
+}
+.oe_styling_v8 .oe_button.oe_tacky, .oe_styling_v8 a.oe_button.oe_tacky {
+	background: #34495E
+}
+.oe_styling_v8 .oe_button.oe_tacky:active, .oe_styling_v8 .oe_button.oe_tacky:hover, .oe_styling_v8 a.oe_button.oe_tacky:active, .oe_styling_v8 a.oe_button.oe_tacky:hover {
+	background: #253544
+}
+.oe_styling_v8 .oe_button.oe_disabled, .oe_styling_v8 a.oe_button.oe_disabled {
+	background: #c8c8c8;
+	cursor: default
+}
+.oe_styling_v8 .oe_button.oe_disabled:active, .oe_styling_v8 .oe_button.oe_disabled:hover, .oe_styling_v8 a.oe_button.oe_disabled:active, .oe_styling_v8 a.oe_button.oe_disabled:hover {
+	background: #c8c8c8
+}
+.oe_styling_v8.oe_styling_black .oe_button {
+	-webkit-box-shadow: 0 2px 0 #463555;
+	-moz-box-shadow: 0 2px 0 #463555;
+	box-shadow: 0 2px 0 #463555
+}
+.oe_styling_v8 .oe_input {
+	padding: 4px 7px;
+	border-radius: 3px;
+	border: 1px solid #d6d6d6;
+	box-shadow: 0 2px #e6e6e6;
+	background: #fafafa;
+	font-weight: 300;
+	outline: 0;
+	-webkit-transition: all 150ms linear;
+	-moz-transition: all 150ms linear;
+	-o-transition: all 150ms linear;
+	transition: all 150ms linear
+}
+.oe_styling_v8 .oe_input:focus {
+	border: 1px solid #969696;
+	box-shadow: 0 2px #d2d2d2
+}
+.oe_styling_v8 .oe_input.oe_valid {
+	background: #f2ffec;
+	border-color: #b1ebb6;
+	box-shadow: 0 2px #e1f8e1;
+	color: #0f610f
+}
+.oe_styling_v8 .oe_input.oe_invalid {
+	background: #fff2f2;
+	border-color: #ebb1b1;
+	box-shadow: 0 2px #f8e1e1;
+	color: #610f0f
+}
+.oe_styling_v8 .oe_input.oe_big {
+	padding: 8px 14px
+}
+.oe_styling_v8 .oe_input_label {
+	font-weight: 300;
+	font-size: 16px
+}
+.oe_styling_v8 .oe_input_label.oe_big {
+	font-size: 20px
+}
+.oe_styling_v8 .oe_textarea {
+	width: 300px;
+	height: 80px
+}
+.oe_styling_v8 .oe_form_layout_table {
+	width: 100%
+}
+.oe_styling_v8 .oe_form_layout_table td {
+	padding-bottom: 16px
+}
+.oe_styling_v8 .oe_form_layout_table td:first-child {
+	text-align: right;
+	padding-right: 16px
+}
+.text-alpha {
+	color: #A24689!important
+}
+.oe_styling_v8 h1.oe_slogan {
+	font-size: 64px;
+	font-weight: 900;
+	margin-top: 48px;
+	margin-bottom: 48px
+}
+.oe_styling_v8 h2.oe_slogan {
+	font-size: 40px;
+	font-weight: 300
+}
+.oe_styling_v8 h3.oe_slogan {
+	font-size: 26px;
+	font-weight: 300;
+	filter: alpha(Opacity=50);
+	opacity: .5
+}
+.oe_styling_v8 h4.oe_slogan {
+	font-size: 24px;
+	font-weight: 300
+}
+.oe_styling_v8 h4.oe_slogan:after, .oe_styling_v8 h4.oe_slogan:before {
+	margin: 0 20px;
+	content: "";
+	display: inline-block;
+	width: 100px;
+	height: 0;
+	border-top: solid 1px;
+	vertical-align: middle;
+	filter: alpha(Opacity=30);
+	opacity: .3
+}
+.oe_styling_v8 h5.oe_slogan {
+	font-weight: 300
+}
+.oe_styling_v8 h2.oe_slogan+h3.oe_slogan {
+	margin-top: -28px
+}
+.oe_quote {
+	margin: 8px;
+	padding: 16px;
+	background: rgba(0,0,0,.02);
+	border: 1px solid rgba(0,0,0,.06);
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	-ms-border-radius: 2px;
+	-o-border-radius: 2px;
+	border-radius: 2px
+}
+.oe_quote .oe_q, .oe_quote q {
+	margin: 10px;
+	display: block;
+	font-style: italic;
+	text-align: center;
+	font-size: 20px
+}
+.oe_quote .oe_q:after, .oe_quote .oe_q:before, .oe_quote q:after, .oe_quote q:before {
+	content: '"';
+	font-weight: 900;
+	filter: alpha(Opacity=20);
+	opacity: .2
+}
+.oe_quote cite {
+	display: block;
+	font-style: normal;
+	margin-top: 16px
+}
+.oe_quote .oe_photo {
+	float: left;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	margin-right: 16px
+}
+.oe_quote .oe_author {
+	font-size: 20px;
+	padding-top: 6px
+}
+.oe_dark .oe_quote {
+	background: #fff;
+	border: 1px solid #f0f0ff
+}
+.oe_picture {
+	display: block;
+	max-width: 84%;
+	max-height: 400px;
+	margin: 16px 8%
+}
+.oe_screenshot {
+	padding: 8px;
+	background-color: #fff;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	-ms-border-radius: 3px;
+	-o-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	box-shadow: 0 1px 4px rgba(0,0,0,.2)
+}
+.oe_pic_ctr>img.oe_picture {
+	width: 100%;
+	max-width: none;
+	max-height: none;
+	margin: 0
+}
+.oe_pic_ctr>.oe_title {
+	position: absolute;
+	top: 15px;
+	right: 38px
+}
+.oe_styling_v8 .oe_pic_ctr>.oe_title {
+	font-size: 64px;
+	color: #fff;
+	font-weight: 600;
+	margin: 0;
+	text-shadow: 0 2px 0 #494949, 0 2px 5px rgba(0,0,0,.33), 0 0 60px rgba(0,0,0,.22)
+}
+div.oe_demo {
+	position: relative;
+	border: 1px solid #dedede
+}
+div.oe_demo span.oe_demo_play {
+	top: 50%;
+	left: 50%;
+	width: 80px;
+	height: 60px;
+	margin-top: -30px;
+	margin-left: -40px;
+	display: block;
+	position: absolute;
+	background: url(/loempia/static/src/css/../img/layout/play-button.png) left top no-repeat;
+	pointer-events: none
+}
+div.oe_demo img {
+	max-width: 100%;
+	width: 100%
+}
+div.oe_demo div.oe_demo_footer {
+	position: absolute;
+	left: 0;
+	background-color: rgba(162,70,137,.7);
+	opacity: .85;
+	bottom: -1px;
+	width: 100%;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: 700;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	pointer-events: none
+}
+div.oe_demo:hover span.oe_demo_play {
+	background: url(/loempia/static/src/css/../img/layout/play-button-over.png) left top no-repeat
+}
+.oe_styling_v8 .oe_container.oe_separator {
+	height: 64px;
+	margin-bottom: 16px;
+	background: -webkit-gradient(linear, 50% 0, 50% 100%, color-stop(0, rgba(0,0,0,0)), color-stop(100%, rgba(0,0,0,.02)));
+	background: -webkit-linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.02));
+	background: -moz-linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.02));
+	background: -o-linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.02));
+	background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.02));
+	-webkit-box-shadow: 0 -3px 10px -5px rgba(0,0,0,.1) inset;
+	-moz-box-shadow: 0 -3px 10px -5px rgba(0,0,0,.1) inset;
+	box-shadow: 0 -3px 10px -5px rgba(0,0,0,.1) inset;
+	overflow-y: hidden
+}
+.oe_row_tabs {
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-top: 21px
+}
+.oe_row_tab {
+	position: relative;
+	min-width: 120px;
+	padding: 8px;
+	font-size: 20px;
+	display: inline-block;
+	margin: 0 -2px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	border: 1px solid rgba(0,0,0,.1);
+	border-bottom: none;
+	background: #fafafa;
+	background-image: +linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.02));
+	box-shadow: 0 -3px 10px -5px rgba(0,0,0,.1) inset;
+	cursor: pointer;
+	-webkit-transition: all 250ms linear;
+	-moz-transition: all 250ms linear;
+	-o-transition: all 250ms linear;
+	transition: all 250ms linear
+}
+.oe_row_tab:hover {
+	padding-bottom: 12px;
+	top: -4px;
+	background-color: #fff
+}
+.oe_row_tab.oe_active {
+	background-color: #fff;
+	background-image: none;
+	box-shadow: none;
+	border-top-color: #8272b6;
+	border-top-width: 2px;
+	cursor: default
+}
+.oe_row_tab.oe_active:hover {
+	padding-bottom: 8px;
+	top: 0
+}
+.oe_calltoaction {
+	height: 32px;
+	margin-top: -32px;
+	position: relative
+}
+.oe_styling_v8 .oe_slogan {
+	color: #333;
+	margin-top: 32px;
+	margin-bottom: 32px;
+	text-align: center
+}
+.oe_slogan {
+	text-align: center
+}
+.oe_dark {
+	overflow: hidden;
+	background: #efefef;
+	box-shadow: none
+}
+.nav-pills .nav-link.active, .nav-pills .nav > li > a.active, .nav-pills .show > .nav-link, .nav-pills .nav > li.show > a {
+	color: #fff;
+	background-color: #4B5ADA !important;
+}
+</style>
+</head>
+
+<body>
+
+<!--Gif Section Start-->
+<!--<section id="learn_more" class="oe_dark">
+  <div class="container-fluid p-0">
+    <div class="col-md-12 col-sm-12 col-xs-12 padding-none text-center mb32">
+      <div> <img class="img img-responsive" style="max-width:100%; width:100%" src="Design-gif-for-Appstore.gif"> </div>
+    </div>
+  </div>
+</section>-->
+<!--Gif Section End--> 
+
+<!--Sale Section Start--> 
+<!--<section class="oe_container oe_dark" style=" padding-bottom:20px;">
+  <div class="col-md-12 col-sm-12 col-xs-12 padding-none text-center mb8">
+    <div> <img class="img-fluid p-1 shadow-lg mt-2" src="https://www.pragtech.co.in/appstore-img/sale.jpg"/> </div>
+  </div>
+</section>--> 
+<!--Sale Section End--> 
+	<!--related products start-->
+
+<section>
+  <div class="container  mt-5 mb-5">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="text-center mb-3" style="padding-bottom: 10px; color:#333E99;"> <b>Our Customer Reviews</b> </h2>
+        <div class="dropdown-divider mt-3 mb-3" style="border-color: #333E99; width: 75%; margin: 0 auto;"></div>
+        <div id="slide-bottom1" class="row carousel slide mt64 mb32" data-ride="carousel"> 
+          <!-- The slideshow -->
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> <div class="row">
+			 <div class="col-md-12 col-sm-4 col-xs-12 pl-5 ">
+			<img class="offset-md-2" src="img/bsach.png" alt="bsach" width="50%;"> </div>
+              <div class="col-md-12 col-sm-12 col-xs-12 pl-5 pr-5 ">
+                 <h6 class="text-left " style="font-family:font-family: 'Lato', sans-serif"><br>"Excellent work! Perfect function. Thank you very much for your time!"</h6>
+				      <p class="text-right mt30">- <strong>bsach</strong></p>
+                </div>
+              </div>
+				</div>
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> <div class="row">
+			 <div class="col-md-12 col-sm-4 col-xs-12 pl-5 ">
+			<img class="offset-md-2" src="img/coder_geek.png" alt="CoderGeek" width="55%;"> </div>
+              <div class="col-md-12 col-sm-12 col-xs-12 pl-5 pr-5 ">
+                 <h6 class="text-left " style="font-family:font-family: 'Lato', sans-serif"><br>"Dear Pragmatic,
+thank you for the quality of service you provided and I sincerely appreciate your efficient, gracious from Pragmatic Techsoft Pvt. Ltd. and the level of detail and accountability you have demonstrated on this matter, and the way you conduct business as a whole. I will continue to recommend your services to other friends and contacts."</h6>
+				      <p class="text-right mt30">- <strong>CoderGeek</strong></p>
+                </div>
+              </div>
+				</div>
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> <div class="row">
+			 <div class="col-md-12 col-sm-4 col-xs-12 pl-5 ">
+			<img class="offset-md-2" src="img/mark_agbko.png" alt="CoderGeek" width="55%;"> </div>	  
+			 <div class="col-md-12 col-sm-4 col-xs-12 pl-5 ">
+			 </div>
+              <div class="col-md-12 col-sm-12 col-xs-12 pl-5 pr-5 ">
+                 <h6 class="text-left " style="font-family:font-family: 'Lato', sans-serif"><br>We purchased this app back in 2020, and since there are no issues with the product itself,  your product is excellent and has no flaws in it.</h6>
+				      <p class="text-right mt30"><strong>- MARK AGBEKO</strong></p>
+                </div>
+              </div>
+				</div>
+            </div>
+          </div>
+          <!-- Left and right controls --> 
+           <a class="carousel-control-prev" href="#slide-bottom1" data-slide="prev" style="left:-25px;width: 35px;color: #000;"> <span class="carousel-control-prev-icon"><i class="fa fa-chevron-left" style="font-size:24px"></i></span> </a> <a class="carousel-control-next" href="#slide-bottom1" data-slide="next" style="right:-25px;width: 35px;color: #000;"> <span class="carousel-control-next-icon"><i class="fa fa-chevron-right" style="font-size:24px"></i></span> </a> </div>
+       
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--related products end--> 
+		
+	
+	
+	<section>
+  <div class="container shadow-lg p-4 mt-5" style=" border-radius: 30px; background-color:#333E99;">
+    <div class="row"> 
+      <!--<div class="col-12"> <img class="img-fluid mt-2" src="https://www.pragtech.co.in/appstore-img/sale.jpg"/> </div>-->
+      <div class="col-12">
+        <div class="mt-3 align-content-center pt-3"> <img class="mx-auto d-block" width="28%" height="28%" src="img/pragmatic_logo.png"> </div>
+        <h1 class="text-center  pt-3" style="padding-bottom: 10px; color:#F4A0FB"><strong>Odoo WooCommerce Connector</strong></h1>
+      </div>
+      <div class="col-12 pb-2">
+        <p class="text-left" style="color: gainsboro;">WooCommerce has become the most widely used eCommerce platform online, offering the ability to sell any product with an aesthetically pleasing presentation. Designed to seamlessly integrate with WordPress, it is the preferred solution for eCommerce among both merchants and developers, granting them full control over their online store.<br>
+        </p>
+        <p class="text-left" style="color: gainsboro;">Pragmatic has created a connector module between Odoo and WooCommerce that allows users to easily import data from WooCommerce to Odoo. The connector offers several features, listed below. When a user imports a product from WooCommerce to Odoo, they will be able to view the corresponding WooCommerce ID within the form.
+		</p>
+      </div>
+    </div>
+	   <div class="d-flex justify-content-center text-center"> <a class="mr-2" style="padding:12px 32px; display:inline-block; background-color:#F4A0FB; color:#170B26; border-radius:25px; margin:14px 0px; font-weight:400" href="mailto:support@pragtech.co.in"><i class="fa fa-envelope mr-1"></i><b>REQUEST A FREE DEMO VIDEO</b></a> <a style="padding:12px 32px; display:inline-block; background-color:#00AFF0; color:#FFF; border-radius:25px; margin:14px 0px; font-weight:400" href="skype:pragtech?call"> <i class="fa fa-skype mr-1"></i> <b>Skype Us</b></a> </div>
+  </div>
+</section>
+	
+	
+	<section>
+  <div class="container p-4 mt-5" style=" border-radius: 20px;">
+    <div class="row"> 
+      <!--<div class="col-12"> <img class="img-fluid mt-2" src="https://www.pragtech.co.in/appstore-img/sale.jpg"/> </div>-->
+      <div class="col-12 ">
+        <h1 class="text-center mb-3 pt-3" style="padding-bottom: 10px; color:#4B5ADA"><strong>Key Connector Features</strong></h1>
+      </div>
+		<div class="col-12">
+        <div class="row">
+			<div class="row position-relative" style="color:#333333; font-weight:500; font-size:16px"> 
+                                <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:80px;" src="img/import_product_category.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Import Product Category from WooCommerce to Odoo</h5>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                              <img class="img img-responsive" style="width:80px;" src="img/import_product.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Import Product from WooCommerce to Odoo</h5>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                              <img class="img img-responsive" style="width:70px;" src="img/import_inventory.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Import Inventory from WooCommerce to Odoo</h5>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                              <img class="img img-responsive" style="width:70px;"src="img/import_customer.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Import Customer from WooCommerce to Odoo</h5>
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/import_sales.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Import Sales Order from WooCommerce to Odoo</h5>
+                                            </div>
+                                        </div>
+                                </div>
+				       <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/webhook.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Get Orders from WooCommerce to Odoo Immediately Using Webhook</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+				<div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/refund.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: #202a25;">Manage Refunds from WooCommerce</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+				<div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/auto_redirection.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: #202a25;">Auto Redirection to Orders in WooCommerce from Odoo</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+				      <div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/payment.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: 202a25;">Payment Gateways Import Functionality</h5>
+												<ul>
+                                                 <li style="color: 202a25;">Payment Gateways Import Functionality</li>
+                                                 <li style="color: 202a25;">Payment Gateways Import Automatic Job</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </div>
+				<div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/shipping_methods.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: #202a25;">Shipping Methods Import Functionality</h5>
+												<ul>
+                                                 <li style="color: #202a25;">Product Coupons Import Functionality</li>
+                                                 <li style="color: #202a25;">Shipping Methods Import Automatic Job</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </div>
+				<div class="col-sm-6 col-lg-4 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 bg-white shadow-sm px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div style="width:100px">
+                                               <img class="img img-responsive" style="width:70px;" src="img/coupon.png">
+                                            </div>
+                                            <div class="w-100 pl-3">
+                                                <h5 style="color: #202a25;">Product Coupons Import And Export</h5>
+												<ul>
+                                                 <li style="color: #202a25;">Product Coupons Import Functionality</li>
+                                                 <li style="color: #202a25;">Product Coupons Export Functionality</li>
+                                                 <li style="color: #202a25;">Product Coupons Import Automatic Job</li>
+                                                 <li style="color: #202a25;">Product Coupons Export Automatic Job</li>
+                                                 <li style="color: #202a25;">Import Order with Coupon</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+	
+	
+	<section class="mt-5">
+  <div class="container shadow-lg p-4 mt-5" style="border-radius:20px;">
+    <div class="row mt-3">
+      <div class="col-12 text-center">
+        <h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px">Install the <strong>woocommerce python package</strong> <br>to install this module.</h3>
+      </div>
+    </div>
+	  <div class="row mt-3 d-flex align-content-center">       
+		  <div class="col-md-4"></div>
+		   <div class="col-md-4 pb-2">
+						 <div style="font-weight:500; font-size:15px; margin:0 auto; border:1px solid #4B5ADA; display:flex; background-color:#4B5ADA; border-radius:10px; min-width:100%">
+        <div class="text-center" style="color:#091E42; padding:0; min-width:100%">
+          <span class="bg-white position-relative" style="padding:7px; color:#0f1e40; float:left; font-weight:600; width:65px; vertical-align:middle; border-bottom-left-radius:9px; border-top-left-radius:9px;">
+            <span class="text-center d-inline-block pr-2">API link</span>
+          </span>
+          <h6 style="vertical-align:middle; border-top-right-radius:9px; border-bottom-right-radius:9px; margin-top: 18px; margin-bottom: 0px; color:#fff; font-weight:500; padding:0px 12px 0px 80px; font-size: 14px;" class="text-center mb0">https://bit.ly/3MxxK6Y</h6>
+        </div>
+		<div class="col-md-4"></div>
+      </div>
+      </div>
+     </div>
+  </div>
+</section>
+	
+	
+<section>
+  <div class="container shadow-lg p-4 mt-5 text-center" style="border-radius: 30px;">
+    <div class="row">
+      <div class="col-12">
+        <div class="bg-white mb-4 pt-2" style="border-radius:10px">
+          <div class="nav bg-transparent flex-row nav-pills" id="v-pills-tab1" role="tablist" aria-orientation="vertical"> <a style="border-radius:0; padding-bottom:2px !important;" id="tab1" data-toggle="pill" href="#tab1pr" role="tab" aria-controls="tab1pr" aria-selected="false" class="nav-link p-0 border-bottom col active">
+            <div class="media bg-white align-items-center px-2 py-3 justify-content-center">
+              <div class="pl-2 pr-3 position-relative">
+                <h5 class="h6 d-flex align-items-center m-0 text-left" style="color: #4B5ADA; font-size: 18px; padding-bottom: 18px"><b>Aspect</b></h5>
+              </div>
+            </div>
+            </a> <a style="border-radius:0; padding-bottom:2px !important" class="nav-link p-0 border-bottom col" id="tab2" data-toggle="pill" href="#tab2pr" role="tab" aria-controls="tab2pr" aria-selected="true">
+            <div class="media bg-white align-items-center px-2 py-3 justify-content-center">
+              <div class="pl-2 pr-3 position-relative">
+                <h5 class="text-center h6 d-flex align-items-center m-0 text-left" style="color: #4B5ADA; font-size: 18px; padding-bottom: 18px"><b>Screenshots</b><br>
+                </h5>
+              </div>
+            </div>
+            </a> <a style="border-radius:0; padding-bottom:2px !important" class="nav-link p-0 border-bottom col" id="tab3" data-toggle="pill" href="#tab3pr" role="tab" aria-controls="tab3pr" aria-selected="false">
+            <div class="media bg-white align-items-center px-2 py-3 justify-content-center">
+              <div class="pl-2 pr-3 position-relative">
+                <h5 class="text-center h6 d-flex align-items-center m-0 text-left" style="color: #4B5ADA; font-size: 18px; padding-bottom: 18px"><b>FAQ</b><br>
+                </h5>
+              </div>
+            </div>
+            </a> <a style="border-radius:0; padding-bottom:2px !important" class="nav-link p-0 border-bottom col" id="tab4" data-toggle="pill" href="#tab4pr" role="tab" aria-controls="tab4pr" aria-selected="false">
+            <div class="media bg-white align-items-center px-2 py-3 justify-content-center">
+              <div class="pl-2 pr-3 position-relative">
+                <h5 class="text-center h6 d-flex align-items-center m-0 text-left" style="color: #4B5ADA; font-size: 18px; padding-bottom: 18px"><b>Support</b><br>
+                </h5>
+              </div>
+            </div>
+            </a> <a style="border-radius:0; padding-bottom:2px !important" class="nav-link p-0 border-bottom col" id="tab5" data-toggle="pill" href="#tab5pr" role="tab" aria-controls="tab5pr" aria-selected="false">
+            <div class="media bg-white align-items-center px-2 py-3 justify-content-center">
+              <div class="pl-2 pr-3 position-relative">
+                <h5 class="text-center h6 d-flex align-items-center m-0 text-left" style="color: #4B5ADA; font-size: 18px; padding-bottom: 18px"><b>Version Release</b><br>
+                </h5>
+              </div>
+            </div>
+            </a>
+			</div>
+			</div>
+		  </div>
+		</div>
+
+          <div class="tab-content p-4 mt-3" style="border-radius:10px; " id="v-pills-tabContent1" >
+			
+			<!--Tab 1-->
+            <div class="tab-pane fade active show" id="tab1pr" role="tabpanel" aria-labelledby="tab1">                             <div class="col-12">
+                <h2 class="text-center pt-3" style="padding-bottom: 10px; color:#4B5ADA"><strong>Odoo – WooCommerce Connector</strong></h2>
+                <div class="dropdown-divider mt-3 mb-3" style="border-color: #4B5ADA; width: 75%; margin: 0 auto;"></div>
+              </div>
+				<div class="row">
+                <p class="text-left" style="color: #202a25;">Our all-inclusive <i style="color: #4B5ADA;"><strong>Odoo – WooCommerce Connector</strong></i> is used to connect your odoo and WooCommerce and export or import data bidirectionally. Using this module you can easily manage your multiple WooCommerce stores by connecting with your odoo database.<br>
+          <br>
+          This application provides the features for exporting and importing Customers, Sales Orders, Products, Product Categories, Product attributes and values, Taxes.<br>
+          <br>
+          User can create and configure multiple woocommerce instances in odoo and start importing and exporting data, this module have a beautiful user friendly dashboard from where user can see the synced data count, total sales along with a bar graph.<br>
+          <br></p>
+			<div class="col-12">
+                <h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>WooCommerce to Odoo - Import Operations</strong></h3>
+            </div>
+
+					
+				             <ul class="mt-3 pb-4">
+                <li class="mb8 text-left mt-3">
+                  <b>Import Product Category from Woocommerce to Odoo.</b>
+				</li>
+                <li class="mb8 text-left mt-3">
+                  <b>Import Products with Variants from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Import Inventory from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Import Customer from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Import Sales Order from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                  <b>Import Product Coupons from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                  <b>Import Shipping Methods from Woocommerce to Odoo.</b>
+				</li>
+				<li class="mb8 text-left mt-3">
+                  <b>Import Payment Gateways from Woocommerce to Odoo.</b>
+				</li>
+              </ul>	
+					 <div class="col-12">
+                <h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Odoo to WooCommerce - Export Operations</strong></h3>
+              </div>
+
+					
+				             <ul class="mt-3 pb-4">
+                <li class="mb8 text-left mt-3">
+                   <b>Export Product Category from Woocommerce to Odoo.</b>
+				</li>
+                <li class="mb8 text-left mt-3">
+                  <b>Export Products with Variants from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Export Inventory from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Export Customer from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Export Sales Order from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Export Product Coupons from Woocommerce to Odoo.</b>
+                </li>
+                <li class="mb8 text-left mt-3">
+                 <b>Export Shipping Methods from Woocommerce to Odoo.</b>
+				</li>
+				<li class="mb8 text-left mt-3">
+                 <b>Export Payment Gateways from Woocommerce to Odoo.</b>
+				</li>
+              </ul>	
+              </div>
+				
+				<br>
+<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Get WooCommerce Orders to Odoo Immediately Using Webhook</strong></h3>
+<p class="text-left mt-3 mb-5" style="color: 202a25;">Get WooCommerce orders to Odoo immediately without waiting for the next cron job using webhook.</p>
+<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Order Creating using Webhook</strong></h3>
+
+<p class="text-left mt-3 mb-5" style="color: 202a25;">When an order is created in woocommerce then using webhook the order is directly created in Odoo.</p>
+				
+<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import and Synchronise</strong></h3>			
+<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-100" src="img/woocommerce-import-and-synchronise.jpg"> </div>
+<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export and Synchronise</strong></h3>			
+<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-100" src="img/woocommerce-export-and-synchronise.jpg"> </div>	
+<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Automatic Jobs</strong></h3>			
+<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-100" src="img/woocommerce-automatic-jobs.jpg"> </div>	
+
+              <!--<div style="margin:0px -48px -72px;"> <img class="img-fluid w-100" src="https://www.pragtech.co.in/appstore-img/wave2.png" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"> </div>--> 
+            </div>
+            <!--Tab 1-->
+			  
+			  
+			  
+			  
+			<!--Tab 2-->  
+			  <div class="tab-pane fade" id="tab2pr" role="tabpanel" aria-labelledby="tab2">
+              <div class="row">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-12">
+						  <div class="col-12">
+                        <h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px">          <strong>Woocommerce Configuration</strong></h3>
+                        </div>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce1.png"> </div>
+						<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px">          <strong>Woocommerce - Instances Configurations  </strong></h3>
+                      	<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce3.png"> </div>
+						<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Woocommerce Dashboard </strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce4.png"> </div>
+						<!--<h3 class="text-center pt-3" style="padding-bottom: 10px; color:#4B5ADA"><strong>Import From Woocommerce</strong></h3>-->
+						<!--<div class="mt-3 mb-3 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce5.png"> </div>-->
+						<!--<h3 class="text-center pt-3" style="padding-bottom: 10px; color:#4B5ADA"><strong>Woocommerce Import Customers </strong></h3>-->
+						<!--<div class="mt-3 mb-3 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce6.png"> </div>-->
+						<!--<h3 class="text-center pt-3" style="padding-bottom: 10px; color:#4B5ADA"><strong>Woocommerce Synced Customers </strong></h3>-->
+						<!--<div class="mt-3 mb-3 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce7.png"> </div>-->
+						<h2 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export And Import Features</strong></h2>
+						
+						
+						<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Woocommerce Export/Import Customers </strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce8.png"> </div>
+						
+						<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Customers</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/import_customers_.png"> </div>
+						
+						<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export Customers </strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce9.png"> </div>
+						<!--<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import From Woocommerce</strong></h3>-->
+						<!--<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/WooCommerce10.png"> </div>-->
+						
+					
+						<h2 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export And Import Products</strong></h2>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Products</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/import_products.png"> </div>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export Products</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/export_products.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export And Import Sales Order</strong></h2>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Sales Order</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/import_sales_order.png"> </div>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export Sales Order</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/export_sales_order.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export And Import Tax</strong></h2>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Tax</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/import_tax.png"> </div>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export Tax</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/export_tax.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export And Import Coupon</strong></h2>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Coupon</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/import_coupon.png"> </div>
+						<h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export Coupon</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/export_coupon.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong> Import Shipping Method</strong></h2>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/shipping_method.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Payment Gateway</strong></h2>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/Payment_gateway_1.PNG"> </div>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/Payment_gateway_2.PNG"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export And Import Product Tags</strong></h2>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Import Product Tag</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/import_product_tag.png"> </div>
+						<h3  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Export Product Tag</strong></h3>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/export_product_tag.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Manage Refunds</strong></h2>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/manage_refunds_installation.png"> </div>
+						<h2  class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Auto redirection</strong></h2>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/manage_refund_auto_redirection.png"> </div>
+						<h2 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Get WooCommerce Orders to Odoo Immediately Using Webhook</strong></h2>
+						<div class="mt-3 mb-5 text-center oe_screenshot"> <img class="img-fluid w-55" src="img/using_webhook.PNG"> </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--<div style="margin:0px -48px -72px; padding-top: 30px;"> <img class="img-fluid w-100" src="https://www.pragtech.co.in/appstore-img/wave2.png" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"> </div>--> 
+            </div>
+			<!--Tab 2-->  
+			
+			  
+			  
+			  <!--Tab 3-->  
+            <div class="tab-pane fade" id="tab3pr" role="tabpanel" aria-labelledby="tab4">
+              <div class="row">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-12">		 
+                      <div id="accordion">
+                        <div class="card">
+                          <div class="card-header"> <a class="card-link" data-toggle="collapse" href="#collapseOne" > <strong>Qn :</strong> is this one time payment or there is renewal cost ? </a> </div>
+                          <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                            <div class="card-body"> <strong>Ans :</strong> This is a one-time payment. </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-header"> <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo"> <strong>Qn :</strong> is this module working with community and enterprise editions ? </a> </div>
+                          <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                            <div class="card-body"> <strong>Ans:</strong> Yes, the module works with both the Community &amp; enterprise version of apps. </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+			   </div>
+            </div>
+		     <!--Tab 3-->  
+			  
+			  
+			 <!--Tab 4-->  
+            <div class="tab-pane fade" id="tab4pr" role="tabpanel" aria-labelledby="tab4">
+              <div class="row">
+                <div class="col-12">
+					<!--Banner Section Start-->
+      <div class="col-12 text-center">             
+    <div class="xero_bg pt80">
+      <div class="col-sm-8 col-md-8 col-xs-8 offset-md-3 offset-sm-3" style="background-color: #fff; text-align: center; border-radius: 20px;">
+       
+      </div>
+    </div>
+	</div>
+
+	
+<!--Banner Section End--> 
+                  <div class="container pt-3 pb-3">
+                    <!--<div class="row mt-3">
+                      <div class="col-12 text-center">
+                        <h3 class="text-center mb-3" style="color: #4B5ADA;"><b>Blog and User Manual links<br></b></h3>
+                        <div class="dropdown-divider mt-3 mb-3" style="border-color:#4B5ADA; width:75%; margin:0 auto"></div>
+                      </div>
+                    </div>-->
+					  <h3 class="text-center alert" style=" color:#4B5ADA; background-color:#d9ddff; border-radius:10px"><strong>Odoo Woocommerce Connector User manual and Blog links</strong></h3>
+                    <div class="row mt-3 d-flex align-content-center">
+						<div class="col-md-1"></div>
+						<div class="col-md-5 border-right pb-2">
+							 <p class="text-center" style="color: #202a25;"><strong>Odoo Woocommerce Connector USER MANUAL :</strong> </p>
+						 <div style="font-weight:500; font-size:15px; margin:0 auto; border:1px solid #4B5ADA; display:flex; background-color:#4B5ADA; border-radius:10px; min-width:100%">
+        <div class="text-center" style="color:#091E42; padding:0; min-width:100%">
+          <span class="bg-white position-relative" style="padding:7px; color:#0f1e40; float:left; font-weight:600; width:65px; vertical-align:middle; border-bottom-left-radius:9px; border-top-left-radius:9px; font-size:12px; height:50px">
+            <span class="text-center d-inline-block pr-4">USER MANUAL</span> 
+          </span>
+          <h6 style="vertical-align:middle; border-top-right-radius:9px; border-bottom-right-radius:9px; margin-top: 18px; margin-bottom: 0px; color:#fff; font-weight:500; padding:0px 12px 0px 80px; font-size: 13px;" class="text-center mb0">https://bit.ly/3KK2zm7</h6>
+        </div>
+      </div>
+                        </div>
+                      <div class="col-md-5 pb-2">
+                        <p class="text-center" style="color: #202a25;"><strong>Odoo Woocommerce Connector BLOG POST :</strong> </p>
+                        <!--<p class="text-center text-dark">https://blog.pragtech.co.in/odoo-woocommerce-connector/</p>-->
+						 <div style="font-weight:500; font-size:15px; margin:0 auto; border:1px solid #4B5ADA; display:flex; background-color:#4B5ADA; border-radius:10px; min-width:100%">
+        <div class="text-center" style="color:#091E42; padding:0; min-width:100%">
+          <span class="bg-white position-relative" style="padding:7px; color:#0f1e40; float:left; font-weight:600; width:65px; vertical-align:middle; border-bottom-left-radius:9px; border-top-left-radius:9px; font-size:12px; height:50px">
+            <span class="text-center d-inline-block pr-2">BLOG LINK</span>
+          </span>
+          <h6 style="vertical-align:middle; border-top-right-radius:9px; border-bottom-right-radius:9px; margin-top: 18px; margin-bottom: 0px; color:#fff; font-weight:500; padding:0px 12px 0px 80px; font-size: 13px;" class="text-center mb0">https://bit.ly/40CzaRN</h6>
+        </div>
+      </div>
+                        </div>
+						<div class="col-md-1"></div>
+                  </div>
+                </div>
+					<div class="col-md-6 col-sm-6 col-xs-12 offset-md-3 offset-sm-3 pt-5 pb-4 padding-none text-center">
+      <a href="https://www.youtube.com/embed/eTm890KYQ1A" target="_blank"><img class="oe_screenshot" src="img/woocommerce_connector_thumbnail.jpg" style="margin:auto; width:100%"> </a>   
+     </div>
+              </div>
+				<!--Contact and support section-->
+       
+              <!--Contact and support section-->
+              <div class="container p-2" >
+                <div class="row mt-3 p-3">
+                  
+                  <div class="col-md-12" style="display:table-cell; border-radius: 30px; background-color:#333E99; padding:20px; border-radius: 10px;">
+					  
+                    <h3 style="text-align:center; color: #FFFFFF;"><b>Our solutions focus on your problems</b></h3>
+                    <div class="dropdown-divider mt-3 mb-3" style="border-color:  #4B5ADA"></div>
+					  <div class="col-12">
+			<div class="row position-relative" style="color:#333333; font-weight:500; font-size:16px">
+				<div class="col-sm-6 col-lg-6 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div class="w-100 ">
+												<ul>
+                                                 <li class="text-left" style="color: #FFFFFF;">Odoo Implementation</li>
+                                                 <li class="text-left" style="color: #FFFFFF;">Odoo Customization</li>
+                                                 <li class="text-left" style="color: #FFFFFF;">ERP Development and Implementation</li>
+                                                 <li class="text-left" style="color: #FFFFFF;">Odoo Ipass Cloud</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </div>
+				<div class="col-sm-6 col-lg-6 col-xl-6 mb-3 pr-lg-0 pr-sm-1" >
+                                        <div class="d-flex align-items-top h-100 px-3 py-3" style="border:1px solid #4B5ADA; border-radius:15px">
+                                            <div class="w-100 ">
+												<ul>
+                                                 <li class="text-left" style="color: #FFFFFF;">AI for Odoo</li>
+                                                 <li class="text-left" style="color: #FFFFFF;">Odoo Apps</li>
+                                                 <li class="text-left" style="color: #FFFFFF;">Aws Marketplace Products</li>
+                                                 <li class="text-left" style="color: #FFFFFF;">Business Engines</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+      </div>
+				  	  
+					  
+                   	<p class="pt-4" style="font-size: 25px; color: #FFFFFF;">Our Pricing includes User Manual, 90 Days Support <span style="
+    color: #ffffff;"><b>(Monday-Friday 10am to 7pm IST)</b></span> and One time Setup</p>
+					
+					
+    <h3 style="margin-top:5px; color: #FFFFFF;">We support for <b style="color: #FFFFFF;">English / French / Spanish at an additional cost</b></h3>
+
+					
+					     <!-- START For Desktop Purpose Only -->
+          <div class="col-md-12 mt-3 pt-3 hidden-xs" style="margin:auto; padding-left: 5px; padding-right: 5px;">
+            <table class="table-sm" width="100%" border="1" background="#fff" style="background-color:#fff;">
+              <thead style="background-color: #002542; color: #FFF;">
+                <tr>
+                  <td colspan="10" style="padding: 15px; font-size: 23px;"><b>Supported Odoo versions & platforms</b></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background-color: #f8f8f8; font-size: 14px;">
+                  <td style="padding:10px;"><b>Odoo.sh</b></td>
+                  <td style="padding: 10px;"><b>Self Hosted</b></td>
+                  <td style="padding: 10px;"><b>Enterprise</b></td>
+                  <td style="padding: 10px;"><b>Community</b></td>
+                  <td style="padding: 10px;"><b>Odoo Online</b></td>
+                </tr>
+                <tr> 
+                  <!--<td style="text-align:center; padding:10px;"><img src="img/yes_icon.svg" width="28"></td>
+                    <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                    <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                   <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                   <td style="text-align:center"><img src="img/no_icon.svg" width="28"></td>-->
+                  
+                  <td style="text-align:center; padding:10px;"><img src="img/yes_icon.svg" width="28"></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                  <td style="text-align:center"><img src="img/no_icon.svg" width="28"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- END For Desktop Purpose Only --> 
+          
+          <!-- START For Mobile Purpose Only -->
+          
+          <div class="col-md-12 mt-3 visible-xs" style="margin:auto; padding-left: 5px; padding-right: 5px;">
+            <table class="table-sm" width="100%" border="1" background="#fff" style="background-color:#fff;">
+              <thead style="    background-color: #002542; color: #FFF;">
+                <tr>
+                  <td colspan="2" style="padding: 15px; font-size: 23px;"><b>Supported Odoo versions & platforms</b></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="padding: 10px;"><b>Odoo.sh</b></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px;"><b>Self Hosted</b></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                  <td style="padding: 10px;"><b>Enterprise</b></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px;"><b>Community</b></td>
+                  <td style="text-align:center"><img src="img/yes_icon.svg" width="28"></td>
+                </tr>
+                <tr style="background-color: #f8f8f8;">
+                  <td style="padding: 10px;"><b>Odoo Online</b></td>
+                  <td style="text-align:center"><img src="img/no_icon.svg" width="28"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- END For Mobile Purpose Only -->
+     	   <div class="container pt-3 pb-3" style="text-align: Left; margin-top:20px; list-style: none!important; line-height: 37px; padleft: 14px; font-weight: 600; font-size:14px; ">
+
+		  
+		   <p class="text-center" style="color: #FFFFFF;">• Works & tested on standard installations of Odoo with no third party apps, <br>• Free support only for odoo installations with no third party apps, <br>• Paid support availaible for Odoo installations with third party apps.
+		   </p>
+	      
+		
+		  </div>
+				       <p><a class="btn m-2" href="mailto:support@pragtech.co.in" style="background-color:#F4A0FB; padding:9px; color:#000; font-size:20px"><i class="fa fa-envelope" style="padding-right:9px"></i>support@pragtech.co.in</a> <a class="btn m-2" href="skype:pragtech?call" style="background-color:#F4A0FB; padding:9px; color:#000; font-size:20px"><i class="fa fa-skype" style="padding-right:9px"></i>pragtech</a> </p>
+				   
+                  </div>
+                </div>
+                
+				
+              </div>
+              <!--Contact and support section--> 
+				
+					<div class="col-12 text-center">
+						<div class="mt-5 mb-2 text-center"> <img class="img-fluid w-10" src="logo.png"> </div>
+                    <h2 class="p-2" style="color: #4B5ADA;"><strong>Pragmatic Techsoft Pvt. Ltd.</strong></h2>
+						 <p class="text-justify" style="font-size:16px;"><b>Pragmatic</b> is a global open source enterprise software development,
+                      consulting and products company. Our philosophy is to use Open Source
+                      tools and technologies to provide cost effective and green solutions for our customers.</p>
+                    <p class="text-justify" style="font-size:16px;">We are a dynamic and fast growing company committed towards creating
+                      value for our customers. Located in Pune, India the educational and IT
+                      hub of western India, we take pride in delivering rapid, customized open
+                      source enterprise applications following agile and lean software methods.
+                      Whether you are developing an application from scratch, working on an existing
+                      application or porting your application to a new platform or framework, we can meet your business needs.</p>
+						<p class="oe_mt32 text-justify" style="font-size:16px">If you need any help or want more additional features, you may contact us through:</p>
+                  <p><a class="btn m-2" href="mailto:support@pragtech.co.in" style="background-color:#EC450E; padding:9px; color:#fff; font-size:20px"><i class="fa fa-envelope" style="padding-right:9px"></i>support@pragtech.co.in</a> <a class="btn m-2" href="skype:pragtech?call" style="background-color:#00AAE9; padding:9px; color:#fff; font-size:20px"><i class="fa fa-skype" style="padding-right:9px"></i>pragtech</a> </p>
+                  </div>
+					<div class="col-md-12">
+                    <div class="dropdown-divider mt-3 mb-3" style="border-color: #4B5ADA; margin: 0 auto;"></div>
+                    <div class="row">
+                      <div class="col-md-6 col-sm-6 col-xs-12" style="text-align: center;"> <a style="color:#4B5ADA; font-size: 17px; font-weight: bold" href="mailto:sales@pragtech.co.in"> <i class="fa fa-envelope" style="font-size:19px;" aria-hidden="true"></i> sales@pragtech.co.in</a><br/>
+                      </div>
+                      <div class="col-md-6 col-sm-6 col-xs-12" style="text-align: center;"> <a style="color:#4B5ADA; font-size: 17px; font-weight: bold" href="https://www.pragtech.co.in/"><i class="fa fa-globe" style="font-size:19px;" aria-hidden="true"></i> www.pragtech.co.in</a><br/>
+                      </div>
+                    </div>
+                    <div class="dropdown-divider mt-3 mb-3" style="border-color: #4B5ADA;  margin: 0 auto;"></div>
+                  </div>
+				
+				 <!--Covid support-->
+              <div class="container  p-4 mt-5">
+                <div class="row">
+                  <div class="col-12 text-center">
+                    <h2 class="text-center mb-3" style="padding-bottom: 10px; color:#4B5ADA"><strong>Help Support Covid Relief</strong></h2>
+                    <div class="dropdown-divider mt-3 mb-3" style="border-color: #4B5ADA; width: 75%; margin: 0 auto;"></div>
+                    <p class="text-left mb-3" ><strong>Pragmatic</strong> has always been contributing itswarsa social causes by exercising its Corporate Social Responsibility. We are pledged to COVID relief and have been donating a major share of our profits to COVID Pandemic Relief. By purchasing our apps and services you are becoming a part of helping the needy in these critical times. If you want to help further please connect with us and we will help you find NGOs whom you can donate directly. </p>
+                    <div class="d-flex justify-content-center mt-4"> <a class="mr-2" style="padding:12px 32px; display:inline-block; background-color:#EC450E; color:#fff; border-radius:10px; margin:14px 0px; font-weight:400" href="mailto:support@pragtech.co.in"><i class="fa fa-envelope mr-1"></i>support@pragtech.co.in</a> </div>
+                    <div class="mt-3"> <img class="img-fluid" src="img/Help_support.jpg" style="margin:auto; border-radius:10px;"> </div>
+                  </div>
+                </div>
+              </div>
+              <!--Covid support--> 
+            </div>
+          </div>
+			 <!--Tab 4-->   
+			 
+			  
+			   <!--Tab 5--> 
+			  <div class="tab-pane fade" id="tab5pr" role="tabpanel" aria-labelledby="tab5">
+              <div class="row">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12">
+						<div class="row">
+	<div class="col-12 mb-4">
+<div class="row mb-2 shadow rounded bg-white" style="padding:20px">
+			<div class="col-11 text-left pl-3"><p class="text-primary">16.0.1.1.7 | Feburary 27th, 2023 <b>Bug Fixes</b> <span class="badge badge-danger">New</span></p> </div>
+			</div>
+<div class="row mb-2 shadow rounded bg-white" style="padding:20px">
+			<div class="col-11 text-left pl-3"><p class="text-primary">16.0.1.1.6 | Feburary 21st, 2023 <b>Bug Fixes</b></p> </div>
+			</div>		
+		<div class="row mb-2 shadow rounded bg-white" style="padding:20px">
+			<div class="col-11 text-left pl-3"><p class="text-primary">16.0.1.1.5 | Feburary 01st, 2023 <b>Updated product import functionality with images</b></p> </div>
+			</div>	
+		</div>
+		</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--<div style="margin:0px -48px -72px; padding-top: 30px;"> <img class="img-fluid w-100" src="https://www.pragtech.co.in/appstore-img/wave2.png" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px"> </div>--> 
+            </div>
+			   <!--Tab 5--> 
+        </div>
+      </div>
+</section>
+
+<section>
+  <div class="container p-4 mt-5">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="text-center mb-3" style="padding-bottom: 10px; color:#4B5ADA"> <b>Related Products</b> </h2>
+         <div class="dropdown-divider mt-3 mb-3" style="border-color: #4B5ADA; width: 75%; margin: 0 auto;"></div>
+        <div id="slide-bottom mt-5" class="row carousel slide mt64 mb32" data-ride="carousel"> 
+          <!-- The slideshow -->
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> <a href="https://apps.odoo.com/apps/modules/16.0/pragmatic_salesforce_connector/" target="_blank">
+                <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;"> <img class="img img-fluid center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/animated-salesforce-connector.gif">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: normal;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">Odoo SalesForce Connector</h4>
+                </div>
+                </a> </div>
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> <a href="https://apps.odoo.com/apps/modules/16.0/pragmatic_quickbooks_connector/" target="_blank">
+                <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;"> <img class="img img-fluid center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/quickbook-connector_usa.gif">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: normal;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">QuickBooks USA Online Odoo Connector</h4>
+                </div>
+                </a> </div>
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> <a href="https://apps.odoo.com/apps/modules/16.0/pragmatic_odoo_xero_connector/" target="_blank">
+                <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;"> <img class="img img-fluid center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/Animated-xero-integrationv12.gif">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: normal;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">Xero Integration OAuth 2.0 REST API</h4>
+                </div>
+                </a> </div>
+            </div>
+            <div class="carousel-item">
+              <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16" style="float: left;"> 
+				  <a href="https://apps.odoo.com/apps/modules/16.0/hubspot/" target="_blank">
+                <div style="box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);border-radius: 10px;"> <img class="img img-fluid center-block" style="border-top-left-radius: 10px;border-top-right-radius: 10px;" src="related-products/New-Hubspot-Gif-Animation.gif">
+                  <h4 class="mt0" style="padding:6% 4%;text-align: center;white-space: normal;width: 100%;overflow: hidden;text-overflow: ellipsis;font-family: Roboto-medium;">Odoo Hubspot Integration</h4>
+                </div>
+                </a> </div>
+            </div>
+          </div>
+          
+          <!-- Left and right controls --> 
+          <a class="carousel-control-prev" href="#slide-bottom" data-slide="prev" style="left:-25px;width: 35px;color: #000;"> <span class="carousel-control-prev-icon"><i class="fa fa-chevron-left" style="font-size:24px"></i></span> </a> <a class="carousel-control-next" href="#slide-bottom" data-slide="next" style="right:-25px;width: 35px;color: #000;"> <span class="carousel-control-next-icon"><i class="fa fa-chevron-right" style="font-size:24px"></i></span> </a> </div>
+      </div>
+    </div>
+    <!--<div style="margin:0px -25px -25px"> <img class="img-fluid w-100" src="https://www.pragtech.co.in/appstore-img/wave2.png" style="border-bottom-left-radius:20px; border-bottom-right-radius:20px"> </div>--> 
+  </div>
+</section>
+	
+	
+	
+	
+</body>
+</html>

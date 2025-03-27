@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//table//tr/th[1]" position="after">
+                <th><strong>On Hand</strong></th>
+                <th><strong>Forecasted</strong></th>
+        </xpath>
+        <xpath expr="//t[@t-foreach='lines_to_report']//td[@name='td_name']" position="after">
+            <td><span t-field="line.qoh_available"/></td>
+            <td><span t-field="line.foh_available"/></td>
+        </xpath>
+    </template>
+</odoo>

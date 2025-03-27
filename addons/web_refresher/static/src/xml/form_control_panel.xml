@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2024 Tecnativa - Carlos Roca
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<template>
+    <t
+        t-name="web_refresher.FormControlPanel"
+        t-inherit="web.FormControlPanel"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath expr="//div[hasclass('o_cp_pager')]" position="before">
+            <div class="oe_cp_refresher" role="search" t-ref="refresher">
+                <Refresher t-if="displayRefresher" t-props="refresherProps" />
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o_cp_bottom_right')]" position="before">
+            <div
+                t-if="!display['bottom-right']"
+                class="o_cp_bottom_right d-flex flex-row-reverse"
+            >
+                <div class="oe_cp_refresher" role="search" t-ref="refresher">
+                    <Refresher t-if="displayRefresher" refresherReport="true" />
+                </div>
+            </div>
+        </xpath>
+    </t>
+</template>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="multiple_product_action" model="ir.actions.act_window">
+        <field name="name">Product List</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">multiple.product</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+<!--Wizard for selecting the product-->
+    <record id="multiple_product_view_form" model="ir.ui.view">
+       <field name="name">multiple.product.view.form</field>
+       <field name="model">multiple.product</field>
+       <field name="type">form</field>
+       <field name="arch" type="xml">
+           <form>
+               <field name="product_list_ids" />
+               <footer>
+                   <button name="action_add_line" string="Add to Lines" type="object" class="oe_highlight"/>
+                   <button string="Cancel" class="btn btn-default" special="cancel"/>
+               </footer>
+           </form>
+       </field>
+    </record>
+</odoo>

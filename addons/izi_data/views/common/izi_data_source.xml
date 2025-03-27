@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree view for the menuitem -->
+        <record id="izi_data_source_tree" model="ir.ui.view">
+            <field name="name">izi.data.source.tree</field>
+            <field name="model">izi.data.source</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view for the menuitem -->
+        <record id="izi_data.izi_data_source_form" model="ir.ui.view">
+            <field name="name">izi.data.source.form</field>
+            <field name="model">izi.data.source</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Authenticate" class="oe_highlight" name="authenticate" type="object"/>
+                        <button string="Get Tables" class="oe_highlight" name="get_source_tables" type="object"/>
+                        <button string="Get Fields" class="" name="get_source_fields" type="object" invisible="1"/>
+                        <field name="state" statusbar_visible="new,ready" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="type" attrs="{'readonly': [('id', '!=', False), ('type', '!=', False)]}" force_save="1"/>
+                                <field name="table_filter"/>
+                            </group>
+                        </group>
+                        <group>
+                        </group>
+                        <notebook>
+                            <page string="Tables">
+                                <field name="table_ids">
+                                    <tree editable="top">
+                                        <field name="name"/>
+                                        <field name="table_name"/>
+                                        <field name="active" widget="boolean_toggle"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Sources">
+                                <field name="item_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="table_id"/>
+                                        <field name="type"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- IZI Data Source Item -->
+        <record id="izi_data.izi_data_source_item_form" model="ir.ui.view">
+            <field name="name">izi.data.source.item.form</field>
+            <field name="model">izi.data.source.item</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="source_id" invisible="1"/>
+                                <field name="table_id" invisible="1"/>
+                                <field name="action_to_field" invisible="1"/>
+                                <field name="limit"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="process_data"
+                            string="Process"
+                            type="object"
+                            class="oe_highlight"
+                            />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

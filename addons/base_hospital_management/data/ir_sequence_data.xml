@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!--        Blood Bank sequence-->
+        <record id="blood_bank_sequence" model="ir.sequence">
+            <field name="name">Blood Bank Sequence</field>
+            <field name="code">blood.bank</field>
+            <field name="prefix">BB/</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--        Building sequence generator-->
+        <record id="building_sequence" model="ir.sequence">
+            <field name="name">Building Sequence</field>
+            <field name="code">building.sequence</field>
+            <field name="prefix">BC/</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--        Inpatient sequence generator-->
+        <record id="inpatient_sequence" model="ir.sequence">
+            <field name="name">Inpatient sequence</field>
+            <field name="code">hospital.inpatient</field>
+            <field name="prefix">IN/PAT</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--        Lab test sequence generator-->
+        <record id="seq_lab_test_line" model="ir.sequence">
+            <field name="name">Lab Test Sequence</field>
+            <field name="code">lab.test.sequence</field>
+            <field name="prefix">LB/TS/</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--        Lab test draft sequence-->
+        <record id="seq_hospital_draft_lab_test" model="ir.sequence">
+            <field name="name">Lab Test Draft Sequence</field>
+            <field name="code">lab_tests.draft.sequence</field>
+            <field name="prefix">LB/DR/</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--        Lab sequence generator-->
+        <record id="lab_sequence" model="ir.sequence">
+            <field name="name">Laboratory Sequence</field>
+            <field name="code">laboratory.sequence</field>
+            <field name="prefix">LAB</field>
+            <field name="padding">3</field>
+        </record>
+        <!--        Patient sequence generator-->
+        <record id="patient_sequence" model="ir.sequence">
+            <field name="name">Patient sequence</field>
+            <field name="code">patient.sequence</field>
+            <field name="prefix">PAT</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        <!--        Vaccination sequence generator-->
+        <record id="vaccination_sequence"
+                model="ir.sequence">
+            <field name="name">Vaccination Sequence</field>
+            <field name="code">vaccination.sequence</field>
+            <field name="prefix">VAC</field>
+            <field name="padding">3</field>
+        </record>
+    </data>
+</odoo>

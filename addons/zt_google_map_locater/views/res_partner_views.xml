@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='street']" position="before">
+                <field name="map_address" widget="address_autocomplete" class="address" id="address" placeholder="Find My Address"/>                
+            </xpath>
+            <!-- Inherit and add a map section after the Address group -->
+            <xpath expr="//field[@name='country_id']" position="before">
+                <field name="country_label" placeholder="Country Label" />
+            </xpath>
+             <xpath expr="//field[@name='state_id']" position="after">
+                <field name="state_label" placeholder="State Label" />
+            </xpath>
+        </field>
+    </record> 
+</odoo>
+        

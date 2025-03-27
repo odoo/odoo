@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_product_woo_form">
+        <field name="name">product.template.form.view.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="after">
+                <field name="website_published" invisible="1"/>
+            </xpath>
+
+            <div name="button_box" position="inside">
+                <button name="woo_published" icon="fa-brands fa-wordpress" class="oe_stat_button" type="object"
+                        string="Click to Publish"
+                        attrs="{'invisible': ['|',('is_exported','=',False),('website_published','=',True)]}"/>
+                <button name="woo_unpublished" icon="fa-brands fa-wordpress" class="oe_stat_button" type="object"
+                        string="Click to Unpublished"
+                        attrs="{'invisible': ['|',('is_exported','=',False),('website_published','=',False)]}"/>
+            </div>
+
+<!--DB            <field name="default_code" position="replace">-->
+<!--                <field name="default_code" required="0"/>-->
+<!--            </field>-->
+
+            <xpath expr="//notebook" position='inside'>
+                <page string="Images">
+                    <group string="Images Info" colspan="4">
+                        <field name="woo_image_ids"
+                               mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1">
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//div[@name='pricing']" position="after">
+                <field string="WooCommerce Sale Price" name="woo_sale_price" widget="monetary"/>
+                <field string="WooCommerce Regular Price" name="woo_regular_price" widget="monetary"/>
+                <field name="woo_tag_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                <field name="is_exported" readonly="1"/>
+                <field name="woo_id" string="WooCommerce Id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//notebook/page[4]" position="after">
+                <page string="WooCommerce Details">
+                    <separator name="Dimension" string="Dimensions" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"/>
+                        <group>
+                            <div class="o_row_woo" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
+                                <label for="weight" style="font-weight: bold;">Weight</label>
+                                <field name="weight" class="woo_input" string="Weight"/>
+                                <field nolabel="1" name="woo_weight_unit" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group col="3">
+                           <group>
+                               <div class="o_row_woo" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
+                                    <label for="woo_product_length" style="font-weight: bold;">Length</label>
+                                    <field name="woo_product_length" class="woo_input" string="Length"/>
+                                    <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                </div>
+                           </group>
+
+                           <group>
+                                <div class="o_row_woo" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
+                                    <label for="woo_product_width" style="font-weight: bold;">Width</label>
+                                    <field name="woo_product_width" class="woo_input" string="Width"/>
+                                    <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                </div>
+                           </group>
+
+                           <group>
+                                <div class="o_row_woo" attrs="{'invisible':[('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}">
+                                    <label for="woo_product_height" style="font-weight: bold;">Height</label>
+                                    <field name="woo_product_height" class="woo_input" string="Height"/>
+                                    <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                </div>
+                           </group>
+
+                        </group>
+
+                    <separator name="Commission" string="Commission"/>
+                    <group>
+                        <group>
+                            <field name="commission_type"/>
+                            <field name="commission_value"/>
+                            <field name="fixed_commission_value"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_varient_woo_form">
+        <field name="name">product.product.form.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="woo_id" string="WooCommerce Id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//div[@name='pricing']" position="after">
+                <field name="woo_sale_price" widget="monetary"/>
+                <field string="WooCommerce Regular Price" name="woo_regular_price" widget="monetary"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//notebook/page[4]" position="after">
+                <page string="WooCommerce Details">
+                     <separator name="Dimension" string="Dimensions"/>
+                        <group>
+                            <div class="o_row_woo">
+                                <label for="weight" style="font-weight: bold;">Weight</label>
+                                <field name="weight" class="woo_input" string="Weight"/>
+                                <field nolabel="1" name="woo_weight_unit" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group col="3">
+                           <group>
+                               <div class="o_row_woo">
+                                    <label for="woo_product_length" style="font-weight: bold;">Length</label>
+                                    <field name="woo_product_length" class="woo_input" string="Length"/>
+                                    <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                </div>
+                           </group>
+
+                           <group>
+                                <div class="o_row_woo">
+                                    <label for="woo_product_width" style="font-weight: bold;">Width</label>
+                                    <field name="woo_product_width" class="woo_input" string="Width"/>
+                                    <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                </div>
+                           </group>
+
+                           <group>
+                                <div class="o_row_woo">
+                                    <label for="woo_product_height" style="font-weight: bold;">Height</label>
+                                    <field name="woo_product_height" class="woo_input" string="Height"/>
+                                    <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                </div>
+                           </group>
+
+                        </group>
+
+                    <separator name="Description" string="Description"/>
+                    <group>
+                        <group>
+                            <field name="woo_varient_description" string="Description"/>
+                        </group>
+                    </group>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- easy form -->
+    <record model="ir.ui.view" id="product_varient_woo_easy_form">
+        <field name="name">product.product.easy.form.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="woo_id" string="WooCommerce Id" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//group[@name='pricing']" position="inside">
+                <field name="woo_sale_price" widget="monetary"/>
+                <field string="WooCommerce Regular Price" name="woo_regular_price" widget="monetary"/>
+                <field name="is_exported" readonly="1"/>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="WooCommerce Details">
+                         <separator name="Dimension" string="Dimensions"/>
+                            <group>
+                                <div class="o_row_woo">
+                                    <label for="weight" style="font-weight: bold;">Weight</label>
+                                    <field name="weight" class="woo_input" string="Weight"/>
+                                    <field nolabel="1" name="woo_weight_unit" readonly="1" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group col="3">
+                               <group>
+                                   <div class="o_row_woo">
+                                        <label for="woo_product_length" style="font-weight: bold;">Length</label>
+                                        <field name="woo_product_length" class="woo_input" string="Length"/>
+                                        <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                    </div>
+                               </group>
+
+                               <group>
+                                    <div class="o_row_woo">
+                                        <label for="woo_product_width" style="font-weight: bold;">Width</label>
+                                        <field name="woo_product_width" class="woo_input" string="Width"/>
+                                        <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                    </div>
+                               </group>
+
+                               <group>
+                                    <div class="o_row_woo">
+                                        <label for="woo_product_height" style="font-weight: bold;">Height</label>
+                                        <field name="woo_product_height" class="woo_input" string="Height"/>
+                                        <field nolabel="1" name="woo_unit_other" readonly="1" class="oe_inline"/>
+                                    </div>
+                               </group>
+
+                            </group>
+
+                        <separator name="Description" string="Description"/>
+                        <group>
+                            <group>
+                                <field name="woo_varient_description" string="Description"/>
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_woo_product_image_form" model="ir.ui.view">
+        <field name="name">woo.product.image.form</field>
+        <field name="model">woo.product.image</field>
+        <field name="arch" type="xml">
+            <form string="Product Images" create="0">
+                <sheet>
+                    <div>
+                        <p colspan="2" class="alert alert-warning" role="alert">
+                            <u>
+                                <h3 style="font-weight:bold;color:#7d5a29">Note :</h3>
+                            </u>
+                            <b>
+                                Please add any image extension like jpeg, png at the end of url separated by a dot,
+                                some url doesn't support extension in such case kindly please change the url.
+                            </b>
+                            <b>
+                                Eg: https://source.unsplash.com/user/c_v_r/1900x800.jpeg
+                            </b>
+                        </p>
+                    </div>
+
+                    <div class="row o_website_sale_image_modal">
+                        <div class="col-md-6 col-xl-5" invisible="context.get('default_woo_variant_id',False)">
+                            <group>
+                            <field name="name"/>
+                            <field name="url" required="1"/>
+                            </group>
+                        </div>
+
+                        <div class="col-md-6 col-xl-7 text-center o_website_sale_image_modal_container">
+                            <div class="row">
+                                <div class="col">
+                                    <field name="image" widget="image" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_woo_product_image_kanban" model="ir.ui.view">
+        <field name="name">woo.product.image.kanban</field>
+        <field name="model">woo.product.image</field>
+        <field name="arch" type="xml">
+            <kanban string="Product Images">
+                <field name="image"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click" style="width:20%">
+                            <div class="o_kanban_image">
+                                <img alt="Product" class="o_image_64_contain"
+                                     t-att-src="kanban_image('woo.product.image', 'image')"/>
+                            </div>
+
+                            <div class="oe_kanban_details">
+                                <br/>
+                                <t t-set="size_status" t-value="'badge-success'"/>
+                                <span t-attf-class="badge #{size_status} o_product_image_size"
+                                      t-esc="record.image.value" t-att-title="message"/>
+                                <br>
+                                    <field name="name"/>
+                                </br>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_template_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.tree.inherit.woo</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_product_button</attribute>
+            </xpath>
+
+            <field name="standard_price" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_product_tree_view_inherit" model="ir.ui.view">
+        <field name="name">product.product.tree.inherit.woo</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">woo_import_product_button</attribute>
+            </xpath>
+
+            <field name="standard_price" position="before">
+                <field name="woo_sale_price"/>
+            </field>
+            <field name="standard_price" position="after">
+                <field name="woo_id" readonly="1"/>
+                <field name="is_exported" readonly="1"/>
+                <field name="woo_instance_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_product_template_search_inherit" model="ir.ui.view">
+        <field name="name">view.product.product.search.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Woo Synced Products" name="woo_imported_products"
+                        domain="[('is_exported', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_product_template_woo" model="ir.actions.act_window">
+        <field name="name">Products</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.template</field>
+        <field name="view_id" ref="product.product_template_tree_view"/>
+        <field name="context">{'search_default_woo_imported_products': 1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+</odoo>
+

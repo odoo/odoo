@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Doctor slot calender view-->
+    <record id="inpatient_surgery_view_calender" model="ir.ui.view">
+        <field name="name">inpatient.surgery.view.calendar</field>
+        <field name="model">inpatient.surgery</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <calendar date_start="planned_date" string="Surgery"
+                      mode="week" quick_add="False">
+                <field name="doctor_id"/>
+                <field name="inpatient_id" avatar_field="avatar_128"/>
+            </calendar>
+        </field>
+    </record>
+    <!--    Doctor slot tree view-->
+    <record id="inpatient_surgery_view_tree" model="ir.ui.view">
+        <field name="name">inpatient.surgery.view.tree</field>
+        <field name="model">inpatient.surgery</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="doctor_id"/>
+                <field name="inpatient_id"/>
+                <field name="hours_to_take" widget="float_time"/>
+            </tree>
+        </field>
+    </record>
+    <!--    Doctor slot form view-->
+    <record id="inpatient_surgery_view_form" model="ir.ui.view">
+        <field name="name">inpatient.surgery.view.form</field>
+        <field name="model">inpatient.surgery</field>
+        <field eval="2" name="priority"/>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                    <button name="action_confirm" type="object"
+                            string="Confirm" class="btn-primary"
+                            attrs="{'invisible': [('state', 'in', ['confirmed', 'done'])]}"/>
+                    <button name="action_cancel" type="object"
+                            string="Cancel" class="btn-secondary"
+                            attrs="{'invisible':  [('state', 'in', ['confirmed', 'done'])]}"/>
+                    <button name="action_done" type="object" string="Done"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="doctor_id"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="hours_to_take" widget="float_time"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="inpatient_id"
+                                   options="{'no_create': True, 'no_edit': True}"/>
+                            <field name="planned_date"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"
+                           groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    Doctor slot menu action-->
+    <record id="inpatient_surgery_action" model="ir.actions.act_window">
+        <field name="name">Surgery</field>
+        <field name="res_model">inpatient.surgery</field>
+        <field name="view_mode">calendar,list,form</field>
+    </record>
+    <!--    Doctor menu-->
+    <menuitem id="appointment_menu_doctor"
+              name="Doctor"
+              parent="hospital_menu_appointment"
+              sequence="8">
+    </menuitem>
+    <!--    Doctor slot menu-->
+    <menuitem id="inpatient_surgery_menu"
+              name="Surgery"
+              parent="appointment_menu_doctor"
+              action="inpatient_surgery_action"
+              sequence="10">
+    </menuitem>
+</odoo>

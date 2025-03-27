@@ -1,0 +1,254 @@
+.o_action_manager {
+    overflow: auto !important;
+}
+
+.salon_dashboards {
+    padding-top: 10px;
+    background-color: #f8faff !important;
+}
+
+.salon-card h4 {
+    font-size: 1.1rem;
+}
+
+.breadcrumbs {
+    margin-top: 0;
+}
+
+/*    Widget One
+---------------------------*/
+.stat-content {
+    display: inline-block;
+    width: 66%;
+}
+
+.stat-icon {
+    display: inline-block;
+}
+
+.stat-widget-one .stat-icon {
+    vertical-align: top;
+    margin: auto;
+    width: 100%;
+    color: #01c490;
+}
+
+.stat-widget-one .stat-icon i {
+    font-size: 30px;
+    font-weight: 900;
+    display: inline-block;
+    color: #01c490;
+}
+
+.stat-widget-one .stat-text {
+    font-size: 14px;
+    color: #868e96;
+    font-weight: bold;
+}
+
+.stat-widget-one .stat-digit {
+    font-size: 24px;
+    color: #02448b;
+}
+
+.stat-count {
+    font-size: 20px;
+    text-align: center;
+    color: #00438b;
+}
+
+.stat-title {
+    font-size: 17px;
+    text-align: center;
+    color: #00438b;
+}
+
+/*=====================Dashboard===========================*/
+
+.salon_dashboards {
+    background-color: #f8faff !important;
+    padding: 0px !important;
+}
+
+.container-fluid.o_hr_dashboard {
+    padding: 0px !important;
+}
+
+.salon-card {
+    padding: 0px;
+    margin-bottom: 1.5rem;
+    border-radius: 0px;
+    box-shadow: none;
+    background: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform, box-shadow;
+}
+
+.salon-card:hover {
+    transform: translateY(-2px) translateZ(0) !important;
+    box-shadow: 0 10px 10px 0 rgba(62, 57, 107, 0.12), 0 0 0 transparent !important;
+}
+
+.salon {
+    margin-top: 3%;
+    margin-bottom: 2%;
+}
+
+.salon .stat-icon {
+    border-radius: 15px 0 0 15px;
+    width: 30%;
+    height: 100px;
+    text-align: center;
+    padding-top: 10%;
+    background: #314384ff;
+    color: #fff;
+}
+
+.salon .salon-card {
+    border-radius: 15px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    will-change: transform, box-shadow;
+    box-shadow: 0 10px 40px 0 rgba(62, 57, 107, 0.07),
+    0 2px 9px 0 rgba(62, 57, 107, 0.06);
+}
+
+.stat-widget-one .stat-text {
+    font-size: 14px;
+    color: #314384ff;
+    margin: 2rem 0rem 1rem 0rem;
+    text-align: center;
+}
+
+.stat-widget-one .stat-digit {
+    font-size: 20px;
+    font-weight: bolder;
+    padding: 1px 10px 2px 0;
+    color: #8061a9;
+    text-shadow: 0px 0px 20px #000000;
+    text-align: center;
+}
+
+.stat-widget-one .stat-icon i {
+    /*border-radius: 15px 0 0 15px;*/
+    font-size: 25px;
+    font-weight: 900;
+    display: inline-block;
+    color: #fff;
+}
+
+.stat-widget-one {
+    border-radius: 15px;
+    background-color: white;
+    text-align: inherit !important;
+}
+
+.stat-widget-one {
+    width: 100%;
+}
+
+.salon_sales .stat-icon {
+    background: #964ec2 !important;
+}
+
+.salon_clients .stat-icon {
+    background: #813de6 !important;
+}
+
+.salon_orders .stat-icon {
+    background: #6f23a9 !important;
+}
+
+.salon_sales .stat-widget-one .stat-text {
+    color: #964ec2;
+}
+
+.salon_clients .stat-widget-one .stat-text {
+    color: #813de6;
+}
+
+.salon_orders .stat-widget-one .stat-text {
+    color: #6f23a9;
+}
+
+.salon-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*Chair*/
+img {
+    padding: 5px;
+}
+
+article {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17em, 1fr));
+    grid-gap: 1em;
+    height: fit-content;
+    margin-left: 1vw;
+}
+
+@media (max-width: 575.98px) {
+    .salon_chair {
+        width: 100%;
+        position: relative;
+    }
+}
+
+.chair_name {
+    opacity: 100%;
+    position: absolute;
+    padding: 26px 26px 3px 73px;
+    color: #ffffff;
+    font-weight: bolder;
+    -webkit-filter: drop-shadow(0px 4px 5px #000000);
+    filter: drop-shadow(0px 4px 5px #000000);
+}
+
+.chair_orders {
+    opacity: 100%;
+    position: absolute;
+    padding: 62px 0px 2px 94px;
+    color: #ffffff;
+    font-weight: bolder;
+    -webkit-filter: drop-shadow(0px 4px 5px #000000);
+    filter: drop-shadow(0px 4px 5px #000000);
+}
+
+.chair_setting {
+    opacity: 0.0;
+    -webkit-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+    -ms-transition: all 500ms ease-in-out;
+    -o-transition: all 500ms ease-in-out;
+    transition: all 500ms ease-in-out;
+}
+
+.salon_chair:hover .chair_setting {
+    opacity: 1.0;
+    padding: 16px 0 0px 165px;
+    color: #4d4d4d;
+    font-size: medium;
+    -webkit-filter: drop-shadow(0px 4px 5px #da9bff);
+    filter: drop-shadow(0px 2px 6px #d999ff);
+}
+
+.salon_chair {
+    opacity: 85%;
+    background-image: url("images/chair.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: auto;
+    height: 100vw;
+}
+
+.salon_chair {
+    height: 200px;
+    width: 100%;
+}
+
+.salon_chair:hover {
+    -webkit-filter: drop-shadow(0px 4px 4px #3e3e3e);
+    filter: drop-shadow(0px 4px 4px #373737);
+}

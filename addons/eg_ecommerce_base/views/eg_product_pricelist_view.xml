@@ -1,0 +1,70 @@
+<odoo>
+    <record id="eg_product_pricelist_tree_view" model="ir.ui.view">
+        <field name="name">eg.product.pricelist.tree</field>
+        <field name="model">eg.product.pricelist</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="instance_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="eg_product_pricelist_form_view" model="ir.ui.view">
+        <field name="name">eg.product.pricelist.form</field>
+        <field name="model">eg.product.pricelist</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. India Retailers"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="instance_id"/>
+                            <field name="provider" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Price Rules">
+                            <field name="eg_product_pricelist_line_ids">
+                                <tree editable="bottom">
+                                    <field name="eg_product_template_id"
+                                           domain="[('instance_id','=', parent.instance_id)]"/>
+                                    <field name="eg_product_id"
+                                           domain="[('eg_tmpl_id','=',eg_product_template_id)]"/>
+                                    <field name="price_unit"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+<!--    <record id="eg_product_pricelist_search_view" model="ir.ui.view">-->
+<!--        <field name="name">eg.product.pricelist.search</field>-->
+<!--        <field name="model">eg.product.pricelist</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <search>-->
+<!--                <group string="Group By">-->
+<!--                    <filter name="group_by_instance" string="Instance"-->
+<!--                            context="{'group_by': 'instance_id'}"/>-->
+<!--                </group>-->
+<!--            </search>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record model="ir.actions.act_window" id="action_eg_product_pricelist">
+        <field name="name">Product Pricelist</field>
+        <field name="res_model">eg.product.pricelist</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_eg_product_pricelist" name="Product PriceList" parent="product_mapping_id"
+              action="action_eg_product_pricelist" sequence="5"/>
+</odoo>

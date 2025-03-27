@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Overwrite the templates "mail.Chatter" to rearrange the view and added features-->
+<templates id="template" xml:space="preserve">
+<t name="mail.ChatterAdvanced"
+   t-inherit="mail.Chatter"
+   t-inherit-mode="extension"
+   owl="1">
+        <xpath expr="//div[hasclass('o_Chatter')]" position="replace">
+            <div class="o_Chatter position-relative flex-grow-1 flex-column d-flex w-100 bg-view"
+                 t-attf-class="{{ className }}" t-ref="root">
+                <t t-if="chatter.dropZoneView">
+                    <DropZone
+                            className="'o_Chatter_dropZone'"
+                            record="chatter.dropZoneView"
+                    />
+                </t>
+                <div class="o_Chatter_fixedPanel">
+                    <ChatterTopbar
+                            t-if="chatter.topbar"
+                            className="'o_Chatter_topbar'"
+                            record="chatter.topbar"
+                    />
+                    <t t-if="chatter.composerView">
+                        <div class="chat">
+                        <Composer
+                                className="'o_Chatter_composer border-bottom'"
+                                classNameObj="{ 'o-bordered': chatter.hasExternalBorder }"
+                                record="chatter.composerView"
+                        />
+                        </div>
+                    </t>
+                </div>
+                <div class="o_Chatter_scrollPanel overflow-auto" t-on-scroll="chatter.onScrollScrollPanel"
+                     t-ref="scrollPanel">
+                    <div class="view d-none">
+                        <t t-if="chatter.attachmentBoxView">
+                        <AttachmentBox
+                                className="'o_Chatter_attachmentBox'"
+                                record="chatter.attachmentBoxView"
+                        />
+                        </t>
+                        <t t-if="chatter.activityBoxView">
+                        <ActivityBox
+                                className="'o_Chatter_activityBox'"
+                                record="chatter.activityBoxView"
+                        />
+                        </t>
+                        <t t-if="chatter.threadView">
+                        <ThreadView
+                                className="'o_Chatter_thread'"
+                                record="chatter.threadView"
+                        />
+                        </t>
+                    </div>
+
+                </div>
+            </div>
+        </xpath>
+</t>
+</templates>

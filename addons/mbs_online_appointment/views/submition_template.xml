@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="mbs_online_appointment_submit_form">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                    <div class="container">
+                        <br/>
+                        <nav>
+                            <ul class="pagination pagination-lg justify-content-end">
+                                <li class="page-item">
+                                    <a class="page-link" href="/patient_registration">Appointment</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="/appointment_details">Details</a>
+                                </li>
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">Confirmation</span>
+                                </li>
+                                <li class="page-item disabled">
+                                    <a class="page-link">Done</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <br/>
+                        <form action="/mbs_online_appointment/finalsubmit">
+                            <!-- <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/> -->
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                     data-type="char" data-name="Field"
+                                     style="border:1px solid #016170 !important; text-align:center;">
+                                    <section data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
+                                        <div class="container">
+                                            <h3>Acknowledge(<span class="required">*</span>Mandatory)
+                                            </h3>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <br/>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required"
+                                     style="border-left:1px solid #016170 !important; border-right:1px solid #016170 !important; border-bottom:1px solid #016170 !important; margin-top:-16px;">
+                                    <sheet>
+                                        <br/>
+                                        <br/>
+                                        <span class="s_website_form_mark" style="color:red;">*</span>
+                                        <input type="checkbox" name="rGroup" value="1" id="r1" checked="checked"
+                                               required="1">
+                                            I confirm that information given in this form is true, complete and
+                                            accurate.
+                                        </input>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                        <br/>
+                                    </sheet>
+                                    <br/>
+                                    <br/>
+                                </div>
+                                <div class="col-12 row">
+                                    <div class="col-2">
+                                        <a role="button" href="/appointment_details" class="btn btn-primary"
+                                           style="margin-top:20px;">Previous
+                                        </a>
+                                    </div>
+                                    <div class="col-4 text-right">
+                                        <button type="cancel" class="btn btn-primary text-left"
+                                                style="margin-top:20px;">Cancel
+                                        </button>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <button type="submit" class="btn btn-primary text-left"
+                                                style="margin-top:20px;padding-left:20px;">Submit to Hospital
+                                        </button>
+                                    </div>
+                                </div>
+                                <br/>
+                                <br/>
+                                <br/>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+</odoo>

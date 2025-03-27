@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_customer_form" model="ir.ui.view">
+            <field name="name">Credit Limit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='accounting']" position="inside">
+                    <group string="Credit Limit" attrs="{'invisible':[('enable_credit_limit','=',False)]}">
+                        <group>
+                            <field name="active_limit"/>
+                            <field name="enable_credit_limit" invisible="1"/>
+                            <field name="warning_stage" attrs="{'invisible':[('active_limit','=',False)]}"/>
+                            <field name="blocking_stage" attrs="{'invisible':[('active_limit','=',False)]}"/>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="header_view" model="ir.ui.view">
+            <field name="name">Credit Limit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="has_due" invisible="1"/>
+                    <field name="is_warning" invisible="1"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-info" role="alert" style="height: 40px; margin-bottom:0px;"
+                         attrs="{'invisible':[('has_due','=',False)]}">
+                        This Customer's due amount is <strong><field name="due_amount"/></strong>.
+                    </div>
+                </xpath>
+                <xpath expr="//sheet/div[@name='button_box']" position="after">
+                    <div role="alert" class="alert alert-danger" style="height: 40px; width: 350px; margin-bottom:0px;"
+                         attrs="{'invisible':[('is_warning','=',False)]}">
+                        This customer's <strong>warning limit</strong> has been crossed.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="account_move_form_inherited" model="ir.ui.view">
+            <field name="name">Account Move</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="has_due" invisible="1"/>
+                    <field name="is_warning" invisible="1"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <div class="alert alert-info" role="alert" style="height: 40px; margin-bottom:0px;"
+                         attrs="{'invisible':['|',('has_due','=',False),('move_type','not in',('out_invoice','out_refund','out_receipt'))]}">
+                        This Customer's due amount is <strong><field name="due_amount"/></strong>.
+                    </div>
+                </xpath>
+                <xpath expr="//sheet/div[@name='button_box']" position="after">
+                    <div role="alert" class="alert alert-danger" style="height: 40px; width: 350px; margin-bottom:0px;"
+                         attrs="{'invisible':['|',('is_warning','=',False),('move_type','not in',('out_invoice','out_refund','out_receipt'))]}">
+                        This customer's <strong>warning limit</strong> has been crossed.
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

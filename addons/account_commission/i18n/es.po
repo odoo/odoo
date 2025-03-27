@@ -1,0 +1,611 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_commission
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-05-09 15:35+0000\n"
+"Last-Translator: Sergio Ariel Ameghino <ariel.ameghino@gmail.com>\n"
+"Language-Team: none\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.17\n"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__quantity
+msgid "# of Qty"
+msgstr "# de cantd"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "(keep empty for invoicing all the pending settlements)"
+msgstr "(mantener vacío para facturar todas las liquidaciones pendientes)"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "<strong>Settlement invoice:</strong>"
+msgstr "<strong>Factura de liquidación:</strong>"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__agent_id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__agent_id
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Agent"
+msgstr "Agente"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_account_invoice_line_agent
+msgid "Agent detail of commission line in invoice lines"
+msgstr "Detalle de agente de línea de comisión en líneas de pedido"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__partner_agent_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_move__partner_agent_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__partner_agent_ids
+msgid "Agents"
+msgstr "Agentes"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__agent_ids
+msgid "Agents & commissions"
+msgstr "Agentes & comisiones"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_account_move_line__agent_ids
+msgid "Agents/Commissions related to the invoice line."
+msgstr "Agentes/Comisiones relacionados con la línea de factura."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__amount
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Amount"
+msgstr "Importe"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__any_settled
+msgid "Any Settled"
+msgstr "Liquidada"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__balance
+msgid "Balance"
+msgstr "Balance"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#, python-format
+msgid "Cannot cancel an invoiced settlement."
+msgstr "No se puede cancelar una liquidación facturada."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__categ_id
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Category of Product"
+msgstr "Categoría del producto"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__commission_free
+msgid "Comm. free"
+msgstr "Libre de comisión"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__commission_id
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__commission_status
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__commission_id
+msgid "Commission"
+msgstr "Comisión"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__amount
+msgid "Commission Amount"
+msgstr "Importe de la Comisión"
+
+#. module: account_commission
+#: model:ir.actions.act_window,name:account_commission.action_invoice_commission_analysis_report
+#: model:ir.ui.menu,name:account_commission.menu_invoice_commissions_analysis
+msgid "Commission Analysis"
+msgstr "Análisis de comisión"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__commission_total
+#: model:ir.model.fields,field_description:account_commission.field_account_move__commission_total
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__commission_total
+#: model:ir.ui.menu,name:account_commission.menu_invoicing_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_line_form
+msgid "Commissions"
+msgstr "Comisiones"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__company_id
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__company_id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__company_id
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Company"
+msgstr "Companía"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_commission_make_invoice__company_id
+msgid "Company related to this journal"
+msgstr "Compañía relacionada con este diario"
+
+#. module: account_commission
+#: model:ir.actions.act_window,name:account_commission.action_commission_make_invoices
+#: model:ir.ui.menu,name:account_commission.menu_invoicing_settlements_make_invoice
+msgid "Create Commission Invoices"
+msgstr "Crear facturas de comisiones"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "Create invoices"
+msgstr "Crear Facturas"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/wizards/wizard_invoice.py:0
+#, python-format
+msgid "Created Invoices"
+msgstr "Facturas creadas"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__create_uid
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__create_date
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__currency_id
+msgid "Currency"
+msgstr "Divisa"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Description"
+msgstr "Descripción"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__display_name
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__display_name
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__display_name
+msgid "Display Name"
+msgstr "Nombre a Mostrar"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_form
+msgid "Edit agents"
+msgstr "Editar agentes"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Extended Filters"
+msgstr "Filtros extendidos"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__from_settlement
+msgid "From Settlement"
+msgstr "Desde liquidación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__invoice_id
+msgid "Generated Invoice"
+msgstr "Factura generada"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__invoice_line_ids
+msgid "Generated invoice lines"
+msgstr "Líneas de factura generadas"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Group By"
+msgstr "Agrupado por"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__grouped
+msgid "Group invoices"
+msgstr "Agrupar facturas"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__id
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__id
+msgid "ID"
+msgstr "ID (identificación)"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__invoice_id
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement_line__invoice_agent_line_id
+msgid "Invoice Agent Line"
+msgstr "Línea de agente de facturación"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission__invoice_state__open
+msgid "Invoice Based"
+msgstr "Basado en factura"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_invoice_commission_analysis_report
+msgid "Invoice Commission Analysis Report"
+msgstr "Informe analítico de facturas de comisión"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__date_invoice
+msgid "Invoice Date"
+msgstr "Fecha factura"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__invoice_line_id
+msgid "Invoice Line"
+msgstr "Línea de factura"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Invoice Month"
+msgstr "Mes de facturación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission__invoice_state
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__invoice_state
+msgid "Invoice Status"
+msgstr "Estado de Facturación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__invoice_date
+msgid "Invoice date"
+msgstr "Fecha de facturación"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_settlement__state__except_invoice
+msgid "Invoice exception"
+msgstr "Excepción de factura"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_settlement__state__invoiced
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Invoiced"
+msgstr "Facturado"
+
+#. module: account_commission
+#: model:ir.actions.act_window,name:account_commission.action_invoicing_commission_settlement
+#: model:ir.ui.menu,name:account_commission.menu_invoicing_settlements
+msgid "Invoices Settlements"
+msgstr "Liquidación de Facturas"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__journal_id
+msgid "Journal"
+msgstr "Dario"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_account_move
+msgid "Journal Entry"
+msgstr "Entrada diaria"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_account_move_line
+msgid "Journal Item"
+msgstr "Artículo diario"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent____last_update
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice____last_update
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__write_uid
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__write_uid
+msgid "Last Updated by"
+msgstr "actualizado por última vez por"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__write_date
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__write_date
+msgid "Last Updated on"
+msgstr "Última Actualización el"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_settlement_line
+msgid "Line of a commission settlement"
+msgstr "Línea de liquidación de comisiones"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#: model_terms:ir.ui.view,arch_db:account_commission.view_settlement_form
+#, python-format
+msgid "Make invoice"
+msgstr "Crear factura"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+msgid "Make invoices"
+msgstr "Crear facturas"
+
+#. module: account_commission
+#: model:res.groups,name:account_commission.group_invoicing_commission
+msgid "Manage invoices commissions"
+msgstr "Gestionar las comisiones de facturas"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/wizards/wizard_invoice.py:0
+#, python-format
+msgid "No valid settlements to invoice."
+msgstr "No hay liquidaciones válidas para facturar."
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Not Settled"
+msgstr "No liquidada"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__object_id
+msgid "Parent"
+msgstr "Parental"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__partner_id
+msgid "Partner"
+msgstr "Socio"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission__invoice_state__paid
+msgid "Payment Based"
+msgstr "Basado en Pagos"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__percentage
+msgid "Percentage of commission"
+msgstr "Porcentaje de comisión"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#, python-format
+msgid "Period: from %(date_from)s to %(date_to)s"
+msgstr "Período: de %(date_from)s a %(date_to)s"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__product_id
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__product_id
+msgid "Product"
+msgstr "Producto"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__product_id
+msgid "Product for invoicing"
+msgstr "Producto para facturar"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.report_settlement_document
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_form
+msgid "Regenerate agents"
+msgstr "Regenerar agentes"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_settlement_form
+msgid "Reset to draft"
+msgstr "Restablecer borrador"
+
+#. module: account_commission
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_make_settle__settlement_type__sale_invoice
+#: model:ir.model.fields.selection,name:account_commission.selection__commission_settlement__settlement_type__sale_invoice
+msgid "Sales Invoices"
+msgstr "Facturas de Ventas"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_commission__invoice_state
+msgid ""
+"Select the invoice status for settling the commissions:\n"
+"* 'Invoice Based': Commissions are settled when the invoice is issued.\n"
+"* 'Payment Based': Commissions are settled when the invoice is paid (or "
+"refunded)."
+msgstr ""
+"Seleccione el estado de la factura para liquidar las comisiones:\n"
+"* 'Basado en factura': Las comisiones se liquidan cuando se emite la factura."
+"\n"
+"* 'Basado en Pago': Las comisiones se liquidan cuando se paga (o reembolsa) "
+"la factura."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__settled
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__settled
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Settled"
+msgstr "Liquidado"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_settlement
+#: model:ir.model.fields,field_description:account_commission.field_account_move_line__settlement_id
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_invoice__settlement_ids
+msgid "Settlement"
+msgstr "Liquidación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__settlement_count
+#: model:ir.model.fields,field_description:account_commission.field_account_move__settlement_count
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__settlement_count
+msgid "Settlement Count"
+msgstr "Recuento de liquidación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_invoice_line_agent__settlement_line_ids
+msgid "Settlement Line"
+msgstr "Línea de liquidación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_make_settle__settlement_type
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__settlement_type
+msgid "Settlement Type"
+msgstr "Tipo de liquidación"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_account_move_line__settlement_id
+msgid "Settlement that generates this invoice line"
+msgstr "Liquidación que genera esta línea de factura"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_account_bank_statement_line__settlement_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_move__settlement_ids
+#: model:ir.model.fields,field_description:account_commission.field_account_payment__settlement_ids
+#: model_terms:ir.ui.view,arch_db:account_commission.commission_make_invoice_form
+#: model_terms:ir.ui.view,arch_db:account_commission.view_in_invoice_bill_tree_inherit
+#: model_terms:ir.ui.view,arch_db:account_commission.view_move_form
+msgid "Settlements"
+msgstr "Liquidaciones"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement_line__invoice_line_id
+msgid "Source invoice line"
+msgstr "Origen de línea de factura"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_commission_settlement__state
+msgid "State"
+msgstr "Estado"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "Status"
+msgstr "Situación"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__price_subtotal
+msgid "Subtotal"
+msgstr "Sub total"
+
+#. module: account_commission
+#: model:ir.model.fields,help:account_commission.field_commission_settlement__settlement_type
+msgid ""
+"The source of the settlement, e.g. 'Sales invoice', 'Sales order', 'Purchase "
+"order'..."
+msgstr ""
+"El origen de la liquidación, por ejemplo, 'Factura de venta','Pedido de "
+"venta', 'Pedido de compra'..."
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "This Year"
+msgstr "Este año"
+
+#. module: account_commission
+#: model_terms:ir.actions.act_window,help:account_commission.action_invoice_commission_analysis_report
+msgid ""
+"This report performs analysis on your commissions added in invoice lines. "
+"You can check the amount and lines that will be settled by date, product, "
+"product category, aget, etc. Use this report to perform analysis on invoice "
+"lines agents not beeing settled yet."
+msgstr ""
+"Este informe realiza un análisis de sus comisiones añadidas en líneas de "
+"factura. Puede comprobar el importe y las líneas que se liquidarán por "
+"fecha, producto, categoría de producto, edad, etc. Utilice este informe para "
+"analizar las líneas de factura que aún no han sido liquidadas."
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__price_unit
+msgid "Unit Price"
+msgstr "Precio Unitario"
+
+#. module: account_commission
+#: model:ir.model.fields,field_description:account_commission.field_invoice_commission_analysis_report__uom_id
+msgid "Unit of Measure"
+msgstr "Unidad de Medida"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_make_invoice
+msgid "Wizard for making an invoice from a settlement"
+msgstr "Asistente para hacer una factura a partir de una liquidación"
+
+#. module: account_commission
+#: model:ir.model,name:account_commission.model_commission_make_settle
+msgid "Wizard for settling commissions"
+msgstr "Asistente para liquidación de comisiones"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/account_move.py:0
+#, python-format
+msgid "You can't cancel an invoice with settled lines"
+msgstr "No se puede cancelar una factura con líneas liquidadas"
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/commission_settlement.py:0
+#, python-format
+msgid "You can't delete invoiced settlements."
+msgstr "No se pueden borrar liquidaciones facturadas."
+
+#. module: account_commission
+#. odoo-python
+#: code:addons/account_commission/models/account_move.py:0
+#, python-format
+msgid "You can't modify a settled line"
+msgstr "No puede modificar una línea liquidada"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_graph
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_pivot
+msgid "invoice Commission Analysis"
+msgstr "Análisis de comisión facturada"
+
+#. module: account_commission
+#: model_terms:ir.ui.view,arch_db:account_commission.view_invoice_commission_analysis_search
+msgid "invoices Commission Analysis"
+msgstr "Análisis de Comisiones facturadas"
+
+#~ msgid ""
+#~ "Select the invoice status for settling the commissions:\n"
+#~ "* 'Invoice Based': Commissions are settled when the invoice is issued.\n"
+#~ "* 'Payment Based': Commissions are settled when the invoice is paid."
+#~ msgstr ""
+#~ "Seleccione el estado de la factura para liquidar las comisiones:\n"
+#~ "* 'Basado en factura': Las comisiones se liquidan cuando se emite la "
+#~ "factura.\n"
+#~ "* Pago\": Las comisiones se liquidan cuando se paga la factura."
+
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"

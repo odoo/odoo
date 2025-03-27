@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2019-2023 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details) -->
+<odoo noupdate="1">
+
+	<record id="seq_claim" model="ir.sequence">
+	    <field name="name">CRM Claim</field>
+	    <field name="code">crm.claim</field>
+	    <field eval="5" name="padding" />
+	    <field name="prefix">RMA-%(year)s/</field>
+    </record>
+
+	<!--
+	Case Stage
+	-->
+
+	<record model="crm.claim.stage" id="stage_claim1">
+	    <field name="name">New</field>
+	    <field name="sequence">1</field>
+	    <field name="state">draft</field>
+	</record>
+
+	<record model="crm.claim.stage" id="stage_claim2">
+	    <field name="name">In Progress</field>
+	    <field name="sequence">2</field>
+	    <field name="state">open</field>
+	</record>
+
+	<record model="crm.claim.stage" id="stage_claim3">
+		<field name="name">Waiting for Return</field>
+		<field name="sequence">3</field>
+		<field name="state">return</field>
+	</record>
+
+	<record model="crm.claim.stage" id="stage_claim5">
+		<field name="name">Waiting for Payment</field>
+		<field name="sequence">5</field>
+		<field name="state">payment</field>
+	</record>
+
+	<record model="crm.claim.stage" id="stage_claim6">
+		<field name="name">Waiting for Delivery</field>
+		<field name="sequence">6</field>
+		<field name="state">delivery</field>
+	</record>
+
+	<record model="crm.claim.stage" id="stage_claim7">
+		<field name="name">Settled</field>
+		<field name="sequence">7</field>
+		<field name="state">done</field>
+		<field name="fold" eval="True" />
+	</record>
+
+	<record model="crm.claim.stage" id="stage_claim8">
+		<field name="name">Rejected</field>
+		<field name="state">cancel</field>
+		<field name="sequence">8</field>
+		<field name="fold" eval="True" />
+	</record>
+
+</odoo>
