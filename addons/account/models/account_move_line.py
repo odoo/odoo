@@ -128,7 +128,6 @@ class AccountMoveLine(models.Model):
     )
     amount_currency = fields.Monetary(
         string='Amount in Currency',
-        group_operator=None,
         compute='_compute_amount_currency', inverse='_inverse_amount_currency', store=True, readonly=False, precompute=True,
         help="The amount expressed in an optional other currency if it is a multi-currency entry.")
     currency_id = fields.Many2one(
@@ -1754,6 +1753,19 @@ class AccountMoveLine(models.Model):
         with self.move_id._check_balanced(move_container),\
              self.move_id._sync_dynamic_lines(move_container):
             res = super().unlink()
+
+        return res
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if not groupby or 'currency_id' in groupby or 'amount_currency' not in fields:
+            return super().read_group(domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True)
+
+        fields.append('currency_id:count_distinct')
+        res = super().read_group(domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True)
+        for group_line in res:
+            if group_line['currency_id'] != 1:
+                group_line['amount_currency'] = False
 
         return res
 
