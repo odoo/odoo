@@ -39,7 +39,9 @@ class MailLinkPreview(models.Model):
         if not tools.is_html_empty(message.body):
             urls = OrderedSet(html.fromstring(message.body).xpath("//a[not(@data-oe-model)]/@href"))
             if request_url:
-                ignore_pattern = re.compile(f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)")
+                ignore_pattern = re.compile(
+                    f"{re.escape(request_url)}(((odoo|web|chat)(/|$|#|\\?))|mail/message/\\d+(/|$|#|\\?))"
+                )
                 urls = list(filter(lambda url: not ignore_pattern.match(url), urls))
         requests_session = requests.Session()
         message_link_previews_ok = self.env["mail.message.link.preview"]

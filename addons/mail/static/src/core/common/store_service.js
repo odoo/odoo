@@ -87,7 +87,7 @@ export class Store extends BaseStore {
 
     fetchDeferred = new Deferred();
     /** @type {[string | [string, any]]} */
-    fetchParams = [];
+    fetchParams = {};
     fetchReadonly = true;
     fetchSilent = true;
 
@@ -195,7 +195,7 @@ export class Store extends BaseStore {
      * @returns {Deferred}
      */
     async fetchStoreData(name, params, { readonly = true, silent = true } = {}) {
-        this.fetchParams.push(params ? [name, params] : name);
+        this.fetchParams[name] = params;
         this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
         const fetchDeferred = this.fetchDeferred;
@@ -252,7 +252,12 @@ export class Store extends BaseStore {
         const fetchDeferred = this.fetchDeferred;
         rpc(
             this.fetchReadonly ? "/mail/data" : "/mail/action",
-            { fetch_params: this.fetchParams, context: user.context },
+            {
+                fetch_params: Object.entries(this.fetchParams).map((param) =>
+                    param[1] ? param : param[0]
+                ),
+                context: user.context,
+            },
             {
                 silent: this.fetchSilent,
             }
@@ -268,7 +273,7 @@ export class Store extends BaseStore {
 
     resetFetchState() {
         this.fetchDeferred = new Deferred();
-        this.fetchParams = [];
+        this.fetchParams = {};
         this.fetchReadonly = true;
         this.fetchSilent = true;
     }

@@ -1064,6 +1064,9 @@ function _process_request_for_all(store, name, params, context = {}) {
             store.add(channel, makeKwArgs({ delete: true }));
         }
     }
+    if (name === "messages") {
+        store.add(MailMessage.search([["id", "in", params]]));
+    }
 }
 
 function _process_request_for_internal_user(store, name, params) {
