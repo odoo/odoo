@@ -13,12 +13,12 @@ test("edit box-shadow with ShadowOption", async () => {
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
-    expect(queryAllTexts(".hb-row > div:first-child")).toEqual(["Shadow"]);
+    expect(queryAllTexts(".hb-row .hb-row-label")).toEqual(["Shadow"]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
         '<div class="test-options-target o-paragraph">b</div>'
     );
     await contains('.options-container button[title="Outset"]').click();
-    expect(queryAllTexts(".hb-row > div:first-child")).toEqual([
+    expect(queryAllTexts(".hb-row .hb-row-label")).toEqual([
         "Shadow",
         "Color",
         "Offset (X, Y)",
@@ -47,7 +47,7 @@ test("edit box-shadow with ShadowOption", async () => {
     );
 
     await contains('.options-container button[title="Inset"]').click();
-    expect(queryAllTexts(".hb-row > div:first-child")).toEqual([
+    expect(queryAllTexts(".hb-row .hb-row-label")).toEqual([
         "Shadow",
         "Color",
         "Offset (X, Y)",
@@ -60,7 +60,7 @@ test("edit box-shadow with ShadowOption", async () => {
     );
 
     await contains(".options-container button:contains(None)").click();
-    expect(queryAllTexts(".hb-row > div:first-child")).toEqual(["Shadow"]);
+    expect(queryAllTexts(".hb-row .hb-row-label")).toEqual(["Shadow"]);
     expect(":iframe .test-options-target").toHaveOuterHTML(
         '<div class="test-options-target o-paragraph" style="">b</div>'
     );

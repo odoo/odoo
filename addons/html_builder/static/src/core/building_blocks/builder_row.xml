@@ -4,13 +4,13 @@
 <t t-name="html_builder.BuilderRow">
     <BuilderComponent>
         <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" t-att-class="this.getLevelClass()" t-ref="root" t-att-data-label="props.label">
-            <button t-if="state.hasCollapseContent"
-                    class="o_we_collapse_toggler pt-1" t-att-class="{ 'active': state.expanded }"
+            <button t-ref="collapse"
+                    class="o_we_collapse_toggler pt-1 d-none" t-att-class="{ 'active': state.expanded }"
                     title="Toggle more options"
                     t-on-click="toggleCollapseContent"
                     t-att-aria-expanded="state.expanded ? 'true' : 'false'"
                     t-att-aria-controls="collapseContentId"/>
-            <div class="d-flex" style="flex-grow: 0.4; flex-basis: 0; min-width: 0;" t-att-data-tooltip="props.tooltip" t-on-click="toggleCollapseContent">
+            <div class="d-flex hb-row-label" style="flex-grow: 0.4; flex-basis: 0; min-width: 0;" t-att-data-tooltip="props.tooltip" t-on-click="toggleCollapseContent">
                 <span class="text-nowrap text-truncate" t-out="props.label"/>
             </div>
             <div class="d-flex" style="flex-grow: 0.6; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
