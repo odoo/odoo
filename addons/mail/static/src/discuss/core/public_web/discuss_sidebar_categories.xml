@@ -13,7 +13,7 @@
             </Dropdown>
             <DiscussSidebarQuickSearchInput t-else="" state="state"/>
         </t>
-        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat_index">
+        <t t-foreach="store.discuss.allCategories" t-as="cat" t-key="cat.id">
             <t t-if="cat.isVisible" t-call="mail.DiscussSidebarCategories.category">
                 <t t-set="category" t-value="cat"/>
             </t>
