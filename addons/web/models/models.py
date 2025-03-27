@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import annotations
 
 import base64
@@ -12,9 +11,8 @@ import datetime
 import pytz
 
 from odoo import api, models
-from odoo.fields import Command, Date
+from odoo.fields import Command, Date, Domain
 from odoo.api import NewId
-from odoo.osv.expression import AND, OR, TRUE_DOMAIN, normalize_domain
 from odoo.models import READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBER_GRANULARITY, READ_GROUP_TIME_GRANULARITY, BaseModel
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError
@@ -23,15 +21,21 @@ from odoo.tools.translate import LazyTranslate
 _lt = LazyTranslate(__name__)
 SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
-def is_true_domain(domain):
-    return normalize_domain(domain) == TRUE_DOMAIN
-
 
 class lazymapping(defaultdict):
     def __missing__(self, key):
         value = self.default_factory(key)
         self[key] = value
         return value
+
+
+def AND(domains):
+    return list(Domain.AND(domains))
+
+
+def OR(domains):
+    return list(Domain.OR(domains))
+
 
 DISPLAY_DATE_FORMATS = {
     'day': 'dd MMM yyyy',
@@ -885,10 +889,10 @@ class Base(models.AbstractModel):
 
         enable_counters = kwargs.get('enable_counters')
         only_counters = kwargs.get('only_counters')
-        extra_domain = kwargs.get('extra_domain', [])
-        no_extra = is_true_domain(extra_domain)
-        model_domain = kwargs.get('model_domain', [])
-        count_domain = AND([model_domain, extra_domain])
+        extra_domain = Domain(kwargs.get('extra_domain', []))
+        no_extra = extra_domain.is_true()
+        model_domain = Domain(kwargs.get('model_domain', []))
+        count_domain = model_domain & extra_domain
 
         limit = kwargs.get('limit')
         set_limit = kwargs.get('set_limit')

@@ -14,7 +14,7 @@ from pytz import timezone, utc
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.osv import expression
+from odoo.fields import Domain
 from odoo.tools.date_intervals import Intervals, float_to_time, make_aware, datetime_to_string, string_to_datetime
 from odoo.tools.float_utils import float_round
 
@@ -353,13 +353,13 @@ class ResourceCalendar(models.Model):
         else:
             resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
-        domain = domain if domain is not None else []
-        domain = expression.AND([domain, [
-            ('calendar_id', '=', self.id),
-            ('resource_id', 'in', resource_ids),
-            ('display_type', '=', False),
-            ('day_period', '!=' if not lunch else '=', 'lunch'),
-        ]])
+        domain = Domain.AND([
+            Domain(domain or Domain.TRUE),
+            Domain('calendar_id', '=', self.id),
+            Domain('resource_id', 'in', resource_ids),
+            Domain('display_type', '=', False),
+            Domain('day_period', '!=' if not lunch else '=', 'lunch'),
+        ])
 
         attendances = self.env['resource.calendar.attendance'].search(domain)
         # Since we only have one calendar to take in account

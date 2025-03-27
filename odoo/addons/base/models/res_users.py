@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from __future__ import annotations
 
@@ -20,11 +19,11 @@ from markupsafe import Markup
 import pytz
 from passlib.context import CryptContext as _CryptContext
 
-from odoo import api, fields, models, tools, _, Command
+from odoo import api, fields, models, tools, _
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationError
+from odoo.fields import Command, Domain
 from odoo.http import request, DEFAULT_LANG
-from odoo.osv import expression
 from odoo.tools import is_html_empty, frozendict, lazy_property, SQL
 
 
@@ -598,11 +597,11 @@ class ResUsers(models.Model):
 
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
-        domain = domain or []
+        domain = Domain(domain or Domain.TRUE)
         # first search only by login, then the normal search
         if (
-            name and operator not in expression.NEGATIVE_TERM_OPERATORS
-            and (user := self.search_fetch(expression.AND([[('login', '=', name)], domain]), ['display_name']))
+            name and not Domain.is_negative_operator(operator)
+            and (user := self.search_fetch(Domain('login', '=', name) & domain, ['display_name']))
         ):
             return [(user.id, user.display_name)]
         return super().name_search(name, domain, operator, limit)

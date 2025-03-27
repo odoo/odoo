@@ -100,9 +100,9 @@ class IrFieldsConverter(models.AbstractModel):
         """ Returns a converter object for the model. A converter is a
         callable taking a record-ish (a dictionary representing an odoo
         record with values of typetag ``fromtype``) and returning a converted
-        records matching what :meth:`odoo.osv.orm.Model.write` expects.
+        records matching what :meth:`odoo.models.Model.write` expects.
 
-        :param model: :class:`odoo.osv.orm.Model` for the conversion base
+        :param model: :class:`odoo.models.Model` for the conversion base
         :param fromtype:
         :returns: a converter callable
         :rtype: (record: dict, logger: (field, error) -> None) -> dict

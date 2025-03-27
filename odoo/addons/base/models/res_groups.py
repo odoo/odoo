@@ -1,11 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections.abc import Collection
-
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.osv import expression
 from odoo.tools import SetDefinitions
 
 
@@ -120,30 +117,31 @@ class ResGroups(models.Model):
     def _search_full_name(self, operator, operand):
         lst = True
         if isinstance(operand, bool):
-            return [('name', operator, operand)]
+            return Domain('name', operator, operand)
         if isinstance(operand, str):
             lst = False
             operand = [operand]
         where_domains = []
+        is_negative = Domain.is_negative_operator(operator)
         for group in operand:
             values = [v for v in group.split('/') if v]
             group_name = values.pop().strip()
-            category_name = values and '/'.join(values).strip() or group_name
-            group_domain = [('name', operator, lst and [group_name] or group_name)]
+            category_name = '/'.join(values).strip() if values else group_name
+            group_domain = Domain('name', operator, [group_name] if lst else group_name)
             category_ids = self.env['ir.module.category'].sudo()._search(
-                [('name', operator, [category_name] if lst else category_name)])
-            category_domain = [('category_id', 'in', category_ids)]
-            if operator in expression.NEGATIVE_TERM_OPERATORS and not values:
-                category_domain = expression.OR([category_domain, [('category_id', '=', False)]])
-            if (operator in expression.NEGATIVE_TERM_OPERATORS) == (not values):
-                where = expression.AND([group_domain, category_domain])
+                Domain('name', operator, [category_name] if lst else category_name))
+            category_domain = Domain('category_id', 'in', category_ids)
+            if is_negative and not values:
+                category_domain |= Domain('category_id', '=', False)
+            if is_negative == (not values):
+                where = group_domain & category_domain
             else:
-                where = expression.OR([group_domain, category_domain])
+                where = group_domain | category_domain
             where_domains.append(where)
-        if operator in expression.NEGATIVE_TERM_OPERATORS:
-            return expression.AND(where_domains)
+        if is_negative:
+            return Domain.AND(where_domains)
         else:
-            return expression.OR(where_domains)
+            return Domain.OR(where_domains)
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None):

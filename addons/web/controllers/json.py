@@ -14,9 +14,9 @@ from werkzeug.exceptions import BadRequest, NotFound
 
 from odoo import http
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.models import check_object_name
-from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
 from .utils import get_action_triples
@@ -112,8 +112,8 @@ class WebJsonController(http.Controller):
             domains.append(user_domain)
         else:
             default_domain = get_default_domain(model, action, context, eval_context)
-            if default_domain and default_domain != expression.TRUE_DOMAIN:
-                kwargs['domain'] = repr(default_domain)
+            if default_domain and not Domain(default_domain).is_true():
+                kwargs['domain'] = repr(list(default_domain))
             domains.append(default_domain)
         try:
             limit = int(kwargs.get('limit', 0)) or action.limit
@@ -176,7 +176,7 @@ class WebJsonController(http.Controller):
         # Last checks before the query
         if redirect := check_redirect():
             return redirect
-        domain = expression.AND(domains)
+        domain = Domain.AND(domains)
         # Reading a group or a list
         if groupby:
             res = model.web_read_group(
@@ -289,7 +289,7 @@ def get_default_domain(model, action, context, eval_context):
                             yield domain
                         # not parsing context['group_by']
 
-        default_domain = expression.AND(
+        default_domain = Domain.AND(
             safe_eval(domain, eval_context)
             for domain in filters_from_context()
         )

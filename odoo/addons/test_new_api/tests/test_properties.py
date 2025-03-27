@@ -2726,7 +2726,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
+                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
             ],
         )
 
@@ -2743,7 +2743,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.mypartner', '=', False),
-                ('attributes.mypartner', 'not in', (self.partner.id, self.partner_2.id)),
+                ('attributes.mypartner', 'not in', [self.partner.id, self.partner_2.id]),
             ],
         )
 
@@ -2820,7 +2820,7 @@ class PropertiesGroupByCase(TestPropertiesMixin):
             [
                 '|',
                 ('attributes.myselection', '=', False),
-                ('attributes.myselection', 'not in', ('optionA', 'optionB')),
+                ('attributes.myselection', 'not in', ['optionA', 'optionB']),
             ],
         )
         self.assertEqual(result[1]['attributes.myselection'], False)
