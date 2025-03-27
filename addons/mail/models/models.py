@@ -403,10 +403,15 @@ class Base(models.AbstractModel):
         def email_key(email):
             return email_normalize(email, strict=False) or email.strip()
         is_mail_thread = 'message_partner_ids' in self
-        suggested = self._message_add_suggested_recipients(force_primary_email=primary_email)
-        if additional_partners:
-            for record in self:
-                suggested[record.id]['partners'] += additional_partners
+        suggested_record = self._message_add_suggested_recipients(force_primary_email=primary_email)
+
+        # copy suggested based on records, then add those from context
+        suggested = {}
+        for record in self:
+            suggested[record.id] = {
+                'email_to_lst': suggested_record[record.id]['email_to_lst'].copy(),
+                'partners': suggested_record[record.id]['partners'] + (additional_partners or self.env['res.partner']),
+            }
 
         # find last relevant message
         messages = self.env['mail.message']
@@ -464,7 +469,12 @@ class Base(models.AbstractModel):
             partners = self.env['res.partner'].browse(tools.misc.unique(
                 p.id for p in (suggested[record.id]['partners'] + records_partners[record.id])
                 if (
-                    p not in followers and
+                    # skip followers, unless being a customer suggested by record (mostly defaults)
+                    (
+                        p not in followers or (
+                            p in suggested_record[record.id]['partners'] and
+                            p.partner_share
+                    )) and
                     p.email_normalized not in ban_emails and
                     not p.is_public
                 )
