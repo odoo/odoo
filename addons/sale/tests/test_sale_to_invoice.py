@@ -572,22 +572,16 @@ class TestSaleToInvoice(TestSaleCommon):
                     'price_unit': 0,
                     'tax_id': [],
                 }),
-                Command.create({
-                    'name': 'Horse-meat burger',
-                    'product_id': product_a.id,
-                    'product_uom_qty': 3,
-                    'price_unit': 5.0,
-                    'tax_id': [],
-                }),
-                Command.create({
-                    'name': 'French fries',
-                    'product_id': product_b.id,
-                    'product_uom_qty': 3,
-                    'price_unit': 5.0,
-                    'tax_id': [],
-                }),
             ]
         })
+        sale_order.order_line = [Command.create({
+            'product_id': product.id,
+            'product_uom_qty': 3,
+            'price_unit': 5.0,
+            'tax_id': [],
+            'combo_item_id': combo.combo_item_ids.id,
+            'linked_line_id': sale_order.order_line.id,
+        }) for product, combo in zip(product_a + product_b, combo_a + combo_b)]
 
         # Confirm the SO
         sale_order.action_confirm()
@@ -613,22 +607,42 @@ class TestSaleToInvoice(TestSaleCommon):
                 'name': 'Meal Menu x 3',
                 'display_type': 'line_section',
                 'product_id': False,
-                'quantity': 0,
+                'quantity': 3,
                 'price_unit': 0,
+                'sequence': 0,
             },
             {
                 'name': 'Horse-meat burger',
                 'display_type': 'product',
                 'product_id': product_a.id,
                 'quantity': 3,
-                'price_unit': 5.0
+                'price_unit': 5.0,
+                'sequence': 1,
             },
             {
                 'name': 'French fries',
                 'display_type': 'product',
                 'product_id': product_b.id,
                 'quantity': 3,
-                'price_unit': 5.0
+                'price_unit': 5.0,
+                'sequence': 2,
+            },
+        ])
+        self.assertRecordValues(sale_order.order_line, [
+            {
+                'product_id': product_combo.id,
+                'qty_to_invoice': 0,
+                'qty_invoiced': 3,
+            },
+            {
+                'product_id': product_a.id,
+                'qty_to_invoice': 0,
+                'qty_invoiced': 3,
+            },
+            {
+                'product_id': product_b.id,
+                'qty_to_invoice': 0,
+                'qty_invoiced': 3,
             },
         ])
 

@@ -345,10 +345,9 @@ export class ProductScreen extends Component {
         if (limit_categories) {
             const productIds = new Set([]);
             for (const categ of iface_available_categ_ids) {
-                for (const p of this.pos.models["product.product"].getBy(
-                    "pos_categ_ids",
-                    categ.id
-                )) {
+                const categoryProducts =
+                    this.pos.models["product.product"].getBy("pos_categ_ids", categ.id) || [];
+                for (const p of categoryProducts) {
                     productIds.add(p.id);
                 }
             }

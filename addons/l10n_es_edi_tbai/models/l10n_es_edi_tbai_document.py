@@ -218,9 +218,9 @@ class L10nEsEdiTbaiDocument(models.Model):
                 error_code = response_headers['eus-bizkaia-n3-codigo-respuesta']
                 error_msg = response_headers['eus-bizkaia-n3-mensaje-respuesta']
                 errors.append(error_code + ": " + error_msg)
-            if errors:
-                return False, errors
-            return self._process_post_response_xml_bi(env, response_xml)
+            success, errors_add = self._process_post_response_xml_bi(env, response_xml)
+            errors += errors_add
+            return success, errors
 
     def _prepare_post_params_ar_gi(self):
         """Web service parameters for Araba and Gipuzkoa."""
@@ -307,6 +307,8 @@ class L10nEsEdiTbaiDocument(models.Model):
     @api.model
     def _process_post_response_xml_bi(self, env, response_xml):
         """Government response processing for Bizkaia."""
+        if response_xml is None:
+            return False, []
         success = response_xml.findtext('.//EstadoRegistro') == "Correcto"
 
         if success:
