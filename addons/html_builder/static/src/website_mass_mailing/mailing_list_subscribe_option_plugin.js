@@ -5,10 +5,7 @@ import { user } from "@web/core/user";
 import { _t } from "@web/core/l10n/translation";
 import { NewsletterSubscribeCommonOption } from "./newsletter_subscribe_common_option";
 import { getSelectorParams } from "@html_builder/utils/utils";
-import {
-    applyFunDependOnSelectorAndExclude,
-    applyAsyncFunDependOnSelectorAndExclude,
-} from "@html_builder/plugins/utils";
+import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
 
 class MailingListSubscribeOptionPlugin extends Plugin {
     static id = "mailingListSubscribeOption";
@@ -56,7 +53,7 @@ class MailingListSubscribeOptionPlugin extends Plugin {
         for (const mailingListSubscribeOptionSelector of this
             .mailingListSubscribeOptionSelectorParams) {
             proms.push(
-                applyAsyncFunDependOnSelectorAndExclude(
+                applyFunDependOnSelectorAndExclude(
                     this.addNewsletterListElement.bind(this),
                     snippetEl,
                     mailingListSubscribeOptionSelector
