@@ -889,7 +889,9 @@ test("click on expand from chat window should close the chat window and open the
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Open Form View" });
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["do_action"], "should have done an action to open the form view");
+    await waitForSteps(["do_action"], {
+        message: "should have done an action to open the form view",
+    });
 });
 
 test("preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread", async () => {
