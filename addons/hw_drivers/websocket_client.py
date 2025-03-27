@@ -10,6 +10,7 @@ from threading import Thread
 
 from odoo.addons.hw_drivers import main
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.hw_drivers.server_logger import close_server_log_sender_handler
 
 _logger = logging.getLogger(__name__)
 websocket.enableTrace(True, level=logging.getLevelName(_logger.getEffectiveLevel()))
@@ -44,8 +45,8 @@ def on_message(ws, messages):
     iot_mac = helpers.get_mac_address()
     for message in messages:
         message_type = message['message']['type']
+        payload = message['message']['payload']
         if message_type == 'iot_action':
-            payload = message['message']['payload']
             if iot_mac in payload['iotDevice']['iotIdentifiers']:
                 for device in payload['iotDevice']['identifiers']:
                     device_identifier = device['identifier']
@@ -57,6 +58,10 @@ def on_message(ws, messages):
             else:
                 # likely intended as IoT share the same channel
                 _logger.debug("message ignored due to different iot mac: %s", iot_mac)
+        elif message_type == 'server_clear':
+            if iot_mac in payload['iotIdentifiers']:
+                helpers.disconnect_from_server()
+                close_server_log_sender_handler()
         elif message_type != 'print_confirmation':  # intended to be ignored
             _logger.warning("message type not supported: %s", message_type)
 
