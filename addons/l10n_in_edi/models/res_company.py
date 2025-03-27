@@ -1,4 +1,5 @@
 import pytz
+import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -82,16 +83,57 @@ class ResCompany(models.Model):
     def _l10n_in_check_einvoice_validation(self):
         checks = {
             'company_address_missing': {
-                'fields': ('street', 'zip', 'city', 'state_id', 'country_id',),
-                'message': _("Companies should have a complete address, verify their Street, City, State, Country and Zip code."),
+                'message': _(
+                    "Companies should have a complete address, verify their Street, City, State, "
+                    "Country and Zip code."
+                ),
+                'validation': lambda record: any(
+                    not record[field] for field in (
+                        'street', 'zip', 'city', 'state_id', 'country_id',
+                    )
+                ),
+            },
+            'company_email_check': {
+                'message': _(
+                    "Email won’t be sent to e-invoice: invalid or longer than 100 characters."
+                ),
+                'validation': lambda record: (
+                    record.email and (
+                        not re.match(
+                            r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", record.email
+                        ) or not re.match(r"^.{6,100}$", record.email)
+                    )
+                ),
+            },
+            'company_phone_check': {
+                'message': _(
+                    "Phone number won’t be sent to e-invoice: must be 10–12 digits."
+                ),
+                'validation': lambda record: (
+                    record.phone and not re.match(
+                        r"^[0-9]{10,12}$",
+                        self.env['account.move']._l10n_in_extract_digits(record.phone)
+                    )
+                ),
+            },
+            'company_street2_check': {
+                'message': _(
+                    "Street2 won’t be sent to e-invoice: must be 3–100 characters."
+                ),
+                'validation': lambda record: (
+                    record.street2 and not re.match(r"^.{3,100}$", record.street2)
+                ),
             },
         }
         return {
             f"l10n_in_edi_{key}": {
                 'message': check['message'],
-                'action_text': _("View Company/ies"),
+                'action_text': (
+                    _("View Companies") if len(invalid_records) > 1
+                    else _("View %s", invalid_records.name)
+                ),
                 'action': invalid_records._get_records_action(name=_("Check Company Data")),
             }
             for key, check in checks.items()
-            if (invalid_records := self.filtered(lambda record: any(not record[field] for field in check['fields'])))
+            if (invalid_records := self.filtered(check['validation']))
         }
