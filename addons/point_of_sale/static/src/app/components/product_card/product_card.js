@@ -13,11 +13,14 @@ export class ProductCard extends Component {
         onClick: { type: Function, optional: true },
         showWarning: { type: Boolean, optional: true },
         productCartQty: { type: [Number, undefined], optional: true },
+        slots: { type: Object, optional: true },
+        isComboPopup: { type: Boolean, optional: true },
     };
     static defaultProps = {
         onClick: () => {},
         class: "",
         showWarning: false,
+        isComboPopup: false,
     };
 
     get productQty() {

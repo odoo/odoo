@@ -8,6 +8,7 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
+import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
     steps: () =>
@@ -129,5 +130,58 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("2.38")),
             ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            // Desk accessories combo
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.checkTotal("40.00"),
+            combo.select("Combo Product 3"),
+            combo.checkTotal("42.00"),
+
+            // Desks combo
+            combo.select("Combo Product 5"),
+            combo.checkProductQty("Combo Product 5", "1"),
+            combo.select("Combo Product 5"),
+            combo.select("Combo Product 5"),
+            // Check that we cannot exceed the combo 'max_qty' which is 2
+            combo.checkProductQty("Combo Product 5", "2"),
+            combo.checkTotal("46.00"),
+            combo.clickQtyBtnMinus("Combo Product 5"),
+            combo.checkProductQty("Combo Product 5", "1"),
+            combo.select("Combo Product 4"),
+            combo.checkProductQty("Combo Product 4", "1"),
+            combo.checkTotal("44.00"),
+            combo.isConfirmationButtonDisabled(),
+
+            // Chairs combo
+            combo.select("Combo Product 6"),
+            combo.clickQtyBtnAdd("Combo Product 6"),
+            combo.checkProductQty("Combo Product 6", "2"),
+            // Confirmation should be enabled as we have selected the "min" qty for each combo
+            Utils.negateStep(combo.isConfirmationButtonDisabled()),
+            // As for chairs combo : 'qty_max' > 'qty_free', we can still select the product, but we'll pay them as extra (combo 'base_price')
+            combo.checkTotal("44.00"),
+            combo.select("Combo Product 7"),
+            combo.clickQtyBtnAdd("Combo Product 7"),
+            combo.clickQtyBtnAdd("Combo Product 7"),
+            combo.checkProductQty("Combo Product 7", "3"),
+            combo.checkTotal("134.00"),
+
+            Dialog.confirm(),
+            inLeftSide([
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.97"),
+            ]),
+            ProductScreen.totalAmountIs("151.97"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
