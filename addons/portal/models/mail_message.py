@@ -95,6 +95,7 @@ class MailMessage(models.Model):
 
         note_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
         for message, values in zip(self, vals_list):
+            values["body"] = ["markup", values["body"]]
             if message_to_attachments:
                 values['attachment_ids'] = message_to_attachments.get(message.id, {})
             if 'author_avatar_url' in properties_names:
