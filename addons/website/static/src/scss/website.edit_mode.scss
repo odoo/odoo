@@ -28,10 +28,8 @@ $-editor-messages-margin-x: 2%;
     }
 }
 .o_we_snippet_area_animation {
-    animation-delay: 999ms; // Disable it but allow to inherit the animation
-
     &::before {
-        animation: inherit;
+        animation: catchAttention 200ms ease 0s 2 normal;
         animation-delay: 0ms;
     }
 }
