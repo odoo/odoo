@@ -82,3 +82,45 @@ $line-height-truncate: 1.5em;
         display: none;
     }
 }
+
+// Embed PDFViewer
+// **************************************************
+#PDFViewer.o_wslides_fs_pdf_viewer {
+    background-image: linear-gradient(120deg, $o-wslides-color-dark2, $o-wslides-color-dark3);
+
+    #PDFViewerNav {
+        background-image: linear-gradient(120deg, $o-wslides-color-dark1, $o-wslides-color-dark2);
+    }
+
+    .oe_slides_panel_footer span[role="button"],
+    .oe_slides_panel_footer a,
+    .oe_slides_share_bar span[role="button"],
+    .oe_slides_share_bar a {
+        cursor: pointer;
+        user-select: none;
+        @include o-hover-text-color(rgba(white, 0.7), white);
+
+        &.disabled {
+            @include o-hover-text-color(rgba(white, 0.2), rgba(white, 0.2));
+            cursor: default;
+        }
+    }
+
+    .oe_slide_embed_option {
+        @include o-position-absolute(0,0,0,0);
+    }
+
+    .disabled {
+        // remove JS events for disabled elements
+        pointer-events: none;
+    }
+
+    .o_slide_navigation_buttons {
+        user-select: none;
+    }
+}
+
+.oe_slides_share_bar{
+    padding: 10px 0;
+}
+
