@@ -566,7 +566,7 @@ class TestAPI(MailCommon, TestRecipients):
         ticket_partner_fol.message_subscribe(partner_ids=self.partner_employee.ids)
         for ticket, sugg_partner in zip(
             ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user,
-            (self.test_partner, self.test_partner, False, False),
+            (self.test_partner, self.test_partner, self.test_partner, False),
             strict=True,
         ):
             with self.subTest(ticket=ticket.name):

@@ -308,6 +308,15 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                             'partner_id': author.id,  # already created by project upon initial email reception
                         }
                     ]
+                elif test_user == self.user_portal:
+                    expected_all = [
+                        {  # customer is proposed, even if follower, because shared
+                            'create_values': {},
+                            'email': self.user_portal.email_normalized,
+                            'name': self.user_portal.name,
+                            'partner_id': self.user_portal.partner_id.id,
+                        }
+                    ]
                 expected_all += [
                     {  # mail.thread.cc: email_cc field
                         'create_values': {},
