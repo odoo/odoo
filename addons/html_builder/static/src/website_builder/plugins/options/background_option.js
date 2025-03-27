@@ -1,33 +1,28 @@
-import { useDomState } from "@html_builder/core/utils";
-import { BackgroundImageOption } from "@html_builder/plugins/background_option/background_image_option";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
-import { BackgroundPositionOption } from "@html_builder/plugins/background_option/background_position_option";
-import { BackgroundShapeOption } from "@html_builder/plugins/background_option/background_shape_option";
 import { ParallaxOption } from "../parallax_option";
+import { useBackgroundOption } from "@html_builder/plugins/background_option/background_hook";
 
-export class WebsiteBackgroundOption extends BackgroundOption {
+export class WebsiteBackgroundOption extends BaseOptionComponent {
     static template = "website.WebsiteBackgroundOption";
     static components = {
-        BackgroundImageOption,
-        BackgroundPositionOption,
-        BackgroundShapeOption,
+        ...BackgroundOption.components,
         ParallaxOption,
     };
     static props = {
-        ...super.props,
+        ...BackgroundOption.props,
         withVideos: { type: Boolean, optional: true },
     };
     static defaultProps = {
-        ...super.defaultProps,
+        ...BackgroundOption.defaultProps,
         withVideos: false,
     };
     setup() {
         super.setup();
+        const { showColorFilter } = useBackgroundOption(this.isActiveItem);
+        this.showColorFilter = () => showColorFilter() || this.isActiveItem("toggle_bg_video_id");
         this.websiteBgOptionDomState = useDomState((el) => ({
             applyTo: el.querySelector(".s_parallax_bg") ? ".s_parallax_bg" : "",
         }));
-    }
-    showColorFilter() {
-        return super.showColorFilter() || this.isActiveItem("toggle_bg_video_id");
     }
 }

@@ -5,10 +5,12 @@ import { WebsiteBackgroundOption } from "@html_builder/website_builder/plugins/o
 
 class BlockquoteOptionPlugin extends Plugin {
     static id = "blockquoteOption";
+    selector = ".s_blockquote";
     resources = {
+        mark_color_level_selector_params: [{ selector: this.selector }],
         builder_options: [
             withSequence(30, {
-                selector: ".s_blockquote",
+                selector: this.selector,
                 OptionComponent: WebsiteBackgroundOption,
                 props: {
                     withColors: true,
@@ -19,7 +21,7 @@ class BlockquoteOptionPlugin extends Plugin {
             }),
             withSequence(40, {
                 template: "website.BlockquoteOption",
-                selector: ".s_blockquote",
+                selector: this.selector,
             }),
         ],
     };

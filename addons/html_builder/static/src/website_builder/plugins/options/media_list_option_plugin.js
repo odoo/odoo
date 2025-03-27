@@ -5,6 +5,7 @@ import { MediaListItemOption } from "./media_list_item_option";
 
 class MediaListOptionPlugin extends Plugin {
     static id = "mediaListOption";
+    mediaListItemOptionSelector = ".s_media_list_item";
     resources = {
         builder_options: [
             withSequence(5, {
@@ -13,10 +14,13 @@ class MediaListOptionPlugin extends Plugin {
             }),
             withSequence(20, {
                 OptionComponent: MediaListItemOption,
-                selector: ".s_media_list_item",
+                selector: this.mediaListItemOptionSelector,
             }),
         ],
         builder_actions: this.getActions(),
+        mark_color_level_selector_params: [
+            { selector: this.mediaListItemOptionSelector, applyTo: ":scope > .row" },
+        ],
     };
 
     getActions() {

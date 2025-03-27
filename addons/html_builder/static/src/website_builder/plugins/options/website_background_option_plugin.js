@@ -12,12 +12,14 @@ import {
 
 class WebsiteBackgroundOptionPlugin extends Plugin {
     static id = "websiteOption";
+    sectionSelector = "section";
+    carouselApplyTo = ":scope > .carousel:not(.s_carousel_cards)";
     resources = {
         builder_options: [
             {
                 OptionComponent: WebsiteBackgroundOption,
-                selector: "section",
-                applyTo: ":scope > .carousel:not(.s_carousel_cards)",
+                selector: this.sectionSelector,
+                applyTo: this.carouselApplyTo,
                 props: {
                     withColors: true,
                     withImages: true,
@@ -60,6 +62,11 @@ class WebsiteBackgroundOptionPlugin extends Plugin {
                     withColorCombinations: false,
                 },
             },
+        ],
+        mark_color_level_selector_params: [
+            { selector: this.sectionSelector, applyTo: this.carouselApplyTo },
+            { selector: BOTH_BG_COLOR_IMAGE_SELECTOR, exclude: BOTH_BG_COLOR_IMAGE_EXCLUDE },
+            { selector: ONLY_BG_COLOR_SELECTOR, exclude: ONLY_BG_COLOR_EXCLUDE },
         ],
     };
 }

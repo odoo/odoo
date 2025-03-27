@@ -1,8 +1,6 @@
 import { applyFunDependOnSelectorAndExclude } from "@html_builder/plugins/utils";
-import { getSelectorParams } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { BackgroundOption } from "./background_option";
 
 class BackgroundOptionPlugin extends Plugin {
     static id = "backgroundOption";
@@ -10,18 +8,13 @@ class BackgroundOptionPlugin extends Plugin {
         normalize_handlers: this.normalize.bind(this),
         system_classes: ["o_colored_level"],
     };
-    setup() {
-        this.coloredLevelBackgroundParams = getSelectorParams(
-            this.getResource("builder_options"),
-            BackgroundOption
-        );
-    }
     normalize(root) {
-        for (const coloredLevelBackgroundParam of this.coloredLevelBackgroundParams) {
+        const markColorLevelSelectorParams = this.getResource("mark_color_level_selector_params");
+        for (const markColorLevelSelectorParam of markColorLevelSelectorParams) {
             applyFunDependOnSelectorAndExclude(
                 this.markColorLevel,
                 root,
-                coloredLevelBackgroundParam
+                markColorLevelSelectorParam
             );
         }
     }

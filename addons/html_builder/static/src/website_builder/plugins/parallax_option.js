@@ -1,6 +1,6 @@
-import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
+import { BaseOptionComponent } from "@html_builder/core/utils";
 
-export class ParallaxOption extends BackgroundOption {
+export class ParallaxOption extends BaseOptionComponent {
     static template = "website.ParallaxOption";
     static props = {};
 }

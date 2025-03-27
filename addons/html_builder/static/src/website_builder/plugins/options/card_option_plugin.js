@@ -6,17 +6,21 @@ import { WebsiteBackgroundOption } from "./background_option";
 
 class CardOptionPlugin extends Plugin {
     static id = "cardOption";
+    cardSelector = ".s_card";
+    cardExclude = `div:is(${CARD_PARENT_HANDLERS}) > .s_card`;
+    cardDisableWidthApplyTo = ":scope > .s_card:not(.s_carousel_cards_card)";
+    websiteBgApplyTo = ":scope > .s_carousel_cards_card";
     resources = {
         builder_options: [
             {
                 OptionComponent: CardOption,
-                selector: ".s_card",
-                exclude: `div:is(${CARD_PARENT_HANDLERS}) > .s_card`,
+                selector: this.cardSelector,
+                exclude: this.cardExclude,
             },
             {
                 OptionComponent: CardOption,
                 selector: CARD_PARENT_HANDLERS,
-                applyTo: ":scope > .s_card:not(.s_carousel_cards_card)",
+                applyTo: this.cardDisableWidthApplyTo,
                 props: {
                     disableWidth: true,
                 },
@@ -24,7 +28,7 @@ class CardOptionPlugin extends Plugin {
             {
                 OptionComponent: WebsiteBackgroundOption,
                 selector: CARD_PARENT_HANDLERS,
-                applyTo: ":scope > .s_carousel_cards_card",
+                applyTo: this.websiteBgApplyTo,
                 props: {
                     withColors: true,
                     withImages: true,
@@ -32,6 +36,11 @@ class CardOptionPlugin extends Plugin {
                     withColorCombinations: true,
                 },
             },
+        ],
+        mark_color_level_selector_params: [
+            { selector: this.cardSelector, exclude: this.cardExclude },
+            { selector: CARD_PARENT_HANDLERS, applyTo: this.cardDisableWidthApplyTo },
+            { selector: CARD_PARENT_HANDLERS, applyTo: this.websiteBgApplyTo },
         ],
     };
 }
