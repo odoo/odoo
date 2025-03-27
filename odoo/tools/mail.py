@@ -449,7 +449,10 @@ def html2plaintext(html, body_id=None, encoding='utf-8', include_references=True
             if src:
                 i += 1
                 img.tag = 'span'
-                img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
+                if src.startswith('data:'):
+                    img_name = None   # base64 image
+                else:
+                    img_name = re.search(r'[^/]+(?=\.[a-zA-Z]+(?:\?|$))', src)
                 img.text = '%s [%s]' % (img_name.group(0) if img_name else 'Image', i)
                 url_index.append(src)
 
