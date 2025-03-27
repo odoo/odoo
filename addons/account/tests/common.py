@@ -272,7 +272,6 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_hr_manager', # hr
                     'group_hr_attendance_manager', # hr_attendance
                     'group_hr_contract_manager', # hr_contract
-                    'group_hr_expense_manager', # hr_expense
                     'group_hr_holidays_manager', # hr_holidays
                     'group_hr_recruitment_manager', # hr_recruitment
                     'group_timesheet_manager', # hr_timesheet
