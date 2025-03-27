@@ -270,13 +270,11 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_mrp_manager', # mrp
                     'group_pos_manager', # point_of_sale
                     'group_product_manager', # product
-                    'group_project_manager', # project
                     'group_purchase_manager', # purchase
                     'group_sale_manager', # sales_team
                     'group_stock_manager', # stock
                     # enterprise groups
                     'group_hr_payroll_manager', # hr_payroll
-                    'group_fsm_manager', # industry_fsm
                     'group_plm_manager', # mrp_plm
                 ))
             ]).mapped('res_id')
