@@ -17,10 +17,14 @@ import { parseUrl } from "./local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("deepEqual", () => {
+        const recursive = {};
+        recursive.self = recursive;
+
         const TRUTHY_CASES = [
             [true, true],
             [false, false],
             [null, null],
+            [recursive, recursive],
             [new Date(0), new Date(0)],
             [
                 { b: 2, a: 1 },
@@ -37,6 +41,7 @@ describe(parseUrl(import.meta.url), () => {
         const FALSY_CASES = [
             [true, false],
             [null, undefined],
+            [recursive, { ...recursive, a: 1 }],
             [
                 [1, 2, 3],
                 [3, 1, 2],
