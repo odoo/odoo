@@ -23,3 +23,11 @@ class PosOrderLine(models.Model):
         if self.env.company.country_id.code == 'IN':
             params += ['l10n_in_hsn_code']
         return params
+
+    def _prepare_base_line_for_taxes_computation(self):
+        res = super()._prepare_base_line_for_taxes_computation()
+        if self.company_id.l10n_in_is_gst_registered:
+            res.update({
+                'l10n_in_hsn_code': self.l10n_in_hsn_code,
+            })
+        return res

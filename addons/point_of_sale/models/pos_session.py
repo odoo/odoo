@@ -6,7 +6,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_is_zero, float_compare, plaintext2html, split_every
+from odoo.tools import float_is_zero, float_compare, frozendict, plaintext2html, split_every
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.osv.expression import AND
 
@@ -951,16 +951,8 @@ class PosSession(models.Model):
                 total_amount_currency = 0.0
                 for base_line, to_update in tax_results['base_lines_to_update']:
                     # Combine sales/refund lines
-                    sale_key = (
-                        # account
-                        base_line['account_id'].id,
-                        # sign
-                        -1 if base_line['is_refund'] else 1,
-                        # for taxes
-                        tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
-                        tuple(base_line['tax_tag_ids'].ids),
-                        base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
-                    )
+                    sale_vals_dict = self._get_sale_key(base_line)
+                    sale_key = frozendict(sale_vals_dict)
                     total_amount_currency += to_update['amount_currency']
                     sales[sale_key] = self._update_amounts(
                         sales[sale_key],
@@ -970,8 +962,9 @@ class PosSession(models.Model):
                         },
                         order.date_order,
                     )
-                    if self.config_id.is_closing_entry_by_product:
-                        sales[sale_key] = self._update_quantities(sales[sale_key], base_line['quantity'])
+                    if self.config_id._is_quantities_set():
+                        sales[sale_key].setdefault('quantity', 0)
+                        sales[sale_key]['quantity'] += base_line['quantity']
 
                 # Combine tax lines
                 for tax_line in tax_results['tax_lines_to_add']:
@@ -1427,10 +1420,22 @@ class PosSession(models.Model):
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
+    def _get_sale_key(self, base_line):
+        return {
+            # account
+            'account_id': base_line['account_id'].id,
+            # sign
+            'sign': -1 if base_line['is_refund'] else 1,
+            # for taxes
+            'tax_ids': tuple(base_line['record'].tax_ids_after_fiscal_position.flatten_taxes_hierarchy().ids),
+            'base_tag_ids': tuple(base_line['tax_tag_ids'].ids),
+            'product_id': base_line['product_id'].id if self.config_id.is_closing_entry_by_product else False,
+        }
+
     def _get_sale_vals(self, key, sale_vals):
-        account_id, sign, tax_ids, base_tag_ids, product_id = key
-        amount = sale_vals['amount']
-        amount_converted = sale_vals['amount_converted']
+        tax_ids = key['tax_ids']
+        product_id = key['product_id']
+        sign = key['sign']
         applied_taxes = self.env['account.tax'].browse(tax_ids)
         if product_id:
             product = self.env['product.product'].browse(product_id)
@@ -1445,19 +1450,18 @@ class PosSession(models.Model):
             name = _('%(title)s %(product_name)s with %(taxes)s', title=title, product_name=product_name, taxes=', '.join([tax.name for tax in applied_taxes]))
         partial_vals = {
             'name': name,
-            'account_id': account_id,
+            'account_id': key['account_id'],
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
-            'tax_tag_ids': [(6, 0, base_tag_ids)],
+            'tax_tag_ids': [(6, 0, key['base_tag_ids'])],
             'product_id': product_id,
             'display_type': 'product',
             'product_uom_id': product_uom,
             'currency_id': self.currency_id.id,
-            'amount_currency': amount,
-            'balance': amount_converted,
+            'amount_currency': sale_vals['amount'],
+            'balance': sale_vals['amount_converted'],
+            'quantity': sale_vals.get('quantity', 1.00) * key['sign'],
         }
-        if partial_vals.get('product_id'):
-            partial_vals['quantity'] = sale_vals.get('quantity', 1.00) * sign
         return partial_vals
 
     def _get_tax_vals(self, key, amount, amount_converted, base_amount_converted):
@@ -1518,12 +1522,6 @@ class PosSession(models.Model):
             'amount_currency': amount,
             'foreign_currency_id': self.currency_id.id,
         }
-
-    def _update_quantities(self, vals, qty_to_add):
-        vals.setdefault('quantity', 0)
-        # update quantity
-        vals['quantity'] += qty_to_add
-        return vals
 
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):
         """Responsible for adding `amounts_to_add` to `old_amounts` considering the currency of the session.
