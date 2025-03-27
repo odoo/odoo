@@ -1006,7 +1006,16 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                     res_model: 'ir.ui.view',
                 },
             );
-            cssBgImage = `url(${attachment.image_src})`;
+            cssBgImage = `url("${CSS.escape(attachment.image_src)}")`;
+        } else {
+            // When retrieving backgroundImage, CSS escaping is potentially
+            // lost, we therefore need to re-escape before reusing the URL
+            // given that the `"` are removed for an unknown reason dating back
+            // to the long lost origins of the cover concept.
+            const match = /^url\((['"])(.*?)\1\)$/.exec(cssBgImage);
+            if (match) {
+                cssBgImage = `url("${CSS.escape(match[1])}")`;
+            }
         }
         var coverProps = {
             'background-image': cssBgImage.replace(/"/g, '').replace(window.location.protocol + "//" + window.location.host, ''),

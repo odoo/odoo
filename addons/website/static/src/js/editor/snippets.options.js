@@ -3116,7 +3116,7 @@ options.registry.CoverProperties = options.Class.extend({
                     this.$image[0].classList.add("o_b64_image_to_save");
                 }
             }
-            this.$image.css('background-image', `url('${widgetValue}')`);
+            this.$image.css("background-image", `url("${CSS.escape(widgetValue)}")`);
             this.$target.addClass('o_record_has_cover');
             const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
             $defaultSizeBtn.click();

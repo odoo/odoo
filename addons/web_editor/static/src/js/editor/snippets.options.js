@@ -8100,7 +8100,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     _setBackground(backgroundURL) {
         const parts = backgroundImageCssToParts(this.$target.css('background-image'));
         if (backgroundURL) {
-            parts.url = `url('${backgroundURL}')`;
+            parts.url = `url("${CSS.escape(backgroundURL)}")`;
             this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             delete parts.url;
