@@ -65,11 +65,11 @@ class AccountEdiProxyClientUser(models.Model):
     # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_new_documents()
 
     def _cron_peppol_get_message_status(self):
-        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active')])
+        edi_users = self.search([('company_id.account_peppol_proxy_state', '=', 'active'), ('proxy_type', '=', 'peppol')])
         edi_users._peppol_get_message_status()
 
     # -------------------------------------------------------------------------
