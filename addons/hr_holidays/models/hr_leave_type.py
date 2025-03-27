@@ -256,16 +256,14 @@ class HrLeaveType(models.Model):
         return [('id', 'in', valid_leaves)]
 
     def _search_virtual_remaining_leaves(self, operator, value):
+        def is_valid(leave_type):
+            return leave_type.requires_allocation != "yes" or op(leave_type.virtual_remaining_leaves, value)
         op = PY_OPERATORS.get(operator)
         if not op:
             return NotImplemented
         if operator != 'in':
             value = float(value)
         leave_types = self.env['hr.leave.type'].search([])
-
-        def is_valid(leave_type):
-            return leave_type.requires_allocation != "yes" or op(leave_type.virtual_remaining_leaves)
-
         return [('id', 'in', leave_types.filtered(is_valid).ids)]
 
     @api.depends_context('employee_id', 'default_employee_id', 'leave_date_from', 'default_date_from')
