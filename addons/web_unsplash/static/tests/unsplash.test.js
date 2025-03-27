@@ -1,10 +1,8 @@
-import { expect, test } from "@odoo/hoot";
-import { click, waitFor, press } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { Deferred } from "@web/../lib/hoot/hoot-mock";
+import { expect, test } from "@odoo/hoot";
+import { animationFrame, click, Deferred, press, waitFor } from "@odoo/hoot-dom";
+import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 
 test("Unsplash is inserted in the Media Dialog", async () => {
     const imageRecord = {
