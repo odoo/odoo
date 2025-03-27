@@ -108,7 +108,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_delivered(self):
         super()._compute_qty_delivered()
         for sale_line in self:
-            pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            pos_lines = sale_line.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
             if all(picking.state == 'done' for picking in pos_lines.order_id.picking_ids):
                 sale_line.qty_delivered += sum((self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines if sale_line.product_id.type != 'service'), 0)
 
@@ -116,7 +116,7 @@ class SaleOrderLine(models.Model):
     def _compute_qty_invoiced(self):
         super()._compute_qty_invoiced()
         for sale_line in self:
-            pos_lines = sale_line.pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
+            pos_lines = sale_line.sudo().pos_order_line_ids.filtered(lambda order_line: order_line.order_id.state not in ['cancel', 'draft'])
             sale_line.qty_invoiced += sum([self._convert_qty(sale_line, pos_line.qty, 'p2s') for pos_line in pos_lines], 0)
 
     def _get_sale_order_fields(self):
@@ -175,7 +175,7 @@ class SaleOrderLine(models.Model):
     def _compute_untaxed_amount_invoiced(self):
         super()._compute_untaxed_amount_invoiced()
         for line in self:
-            line.untaxed_amount_invoiced += sum(line.pos_order_line_ids.mapped('price_subtotal'))
+            line.untaxed_amount_invoiced += sum(line.sudo().pos_order_line_ids.mapped('price_subtotal'))
 
     def _get_downpayment_line_price_unit(self, invoices):
         return super()._get_downpayment_line_price_unit(invoices) + sum(

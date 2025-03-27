@@ -28,7 +28,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.user.group_ids |= cls.env.ref('point_of_sale.group_pos_manager')
         # Code from addons/account_payment/tests/common.py:
         Method_get_payment_method_information = AccountPaymentMethod._get_payment_method_information
 
