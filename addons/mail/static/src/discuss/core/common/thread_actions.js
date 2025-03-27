@@ -15,7 +15,8 @@ threadActionsRegistry
             return (
                 component.thread?.model === "discuss.channel" &&
                 component.store.self.type !== "guest" &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+                (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+                component.thread?.channel_type != "ai_composer"
             );
         },
         setup(action) {
@@ -58,7 +59,8 @@ threadActionsRegistry
     .add("attachments", {
         condition: (component) =>
             component.thread?.hasAttachmentPanel &&
-            (!component.props.chatWindow || component.props.chatWindow.isOpen),
+            (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+            component.thread?.channel_type != "ai_composer",
         component: AttachmentPanel,
         icon: "fa fa-fw fa-paperclip",
         iconLarge: "fa fa-fw fa-lg fa-paperclip",
@@ -78,7 +80,8 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+                (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+                component.thread?.channel_type != "ai_composer"
             );
         },
         panelOuterClass(component) {
@@ -113,7 +116,8 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.hasMemberList &&
-                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+                (!component.props.chatWindow || component.props.chatWindow.isOpen) &&
+                component.thread?.channel_type != "ai_composer"
             );
         },
         componentProps(action, component) {

@@ -1,13 +1,13 @@
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "../../utils/dom_traversal";
-import { ChatGPTPromptDialog } from "./chatgpt_prompt_dialog";
-import { ChatGPTAlternativesDialog } from "./chatgpt_alternatives_dialog";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
 import { ChatGPTTranslateDialog } from "./chatgpt_translate_dialog";
 import { LanguageSelector } from "./language_selector";
 import { withSequence } from "@html_editor/utils/resource";
 import { user } from "@web/core/user";
 import { isContentEditable } from "@html_editor/utils/dom_info";
+import { unwrapContents } from "../../utils/dom";
 
 export class ChatGPTPlugin extends Plugin {
     static id = "chatgpt";
@@ -82,7 +82,13 @@ export class ChatGPTPlugin extends Plugin {
         return cannotReplace || isEmpty;
     }
 
-    openDialog(params = {}) {
+    async openDialog(params = {}) {
+        // Force save the record before opening the AI dialog
+        // This ensures up-to-date info for the model + prevents launching the dialog with an empty record.
+        const saved = await this.config.onAICommandSave();
+        if (!saved){
+            return;
+        }
         const selection = this.dependencies.selection.getEditableSelection();
         const dialogParams = {
             insert: (content) => {
@@ -123,21 +129,80 @@ export class ChatGPTPlugin extends Plugin {
                     divContainer.prepend(div);
                     setTimeout(() => div.remove(), 2000);
                 }
+                unwrapContents(insertedNodes[0]);
             },
             ...params,
         };
         dialogParams.baseContainer = this.dependencies.baseContainer.getDefaultNodeName();
         // collapse to end
         const sanitize = this.dependencies.sanitize.sanitize;
-        if (selection.isCollapsed) {
-            this.dependencies.dialog.addDialog(ChatGPTPromptDialog, { ...dialogParams, sanitize });
-        } else {
+        if (params.language) {
             const originalText = selection.textContent() || "";
             this.dependencies.dialog.addDialog(
-                params.language ? ChatGPTTranslateDialog : ChatGPTAlternativesDialog,
+                ChatGPTTranslateDialog,
                 { ...dialogParams, originalText, sanitize }
             );
-        }
+        } else {
+            let recordModel, recordName, recordId, callerId, placeholderPrompt, callerComp, textSelection;
+            // fetch record information that we need for the channel creation
+            const { resModel, resId, data, id } = this.config.getRecordInfo();
+            if (selection.isCollapsed) {
+                if (resModel !== "mail.compose.message") {
+                    const resultName = await this.services.orm.read(resModel, [ resId ], [ 'name' ]);
+                    recordName = resultName[0]['name'];
+                    recordModel = resModel;
+                    recordId = callerId = resId;
+                    callerComp = "html_field_record";
+                    placeholderPrompt = "";
+                    // set insertButtonCaller flag to the records id
+                    this.services['mail.store']["mail.message"].insertButtonCaller = resId;
+                } else {
+                    recordName = data.record_name;
+                    recordModel = data.model;
+                    recordId = Number(data.res_ids.slice(1,-1));
+                    callerComp = "html_field_composer";
+                    callerId = id;
+                    placeholderPrompt = 'Write a follow up answer';
+                }
+            } else {
+                callerComp = "html_field_text_select";
+                recordName = data.record_name
+                if (!recordName) {
+                    const temp_name = await this.services.orm.read(resModel, [ resId ], [ 'name' ]);
+                    recordName = temp_name[0]['name'];
+                }
+                placeholderPrompt = "Rewrite";
+                textSelection = selection.textContent();
+                callerId = resId || id;
+                // set insertButtonCaller flag to the records id
+                this.services['mail.store']["mail.message"].insertButtonCaller = resId || id;
+            }
+            // create the discuss channel used for talking with the ai
+            const ai_channel_id = await this.services.orm.call(
+                'discuss.channel',
+                'create_ai_composer_channel',
+                [ 
+                    callerComp,
+                    recordName,
+                    recordModel,
+                    recordId,
+                    textSelection,
+                ], 
+            );
+            // create and open the thread for the discuss channel
+            const thread = await this.services['mail.store'].Thread.getOrFetch({
+                model: "discuss.channel",
+                id: Number(ai_channel_id), 
+            });
+            thread.open({ 
+                focus: true, 
+                specialActions: {
+                    'insert': dialogParams.insert,
+                },
+                chatCaller: callerId,
+                composerText: placeholderPrompt,
+            });
+        } 
         if (this.services.ui.isSmall) {
             // TODO: Find a better way and avoid modifying range
             // HACK: In the case of opening through dropdown:

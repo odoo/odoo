@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-Chatter-topbarGrow')]" position="after">
+            <button class="btn btn-ai-chatter" data-hotkey="a"
+                t-on-click="onClickAIChatterButton"
+                title="Ask AI">
+                <img src="/ai_apps/static/description/icon.png" style="height: 24px;"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

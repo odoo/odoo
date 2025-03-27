@@ -8,3 +8,12 @@
         border: none !important;
     }
 }
+
+.o-overlay-item:has(.o-discuss-mobileContextMenu) {
+    z-index: 1058;  // the chat window has z-index of 1056 in order to be over the full mail composer
+}
+
+// this is for notification to be rendered over the chat-window (z-index=1056) - like above
+.o_notification_manager {
+    z-index: 1058;
+}

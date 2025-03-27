@@ -2,7 +2,9 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { htmlJoin } from "@mail/utils/common/html";
+
+import { Component, markup, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class MailComposerChatGPT extends Component {
@@ -13,6 +15,15 @@ export class MailComposerChatGPT extends Component {
         this.btnLabel = _t("AI"); // workaround to translate short string
         this.store = useService("mail.store");
         this.orm = useService("orm");
+        this.areWeInDiscuss = this.store.discuss.isActive
+        onMounted(() => {
+            this.store["mail.message"].insertButtonCaller = this.props.record.id
+            this.store.discuss.isActive = false;
+        });
+        onWillUnmount(() => {
+            this.store["mail.message"].insertButtonCaller = false
+            this.store.discuss.isActive = this.areWeInDiscuss;
+        });
     }
 
     async onOpenChatGPTPromptDialogBtnClick() {
@@ -21,9 +32,10 @@ export class MailComposerChatGPT extends Component {
             'discuss.channel',
             'create_ai_composer_channel',
             [ 
+                'composer_ai_button',
                 this.props.record.data.record_name,
                 this.props.record.data.model,
-                this.props.record.data.res_ids,
+                Number(this.props.record.data.res_ids.slice(1,-1)),
             ], 
         );
         // create and open the thread for the discuss channel
@@ -31,10 +43,21 @@ export class MailComposerChatGPT extends Component {
             model: "discuss.channel",
             id: Number(ai_channel_id), 
         });
-        thread.open({ focus: true });
-        // drop the mail composer dialog's z-index so the chat windows and bubble are above it
-        const mail_composer_dialog = document.querySelector(".o-overlay-item");
-        mail_composer_dialog.style.zIndex = "9"; 
+        thread.open({ 
+            focus: true, 
+            specialActions: {
+                'insert': (content) => {
+                    const root = document.createElement("div");
+                    root.appendChild(content);
+                    const { body } = this.props.record.data;
+                    this.props.record.update({
+                        body: htmlJoin(markup(root.innerHTML), body),
+                    });
+                },
+            },
+            chatCaller: this.props.record.id,
+            composerText: 'Write a follow up answer',
+        });
         return;
     }
 }

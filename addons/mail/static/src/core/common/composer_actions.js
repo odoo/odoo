@@ -154,12 +154,7 @@ function transformAction(component, id, action) {
             return action.componentProps?.(component, this);
         },
         get condition() {
-            if (!action?.condition) {
-                return true;
-            }
-            return typeof action.condition === "function"
-                ? action.condition(component)
-                : action.condition;
+            return composerActionsInternal.condition(component, id, action);
         },
         get disabledCondition() {
             return action.disabledCondition?.(component);
@@ -200,6 +195,17 @@ function transformAction(component, id, action) {
         },
         setup: action.setup,
     };
+}
+
+export const composerActionsInternal = {
+    condition(component, id, action) {
+        if (!action?.condition) {
+            return true;
+        }
+        return typeof action.condition === "function"
+            ? action.condition(component)
+            : action.condition;
+    }
 }
 
 export function useComposerActions() {

@@ -5,9 +5,6 @@
     'version': '0.1',
     'sequence': 420,
     'summary': 'Artificial Intelligence Feature Management',
-    'images': [
-        'static/description/ai_icon.png',
-    ],
     'depends': [
         'base',
         'base_setup',
@@ -26,7 +23,7 @@
     'application': True,
     'assets': {
         'web.assets_backend': [
-            'ai_apps/static/src/thread_model_patch.js',
+            'ai_apps/static/src/**/*',
         ],
     },
     'license': 'LGPL-3',
