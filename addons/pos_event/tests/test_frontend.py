@@ -10,6 +10,8 @@ class TestUi(TestPointOfSaleHttpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.user.group_ids += cls.quick_ref('event.group_event_manager')
+
         cls.event_category = cls.env['pos.category'].create({
             'name': 'Events',
         })
