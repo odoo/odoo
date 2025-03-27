@@ -5,6 +5,7 @@ import re
 import psycopg2
 from collections import defaultdict
 
+
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
@@ -169,6 +170,27 @@ class AccountMove(models.Model):
         except psycopg2.errors.LockNotAvailable:
             raise UserError(_('This electronic document is being processed already.')) from None
 
+    def _l10n_in_edi_optional_field_validation(self, partner):
+        """
+        Validates optional partner fields (e.g., email, phone, street2) for e-invoicing,
+        which are not mandatory in the government API JSON schema. Returns error messages
+        for posting in the chatter.
+        """
+        message = []
+        if partner.email and (
+            not re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email) or
+            not re.match(r"^.{6,100}$", partner.email)
+        ):
+            message.append(_("- Email: invalid or longer than 100 characters."))
+        if partner.phone and not re.match(
+            r"^[0-9]{10,12}$",
+            partner.env['account.move']._l10n_in_extract_digits(partner.phone)
+        ):
+            message.append(_("- Phone number: must be 10–12 digits."))
+        if partner.street2 and not re.match(r"^.{3,100}$", partner.street2):
+            message.append(_("- Street2: must be 3–100 characters."))
+        return message
+
     def _l10n_in_edi_send_invoice(self):
         self.ensure_one()
         if self.l10n_in_edi_error:
@@ -242,6 +264,16 @@ class AccountMove(models.Model):
             'company_id': self.company_id.id,
         })
         self.l10n_in_edi_status = 'sent'
+        message = []
+        for partner in partners:
+            if partner_validation := self._l10n_in_edi_optional_field_validation(partner):
+                message.append(
+                    Markup("<strong><em>%s</em></strong><br>%s") % (partner.name, Markup("<br>").join(partner_validation))
+                )
+        if message:
+            self.message_post(
+                body=Markup("<strong>%s</strong><br>%s") % (_("Following:"), Markup("<br>").join(message))
+            )
 
     def _l10n_in_edi_cancel_invoice(self):
         if self.l10n_in_edi_error:
@@ -335,12 +367,19 @@ class AccountMove(models.Model):
             'Pin': zip_digits and int(zip_digits) or '',
             'Stcd': partner.state_id.l10n_in_tin or '',
         }
-        if partner.street2:
+        if partner.street2 and re.match(r"^.{3,100}$", partner.street2):
             partner_details['Addr2'] = partner.street2
         if set_phone_and_email:
-            if partner.email:
+            if (
+                partner.email
+                and re.match(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$", partner.email)
+                and re.match(r"^.{6,100}$", partner.email)
+            ):
                 partner_details['Em'] = partner.email
-            if partner.phone:
+            if (
+                partner.phone
+                and re.match(r"^[0-9]{10,12}$", self._l10n_in_extract_digits(partner.phone))
+            ):
                 partner_details['Ph'] = self._l10n_in_extract_digits(partner.phone)
         if pos_state_id:
             partner_details['POS'] = pos_state_id.l10n_in_tin or ''
@@ -687,7 +726,7 @@ class AccountMove(models.Model):
                 }]
             }
         if (error := response.get('error')) and '1005' in [e.get("code") for e in error]:
-            # Invalid token eror then create new token and send generate request again.
+            # Invalid token error then create new token and send generate request again.
             # This happen when authenticate called from another odoo instance with same credentials (like. Demo/Test)
             authenticate_response = company._l10n_in_edi_authenticate()
             if not authenticate_response.get("error"):
