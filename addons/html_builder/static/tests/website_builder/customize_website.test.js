@@ -155,3 +155,31 @@ test("use isActiveItem base on BuilderCheckbox with 'websiteConfig'", async () =
     expect(".test").toHaveCount(1);
     expect.verifySteps(["theme_customize_data_get"]);
 });
+
+test("click on BuilderCheckbox with action “websiteConfig”", async () => {
+    onRpc("/website/theme_customize_data_get", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data_get");
+        expect(params.keys).toEqual(["test_template_1", "test_template_2"]);
+        return ["test_template_2"];
+    });
+    onRpc("/website/theme_customize_data", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data");
+        expect(params.enable).toEqual(["test_template_1"]);
+        expect(params.disable).toEqual(["test_template_2"]);
+    });
+
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['!test_template_1', 'test_template_2']}"/>
+        `,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect.verifySteps(["theme_customize_data_get"]);
+
+    await contains("input[type='checkbox']:checked").click();
+    expect.verifySteps(["theme_customize_data"]);
+});
