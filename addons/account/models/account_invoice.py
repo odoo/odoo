@@ -94,8 +94,8 @@ class AccountInvoice(models.Model):
         if currency_id == company_currency_id:
             currency_clause = ['|', ('currency_id', '=', False)] + currency_clause
         return (
-            self.env['account.journal'].search(domain + currency_clause, limit=1)
-            or self.env['account.journal'].search(domain, limit=1)
+            self.env['account.journal'].with_context(active_test=True).search(domain + currency_clause, limit=1)
+            or self.env['account.journal'].with_context(active_test=True).search(domain, limit=1)
         )
 
     @api.model
