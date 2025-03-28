@@ -40,7 +40,7 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
-        carrier_id = self.group_id.sale_id.carrier_id.id
+        carrier_id = self.reference_ids.sale_ids.carrier_id.id
         carrier_tracking_ref = False
         if self.move_orig_ids.picking_id.carrier_id:
             # check if previous picking have carrier_id take carrier from that

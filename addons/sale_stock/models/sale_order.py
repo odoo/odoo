@@ -45,7 +45,6 @@ class SaleOrder(models.Model):
         search='_search_late_availability',
         help="True if any related picking has late availability"
     )
-    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
     stock_reference_ids = fields.Many2many(
         'stock.reference', 'stock_reference_sale_rel',
         'sale_id', 'reference_id', string='References', copy=False)
@@ -282,7 +281,7 @@ class SaleOrder(models.Model):
             picking_id = picking_id[0]
         else:
             picking_id = pickings[0]
-        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_group_id=picking_id.group_id.id)
+        action['context'] = dict(default_partner_id=self.partner_id.id, default_picking_type_id=picking_id.picking_type_id.id, default_origin=self.name, default_reference_ids=self.stock_reference_ids[:-1].id)
         return action
 
     def _prepare_invoice(self):

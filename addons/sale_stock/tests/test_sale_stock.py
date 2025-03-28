@@ -1931,7 +1931,6 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.picking_policy = "one"
         so.action_confirm()
 
-        self.assertEqual(so.procurement_group_id.move_type, "one")
         self.assertEqual(so.picking_ids[0].picking_type_id, picking_type_out)
         self.assertEqual(so.picking_ids[0].move_type, "one")
 

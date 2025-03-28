@@ -21,10 +21,6 @@ class StockRule(models.Model):
             return False
         return super()._get_partner_id(values, rule)
 
-
-class ProcurementGroup(models.Model):
-    _inherit = "procurement.group"
-
     @api.model
     def _get_rule_domain(self, location, values):
         domain = super()._get_rule_domain(location, values)

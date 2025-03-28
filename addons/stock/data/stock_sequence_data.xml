@@ -13,16 +13,6 @@
             <field name="company_id"></field>
         </record>
 
-        <!-- Sequences for procurement group -->
-        <record id="sequence_proc_group" model="ir.sequence">
-            <field name="name">Procurement Group</field>
-            <field name="code">procurement.group</field>
-            <field name="prefix">PG/</field>
-            <field name="padding">6</field>
-            <field name="number_next">1</field>
-            <field name="number_increment">1</field>
-        </record>
-
         <!-- Sequences for pickings -->
         <record id="seq_picking_internal" model="ir.sequence">
             <field name="name">Picking INT</field>
@@ -55,7 +45,7 @@
         <!-- Scheduler -->
         <record forcecreate="True" id="ir_cron_scheduler_action" model="ir.cron">
             <field name="name">Procurement: run scheduler</field>
-            <field name="model_id" ref="model_procurement_group"/>
+            <field name="model_id" ref="model_stock_rule"/>
             <field name="state">code</field>
             <field name="code">
 model.run_scheduler(True)

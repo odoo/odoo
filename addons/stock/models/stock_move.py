@@ -21,11 +21,6 @@ class StockMove(models.Model):
     _description = "Stock Move"
     _order = 'sequence, id'
 
-    def _default_group_id(self):
-        if self.env.context.get('default_picking_id'):
-            return self.env['stock.picking'].browse(self.env.context['default_picking_id']).group_id.id
-        return False
-
     name = fields.Char('Description', required=True)
     sequence = fields.Integer('Sequence', default=10)
     priority = fields.Selection(
@@ -141,7 +136,6 @@ class StockMove(models.Model):
     scrapped = fields.Boolean(
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_id = fields.Many2one('stock.scrap', 'Scrap operation', readonly=True, check_company=True, index='btree_not_null')
-    group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
     reference_ids = fields.Many2many(
         'stock.reference', 'stock_reference_move_rel', 'move_id', 'reference_id', string='References')
     rule_id = fields.Many2one(
@@ -700,8 +694,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             if (vals.get('quantity') or vals.get('move_line_ids')) and 'lot_ids' in vals:
                 vals.pop('lot_ids')
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
-            if picking_id.group_id and 'group_id' not in vals:
-                vals['group_id'] = picking_id.group_id.id
             if picking_id.state == 'done' and vals.get('state') != 'done':
                 vals['state'] = 'done'
             if vals.get('state') == 'done':
@@ -746,10 +738,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             move_to_recompute_state |= self.filtered(lambda m: m.state not in ['draft', 'cancel', 'done'])
         if 'location_id' in vals:
             move_to_check_location = self.filtered(lambda m: m.location_id.id != vals.get('location_id'))
-        if 'picking_id' in vals and 'group_id' not in vals:
-            picking = self.env['stock.picking'].browse(vals['picking_id'])
-            if picking.group_id:
-                vals['group_id'] = picking.group_id.id
         if 'product_id' in vals or 'location_id' in vals or 'location_dest_id' in vals:
             self._update_orderpoints()
         res = super().write(vals)
@@ -1065,20 +1053,20 @@ Please change the quantity done or the rounding precision in your settings.""",
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
 
-            ProcurementGroup = self.env['procurement.group']
+            StockRule = self.env['stock.rule']
             if move.location_dest_id.company_id not in self.env.companies:
-                ProcurementGroup = self.env['procurement.group'].sudo()
+                StockRule = self.env['stock.rule'].sudo()
                 move = move.with_context(allowed_companies=self.env.user.company_ids.ids)
                 warehouse_id = False
 
-            rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
+            rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
                 'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
             })
 
             excluded_rule_ids = []
             while (rule and rule.push_domain and not move.filtered_domain(literal_eval(rule.push_domain))):
                 excluded_rule_ids.append(rule.id)
-                rule = ProcurementGroup._get_push_rule(move.product_id, move.location_dest_id, {
+                rule = StockRule._get_push_rule(move.product_id, move.location_dest_id, {
                     'route_ids': move.route_ids | move.move_line_ids.result_package_id.package_type_id.route_ids, 'warehouse_id': warehouse_id, 'packaging_uom_id': move.packaging_uom_id,
                     'domain': [('id', 'not in', excluded_rule_ids)],
                 })
@@ -1325,20 +1313,20 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _key_assign_picking(self):
         self.ensure_one()
-        keys = (self.group_id, self.location_id, self.location_dest_id, self.picking_type_id)
-        if self.partner_id and not self.group_id:
+        keys = (self.reference_ids, self.location_id, self.location_dest_id, self.picking_type_id)
+        if self.partner_id and not self.reference_ids:
             keys += (self.partner_id, )
         return keys
 
     def _search_picking_for_assignation_domain(self):
         domain = [
-            ('group_id', '=', self.group_id.id),
+            ('reference_ids', '=', self.reference_ids.ids),
             ('location_id', '=', self.location_id.id),
             ('location_dest_id', '=', (self.location_dest_id.id or self.picking_type_id.default_location_dest_id.id)),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('printed', '=', False),
             ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
-        if self.partner_id and not self.group_id:
+        if self.partner_id and not self.reference_ids:
             domain += [('partner_id', '=', self.partner_id.id)]
         return domain
 
@@ -1468,7 +1456,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             'origin': origin,
             'company_id': self.mapped('company_id').id,
             'user_id': False,
-            'group_id': self.mapped('group_id').id,
             'partner_id': partner,
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,
@@ -1506,7 +1493,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             else:
                 move_to_confirm.add(move.id)
             if move._should_be_assigned():
-                key = (move.group_id.id, move.location_id.id, move.location_dest_id.id)
+                key = (frozenset(move.reference_ids.ids), move.location_id.id, move.location_dest_id.id)
                 to_assign[key].add(move.id)
 
         # create procurements for make to order moves
@@ -1515,12 +1502,12 @@ Please change the quantity done or the rounding precision in your settings.""",
         quantities = move_create_proc._prepare_procurement_qty()
         for move, quantity in zip(move_create_proc, quantities):
             values = move._prepare_procurement_values()
-            origin = move._prepare_procurement_origin()
-            procurement_requests.append(self.env['procurement.group'].Procurement(
+            origin = move.origin or move.picking_id.display_name
+            procurement_requests.append(self.env['stock.rule'].Procurement(
                 move.product_id, quantity, move.product_uom,
                 move.location_id, move.rule_id and move.rule_id.name or "/",
                 origin, move.company_id, values))
-        self.env['procurement.group'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
+        self.env['stock.rule'].run(procurement_requests, raise_user_error=not self.env.context.get('from_orderpoint'))
 
         move_to_confirm, move_waiting = self.browse(move_to_confirm).filtered(lambda m: m.state != 'cancel'), self.browse(move_waiting).filtered(lambda m: m.state != 'cancel')
         move_to_confirm.write({'state': 'confirmed'})
@@ -1577,10 +1564,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             neg_push_moves._action_confirm(merge_into=neg_push_moves.move_orig_ids.move_dest_ids)
         return moves
 
-    def _prepare_procurement_origin(self):
-        self.ensure_one()
-        return self.group_id and self.group_id.name or (self.origin or self.picking_id.name or "/")
-
     def _prepare_procurement_qty(self):
         quantities = []
         mtso_products_by_locations = defaultdict(list)
@@ -1620,12 +1603,12 @@ Please change the quantity done or the rounding precision in your settings.""",
         be used in move/po creation.
         """
         self.ensure_one()
-        group_id = self.group_id or False
-        if self.rule_id:
-            if self.rule_id.group_propagation_option == 'fixed' and self.rule_id.group_id:
-                group_id = self.rule_id.group_id
-            elif self.rule_id.group_propagation_option == 'none':
-                group_id = False
+        # group_id = self.group_id or False
+        # if self.rule_id:
+        #     if self.rule_id.group_propagation_option == 'fixed' and self.rule_id.group_id:
+        #         group_id = self.rule_id.group_id
+        #     elif self.rule_id.group_propagation_option == 'none':
+        #         group_id = False
 
         product_id = self.product_id.with_context(lang=self._get_lang())
         dates_info = {'date_planned': self._get_mto_procurement_date()}
@@ -1644,7 +1627,6 @@ Please change the quantity done or the rounding precision in your settings.""",
             'date_order': dates_info.get('date_order'),
             'date_deadline': self.date_deadline,
             'move_dest_ids': move_dest_ids,
-            'group_id': group_id,
             'route_ids': self.route_ids or self.move_line_ids.result_package_id.package_type_id.route_ids,
             'warehouse_id': warehouse,
             'priority': self.priority,
@@ -2286,7 +2268,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 ]
                 if picking_type_code:
                     domain.append(('picking_type_id.code', '=', picking_type_code))
-                rule = self.env['procurement.group']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id, domain)
+                rule = self.env['stock.rule']._search_rule(False, move.packaging_uom_id, product_id, move.warehouse_id, domain)
                 if rule:
                     break
                 location = location.location_id
@@ -2318,10 +2300,11 @@ Please change the quantity done or the rounding precision in your settings.""",
             if orderpoint:
                 orderpoints_by_company[orderpoint.company_id] |= orderpoint
             if orderpoint and move.product_qty > orderpoint.product_min_qty and move.origin:
-                orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, [])
-                orderpoints_context_by_company[orderpoint.company_id][orderpoint.id].append(move.origin)
+                orderpoints_context_by_company[orderpoint.company_id].setdefault(orderpoint.id, set())
+
+                orderpoints_context_by_company[orderpoint.company_id][orderpoint.id] |= set(move.reference_ids.ids)
         for company, orderpoints in orderpoints_by_company.items():
-            orderpoints.with_context(origins=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
+            orderpoints.with_context(references=orderpoints_context_by_company[company])._procure_orderpoint_confirm(
                 company_id=company, raise_user_error=False)
 
     def _trigger_assign(self):
@@ -2343,7 +2326,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                         ]
         moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
                                                          order='priority desc, date asc, id asc')
-        moves_to_reserve = moves_to_reserve.sorted(key=lambda m: m.group_id.id in self.group_id.ids, reverse=True)
+        moves_to_reserve = moves_to_reserve.sorted(key=lambda m: any(r in self.reference_ids.ids for r in m.reference_ids.ids), reverse=True)
         moves_to_reserve._action_assign()
 
     def _rollup_move_dests_fetch(self):

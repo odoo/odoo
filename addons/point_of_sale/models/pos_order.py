@@ -1644,12 +1644,12 @@ class PosOrderLine(models.Model):
             product_qty = line.qty
 
             procurement_uom = line.product_id.uom_id
-            procurements.append(self.env['procurement.group'].Procurement(
+            procurements.append(self.env['stock.rule'].Procurement(
                 line.product_id, product_qty, procurement_uom,
                 line.order_id.partner_id.property_stock_customer,
                 line.name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
-            self.env['procurement.group'].run(procurements)
+            self.env['stock.rule'].run(procurements)
 
         # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
         orders = self.mapped('order_id')

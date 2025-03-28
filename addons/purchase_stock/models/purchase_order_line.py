@@ -31,7 +31,6 @@ class PurchaseOrderLine(models.Model):
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
     is_storable = fields.Boolean(related='product_id.is_storable')
     location_final_id = fields.Many2one('stock.location', 'Location from procurement')
-    group_id = fields.Many2one('procurement.group', 'Procurement group that generated this line', index='btree_not_null')
 
     def _compute_qty_received_method(self):
         super(PurchaseOrderLine, self)._compute_qty_received_method()
@@ -300,7 +299,7 @@ class PurchaseOrderLine(models.Model):
             'company_id': self.order_id.company_id.id,
             'price_unit': price_unit,
             'picking_type_id': self.order_id.picking_type_id.id,
-            'group_id': self.order_id.group_id.id,
+            'reference_ids': [Command.set(self.order_id.reference_ids.ids)],
             'origin': self.order_id.name,
             'description_picking': product.description_pickingin or self.name,
             'propagate_cancel': self.propagate_cancel,
@@ -339,11 +338,6 @@ class PurchaseOrderLine(models.Model):
         res['propagate_cancel'] = values.get('propagate_cancel')
         res['product_description_variants'] = values.get('product_description_variants')
         res['product_no_variant_attribute_value_ids'] = values.get('never_product_template_attribute_value_ids')
-
-        # Need to attach purchase order to procurement group for mtso
-        group = values.get('group_id')
-        if group and not res['move_dest_ids']:
-            res['group_id'] = values['group_id'].id
         return res
 
     def _create_stock_moves(self, picking):
