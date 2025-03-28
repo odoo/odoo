@@ -101,3 +101,57 @@ test("click on BuilderSelectItem with action “websiteConfig”", async () => {
     await contains("[data-action-param*='test_template_1']").click();
     expect.verifySteps(["theme_customize_data"]);
 });
+
+test("use isActiveItem base on BuilderButton with 'websiteConfig'", async () => {
+    const def = new Deferred();
+    onRpc("/website/theme_customize_data_get", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data_get");
+        expect(params.keys).toEqual(["test_template_1"]);
+        await def;
+        return ["test_template_1"];
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderButton id="'a'" action="'websiteConfig'" actionParam="{views: ['test_template_1']}">1</BuilderButton>
+            <div t-if="isActiveItem('a')" class="test">a</div>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".o-tab-content > .o_customize_tab").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect("[data-action-param*='test_template_1']").toHaveClass("active");
+    expect(".test").toHaveCount(1);
+    expect.verifySteps(["theme_customize_data_get"]);
+});
+
+test("use isActiveItem base on BuilderCheckbox with 'websiteConfig'", async () => {
+    const def = new Deferred();
+    onRpc("/website/theme_customize_data_get", async (request) => {
+        const { params } = await request.json();
+        expect.step("theme_customize_data_get");
+        expect(params.keys).toEqual(["test_template_1"]);
+        await def;
+        return ["test_template_1"];
+    });
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderCheckbox id="'a'" action="'websiteConfig'" actionParam="{views: ['test_template_1']}"/>
+            <div t-if="isActiveItem('a')" class="test">a</div>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".o-tab-content > .o_customize_tab").toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(".o-tab-content > .o_customize_tab").toHaveCount(1);
+    expect("[data-action-param*='test_template_1'] .form-check-input:checked").toHaveCount(1);
+    expect(".test").toHaveCount(1);
+    expect.verifySteps(["theme_customize_data_get"]);
+});

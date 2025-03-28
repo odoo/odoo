@@ -21,7 +21,7 @@ export class BuilderCheckbox extends Component {
         this.info = useActionInfo();
         const { operation, isApplied, onReady } = useClickableBuilderComponent();
         if (this.props.id) {
-            useDependencyDefinition(this.props.id, { isActive: isApplied });
+            useDependencyDefinition(this.props.id, { isActive: isApplied }, { onReady });
         }
         this.state = useDomState(
             () => ({
