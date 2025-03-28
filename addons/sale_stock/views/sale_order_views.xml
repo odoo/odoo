@@ -34,7 +34,7 @@
             <div name="commitment_date_div" position="replace">
                 <div class="o_row">
                     <field name="commitment_date"/>
-                    <span class="text-muted" invisible="effective_date and commitment_date">Expected: <field name="expected_date" class="oe_inline"/></span>
+                    <span class="text-muted" invisible="not expected_date or (effective_date and commitment_date)">Expected: <field name="expected_date" class="oe_inline"/></span>
                 </div>
                 <field name="effective_date" invisible="not effective_date"/>
                 <field name="delivery_status" invisible="state != 'sale'"/>

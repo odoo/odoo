@@ -706,7 +706,7 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.customer_lead', 'date_order', 'state')
     def _compute_expected_date(self):
-        """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
+        """ For service and combo (non-goods) products, we avoid computing the expected date. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
         self.mapped("order_line")  # Prefetch indication
@@ -715,7 +715,7 @@ class SaleOrder(models.Model):
                 order.expected_date = False
                 continue
             dates_list = order.order_line.filtered(
-                lambda line: not line.display_type and not line._is_delivery()
+                lambda line: line.product_id.type == 'consu' and not line.display_type and not line._is_delivery()
             ).mapped(lambda line: line and line._expected_date())
             if dates_list:
                 order.expected_date = order._select_expected_date(dates_list)
