@@ -156,6 +156,8 @@ class StockMove(models.Model):
         'mrp.production', 'Production Order for finished products', check_company=True, index='btree_not_null', ondelete="cascade")
     raw_material_production_id = fields.Many2one(
         'mrp.production', 'Production Order for components', check_company=True, index='btree_not_null', ondelete="cascade")
+    production_group_id = fields.Many2one(
+        'mrp.production.group', 'Used for Productions')
     unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Disassembly Order', check_company=True, index='btree_not_null')
     consume_unbuild_id = fields.Many2one(
@@ -379,9 +381,9 @@ class StockMove(models.Model):
                     mo = mo.browse(mo_id)
                     mo_id_to_mo[mo_id] = mo
                 values['origin'] = mo._get_origin()
-                values['group_id'] = mo.procurement_group_id.id
                 values['propagate_cancel'] = mo.propagate_cancel
                 values['reference_ids'] = mo.reference_ids.ids
+                values['production_group_id'] = mo.production_group_id.id
                 if values.get('raw_material_production_id', False):
                     product = product_id_to_product[values['product_id']]
                     if not product:
@@ -714,6 +716,7 @@ class StockMove(models.Model):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
+        res['production_group_id'] = self.production_group_id.id
         res['bom_line_id'] = self.bom_line_id.id
         return res
 
