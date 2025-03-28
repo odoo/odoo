@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { getCommonAncestor } from "@html_editor/utils/dom_traversal";
+import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 
 class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
@@ -63,10 +63,7 @@ class FacebookOptionPlugin extends Plugin {
     };
 
     normalize(root) {
-        for (const element of [
-            ...root.querySelectorAll(".o_facebook_page"),
-            ...(root.matches(".o_facebook_page") ? [root] : []),
-        ]) {
+        for (const element of selectElements(root, ".o_facebook_page")) {
             let desiredHeight;
             if (element.dataset.tabs) {
                 desiredHeight = element.dataset.tabs === "events" ? 300 : 500;
@@ -80,11 +77,7 @@ class FacebookOptionPlugin extends Plugin {
             }
         }
 
-        const SELECTOR = ".o_facebook_page:not([data-href])";
-        const nodes = [
-            ...root.querySelectorAll(SELECTOR),
-            ...(root.matches(SELECTOR) ? [root] : []),
-        ];
+        const nodes = [...selectElements(root, ".o_facebook_page:not([data-href])")];
         if (nodes.length) {
             this.loadAndSetEmptyLink(nodes);
         }

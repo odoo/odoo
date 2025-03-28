@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { getCommonAncestor } from "@html_editor/utils/dom_traversal";
+import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 
 class InstagramOptionPlugin extends Plugin {
@@ -40,10 +40,8 @@ class InstagramOptionPlugin extends Plugin {
     }
 
     normalize(root) {
-        const SELECTOR = ".s_instagram_page[data-instagram-page-is-default]";
         const nodes = [
-            ...root.querySelectorAll(SELECTOR),
-            ...(root.matches(SELECTOR) ? [root] : []),
+            ...selectElements(root, ".s_instagram_page[data-instagram-page-is-default]"),
         ];
         if (nodes.length) {
             this.loadAndSetPage(nodes);
