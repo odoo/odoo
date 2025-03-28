@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "%(payment_method)s requires both a first and last name."
-msgstr ""
+msgstr "%(payment_method)s vereist zowel een voor- als achternaam."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -33,6 +33,8 @@ msgid ""
 "An error occurred during the processing of your payment (%(reason)s). Please"
 " try again."
 msgstr ""
+"Er is een fout opgetreden tijdens de verwerking van je betaling "
+"(%(reason)s). Probeer het opnieuw."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
@@ -48,7 +50,7 @@ msgstr "Handelaars-ID"
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "No transaction found matching reference %(ref)s."
-msgstr ""
+msgstr "Geen transactie gevonden die overeenkomt met referentie %(ref)s."
 
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
@@ -58,17 +60,17 @@ msgstr "Nuvei"
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "Nuvei Merchant Identifier"
-msgstr ""
+msgstr "Handelaars-ID Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
 msgid "Nuvei Secret Key"
-msgstr ""
+msgstr "Geheime Sleutel Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "Nuvei Site Identifier"
-msgstr ""
+msgstr "Site-ID Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
@@ -108,7 +110,7 @@ msgstr "Geheime sleutel"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
-msgstr ""
+msgstr "Site-ID"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
@@ -127,6 +129,7 @@ msgstr "De klant heeft de betaalpagina verlaten."
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "The site identifier code associated with the merchant account."
 msgstr ""
+"De identificatiecode van de site die aan het handelaarsaccount is gekoppeld."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code

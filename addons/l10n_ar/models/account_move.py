@@ -2,6 +2,7 @@
 from odoo import models, fields, api, _
 from odoo.osv import expression
 from odoo.exceptions import UserError, RedirectWarning, ValidationError
+from odoo.tools.misc import formatLang
 from dateutil.relativedelta import relativedelta
 import logging
 _logger = logging.getLogger(__name__)
@@ -360,11 +361,63 @@ class AccountMove(models.Model):
             for subtotal in tax_totals['subtotals']
             for tax_group in subtotal['tax_groups']
         }
-        tax_group_ids_to_exclude = self.env['account.tax.group'].browse(tax_group_ids).filtered('l10n_ar_vat_afip_code').ids
+        tax_group_ids_to_exclude = self.env['account.tax.group']\
+            .browse(tax_group_ids)\
+            .filtered(lambda tax_group: (
+                self._l10n_ar_is_tax_group_other_national_ind_tax(tax_group)
+                or self._l10n_ar_is_tax_group_vat(tax_group)
+            )).ids
         if tax_group_ids_to_exclude:
-            return self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
+            tax_totals = self.env['account.tax']._exclude_tax_groups_from_tax_totals_summary(tax_totals, tax_group_ids_to_exclude)
         return tax_totals
+
+    def _l10n_ar_get_invoice_custom_tax_summary_for_report(self):
+        """ Get a new tax details for RG 5614/2024 to show ARCA VAT and Other National Internal Taxes. """
+        if self.l10n_latam_document_type_id.code not in ('6', '7', '8'):
+            return []
+
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
+
+        def grouping_function(base_line, tax_data):
+            tax_group = tax_data['tax'].tax_group_id
+            skip = False
+            name = None
+            if self._l10n_ar_is_tax_group_other_national_ind_tax(tax_group):
+                name = _("Other National Ind. Taxes %s", base_line['currency_id'].symbol)
+            elif self._l10n_ar_is_tax_group_vat(tax_group):
+                name = _("VAT Content %s", base_line['currency_id'].symbol)
+            else:
+                skip = True
+            return {
+                'name': name,
+                'skip': skip,
+            }
+
+        AccountTax = self.env['account.tax']
+        base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        results = []
+        for grouping_key, values in values_per_grouping_key.items():
+            if (
+                grouping_key
+                and not grouping_key['skip']
+                and not self.currency_id.is_zero(values['tax_amount_currency'])
+            ):
+                results.append({
+                    'name': grouping_key['name'],
+                    'tax_amount_currency': values['tax_amount_currency'],
+                    'formatted_tax_amount_currency': formatLang(self.env, values['tax_amount_currency']),
+                })
+        return results
 
     def _l10n_ar_include_vat(self):
         self.ensure_one()
         return self.l10n_latam_document_type_id.l10n_ar_letter in ['B', 'C', 'X', 'R']
+
+    @api.model
+    def _l10n_ar_is_tax_group_other_national_ind_tax(self, tax_group):
+        return tax_group.l10n_ar_tribute_afip_code in ('01', '04')
+
+    @api.model
+    def _l10n_ar_is_tax_group_vat(self, tax_group):
+        return bool(tax_group.l10n_ar_vat_afip_code)
