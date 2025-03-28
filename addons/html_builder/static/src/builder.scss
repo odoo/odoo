@@ -103,7 +103,7 @@
     }
 }
 
-%o_we_sublevel > div:first-child::before {
+%o_we_sublevel > div:first-of-type::before {
     content: "└"; // TODO The size and look of this depends on the
                   // browser default font, we should use a SVG instead.
     display: inline-block;
@@ -118,7 +118,7 @@
         @extend %o_we_sublevel;
 
         @if $level > 1 {
-            > div:first-child::before {
+            > div:first-of-type::before {
                 padding-left: ($level - 1) * 0.6em;
             }
         }
