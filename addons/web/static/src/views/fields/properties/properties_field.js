@@ -536,7 +536,8 @@ export class PropertiesField extends Component {
                 "name",
                 "string",
                 "definition_changed",
-                "type"
+                "type",
+                "fold_by_default"
             );
         }
         const propertiesValues = this.propertiesList;
@@ -688,19 +689,6 @@ export class PropertiesField extends Component {
      * -------------------------------------------------------- */
 
     /**
-     * Generate the key to get the fold state from the local storage.
-     *
-     * @returns {string}
-     */
-    _getSeparatorFoldKey() {
-        const definitionRecordId = this.props.record.data[this.definitionRecordField][0];
-        const definitionRecordModel = this.props.record.fields[this.definitionRecordField].relation;
-        // store the fold / unfold information per definition record
-        // to clean the keys (to not keep information about removed separator)
-        return `properties.fold,${definitionRecordModel},${definitionRecordId}`;
-    }
-
-    /**
      * Read the local storage and return the fold state stored in it.
      *
      * We clean the dictionary state because a property might have been deleted,
@@ -709,11 +697,13 @@ export class PropertiesField extends Component {
      * @returns {array} The folded state (name of the properties unfolded)
      */
     _getUnfoldedSeparators() {
-        const key = this._getSeparatorFoldKey();
-        const unfoldedSeparators = JSON.parse(window.localStorage.getItem(key)) || [];
-        const allPropertiesNames = this.propertiesList.map((property) => property.name);
-        // remove element that do not exist anymore (e.g. if we remove a separator)
-        return unfoldedSeparators.filter((name) => allPropertiesNames.includes(name));
+        const names = [];
+        for (const property of this.propertiesList) {
+            if (property.type === "separator" && !property.fold_by_default) {
+                names.push(property.name);
+            }
+        }
+        return names;
     }
 
     /**
@@ -723,7 +713,7 @@ export class PropertiesField extends Component {
      * @param {boolean} (forceUnfold) force the separator to be unfolded
      */
     _unfoldSeparators(separatorNames, forceUnfold) {
-        let unfoldedSeparators = this._getUnfoldedSeparators();
+        let unfoldedSeparators = this.state.unfoldedSeparators;
         for (const separatorName of separatorNames) {
             if (unfoldedSeparators.includes(separatorName)) {
                 if (!forceUnfold) {
@@ -735,8 +725,6 @@ export class PropertiesField extends Component {
                 unfoldedSeparators.push(separatorName);
             }
         }
-        const key = this._getSeparatorFoldKey();
-        window.localStorage.setItem(key, JSON.stringify(unfoldedSeparators));
         this.state.unfoldedSeparators = unfoldedSeparators;
     }
 
