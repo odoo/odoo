@@ -130,8 +130,7 @@ def filter_fields(data):
     """return all field names used in global filter definitions"""
     fields_by_model = defaultdict(set)
     charts = odoo_charts(data)
-    odoo_version = data.get("odooVersion", 1)
-    if odoo_version < 5:
+    if "odooVersion" in data and data["odooVersion"] < 5:
         for filter_definition in data.get("globalFilters", []):
             for pivot_id, matching in filter_definition.get("pivotFields", dict()).items():
                 model = data["pivots"][pivot_id]["model"]
@@ -144,13 +143,13 @@ def filter_fields(data):
                 model = chart["metaData"]["resModel"]
                 fields_by_model[model].add(matching["field"])
     else:
-        for pivot in data["pivots"].values():
+        for pivot in data.get("pivots", {}).values():
             if pivot.get("type", "ODOO") == "ODOO":
                 model = pivot["model"]
                 field = pivot.get("fieldMatching", {}).get("chain")
                 if field:
                     fields_by_model[model].add(field)
-        for _list in data["lists"].values():
+        for _list in data.get("lists", {}).values():
             model = _list["model"]
             field = _list.get("fieldMatching", {}).get("chain")
             if field:
