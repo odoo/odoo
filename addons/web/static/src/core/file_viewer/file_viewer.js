@@ -235,6 +235,7 @@ export class FileViewer extends Component {
         } else {
             style += "max-height: 100%; max-width: 100%;";
         }
+        style += `background: repeating-conic-gradient(#ccc 0deg 90deg, #fff 90deg 180deg) 50% / 20px 20px;`;
         return style;
     }
 
