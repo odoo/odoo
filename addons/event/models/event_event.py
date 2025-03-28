@@ -698,17 +698,6 @@ class EventEvent(models.Model):
         return self.with_context(tz=self.date_tz or 'UTC')
 
     # ------------------------------------------------------------
-    # MAILING
-    # ------------------------------------------------------------
-
-    def _message_add_suggested_recipients(self, force_primary_email=False):
-        # override to suggested organizer instead of adding them as follower
-        suggested = super()._message_add_suggested_recipients(force_primary_email=force_primary_email)
-        for event in self.filtered('organizer_id'):
-            suggested[event.id]['partners'] |= event.organizer_id
-        return suggested
-
-    # ------------------------------------------------------------
     # ACTIONS
     # ------------------------------------------------------------
 
