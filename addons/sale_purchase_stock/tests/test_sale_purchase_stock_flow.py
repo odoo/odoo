@@ -270,7 +270,7 @@ class TestSalePurchaseStockFlow(TransactionCase):
             {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
         ])
 
-def test_two_step_delivery_forecast_after_first_picking(self):
+    def test_two_step_delivery_forecast_after_first_picking(self):
         """ When a product is moved with 2-step delivery, the first of the two pickings associated
         with that delivery (upon completion) should have the actual physical location to which the
         product was delivered as its destination in `report.stock.quantity`: prior, irrespective of
@@ -306,14 +306,14 @@ def test_two_step_delivery_forecast_after_first_picking(self):
         pick_picking.move_ids.quantity = 2
         pick_picking.button_validate()
 
-        forecasted_qty = self.env['report.stock.quantity'].with_context(fill_temporal=False).read_group(
+        forecasted_qty = self.env['report.stock.quantity'].with_context(fill_temporal=False)._read_group(
             domain=[
                 ('state', '=', 'forecast'),
                 ('warehouse_id', '=', wh.id),
                 ('product_tmpl_id', '=', product.product_tmpl_id.id),
                 ('date', '=', fields.Date.today() - timedelta(days=20)),
             ],
-            fields=['__count', 'product_qty:sum'],
+            aggregates=['product_qty:sum'],
             groupby=['date:day', 'product_id'],
         )
-        self.assertEqual(forecasted_qty[0]['product_qty'], 0)
+        self.assertEqual(forecasted_qty[0][2], 0)
