@@ -2574,8 +2574,9 @@ def tagged(*tags):
         obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
         at_install = 'at_install' in obj.test_tags
         post_install = 'post_install' in obj.test_tags
-        if not (at_install ^ post_install):
-            _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
+        no_install = 'no_install' in obj.test_tags
+        if at_install + post_install + no_install != 1:
+            _logger.warning('A tests should be either at_install or post_install or no_install, which is not the case of %r', obj)
         return obj
     return tags_decorator
 
