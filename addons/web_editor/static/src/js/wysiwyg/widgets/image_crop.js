@@ -310,7 +310,6 @@ export class ImageCrop extends Component {
                 break;
             case 'rotate':
                 this.$cropperImage.cropper(action, value);
-                this._resetCropBox();
                 break;
             case 'flip': {
                 const amount = this.$cropperImage.cropper('getData')[scaleDirection] * -1;
