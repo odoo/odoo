@@ -92,19 +92,6 @@ async function makePropertiesGroupView(propertySpecs) {
 
     ResCompany._records[0].definitions = definitions;
 
-    // unfold all separators
-    window.localStorage.setItem(
-        "properties.fold,res.company,37",
-        JSON.stringify(
-            definitions
-                .filter((property) => property.type === "separator")
-                .map((property) => property.name)
-        )
-    );
-
-    // clean other element
-    window.localStorage.removeItem("properties.fold,fake.model,1337");
-
     await mountView({
         type: "form",
         resModel: "partner",
@@ -141,15 +128,6 @@ function getGroups() {
             property.getAttribute("property-name"),
         ]),
     ]);
-}
-
-function getLocalStorageFold() {
-    return {
-        "company,37":
-            JSON.parse(window.localStorage.getItem("properties.fold,res.company,37")) || [],
-        "fake.model,1337":
-            JSON.parse(window.localStorage.getItem("properties.fold,fake.model,1337")) || [],
-    };
 }
 
 function getPropertyHandleElement(propertyName) {
@@ -2061,53 +2039,52 @@ test("properties: separators layout", async () => {
     ]);
 });
 
-test("properties: separators and local storage", async () => {
-    await makePropertiesGroupView([false, false, false, false, true, false]);
+test("properties: fold section by default", async () => {
+    onRpc("has_access", () => true);
+    ResCompany._records[0].definitions = [
+        { name: "property_1", string: "Separator 1", type: "separator", fold_by_default: true },
+        { name: "property_2", string: "Property 2", type: "char" },
+        { name: "property_3", string: "Separator 3", type: "separator" },
+        { name: "property_4", string: "Property 4", type: "char" },
+    ];
 
-    // store the fold state of an other properties field to verify that it stay untouched
-    // and check that the property that doesn't exist is removed
-    window.localStorage.setItem("company,37", JSON.stringify(["fake"]));
-    window.localStorage.setItem("properties.fold,fake.model,1337", JSON.stringify(["a", "b", "c"]));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties" columns="2"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
 
     expect(getGroups()).toEqual([
+        [["SEPARATOR 1", "property_1"]],
         [
-            ["", ""],
-            ["Property 1", "property_1"],
-            ["Property 2", "property_2"],
-            ["Property 3", "property_3"],
+            ["SEPARATOR 3", "property_3"],
             ["Property 4", "property_4"],
-        ],
-        [
-            ["SEPARATOR 5", "property_5"],
-            ["Property 6", "property_6"],
         ],
     ]);
 
-    // fold the group
-    await click("div[property-name='property_5'] .o_field_property_group_label");
+    await click("div[property-name='property_1'] .o_field_property_group_label");
     await animationFrame();
+
     expect(getGroups()).toEqual([
         [
-            ["", ""],
-            ["Property 1", "property_1"],
+            ["SEPARATOR 1", "property_1"],
             ["Property 2", "property_2"],
-            ["Property 3", "property_3"],
+        ],
+        [
+            ["SEPARATOR 3", "property_3"],
             ["Property 4", "property_4"],
         ],
-        [["SEPARATOR 5", "property_5"]],
     ]);
-    expect(getLocalStorageFold()).toEqual({
-        "company,37": [],
-        "fake.model,1337": ["a", "b", "c"], // stay untouched
-    });
-
-    // unfold the group
-    await click("div[property-name='property_5'] .o_field_property_group_label");
-    await animationFrame();
-    expect(getLocalStorageFold()).toEqual({
-        "company,37": ["property_5"],
-        "fake.model,1337": ["a", "b", "c"], // stay untouched
-    });
 });
 
 /**
@@ -2275,11 +2252,6 @@ test("properties: separators move properties", async () => {
         ],
     ]);
     assertFolded([false, false, false, false]);
-
-    expect(getLocalStorageFold()).toEqual({
-        "company,37": ["property_5", "property_3", "property_2", "property_6"],
-        "fake.model,1337": [],
-    });
 });
 
 test.tags("desktop");
