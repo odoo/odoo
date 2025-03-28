@@ -78,7 +78,17 @@ class ResUsers(models.Model):
             visitor_pre_authenticate_sudo = request.env['website.visitor']._get_visitor_from_request()
         auth_info = super().authenticate(credential, user_agent_env)
         if auth_info.get('uid') and visitor_pre_authenticate_sudo:
+<<<<<<< 039044501909ebdcf9b926861ac7300b866f67f6
             env = self.env(user=auth_info['uid'])
+||||||| 168aee63fc7e3cec83fbb97cdc60b4cde50b54af
+            env = api.Environment(request.env.cr, auth_info['uid'], {})
+=======
+            env = api.Environment(request.env.cr, auth_info['uid'], {})
+            # user may not always exist in request cursor for auto-provisioning modules like LDAP
+            if not env.user.exists():
+                return auth_info
+
+>>>>>>> 6791a0dd9d5d5227b959634e6b950dbbddf3dca7
             user_partner = env.user.partner_id
             visitor_current_user_sudo = env['website.visitor'].sudo().search([
                 ('partner_id', '=', user_partner.id)
