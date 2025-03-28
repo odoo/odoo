@@ -47,6 +47,21 @@ test("Open custom tab with Component option", async () => {
     expect(queryAllTexts(".options-container > div")).toEqual(["Yop", "Row 1\nTest"]);
 });
 
+test("OptionContainer should display custom title", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`
+        <BuilderRow label="'Row 1'">
+            Test
+        </BuilderRow>`,
+        title: "My custom title",
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target" data-name="Yop">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    expect(queryAllTexts(".options-container > div")).toEqual(["My custom title", "Row 1\nTest"]);
+});
+
 test("Don't display option base on exclude", async () => {
     addOption({
         selector: ".test-options-target",

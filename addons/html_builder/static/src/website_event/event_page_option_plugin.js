@@ -11,11 +11,13 @@ class EventPageOption extends Plugin {
                 template: "website_event.EventPageOption",
                 selector: this.evenPageSelector,
                 editableOnly: false,
+                title: "Event Page",
             }),
             withSequence(20, {
                 template: "website_event.EventMainPageOption",
                 selector: "main:has(#o_wevent_event_main)",
                 editableOnly: false,
+                title: "Event Cover Position",
             }),
         ],
         builder_actions: this.getActions(),

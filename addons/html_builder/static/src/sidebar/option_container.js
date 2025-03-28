@@ -46,7 +46,11 @@ export class OptionsContainer extends BaseOptionComponent {
     }
 
     get title() {
-        return getSnippetName(this.env.getEditingElement());
+        let title;
+        for (const option of this.props.options) {
+            title = option.title || title;
+        }
+        return title || getSnippetName(this.env.getEditingElement());
     }
 
     selectElement() {
