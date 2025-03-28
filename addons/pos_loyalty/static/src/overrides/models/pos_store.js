@@ -78,7 +78,7 @@ patch(PosStore.prototype, {
         }
 
         const order = this.get_order();
-        if (order.finalized) {
+        if (!order || order.finalized) {
             return;
         }
         updateRewardsMutex.exec(() => {

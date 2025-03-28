@@ -124,9 +124,12 @@ export class ProductScreen extends Component {
     }
 
     getCategoriesAndSub() {
-        const rootCategories = this.pos.models["pos.category"].filter(
-            (category) => !category.parent_id
-        );
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories.filter((category) => !category.parent_id);
         const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
         const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
         return this.getCategoriesList(rootCategories, allParents, 0)
@@ -338,6 +341,18 @@ export class ProductScreen extends Component {
     }
 
     get products() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories) {
+            const productIds = new Set([]);
+            for (const categ of iface_available_categ_ids) {
+                const categoryProducts =
+                    this.pos.models["product.product"].getBy("pos_categ_ids", categ.id) || [];
+                for (const p of categoryProducts) {
+                    productIds.add(p.id);
+                }
+            }
+            return this.pos.models["product.product"].filter((p) => productIds.has(p.id));
+        }
         return this.pos.models["product.product"].getAll();
     }
 

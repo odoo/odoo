@@ -29,6 +29,7 @@ class PurchaseOrderLine(models.Model):
     product_description_variants = fields.Char('Custom Description')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
     forecasted_issue = fields.Boolean(compute='_compute_forecasted_issue')
+    is_storable = fields.Boolean(related='product_id.is_storable')
     location_final_id = fields.Many2one('stock.location', 'Location from procurement')
     group_id = fields.Many2one('procurement.group', 'Procurement group that generated this line')
 
@@ -313,6 +314,16 @@ class PurchaseOrderLine(models.Model):
             'product_packaging_id': self.product_packaging_id.id,
             'sequence': self.sequence,
         }
+
+    def _prepare_account_move_line(self, move=False):
+        res = super()._prepare_account_move_line(move=move)
+        if 'balance' not in res:
+            res['balance'] = self.currency_id._convert(
+                self.price_unit_discounted * (self.qty_received or 1),
+                self.company_id.currency_id,
+                round=False,
+            )
+        return res
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):

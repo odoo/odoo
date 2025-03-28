@@ -24,11 +24,15 @@ class AccountMoveSendWizard(models.TransientModel):
                 if peppol_partner.peppol_verification_state == 'not_valid':
                     addendum_disable_reason = _(' (Customer not on Peppol)')
                 elif peppol_partner.peppol_verification_state == 'not_verified':
-                    addendum_disable_reason = _(' (Consumer)')
+                    addendum_disable_reason = _(' (no VAT)')
                 else:
                     addendum_disable_reason = ''
                 vals_not_valid = {'readonly': True, 'checked': False} if addendum_disable_reason else {}
-                addendum_mode = _(' (Demo/Test mode)') if peppol_proxy_mode != 'prod' else ''
+                addendum_mode = ''
+                if peppol_proxy_mode == 'test':
+                    addendum_mode = _(' (Test)')
+                elif peppol_proxy_mode == 'demo':
+                    addendum_mode = _(' (Demo)')
                 if addendum_disable_reason or addendum_mode:
                     wizard.sending_method_checkboxes = {
                         **wizard.sending_method_checkboxes,

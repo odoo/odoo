@@ -328,28 +328,26 @@ msgstr "Ein Barcode darf nur genau einer Verpackung zugeordnet sein!"
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr "Eine Kombinationsauswahl kann keine doppelten Produkte enthalten."
+msgstr "Eine Kombi-Auswahl kann keine doppelten Produkte enthalten."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
-"Eine Kombinationsauswahl kann keine Produkte vom Typ „Kombination“ "
-"enthalten."
+msgstr "Eine Kombi-Auswahl kann keine Produkte vom Typ „Kombi“ enthalten."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr "Eine Kombinationsauswahl muss mindestens ein Produkt enthalten."
+msgstr "Eine Kombi-Auswahl muss mindestens ein Produkt enthalten."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
 msgstr ""
-"Eine Kombinationsauswahl muss mindestens eine Kombinationsauswahl enthalten."
+"Eine Kombi-Auswahl muss mindestens eine Kombinationsauswahl enthalten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -389,8 +387,7 @@ msgstr "Ein Produkt benutzt bereits den Barcode"
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
 msgstr ""
-"Ein verkäufliches Kombinationsprodukt kann nur verkäufliche Produkte "
-"enthalten."
+"Ein verkäufliches Kombi-Produkt kann nur verkäufliche Produkte enthalten."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
@@ -883,12 +880,12 @@ msgstr "Kombinationshinweise"
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Combo"
-msgstr "Kombination"
+msgstr "Kombi"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr "Kombinationsauswahl"
+msgstr "Kombi-Auswahl"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -896,23 +893,23 @@ msgstr "Kombinationsauswahl"
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
 msgid "Combo Choices"
-msgstr "Kombinationsmöglichkeiten"
+msgstr "Kombi-Möglichkeiten"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr "Kombinationsartikel"
+msgstr "Kombi-Artikel"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr "Kombinationspreis"
+msgstr "Kombi-Preis"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr "Kombinationsprodukte können keine Attribute enthalten."
+msgstr "Kombi-Produkte können keine Attribute enthalten."
 
 #. module: product
 #. odoo-python
@@ -921,7 +918,7 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
-"Kombinationen ermöglichen die Auswahl eines Produkts aus einer Auswahl pro "
+"Kombis ermöglichen die Auswahl eines Produkts aus einer Auswahl pro "
 "Kategorie."
 
 #. module: product
@@ -2327,7 +2324,7 @@ msgstr "Schwarzer Bürostuhl"
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr "Büro-Kombination"
+msgstr "Büro-Kombi"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
@@ -2712,12 +2709,12 @@ msgstr "Produktkategorie"
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr "Produktkombination"
+msgstr "Produktkombi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr "Produktkombinationsartikel"
+msgstr "Produkt-Kombi-Artikel"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
@@ -3444,11 +3441,11 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
-"Der Mindestpreis unter den Produkten in dieser Kombination. Dieser Wert wird"
-" verwendet, um den Preis dieser Kombination im Verhältnis zu den anderen "
-"Kombinationen in einem Kombinationsprodukt zu berechnen. Diese Heuristik "
-"stellt sicher, dass der Preis für jedes Produkt, das der Benutzer in einer "
-"Kombination auswählt, immer gleich bleibt."
+"Der Mindestpreis unter den Produkten in dieser Kombi. Dieser Wert wird "
+"verwendet, um den Preis dieser Kombi im Verhältnis zu den anderen Kombis in "
+"einem Kombiprodukt zu berechnen. Diese Heuristik stellt sicher, dass der "
+"Preis für jedes Produkt, das der Benutzer in einer Kombi auswählt, immer "
+"gleich bleibt."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
@@ -3585,8 +3582,8 @@ msgstr ""
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
 msgstr ""
-"Dieses Produkt ist Teil einer Kombination, daher kann sein Typ nicht in "
-"„Kombination“ geändert werden."
+"Dieses Produkt ist Teil einer Kombi, daher kann sein Typ nicht in „Kombi“ "
+"geändert werden."
 
 #. module: product
 #. odoo-python
