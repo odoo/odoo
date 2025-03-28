@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, Command
 from odoo.tools.sql import column_exists, create_column
 
 
@@ -79,12 +79,6 @@ class StockMoveLine(models.Model):
         return 'customer' in {self.location_id.usage, self.location_dest_id.usage}
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
-
-    sale_id = fields.Many2one('sale.order', 'Sale Order')
-
-
 class StockRule(models.Model):
     _inherit = 'stock.rule'
 
@@ -99,22 +93,31 @@ class StockPicking(models.Model):
 
     sale_id = fields.Many2one('sale.order', compute="_compute_sale_id", inverse="_set_sale_id", string="Sales Order", store=True, index='btree_not_null')
 
-    @api.depends('group_id')
+    @api.depends('move_ids.reference_ids')
     def _compute_sale_id(self):
         for picking in self:
-            picking.sale_id = picking.group_id.sale_id
+            picking.sale_id = picking.reference_ids.sale_ids[:1]
+
+    @api.depends('move_ids.sale_line_id')
+    def _compute_move_type(self):
+        super()._compute_move_type()
+        for picking in self:
+            sale_orders = picking.move_ids.sale_line_id.order_id
+            if sale_orders:
+                if any(so.picking_policy == "direct" for so in sale_orders):
+                    picking.move_type = "direct"
+                else:
+                    picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.group_id:
-            self.group_id.sale_id = self.sale_id
+        if self.reference_ids:
+            self.reference_ids.sale_ids = Command.link(self.sale_id)
         else:
             if self.sale_id:
                 self.env['stock.reference'].create({
                     'sale_ids': [Command.link(self.sale_id.id)],
                     'name': self.sale_id.name,
-                }
-            pg = self.env['procurement.group'].create(vals)
-            self.group_id = pg
+                })
 
     def _auto_init(self):
         """

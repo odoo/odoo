@@ -191,10 +191,10 @@ class StockPickingType(models.Model):
         return ['id', 'use_create_lots', 'use_existing_lots']
 
 
-class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+class StockReference(models.Model):
+    _inherit = 'stock.reference'
 
-    pos_order_id = fields.Many2one('pos.order', 'POS Order')
+    pos_order_ids = fields.Many2many('pos.order', 'POS Order')
 
 
 class StockMove(models.Model):
@@ -202,13 +202,13 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
-        vals['pos_session_id'] = self.mapped('group_id.pos_order_id.session_id').id
-        vals['pos_order_id'] = self.mapped('group_id.pos_order_id').id
+        vals['pos_session_id'] = self.mapped('reference_ids.pos_order_ids.session_id').ids[:1]
+        vals['pos_order_id'] = self.mapped('reference_ids.pos_order_ids').ids[:1]
         return vals
 
     def _key_assign_picking(self):
         keys = super(StockMove, self)._key_assign_picking()
-        return keys + (self.group_id.pos_order_id,)
+        return keys + (self.reference_ids.pos_order_id,)
 
     @api.model
     def _prepare_lines_data_dict(self, order_lines):
