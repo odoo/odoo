@@ -36,7 +36,7 @@
         'wizards/payment_onboarding_views.xml',
     ],
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
             ('remove', 'payment/static/src/js/payment_wizard_copy_clipboard_field.js'),

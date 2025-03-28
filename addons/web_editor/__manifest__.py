@@ -233,6 +233,7 @@ Odoo Web Editor widget.
 
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
             'web_editor/static/src/js/common/**/*',
+            ("remove", "web_editor/static/src/js/common/browser_extensions.js"),
             'web_editor/static/src/js/core/owl_utils.js',
             'web_editor/static/src/js/editor/odoo-editor/src/utils/utils.js',
             'web_editor/static/src/js/wysiwyg/fonts.js',

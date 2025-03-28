@@ -14,7 +14,7 @@
         'data/payment_provider_data.xml',
     ],
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'payment_worldline/static/src/js/payment_form.js',
         ],
     },
