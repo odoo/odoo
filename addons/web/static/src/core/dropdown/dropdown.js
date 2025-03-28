@@ -149,7 +149,13 @@ export class Dropdown extends Component {
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
             onClose: () => this.state.close(),
-            onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
+            onPositioned: (el, { direction, top }) => {
+                this.setTargetDirectionClass(direction);
+                if (top < 0) {
+                    el.style.top = 0;
+                }
+                this.setPopoverMaxHeight(el, direction, top);
+            },
             popoverClass: mergeClasses(
                 "o-dropdown--menu dropdown-menu mx-0",
                 { "o-dropdown--menu-submenu": this.hasParent },
@@ -300,6 +306,15 @@ export class Dropdown extends Component {
         };
         this.target.classList.remove(...Object.values(directionClasses));
         this.target.classList.add(directionClasses[direction]);
+    }
+
+    setPopoverMaxHeight(el, direction, top) {
+        const margins = `${getComputedStyle(el).marginTop} - ${getComputedStyle(el).marginBottom}`;
+        if (direction === "bottom") {
+            el.style.maxHeight = `calc(100dvh - ${top}px - ${margins})`;
+        } else if (direction === "top") {
+            el.style.maxHeight = `calc(${this.target.getBoundingClientRect().top}px - ${margins})`;
+        }
     }
 
     openPopover() {
