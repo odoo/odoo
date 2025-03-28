@@ -3,7 +3,7 @@ import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 export function checkCashMoveShown(amount) {
     return {
         content: `Check has cash move with amount ${amount}`,
-        trigger: `.cash-move-list .cash-move-row:contains(${amount})`,
+        trigger: `.cash-move-list .cash-move-row .cash-move-amount:contains(${amount})`,
     };
 }
 export function deleteCashMove(amount) {

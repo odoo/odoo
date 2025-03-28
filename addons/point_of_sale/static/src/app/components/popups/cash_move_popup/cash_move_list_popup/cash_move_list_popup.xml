@@ -24,7 +24,7 @@
                                     </td>
                                     
                                     <td class="align-middle">
-                                        <div class="fw-bolder"><t t-esc="getAmount(cm)"></t></div>
+                                        <div class="cash-move-amount fw-bolder"><t t-esc="getAmount(cm)"></t></div>
                                     </td>
                                     
                                     <td class="text-end delete-row">
@@ -52,7 +52,7 @@
                                 <div t-attf-class="col-1 align-self-center fs-6 px-0 badge rounded text-bg-{{status === 'In' ? 'success' : 'danger'}}">
                                     <t t-esc="status"></t>
                                 </div>
-                                <div class="col-4 align-self-center fw-bolder"><t t-esc="getAmount(cm)"></t></div>
+                                <div class="cash-move-amount col-4 align-self-center fw-bolder"><t t-esc="getAmount(cm)"></t></div>
                                 <div class="col-2 align-self-center delete-row">
                                     <div class="d-flex align-items-center justify-content-center h-100" name="delete" t-on-click.stop="callbacks[cm.id].call">
                                         <div class="btn btn-danger btn-lg">
