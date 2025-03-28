@@ -10,7 +10,7 @@ class HrPayrollStructureType(models.Model):
 
     name = fields.Char('Salary Structure Type')
     default_resource_calendar_id = fields.Many2one(
-        'resource.calendar', 'Default Working Hours',
+        'resource.calendar', 'Working Hours',
         default=lambda self: self.env.company.resource_calendar_id)
     country_id = fields.Many2one(
         'res.country',
