@@ -1805,7 +1805,91 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_indexed_db_draft_order(self):
         self.main_pos_config.with_user(self.pos_user).open_ui()
+<<<<<<< 28223b6e5b74f3977f272c7e950c3a0b31f74ab3
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_indexed_db_draft_order', login="pos_user")
+||||||| f72e300fb781905f1432bd7cd162517a7023ee8f
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
+
+    def test_limited_categories(self):
+        parent_category = self.env['pos.category'].create({
+            'name': 'Parent',
+        })
+        child_category_1 = self.env['pos.category'].create({
+            'name': 'Child 1',
+            'parent_id': parent_category.id,
+        })
+        child_category_2 = self.env['pos.category'].create({
+            'name': 'Child 2',
+            'parent_id': parent_category.id,
+        })
+        self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 1.20,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category_1.id)],
+        })
+        self.env['product.product'].create({
+            'name': 'Product 2',
+            'available_in_pos': True,
+            'list_price': 2.30,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category_2.id)],
+        })
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_category.id, child_category_1.id, child_category_2.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
+
+=======
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_zero_decimal_places_currency', login="pos_user")
+
+    def test_limited_categories(self):
+        parent_category = self.env['pos.category'].create({
+            'name': 'Parent',
+        })
+        child_category_1 = self.env['pos.category'].create({
+            'name': 'Child 1',
+            'parent_id': parent_category.id,
+        })
+        child_category_2 = self.env['pos.category'].create({
+            'name': 'Child 2',
+            'parent_id': parent_category.id,
+        })
+        self.env['product.product'].create({
+            'name': 'Product 1',
+            'available_in_pos': True,
+            'list_price': 1.20,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category_1.id)],
+        })
+        self.env['product.product'].create({
+            'name': 'Product 2',
+            'available_in_pos': True,
+            'list_price': 2.30,
+            'taxes_id': False,
+            'pos_categ_ids': [(4, child_category_2.id)],
+        })
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [parent_category.id, child_category_1.id, child_category_2.id])],
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
+
+        self.main_pos_config.current_session_id.close_session_from_ui()
+
+        # when no category is selected, all products should be displayed
+        self.main_pos_config.write({
+            'iface_available_categ_ids': [(6, 0, [])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_limited_categories', login="pos_user")
+>>>>>>> 330c74627b57cce95dec2cb1551f80f061b024db
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):

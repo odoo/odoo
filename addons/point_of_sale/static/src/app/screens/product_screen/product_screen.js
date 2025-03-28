@@ -111,6 +111,108 @@ export class ProductScreen extends Component {
             () => [this.currentOrder, this.currentOrder.totalQuantity]
         );
     }
+<<<<<<< 28223b6e5b74f3977f272c7e950c3a0b31f74ab3
+||||||| f72e300fb781905f1432bd7cd162517a7023ee8f
+    getAncestorsAndCurrent() {
+        const selectedCategory = this.pos.selectedCategory;
+        return selectedCategory
+            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            : [selectedCategory];
+    }
+    getChildCategories(selectedCategory) {
+        return selectedCategory
+            ? [...selectedCategory.child_ids]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+
+    getCategoriesList(list, allParents, depth) {
+        return list.map((category) => {
+            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
+                return [
+                    category,
+                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
+                ];
+            }
+            return category;
+        });
+    }
+
+    getCategoriesAndSub() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories.filter((category) => !category.parent_id);
+        const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
+        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
+        return this.getCategoriesList(rootCategories, allParents, 0)
+            .flat(Infinity)
+            .map(this.getChildCategoriesInfo, this);
+    }
+
+    getChildCategoriesInfo(category) {
+        return {
+            ...pick(category, "id", "name", "color"),
+            imgSrc:
+                this.pos.config.show_category_images && category.has_image
+                    ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
+                    : undefined,
+            isSelected: this.getAncestorsAndCurrent().includes(category),
+            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+        };
+    }
+=======
+    getAncestorsAndCurrent() {
+        const selectedCategory = this.pos.selectedCategory;
+        return selectedCategory
+            ? [undefined, ...selectedCategory.allParents, selectedCategory]
+            : [selectedCategory];
+    }
+    getChildCategories(selectedCategory) {
+        return selectedCategory
+            ? [...selectedCategory.child_ids]
+            : this.pos.models["pos.category"].filter((category) => !category.parent_id);
+    }
+
+    getCategoriesList(list, allParents, depth) {
+        return list.map((category) => {
+            if (category.id === allParents[depth]?.id && category.child_ids?.length) {
+                return [
+                    category,
+                    this.getCategoriesList(category.child_ids, allParents, depth + 1),
+                ];
+            }
+            return category;
+        });
+    }
+
+    getCategoriesAndSub() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        let rootCategories = this.pos.models["pos.category"].getAll();
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            rootCategories = iface_available_categ_ids;
+        }
+        rootCategories = rootCategories.filter((category) => !category.parent_id);
+        const selected = this.pos.selectedCategory ? [this.pos.selectedCategory] : [];
+        const allParents = selected.concat(this.pos.selectedCategory?.allParents || []).reverse();
+        return this.getCategoriesList(rootCategories, allParents, 0)
+            .flat(Infinity)
+            .map(this.getChildCategoriesInfo, this);
+    }
+
+    getChildCategoriesInfo(category) {
+        return {
+            ...pick(category, "id", "name", "color"),
+            imgSrc:
+                this.pos.config.show_category_images && category.has_image
+                    ? `/web/image?model=pos.category&field=image_128&id=${category.id}`
+                    : undefined,
+            isSelected: this.getAncestorsAndCurrent().includes(category),
+            isChildren: this.getChildCategories(this.pos.selectedCategory).includes(category),
+        };
+    }
+>>>>>>> 330c74627b57cce95dec2cb1551f80f061b024db
 
     getNumpadButtons() {
         const colorClassMap = {
@@ -294,6 +396,194 @@ export class ProductScreen extends Component {
         return this.pos.searchProductWord.trim();
     }
 
+<<<<<<< 28223b6e5b74f3977f272c7e950c3a0b31f74ab3
+||||||| f72e300fb781905f1432bd7cd162517a7023ee8f
+    get products() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories) {
+            const productIds = new Set([]);
+            for (const categ of iface_available_categ_ids) {
+                const categoryProducts =
+                    this.pos.models["product.product"].getBy("pos_categ_ids", categ.id) || [];
+                for (const p of categoryProducts) {
+                    productIds.add(p.id);
+                }
+            }
+            return this.pos.models["product.product"].filter((p) => productIds.has(p.id));
+        }
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else {
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord === ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const words = unaccent(searchWord.toLowerCase(), false);
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
+
+        return products.filter((p) =>
+            unaccent(p.searchString, false).toLowerCase().includes(words)
+        );
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+=======
+    get products() {
+        const { limit_categories, iface_available_categ_ids } = this.pos.config;
+        if (limit_categories && iface_available_categ_ids.length > 0) {
+            const productIds = new Set([]);
+            for (const categ of iface_available_categ_ids) {
+                const categoryProducts =
+                    this.pos.models["product.product"].getBy("pos_categ_ids", categ.id) || [];
+                for (const p of categoryProducts) {
+                    productIds.add(p.id);
+                }
+            }
+            return this.pos.models["product.product"].filter((p) => productIds.has(p.id));
+        }
+        return this.pos.models["product.product"].getAll();
+    }
+
+    get productsToDisplay() {
+        let list = [];
+
+        if (this.searchWord !== "") {
+            if (!this._searchTriggered) {
+                this.pos.setSelectedCategory(0);
+                this._searchTriggered = true;
+            }
+            list = this.addMainProductsToDisplay(this.getProductsBySearchWord(this.searchWord));
+        } else {
+            this._searchTriggered = false;
+            if (this.pos.selectedCategory?.id) {
+                list = this.getProductsByCategory(this.pos.selectedCategory);
+            } else {
+                list = this.products;
+            }
+        }
+
+        if (!list || list.length === 0) {
+            return [];
+        }
+
+        const excludedProductIds = [
+            this.pos.config.tip_product_id?.id,
+            ...this.pos.hiddenProductIds,
+            ...this.pos.session._pos_special_products_ids,
+        ];
+
+        const filteredList = [];
+        for (const product of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+            if (!excludedProductIds.includes(product.id) && product.canBeDisplayed) {
+                filteredList.push(product);
+            }
+        }
+
+        return this.searchWord === ""
+            ? filteredList
+            : filteredList.sort((a, b) => a.display_name.localeCompare(b.display_name));
+    }
+
+    getProductsBySearchWord(searchWord) {
+        const words = unaccent(searchWord.toLowerCase(), false);
+        const products = this.pos.selectedCategory?.id
+            ? this.getProductsByCategory(this.pos.selectedCategory)
+            : this.products;
+
+        return products.filter((p) =>
+            unaccent(p.searchString, false).toLowerCase().includes(words)
+        );
+    }
+
+    addMainProductsToDisplay(products) {
+        const uniqueProductsMap = new Map();
+        for (const product of products) {
+            if (product.id in this.pos.mainProductVariant) {
+                const mainProduct = this.pos.mainProductVariant[product.id];
+                uniqueProductsMap.set(mainProduct.id, mainProduct);
+            } else {
+                uniqueProductsMap.set(product.id, product);
+            }
+        }
+        return Array.from(uniqueProductsMap.values());
+    }
+
+    getProductsByCategory(category) {
+        const allCategoryIds = category.getAllChildren().map((cat) => cat.id);
+        const products = allCategoryIds.flatMap(
+            (catId) => this.pos.models["product.product"].getBy("pos_categ_ids", catId) || []
+        );
+        // Remove duplicates since owl doesn't like it.
+        return Array.from(new Set(products));
+    }
+
+>>>>>>> 330c74627b57cce95dec2cb1551f80f061b024db
     async onPressEnterKey() {
         const { searchProductWord } = this.pos;
         if (!searchProductWord) {
