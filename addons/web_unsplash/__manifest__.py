@@ -12,7 +12,7 @@
         ],
     'auto_install': True,
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend_lazy': [
             'web_unsplash/static/src/frontend/unsplash_beacon.js',
         ],
         'html_editor.assets_media_dialog': [
