@@ -65,8 +65,8 @@
                                    readonly="state == 'pending' and not is_bill_to_editable or state != 'pending'"/>
                         </group>
                         <group>
-                            <field name="partner_ship_from_id" force_save="1" readonly="state == 'pending' and not is_ship_from_editable or state != 'pending'"/>
-                            <field name="partner_ship_to_id" force_save="1" readonly="state == 'pending' and not is_ship_to_editable or state != 'pending'"/>
+                            <field name="partner_ship_from_id" force_save="1" readonly="state != 'pending'"/>
+                            <field name="partner_ship_to_id" force_save="1" readonly="state != 'pending'"/>
                         </group>
                     </group>
                     <group name="transporter" string="Transporter Details">
