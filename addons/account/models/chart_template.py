@@ -1064,6 +1064,8 @@ class AccountChartTemplate(models.AbstractModel):
                 "auto_reconcile": True,
                 "match_nature": 'both',
                 "match_same_currency": True,
+                "match_text_location_note": True,
+                "match_text_location_reference": True,
                 "allow_payment_tolerance": True,
                 "payment_tolerance_type": 'percentage',
                 "payment_tolerance_param": 0,
@@ -1076,6 +1078,8 @@ class AccountChartTemplate(models.AbstractModel):
                 "auto_reconcile": False,
                 "match_nature": 'both',
                 "match_same_currency": True,
+                "match_text_location_note": True,
+                "match_text_location_reference": True,
                 "allow_payment_tolerance": False,
                 "match_partner": True,
             }
