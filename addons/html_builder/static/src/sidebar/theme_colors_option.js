@@ -1,23 +1,12 @@
-import { Component, onMounted } from "@odoo/owl";
+import { onMounted } from "@odoo/owl";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
-import { useDomState } from "@html_builder/core/utils";
-import { BuilderRow } from "@html_builder/core/building_blocks/builder_row";
-import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select";
-import { BuilderColorPicker } from "@html_builder/core/building_blocks/builder_colorpicker";
-import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";
-import { BuilderContext } from "@html_builder/core/building_blocks/builder_context";
+import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
-export class ThemeColorsOption extends Component {
+export class ThemeColorsOption extends BaseOptionComponent {
     static template = "html_builder.ThemeColorsOption";
-    static components = {
-        BuilderRow,
-        BuilderSelect,
-        BuilderColorPicker,
-        BuilderSelectItem,
-        BuilderContext,
-    };
     static props = {};
     setup() {
+        super.setup();
         this.palettes = this.getPalettes();
         this.state = useDomState(() => ({
             presets: this.getPresets(),
