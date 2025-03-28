@@ -4173,7 +4173,7 @@ class BaseModel(metaclass=MetaModel):
                 for name in regular_fields:
                     corecords = record.sudo()[name]
                     if corecords:
-                        domain = corecords._check_company_domain(companies) # pylint: disable=0601
+                        domain = corecords._check_company_domain(companies)
                         if domain and corecords != corecords.with_context(active_test=False).filtered_domain(domain):
                             inconsistencies.append((record, name, corecords))
             # The second part of the check (for property / company-dependent fields) verifies that the records
