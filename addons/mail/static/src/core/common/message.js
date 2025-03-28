@@ -41,6 +41,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 
 /**
  * @typedef {Object} Props
@@ -125,6 +126,7 @@ export class Message extends Component {
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
         this.optionsDropdown = useDropdownState();
+        this.fileViewer = useFileViewer();
         useChildSubEnv({
             message: this.props.message,
             alignedRight: this.isAlignedRight,
@@ -366,6 +368,19 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     async onClick(ev) {
+        const img = ev.target.closest('.o_mail_activity_note_content img');
+        if (img) {
+            ev.stopPropagation();
+            const imgName = img.src ? decodeURIComponent(img.src.split('/').pop().split('?')[0]) : '';
+            const fileModel = {
+                isImage: true,
+                isViewable: true,
+                name: imgName,
+                defaultSource: img.src,
+                downloadUrl: img.src,
+            };
+        this.fileViewer.open(fileModel);
+    }
         if (this.store.handleClickOnLink(ev, this.props.thread)) {
             return;
         }
