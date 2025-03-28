@@ -562,6 +562,6 @@ class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
         }])
         # Check that the initial MO has been splitted in 2
         self.assertTrue("-001" in mo.name)
-        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids - mo, [{
+        self.assertRecordValues(mo.production_group_id.production_ids - mo, [{
             'qty_producing': 1.0, 'lot_producing_id': False, 'state': 'to_close',
         }])
