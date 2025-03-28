@@ -174,7 +174,7 @@ export class WebsiteBuilder extends Component {
 
     async reloadEditor(param) {
         this.target = param.target || null;
-        await this.reloadIframe(this.state.isEditing);
+        await this.reloadIframe(this.state.isEditing, param.url);
         // trigger an new instance of the builder menu
         this.state.key++;
 
@@ -192,10 +192,14 @@ export class WebsiteBuilder extends Component {
         this.addSystrayItems();
     }
 
-    async reloadIframe(isEditing = true) {
+    async reloadIframe(isEditing = true, url) {
         this.ui.block();
         this.setIframeLoaded();
-        this.websiteContent.el.contentWindow.location.reload();
+        if (url) {
+            this.websiteContent.el.contentWindow.location = url;
+        } else {
+            this.websiteContent.el.contentWindow.location.reload();
+        }
         await this.iframeLoaded;
         if (isEditing) {
             await new Promise((resolve) => {

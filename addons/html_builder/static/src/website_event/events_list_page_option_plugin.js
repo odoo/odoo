@@ -9,7 +9,6 @@ class EventsListPageOptionPlugin extends Plugin {
                 template: "website_event.EventsListPageOption",
                 selector: "main:has(.o_wevent_events_list)",
                 editableOnly: false,
-                isReloadTarget: true,
             },
         ],
     };

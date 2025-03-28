@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_event.EventPageOption">
+    <BuilderRow label.translate="Sub-menu (Specific)">
+        <BuilderCheckbox action="'displaySubMenu'"/>
+    </BuilderRow>
+</t>
+
+
+<t t-name="website_event.EventMainPageOption">
+    <BuilderRow label.translate="Cover Position">
+        <BuilderSelect action="'websiteConfig'">
+            <BuilderSelectItem actionParam="{views: []}">Inside content</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: ['website_event.opt_event_description_cover_top']}">Top</BuilderSelectItem>
+            <BuilderSelectItem actionParam="{views: ['website_event.opt_event_description_cover_hidden']}">Hidden (visitor only)</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+</templates>
+

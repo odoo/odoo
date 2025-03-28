@@ -336,6 +336,7 @@ export function useClickableBuilderComponent() {
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const asyncActions = [];
     let hasReloadAction = false;
+    let getReloadUrl;
     for (const descr of getAllActions()) {
         if (descr.actionId) {
             const action = getAction(descr.actionId);
@@ -344,6 +345,7 @@ export function useClickableBuilderComponent() {
             }
             if (action.isReload) {
                 hasReloadAction = true;
+                getReloadUrl = action.getReloadUrl;
             }
         }
     }
@@ -391,7 +393,8 @@ export function useClickableBuilderComponent() {
                         comp.env.editor.shared.savePlugin.save(),
                     ]);
                     const target = getReloadTarget(editingElement);
-                    comp.env.editor.config.reloadEditor({ target });
+                    const url = getReloadUrl?.();
+                    comp.env.editor.config.reloadEditor({ target, url });
                 });
             } else {
                 callOperation(applyOperation.commit);
