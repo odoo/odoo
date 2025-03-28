@@ -85,6 +85,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/discuss/discuss_gif_favorite_views.xml',
         'views/discuss_channel_views.xml',
         'views/mail_canned_response_views.xml',
+        'views/res_role_views.xml',
         'views/mail_activity_views.xml',
         'views/mail_activity_plan_views.xml',
         'views/mail_activity_plan_template_views.xml',

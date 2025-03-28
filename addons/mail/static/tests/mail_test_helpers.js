@@ -68,6 +68,7 @@ import { MailThread } from "./mock_server/mock_models/mail_thread";
 import { MailTrackingValue } from "./mock_server/mock_models/mail_tracking_value";
 import { ResFake } from "./mock_server/mock_models/res_fake";
 import { ResPartner } from "./mock_server/mock_models/res_partner";
+import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
@@ -131,6 +132,7 @@ export const mailModels = {
     MailTrackingValue,
     ResFake,
     ResPartner,
+    ResRole,
     ResUsers,
     ResUsersSettings,
     ResUsersSettingsVolumes,

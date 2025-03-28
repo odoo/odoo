@@ -787,7 +787,8 @@ export class Thread extends Record {
     async post(body, postData = {}, extraData = {}) {
         let tmpMsg;
         postData.attachments = postData.attachments ? [...postData.attachments] : []; // to not lose them on composer clear
-        const { attachments, parentId, mentionedChannels, mentionedPartners } = postData;
+        const { attachments, parentId, mentionedChannels, mentionedPartners, mentionedRoles } =
+            postData;
         const params = await this.store.getMessagePostParams({ body, postData, thread: this });
         Object.assign(params, extraData);
         const tmpId = this.store.getNextTemporaryId();
@@ -813,6 +814,7 @@ export class Thread extends Record {
                 validMentions: this.store.getMentionsFromText(body, {
                     mentionedChannels,
                     mentionedPartners,
+                    mentionedRoles,
                 }),
             });
             tmpMsg = this.store["mail.message"].insert({

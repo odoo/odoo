@@ -18,6 +18,13 @@ class ResUsers(models.Model):
     """
     _inherit = 'res.users'
 
+    role_ids = fields.Many2many(
+        "res.role",
+        relation="res_role_res_users_rel",
+        string="User Roles",
+        help="Users are notified whenever one of their roles is @-mentioned in a conversation.",
+    )
+    can_edit_role = fields.Boolean(compute="_compute_can_edit_role")
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
@@ -68,13 +75,21 @@ class ResUsers(models.Model):
         inbox_users.write({"group_ids": [Command.link(inbox_group.id)]})
         (self - inbox_users).write({"group_ids": [Command.unlink(inbox_group.id)]})
 
+    @api.depends_context("uid")
+    def _compute_can_edit_role(self):
+        self.can_edit_role = self.env["res.role"].has_access("write")
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
 
     @property
     def SELF_READABLE_FIELDS(self):
-        return super().SELF_READABLE_FIELDS + ['notification_type']
+        return super().SELF_READABLE_FIELDS + [
+            "can_edit_role",
+            "notification_type",
+            "role_ids",
+        ]
 
     @property
     def SELF_WRITEABLE_FIELDS(self):

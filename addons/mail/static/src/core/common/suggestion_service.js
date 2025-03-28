@@ -36,7 +36,10 @@ export class SuggestionService {
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                await this.fetchPartners(cleanedSearchTerm, thread, { abortSignal });
+                await Promise.all([
+                    this.fetchPartners(cleanedSearchTerm, thread, { abortSignal }),
+                    this.store.fetchStoreData("res.role", { term: cleanedSearchTerm }),
+                ]);
                 break;
             }
             case "#":
@@ -115,7 +118,7 @@ export class SuggestionService {
         this.store.Thread.insert(suggestedThreads);
     }
 
-    searchCannedResponseSuggestions(cleanedSearchTerm, sort) {
+    searchCannedResponseSuggestions(cleanedSearchTerm) {
         const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
             (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
         );
@@ -144,7 +147,7 @@ export class SuggestionService {
         };
         return {
             type: "mail.canned.response",
-            suggestions: sort ? cannedResponses.sort(sortFunc) : cannedResponses,
+            suggestions: cannedResponses.sort(sortFunc),
         };
     }
 
@@ -170,23 +173,60 @@ export class SuggestionService {
      *  result in the context of given thread
      * @returns {{ type: String, suggestions: Array }}
      */
-    searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
+    searchSuggestions({ delimiter, term }, { thread } = {}) {
         thread = toRaw(thread);
         const cleanedSearchTerm = cleanTerm(term);
         switch (delimiter) {
             case "@": {
-                return this.searchPartnerSuggestions(cleanedSearchTerm, thread, sort);
+                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, thread);
+                const roles = this.searchRoleSuggestions(cleanedSearchTerm);
+                return {
+                    type: "Partner",
+                    suggestions: [...partners.suggestions, ...roles.suggestions],
+                };
             }
             case "#":
-                return this.searchChannelSuggestions(cleanedSearchTerm, sort);
+                return this.searchChannelSuggestions(cleanedSearchTerm);
             case "::":
-                return this.searchCannedResponseSuggestions(cleanedSearchTerm, sort);
+                return this.searchCannedResponseSuggestions(cleanedSearchTerm);
             case ":":
                 return this.searchEmojisSuggestions(cleanedSearchTerm);
         }
         return {
             type: undefined,
             suggestions: [],
+        };
+    }
+
+    searchRoleSuggestions(cleanedSearchTerm) {
+        const roles = Object.values(this.store["res.role"].records).filter((role) =>
+            cleanTerm(role.name).includes(cleanedSearchTerm)
+        );
+        const sortFunc = (r1, r2) => {
+            const cleanedName1 = cleanTerm(r1.name);
+            const cleanedName2 = cleanTerm(r2.name);
+            if (
+                cleanedName1.startsWith(cleanedSearchTerm) &&
+                !cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return -1;
+            }
+            if (
+                !cleanedName1.startsWith(cleanedSearchTerm) &&
+                cleanedName2.startsWith(cleanedSearchTerm)
+            ) {
+                return 1;
+            }
+            if (cleanedName1 < cleanedName2) {
+                return -1;
+            }
+            if (cleanedName1 > cleanedName2) {
+                return 1;
+            }
+            return r1.id - r2.id;
+        };
+        return {
+            suggestions: roles.sort(sortFunc),
         };
     }
 
@@ -200,7 +240,7 @@ export class SuggestionService {
         );
     }
 
-    searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
+    searchPartnerSuggestions(cleanedSearchTerm, thread) {
         const partners = this.getPartnerSuggestions(thread);
         const suggestions = [];
         for (const partner of partners) {
@@ -226,9 +266,7 @@ export class SuggestionService {
         );
         return {
             type: "Partner",
-            suggestions: sort
-                ? [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)]
-                : suggestions,
+            suggestions: [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)],
         };
     }
 
@@ -266,7 +304,7 @@ export class SuggestionService {
         return {};
     }
 
-    searchChannelSuggestions(cleanedSearchTerm, sort) {
+    searchChannelSuggestions(cleanedSearchTerm) {
         const suggestionList = Object.values(this.store.Thread.records).filter(
             (thread) =>
                 thread.channel_type === "channel" &&
@@ -312,7 +350,7 @@ export class SuggestionService {
         };
         return {
             type: "Thread",
-            suggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
+            suggestions: suggestionList.sort(sortFunc),
         };
     }
 }
