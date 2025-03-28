@@ -3,11 +3,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     deepCopy,
     deepEqual,
+    deepMerge,
     isObject,
     omit,
     pick,
     shallowEqual,
-    deepMerge,
 } from "@web/core/utils/objects";
 
 describe.current.tags("headless");
@@ -98,16 +98,20 @@ test("isObject", () => {
     expect(isObject(10)).toBe(false);
     expect(isObject(10.01)).toBe(false);
 
-    expect(isObject([])).toBe(true);
-    expect(isObject([1, 2])).toBe(true);
+    expect(isObject([])).toBe(false);
+    expect(isObject([1, 2])).toBe(false);
+
+    expect(isObject(() => {})).toBe(false);
+    expect(isObject(new Set())).toBe(false);
+    expect(isObject(new Map())).toBe(false);
+    expect(isObject(new Date())).toBe(false);
+    expect(isObject(document.body)).toBe(false);
+    expect(isObject(new (class AAA extends Array {})())).toBe(false);
 
     expect(isObject({})).toBe(true);
     expect(isObject({ a: 1 })).toBe(true);
-
-    expect(isObject(() => {})).toBe(true);
-    expect(isObject(new Set())).toBe(true);
-    expect(isObject(new Map())).toBe(true);
-    expect(isObject(new Date())).toBe(true);
+    expect(isObject(Object.create(null))).toBe(true);
+    expect(isObject(new (class AAA {})())).toBe(true);
 });
 
 test("omit", () => {

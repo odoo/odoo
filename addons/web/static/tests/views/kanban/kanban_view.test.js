@@ -13007,23 +13007,7 @@ test("group by properties and drag and drop", async () => {
         },
     ];
     Partner._records[1].parent_id = 1;
-    Partner._records[1].properties = [
-        {
-            name: "my_char",
-            string: "My Char",
-            type: "char",
-            value: "aaa",
-        },
-    ];
     Partner._records[2].parent_id = 1;
-    Partner._records[2].properties = [
-        {
-            name: "my_char",
-            string: "My Char",
-            type: "char",
-            value: "bbb",
-        },
-    ];
     Partner._records[3].parent_id = 2;
 
     onRpc("web_read_group", () => ({
