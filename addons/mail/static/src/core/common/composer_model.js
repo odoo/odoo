@@ -19,6 +19,7 @@ export class Composer extends Record {
     emailAddSignature = true;
     message = Record.one("mail.message");
     mentionedPartners = Record.many("Persona");
+    mentionedRoles = Record.many("res.role");
     mentionedChannels = Record.many("Thread");
     cannedResponses = Record.many("mail.canned.response");
     text = "";

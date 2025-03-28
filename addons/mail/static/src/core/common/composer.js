@@ -377,6 +377,13 @@ export class Composer extends Component {
                                 optionTemplate: "mail.Composer.suggestionSpecial",
                                 classList: "o-mail-Composer-suggestion",
                             };
+                        } else if (suggestion.Model.getName() === "res.role") {
+                            return {
+                                label: suggestion.name,
+                                role: suggestion,
+                                optionTemplate: "mail.Composer.suggestionRole",
+                                classList: "o-mail-Composer-suggestion",
+                            };
                         } else {
                             return {
                                 label: suggestion.name,
@@ -541,6 +548,7 @@ export class Composer extends Component {
         const validMentions = this.store.getMentionsFromText(body, {
             mentionedChannels: this.props.composer.mentionedChannels,
             mentionedPartners: this.props.composer.mentionedPartners,
+            mentionedRoles: this.props.composer.mentionedRoles,
         });
         let default_body = await prettifyMessageContent(body, { validMentions });
         if (!default_body) {
@@ -697,6 +705,7 @@ export class Composer extends Component {
             isNote: this.props.type === "note",
             mentionedChannels: composer.mentionedChannels || [],
             mentionedPartners: composer.mentionedPartners || [],
+            mentionedRoles: composer.mentionedRoles || [],
             cannedResponseIds: composer.cannedResponses.map((c) => c.id),
             parentId: this.props.composer.replyToMessage?.id,
         };
@@ -743,6 +752,7 @@ export class Composer extends Component {
                 composer.message.edit(value, composer.attachments, {
                     mentionedChannels: composer.mentionedChannels,
                     mentionedPartners: composer.mentionedPartners,
+                    mentionedRoles: composer.mentionedRoles,
                 })
             );
         } else {

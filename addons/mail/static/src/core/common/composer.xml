@@ -208,6 +208,11 @@
         <span t-if="partner.email" class="text-600 text-truncate align-self-center">(<t t-esc="partner.email"/>)</span>
     </t>
 
+    <t t-name="mail.Composer.suggestionRole">
+        <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-esc="option.label"/>
+        <em class="text-600 text-truncate align-self-center">Notify users with this role</em>
+    </t>
+
     <t t-name="mail.Composer.suggestionThread">
         <strong class="px-2 py-1 align-self-center flex-shrink-0 text-truncate">
             <i t-attf-class="fa #{option.thread.parent_channel_id ? 'fa-comments-o' : 'fa-hashtag'} me-2"/>

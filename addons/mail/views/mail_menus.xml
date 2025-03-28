@@ -39,6 +39,12 @@
         action="mail.mail_canned_response_action"
         sequence="15"
     />
+    <menuitem name="Roles"
+        id="mail.menu_roles"
+        parent="mail.menu_configuration"
+        action="mail.res_role_action"
+        sequence="25"
+    />
 
     <record id="base.menu_email" model="ir.ui.menu">
         <field name="sequence">3</field>

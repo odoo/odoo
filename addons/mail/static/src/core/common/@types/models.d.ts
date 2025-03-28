@@ -15,6 +15,7 @@ declare module "models" {
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
     import { Persona as PersonaClass } from "@mail/core/common/persona_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
+    import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
     import { Thread as ThreadClass } from "@mail/core/common/thread_model";
     import { Volume as VolumeClass } from "@mail/core/common/volume_model";
@@ -35,6 +36,7 @@ declare module "models" {
     export interface Notification extends NotificationClass {}
     export interface Persona extends PersonaClass {}
     export interface ResGroups extends ResGroupsClass {}
+    export interface ResRole extends ResRoleClass {}
     export interface Settings extends SettingsClass {}
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
@@ -56,6 +58,7 @@ declare module "models" {
         Persona: StaticMailRecord<Persona, typeof PersonaClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
+        "res.role": StaticMailRecord<ResRole, typeof ResRoleClass>;
         Settings: StaticMailRecord<Settings, typeof SettingsClass>;
         Thread: StaticMailRecord<Thread, typeof ThreadClass>;
         Volume: StaticMailRecord<Volume, typeof VolumeClass>;
@@ -78,6 +81,7 @@ declare module "models" {
         Persona: Persona;
         "res.country": Country;
         "res.groups": ResGroups;
+        "res.role": ResRole;
         Settings: Settings;
         Thread: Thread;
         Volume: Volume;
