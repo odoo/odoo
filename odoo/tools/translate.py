@@ -542,7 +542,7 @@ def _get_translation_source(stack_level: int, module: str = '', lang: str = '', 
         return module or 'base', 'en_US'
 
 
-def get_text_alias(source: str, *args, **kwargs):
+def get_text_alias(source: str, /, *args, **kwargs):
     assert not (args and kwargs)
     assert isinstance(source, str)
     module, lang = _get_translation_source(1)
@@ -574,7 +574,7 @@ class LazyGettext:
 
     __slots__ = ('_args', '_default_lang', '_module', '_source')
 
-    def __init__(self, source, *args, _module='', _default_lang='', **kwargs):
+    def __init__(self, source, /, *args, _module='', _default_lang='', **kwargs):
         assert not (args and kwargs)
         assert isinstance(source, str)
         self._source = source
