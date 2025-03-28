@@ -74,6 +74,7 @@
 
     <t t-name="portal.pager">
         <div class="o_portal_chatter_pager">
+        <!-- TODO -->
             <t t-if="Object.keys(widget._pagerData).length > 0">
                 <ul class="pagination" t-if="widget._pagerData['pages'].length &gt; 1">
                     <li t-if="widget._pagerData['page'] != widget._pagerData['page_previous']" t-att-data-page="widget._pagerData['page_previous']" class="page-item o_portal_chatter_pager_btn">

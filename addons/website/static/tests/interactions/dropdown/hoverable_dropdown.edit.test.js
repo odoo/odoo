@@ -17,9 +17,9 @@ test("[EDIT] onMouseLeave doesn't work in edit mode", async () => {
             <div class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown</a>
                 <div class="dropdown-menu">
-                    <a href="#" style="display: block;">A</a>
-                    <a href="#" style="display: block;">B</a>
-                    <a href="#" style="display: block;">C</a>
+                    <a href="#test" style="display: block;">A</a>
+                    <a href="#test" style="display: block;">B</a>
+                    <a href="#test" style="display: block;">C</a>
                 </div>
             </div>
         </header>
@@ -45,17 +45,17 @@ test("[EDIT] onMouseEnter doesn't work in edit mode if another dropdown is opene
             <div id="D1" class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown 1</a>
                 <div class="dropdown-menu">
-                    <a href="#" style="display: block;">A1</a>
-                    <a href="#" style="display: block;">B1</a>
-                    <a href="#" style="display: block;">C1</a>
+                    <a href="#test" style="display: block;">A1</a>
+                    <a href="#test" style="display: block;">B1</a>
+                    <a href="#test" style="display: block;">C1</a>
                 </div>
             </div>
             <div id="D2" class="dropdown" style="margin: auto;">
                 <a class="dropdown-toggle">Dropdown 2</a>
                 <div class="dropdown-menu">
-                    <a href="#" style="display: block;">A2</a>
-                    <a href="#" style="display: block;">B2</a>
-                    <a href="#" style="display: block;">C2</a>
+                    <a href="#test" style="display: block;">A2</a>
+                    <a href="#test" style="display: block;">B2</a>
+                    <a href="#test" style="display: block;">C2</a>
                 </div>
             </div>
         </header>

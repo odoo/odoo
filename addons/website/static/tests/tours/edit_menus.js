@@ -31,7 +31,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: '.modal:not(.o_inactive_modal) .modal-body a:eq(1)',
+        trigger: '.modal:not(.o_inactive_modal) .modal-body button:contains("Add Mega Menu Item")',
         run: "click",
     },
     {
@@ -61,7 +61,7 @@ registerWebsitePreviewTour('edit_menus', {
     clickOnExtraMenuItem({}, true),
     {
         content: "There should be a new megamenu item.",
-        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: ':iframe .top_menu .nav-item button.o_mega_menu_toggle:contains("Megaaaaa!")',
     },
     // Add a menu item in edit mode.
     ...clickOnEditAndWaitEditMode(),
@@ -80,7 +80,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Trigger the link dialog (click 'Add Menu Item')",
-        trigger: '.modal-body a:eq(0)',
+        trigger: '.modal-body button:contains("Add Menu Item")',
         run: "click",
     },
     {
@@ -271,7 +271,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Menu item should have a child",
-        trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        trigger: ':iframe .top_menu .nav-item button.dropdown-toggle:contains("Home")',
         run: "click",
     },
     // Check that with the auto close of dropdown menus, the dropdowns remain
@@ -291,7 +291,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Open the Home menu after scroll",
-        trigger: ':iframe .top_menu .nav-item a.dropdown-toggle:contains("Home")',
+        trigger: ':iframe .top_menu .nav-item button.dropdown-toggle:contains("Home")',
         run: "click",
     },
     {
@@ -301,7 +301,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Close the Home menu",
-        trigger: ':iframe .top_menu .nav-item:has(a.dropdown-toggle:contains("Home"))',
+        trigger: ':iframe .top_menu .nav-item:has(button.dropdown-toggle:contains("Home"))',
         run: "click",
     },
     {
@@ -310,7 +310,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Open the mega menu",
-        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: ':iframe .top_menu .nav-item button.o_mega_menu_toggle:contains("Megaaaaa!")',
         run: "click",
     },
     {
@@ -333,12 +333,12 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Open the mega menu after scroll",
-        trigger: ':iframe .top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
+        trigger: ':iframe .top_menu .nav-item button.o_mega_menu_toggle:contains("Megaaaaa!")',
         run: "click",
     },
     {
         content: "Check that the mega menu is opened",
-        trigger: ':iframe .top_menu .nav-item:has(a.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
+        trigger: ':iframe .top_menu .nav-item:has(button.o_mega_menu_toggle:contains("Megaaaaa!")) ' +
             '.s_mega_menu_odoo_menu',
     },
     ...clickOnEditAndWaitEditMode(),
@@ -370,7 +370,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Trigger link dialog (click 'Add Menu Item')",
-        trigger: '.modal-body a:eq(0)',
+        trigger: '.modal-body button:contains("Add Menu Item")',
         run: "click",
     },
     {
@@ -394,7 +394,7 @@ registerWebsitePreviewTour('edit_menus', {
     },
     {
         content: "Trigger link dialog (click 'Add Menu Item')",
-        trigger: '.modal-body a:eq(0)',
+        trigger: '.modal-body button:contains("Add Menu Item")',
         run: "click",
     },
     {

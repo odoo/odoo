@@ -2547,7 +2547,7 @@ describe("Selection not collapsed", () => {
         test("should remove the o_checked class on delete range", async () => {
             await testEditor({
                 contentBefore:
-                    '<ul class="o_checklist"><li>ab</li><li class="o_checked"><a href="#">[cd</a></li><li>ef]</li><li>gh</li></ul>',
+                    '<ul class="o_checklist"><li>ab</li><li class="o_checked"><a href="#test">[cd</a></li><li>ef]</li><li>gh</li></ul>',
                 stepFunction: deleteBackward,
                 contentAfterEdit:
                     '<ul class="o_checklist"><li>ab</li><li o-we-hint-text="List" class="o-we-hint">[]<br></li><li>gh</li></ul>',

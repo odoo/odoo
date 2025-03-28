@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("website_livechat_logout_after_chat_star
             run: "click",
         },
         {
-            trigger: "header#top a:contains(Mitchell Admin)",
+            trigger: "header#top span:contains(Mitchell Admin)",
             run: "click",
         },
         {

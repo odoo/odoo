@@ -191,7 +191,7 @@ QUnit.module("Analytic", (hooks) => {
         // add a line
         popup = target.querySelector('.analytic_distribution_popup');
         planTable = popup.querySelectorAll('table')[0];
-        await click(planTable, '.o_field_x2many_list_row_add a');
+        await click(planTable, '.o_field_x2many_list_row_add button');
         const newRow = planTable.querySelector('tr:nth-of-type(3)');
         assert.equal(newRow.querySelector('.o_field_percentage input').value, 50);
 

@@ -25,14 +25,13 @@
                 </tr>
                 <tr t-foreach="props.docs.lines" t-as="line" t-key="line_index" t-attf-class="#{line.is_matched and 'table-info'}">
                     <td t-attf-class="#{line.is_late and 'table-danger'}">
-                        <a t-if="line.document_in"
-                            href="#"
+                        <button t-if="line.document_in"
                             t-on-click.prevent="() => this.props.openView(line.document_in._name, 'form', line.document_in.id)"
                             t-out="line.document_in.name"
-                            class="fw-bold"/>
+                            class="btn btn-link p-0 fw-bold"/>
 
                         <t t-elif="line.reservation">
-                            <a t-out="line.reservation.name" href="#" class="fw-bold"
+                            <button t-out="line.reservation.name" class="btn btn-link p-0 fw-bold"
                                t-on-click.prevent="() => this.props.openView(line.reservation._name, 'form', line.reservation.id)"
                                 /> reserved
                             <button t-if="displayReserve(line)"
@@ -72,11 +71,10 @@
                             t-attf-class="o_priority o_priority_star me-1 fa fa-star#{line.move_out.picking_id.priority=='1' ? '' : '-o'}"
                             t-on-click="() => this._onClickChangePriority('stock.picking', line.move_out.picking_id)"
                             name="change_priority_link"/>
-                        <a t-if="line.document_out"
-                            href="#"
+                        <button t-if="line.document_out"
                             t-on-click.prevent="() => this.props.openView(line.document_out._name, 'form', line.document_out.id)"
                             t-out="line.document_out.name"
-                            class="fw-bold"/>
+                            class="btn btn-link p-0 fw-bold"/>
                     </td>
                     <td t-out="line.delivery_date or ''"
                         t-attf-class="#{! line.replenishment_filled and 'table-danger'}"/>

@@ -5,11 +5,11 @@
          class="o_website_loader_container position-fixed fixed-top fixed-left h-100 w-100 d-flex"
          t-att-class="currentWaitingMessage.flag ? ('o_website_loader_container_' + currentWaitingMessage.flag) : ''">
         <div class="o_website_loader_container_content position-relative d-flex flex-column p-3 p-lg-5">
-            <a t-if="state.showCloseButton"
-               href="#" class="btn" style="position: absolute; right: 0; top: 0; margin: 15px;"
+            <button t-if="state.showCloseButton"
+               class="btn" style="position: absolute; right: 0; top: 0; margin: 15px;"
                t-on-click="close">
                 <i class="oi oi-close oi-large" role="presentation"/>
-            </a>
+            </button>
 
             <div class="o_website_loader_odoo_logo mb-5" style="height: 31px; width: 78px;"/>
 

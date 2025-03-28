@@ -7,7 +7,7 @@ import {
 
 const toggleMegaMenu = (stepOptions) => Object.assign({}, {
     content: "Toggles the mega menu.",
-    trigger: ":iframe .top_menu .nav-item a.o_mega_menu_toggle",
+    trigger: ":iframe .top_menu .nav-item button.o_mega_menu_toggle",
     run(helpers) {
         // If the mega menu is displayed inside the extra menu items, it should
         // already be displayed.
@@ -37,7 +37,7 @@ registerWebsitePreviewTour('edit_megamenu', {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: '.modal-body a:eq(1)',
+        trigger: '.modal-body button:contains(Add Mega Menu Item)',
         run: "click",
     },
     {
@@ -138,7 +138,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: ".modal-body a:eq(1)",
+        trigger: ".modal-body button:contains('Add Mega Menu Item')",
         run: "click",
     },
     {
@@ -164,7 +164,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     },
     {
         content: "Check for the new mega menu",
-        trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megatron"))`,
+        trigger: `:iframe .top_menu:has(.nav-item button.o_mega_menu_toggle:contains("Megatron"))`,
     },
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"
@@ -173,7 +173,7 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
     toggleMegaMenu({}),
     {
         content: "Select the first menu link of the first column",
-        trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav a",
+        trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav button",
         async run(actions) {
             await actions.click();
             const iframeDocument = document.querySelector('.o_iframe').contentDocument;
@@ -213,9 +213,10 @@ registerWebsitePreviewTour("megamenu_active_nav_link", {
         trigger: ":iframe .s_mega_menu_odoo_menu .row > div:first-child .nav > :nth-child(1)",
         run: "click",
     },
+    // TODO: all menu's active currently check bg-color for active menu
     {
         content: "Check if the new mega menu is active",
-        trigger: `:iframe .top_menu:has(.nav-item a.o_mega_menu_toggle.active:contains("MegaTron"))`,
+        trigger: `:iframe .top_menu:has(.nav-item button.o_mega_menu_toggle:contains("MegaTron"))`,
     },
 ])
 registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
@@ -238,7 +239,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         content: "Trigger the link dialog (click 'Add Mega Menu Item')",
-        trigger: '.modal-body a:eq(1)',
+        trigger: '.modal-body button:contains(Add Mega Menu Item)',
         run: "click",
     },
     {
@@ -264,7 +265,7 @@ registerWebsitePreviewTour('edit_megamenu_big_icons_subtitles', {
     },
     {
         content: "Check for the new mega menu",
-        trigger: ':iframe .top_menu:has(.nav-item a.o_mega_menu_toggle:contains("Megaaaaa2!"))',
+        trigger: ':iframe .top_menu:has(.nav-item button.o_mega_menu_toggle:contains("Megaaaaa2!"))',
     },
     {
         trigger: ".o_website_preview.editor_enable.editor_has_snippets:not(.o_is_blocked)"

@@ -1099,7 +1099,7 @@ registerWebsitePreviewTour("website_form_special_characters", {
         run: "edit test2",
     }, {
         content: "Click on 'Submit'",
-        trigger: ":iframe a.s_website_form_send",
+        trigger: ":iframe button.s_website_form_send",
         run: "click",
     }, {
         content: "Check the form was again sent (success page without form)",

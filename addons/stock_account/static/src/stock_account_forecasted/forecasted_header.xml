@@ -2,9 +2,9 @@
 <templates id="template">
     <t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension">
         <xpath expr="//h6[@name='product_variants']" position="after">
-            <h6 t-if="() => env.user.has_group('stock.group_stock_manager')">
+            <h6 t-if="() => env.user.has_group('stock.group_stock_manager')" class="d-flex align-items-baseline">
                 Value On Hand:
-                <a href="#"
+                <button class="btn btn-link p-0 lh-1 ms-1"
                    t-out="props.docs.value"
                    t-on-click.prevent="_onClickValuation"/>
             </h6>

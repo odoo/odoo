@@ -897,11 +897,11 @@ test("link preview in Link Popover", async () => {
     setSelectionInHtmlField(".test_target a");
     await animationFrame();
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
-    expect(".o-we-linkpopover a#link-preview").toHaveText("This website", {
+    expect(".o-we-linkpopover button#link-preview").toHaveText("This website", {
         message: "Link label in preview should match label input field",
     });
 
@@ -909,7 +909,7 @@ test("link preview in Link Popover", async () => {
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("Bad new label", {
         message: "The label input field should match the link's content",
     });
-    expect(".o-we-linkpopover a#link-preview").toHaveText("Bad new label", {
+    expect(".o-we-linkpopover button#link-preview").toHaveText("Bad new label", {
         message: "Link label in preview should match label input field",
     });
     // Move selection outside to discard
@@ -922,17 +922,17 @@ test("link preview in Link Popover", async () => {
     setSelectionInHtmlField(".test_target a");
     await animationFrame();
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
-    expect(".o-we-linkpopover a#link-preview").toHaveText("This website", {
+    expect(".o-we-linkpopover button#link-preview").toHaveText("This website", {
         message: "Link label in preview should match label input field",
     });
 
     // Open the popover option to edit the link
     await contains(".o-we-linkpopover input.o_we_label_link").edit("New label");
-    expect(".o-we-linkpopover a#link-preview").toHaveText("New label", {
+    expect(".o-we-linkpopover button#link-preview").toHaveText("New label", {
         message: "Preview should be updated on label input field change",
     });
 

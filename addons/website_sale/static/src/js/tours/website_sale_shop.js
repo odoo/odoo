@@ -15,12 +15,12 @@ registerWebsitePreviewTour("test_01_admin_shop_tour", {
     trigger: ":iframe .js_sale",
 },
 {
-    trigger: ".o_menu_systray .o_new_content_container > a",
+    trigger: ".o_menu_systray .o_new_content_container > button",
     content: _t("Let's create your first product."),
     tooltipPosition: "bottom",
     run: "click",
 }, {
-    trigger: "a[data-module-xml-id='base.module_website_sale']",
+    trigger: "button[data-module-xml-id='base.module_website_sale']",
     content: markup(_t("Select <b>New Product</b> to create it and manage its properties to boost your sales.")),
     tooltipPosition: "bottom",
     run: "click",
@@ -82,7 +82,7 @@ goBackToBlocks(),
     trigger: ":iframe body:not(.editor_enable)",
 },
 {
-    trigger: ".o_menu_systray_item.o_website_publish_container a",
+    trigger: ".o_menu_systray_item.o_website_publish_container button",
     content: _t("Click on this button so your customers can see it."),
     tooltipPosition: "bottom",
     run: "click",
