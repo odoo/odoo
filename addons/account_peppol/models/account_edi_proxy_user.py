@@ -48,7 +48,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             error_message = get_exception_message(error_vals)
 
         return _(
-            source="Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",
+            "Peppol Error [code=%(error_code)s]: %(error_subject)s\n%(error_message)s",
             error_code=error_vals['code'],
             error_subject=error_vals['subject'],
             error_message=error_message,
