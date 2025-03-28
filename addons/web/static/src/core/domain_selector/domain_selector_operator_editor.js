@@ -38,6 +38,8 @@ export function getDomainDisplayedOperators(fieldDef) {
         case "date":
         case "datetime":
             return [
+                "today",
+                "not_today",
                 "=",
                 "!=",
                 ">",

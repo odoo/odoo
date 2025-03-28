@@ -1042,8 +1042,10 @@ test("support properties", async () => {
         },
         {
             name: "xphone_prop_5",
-            domain: `[("properties.xphone_prop_5", "=", "2023-10-05")]`,
+            domain: `[("properties.xphone_prop_5", "=", context_today().strftime("%Y-%m-%d"))]`,
             options: [
+                "today",
+                "not today",
                 "is equal",
                 "is not equal",
                 "is greater",
@@ -2690,4 +2692,50 @@ test("don't show avatar for expressions", async () => {
     await contains(SELECTORS.debugArea).edit(`[("user_id", "=", uid)]`);
     expect(".o_record_selector input").toHaveValue("uid");
     expect(".o_record_selector img").toHaveCount(0);
+});
+
+test("today operator for date field (mode readonly)", async () => {
+    const parent = await makeDomainSelector({
+        domain: `[("date", "=", context_today().strftime("%Y-%m-%d"))]`,
+        readonly: true,
+    });
+    expect(getConditionText()).toBe(`Date today`);
+    await parent.set(`[("date", "!=", context_today().strftime("%Y-%m-%d"))]`);
+    expect(getConditionText()).toBe(`Date not today`);
+});
+
+test("today operator for date field", async () => {
+    await makeDomainSelector({
+        domain: `[("date", "=", False)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await selectOperator("not_today");
+    expect.verifySteps([`[("date", "!=", context_today().strftime("%Y-%m-%d"))]`]);
+    await selectOperator("today");
+    expect.verifySteps([`[("date", "=", context_today().strftime("%Y-%m-%d"))]`]);
+    await selectOperator("between");
+    expect.verifySteps([`["&", ("date", ">=", "2019-03-11"), ("date", "<=", "2019-03-11")]`]);
+});
+
+test("today operator for datetime field", async () => {
+    await makeDomainSelector({
+        domain: `[("datetime", "=", False)]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    await selectOperator("not_today");
+    expect.verifySteps([
+        `["|", ("datetime", "<", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", ">", datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+    ]);
+    await selectOperator("today");
+    expect.verifySteps([
+        `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+    ]);
+    await selectOperator("between");
+    expect.verifySteps([
+        `["&", ("datetime", ">=", "2019-03-10 23:00:00"), ("datetime", "<=", "2019-03-11 22:59:59")]`,
+    ]);
 });
