@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<odoo>
+    <template id="tax_report_export_template">
+<iv:Fornitura xmlns:iv="urn:www.agenziaentrate.gov.it:specificheTecniche:sco:ivp" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <iv:Intestazione>
+        <iv:CodiceFornitura t-if="supply_code"><t t-out="supply_code"/></iv:CodiceFornitura>
+        <iv:CodiceFiscaleDichiarante t-if="declarant_fiscal_code"><t t-out="declarant_fiscal_code"/></iv:CodiceFiscaleDichiarante>
+        <iv:CodiceCarica t-if="declarant_role_code"><t t-out="declarant_role_code"/></iv:CodiceCarica>
+        <iv:IdSistema t-if="id_sistema"><t t-out="id_sistema"/></iv:IdSistema>
+    </iv:Intestazione>
+    <iv:Comunicazione identificativo="00001">
+        <iv:Frontespizio>
+            <iv:CodiceFiscale t-if="taxpayer_code"><t t-out="taxpayer_code"/></iv:CodiceFiscale>
+            <iv:AnnoImposta t-if="tax_year"><t t-out="tax_year"/></iv:AnnoImposta>
+            <iv:PartitaIVA t-if="vat_number"><t t-out="vat_number"/></iv:PartitaIVA>
+            <iv:PIVAControllante t-if="parent_company_vat_number"><t t-out="parent_company_vat_number"/></iv:PIVAControllante>
+            <iv:UltimoMese t-if="last_month"><t t-out="last_month"/></iv:UltimoMese>
+            <iv:CFDichiarante t-if="declarant_fiscal_code"><t t-out="declarant_fiscal_code"/></iv:CFDichiarante>
+            <iv:CodiceCaricaDichiarante t-if="declarant_role_code"><t t-out="declarant_role_code"/></iv:CodiceCaricaDichiarante>
+            <iv:CodiceFiscaleSocieta t-if="company_code"><t t-out="company_code"/></iv:CodiceFiscaleSocieta>
+            <iv:FirmaDichiarazione>1</iv:FirmaDichiarazione>
+            <iv:CFIntermediario t-if="intermediary_code"><t t-out="intermediary_code"/></iv:CFIntermediario>
+            <iv:ImpegnoPresentazione t-if="submission_commitment"><t t-out="submission_commitment"/></iv:ImpegnoPresentazione>
+            <iv:DataImpegno t-if="commitment_date"><t t-out="commitment_date"/></iv:DataImpegno>
+            <iv:FirmaIntermediario t-if="intermediary_signature"><t t-out="intermediary_signature"/></iv:FirmaIntermediario>
+            <iv:FlagConferma>1</iv:FlagConferma>
+            <iv:IdentificativoProdSoftware>ODOO S.A.</iv:IdentificativoProdSoftware>
+        </iv:Frontespizio>
+        <iv:DatiContabili>
+            <iv:Modulo>
+                <iv:NumeroModulo>1</iv:NumeroModulo>
+                <iv:Mese t-if="month"><t t-out="month"/></iv:Mese>
+                <iv:Subfornitura t-if="subcontracting"><t t-out="subcontracting"/></iv:Subfornitura>
+                <iv:EventiEccezionali t-if="exceptional_events"><t t-out="exceptional_events"/></iv:EventiEccezionali>
+                <iv:OperazioniStraordinarie t-if="extraordinary_operations"><t t-out="extraordinary_operations"/></iv:OperazioniStraordinarie>
+                <iv:TotaleOperazioniAttive t-if="total_active_operations"><t t-out="total_active_operations"/></iv:TotaleOperazioniAttive>
+                <iv:TotaleOperazioniPassive t-if="total_passive_operations"><t t-out="total_passive_operations"/></iv:TotaleOperazioniPassive>
+                <iv:IvaEsigibile t-if="vat_payable"><t t-out="vat_payable"/></iv:IvaEsigibile>
+                <iv:IvaDetratta t-if="vat_deducted"><t t-out="vat_deducted"/></iv:IvaDetratta>
+                <iv:IvaDovuta t-if="vat_due"><t t-out="vat_due"/></iv:IvaDovuta>
+                <iv:IvaCredito t-if="vat_credit"><t t-out="vat_credit"/></iv:IvaCredito>
+                <iv:DebitoPrecedente t-if="previous_debt"><t t-out="previous_debt"/></iv:DebitoPrecedente>
+                <iv:CreditoPeriodoPrecedente t-if="previous_period_credit"><t t-out="previous_period_credit"/></iv:CreditoPeriodoPrecedente>
+                <iv:CreditoAnnoPrecedente t-if="previous_year_credit"><t t-out="previous_year_credit"/></iv:CreditoAnnoPrecedente>
+                <iv:VersamentiAutoUE t-if="eu_self_payments"><t t-out="eu_self_payments"/></iv:VersamentiAutoUE>
+                <iv:CreditiImposta t-if="tax_credits"><t t-out="tax_credits"/></iv:CreditiImposta>
+                <iv:InteressiDovuti t-if="due_interests"><t t-out="due_interests"/></iv:InteressiDovuti>
+                <iv:Metodo t-if="method"><t t-out="method"/></iv:Metodo>
+                <iv:Acconto t-if="advance_payment"><t t-out="advance_payment"/></iv:Acconto>
+                <iv:ImportoDaVersare t-if="amount_to_be_paid"><t t-out="amount_to_be_paid"/></iv:ImportoDaVersare>
+                <iv:ImportoACredito t-if="amount_in_credit"><t t-out="amount_in_credit"/></iv:ImportoACredito>
+            </iv:Modulo>
+        </iv:DatiContabili>
+    </iv:Comunicazione>
+</iv:Fornitura>
+    </template>
+</odoo>
