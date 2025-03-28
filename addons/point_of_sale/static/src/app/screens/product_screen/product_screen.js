@@ -126,7 +126,7 @@ export class ProductScreen extends Component {
     getCategoriesAndSub() {
         const { limit_categories, iface_available_categ_ids } = this.pos.config;
         let rootCategories = this.pos.models["pos.category"].getAll();
-        if (limit_categories) {
+        if (limit_categories && iface_available_categ_ids.length > 0) {
             rootCategories = iface_available_categ_ids;
         }
         rootCategories = rootCategories.filter((category) => !category.parent_id);
@@ -342,7 +342,7 @@ export class ProductScreen extends Component {
 
     get products() {
         const { limit_categories, iface_available_categ_ids } = this.pos.config;
-        if (limit_categories) {
+        if (limit_categories && iface_available_categ_ids.length > 0) {
             const productIds = new Set([]);
             for (const categ of iface_available_categ_ids) {
                 const categoryProducts =
