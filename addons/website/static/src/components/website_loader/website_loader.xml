@@ -15,6 +15,10 @@
 
             <div t-if="state.showWaitingMessages" t-out="currentWaitingMessage.title" class="h4-fs text-muted mb-3"/>
             <div t-elif="state.title" t-out="state.title"/>
+            <div t-elif="!state.showTips" class="mt-3 h2-fs fw-bold p-1">
+                <i class="fa fa-circle-o-notch fa-spin fa-fw fa-lg"/>
+                <span class="mt-2">Applying theme on your website.</span>
+            </div>
             <div t-else="">Building your website...</div>
             <div class="mt-3"/>
             <div t-if="['text', 'images', 'generic'].includes(currentWaitingMessage.flag)" class="o_website_loader_tip d-flex gap-2 h3-fs mb-2">
