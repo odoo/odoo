@@ -93,9 +93,11 @@ class StockPickingBatch(models.Model):
                     estimated_shipping_weight += p_type.base_weight or 0
                     estimated_shipping_volume += (p_type.packaging_length * p_type.width * p_type.height) / 1000.0**3
             # move without packs
-            for move in self.picking_ids.move_ids_without_package:
-                estimated_shipping_weight += move.product_id.weight * move.product_qty
-                estimated_shipping_volume += move.product_id.volume * move.product_qty
+            for move_line in self.picking_ids.move_ids.move_line_ids:
+                if move_line.result_package_id:
+                    continue
+                estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
+                estimated_shipping_volume += move_line.product_id.volume * move_line.quantity_product_uom
             batch.estimated_shipping_weight = estimated_shipping_weight
             batch.estimated_shipping_volume = estimated_shipping_volume
 

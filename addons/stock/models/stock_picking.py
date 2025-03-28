@@ -42,7 +42,7 @@ class StockPickingType(models.Model):
     return_picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type for Returns',
         check_company=True)
-    show_entire_packs = fields.Boolean('Move Entire Packages', help="If ticked, you will be able to select entire packages to move")
+    allow_pack_in_pack = fields.Boolean('Multi-level Package', help="Allows to do a new put in pack if destination package is already set")
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse', compute='_compute_warehouse_id', store=True, readonly=False, ondelete='cascade',
         check_company=True)
@@ -620,8 +620,6 @@ class StockPicking(models.Model):
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
-    move_ids_without_package = fields.One2many(
-        'stock.move', 'picking_id', string="Stock move", domain=['|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
@@ -646,7 +644,6 @@ class StockPicking(models.Model):
         default=lambda self: self.env.user, copy=False
     )
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')
-    move_line_ids_without_package = fields.One2many('stock.move.line', 'picking_id', 'Operations without package', domain=['|',('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     packages_count = fields.Integer('Packages Count', compute='_compute_packages_count')
     show_check_availability = fields.Boolean(
         compute='_compute_show_check_availability',
@@ -682,8 +679,6 @@ class StockPicking(models.Model):
     show_operations = fields.Boolean(related='picking_type_id.show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
-    package_level_ids = fields.One2many('stock.package_level', 'picking_id')
-    package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
     products_availability = fields.Char(
         string="Product Availability", compute='_compute_products_availability',
         help="Latest product availability status of the picking")
@@ -1038,12 +1033,11 @@ class StockPicking(models.Model):
     def _onchange_picking_type(self):
         if self.picking_type_id and self.state == 'draft':
             self = self.with_company(self.company_id)
-            # The compute store doesn't work in case of One2many inverse (move_ids_without_package)
-            (self.move_ids | self.move_ids_without_package).filtered(
+            self.move_ids.filtered(
                 lambda m: m.picking_type_id != self.picking_type_id
             ).picking_type_id = self.picking_type_id
-            (self.move_ids | self.move_ids_without_package).company_id = self.company_id
-            for move in (self.move_ids | self.move_ids_without_package):
+            self.move_ids.company_id = self.company_id
+            for move in self.move_ids:
                 if not move.product_id:
                     continue
                 move.description_picking = move.product_id._get_description(move.picking_type_id)
@@ -1063,20 +1057,9 @@ class StockPicking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
-    @api.onchange('location_dest_id')
-    def _onchange_location_dest_id(self):
-        moves = self.move_ids_without_package
-        if any(not move._origin for move in moves):
-            # Because of an ORM limitation, the new SM defined in self.move_ids_without_package are not set in
-            # self.move_ids. Since the user edits the destination location, the ORM will check which SM must be
-            # recomputed (cf dependencies of SM._compute_location_dest_id). But, to do so, the ORM will look at
-            # self.move_ids, i.e.: it will not call the compute method for the new SM. We therefore have to
-            # manually trigger the compute method
-            self.env.add_to_compute(moves._fields['location_dest_id'], moves)
-
     @api.onchange('location_id')
     def _onchange_location_id(self):
-        (self.move_ids | self.move_ids_without_package).location_id =  self.location_id
+        self.move_ids.location_id = self.location_id
         for move in self.move_ids.filtered(lambda m: m.move_orig_ids):
             for ml in move.move_line_ids:
                 parent_path = [int(loc_id) for loc_id in ml.location_id.parent_path.split('/')[:-1]]
@@ -1154,7 +1137,7 @@ class StockPicking(models.Model):
             after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.move_ids.filtered(lambda move: not move.scrapped).write(after_vals)
-        if vals.get('move_ids') or vals.get('move_ids_without_package'):
+        if vals.get('move_ids'):
             self._autoconfirm_picking()
 
         return res
@@ -1181,7 +1164,6 @@ class StockPicking(models.Model):
 
     def action_confirm(self):
         self._check_company()
-        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         # call `_action_confirm` on every draft move
         self.move_ids.filtered(lambda move: move.state == 'draft')._action_confirm()
 
@@ -1195,7 +1177,6 @@ class StockPicking(models.Model):
         also impact the state of the picking as it is computed based on move's states.
         @return: True
         """
-        self.mapped('package_level_ids').filtered(lambda pl: pl.state == 'draft' and not pl.move_ids)._generate_moves()
         self.filtered(lambda picking: picking.state == 'draft').action_confirm()
         moves = self.move_ids.filtered(lambda move: move.state not in ('draft', 'cancel', 'done')).sorted(
             key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
@@ -1380,7 +1361,6 @@ class StockPicking(models.Model):
 
     def do_unreserve(self):
         self.move_ids._do_unreserve()
-        self.package_level_ids.filtered(lambda p: not p.move_ids).unlink()
 
     def button_validate(self):
         draft_picking = self.filtered(lambda p: p.state == 'draft')
@@ -1534,7 +1514,7 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 continue
-            if not picking.move_ids and not picking.package_level_ids:
+            if not picking.move_ids:
                 continue
             if any(move.additional for move in picking.move_ids):
                 picking.action_confirm()
@@ -1561,7 +1541,6 @@ class StockPicking(models.Model):
                     'backorder_id': picking.id
                 })
                 moves_to_backorder.write({'picking_id': backorder_picking.id, 'picked': False})
-                moves_to_backorder.move_line_ids.package_level_id.write({'picking_id': backorder_picking.id})
                 moves_to_backorder.mapped('move_line_ids').write({'picking_id': backorder_picking.id})
                 backorders |= backorder_picking
                 backorder_picking.user_id = False
