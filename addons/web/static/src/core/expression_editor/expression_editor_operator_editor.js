@@ -5,6 +5,8 @@ const EXPRESSION_VALID_OPERATORS = [
     "<=",
     ">",
     ">=",
+    "today",
+    "not_today",
     "between",
     "last",
     "not_last",

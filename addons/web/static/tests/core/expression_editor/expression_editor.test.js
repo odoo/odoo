@@ -456,6 +456,8 @@ test("next operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -485,6 +487,8 @@ test("not_next operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -514,6 +518,8 @@ test("last operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",
@@ -543,6 +549,8 @@ test("not_last operator", async () => {
         },
     });
     expect(getOperatorOptions()).toEqual([
+        "today",
+        "not today",
         "is equal",
         "is not equal",
         "is greater",

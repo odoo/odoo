@@ -13,7 +13,17 @@ import {
 } from "@web/core/tree_editor/tree_editor_autocomplete";
 import { unique } from "@web/core/utils/arrays";
 import { Input, Select, List, Range, Within } from "@web/core/tree_editor/tree_editor_components";
-import { connector, formatValue, isTree } from "@web/core/tree_editor/condition_tree";
+import {
+    connector,
+    DATE_TODAY_STRING_EXPRESSION,
+    DATETIME_END_OF_TODAY_STRING_EXPRESSION,
+    DATETIME_TODAY_STRING_EXPRESSION,
+    Expression,
+    formatValue,
+    isEndOfTodayExpr,
+    isTodayExpr,
+    isTree,
+} from "@web/core/tree_editor/condition_tree";
 import { getResModel, disambiguate, isId } from "@web/core/tree_editor/utils";
 import { Domain } from "@web/core/domain";
 
@@ -146,6 +156,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     const value = defaultValue();
                     return isLitteralObject(value) ? [value.start, value.end] : [value, value];
                 },
+                shouldResetValue: (value) =>
+                    !editorInfo.isSupported(value[0]) || !editorInfo.isSupported(value[1]),
             };
         }
         case "last":
@@ -243,6 +255,31 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         }
         case "date":
         case "datetime":
+            if (["today", "not_today"].includes(operator)) {
+                return {
+                    component: null,
+                    extractProps: null,
+                    isSupported: (value) => {
+                        if (type === "date") {
+                            return isTodayExpr(value, type);
+                        }
+                        return (
+                            Array.isArray(value) &&
+                            isTodayExpr(value[0], type) &&
+                            isEndOfTodayExpr(value[1])
+                        );
+                    },
+                    defaultValue: () => {
+                        if (type === "date") {
+                            return new Expression(DATE_TODAY_STRING_EXPRESSION);
+                        }
+                        return [
+                            new Expression(DATETIME_TODAY_STRING_EXPRESSION),
+                            new Expression(DATETIME_END_OF_TODAY_STRING_EXPRESSION),
+                        ];
+                    },
+                };
+            }
             return {
                 component: DateTimeInput,
                 extractProps: ({ value, update }) => ({

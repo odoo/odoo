@@ -184,7 +184,7 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     if (isTree(node.value)) {
         return description;
     }
-    if (["set", "not_set"].includes(operator)) {
+    if (["set", "not_set", "today", "not_today"].includes(operator)) {
         return description;
     }
 

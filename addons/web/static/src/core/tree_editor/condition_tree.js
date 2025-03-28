@@ -81,8 +81,9 @@ const EXCHANGE = {
 
 const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is not"];
 
-const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
-const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
+export const DATETIME_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+export const DATETIME_END_OF_TODAY_STRING_EXPRESSION = `datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`;
+export const DATE_TODAY_STRING_EXPRESSION = `context_today().strftime("%Y-%m-%d")`;
 const DELTA_DATE_AST = parseExpr(
     `(context_today() + relativedelta(period=amount)).strftime('%Y-%m-%d')`
 );
@@ -133,11 +134,15 @@ function getDeltaExpression(value, fieldType) {
     return expression(formatAST(ast));
 }
 
-function isTodayExpr(val, type) {
+export function isTodayExpr(val, type) {
     return (
         val._expr ===
         (type === "date" ? DATE_TODAY_STRING_EXPRESSION : DATETIME_TODAY_STRING_EXPRESSION)
     );
+}
+
+export function isEndOfTodayExpr(val) {
+    return val._expr === DATETIME_END_OF_TODAY_STRING_EXPRESSION;
 }
 
 export class Couple {
@@ -227,6 +232,58 @@ export function cloneTree(tree) {
         clone[key] = cloneValue(tree[key]);
     }
     return clone;
+}
+
+function _areEquivalentTrees(tree, otherTree) {
+    if (tree.type !== otherTree.type) {
+        return false;
+    }
+    if (tree.negate !== otherTree.negate) {
+        return false;
+    }
+    if (tree.type === "condition") {
+        if (formatValue(tree.path) !== formatValue(otherTree.path)) {
+            return false;
+        }
+        if (formatValue(tree.operator) !== formatValue(otherTree.operator)) {
+            return false;
+        }
+        if (isTree(tree.value)) {
+            if (isTree(otherTree.value)) {
+                return _areEquivalentTrees(tree.value, otherTree.value);
+            }
+            return false;
+        } else if (isTree(otherTree.value)) {
+            return false;
+        }
+        if (formatValue(tree.value) !== formatValue(otherTree.value)) {
+            return false;
+        }
+        return true;
+    }
+    if (tree.value !== otherTree.value) {
+        return false;
+    }
+    if (tree.type === "complex_condition") {
+        return true;
+    }
+    if (tree.children.length !== otherTree.children.length) {
+        return false;
+    }
+    for (let i = 0; i < tree.children.length; i++) {
+        const child = tree.children[i];
+        const otherChild = otherTree.children[i];
+        if (!_areEquivalentTrees(child, otherChild)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+export function areEquivalentTrees(tree, otherTree) {
+    const simplifiedTree = applyTransformations(VIRTUAL_OPERATORS_DESTRUCTION, tree);
+    const otherSimplifiedTree = applyTransformations(VIRTUAL_OPERATORS_DESTRUCTION, otherTree);
+    return _areEquivalentTrees(simplifiedTree, otherSimplifiedTree);
 }
 
 export function formatValue(value) {
@@ -779,7 +836,8 @@ function allEqual(...values) {
 }
 
 function applyTransformations(transformations, transformed, ...fixedParams) {
-    for (const fn of transformations.reverse()) {
+    for (let i = transformations.length - 1; i >= 0; i--) {
+        const fn = transformations[i];
         transformed = fn(transformed, ...fixedParams);
     }
     return transformed;
@@ -895,7 +953,8 @@ function _removeBetweenOperator(c) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-// set - not_set - starts_with - ends_with - next - not_next - last - not_last //
+// set - not_set - starts_with - ends_with - next - not_next - last - not_last
+// today - not_today
 /////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -941,6 +1000,17 @@ function _createVirtualOperator(c, options = {}) {
         if (delta) {
             return condition(path, virtualOperator, [...delta, fieldType], negate);
         }
+    }
+    if (fieldType === "date" && ["=", "!="].includes(operator) && isTodayExpr(value, fieldType)) {
+        return condition(path, operator === "=" ? "today" : "not_today", value, negate);
+    }
+    if (
+        fieldType === "datetime" &&
+        ["between", "is_not_between"].includes(operator) &&
+        isTodayExpr(value[0], fieldType) &&
+        isEndOfTodayExpr(value[1])
+    ) {
+        return condition(path, operator === "between" ? "today" : "not_today", value, negate);
     }
 }
 
@@ -990,6 +1060,18 @@ function _removeVirtualOperator(c) {
             expressions,
             negate
         );
+    }
+    if (["today", "not_today"].includes(operator)) {
+        if (Array.isArray(value)) {
+            return condition(
+                path,
+                operator === "today" ? "between" : "is_not_between",
+                value,
+                negate
+            );
+        } else {
+            return condition(path, operator === "today" ? "=" : "!=", value, negate);
+        }
     }
 }
 
@@ -1079,6 +1161,10 @@ function removeComplexConditions(tree) {
 //    expression <-> tree
 ////////////////////////////////////////////////////////////////////////////////
 
+const VIRTUAL_OPERATORS_CREATION = [createVirtualOperators, createBetweenOperators];
+
+const VIRTUAL_OPERATORS_DESTRUCTION = [removeBetweenOperators, removeVirtualOperators];
+
 /**
  * @param {string} expression
  * @param {Options} [options={}]
@@ -1087,7 +1173,7 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return applyTransformations([createVirtualOperators, createBetweenOperators], tree, options);
+    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
 }
 
 /**
@@ -1097,7 +1183,7 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = applyTransformations(
-        [createComplexConditions, removeBetweenOperators, removeVirtualOperators],
+        [createComplexConditions, ...VIRTUAL_OPERATORS_DESTRUCTION],
         tree
     );
     return _expressionFromTree(simplifiedTree, options, true);
@@ -1109,7 +1195,7 @@ export function expressionFromTree(tree, options = {}) {
  */
 export function domainFromTree(tree) {
     const simplifiedTree = applyTransformations(
-        [removeBetweenOperators, removeVirtualOperators, removeComplexConditions],
+        [...VIRTUAL_OPERATORS_DESTRUCTION, removeComplexConditions],
         tree
     );
     const domainAST = {
@@ -1128,7 +1214,7 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return applyTransformations([createVirtualOperators, createBetweenOperators], tree, options);
+    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
 }
 
 /**
