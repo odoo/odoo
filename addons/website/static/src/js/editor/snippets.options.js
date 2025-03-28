@@ -2220,10 +2220,13 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
         // Prevent the "Controllers" option from being "centered" when
         // arrows and indicators are displayed
         await this._super(...arguments);
-        if (["arrows_opt", "indicators_opt"].includes(params.name)) {
-            const carouselEl = this.$target[0].closest(".carousel");
+
+        // Specific to "s_carousel_cards" and "s_carousel_intro", where the
+        // controllers are horizontally aligned.
+        const carouselEl = this.$target[0].closest(".carousel");
+        const horizontalControllersEl = carouselEl.querySelector(".o_horizontal_controllers_row");
+        if (["arrows_opt", "indicators_opt"].includes(params.name) && horizontalControllersEl) {
             // FIXME need to migrate s_carousel_intro_controllers_row
-            const controllersEl = carouselEl.querySelector(".o_horizontal_controllers_row");
             const indicatorsEl = carouselEl.querySelector(".carousel-indicators");
 
             const hasHiddenArrows = carouselEl.classList.contains("s_carousel_arrows_hidden");
@@ -2232,8 +2235,8 @@ options.registry.Carousel = options.registry.CarouselHandler.extend({
             );
 
             const contentBetween = !hasHiddenIndicators && !hasHiddenArrows;
-            controllersEl.classList.toggle("justify-content-between", contentBetween);
-            controllersEl.classList.toggle("justify-content-center", !contentBetween);
+            horizontalControllersEl.classList.toggle("justify-content-between", contentBetween);
+            horizontalControllersEl.classList.toggle("justify-content-center", !contentBetween);
         }
     },
     //--------------------------------------------------------------------------
