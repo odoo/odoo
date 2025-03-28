@@ -21,6 +21,7 @@ declare module "mock_models" {
     import { MailThread as MailThread2 } from "@mail/../tests/mock_server/mock_models/mail_thread";
     import { MailTrackingValue as MailTrackingValue2 } from "@mail/../tests/mock_server/mock_models/mail_tracking_value";
     import { ResFake as ResFake2 } from "@mail/../tests/mock_server/mock_models/res_fake";
+    import { ResRole as ResRole2 } from "addons/mail/static/tests/mock_server/mock_models/res_role";
     import { ResPartner as ResPartner2 } from "@mail/../tests/mock_server/mock_models/res_partner";
     import { ResUsers as ResUsers2 } from "@mail/../tests/mock_server/mock_models/res_users";
     import { ResUsersSettings as ResUsersSettings2 } from "@mail/../tests/mock_server/mock_models/res_users_settings";
@@ -49,6 +50,7 @@ declare module "mock_models" {
     export interface MailTrackingValue extends MailTrackingValue2 {}
     export interface ResFake extends ResFake2 {}
     export interface ResPartner extends ResPartner2 {}
+    export interface ResRole extends ResRole2 {}
     export interface ResUsers extends ResUsers2 {}
     export interface ResUsersSettings extends ResUsersSettings2 {}
     export interface ResUsersSettingsVolumes extends ResUsersSettingsVolumes2 {}
@@ -77,6 +79,7 @@ declare module "mock_models" {
         "mail.tracking.value": MailTrackingValue,
         "res.fake": ResFake,
         "res.partner": ResPartner,
+        "res.role": ResRole,
         "res.users": ResUsers,
         "res.users.settings": ResUsersSettings,
         "res.users.settings.volumes": ResUsersSettingsVolumes,

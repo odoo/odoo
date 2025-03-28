@@ -651,6 +651,11 @@ export async function mail_message_post(request) {
     if (thread_model === "discuss.channel") {
         allowedParams.push("parent_id", "special_mentions");
     }
+    if (post_data.role_ids?.length) {
+        const userIds = this.env["res.users"].search([["role_ids", "in", post_data.role_ids]]);
+        const partnerIds = this.env["res.partner"].search([["user_ids", "in", userIds]]);
+        post_data.partner_ids = [...new Set([...(post_data.partner_ids || []), ...partnerIds])];
+    }
     for (const allowedParam of allowedParams) {
         if (post_data[allowedParam] !== undefined) {
             finalData[allowedParam] = post_data[allowedParam];
@@ -1088,6 +1093,13 @@ function _process_request_for_internal_user(store, name, params) {
             ["group_ids", "in", this.env.user.group_ids],
         ];
         store.add(this.env["mail.canned.response"].search(domain));
+    }
+    if (name === "res.role") {
+        const roleIds = this.env["res.role"].search(
+            [["name", "ilike", params.term || ""]],
+            makeKwArgs({ limit: params.limit || 8 })
+        );
+        store.add("res.role", this.env["res.role"]._read_format(roleIds, ["name"], false));
     }
 }
 

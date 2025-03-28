@@ -52,13 +52,13 @@ const suggestionServicePatch = {
     /**
      * @override
      */
-    searchSuggestions({ delimiter, term }, { thread, sort = false } = {}) {
+    searchSuggestions({ delimiter, term }, { thread } = {}) {
         if (delimiter === "/") {
-            return this.searchChannelCommand(cleanTerm(term), thread, sort);
+            return this.searchChannelCommand(cleanTerm(term), thread);
         }
         return super.searchSuggestions(...arguments);
     },
-    searchChannelCommand(cleanedSearchTerm, thread, sort) {
+    searchChannelCommand(cleanedSearchTerm, thread) {
         if (!thread.model === "discuss.channel") {
             // channel commands are channel specific
             return;
@@ -74,14 +74,12 @@ const suggestionServicePatch = {
                 }
                 return true;
             })
-            .map(([name, command]) => {
-                return {
-                    channel_types: command.channel_types,
-                    help: command.help,
-                    id: command.id,
-                    name,
-                };
-            });
+            .map(([name, command]) => ({
+                channel_types: command.channel_types,
+                help: command.help,
+                id: command.id,
+                name,
+            }));
         const sortFunc = (c1, c2) => {
             if (c1.channel_types && !c2.channel_types) {
                 return -1;
@@ -113,7 +111,7 @@ const suggestionServicePatch = {
         };
         return {
             type: "ChannelCommand",
-            suggestions: sort ? commands.sort(sortFunc) : commands,
+            suggestions: commands.sort(sortFunc),
         };
     },
     /** @override */

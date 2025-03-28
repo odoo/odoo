@@ -60,6 +60,7 @@ class UseSuggestion {
     clearRawMentions() {
         this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
+        this.composer.mentionedRoles.length = 0;
     }
     clearCannedResponses() {
         this.composer.cannedResponses = [];
@@ -158,6 +159,9 @@ class UseSuggestion {
                 type: "partner",
             });
         }
+        if (option.role) {
+            this.composer.mentionedRoles.add(option.role);
+        }
         if (option.thread) {
             this.composer.mentionedChannels.add({
                 model: "discuss.channel",
@@ -179,7 +183,6 @@ class UseSuggestion {
         }
         const { type, suggestions } = this.suggestionService.searchSuggestions(this.search, {
             thread: this.thread,
-            sort: true,
         });
         if (!suggestions.length) {
             this.state.items = undefined;

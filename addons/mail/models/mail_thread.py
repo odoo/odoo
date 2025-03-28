@@ -4741,7 +4741,15 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     def _get_allowed_message_post_params(self):
-        return {"attachment_ids", "body", "email_add_signature", "message_type", "partner_ids", "subtype_xmlid"}
+        return {
+            "attachment_ids",
+            "body",
+            "email_add_signature",
+            "message_type",
+            "partner_ids",
+            "role_ids",
+            "subtype_xmlid",
+        }
 
     @api.model
     def _get_allowed_message_update_params(self):

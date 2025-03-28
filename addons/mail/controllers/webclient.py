@@ -98,3 +98,8 @@ class WebclientController(http.Controller):
                 ("group_ids", "in", request.env.user.all_group_ids.ids),
             ]
             store.add(request.env["mail.canned.response"].search(domain))
+        if name == "res.role":
+            roles = request.env["res.role"].search(
+                [("name", "ilike", params.get("term", ""))], limit=params.get("limit", 8)
+            )
+            store.add(roles, "name")

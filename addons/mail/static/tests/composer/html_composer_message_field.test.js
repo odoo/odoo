@@ -22,7 +22,14 @@ import {
     onRpc,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
-import { defineMailModels, mailModels } from "../mail_test_helpers";
+import {
+    defineMailModels,
+    mailModels,
+    openView,
+    registerArchs,
+    start,
+    startServer,
+} from "../mail_test_helpers";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -86,9 +93,9 @@ test("media dialog: upload", async function () {
         return attachment;
     });
 
-    onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => {
-        return ["129a52e1-6bf2-470a-830e-8e368b022e13"];
-    });
+    onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => [
+        "129a52e1-6bf2-470a-830e-8e368b022e13",
+    ]);
     await mountView({
         type: "form",
         resId,
@@ -141,16 +148,25 @@ test("mention a partner", async () => {
     onRpc("res.partner", "get_mention_suggestions", ({ kwargs }) => {
         expect.step(`get_mention_suggestions: ${kwargs.search}`);
     });
-    await mountViewInDialog({
-        type: "form",
-        resModel: "mail.compose.message",
-        arch: `
+    const pyEnv = await startServer();
+    registerArchs({
+        "mail.compose.message,false,form": `
         <form>
             <field name="body" type="html" widget="html_composer_message"/>
         </form>`,
     });
-
-    const anchorNode = queryOne(`[name='body'] .odoo-editor-editable div.o-paragraph`);
+    const composerId = pyEnv["mail.compose.message"].create({
+        subject: "Greetings",
+        body: "<p><br></p>",
+        model: "res.partner",
+    });
+    await start();
+    await openView({
+        res_model: "mail.compose.message",
+        res_id: composerId,
+        views: [["mail.compose.message,false,form", "form"]],
+    });
+    const anchorNode = queryOne(`.odoo-editor-editable p`);
     setSelection({ anchorNode, anchorOffset: 0 });
     await insertText(htmlEditor, "@");
     await animationFrame();
@@ -166,11 +182,11 @@ test("mention a partner", async () => {
 
     await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
-    <div class="o-paragraph">
+    <p>
         <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
             @Mitchell Admin
         </a>
-    </div>`);
+    </p>`);
 });
 
 test("mention a channel", async () => {
