@@ -635,7 +635,8 @@ class IrCron(models.Model):
             self._cr.postcommit.add(self._notifydb)
         return super().write(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_unless_running(self):
         try:
             self.lock_for_update()
         except LockError:
@@ -644,7 +645,6 @@ class IrCron(models.Model):
                 "This cron task is currently being executed and may not be modified "
                 "Please try again in a few minutes"
             )) from None
-        return super().unlink()
 
     @api.model
     def toggle(self, model, domain):
