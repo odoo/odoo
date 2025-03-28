@@ -19,6 +19,7 @@ def migrate(cr, version):
     - pos_payment
     """
     def deduplicate_uuids(table):
+<<<<<<< f6514af3576672c5e72c83bcd3577695322028bd
         cr.execute(
             f"""
                 SELECT UNNEST(ARRAY_AGG(id))
@@ -30,9 +31,34 @@ def migrate(cr, version):
 
         all_ids = [r[0] for r in cr.fetchall()]
         for ids in split_every(cr.IN_MAX, all_ids):
+||||||| 4d5a598482bb19416092982d6f0bb555d83379d8
+        cr.execute(
+            f"""
+                SELECT UNNEST(ARRAY_AGG(id))
+                  FROM {table}
+              GROUP BY uuid
+                HAVING COUNT(*) > 1
+            """
+        )
+
+        all_ids = [r[0] for r in cr.fetchall()]
+        for ids in cr.split_for_in_conditions(all_ids):
+=======
+        query = f"""
+        SELECT UNNEST(ARRAY_AGG(id))
+          FROM {table}
+         GROUP BY uuid
+        HAVING COUNT(*) > 1
+        """
+        while True:
+            cr.execute(query)
+            if not cr.rowcount:
+                break
+            ids = [r[0] for r in cr.fetchmany(100000)]
+>>>>>>> 5117a556a876b46132a2caead697f3a0050efa33
             cr.execute(
                 f"UPDATE {table} SET uuid = (%s::json)->>(id::text) WHERE id IN %s",
-                [Json({id_: str(uuid.uuid4()) for id_ in ids}), ids]
+                [Json({id_: str(uuid.uuid4()) for id_ in ids}), tuple(ids)]
             )
 
     deduplicate_uuids("pos_order")
