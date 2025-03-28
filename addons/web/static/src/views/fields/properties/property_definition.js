@@ -353,6 +353,19 @@ export class PropertyDefinition extends Component {
         this.state.propertyDefinition = propertyDefinition;
     }
 
+    /**
+     * Ensure the section below the separator is folded/unfolded by default
+     * @param {boolean} checked
+     */
+    onFoldByDefaultChange(checked) {
+        const propertyDefinition = {
+            ...this.state.propertyDefinition,
+            fold_by_default: checked,
+        };
+        this.props.onChange(propertyDefinition);
+        this.state.propertyDefinition = propertyDefinition;
+    }
+
     /* --------------------------------------------------------
      * Private methods
      * -------------------------------------------------------- */
