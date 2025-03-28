@@ -995,6 +995,7 @@
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
                                            domain="[('company_id', 'in', (False, company_id))]"
                                            options='{"no_quick_create": True}'
+                                           default_focus="1"
                                            invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"
                                            placeholder="Search a name or Tax ID..."
                                            readonly="state != 'draft'"/>
@@ -1015,8 +1016,8 @@
                                        readonly="state != 'draft'"/>
                                 <label for="ref" string="Bill Reference"
                                        invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')" />
-                                <field name="ref" nolabel="1" invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')" />
-                                <field name="ref" invisible="move_type in ('in_invoice', 'in_receipt', 'in_refund', 'out_invoice', 'out_refund')"/>
+                                <field name="ref" default_focus="1" nolabel="1" invisible="move_type not in ('in_invoice', 'in_receipt', 'in_refund')"/>
+                                <field name="ref" default_focus="1" invisible="move_type in ('in_invoice', 'in_receipt', 'in_refund', 'out_invoice', 'out_refund')"/>
                                 <field name="tax_cash_basis_origin_move_id" invisible="not tax_cash_basis_origin_move_id"/>
                                 <label name="invoice_vendor_bill_id_label" for="invoice_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
                                        invisible="state != 'draft' or move_type != 'in_invoice'"/>
