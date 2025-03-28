@@ -330,6 +330,9 @@ export class CustomizeWebsitePlugin extends Plugin {
         if (actionParam.views) {
             return Promise.all(
                 actionParam.views.map((view) => {
+                    if (view.startsWith("!")) {
+                        view = view.substring(1);
+                    }
                     if (!(view in this.cache)) {
                         this.cache[view] = this._loadBatchKey(view);
                     }
@@ -367,6 +370,16 @@ export class CustomizeWebsitePlugin extends Plugin {
         // step 1: enable and disable views
         const toEnable = new Set();
         const toDisable = new Set();
+        const prepareView = (view, disable) => {
+            if (view.startsWith("!")) {
+                const viewKey = view.substring(1);
+                (disable ? toEnable : toDisable).add(viewKey);
+                (disable ? toDisable : toEnable).delete(viewKey);
+            } else {
+                (disable ? toEnable : toDisable).delete(view);
+                (disable ? toDisable : toEnable).add(view);
+            }
+        };
         const shouldReset = !!action.param.resetViewArch;
         const views = action.param.views;
         if (action.selectableContext) {
@@ -378,22 +391,20 @@ export class CustomizeWebsitePlugin extends Plugin {
                 for (const a of item.getActions()) {
                     if (a.actionId === "websiteConfig") {
                         for (const view of a.actionParam.views || []) {
-                            toDisable.add(view);
+                            // disable all
+                            prepareView(view, true);
                         }
                     }
                 }
             }
             for (const view of views) {
-                toDisable.delete(view);
-                toEnable.add(view);
+                // enable selected one
+                prepareView(view, false);
             }
         } else {
             for (const view of views) {
-                if (this.activeViews[view]) {
-                    toDisable.add(view);
-                } else {
-                    toEnable.add(view);
-                }
+                // enable on apply, disable on clear
+                prepareView(view, !apply);
             }
         }
         const updateTheme = rpc("/website/theme_customize_data", {
@@ -414,6 +425,9 @@ export class CustomizeWebsitePlugin extends Plugin {
     }
 
     getConfigKey(key) {
+        if (key.startsWith("!")) {
+            return !this.activeViews[key.substring(1)];
+        }
         return this.activeViews[key];
     }
 }
