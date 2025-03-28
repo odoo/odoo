@@ -1,22 +1,17 @@
-import { patch } from "@web/core/utils/patch";
 import { AddSnippetDialog } from "@web_editor/js/editor/add_snippet_dialog";
+import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
 
 patch(AddSnippetDialog.prototype, {
     /**
-     * 
      * @override
-     * Inserts the snippets from the selected snippetGroup into the <iframe>.
-     * 
+     * Insert dynamic product snippet by rendering exsisting templates.
      */
     async insertSnippets() {
-        const snippetsToDisplay = [...this.props.snippets.values()]
-            .filter((snippet) => {
-                // Note: custom ones have "custom" group, but inner ones (custom or
-                // not) have no group.
-                return !snippet.excluded && snippet.group;
-            })
-            .filter((snippet) => snippet.group === this.state.groupSelected);
+        const snippetsToDisplay = Array.from(this.props.snippets.values())
+            // Note: custom ones have "custom" group, but inner ones (custom or
+            // not) have no group.
+            .filter(snippet => snippet.group === this.state.groupSelected && !snippet.excluded);
 
         if (this.state.groupSelected === "products") {
             const xmlIdToElementsMap = snippetsToDisplay.reduce((acc, snippet) => {
@@ -31,7 +26,6 @@ patch(AddSnippetDialog.prototype, {
             if (Object.keys(xmlIdToElementsMap).length) {
                 const data = await rpc("/website_sale/get_snippet_data", {
                     template_data: xmlIdToElementsMap,
-                    csrf_token: odoo.csrf_token,
                 });
 
                 for (const [xmlId, snippets] of Object.entries(data)) {
@@ -41,20 +35,17 @@ patch(AddSnippetDialog.prototype, {
                     );
 
                     if (snippet) {
-                        const fragment = document.createDocumentFragment();
-
-                        snippets.forEach((snippetHTML) => {
-                            const productEl = new DOMParser().parseFromString(
-                                snippetHTML,
-                                "text/html"
-                            ).body.firstChild;
-
-                            fragment.appendChild(productEl);
-                        });
-
-                        const targetElement = snippet.content[0]?.querySelector("div[data-xml-id]");
+                        const targetElement = snippet.content[0]?.querySelector("div[data-xml-id]").parentElement;
                         if (targetElement) {
-                            targetElement.replaceWith(fragment);
+                            targetElement.innerHTML = "";
+                            snippets.forEach((snippetHTML) => {
+                                const productEl = new DOMParser().parseFromString(
+                                    snippetHTML,
+                                    "text/html"
+                                ).body.firstChild;
+
+                                targetElement.appendChild(productEl);
+                            });
                         }
                     }
                 }

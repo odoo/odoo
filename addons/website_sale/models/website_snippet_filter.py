@@ -286,10 +286,6 @@ class WebsiteSnippetFilter(models.Model):
 
         @return List of dummy records
         """
-        if not hasattr(request, 'website_routing'):
-            website = request.env['website'].with_context(lang=None).get_current_website()
-            request.website_routing = website.id
-
         dynamic_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
         rendered = dynamic_filter and dynamic_filter._render(template_key, num_of_elements, None, with_sample=True) or []
         return rendered

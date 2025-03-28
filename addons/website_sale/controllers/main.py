@@ -1750,5 +1750,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def get_snippet_data(self, template_data, **kwargs):
         results = {}
         for key, value in template_data.items():
-            results[key] = request.env['website.snippet.filter'].get_dummy_product_records(key, value)
+            # Here, sudo() is added because, on Runbot, the "category_page_and_products_snippet_edition"
+            # tour is failing due to access rights issues with the website.snippet.filter model.
+            results[key] = request.env['website.snippet.filter'].sudo().get_dummy_product_records(key, value)
         return results
