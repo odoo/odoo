@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.FooterWidthOption">
+    <BuilderRow label.translate="Content width">
+        <BuilderButtonGroup action="'websiteConfig'">
+            <BuilderButton
+                classAction="'o_container_small'"
+                actionParam="{
+                    views: ['website.footer_copyright_content_width_small'],
+                }"
+            >
+                <img src="/website/static/src/img/snippets_options/content_width_small.svg"/>
+            </BuilderButton>
+            <BuilderButton
+                classAction="'container'"
+                actionParam="{
+                    views: [],
+                }"
+            >
+                <img src="/website/static/src/img/snippets_options/content_width_normal.svg"/>
+            </BuilderButton>
+            <BuilderButton
+                classAction="'container-fluid'"
+                actionParam="{
+                    views: ['website.footer_copyright_content_width_fluid'],
+                }"
+            >
+                <img src="/website/static/src/img/snippets_options/content_width_full.svg"/>
+            </BuilderButton>
+        </BuilderButtonGroup>
+    </BuilderRow>
+</t>
+
+</templates>
