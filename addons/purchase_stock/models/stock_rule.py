@@ -309,24 +309,24 @@ class StockRule(models.Model):
                    partner.with_company(company_id).property_purchase_currency_id or \
                    company_id.currency_id
 
-        domain = (
+        domain = [
             ('partner_id', '=', partner.id),
             ('state', '=', 'draft'),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
             ('user_id', '=', partner.buyer_id.id),
             ('currency_id', '=', currency.id),
-        )
+        ]
         delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
         if values.get('orderpoint_id') and delta_days is not False:
             procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
             delta_days = int(delta_days)
-            domain += (
+            domain += [
                 ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
                 ('date_order', '>=', datetime.combine(procurement_date - relativedelta(days=delta_days), datetime.min.time()))
-            )
+            ]
         if group:
-            domain += (('group_id', '=', group.id),)
+            domain += [('group_id', '=', group.id),]
         return domain
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):

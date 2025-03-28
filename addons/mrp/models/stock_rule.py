@@ -143,11 +143,11 @@ class StockRule(models.Model):
                 fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),
                 datetime.max.time()
             )
-            domain += ('|',
+            domain += ['|',
                        '&', ('state', '=', 'draft'), ('date_deadline', '<=', procurement_date),
-                       '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date))
+                       '&', ('state', '=', 'confirmed'), ('date_start', '<=', procurement_date)]
         if group:
-            domain += (('procurement_group_id', '=', group.id),)
+            domain += [('procurement_group_id', '=', group.id),]
         return domain
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):
