@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 class EventPageOption extends Plugin {
@@ -6,16 +7,16 @@ class EventPageOption extends Plugin {
     evenPageSelector = "main:has(.o_wevent_event)";
     resources = {
         builder_options: [
-            {
+            withSequence(10, {
                 template: "website_event.EventPageOption",
                 selector: this.evenPageSelector,
                 editableOnly: false,
-            },
-            {
+            }),
+            withSequence(20, {
                 template: "website_event.EventMainPageOption",
                 selector: "main:has(#o_wevent_event_main)",
                 editableOnly: false,
-            },
+            }),
         ],
         builder_actions: this.getActions(),
     };
