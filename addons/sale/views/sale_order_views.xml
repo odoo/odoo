@@ -561,7 +561,7 @@
                                     <group invisible="display_type">
                                         <label for="customer_lead"/>
                                         <div name="lead">
-                                            <field name="customer_lead" class="oe_inline"/> days
+                                            <field name="customer_lead" class="oe_inline" readonly="product_type != 'consu'"/> days
                                         </div>
                                         <field name="analytic_distribution" widget="analytic_distribution"
                                            groups="analytic.group_analytic_accounting"
@@ -691,7 +691,7 @@
                                     name="customer_lead"
                                     optional="hide"
                                     width="80px"
-                                    readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment"/>
+                                    readonly="parent.state not in ['draft', 'sent', 'sale'] or is_downpayment or product_type != 'consu'"/>
                                 <field name="price_unit" readonly="qty_invoiced &gt; 0"/>
                                 <field
                                     name="tax_ids"
@@ -858,7 +858,7 @@
                                 <label for="commitment_date" string="Delivery Date"/>
                                 <div name="commitment_date_div" class="o_row">
                                     <field name="commitment_date" readonly="state == 'cancel' or locked"/>
-                                    <span name="expected_date_span" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
+                                    <span name="expected_date_span" invisible="not expected_date" class="text-muted">Expected: <field name="expected_date" class="oe_inline"/></span>
                                 </div>
                             </group>
                             <group name="sale_reporting" string="Tracking">
