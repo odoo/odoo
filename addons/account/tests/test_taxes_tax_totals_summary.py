@@ -1728,6 +1728,27 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             }
             yield 2, self.populate_document(document_params), expected_values
 
+            document_params = self.init_document(
+                lines=[{'price_unit': 50.01}],
+                cash_rounding=cash_rounding,
+            )
+            expected_values = {
+                'same_tax_base': True,
+                'currency_id': self.currency.id,
+                'base_amount_currency': 50.01,
+                'tax_amount_currency': 0.0,
+                'total_amount_currency': 50.01,
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'base_amount_currency': 50.01,
+                        'tax_amount_currency': 0.0,
+                        'tax_groups': [],
+                    },
+                ],
+            }
+            yield 3, self.populate_document(document_params), expected_values
+
     def test_cash_rounding_generic_helpers(self):
         for test_index, document, expected_values in self._test_cash_rounding():
             with self.subTest(test_index=test_index):
@@ -1969,7 +1990,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 1300.0,
+                    'base_amount_currency': 3300.0,
                     'tax_amount_currency': 126.0,
                     'tax_groups': [
                         {
@@ -1982,7 +2003,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 1",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 3426.0,
                     'tax_amount_currency': 120.0,
                     'tax_groups': [
                         {
@@ -1995,7 +2016,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 2",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 3546.0,
                     'tax_amount_currency': 300.0,
                     'tax_groups': [
                         {
@@ -2033,7 +2054,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
             'subtotals': [
                 {
                     'name': "Untaxed Amount",
-                    'base_amount_currency': 1200.0,
+                    'base_amount_currency': 1500.0,
                     'tax_amount_currency': 360.0,
                     'tax_groups': [
                         {
@@ -2046,7 +2067,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 1",
-                    'base_amount_currency': 500.0,
+                    'base_amount_currency': 1860.0,
                     'tax_amount_currency': 82.0,
                     'tax_groups': [
                         {
@@ -2065,7 +2086,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "PRE GROUP 2",
-                    'base_amount_currency': 300.0,
+                    'base_amount_currency': 1942.0,
                     'tax_amount_currency': -75.0,
                     'tax_groups': [
                         {
@@ -2124,7 +2145,7 @@ class TestTaxesTaxTotalsSummary(TestTaxCommon):
                 },
                 {
                     'name': "Tax withholding",
-                    'base_amount_currency': 100.0,
+                    'base_amount_currency': 110.0,
                     'tax_amount_currency': -47.0,
                     'tax_groups': [
                         {

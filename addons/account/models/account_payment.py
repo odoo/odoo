@@ -144,6 +144,7 @@ class AccountPayment(models.Model):
         relation='account_move__account_payment',
         column1='payment_id',
         column2='invoice_id',
+        copy=False,
     )
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
         compute='_compute_stat_buttons_from_reconciliation',
@@ -334,8 +335,8 @@ class AccountPayment(models.Model):
         currency_id = self.currency_id.id
 
         # Compute a default label to set on the journal items.
-        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
-        counterpart_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list())
+        liquidity_line_name = ''.join(x[1] for x in self._get_aml_default_display_name_list() if x[1])
+        counterpart_line_name = liquidity_line_name
 
         line_vals_list = [
             # Liquidity line.
@@ -411,12 +412,13 @@ class AccountPayment(models.Model):
             if not payment.state:
                 payment.state = 'draft'
             # in_process --> paid
-            if payment.state == 'in_process' and payment.outstanding_account_id:
-                move = payment.move_id
+            if (move := payment.move_id) and payment.state in ('paid', 'in_process'):
                 liquidity, _counterpart, _writeoff = payment._seek_for_lines()
-                if move and move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))):
-                    payment.state = 'paid'
-                    continue
+                payment.state = (
+                    'paid'
+                    if move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) else
+                    'in_process'
+                )
             if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
                 payment.state = 'paid'
 
@@ -978,6 +980,7 @@ class AccountPayment(models.Model):
             pay.move_id \
                 .with_context(skip_invoice_sync=True) \
                 .write({
+                'date': pay.date,
                 'partner_id': pay.partner_id.id,
                 'currency_id': pay.currency_id.id,
                 'partner_bank_id': pay.partner_bank_id.id,

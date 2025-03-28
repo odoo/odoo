@@ -110,11 +110,15 @@ export const accountTaxHelpers = {
         if (tax.price_include) {
             // Case: special mode is False or 'total_included'
             if (!special_mode || special_mode === "total_included") {
-                if (!tax.include_base_amount) {
+                if (tax.include_base_amount) {
                     for (const other_tax of get_tax_after()) {
-                        if (other_tax.price_include) {
+                        if (!other_tax.is_base_affected) {
                             add_extra_base(other_tax, -1)
                         }
+                    }
+                } else {
+                    for (const other_tax of get_tax_after()) {
+                        add_extra_base(other_tax, -1)
                     }
                 }
                 for (const other_tax of get_tax_before()) {
@@ -123,9 +127,11 @@ export const accountTaxHelpers = {
 
             // Case: special_mode = 'total_excluded'
             } else {
-                for (const other_tax of get_tax_after()) {
-                    if (!other_tax.price_include || tax.include_base_amount) {
-                        add_extra_base(other_tax, 1);
+                if (tax.include_base_amount) {
+                    for (const other_tax of get_tax_after()) {
+                        if (other_tax.is_base_affected) {
+                            add_extra_base(other_tax, 1);
+                        }
                     }
                 }
             }
@@ -207,10 +213,6 @@ export const accountTaxHelpers = {
             return (raw_base * tax.amount) / 100.0 / incl_base_multiplicator;
         }
         return null;
-    },
-
-    eval_raw_base(quantity, price_unit, evaluation_context) {
-        return quantity * price_unit;
     },
 
     get_tax_details(
@@ -309,11 +311,7 @@ export const accountTaxHelpers = {
             }
         }
 
-        const raw_base_evaluation_context = {
-            taxes: sorted_taxes,
-            precision_rounding: precision_rounding,
-        };
-        let raw_base = this.eval_raw_base(quantity, price_unit, raw_base_evaluation_context);
+        let raw_base = quantity * price_unit;
         if (rounding_method === "round_per_line") {
             raw_base = roundPrecision(raw_base, precision_rounding);
         }
@@ -324,7 +322,6 @@ export const accountTaxHelpers = {
             quantity: quantity,
             raw_base: raw_base,
             special_mode: special_mode,
-            precision_rounding: precision_rounding,
         };
 
         // Define the order in which the taxes must be evaluated.
@@ -970,39 +967,31 @@ export const accountTaxHelpers = {
         }
 
         // Subtotals.
-        const subtotal_grouping_function = (base_line, tax_data) =>
-            tax_data.tax.tax_group_id.preceding_subtotal || untaxed_amount_subtotal_label;
+        if (!Object.keys(subtotals).length) {
+            subtotals[untaxed_amount_subtotal_label] = {
+                tax_groups: [],
+                tax_amount_currency: 0.0,
+                tax_amount: 0.0,
+                base_amount_currency: 0.0,
+                base_amount: 0.0,
+            };
+        }
 
-        base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, subtotal_grouping_function);
-        values_per_grouping_key = this.aggregate_base_lines_aggregated_values(base_lines_aggregated_values);
-
-        for (const values of Object.values(values_per_grouping_key)) {
-            const preceding_subtotal = values.grouping_key || untaxed_amount_subtotal_label;
-            if (!(preceding_subtotal in subtotals)) {
-                subtotals[preceding_subtotal] = {
-                    tax_groups: [],
-                    tax_amount_currency: 0.0,
-                    tax_amount: 0.0,
-                    base_amount_currency: 0.0,
-                    base_amount: 0.0,
-                };
+        const ordered_subtotals = Array.from(Object.entries(subtotals))
+            .sort((a, b) => (subtotals_order[a[0]] || 0) - (subtotals_order[b[0]] || 0));
+        let accumulated_tax_amount_currency = 0.0;
+        let accumulated_tax_amount = 0.0;
+        for (const [subtotal_label, subtotal] of ordered_subtotals) {
+            subtotal.name = subtotal_label;
+            subtotal.base_amount_currency = tax_totals_summary.base_amount_currency + accumulated_tax_amount_currency;
+            subtotal.base_amount = tax_totals_summary.base_amount + accumulated_tax_amount;
+            for (const tax_group of subtotal.tax_groups) {
+                subtotal.tax_amount_currency += tax_group.tax_amount_currency;
+                subtotal.tax_amount += tax_group.tax_amount;
+                accumulated_tax_amount_currency += tax_group.tax_amount_currency;
+                accumulated_tax_amount += tax_group.tax_amount;
             }
-            const is_first_preceding_subtotal =
-                preceding_subtotal === untaxed_amount_subtotal_label ||
-                (!(untaxed_amount_subtotal_label in subtotals_order) &&
-                    subtotals_order[preceding_subtotal] === 0);
-            const subtotal = subtotals[preceding_subtotal];
-            if (is_first_preceding_subtotal) {
-                // The first subtotal is always the base of the whole document.
-                subtotal.base_amount_currency += values.total_excluded_currency;
-                subtotal.base_amount += values.total_excluded;
-            } else {
-                // Otherwise, it's the base of the first tax in the group.
-                subtotal.base_amount_currency += values.base_amount_currency;
-                subtotal.base_amount += values.base_amount;
-            }
-            subtotal.tax_amount_currency += values.tax_amount_currency;
-            subtotal.tax_amount += values.tax_amount;
+            tax_totals_summary.subtotals.push(subtotal);
         }
 
         // Cash rounding
@@ -1022,10 +1011,10 @@ export const accountTaxHelpers = {
             const total_amount_currency = tax_totals_summary.base_amount_currency + tax_totals_summary.tax_amount_currency;
             const total_amount = tax_totals_summary.base_amount + tax_totals_summary.tax_amount;
             const expected_total_amount_currency = roundPrecision(total_amount_currency, cash_rounding_pd, cash_rounding_method);
-            const cash_rounding_base_amount_currency = expected_total_amount_currency - total_amount_currency;
+            let cash_rounding_base_amount_currency = expected_total_amount_currency - total_amount_currency;
+            const rate = total_amount ? Math.abs(total_amount_currency / total_amount) : 0.0;
+            let cash_rounding_base_amount = rate ? roundPrecision(cash_rounding_base_amount_currency / rate, company_pd) : 0.0;
             if (!floatIsZero(cash_rounding_base_amount_currency, currency.decimal_places)) {
-                const rate = total_amount ? Math.abs(total_amount_currency / total_amount) : 0.0;
-                const cash_rounding_base_amount = rate ? roundPrecision(cash_rounding_base_amount_currency / rate, company_pd) : 0.0;
                 if (strategy === 'add_invoice_line') {
                     tax_totals_summary.cash_rounding_base_amount_currency = cash_rounding_base_amount_currency;
                     tax_totals_summary.cash_rounding_base_amount = cash_rounding_base_amount;
@@ -1034,27 +1023,27 @@ export const accountTaxHelpers = {
                     subtotals[untaxed_amount_subtotal_label].base_amount_currency += cash_rounding_base_amount_currency;
                     subtotals[untaxed_amount_subtotal_label].base_amount += cash_rounding_base_amount;
                 } else if (strategy === 'biggest_tax') {
-                    const [max_subtotal, max_tax_group] = Array.from(Object.values(subtotals))
-                        .flatMap(subtotal => subtotal.tax_groups.map(tax_group => [subtotal, tax_group]))
-                        .reduce((a, b) => (b[1].tax_amount_currency > a[1].tax_amount_currency ? b : a));
+                    const all_subtotal_tax_group = tax_totals_summary.subtotals
+                        .flatMap(subtotal => subtotal.tax_groups.map(tax_group => [subtotal, tax_group]));
 
-                    max_tax_group.tax_amount_currency += cash_rounding_base_amount_currency;
-                    max_tax_group.tax_amount += cash_rounding_base_amount;
-                    max_subtotal.tax_amount_currency += cash_rounding_base_amount_currency;
-                    max_subtotal.tax_amount += cash_rounding_base_amount;
-                    tax_totals_summary.tax_amount_currency += cash_rounding_base_amount_currency;
-                    tax_totals_summary.tax_amount += cash_rounding_base_amount;
+                    if (all_subtotal_tax_group.length) {
+                        const [max_subtotal, max_tax_group] = all_subtotal_tax_group
+                            .reduce((a, b) => (b[1].tax_amount_currency > a[1].tax_amount_currency ? b : a));
+
+                        max_tax_group.tax_amount_currency += cash_rounding_base_amount_currency;
+                        max_tax_group.tax_amount += cash_rounding_base_amount;
+                        max_subtotal.tax_amount_currency += cash_rounding_base_amount_currency;
+                        max_subtotal.tax_amount += cash_rounding_base_amount;
+                        tax_totals_summary.tax_amount_currency += cash_rounding_base_amount_currency;
+                        tax_totals_summary.tax_amount += cash_rounding_base_amount;
+                    } else {
+                        // Failed to apply the cash rounding since there is no tax.
+                        cash_rounding_base_amount_currency = 0.0
+                        cash_rounding_base_amount = 0.0
+                    }
                 }
             }
         }
-
-        // Flat the subtotals.
-        const ordered_subtotals = Array.from(Object.entries(subtotals))
-            .sort((a, b) => (subtotals_order[a[0]] || 0) - (subtotals_order[b[0]] || 0));
-        ordered_subtotals.forEach(([subtotal_label, subtotal]) => {
-            subtotal.name = subtotal_label;
-            tax_totals_summary.subtotals.push(subtotal);
-        });
 
         // Subtract the cash rounding from the untaxed amounts.
         const cash_rounding_base_amount_currency = tax_totals_summary.cash_rounding_base_amount_currency || 0.0;

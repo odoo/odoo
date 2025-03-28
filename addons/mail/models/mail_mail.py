@@ -423,7 +423,6 @@ class MailMail(models.Model):
                     'Unknown error when evaluating mail headers (received %r): %s',
                     self.headers, e,
                 )
-        headers['X-Odoo-Message-Id'] = self.message_id
         headers.setdefault('Return-Path', self.record_alias_domain_id.bounce_email or self.env.company.bounce_email)
 
         # prepare recipients: use email_to if defined then check recipient_ids
@@ -770,7 +769,13 @@ class MailMail(models.Model):
                 if res:  # mail has been sent at least once, no major exception occurred
                     mail.write({'state': 'sent', 'message_id': res, 'failure_reason': False})
                     if not modules.module.current_test:
-                        _logger.info('Mail with ID %r and Message-Id %r successfully sent', mail.id, mail.message_id)
+                        _logger.info(
+                            "Mail with ID %r and Message-Id %r from %r to (redacted) %r successfully sent",
+                            mail.id,
+                            mail.message_id,
+                            tools.email_normalize(msg['from']),
+                            tools.mail.email_anonymize(tools.email_normalize(msg['to']))
+                        )
                     # /!\ can't use mail.state here, as mail.refresh() will cause an error
                     # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 mail._postprocess_sent_message(success_pids=success_pids, failure_type=failure_type)

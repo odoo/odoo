@@ -167,6 +167,17 @@ describe('Copy', () => {
                 },
             });
         });
+
+        it('should replace NBSP characters with space when copying text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>[content\u00A0]</p>',
+                stepFunction: async editor => {
+                    const clipboardData = new DataTransfer();
+                    triggerEvent(editor.editable, 'copy', { clipboardData });
+                    window.chai.expect(clipboardData.getData('text/plain')).to.be.equal('content ');
+                },
+            });
+        });
     });
 });
 describe('Cut', () => {
@@ -251,12 +262,12 @@ describe('Cut', () => {
 describe('Paste', () => {
     describe('Html Paste cleaning', () => {
         describe('whitelist', async () => {
-            it('should keep whitelisted Tags tag', async () => {
-                for (const node of CLIPBOARD_WHITELISTS.nodes) {
-                    if (!['TABLE', 'THEAD', 'TH', 'TBODY', 'TR', 'TD', 'IMG', 'BR', 'LI', '.fa'].includes(node)) {
-                        const isInline = ['I', 'B', 'U', 'S', 'EM', 'STRONG', 'IMG', 'BR', 'A', 'FONT'].includes(node);
-                        const html = isInline ? `a<${node.toLowerCase()}>b</${node.toLowerCase()}>c` : `a</p><${node.toLowerCase()}>b</${node.toLowerCase()}><p>c`;
+            for (const node of CLIPBOARD_WHITELISTS.nodes) {
+                if (!['TABLE', 'THEAD', 'TH', 'TBODY', 'TR', 'TD', 'IMG', 'BR', 'LI', '.fa'].includes(node)) {
+                    const isInline = ['I', 'B', 'U', 'S', 'EM', 'STRONG', 'IMG', 'BR', 'A', 'FONT'].includes(node);
+                    const html = isInline ? `a<${node.toLowerCase()}>b</${node.toLowerCase()}>c` : `a</p><${node.toLowerCase()}>b</${node.toLowerCase()}><p>c`;
 
+                    it('should keep whitelisted Tags tag', async () => {
                         await testEditor(BasicEditor, {
                             contentBefore: '<p>123[]4</p>',
                             stepFunction: async editor => {
@@ -264,10 +275,10 @@ describe('Paste', () => {
                             },
                             contentAfter: '<p>123' + html.replace(/<\/?font>/g, '') + '[]4</p>',
                         });
-                    }
+                    });
                 }
+            }
 
-            });
             it('should keep whitelisted Tags tag (2)', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: '<p>123[]</p>',

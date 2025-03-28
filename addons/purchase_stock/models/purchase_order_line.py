@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, Command, fields, models, _
+from odoo import SUPERUSER_ID, api, Command, fields, models, _
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 
@@ -314,6 +314,16 @@ class PurchaseOrderLine(models.Model):
             'sequence': self.sequence,
         }
 
+    def _prepare_account_move_line(self, move=False):
+        res = super()._prepare_account_move_line(move=move)
+        if 'balance' not in res:
+            res['balance'] = self.currency_id._convert(
+                self.price_unit_discounted * (self.qty_received or 1),
+                self.company_id.currency_id,
+                round=False,
+            )
+        return res
+
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, po):
         line_description = ''
@@ -374,7 +384,7 @@ class PurchaseOrderLine(models.Model):
             name = product_lang.display_name
             if product_lang.description_purchase:
                 name += '\n' + product_lang.description_purchase
-            lines = lines.filtered(lambda l: l.name == name + '\n' + description_picking)
+            lines = lines.filtered(lambda l: (l.name == name + '\n' + description_picking) or (values.get('product_description_variants') in (product_lang.name, product_id.with_user(SUPERUSER_ID).name) and l.name == name))
             if lines:
                 return lines[0]
 

@@ -97,7 +97,13 @@ class PaymentTransaction(models.Model):
                 done_tx._invoice_sale_orders()
             super(PaymentTransaction, done_tx)._post_process()  # Post the invoices.
             if auto_invoice:
-                self._send_invoice()
+                if (
+                    str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
+                    and (send_invoice_cron := self.env.ref('sale.send_invoice_cron', raise_if_not_found=False))
+                ):
+                    send_invoice_cron._trigger()
+                else:
+                    self._send_invoice()
 
     def _check_amount_and_confirm_order(self):
         """ Confirm the sales order based on the amount of a transaction.
@@ -134,7 +140,10 @@ class PaymentTransaction(models.Model):
             order.message_post(body=message, author_id=author.id)
 
     def _send_invoice(self):
-        for tx in self:
+        # Send messages as OdooBot so that
+        #   * logged in users receive the invoice
+        #   * the mail and notifications are not sent by the public user
+        for tx in self.with_user(SUPERUSER_ID):
             tx = tx.with_company(tx.company_id).with_context(
                 company_id=tx.company_id.id,
             )
@@ -142,7 +151,7 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            self.env['account.move.send'].with_user(SUPERUSER_ID)._generate_and_send_invoices(
+            self.env['account.move.send']._generate_and_send_invoices(
                 invoice_to_send,
                 allow_raising=False,
                 allow_fallback_pdf=True,

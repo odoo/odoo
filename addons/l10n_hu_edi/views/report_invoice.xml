@@ -117,7 +117,7 @@
     <template id="custom_header">
         <div class="row mb8">
             <div class="col-6">
-                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                <img t-if="company.logo" class="o_company_logo_small" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
             </div>
             <div class="col-6 text-end mb4">
                 <div class="mt0 h4" t-field="company.report_header"/>

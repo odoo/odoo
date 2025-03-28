@@ -216,6 +216,14 @@ class PosConfig(models.Model):
             'records': records
         })
 
+        for config in self.trusted_config_ids:
+            config._notify('SYNCHRONISATION', {
+                'static_records': static_records,
+                'session_id': config.current_session_id.id,
+                'login_number': 0,
+                'records': records
+            })
+
     def read_config_open_orders(self, domain, record_ids):
         all_domain = expression.OR([domain, [('id', 'in', record_ids.get('pos.order')), ('config_id', '=', self.id)]])
         all_orders = self.env['pos.order'].search(all_domain)
@@ -719,6 +727,7 @@ class PosConfig(models.Model):
     def _get_available_product_domain(self):
         domain = [
             *self.env['product.product']._check_company_domain(self.company_id),
+            ('active', '=', True),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
@@ -787,12 +796,11 @@ class PosConfig(models.Model):
             self.get_limited_product_count(),
         )
         product_ids = [r[0] for r in self.env.execute_query(sql)]
-        special_products = self._get_special_products().filtered(
-            lambda product: not product.sudo().company_id
-                            or product.sudo().company_id == self.company_id
-        )
-        product_ids.extend(special_products.ids)
-        products = self.env['product.product'].browse(product_ids)
+        product_ids.extend(self._get_special_products().ids)
+        products = self.env['product.product'].search([('id', 'in', product_ids)])
+        # sort products by product_ids order
+        id_to_index = {pid: index for index, pid in enumerate(product_ids)}
+        products = products.sorted(key=lambda p: id_to_index[p.id])
         product_combo = products.filtered(lambda p: p['type'] == 'combo')
         product_in_combo = product_combo.combo_ids.combo_item_ids.product_id
         products_available = products | product_in_combo
@@ -801,6 +809,14 @@ class PosConfig(models.Model):
     def get_limited_product_count(self):
         default_limit = 20000
         config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_product_count', default_limit)
+        try:
+            return int(config_param)
+        except (TypeError, ValueError, OverflowError):
+            return default_limit
+
+    def _get_limited_partner_count(self):
+        default_limit = 100
+        config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', default_limit)
         try:
             return int(config_param)
         except (TypeError, ValueError, OverflowError):
@@ -824,7 +840,7 @@ class PosConfig(models.Model):
             )
             ORDER BY  COALESCE(pm.order_count, 0) DESC,
                       NAME limit %s;
-        """, self.company_id.id, 100))
+        """, self.company_id.id, self._get_limited_partner_count()))
 
     def action_pos_config_modal_edit(self):
         return {
@@ -869,7 +885,7 @@ class PosConfig(models.Model):
             'type': self.customer_display_type,
             'has_bg_img': bool(self.customer_display_bg_img),
             'company_id': self.company_id.id,
-            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type == 'proxy' else {}),
+            **({'proxy_ip': self._get_display_device_ip()} if self.customer_display_type != 'none' else {}),
         }
 
     @api.model
@@ -1082,3 +1098,12 @@ class PosConfig(models.Model):
     def _get_available_pricelists(self):
         self.ensure_one()
         return self.available_pricelist_ids if self.use_pricelist else self.pricelist_id
+
+    @api.model
+    def _set_default_pos_load_limit(self):
+        param_model = self.env["ir.config_parameter"]
+        if not param_model.get_param("point_of_sale.limited_product_count"):
+            param_model.set_param("point_of_sale.limited_product_count", 20000)
+
+        if not param_model.get_param("point_of_sale.limited_customer_count"):
+            param_model.set_param("point_of_sale.limited_customer_count", 100)

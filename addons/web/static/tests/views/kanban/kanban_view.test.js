@@ -6,6 +6,7 @@ import {
     edit,
     hover,
     leave,
+    on,
     pointerDown,
     press,
     queryAll,
@@ -14,6 +15,7 @@ import {
     queryOne,
     queryText,
     resize,
+    scroll,
     setInputFiles,
 } from "@odoo/hoot-dom";
 import { Deferred, advanceFrame, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
@@ -5118,12 +5120,18 @@ test("kanban view with default_group_by", async () => {
     onRpc("web_read_group", ({ kwargs }) => {
         readGroupCount++;
         switch (readGroupCount) {
-            case 1:
-                return expect(kwargs.groupby).toEqual(["bar"]);
-            case 2:
-                return expect(kwargs.groupby).toEqual(["product_id"]);
-            case 3:
-                return expect(kwargs.groupby).toEqual(["bar"]);
+            case 1: {
+                expect(kwargs.groupby).toEqual(["bar"]);
+                break;
+            }
+            case 2: {
+                expect(kwargs.groupby).toEqual(["product_id"]);
+                break;
+            }
+            case 3: {
+                expect(kwargs.groupby).toEqual(["bar"]);
+                break;
+            }
         }
     });
     await mountView({
@@ -10413,13 +10421,13 @@ test("open file explorer if no cover image", async () => {
     await setInputFiles([]);
     await animationFrame();
 
-    expect(`.o_file_input input`).not.toBeEnabled({
+    expect(`.o_dialog .o_file_input input`).not.toBeEnabled({
         message: "the upload button should be disabled on upload",
     });
     uploadedPromise.resolve();
     await animationFrame();
 
-    expect(`.o_file_input input`).toBeEnabled({
+    expect(`.o_dialog .o_file_input input`).toBeEnabled({
         message: "the upload button should be enabled for upload",
     });
 });
@@ -12840,26 +12848,26 @@ test("scroll on group unfold and progressbar click", async () => {
     });
 
     expect.verifySteps(["get_views", "read_progress_bar", "web_read_group", "web_search_read"]);
-    queryOne(".o_content").scrollTo = (params) => {
-        expect.step("scrolled");
-        expect(params.top).toBe(0);
-    };
+    queryOne(".o_content").style.maxHeight = "80px";
+    on(".o_content", "scroll", () => expect.step("scrolled"));
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanProgressBars(0)[0]).click();
 
     expect.verifySteps([
+        "scrolled",
         "web_read_group",
         "web_search_read",
         "read_progress_bar",
         "web_read_group",
         "web_read_group",
-        "scrolled",
     ]);
     expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
 
+    await scroll(".o_content", { top: 50 }); // scroll down to allow auto-scroll to top
     await contains(getKanbanColumn(1)).click();
 
-    expect.verifySteps(["web_search_read", "scrolled"]);
+    expect.verifySteps(["scrolled", "web_search_read"]);
 });
 
 test.tags("desktop");
@@ -12958,6 +12966,8 @@ test("action button in controlPanel with display='always'", async () => {
 
 test.tags("desktop");
 test("Keep scrollTop when loading records with load more", async () => {
+    Partner._records[0].bar = false;
+    Partner._records[1].bar = false;
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -12972,14 +12982,12 @@ test("Keep scrollTop when loading records with load more", async () => {
         groupBy: ["bar"],
         limit: 1,
     });
-    queryOne(".o_kanban_renderer").style.overflow = "scroll";
-    queryOne(".o_kanban_renderer").style.height = "500px";
     const clickKanbanLoadMoreButton = queryFirst(".o_kanban_load_more button");
     clickKanbanLoadMoreButton.scrollIntoView();
-    const previousScrollTop = queryOne(".o_kanban_renderer").scrollTop;
+    const previousScrollTop = queryOne(".o_content").scrollTop;
     await contains(clickKanbanLoadMoreButton).click();
     expect(previousScrollTop).not.toBe(0, { message: "Should not have the scrollTop value at 0" });
-    expect(queryOne(".o_kanban_renderer").scrollTop).toBe(previousScrollTop);
+    expect(queryOne(".o_content").scrollTop).toBe(previousScrollTop);
 });
 
 test("Kanban: no reset of the groupby when a non-empty column is deleted", async () => {
@@ -13508,4 +13516,90 @@ test("group by numeric field (with aggregator)", async () => {
         groupBy: ["int_field"],
     });
     expect.verifySteps(["web_read_group"]);
+});
+
+test.tags("desktop")("drag and drop records and quickly open a record", async () => {
+    Partner._views["kanban,false"] = `
+        <kanban>
+            <templates>
+                <t t-name="card">
+                    <div><field name="foo"/></div>
+                </t>
+            </templates>
+        </kanban>`;
+    Partner._views["search,false"] = "<search/>";
+    Partner._views["form,false"] = `
+        <form>
+            <field name="foo"/>
+        </form>`;
+
+    const defs = [new Deferred(), new Deferred()];
+    let saveCount = 0;
+    onRpc("web_save", () => {
+        expect.step("web_save");
+        return defs[saveCount++];
+    });
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [
+            [false, "kanban"],
+            [false, "form"],
+        ],
+        context: {
+            group_by: ["product_id"],
+        },
+    });
+
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
+
+    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:nth-child(2)"
+    );
+    await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
+        ".o_kanban_group:nth-child(2)"
+    );
+    await contains(".o_kanban_record:eq(0)").click();
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(4);
+    expect.verifySteps(["web_save"]);
+
+    defs[0].resolve();
+    await animationFrame();
+    // because of the mutex in the model, the second web_save is done only once the first one
+    // returned, but that rpc can't be done if the component has already been destroyed.
+    expect(".o_kanban_view").toHaveCount(1);
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(4);
+    expect.verifySteps(["web_save"]);
+
+    defs[1].resolve();
+    await animationFrame();
+    expect(".o_form_view").toHaveCount(1);
+});
+
+test("hide pager in the kanban view with sample data", async () => {
+    Partner._records = [];
+
+    await mountView({
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="card">
+                        <field name="foo"/>
+                        <field name="int_field"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        resModel: "partner",
+        type: "kanban",
+        noContentHelp: "No content helper",
+    });
+
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(".o_cp_pager").not.toBeVisible();
 });

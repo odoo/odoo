@@ -2,6 +2,7 @@
 
 import itertools
 import random
+
 from collections import defaultdict
 
 from odoo import _, api, fields, models
@@ -53,6 +54,7 @@ class SaleOrder(models.Model):
         loyalty_history_data = self.env['loyalty.history'].sudo()._read_group(
             domain=[
                 ('order_id', 'in', confirmed_so.ids),
+                ('order_model', '=', self._name),
             ],
             groupby=['order_id'],
             aggregates=['issued:sum', 'used:sum'],
@@ -345,7 +347,7 @@ class SaleOrder(models.Model):
             ):
                 continue
             if not cheapest_line or cheapest_line_price_unit > line_price_unit:
-                cheapest_line = self._get_order_lines_with_price(line)
+                cheapest_line = line._get_lines_with_price()
                 cheapest_line_price_unit = line_price_unit
         return cheapest_line
 
@@ -384,7 +386,7 @@ class SaleOrder(models.Model):
                 and not line.combo_item_id
                 and line.product_id.filtered_domain(domain)
             ):
-                discountable_lines |= self._get_order_lines_with_price(line)
+                discountable_lines |= line._get_lines_with_price()
         return discountable_lines
 
     def _discountable_specific(self, reward):
@@ -935,13 +937,18 @@ class SaleOrder(models.Model):
         # |       STEP 1: Retrieve all applicable programs    |
         # +===================================================+
 
-        # Automatically load in eWallet coupons
+        # Automatically load in eWallet and loyalty cards coupons with previously received points
         if self._allow_nominative_programs():
-            ewallet_coupons = self.env['loyalty.card'].search(
-                [('id', 'not in', self.applied_coupon_ids.ids), ('partner_id', '=', self.partner_id.id),
-                ('points', '>', 0), ('program_id.program_type', '=', 'ewallet')])
-            if ewallet_coupons:
-                self.applied_coupon_ids += ewallet_coupons
+            loyalty_card = self.env['loyalty.card'].search([
+                ('id', 'not in', self.applied_coupon_ids.ids),
+                ('partner_id', '=', self.partner_id.id),
+                ('points', '>', 0),
+                '|', ('program_id.program_type', '=', 'ewallet'),
+                     '&', ('program_id.program_type', '=', 'loyalty'),
+                          ('program_id.applies_on', '!=', 'current'),
+            ])
+            if loyalty_card:
+                self.applied_coupon_ids += loyalty_card
         # Programs that are applied to the order and count points
         points_programs = self._get_points_programs()
         # Coupon programs that require the program's rules to match but do not count for points
@@ -1105,11 +1112,7 @@ class SaleOrder(models.Model):
         return self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
 
     def _get_order_line_price(self, order_line, price_type):
-        return sum(self._get_order_lines_with_price(order_line).mapped(price_type))
-
-    @staticmethod
-    def _get_order_lines_with_price(order_line):
-        return order_line.linked_line_ids if order_line.product_type == 'combo' else order_line
+        return sum(order_line._get_lines_with_price().mapped(price_type))
 
     def _program_check_compute_points(self, programs):
         """
@@ -1147,7 +1150,7 @@ class SaleOrder(models.Model):
                 for rule in program.rule_ids:
                     # Skip lines to which the rule doesn't apply.
                     if line.product_id in so_products_per_rule.get(rule, []):
-                        lines_per_rule[rule] |= self._get_order_lines_with_price(line)
+                        lines_per_rule[rule] |= line._get_lines_with_price()
 
         result = {}
         for program in programs:

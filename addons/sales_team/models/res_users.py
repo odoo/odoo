@@ -33,3 +33,7 @@ class ResUsers(models.Model):
             else:
                 sorted_memberships = user.crm_team_member_ids  # sorted by create date
                 user.sale_team_id = sorted_memberships[0].crm_team_id if sorted_memberships else False
+
+    def action_archive(self):
+        self.env['crm.team.member'].search([('user_id', 'in', self.ids)]).action_archive()
+        return super().action_archive()

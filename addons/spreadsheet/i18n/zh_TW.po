@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -346,7 +346,7 @@ msgstr "2 列"
 msgid ""
 "A boolean indicating whether to use A1 style notation (TRUE) or R1C1 style "
 "notation (FALSE)."
-msgstr "真假值，表示使用「A1」格式（真）抑或「R1C1」格式（假）標示。"
+msgstr "真假值，TRUE（真）表示使用「A1」格式表示法，FALSE（假）表示使用「R1C1」格式表示法。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -354,7 +354,7 @@ msgstr "真假值，表示使用「A1」格式（真）抑或「R1C1」格式（
 msgid ""
 "A boolean; if TRUE, empty cells selected in the text arguments won't be "
 "included in the result."
-msgstr "真假值;如果為 TRUE，則在文本引數中選擇的空單元格將不會包含在結果中。"
+msgstr "真假值，如果為 TRUE（真），文字引數選取的空白儲存格，不會包含在結果內。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -792,7 +792,7 @@ msgstr "要計算平均值的額外數值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Additional values to be returned if their corresponding conditions are TRUE."
-msgstr "如果相應條件為 TRUE，則傳回附加值。"
+msgstr "若相應條件為 TRUE（真），則傳回附加值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3659,7 +3659,8 @@ msgstr "取得有關儲存格的資訊。"
 msgid ""
 "Given a general exponential form of y = b*m^x for a curve fit, calculates b "
 "if TRUE or forces b to be 1 and only calculates the m values if FALSE."
-msgstr "給定一般指數形式 y = b*m^x 進行曲線擬合，如果為真，則計算 b；如果為假，則強制 b 為 1 並只計算 m 值。"
+msgstr ""
+"給定一般指數形式 y = b*m^x 進行曲線擬合，如果為 TRUE（真），則計算 b；如果為 FALSE（假），則強制 b 為 1 並只計算 m 值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6788,7 +6789,7 @@ msgstr "貨幣符號"
 msgid ""
 "TRUE or FALSE indicating whether to sort sort_column in ascending order. "
 "FALSE sorts in descending order."
-msgstr "表示是否對 sort_column 作遞增排序。假（FALSE）表示遞減排序。"
+msgstr "以真假值表示是否對 sort_column 作遞增排序。設為 FALSE（假）表示遞減排序。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7141,6 +7142,24 @@ msgstr "將被轉換的數組。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The base (%s) must be between 2 and 36 inclusive."
 msgstr "基數（%s）必須在 2 至 36 之間，包括此兩值。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The base (%s) must be strictly positive."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The base must be different from 1."
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The base of the logarithm."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8106,6 +8125,12 @@ msgstr "壽命（%s）必須是嚴格的正數。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The logarithm of a number, base e (euler's number)."
 msgstr "數字以 e（歐拉數）為底的對數（log）。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The logarithm of a number, for a given base."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9139,7 +9164,7 @@ msgstr "投資收益再投資所獲得的回報（百分比）。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The returned value if condition1 is TRUE."
-msgstr "條件 condition1 為真時傳回的值。"
+msgstr "條件 condition1 為 TRUE（真）時，所傳回的值。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -9719,6 +9744,12 @@ msgstr "計算反正切值的數值。"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value for which to calculate the logarithm, base e."
 msgstr "計算對數的數值（以 e 為底數）。"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "The value for which to calculate the logarithm."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11602,7 +11633,7 @@ msgstr "頂部"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "true"
-msgstr "否"
+msgstr "真"
 
 #. module: spreadsheet
 #. odoo-javascript

@@ -1,5 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
-import { queryOne, scroll } from "@odoo/hoot-dom";
+import { queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import {
@@ -221,6 +221,7 @@ test("properly handle case when action id does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction(4448);
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText("The action 4448 does not exist");
 });
@@ -230,6 +231,7 @@ test("properly handle case when action path does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("plop");
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText('The action "plop" does not exist');
 });
@@ -239,6 +241,7 @@ test("properly handle case when action xmlId does not exist", async () => {
     await mountWithCleanup(WebClient);
     getService("action").doAction("not.found.action");
     await animationFrame();
+    expect.verifyErrors(["RPC_ERROR"]);
     expect(`.modal .o_error_dialog`).toHaveCount(1);
     expect(".o_error_dialog .modal-body").toHaveText(
         'The action "not.found.action" does not exist'
@@ -322,12 +325,13 @@ test("action cache: additionalContext is used on the key", async () => {
     expect(action.context).toEqual(actionParams);
 });
 
-test('action with "no_breadcrumbs" set to true', async () => {
+test.tags("desktop")('action with "no_breadcrumbs" set to true', async () => {
     defineActions([
         {
             id: 42,
             res_model: "partner",
-            views: [[1, "kanban"]],
+            type: "ir.actions.act_window",
+            views: [[1, "kanban"], [false, "list"]],
             context: { no_breadcrumbs: true },
         },
     ]);
@@ -336,6 +340,10 @@ test('action with "no_breadcrumbs" set to true', async () => {
     expect(".o_breadcrumb").toHaveCount(1);
     // push another action flagged with 'no_breadcrumbs=true'
     await getService("action").doAction(42);
+    await waitFor(".o_kanban_view");
+    expect(".o_breadcrumb").toHaveCount(0);
+    await contains(".o_switch_view.o_list").click();
+    await waitFor(".o_list_view");
     expect(".o_breadcrumb").toHaveCount(0);
 });
 
@@ -631,7 +639,14 @@ test("action is removed while waiting for another action with selectMenu", async
             params: { description: "Id 1" },
         },
     ]);
-    defineMenus([{ id: 1, children: [], name: "App1", appID: 1, actionID: 1001, xmlid: "menu_1" }]);
+    defineMenus([
+        {
+            id: 1,
+            name: "App1",
+            actionID: 1001,
+            xmlid: "menu_1",
+        },
+    ]);
 
     await mountWithCleanup(WebClient);
     // starting point: a kanban view

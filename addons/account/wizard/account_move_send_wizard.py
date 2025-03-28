@@ -244,8 +244,8 @@ class AccountMoveSendWizard(models.TransientModel):
             'invoice_edi_format': self.invoice_edi_format,
             'extra_edis': self.extra_edis or [],
             'pdf_report': self.pdf_report_id,
-            'author_user_id': self.env.user.partner_id.id,
-            'author_partner_id': self.env.user.id,
+            'author_user_id': self.env.user.id,
+            'author_partner_id': self.env.user.partner_id.id,
         }
         if self.sending_methods and 'email' in self.sending_methods:
             send_settings.update({
@@ -266,9 +266,9 @@ class AccountMoveSendWizard(models.TransientModel):
             and len(self.sending_methods) == 1
             and not self.move_id.partner_id.with_company(self.company_id).invoice_sending_method
         ):
-            self.move_id.partner_id.with_company(self.company_id).invoice_sending_method = self.sending_methods[0]
+            self.move_id.partner_id.with_company(self.company_id).sudo().invoice_sending_method = self.sending_methods[0]
         if not self.move_id.partner_id.invoice_template_pdf_report_id and self.pdf_report_id != self._get_default_pdf_report_id(self.move_id):
-            self.move_id.partner_id.invoice_template_pdf_report_id = self.pdf_report_id
+            self.move_id.partner_id.sudo().invoice_template_pdf_report_id = self.pdf_report_id
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS

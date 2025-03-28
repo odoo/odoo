@@ -344,3 +344,9 @@ class HrEmployee(models.Model):
                     content['exceeding_duration'] = round(min(0, latest_remaining - additional_leaves_duration), 2)
 
         return (allocations_leaves_consumed, to_recheck_leaves_per_leave_type)
+
+    def _get_hours_per_day(self, date_from):
+        ''' Return 24H to handle the case of Fully Flexible (ones without a working calendar)'''
+        self.ensure_one()
+        calendars = self._get_calendars(date_from)
+        return calendars[self.id].hours_per_day if calendars[self.id] else 24

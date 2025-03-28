@@ -101,7 +101,13 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
         return searchDomain;
     },
     /**
+     * Add `productTemplateId` for product snippets (Accessories, Alternatives and Recently sold).
+     *
+     * See `dynamic_snippet_accessories_action`, `dynamic_snippet_recently_sold_with_action` and
+     * `dynamic_snippet_alternative_products`.
+     *
      * @override
+     * @private
      */
     _getRpcParameters: function () {
         const productTemplateId = $("#product_details").find(".product_template_id");
@@ -145,7 +151,7 @@ const DynamicSnippetProductsCard = WebsiteSale.extend({
      */
     async _onClickAddToCart(ev) {
         const button = ev.currentTarget
-        if (!button.dataset.productSelected || button.dataset.isCombo) {
+        if (!button.dataset.productSelected || button.dataset.isCombo === 'True') {
             const dummy_form = document.createElement('form');
             dummy_form.setAttribute('method', 'post');
             dummy_form.setAttribute('action', '/shop/cart/update');

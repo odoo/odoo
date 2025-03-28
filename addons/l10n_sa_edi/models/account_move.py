@@ -26,7 +26,7 @@ class AccountMove(models.Model):
         :return:
         """
         self.ensure_one()
-        return self.partner_id.company_type == 'person' and self.partner_id.country_code == 'SA'
+        return self.partner_id.company_type == 'person'
 
     @api.depends('amount_total_signed', 'amount_tax_signed', 'l10n_sa_confirmation_datetime', 'company_id',
                  'company_id.vat', 'journal_id', 'journal_id.l10n_sa_production_csid_json', 'edi_document_ids',
@@ -212,6 +212,14 @@ class AccountMove(models.Model):
         if self.country_code == 'SA' and not self._is_downpayment() and self.line_ids._get_downpayment_lines():
             return []
         return super()._prepare_tax_lines_for_taxes_computation(tax_amls, round_from_tax_lines)
+
+    def _get_l10n_sa_totals(self):
+        self.ensure_one()
+        invoice_vals = self.env['account.edi.xml.ubl_21.zatca']._export_invoice_vals(self)
+        return {
+            'total_amount': invoice_vals['vals']['monetary_total_vals']['tax_inclusive_amount'],
+            'total_tax': invoice_vals['vals']['tax_total_vals'][-1]['tax_amount'],
+        }
 
 
 class AccountMoveLine(models.Model):

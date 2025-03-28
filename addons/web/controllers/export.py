@@ -164,6 +164,7 @@ class GroupsTreeNode:
 
         records = records.with_context(self._read_context)
         node.data = records.export_data(self._export_field_names).get('datas', [])
+        return records
 
 
 class ExportXlsxWriter:
@@ -378,9 +379,12 @@ class Export(http.Controller):
 
         fields['id']['string'] = request.env._('External ID')
 
-        if parent_field:
+        if not Model._is_an_ordinary_table():
+            fields.pop("id", None)
+        elif parent_field:
             parent_field['string'] = request.env._('External ID')
             fields['id'] = parent_field
+            fields['id']['type'] = parent_field['field_type']
 
         exportable_fields = {}
         for field_name, field in fields.items():
@@ -570,8 +574,9 @@ class ExportFormat(object):
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
             tree = GroupsTreeNode(Model, field_names, groupby, groupby_type, read_context)
+            records = Model.browse()
             for leaf in groups_data:
-                tree.insert_leaf(leaf)
+                records |= tree.insert_leaf(leaf)
 
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
@@ -579,6 +584,14 @@ class ExportFormat(object):
 
             export_data = records.export_data(field_names).get('datas', [])
             response_data = self.from_data(fields, columns_headers, export_data)
+
+        _logger.info(
+            "User %d exported %d %r records from %s. Fields: %s. %s: %s",
+            request.env.user.id, len(records.ids), records._name, request.httprequest.environ['REMOTE_ADDR'],
+            ','.join(field_names),
+            'IDs sample' if ids else 'Domain',
+            records.ids[:10] if ids else domain,
+        )
 
         # TODO: call `clean_filename` directly in `content_disposition`?
         return request.make_response(response_data,

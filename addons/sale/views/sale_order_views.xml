@@ -399,6 +399,7 @@
                             mode="list,kanban"
                             readonly="state == 'cancel' or locked">
                             <form>
+                                <field name="technical_price_unit" invisible="1"/>
                                 <field name="display_type" invisible="1"/>
                                 <field name="is_downpayment" invisible="1"/>
                                 <!--
@@ -410,6 +411,7 @@
                                 <group>
                                     <group invisible="display_type">
                                         <field name="product_updatable" invisible="1"/>
+                                        <label for="product_id"/>
                                         <div class="d-flex align-items-baseline">
                                             <span class="fa fa-exclamation-triangle text-warning me-1"
                                                 title="This product is archived"
@@ -658,6 +660,17 @@
                                        column_invisible="parent.company_price_include == 'tax_excluded'"
                                        invisible="is_downpayment"
                                        string="Amount"/>
+                                <!-- Optional amounts -->
+                                <field name="price_total"
+                                       column_invisible="parent.company_price_include == 'tax_included'"
+                                       optional="hide"
+                                       invisible="is_downpayment"
+                                       string="Tax Incl."/>
+                                <field name="price_subtotal"
+                                       column_invisible="parent.company_price_include == 'tax_excluded'"
+                                       optional="hide"
+                                       invisible="is_downpayment"
+                                       string="Tax Excl."/>
                                 <!-- Others fields -->
                                 <field name="tax_calculation_rounding_method" column_invisible="True"/>
                                 <field name="state" column_invisible="True"/>

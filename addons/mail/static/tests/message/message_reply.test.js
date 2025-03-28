@@ -7,7 +7,8 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
+import { disableAnimations } from "@odoo/hoot-mock";
+import { serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -40,12 +41,7 @@ test("click on message in reply to highlight the parent message", async () => {
 });
 
 test("click on message in reply to scroll to the parent message", async () => {
-    // make scroll behavior instantaneous.
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView() {
-            return super.scrollIntoView(true);
-        },
-    });
+    disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const [oldestMessageId] = pyEnv["mail.message"].create(

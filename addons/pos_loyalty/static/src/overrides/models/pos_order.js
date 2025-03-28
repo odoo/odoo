@@ -304,6 +304,14 @@ patch(PosOrder.prototype, {
             ) {
                 continue;
             }
+            if (
+                claimedReward.reward.program_id.program_type === "coupons" &&
+                this.lines.find(
+                    (rewardline) => rewardline.reward_id?.id === claimedReward.reward.id
+                )
+            ) {
+                continue;
+            }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
         }
     },
@@ -751,6 +759,13 @@ patch(PosOrder.prototype, {
                 if (points < reward.required_points) {
                     continue;
                 }
+                // Skip if the reward program is of type 'coupons' and there is already an reward orderline linked to the current reward to avoid multiple reward apply
+                if (
+                    reward.program_id.program_type === "coupons" &&
+                    this.lines.find((rewardline) => rewardline.reward_id?.id === reward.id)
+                ) {
+                    continue;
+                }
                 if (auto && this.uiState.disabledRewards.has(reward.id)) {
                     continue;
                 }
@@ -907,7 +922,10 @@ patch(PosOrder.prototype, {
             if (!line.get_quantity()) {
                 continue;
             }
-            const taxKey = line.tax_ids.map((t) => t.id);
+
+            const taxKey = ["ewallet", "gift_card"].includes(reward.program_id.program_type)
+                ? line.tax_ids.map((t) => t.id)
+                : line.tax_ids.filter((t) => t.amount_type !== "fixed").map((t) => t.id);
             discountable += line.get_price_with_tax();
             if (!discountablePerTax[taxKey]) {
                 discountablePerTax[taxKey] = 0;

@@ -8,12 +8,11 @@
         'l10n_sa_pos',
         'l10n_sa_edi',
     ],
-    'author': 'Odoo',
     'summary': """
         ZATCA E-Invoicing, support for PoS
     """,
     'description': """
-        E-invoice implementation for the Kingdom of Saudi Arabia (PoS)
+E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)
     """,
     'category': 'Accounting/Localizations/EDI',
     'license': 'LGPL-3',

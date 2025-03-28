@@ -39,13 +39,13 @@ export class HootTestPath extends Component {
             </t>
             <span class="flex items-center overflow-hidden">
                 <t t-if="uiState.selectedSuiteId and !props.full">
-                    <span class="text-muted font-bold p-1 select-none hidden md:inline">...</span>
+                    <span class="text-gray font-bold p-1 select-none hidden md:inline">...</span>
                     <span class="select-none hidden md:inline">/</span>
                 </t>
                 <t t-foreach="getTestPath()" t-as="suite" t-key="suite.id">
                     <t t-if="props.inert">
                         <span
-                            class="text-muted whitespace-nowrap font-bold p-1 hidden md:inline transition-colors"
+                            class="text-gray whitespace-nowrap font-bold p-1 hidden md:inline transition-colors"
                             t-esc="suite.name"
                         />
                     </t>
@@ -53,30 +53,30 @@ export class HootTestPath extends Component {
                         <HootLink
                             type="'suite'"
                             id="suite.id"
-                            class="'hoot-link text-muted whitespace-nowrap font-bold p-1 hidden md:inline transition-colors'"
+                            class="'text-gray hover:text-primary hover:underline whitespace-nowrap font-bold p-1 hidden md:inline transition-colors'"
                             title="'Run ' + suite.fullName"
                             t-esc="suite.name"
                         />
                         <t t-if="suite.config.multi">
-                            <strong class="text-abort whitespace-nowrap me-1">
+                            <strong class="text-amber whitespace-nowrap me-1">
                                 x<t t-esc="suite.config.multi" />
                             </strong>
                         </t>
                     </t>
-                    <span class="select-none hidden md:inline" t-att-class="{ 'text-skip': suite.config.skip }">/</span>
+                    <span class="select-none hidden md:inline" t-att-class="{ 'text-cyan': suite.config.skip }">/</span>
                 </t>
                 <span
                     class="text-primary truncate font-bold p-1"
-                    t-att-class="{ 'text-skip': props.test.config.skip }"
+                    t-att-class="{ 'text-cyan': props.test.config.skip }"
                     t-att-title="props.test.name"
                     t-esc="props.test.name"
                 />
                 <t t-if="props.canCopy">
                     <HootCopyButton text="props.test.name" altText="props.test.id" />
                 </t>
-                <t t-if="props.test.runCount > 1">
-                    <strong class="text-abort whitespace-nowrap mx-1">
-                        x<t t-esc="props.test.runCount" />
+                <t t-if="results.length > 1">
+                    <strong class="text-amber whitespace-nowrap mx-1">
+                        x<t t-esc="results.length" />
                     </strong>
                 </t>
             </span>
@@ -93,30 +93,31 @@ export class HootTestPath extends Component {
     `;
 
     setup() {
+        this.results = useState(this.props.test.results);
         this.uiState = useState(this.env.ui);
     }
 
     getStatusInfo() {
         switch (this.props.test.status) {
             case Test.ABORTED: {
-                return { className: "abort", text: "aborted" };
+                return { className: "amber", text: "aborted" };
             }
             case Test.FAILED: {
                 if (this.props.test.config.todo) {
-                    return { className: "todo", text: "todo" };
+                    return { className: "purple", text: "todo" };
                 } else {
-                    return { className: "fail", text: "failed" };
+                    return { className: "rose", text: "failed" };
                 }
             }
             case Test.PASSED: {
                 if (this.props.test.config.todo) {
-                    return { className: "todo", text: "todo" };
+                    return { className: "purple", text: "todo" };
                 } else {
-                    return { className: "pass", text: "passed" };
+                    return { className: "emerald", text: "passed" };
                 }
             }
             default: {
-                return { className: "skip", text: "skipped" };
+                return { className: "cyan", text: "skipped" };
             }
         }
     }
@@ -131,7 +132,7 @@ export class HootTestPath extends Component {
         for (const job of suite.jobs) {
             if (job instanceof Test) {
                 tests++;
-                assertions += job.lastResults?.assertions.length || 0;
+                assertions += job.lastResults?.counts.assertion || 0;
             } else {
                 suites++;
             }

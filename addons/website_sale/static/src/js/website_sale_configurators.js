@@ -92,7 +92,7 @@ WebsiteSale.include({
             isFrontend: true,
             options: {
                 isMainProductConfigurable: !isOnProductPage,
-                showQuantity: Boolean(this.$form?.[0].querySelector('.css_quantity')),
+                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
             },
             save: async (mainProduct, optionalProducts, options) => {
                 this._trackProducts([mainProduct, ...optionalProducts]);
@@ -123,7 +123,7 @@ WebsiteSale.include({
             edit: false,
             isFrontend: true,
             options: {
-                showQuantity: Boolean(this.$form?.[0].querySelector('.css_quantity')),
+                showQuantity: Boolean(document.querySelector('.js_add_cart_json')),
             },
             save: (comboProductData, selectedComboItems, options) =>
                 this.addComboProductToCart(
@@ -204,7 +204,7 @@ WebsiteSale.include({
         // Custom attributes.
         serializedProduct.product_custom_attribute_values = [];
         for (const ptal of product.attribute_lines) {
-            const selectedCustomPtav = getSelectedCustomPtav(ptal);
+            const selectedCustomPtav = ptal.customValue && getSelectedCustomPtav(ptal);
             if (selectedCustomPtav) {
                 serializedProduct.product_custom_attribute_values.push({
                     custom_product_template_attribute_value_id: selectedCustomPtav.id,

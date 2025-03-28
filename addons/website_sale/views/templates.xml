@@ -764,7 +764,7 @@
                                         <div t-if="a.display_type == 'color'" class="pt-1 pb-3">
                                             <t t-call="website_sale.o_wsale_offcanvas_color_attribute"/>
                                         </div>
-                                        <div t-elif="a.display_type in ('radio', 'pills', 'select')"
+                                        <div t-elif="a.display_type in ('radio', 'pills', 'select', 'multi')"
                                              class="list-group list-group-flush">
                                             <div t-foreach="a.value_ids" t-as="v" class="list-group-item border-0 ps-0 pb-0">
                                                 <div class="form-check mb-1">
@@ -1725,6 +1725,9 @@
                     </bdi>
                 </del>
             </h3>
+            <small t-if="combination_info.get('tax_disclaimer')" class="text-muted">
+                <t t-out="combination_info['tax_disclaimer']"/>
+            </small>
         </div>
         <div id="product_unavailable" t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}}">
             <h3 class="fst-italic" t-field="website.prevent_zero_price_sale_text"/>
@@ -2029,7 +2032,22 @@
 
     <template id="cart_combo_item_line">
         <div class="d-flex align-items-center">
-            <div t-field="combo_item_line.product_id.image_128"
+            <!--
+                To sell a product type 'combo', one doesn't need to publish all combo choices. This
+                causes an issue when public users access the image of each choice via the /web/image
+                route. To bypass this access check, we send the raw image URL if the product is
+                inaccessible to the current user.
+            -->
+            <img
+                t-if="not combo_item_line.product_id.sudo(False).has_access('read')
+                      and combo_item_line.product_id.image_128"
+                t-att-src="image_data_uri(combo_item_line.product_id.image_128)"
+                class="o_image_64_max img rounded"
+                t-att-alt="combo_item_line.name_short"
+            />
+            <div
+                t-else=""
+                t-field="combo_item_line.product_id.image_128"
                  t-options="{
                     'widget': 'image',
                     'qweb_img_responsive': False,
@@ -2408,7 +2426,7 @@
                                     </t>
                                 </t>
                                 <div
-                                    t-if="use_delivery_as_billing and not only_services"
+                                    t-if="use_delivery_as_billing and not only_services and partner_sudo"
                                     class="alert alert-warning"
                                     role="alert"
                                     groups="account.group_delivery_invoice_address"

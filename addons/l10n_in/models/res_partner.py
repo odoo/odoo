@@ -42,7 +42,7 @@ class ResPartner(models.Model):
                         "As per GSTN the country should be other than India, so it's recommended to"
                     )
                 else:
-                    state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', partner.vat[:2])])
+                    state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', partner.vat[:2])], limit=1)
                     if state_id and state_id != partner.state_id:
                         partner.l10n_in_gst_state_warning = _(
                             "As per GSTN the state should be %s, so it's recommended to", state_id.name
@@ -99,28 +99,16 @@ class ResPartner(models.Model):
 
     @api.model
     def _l10n_in_get_partner_vals_by_vat(self, vat):
-        partner_details = self.read_by_vat(vat)
-        partner_data = partner_details[0] if partner_details else {}
-        if partner_data:
-            partner_gid = partner_data.get('partner_gid')
-            if partner_gid:
-                partner_data = self.enrich_company(company_domain=None, partner_gid=partner_gid, vat=partner_data.get('vat'))
-                partner_data = self._iap_replace_logo(partner_data)
-            return {
-                'name': partner_data.get('name'),
-                'company_type': 'company',
-                'partner_gid': partner_gid,
-                'vat': partner_data.get('vat'),
-                'l10n_in_gst_treatment': 'regular',
-                'image_1920': partner_data.get('image_1920'),
-                'street': partner_data.get('street'),
-                'street2': partner_data.get('street2'),
-                'city': partner_data.get('city'),
-                'state_id': partner_data.get('state_id', {}).get('id', False),
-                'country_id': partner_data.get('country_id', {}).get('id', False),
-                'zip': partner_data.get('zip'),
-            }
-        return {}
+        partner_data = self.enrich_by_gst(vat)
+        partner_data.pop('domain', None)
+        partner_data.pop('unspsc_codes', None)
+        partner_data.update({
+            'country_id': partner_data.get('country_id', {}).get('id'),
+            'state_id': partner_data.get('state_id', {}).get('id'),
+            'company_type': 'company',
+            'l10n_in_gst_treatment': 'regular',
+        })
+        return partner_data
 
     def action_update_state_as_per_gstin(self):
         self.ensure_one()

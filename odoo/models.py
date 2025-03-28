@@ -60,7 +60,7 @@ from .tools import (
     DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, format_list,
     frozendict, get_lang, lazy_classproperty, OrderedSet,
     ormcache, partition, Query, split_every, unique,
-    SQL, sql,
+    SQL, sql, groupby,
 )
 from .tools.lru import LRU
 from .tools.misc import LastOrderedSet, ReversedIterable, unquote
@@ -1064,65 +1064,94 @@ class BaseModel(metaclass=MetaModel):
         import_compatible = self.env.context.get('import_compat', True)
         lines = []
 
-        def splittor(rs):
-            """ Splits the self recordset in batches of 1000 (to avoid
-            entire-recordset-prefetch-effects) & removes the previous batch
-            from the cache after it's been iterated in full
-            """
-            for idx in range(0, len(rs), 1000):
-                sub = rs[idx:idx+1000]
-                for rec in sub:
-                    yield rec
-                sub.invalidate_recordset()
+
         if not _is_toplevel_call:
-            splittor = lambda rs: rs
+            # {properties_field: {property_name: [property_type, {record_id: value}]}}
+            cache_properties = self.env.cr.cache['export_properties_cache']
+        else:
+            cache_properties = self.env.cr.cache['export_properties_cache'] = defaultdict(dict)
 
-        # {properties_fname: {record: {property_name: (value, property_type)}}}
-        cache_properties = {}
+            def fill_properties_cache(records, fnames_by_path, fname):
+                """ Fill the cache for the ``fname`` properties field and return it """
+                cache_properties_field = cache_properties[records._fields[fname]]
 
-        def get_property(properties_fname, property_name, record):
-            # FIXME: Only efficient during the _is_toplevel_call == True
-            if properties_fname not in cache_properties:
-                properties_field = self._fields[properties_fname]
-                # each value is either None or a dict
-                result = []
-                for rec in self:
-                    raw_properties = rec[properties_fname]
-                    definition = properties_field._get_properties_definition(rec)
-                    if not raw_properties or not definition:
-                        result.append(definition or [])
-                    else:
-                        assert isinstance(raw_properties, dict), f"Wrong type {raw_properties!r}"
-                        result.append(properties_field._dict_to_list(raw_properties, definition))
+                # read properties to have all the logic of Properties.convert_to_read_multi
+                for row in records.read([fname]):
+                    properties = row[fname]
+                    if not properties:
+                        continue
+                    rec_id = row['id']
 
-                # FIXME: Far from optimal, it will fetch display_name for no reason
-                res_ids_per_model = properties_field._get_res_ids_per_model(self, result)
+                    for property in properties:
+                        current_prop_name = property['name']
+                        if f"{fname}.{current_prop_name}" not in fnames_by_path:
+                            continue
 
-                cache_properties[properties_fname] = record_map = {}
-                for properties, rec in zip(result, self):
-                    properties_field._parse_json_types(properties, self.env, res_ids_per_model)
-                    record_map[rec] = prop_map = {}
-                    for prop in properties:
-                        value = prop.get('value')
-                        prop_type = prop.get('type')
-                        property_model = prop.get('comodel')
+                        property_type = property['type']
+                        if current_prop_name not in cache_properties_field:
+                            cache_properties_field[current_prop_name] = [property_type, {}]
 
-                        if prop_type in ('many2one', 'many2many') and property_model:
-                            value = self.env[property_model].browse(value)
-                        elif prop_type == 'tags' and value:
+                        __, cache_by_id = cache_properties_field[current_prop_name]
+                        if rec_id in cache_by_id:
+                            continue
+
+                        value = property.get('value')
+                        if property_type in ('many2one', 'many2many'):
+                            if not isinstance(value, list):
+                                value = [value] if value else []
+                            value = self.env[property['comodel']].browse([val[0] for val in value])
+                        elif property_type == 'tags' and value:
                             value = ",".join(
-                                next(iter(tag[1] for tag in prop['tags'] if tag[0] == v), '')
+                                next(iter(tag[1] for tag in property['tags'] if tag[0] == v), '')
                                 for v in value
                             )
-                        elif prop_type == 'selection':
-                            value = dict(prop['selection']).get(value, '')
+                        elif property_type == 'selection':
+                            value = dict(property['selection']).get(value, '')
+                        cache_by_id[rec_id] = value
 
-                        prop_map[prop['name']] = (value, prop_type)
+            def fetch_fields(records, field_paths):
+                """ Fill the cache of ``records`` for all ``field_paths`` recursively included properties"""
+                if not records:
+                    return
 
-            return cache_properties[properties_fname][record].get(property_name, ('', 'char'))
+                fnames_by_path = dict(groupby(
+                    [path for path in field_paths if path and path[0] not in ('id', '.id')],
+                    lambda path: path[0],
+                ))
 
-        # memory stable but ends up prefetching 275 fields (???)
-        for record in splittor(self):
+                # Fetch needed fields (remove '.property_name' part)
+                fnames = list(unique(fname.split('.')[0] for fname in fnames_by_path))
+                records.fetch(fnames)
+                # Fill the cache of the properties field
+                for fname in fnames:
+                    field = records._fields[fname]
+                    if field.type == 'properties':
+                        fill_properties_cache(records, fnames_by_path, fname)
+
+                # Call it recursively for relational field (included property relational field)
+                for fname, paths in fnames_by_path.items():
+                    if '.' in fname:  # Properties field
+                        fname, prop_name = fname.split('.')
+                        field = records._fields[fname]
+                        assert field.type == 'properties' and prop_name
+
+                        property_type, property_cache = cache_properties[field].get(prop_name, ('char', None))
+                        if property_type not in ('many2one', 'many2many') or not property_cache:
+                            continue
+                        model = next(iter(property_cache.values())).browse()
+                        subrecords = model.union(*[property_cache[rec_id] for rec_id in records.ids if rec_id in property_cache])
+                    else:  # Normal field
+                        field = records._fields[fname]
+                        if not field.relational:
+                            continue
+                        subrecords = records[fname]
+
+                    paths = [path[1:] or ['display_name'] for path in paths]
+                    fetch_fields(subrecords, paths)
+
+            fetch_fields(self, fields)
+
+        for record in self:
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
@@ -1145,12 +1174,12 @@ class BaseModel(metaclass=MetaModel):
                     current[i] = (record._name, record.id)
                 else:
                     prop_name = None
-                    if '.' in name:
+                    if '.' in name:  # Properties field
                         fname, prop_name = name.split('.')
                         field = record._fields[fname]
-                        assert field.type == 'properties' and prop_name
-                        value, field_type = get_property(fname, prop_name, record)
-                    else:
+                        field_type, cache_value = cache_properties[field].get(prop_name, ('char', None))
+                        value = cache_value.get(record.id, '') if cache_value else ''
+                    else:  # Normal field
                         field = record._fields[name]
                         field_type = field.type
                         value = record[name]
@@ -1221,6 +1250,9 @@ class BaseModel(metaclass=MetaModel):
                     for i, j in xidmap.pop((record._name, record.id)):
                         lines[i][j] = xid
             assert not xidmap, "failed to export xids for %s" % ', '.join('{}:{}' % it for it in xidmap.items())
+
+        if _is_toplevel_call:
+            self.env.cr.cache.pop('export_properties_cache', None)
 
         return lines
 
@@ -1986,7 +2018,7 @@ class BaseModel(metaclass=MetaModel):
         ]
 
         # row_values: [(a1, b1, c1), (a2, b2, c2), ...]
-        row_values = self.env.execute_query(query.select(*groupby_terms.values(), *select_terms))
+        row_values = self.env.execute_query(query.select(*[groupby_terms[spec] for spec in groupby], *select_terms))
 
         if not row_values:
             return row_values
@@ -3457,6 +3489,7 @@ class BaseModel(metaclass=MetaModel):
         if parent_path_compute:
             self._parent_store_compute()
 
+    @api.private
     def init(self):
         """ This method is called after :meth:`~._auto_init`, and may be
             overridden to create or modify a model's database schema.
@@ -6210,6 +6243,7 @@ class BaseModel(metaclass=MetaModel):
     # Conversion methods
     #
 
+    @api.private
     def ensure_one(self) -> Self:
         """Verify that the current recordset holds a single record.
 
@@ -6223,6 +6257,7 @@ class BaseModel(metaclass=MetaModel):
         except ValueError:
             raise ValueError("Expected singleton: %s" % self)
 
+    @api.private
     def with_env(self, env: api.Environment) -> Self:
         """Return a new version of this recordset attached to the provided environment.
 
@@ -6234,6 +6269,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.__class__(env, self._ids, self._prefetch_ids)
 
+    @api.private
     def sudo(self, flag=True) -> Self:
         """ sudo([flag=True])
 
@@ -6262,6 +6298,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(su=flag))
 
+    @api.private
     def with_user(self, user) -> Self:
         """ with_user(user)
 
@@ -6273,6 +6310,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         return self.with_env(self.env(user=user, su=False))
 
+    @api.private
     def with_company(self, company) -> Self:
         """ with_company(company)
 
@@ -6307,6 +6345,7 @@ class BaseModel(metaclass=MetaModel):
 
         return self.with_context(allowed_company_ids=allowed_company_ids)
 
+    @api.private
     def with_context(self, *args, **kwargs) -> Self:
         """ with_context([context][, **overrides]) -> Model
 
@@ -6346,6 +6385,7 @@ class BaseModel(metaclass=MetaModel):
             context['allowed_company_ids'] = self._context['allowed_company_ids']
         return self.with_env(self.env(context=context))
 
+    @api.private
     def with_prefetch(self, prefetch_ids=None) -> Self:
         """ with_prefetch([prefetch_ids]) -> records
 
@@ -6423,6 +6463,7 @@ class BaseModel(metaclass=MetaModel):
             vals = func(self)
             return vals if isinstance(vals, BaseModel) else []
 
+    @api.private
     def mapped(self, func):
         """Apply ``func`` on all records in ``self``, and return the result as a
         list or a recordset (if ``func`` return recordsets). In the latter
@@ -6461,6 +6502,7 @@ class BaseModel(metaclass=MetaModel):
         else:
             return self._mapped_func(func)
 
+    @api.private
     def filtered(self, func) -> Self:
         """Return the records in ``self`` satisfying ``func``.
 
@@ -6483,6 +6525,7 @@ class BaseModel(metaclass=MetaModel):
                 return self.browse(rec.id for rec in self if rec[func])
         return self.browse(rec.id for rec in self if func(rec))
 
+    @api.private
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
         dict from the ``key``'s result to recordsets. All the resulting
@@ -6510,6 +6553,7 @@ class BaseModel(metaclass=MetaModel):
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
 
+    @api.private
     def filtered_domain(self, domain) -> Self:
         """Return the records in ``self`` satisfying the domain and keeping the same order.
 
@@ -6666,6 +6710,7 @@ class BaseModel(metaclass=MetaModel):
         [result_ids] = stack
         return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
+    @api.private
     def sorted(self, key=None, reverse=False) -> Self:
         """Return the recordset ``self`` ordered by ``key``.
 
@@ -6697,6 +6742,7 @@ class BaseModel(metaclass=MetaModel):
         for name, value in values.items():
             self[name] = value
 
+    @api.private
     def flush_model(self, fnames=None):
         """ Process the pending computations and database updates on ``self``'s
         model.  When the parameter is given, the method guarantees that at least
@@ -6708,6 +6754,7 @@ class BaseModel(metaclass=MetaModel):
         self._recompute_model(fnames)
         self._flush(fnames)
 
+    @api.private
     def flush_recordset(self, fnames=None):
         """ Process the pending computations and database updates on the records
         ``self``.   When the parameter is given, the method guarantees that at
@@ -6791,6 +6838,7 @@ class BaseModel(metaclass=MetaModel):
     #
 
     @api.model
+    @api.private
     def new(self, values=None, origin=None, ref=None) -> Self:
         """ new([values], [origin], [ref]) -> record
 
@@ -6873,6 +6921,7 @@ class BaseModel(metaclass=MetaModel):
         """ Return the concatenation of two recordsets. """
         return self.concat(other)
 
+    @api.private
     def concat(self, *args) -> Self:
         """ Return the concatenation of ``self`` with all the arguments (in
             linear time complexity).
@@ -6917,6 +6966,7 @@ class BaseModel(metaclass=MetaModel):
         """
         return self.union(other)
 
+    @api.private
     def union(self, *args) -> Self:
         """ Return the union of ``self`` with all the arguments (in linear time
             complexity, with first occurrence order preserved).
@@ -7044,6 +7094,7 @@ class BaseModel(metaclass=MetaModel):
         # the sake of code simplicity.
         return self.browse(ids)
 
+    @api.private
     def invalidate_model(self, fnames=None, flush=True):
         """ Invalidate the cache of all records of ``self``'s model, when the
         cached values no longer correspond to the database values.  If the
@@ -7058,6 +7109,7 @@ class BaseModel(metaclass=MetaModel):
             self.flush_model(fnames)
         self._invalidate_cache(fnames)
 
+    @api.private
     def invalidate_recordset(self, fnames=None, flush=True):
         """ Invalidate the cache of the records in ``self``, when the cached
         values no longer correspond to the database values.  If the parameter

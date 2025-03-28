@@ -224,10 +224,16 @@ registry.category("web_tour.tours").add("SaveLastPreparationChangesTour", {
         ].flat(),
 });
 
-const billScreenQRCode = {
-    content: "QR codes are shown",
-    trigger: ".pos-receipt #posqrcode",
-};
+const billScreenQRCodeData = [
+    {
+        content: "Unique code is shown",
+        trigger: ".pos-receipt .unique-code",
+    },
+    {
+        content: "Portal url is shown",
+        trigger: ".pos-receipt .portal-url",
+    },
+];
 
 registry.category("web_tour.tours").add("BillScreenTour", {
     steps: () =>
@@ -238,12 +244,12 @@ registry.category("web_tour.tours").add("BillScreenTour", {
             ProductScreen.clickDisplayedProduct("Coca-Cola"),
             ProductScreen.clickControlButton("Bill"),
             // HACK: is_modal should be false so that the trigger can be found.
-            { ...negateStep(billScreenQRCode) },
+            billScreenQRCodeData.map(negateStep),
             BillScreen.closeBillPopup(),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            billScreenQRCode,
+            ...billScreenQRCodeData,
         ].flat(),
 });
 
@@ -459,6 +465,153 @@ registry.category("web_tour.tours").add("ComboSortedPreparationReceiptTour", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("TableTransferPreparationChange1", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            //Transfer sent product on table with same product sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange2", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer sent product on table with same product not sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange3", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer sent product on table without the same product
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange4", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer not sent product on table with same product not sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.hasTable("5"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderIsEmpty(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange5", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+
+            //Transfer not sent product on table with same product sent
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            ProductScreen.orderlinesHaveNoChange("Product Test"),
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("4"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("TableTransferPreparationChange6", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            //Transfer not sent product on table without the same product
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product Test"),
+            ProductScreen.clickControlButton("Transfer"),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderlineIsToOrder("Product Test"),
+            ProductScreen.orderLineHas("Product Test", "1"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("MultiPreparationPrinter", {
     checkDelay: 50,
     steps: () =>
@@ -470,5 +623,38 @@ registry.category("web_tour.tours").add("MultiPreparationPrinter", {
             ProductScreen.clickOrderButton(),
             Dialog.bodyIs("Failed in printing Detailed Receipt changes of the order"),
             Dialog.confirm(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("LeaveResidualOrder", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("FinishResidualOrder", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            FloorScreen.clickTable("5"),
+            ProductScreen.totalAmountIs("2.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });

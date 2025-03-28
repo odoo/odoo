@@ -2654,24 +2654,41 @@ class TestStockFlowPostInstall(TestStockCommon):
         """
         when changing picking_type_id of a stock.picking, should change the name too
         """
+        stock_location_1 = self.env.ref('stock.stock_location_stock')
+        stock_location_2 = stock_location_1.copy()
         picking_type_1 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_1',
             'code': 'internal',
             'sequence_code': 'PT1/',
+            'default_location_src_id': stock_location_1.id,
+            'default_location_dest_id': self.customer_location,
         })
         picking_type_2 = self.env['stock.picking.type'].create({
             'name': 'new_picking_type_2',
             'code': 'internal',
             'sequence_code': 'PT2/',
+            'default_location_src_id': stock_location_2.id,
+            'default_location_dest_id': self.customer_location,
         })
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location_1, 100)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location_2, 10)
         picking = self.env['stock.picking'].create({
             'picking_type_id': picking_type_1.id,
-            'location_id': self.supplier_location,
-            'location_dest_id': self.stock_location,
+            'move_ids': [(0, 0, {
+                'name': self.productA.name,
+                'product_id': self.productA.id,
+                'product_uom_qty': 50,
+            })],
         })
+        picking.action_confirm()
+        move = picking.move_ids[0]
         self.assertEqual(picking.name, "PT1/00001")
+        self.assertEqual(move.location_id, stock_location_1)
+        self.assertEqual(move.quantity, 50.0)
         picking.picking_type_id = picking_type_2
         self.assertEqual(picking.name, "PT2/00001")
+        self.assertEqual(move.location_id, stock_location_2)
+        self.assertEqual(move.quantity, 10.0)
         picking.picking_type_id = picking_type_1
         self.assertEqual(picking.name, "PT1/00002")
         picking.picking_type_id = picking_type_1

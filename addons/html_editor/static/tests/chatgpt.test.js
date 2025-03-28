@@ -1,12 +1,12 @@
 import { expect, test } from "@odoo/hoot";
-import { setupEditor } from "./_helpers/editor";
-import { getActiveElement, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import { press, queryAll, tick, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { insertText } from "./_helpers/user_actions";
-import { getContent } from "./_helpers/selection";
-import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
 import { loadLanguages } from "@web/core/l10n/translation";
+import { ChatGPTPlugin } from "../src/main/chatgpt/chatgpt_plugin";
+import { setupEditor } from "./_helpers/editor";
+import { getContent, setContent } from "./_helpers/selection";
+import { insertText } from "./_helpers/user_actions";
 
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { DEFAULT_ALTERNATIVES_MODES } from "../src/main/chatgpt/chatgpt_alternatives_dialog";
@@ -116,6 +116,28 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
     const alternativesDialogHeaderSelector = `.o_dialog .modal-header:contains("${ALTERNATIVES_DIALOG_TITLE}")`;
     expect(alternativesDialogHeaderSelector).toHaveCount(0);
     loadLanguages.installedLanguages = false;
+});
+
+test("Translate/ChatGPT should be disabled if selection spans across non editable content or unsplittable", async () => {
+    const { el } = await setupEditor("<div>[ab]</div>");
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+
+    setContent(el, "<div>a[b</div><div>c]d</div>");
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").not.toHaveAttribute("disabled");
+
+    setContent(el, '<div contenteditable="false">a[b</div><div>c]d</div>');
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
+
+    setContent(el, '<div class="oe_unbreakable">a[b</div><div>c]d</div>');
+    await animationFrame();
+    await tick();
+    expect(".o-we-toolbar [name='translate']").toHaveAttribute("disabled");
 });
 
 test("ChatGPT alternatives dialog generates alternatives for each button", async () => {
@@ -298,7 +320,7 @@ test("press escape to close ChatGPT dialog", async () => {
     // Expect the ChatGPT Prompt Dialog to be open.
     const promptDialogHeaderSelector = `.o_dialog .modal-header:contains("${PROMPT_DIALOG_TITLE}")`;
     await waitFor(promptDialogHeaderSelector);
-    expect(getActiveElement()).toBe(queryOne('.modal [name="promptInput"]'));
+    expect('.modal [name="promptInput"]').toBeFocused();
 
     await press("escape");
     await animationFrame();

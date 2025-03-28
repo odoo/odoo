@@ -28,6 +28,7 @@ export class FilterValue extends Component {
     static props = {
         filter: Object,
         model: Object,
+        showTitle: { type: Boolean, optional: true },
     };
 
     setup() {

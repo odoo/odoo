@@ -39,6 +39,10 @@ test("search emoji from keywords", async () => {
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search emoji']", "mexican");
     await contains(".o-Emoji", { text: "🌮" });
+    await insertText("input[placeholder='Search emoji']", "9", { replace: true });
+    await contains(".o-Emoji:eq(0)", { text: "🕘" });
+    await contains(".o-Emoji:eq(1)", { text: "🕤" });
+    await contains(".o-Emoji:eq(2)", { text: "9️⃣" });
 });
 
 test("search emoji from keywords should be case insensitive", async () => {

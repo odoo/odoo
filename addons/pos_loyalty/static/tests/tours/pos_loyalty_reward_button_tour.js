@@ -82,11 +82,10 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", {
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", "2.00"),
             ProductScreen.clickDisplayedProduct("Magnetic Board"),
-            ProductScreen.selectedOrderlineHas("Magnetic Board", "3.00"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
 
-            PosLoyalty.orderTotalIs("5.94"),
+            PosLoyalty.orderTotalIs("9.14"),
             PosLoyalty.finalizeOrder("Cash", "10"),
 
             // Promotion: 2 items of shelves, get desk_pad/monitor_stand free
@@ -142,6 +141,21 @@ registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour2", {
             SelectionPopup.has("Free Product - Test Product A", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product - Test Product A", "-11.50", "1.00"),
             PosLoyalty.isRewardButtonHighlighted(false),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            PosLoyalty.hasRewardLine("Free Product - Desk Organizer", "-5.10", "1.00"),
+            PosLoyalty.orderTotalIs("10.20"),
+            PosLoyalty.finalizeOrder("Cash", "10.20"),
         ].flat(),
 });
 
@@ -237,5 +251,17 @@ registry.category("web_tour.tours").add("PosLoyaltyRewardProductTag", {
             SelectionPopup.has("Product B", { run: "click" }),
             PosLoyalty.hasRewardLine("Free Product", "-10", "2.00"),
             PosLoyalty.isRewardButtonHighlighted(false, true),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_on_order_with_fixed_tax", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product A"),
+            PosLoyalty.enterCode("563412"),
+            PosLoyalty.hasRewardLine("10% on your order", "-1.50"),
         ].flat(),
 });

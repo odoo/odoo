@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 16:32+0000\n"
+"POT-Creation-Date: 2025-03-03 11:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -1213,12 +1213,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll_account
 msgid ""
 "\n"
-"Accounting Data for KSA Payroll Rules.\n"
+"Accounting Data for Saudi Arabia Payroll Rules.\n"
 "=======================================================\n"
 "\n"
 msgstr ""
 "\n"
-"サウジアラビア王国の給与規定に関する会計データ\n"
+"サウジアラビアの給与規定用の会計データ。\n"
 "=======================================================\n"
 "\n"
 
@@ -1456,9 +1456,13 @@ msgstr ""
 msgid ""
 "\n"
 "Accounting reports for Bangladesh\n"
+"============================================\n"
+"- Corporate tax report\n"
 msgstr ""
 "\n"
 "バングラデシュ用会計レポート\n"
+"============================================\n"
+"- 法人税レポート\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_reports
@@ -1768,10 +1772,10 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_pk_reports
 msgid ""
 "\n"
-"Accounting reports for Pakistan\n"
+"Accounting Reports for Pakistan (Profit and Loss report and Balance Sheet)\n"
 msgstr ""
 "\n"
-"パキスタン用会計レポート\n"
+"パキスタン向け会計レポート(損益報告書および貸借対照表)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl_reports
@@ -3078,12 +3082,16 @@ msgid ""
 "\n"
 "Bangladesh Payroll Rules.\n"
 "=========================\n"
-"\n"
+"- Salary rules calculation\n"
+"- Income tax credits handling\n"
+"- Introduced the income tax slabs calculations\n"
 msgstr ""
 "\n"
-"バングラデシュ給与規定\n"
+"バングラデシュの給与規定\n"
 "=========================\n"
-"\n"
+"- 給与規定の計算\n"
+"- 所得税控除の処理\n"
+"- 所得税の段階的計算の導入\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_et
@@ -4638,10 +4646,10 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_edi_pos
 msgid ""
 "\n"
-"E-invoice implementation for the Kingdom of Saudi Arabia (PoS)\n"
+"E-invoice implementation for Saudi Arabia; Integration with ZATCA (POS)\n"
 msgstr ""
 "\n"
-"サウジアラビア王国用電子請求書の実装 (PoS)\n"
+"サウジアラビア向け電子請求書の導入、ZATCAとの統合 (POS)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -4928,12 +4936,24 @@ msgid ""
 "\n"
 "Egypt Payroll and End of Service rules.\n"
 "=======================================\n"
-"\n"
+"- Basic calculation\n"
+"- End of service calculation\n"
+"- Other inputs (overtime, salary attachments, etc.)\n"
+"- Social insurance calculation\n"
+"- End of service provisions\n"
+"- Tax break calculations and deductions\n"
+"- Master payroll export\n"
 msgstr ""
 "\n"
-"エジプト給与および勤務終了に関する規則\n"
+"エジプトの給与および退職金規則\n"
 "=======================================\n"
-"\n"
+"- 基本計算\n"
+"- 退職金計算\n"
+"- その他の入力(残業、給与控除など)\n"
+"- 社会保険の計算\n"
+"- 退職金引当金\n"
+"- 税控除計算および控除額\n"
+"- マスター給与のエクスポート\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -6544,22 +6564,30 @@ msgstr ""
 msgid ""
 "\n"
 "Jordan Payroll and Tax Rules\n"
-"============================\n"
+"========================================\n"
+"\n"
+"- Supports basic calculation\n"
+"- Tax income brackets\n"
+"- National contribution tax and social security\n"
 msgstr ""
 "\n"
-"ヨルダン給与と税規則\n"
-"============================\n"
+"ヨルダンの給与および税に関する規則\n"
+"========================================\n"
+"\n"
+"- 基本的な計算をサポート\n"
+"- 所得税の課税所得区分\n"
+"- 国庫への拠出税および社会保障\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
 msgid ""
 "\n"
-"K.S.A. POS Localization\n"
-"=======================================================\n"
+"Saudi Arabia POS Localization\n"
+"===========================================================\n"
 msgstr ""
 "\n"
-"K.S.A. POSローカリゼーション\n"
-"=======================================================\n"
+"サウジアラビアPOSローカリゼーション\n"
+"===========================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr_recruitment
@@ -6612,14 +6640,28 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa_hr_payroll
 msgid ""
 "\n"
-"Kingdom of Saudi Arabia Payroll and End of Service rules.\n"
+"Saudi Arabia Payroll and End of Service rules.\n"
 "===========================================================\n"
-"\n"
+"- Basic Calculation\n"
+"- End of Service Calculation\n"
+"- Other Input Rules (Overtime, Salary Attachments, etc.)\n"
+"- Split Structures for EOS and Monthly Salaries\n"
+"- GOSI Employee Deduction and company contributions\n"
+"- Unpaid leaves\n"
+"- WPS\n"
+"- Master Payroll Export\n"
 msgstr ""
 "\n"
-"サウジアラビア王国の給与および勤務終了に関する規定\n"
+"サウジアラビア給与および退職金規則\n"
 "===========================================================\n"
-"\n"
+"- 基本計算\n"
+"- 退職金計算\n"
+"- その他の入力(残業、給与控除など)\n"
+"- EOSと月次給与の分割構造\n"
+"- GOSI 従業員控除と会社負担s\n"
+"- 無給休暇\n"
+"- WPS\n"
+"- マスター給与のエクスポート\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_landed_costs
@@ -7892,10 +7934,30 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_sa
 msgid ""
 "\n"
-"Odoo Arabic localization for most Saudi Arabia.\n"
+"Saudi Arabia Accounting Module\n"
+"===========================================================\n"
+"Saudi Arabia Accounting Basic Charts and Localization\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Vat Filling Report\n"
+"- Withholding Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 "\n"
-"サウジアラビアのほとんどの地域でOdooをアラビア語にローカライズしています。\n"
+"サウジアラビア会計モジュール\n"
+"===========================================================\n"
+"サウジアラビア 会計 基本勘定科目表およびローカリゼーション\n"
+"\n"
+"有効化:\n"
+"\n"
+"- 勘定科目表\n"
+"- 税\n"
+"- Vat入力レポート\n"
+"- 源泉徴収税レポート\n"
+"- 会計ポジション\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_enterprise
@@ -8115,10 +8177,14 @@ msgid ""
 "\n"
 "Pakistan Payroll and End of Service rules\n"
 "=========================================\n"
+"- Basic salaries calculations.\n"
+"- Tax bracket calculations/deductions\n"
 msgstr ""
 "\n"
 "パキスタン給与および勤務終了に関する規則\n"
 "=========================================\n"
+"- 基本給与計算\n"
+"- 税額区分計算/控除\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pa
@@ -9634,12 +9700,34 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg
 msgid ""
 "\n"
-"This is the base module to manage the accounting chart for Egypt in Odoo.\n"
+"Egypt Accounting Module\n"
 "==============================================================================\n"
+"Egypt Accounting Basic Charts and Localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- VAT Return\n"
+"- Withholding Tax Report\n"
+"- Schedule Tax Report\n"
+"- Other Taxes Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 "\n"
-"Odooでエジプトの勘定科目を管理する基本モジュールです。\n"
+"エジプト会計モジュール\n"
 "==============================================================================\n"
+"エジプト会計 基本勘定科目表およびローカリゼーション\n"
+"\n"
+"以下を有効化します:\n"
+"\n"
+"- 勘定科目表\n"
+"- 税\n"
+"- VATレポート\n"
+"- 源泉徴収税レポート\n"
+"- 税申告スケジュール\n"
+"- その他の税レポート\n"
+"- 会計ポジション\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ee
@@ -11683,12 +11771,25 @@ msgstr ""
 #: model:ir.module.module,description:base.module_l10n_eg_edi_eta
 msgid ""
 "\n"
-"This module integrate with the ETA Portal to automatically sign and send your invoices to the tax Authority.\n"
-"Special thanks to Plementus <info@plementus.com> for their help in developing this module.\n"
+"Egypt Tax Authority Invoice Integration\n"
+"==============================================================================\n"
+"Integrates with the ETA portal to automatically send and sign the Invoices to the Tax Authority.\n"
 msgstr ""
 "\n"
-"このモジュールはETAポータルと統合し、請求書に自動的に署名して税務当局に送信します。\n"
-"このモジュールの開発にご協力頂いた Plementus <info@plementus.com> に感謝致します。\n"
+"エジプト税務当局向け顧客請求書統合\n"
+"==============================================================================\n"
+"ETAポータルと統合し、税務当局に顧客請求書を自動的に送信し、署名できます。\n"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
+msgid ""
+"\n"
+"            Egyptian Tax Authority Invoice Integration\n"
+"        "
+msgstr ""
+"\n"
+"           エジプト税務当局のインボイス統合\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_urban_piper_swiggy
@@ -12254,10 +12355,12 @@ msgid ""
 "\n"
 "United Arab Emirates Corporate Tax Report\n"
 "=======================================================\n"
+"Adds the Corporate Tax Report which can be accessed by going to Accounting > Reporting > Corporate Tax Report\n"
 msgstr ""
 "\n"
-"アラブ首長国連邦法人税レポート\n"
+"アラブ首長国連邦の法人税レポート\n"
 "=======================================================\n"
+"会計 > 報告 > 法人税レポートにアクセスして表示できる法人税レポートを追加します。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae_hr_payroll
@@ -12265,23 +12368,63 @@ msgid ""
 "\n"
 "United Arab Emirates Payroll and End of Service rules.\n"
 "=======================================================\n"
-"\n"
+"- Basic salary calculations\n"
+"- EOS calculations\n"
+"- Annual leaves provisions and EOS provisions\n"
+"- Social insurance rules for locals\n"
+"- Overtime rule for the other inputs case\n"
+"- Sick-leaves calculations\n"
+"- DEWS calculations\n"
+"- EOS calculations for free zones (DMCC)\n"
+"- Out of contract calculations\n"
+"- Calculation for unused leaves for EOS calculation\n"
+"- Additional other input rules for (bonus, commissions, arrears, etc.)\n"
+"- Master payroll export\n"
+"- WPS\n"
 msgstr ""
 "\n"
-"アラブ首長国連邦の給与および勤務終了に関する規則\n"
+"アラブ首長国連邦の給与および退職規則\n"
 "=======================================================\n"
-"\n"
+"- 基本給の計算\n"
+"- EOSの計算\n"
+"- 年次休暇およびEOSの規定\n"
+"- ローカリゼーションのための社会保険規則\n"
+"- その他の入力ケースの残業規則\n"
+"- 病気休暇の計算\n"
+"- DEWSの計算\n"
+"- フリーゾーン(DMCC)のEOSの計算\n"
+"- 契約外の計算\n"
+"- EOS計算のための未使用休暇の計算\n"
+"- ボーナス、手数料、延滞金など、その他の追加入力規則\n"
+"- マスター給与データのエクスポート\n"
+"- WPS\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ae
 msgid ""
 "\n"
-"United Arab Emirates accounting chart and localization.\n"
+"United Arab Emirates Accounting Module\n"
 "=======================================================\n"
+"United Arab Emirates accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Fiscal Positions\n"
 msgstr ""
 "\n"
-"アラブ首長国連邦の勘定科目とローカライズ\n"
+"アラブ首長国連邦会計モジュール\n"
 "=======================================================\n"
+"アラブ首長国連邦会計の基本勘定科目表およびローカリゼーション\n"
+"\n"
+"以下を有効化します:\n"
+"\n"
+"- 勘定科目表\n"
+"- 税\n"
+"- 税レポート\n"
+"- 会計ポジション\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_hr_payroll
@@ -18389,7 +18532,7 @@ msgstr "バッチ支払"
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
 msgid "Batch Transfer, Carrier"
-msgstr "一括転送、配送会社"
+msgstr "一括転送、運送会社"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_website_sale
@@ -22724,9 +22867,13 @@ msgstr "電子請求書、輸出情報オンライン・ユニバーサルビジ
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_sa_edi
-msgid "E-Invoicing, Universal Business Language"
+msgid ""
+"\n"
+"        E-Invoicing, Universal Business Language\n"
+"    "
 msgstr ""
-" 電子請求(E-Invoicing)、世界共通ビジネス言語\n"
+"\n"
+"        電子請求(E-Invoicing)、世界共通ビジネス言語\n"
 "    "
 
 #. module: base
@@ -22907,13 +23054,8 @@ msgstr "エジプト - 会計の給与"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
-msgid "Egyptian E-Invoice Integration"
-msgstr "エジプト電子請求統合"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_eg_edi_eta
-msgid "Egyptian Tax Authority Invoice Integration"
-msgstr "エジプト税務当局インボイス統合"
+msgid "Egypt E-Invoicing"
+msgstr "エジプト 電子請求"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__eire
@@ -23061,7 +23203,7 @@ msgstr "従業員契約レポート"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
 msgid "Employee Hourly Cost"
-msgstr "従業員毎時コスト"
+msgstr "従業員の時間単価"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
@@ -24986,11 +25128,6 @@ msgstr "飲食/ホスピタリティ"
 #: model:ir.model.fields,help:base.field_res_company__report_footer
 msgid "Footer text displayed at the bottom of all reports."
 msgstr "各種レポートの底に表示されるフッタテキスト"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_l10n_be_codabox
-msgid "For Accounting Firms"
-msgstr "会計事務所用"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__value
@@ -27345,7 +27482,7 @@ msgstr "インドネシアPOS"
 #. module: base
 #: model:ir.actions.act_window,name:base.res_partner_industry_action
 msgid "Industries"
-msgstr "業界"
+msgstr "インダストリー"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_industry
@@ -28223,7 +28360,7 @@ msgstr "ヨルダン 電子請求"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "連絡先に関連付けた仕訳項目"
+msgstr "連絡先に関連する仕訳明細"
 
 #. module: base
 #. odoo-python
@@ -28238,13 +28375,13 @@ msgstr "K - 金融・保険業"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
-msgid "K.S.A. - Payroll"
-msgstr "サウジアラビア(K.S.A.) - 給与"
+msgid "Saudi Arabia - Payroll"
+msgstr "サウジアラビア - 給与"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
-msgid "K.S.A. - Payroll with Accounting"
-msgstr "サウジアラビア(K.S.A.) - 会計の給与"
+msgid "Saudi Arabia - Payroll with Accounting"
+msgstr "サウジアラビア - 会計の給与"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -28965,7 +29102,7 @@ msgstr "支払時に新規顧客にニュースレターに登録させる"
 #: model:ir.module.module,description:base.module_hr_referral
 #: model:ir.module.module,summary:base.module_hr_referral
 msgid "Let your employees share job positions and refer their friends"
-msgstr "従業員に職位を共有させ、友達を紹介しましょう"
+msgstr "従業員が求人情報を共有して友人を紹介"
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_hr_referral
@@ -29581,7 +29718,7 @@ msgstr "整備 - MRP"
 #. module: base
 #: model:ir.module.module,summary:base.module_voip
 msgid "Make and receive phone calls from within Odoo."
-msgstr "Odooから電話をかけたり受けたりできます。"
+msgstr "Odoo内で通話を発信/受信"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_website_sale
@@ -34072,7 +34209,7 @@ msgstr "プロジェクトを整理して計画する"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_todo
 msgid "Organize your work with memos and to-do lists"
-msgstr "メモとTo Doリストで業務を整理しましょう"
+msgstr "メモとTo Doリストで業務を整理"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__orientation
@@ -34254,7 +34391,7 @@ msgstr "POEdit"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_barcodelookup
 msgid "POS - Barcode Lookup"
-msgstr "POS - バーコードLookup"
+msgstr "POS - Barcode Lookup"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_event
@@ -37540,7 +37677,7 @@ msgstr "SEPAクレジット振替 / ISO20022"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "SEPA口座振替"
+msgstr "SEPA Direct Debit"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_iso20022
@@ -41468,16 +41605,54 @@ msgstr "香港の勘定科目表とローカリゼーションを管理するた
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bd
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Bangladesh "
-msgstr "バングラデシュの勘定科目表とローカライズを管理するベースモジュールです。"
+"\n"
+"This is the base module to manage the accounting chart for Bangladesh in Odoo\n"
+"============================\n"
+"Bangladesh accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+"- Tax report\n"
+msgstr ""
+"\n"
+"Odooでバングラデシュの会計チャートを管理するための基本モジュールです\n"
+"============================\n"
+"バングラデシュ会計の基本チャートとローカリゼーション\n"
+"\n"
+"以下を有効化します:\n"
+"\n"
+"- 勘定科目表\n"
+"- 税\n"
+"- 税レポート\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pk
 msgid ""
-"This is the base module to manage chart of accounts and localization for the"
-" Pakistan "
-msgstr "パキスタンの勘定科目表とローカリゼーションを管理するための基本モジュールです。"
+"\n"
+"Pakistan Accounting Module\n"
+"=======================================================\n"
+"Pakistan accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of Accounts\n"
+"- Taxes\n"
+"- Tax Report\n"
+"- Withholding Tax Report\n"
+msgstr ""
+"\n"
+"パキスタン会計モジュール\n"
+"=======================================================\n"
+"パキスタン会計の基本チャートおよびローカリゼーション\n"
+"\n"
+"以下を有効化します:\n"
+"\n"
+"- 勘定科目表\n"
+"- 税\n"
+"- 税レポート\n"
+"- 源泉徴収税レポート\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_report__attachment
@@ -41595,13 +41770,11 @@ msgstr "このモジュールは、hrによって変更されたユーザーフ�
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_codabox
 msgid ""
-"This module allows Accounting Firms to connect to CodaBox\n"
-"and automatically import CODA and SODA statements for their clients in Odoo.\n"
-"The connection must be done by the Accounting Firm.\n"
+"This module allows connection to CodaBox and automatically imports CODA and "
+"SODA statements in Odoo."
 msgstr ""
-"このモジュールにより会計事務所がCodaBoxに接続し、\n"
-"顧客のCODAとSODA明細を自動的にOdooにインポートすることができます。\n"
-"接続は会計事務所が行う必要があります。\n"
+"このモジュールはCodaBoxへの接続を可能にし、CODAおよびSODA明細をOdooに自動的にインポートします。\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_online_payment
@@ -42238,13 +42411,13 @@ msgstr "スピーカーのSMSマーケティングを追跡する"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
 msgid "Track employee attendance"
-msgstr "従業員の勤怠を追跡する"
+msgstr "従業員の勤怠を追跡"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_timesheet
 #: model:ir.module.module,summary:base.module_timesheet_grid
 msgid "Track employee time on tasks"
-msgstr "タスクの従業員の時間を追跡する"
+msgstr "タスクの従業員の時間を追跡"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_maintenance
@@ -42254,17 +42427,17 @@ msgstr "機器の追跡と整備要求の管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr "リードを追跡し、案件を閉じる"
+msgstr "リードを追跡し、案件を成約"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Track your recruitment pipeline"
-msgstr "採用パイプラインを追跡する"
+msgstr "採用パイプラインの追跡"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track, prioritize, and solve customer tickets"
-msgstr "顧客チケットの追跡、優先順位付け、および解決"
+msgstr "顧客チケットの追跡・優先順位付け・解決"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
@@ -42504,13 +42677,18 @@ msgstr "U -域外組織および団体の活動"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
-msgid "U.A.E. - Payroll"
-msgstr "アラブ首長国連邦(U.A.E.) - 給与"
+msgid "United Arab Emirates - Payroll"
+msgstr "アラブ首長国連邦 - 給与"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
-msgid "U.A.E. - Payroll with Accounting"
-msgstr "アラブ首長国連邦(U.A.E.) - 会計の給与"
+msgid "United Arab Emirates - Payroll with Accounting"
+msgstr "アラブ首長国連邦 - 会計の給与"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
+msgid "United Arab Emirates - Corporate Tax Report"
+msgstr "アラブ首長国連邦 - 法人税レポート"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__uct
@@ -42845,11 +43023,6 @@ msgid "United Arab Emirates - Accounting Reports"
 msgstr "アラブ首長国連邦 - 会計レポート"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_ae_corporate_tax_report
-msgid "United Arab Emirates - Corporate Tax Report"
-msgstr "アラブ首長国連邦 - 法人税レポート"
-
-#. module: base
 #: model:res.country,name:base.uk
 msgid "United Kingdom"
 msgstr "イギリス"
@@ -42897,12 +43070,12 @@ msgstr "アメリカ合衆国 - 会計の給与"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps_rest
 msgid "United States Postal Service (USPS) Shipping"
-msgstr "アメリカ合衆国郵便公社 (USPS)配送"
+msgstr "United States Postal Service (USPS) 配送"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping (Legacy)"
-msgstr "アメリカ合衆国郵便公社 (USPS)配送 (レガシー)"
+msgstr "United States Postal Service (USPS) 配送 (Legacy)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -44084,7 +44257,7 @@ msgstr "ウェブサイトがリード生成企業版にアクセス"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile
 msgid "Website profile"
-msgstr "ウェブサイトプロフィール"
+msgstr "ウェブサイトプロファイル"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -45110,7 +45283,7 @@ msgstr "例: Lumber Inc"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "e.g. Mass archive contacts"
-msgstr "例: 一括アーカイブ連絡先"
+msgstr "例:  連絡先を一括アーカイブする"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

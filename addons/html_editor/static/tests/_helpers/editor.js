@@ -153,6 +153,8 @@ export async function testEditor(config) {
             });
         };
     }
+    const isMobileTest = config.props?.mobile;
+    delete config.props?.mobile;
     const { el, editor } = await setupEditor(contentBefore, config);
     // The stageSelection should have been triggered by the click on
     // the editable. As we set the selection programmatically, we dispatch the
@@ -163,7 +165,20 @@ export async function testEditor(config) {
     editor.shared.history.stageSelection();
 
     if (config.props?.iframe) {
-        expect("iframe").toHaveCount(1);
+        const selection = editor.document.getSelection();
+        // If there is no selection, iframe count remains 1 on both mobile
+        // and desktop since the toolbar is not open.
+        // When a selection exists:
+        //   - On mobile: The toolbar remains open regardless of whether
+        //     selection is collapsed or not, so the iframe count is 2.
+        //   - On desktop: The toolbar opens only when selection is not
+        //     collapsed, resulting in 2 iframes; otherwise, it remains 1.
+        // 2 iframes because the font size input is inside its own iframe.
+        let iframeCount = 1;
+        if (selection.anchorNode) {
+            iframeCount = isMobileTest || !selection.isCollapsed ? 2 : 1;
+        }
+        expect("iframe").toHaveCount(iframeCount);
     }
 
     if (contentBeforeEdit) {

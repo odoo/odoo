@@ -16,8 +16,8 @@ import {
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { hover, queryFirst } from "@odoo/hoot-dom";
-import { mockUserAgent } from "@odoo/hoot-mock";
+import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
+import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     mockService,
@@ -25,7 +25,6 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 
-import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 describe.current.tags("desktop");
@@ -121,23 +120,18 @@ test("should disconnect when closing page while in call", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
-    patchWithCleanup(browser, {
-        navigator: {
-            ...browser.navigator,
-            sendBeacon: async (route, data) => {
-                if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
-                    const blobText = await data.text();
-                    const blobData = JSON.parse(blobText);
-                    step(`sendBeacon_leave_call:${blobData.params.channel_id}`);
-                }
-            },
-        },
+    mockSendBeacon(async (route, data) => {
+        if (data instanceof Blob && route === "/mail/rtc/channel/leave_call") {
+            const blobText = await data.text();
+            const blobData = JSON.parse(blobText);
+            step(`sendBeacon_leave_call:${blobData.params.channel_id}`);
+        }
     });
 
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     // simulate page close
-    window.dispatchEvent(new Event("pagehide"), { bubble: true });
+    await manuallyDispatchProgrammaticEvent(window, "pagehide");
     await assertSteps([`sendBeacon_leave_call:${channelId}`]);
 });
 
@@ -507,4 +501,44 @@ test("Use saved volume settings", async () => {
     const rangeInput = queryFirst(".o-discuss-CallContextMenu input[type='range']");
     expect(rangeInput.value).toBe(expectedVolume.toString());
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+});
+
+test("automatically cancel incoming call after some time", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const [memberId] = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    const rtcSessionId = pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: memberId,
+        channel_id: channelId,
+    });
+    pyEnv["discuss.channel.member"].write([memberId], { rtc_inviting_session_id: rtcSessionId });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-CallInvitation");
+    await advanceTime(30_000);
+    await contains(".o-discuss-CallInvitation", { count: 0 });
+});
+
+test("should also invite to the call when inviting to the channel", async () => {
+    mockGetMedia();
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "testpartner@odoo.com",
+        name: "TestPartner",
+    });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChanel",
+        channel_member_ids: [Command.create({ partner_id: serverState.partnerId })],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Start a Call']");
+    await contains(".o-discuss-Call");
+    await click(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-discuss-ChannelInvitation");
+    await click(".o-discuss-ChannelInvitation-selectable", { text: "TestPartner" });
+    await click("[title='Invite to Channel']:enabled");
+    await contains(".o-discuss-CallParticipantCard.o-isInvitation");
 });

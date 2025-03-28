@@ -200,6 +200,104 @@ class TestMrpAccount(TestMrpCommon):
         bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
         bom_form.product_id = self.dining_table
 
+    def test_two_productions_unbuild_one_sell_other_fifo(self):
+        """ Unbuild orders, when supplied with a specific MO record, should restrict their SVL
+        consumption to layers linked to moves originating from that MO record.
+        """
+        final_product = self.env['product.product'].create({
+            'is_storable': True,
+            'name': 'final product',
+            'categ_id': self.categ_real.id,
+        })
+        component = self.env['product.product'].create({
+            'is_storable': True,
+            'name': 'component',
+            'standard_price': 1.0,
+            'categ_id': self.categ_standard.id,
+        })
+        final_bom = self.env['mrp.bom'].create({
+            'product_id': final_product.id,
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1,
+            })],
+        })
+        in_move = self.env['stock.move'].create({
+            'name': 'in 2 component',
+            'product_id': component.id,
+            'product_uom_qty': 2.0,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.source_location_id,
+            'price_unit': 1,
+        })
+        in_move._action_confirm()
+        in_move._action_assign()
+        in_move.picked = True
+        in_move._action_done()
+        mo_1 = self.env['mrp.production'].create({'product_id': final_product.id})
+        mo_1.action_confirm()
+        mo_1.action_assign()
+        mo_1.button_mark_done()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
+            # MO_1
+            [{'remaining_qty': 1.0, 'value': 1.0}]
+        )
+
+        with Form(component) as comp_form:
+            comp_form.standard_price = 2
+        mo_2 = self.env['mrp.production'].create({'product_id': final_product.id})
+        mo_2.action_confirm()
+        mo_2.action_assign()
+        mo_2.button_mark_done()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
+            [
+                {'remaining_qty': 1.0, 'value': 1.0},
+                # MO_2 new value to reflect change of component's `standard_price`
+                {'remaining_qty': 1.0, 'value': 2.0},
+            ]
+        )
+        unbuild_form = Form(self.env['mrp.unbuild'])
+        unbuild_form.product_id = final_product
+        unbuild_form.bom_id = final_bom
+        unbuild_form.product_qty = 1
+        unbuild_form.mo_id = mo_2
+        unbuild_order = unbuild_form.save()
+        unbuild_order.action_unbuild()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
+            [
+                {'remaining_qty': 1.0, 'value': 1.0, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': 2.0, 'quantity': 1.0},
+                # Unbuild SVL value is derived from MO_2, as precised on the unbuild form
+                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': -1.0},
+            ]
+        )
+        out_move = self.env['stock.move'].create({
+            'name': 'out 1 final',
+            'product_id': final_product.id,
+            'product_uom_qty': 1.0,
+            'location_id': self.source_location_id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        out_move._action_confirm()
+        out_move._action_assign()
+        out_move.quantity = 1
+        out_move.picked = True
+        out_move._action_done()
+        self.assertRecordValues(
+            self.env['stock.valuation.layer'].search([('product_id', '=', final_product.id)]),
+            [
+                {'remaining_qty': 0.0, 'value': 1.0, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': 2.0, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': -2.0, 'quantity': -1.0},
+                # Out move SVL value is derived from MO_1, the only candidate origin with some `remaining_qty`
+                {'remaining_qty': 0.0, 'value': -1.0, 'quantity': -1.0},
+            ]
+        )
 
 @tagged("post_install", "-at_install")
 class TestMrpAccountMove(TestAccountMoveStockCommon):
@@ -519,6 +617,42 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
         self.assertRecordValues(labour_move.line_ids, [
             {'credit': 0.01, 'debit': 0.00},
             {'credit': 0.00, 'debit': 0.01},
+        ])
+
+    def test_labor_cost_over_consumption(self):
+        """ Test the labour accounting entries creation is independent of consumption variation"""
+        self.workcenter.write({'costs_hour': 20})
+        self.bom.operation_ids = [Command.create({
+            'name': 'work',
+            'workcenter_id': self.workcenter.id,
+            'time_cycle': 5,
+            'sequence': 1,
+        })]
+        production = self.env['mrp.production'].create({
+            'bom_id': self.bom.id,
+            'product_qty': 1,
+        })
+        production.action_confirm()
+        production.workorder_ids.duration = 60
+
+        production.qty_producing = 1
+
+        # overconsume one component to get a warning wizard
+        production.move_raw_ids[0].quantity += 2
+
+        action = production.button_mark_done()
+        consumption_warning = Form(self.env['mrp.consumption.warning'].with_context(**action['context'])).save()
+        consumption_warning.action_confirm()
+
+        mo_aml = self.env['account.move.line'].search([('name', 'like', production.name)])
+        self.assertEqual(len(mo_aml), 6, "2 Labour + 2 finished product + 2 for the components")
+        self.assertRecordValues(mo_aml, [
+            {'name': production.name + ' - Labour', 'debit': 0.0, 'credit': 20.0},
+            {'name': production.name + ' - Labour', 'debit': 20.0, 'credit': 0.0},
+            {'name': production.name + ' - ' + self.product_A.name, 'debit': 0.0, 'credit': 10.0},
+            {'name': production.name + ' - ' + self.product_A.name, 'debit': 10.0, 'credit': 0.0},
+            {'name': production.name + ' - ' + self.product_B.name, 'debit': 0.0, 'credit': 10.0},
+            {'name': production.name + ' - ' + self.product_B.name, 'debit': 10.0, 'credit': 0.0},
         ])
 
     def test_labor_cost_balancing_with_cost_share(self):

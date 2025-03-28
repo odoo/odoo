@@ -100,7 +100,7 @@ class IotBoxOwlHomePage(Home):
 
     @http.route('/hw_posbox_homepage/wifi_clear', auth='none', type='http', cors='*')
     def clear_wifi_configuration(self):
-        helpers.unlink_file('wifi_network.txt')
+        helpers.update_conf({'wifi_ssid': '', 'wifi_password': ''})
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from wifi',

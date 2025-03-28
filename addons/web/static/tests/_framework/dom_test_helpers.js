@@ -160,7 +160,7 @@ export function contains(target, options) {
     unconsumedContains.push(target);
 
     /** @type {Promise<Element>} */
-    const nodePromise = waitFor(target, { visible: true, ...options });
+    const nodePromise = waitFor.as("contains")(target, { visible: true, ...options });
     return {
         /**
          * @param {PointerOptions} [options]

@@ -45,6 +45,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'amount_type': 'percent',
             'amount': 10.0,
             'type_tax_use': 'none',
+            'include_base_amount': True,
             'price_include_override': 'tax_included'
         })
         tax_20 = self.env['account.tax'].create({

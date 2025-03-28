@@ -19,6 +19,10 @@ export class PosOrder extends Base {
 
         if (!this.session_id && (!this.finalized || typeof this.id !== "number")) {
             this.update({ session_id: this.session });
+
+            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
+                this._isResidual = true;
+            }
         }
 
         // Data present in python model
@@ -43,6 +47,10 @@ export class PosOrder extends Base {
 
         if (!vals.lines) {
             this.lines = [];
+        }
+
+        if (!this.user_id && this.models["res.users"]) {
+            this.user_id = this.user;
         }
 
         // !!Keep all uiState in one object!!
@@ -124,14 +132,14 @@ export class PosOrder extends Base {
                 ? 1
                 : -1;
 
-        const baseLines = orderLines.map((line) => {
-            return accountTaxHelpers.prepare_base_line_for_taxes_computation(
+        const baseLines = orderLines.map((line) =>
+            accountTaxHelpers.prepare_base_line_for_taxes_computation(
                 line,
                 line.prepareBaseLineForTaxesComputationExtraValues({
                     quantity: documentSign * line.qty,
                 })
-            );
-        });
+            )
+        );
         accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
         accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
 
@@ -931,6 +939,9 @@ export class PosOrder extends Base {
         this.assert_editable();
         this.update({ partner_id: partner });
         this.updatePricelistAndFiscalPosition(partner);
+        if (partner.company_type == "company") {
+            this.set_to_invoice(true);
+        }
     }
 
     get_partner() {

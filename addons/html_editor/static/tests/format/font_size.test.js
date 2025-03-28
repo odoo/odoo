@@ -202,9 +202,7 @@ test("should add style to br except line-break br", async () => {
     const { editor, el } = await setupEditor("<p>[]abc<br><br></p>");
     await press(["ctrl", "a"]);
     execCommand(editor, "formatFontSize", { size: "36px" });
-    expect(getContent(el)).toBe(
-        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;">]<br></span></p>`
-    );
+    expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc]</span><br><br></p>`);
 });
 
 test("should add style to br except line-break br (2)", async () => {
@@ -212,6 +210,6 @@ test("should add style to br except line-break br (2)", async () => {
     await press(["ctrl", "a"]);
     execCommand(editor, "formatFontSize", { size: "36px" });
     expect(getContent(el)).toBe(
-        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]<br></span></p>`
+        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
     );
 });

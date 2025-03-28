@@ -7,7 +7,6 @@
 # Patrick-Jordan Kiudorv, 2024
 # Wanradt Koell <wanradt@gmail.com>, 2024
 # Andre Roomet <andreroomet@gmail.com>, 2024
-# Tairi Tiimann, 2024
 # Marek Pontus, 2024
 # Triine Aavik <triine@avalah.ee>, 2024
 # Egon Raamat <egon@avalah.ee>, 2024
@@ -23,14 +22,15 @@
 # Anna, 2024
 # Leaanika Randmets, 2024
 # Siim Raasuke, 2025
+# Tairi Tiimann, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Siim Raasuke, 2025\n"
+"Last-Translator: Tairi Tiimann, 2025\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -443,7 +443,7 @@ msgid ""
 "            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -478,54 +478,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
-"        Tere,\n"
-"        <br/><br/>\n"
-"        Teie\n"
-"        <t t-if=\"ctx.get('proforma')\">\n"
-"            Pro forma arve <t t-out=\"doc_name or ''\">pakkumisele</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (viitega: <t t-out=\"object.origin or ''\"/> )\n"
-"            </t>\n"
-"            summas <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> on saadaval.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">pakkumisele</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
-"            <t t-if=\"object.origin\">\n"
-"                (viitega: <t t-out=\"object.origin or ''\">S00052</t> )\n"
-"            </t>\n"
-"            summas <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> on valmis ülevaatuseks.\n"
-"        </t>\n"
-"        <br/>\n"
-"        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
-"        <t t-if=\"documents\">\n"
-"            <br/> \n"
-"            <t t-if=\"len(documents)&gt;1\">\n"
-"                Siin on mõned dokumendid lisaks, mis võiksid teile huvi pakkuda:\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                Siin on lisaks dokument, mis võiks teile huvi pakkuda:\n"
-"            </t>\n"
-"            <ul style=\"margin-bottom: 0;\">\n"
-"                <t t-foreach=\"documents\" t-as=\"document\">\n"
-"                    <li style=\"font-size: 13px;\">\n"
-"                        <a t-out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/document/' + str(document.id))\" t-att-target=\"target\"/>\n"
-"                    </li>\n"
-"                </t>\n"
-"            </ul>\n"
-"        </t>\n"
-"        <br/>\n"
-"        Ärge kõhelge meiega ühendust võtmast, kui teil on küsimusi.\n"
-"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_cancellation
@@ -2703,7 +2655,7 @@ msgstr "Arveaadress"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
 msgid "Invoicing Journal"
-msgstr "Invoicing Journal"
+msgstr "Arvete andmik"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -5301,11 +5253,6 @@ msgid "Untaxed Total"
 msgstr "Ilma maksudeta kokku"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr "Maksustamata allahindlus"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
 msgstr "Mõõtühikud"
@@ -5520,6 +5467,12 @@ msgid ""
 msgstr ""
 "Te ei saa muuta müügitellimuse rea tüüpi. Selle asemel peaksite olemasoleva "
 "rea kustutama ja looma uue rea õige tüübiga."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "You cannot modify the product of this order line."
+msgstr ""
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days

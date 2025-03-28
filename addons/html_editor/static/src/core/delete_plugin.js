@@ -2,6 +2,7 @@ import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
 import {
     isAllowedContent,
+    isButton,
     isContentEditable,
     isEditorTab,
     isEmpty,
@@ -14,6 +15,7 @@ import {
     isTextNode,
     isVisibleTextNode,
     isWhitespace,
+    isZwnbsp,
     isZWS,
     nextLeaf,
     previousLeaf,
@@ -148,6 +150,7 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
+        this.dispatchTo("before_delete_handlers");
 
         if (!selection.isCollapsed) {
             this.deleteSelection(selection);
@@ -1029,6 +1032,11 @@ export class DeletePlugin extends Plugin {
             // TODO ABD: add test
             return true;
         }
+        const isZwnbspLinkPad = (node) =>
+            isButton(node.previousSibling) || isButton(node.nextSibling);
+        if (isZwnbsp(textNode) && isZwnbspLinkPad(textNode)) {
+            return true;
+        }
         // ZWS and ZWNBSP are invisible.
         if (["\u200B", "\uFEFF"].includes(char)) {
             return false;
@@ -1173,7 +1181,9 @@ export class DeletePlugin extends Plugin {
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
             if (!selection.isCollapsed) {
+                this.dispatchTo("before_delete_handlers");
                 this.deleteSelection(selection);
+                this.dispatchTo("delete_handlers");
             }
             // Default behavior: insert text and trigger input event
         }

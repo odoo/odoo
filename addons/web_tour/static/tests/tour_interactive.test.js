@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { click, hover, leave, queryFirst, waitFor } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { click, hover, leave, queryFirst, waitFor, press } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, disableAnimations, runAllTimers } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import {
     contains,
@@ -10,13 +10,40 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    models,
+    fields,
+    defineModels,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { WebClient } from "../../../web/static/src/webclient/webclient";
 
 describe.current.tags("desktop");
+
+class Partner extends models.Model {
+    _name = "partner";
+
+    m2o = fields.Many2one({ relation: "product" });
+
+    _views = {
+        search: `<search/>`,
+        form: `<form>
+            <field name="m2o"/>
+        </form>`,
+    };
+}
+
+class Product extends models.Model {
+    _name = "product";
+
+    name = fields.Char();
+
+    _records = [{ name: "A" }, { name: "B" }];
+}
+
+defineModels([Partner, Product]);
 
 class Counter extends Component {
     static props = ["*"];
@@ -345,11 +372,7 @@ test("perform edit on next step", async () => {
 });
 
 test("scrolling to next step should update the pointer's height", async (assert) => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
+    disableAnimations();
 
     const content = "Click this pretty button to increment this magnificent counter !";
     registry.category("web_tour.tours").add("tour_de_france", {
@@ -422,11 +445,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
 });
 
 test("scroller pointer to reach next step", async () => {
-    patchWithCleanup(Element.prototype, {
-        scrollIntoView(options) {
-            super.scrollIntoView({ ...options, behavior: "instant" });
-        },
-    });
+    disableAnimations();
 
     registry.category("web_tour.tours").add("tour_des_flandres", {
         steps: () => [
@@ -953,5 +972,112 @@ test("check alternative trigger that appear after the initial trigger", async ()
     otherButton.classList.add("button1");
     queryFirst(".add_button").appendChild(otherButton);
     await contains(".button1").click();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("validating edit step on autocomplete by selecting autocomplete item", async () => {
+    registry.category("web_tour.tours").add("rainbow_tour", {
+        steps: () => [
+            {
+                trigger: ".o-autocomplete--input",
+                run: "edit A",
+            },
+            {
+                trigger: ".o_form_button_save",
+                run: "click",
+            },
+        ],
+    });
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await animationFrame();
+
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o-autocomplete--input").click();
+    await contains(".o-autocomplete--dropdown-item:first-child").click();
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o_form_button_save").click();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("validating edit step on autocomplete by selecting autocomplete item (validate automatically autocomplete item step)", async () => {
+    registry.category("web_tour.tours").add("rainbow_tour", {
+        steps: () => [
+            {
+                trigger: ".o-autocomplete--input",
+                run: "edit A",
+            },
+            {
+                trigger: ".o-autocomplete--dropdown-item:first-child",
+                run: "click",
+            },
+            {
+                trigger: ".o_form_button_save",
+                run: "click",
+            },
+        ],
+    });
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await animationFrame();
+
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o-autocomplete--input").click();
+    await contains(".o-autocomplete--dropdown-item:first-child").click();
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o_form_button_save").click();
+    expect(".o_tour_pointer").toHaveCount(0);
+});
+
+test("validating click on autocomplete item by pressing Enter", async () => {
+    registry.category("web_tour.tours").add("rainbow_tour", {
+        steps: () => [
+            {
+                trigger: ".o-autocomplete--input",
+                run: "click",
+            },
+            {
+                trigger: ".o-autocomplete--dropdown-item:first-child",
+                run: "click",
+            },
+            {
+                trigger: ".o_form_button_save",
+                run: "click",
+            },
+        ],
+    });
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        res_model: "partner",
+        type: "ir.actions.act_window",
+        views: [[false, "form"]],
+    });
+    getService("tour_service").startTour("rainbow_tour", { mode: "manual" });
+    await animationFrame();
+
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o-autocomplete--input").click();
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+    await press("Enter");
+    await animationFrame();
+    expect(".o_tour_pointer").toHaveCount(1);
+    await contains(".o_form_button_save").click();
     expect(".o_tour_pointer").toHaveCount(0);
 });

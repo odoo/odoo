@@ -4865,6 +4865,20 @@ class SnippetsMenu extends Component {
             // This is async but using the main editor mutex, currently locked.
             this._updateInvisibleDOM();
 
+            // Updating options upon changing preview mode to avoid ghost overlay
+            const enabledInvisibleOverrideEl =
+                this.options.wysiwyg.lastElement &&
+                this.options.wysiwyg.lastElement.closest(
+                    ".o_snippet_mobile_invisible, .o_snippet_desktop_invisible"
+                );
+            const needDeactivate = enabledInvisibleOverrideEl && enabledInvisibleOverrideEl.dataset.invisible === "1";
+
+            if (needDeactivate) {
+                return new Promise((resolve) => {
+                    this._activateSnippet(false);
+                    resolve();
+                });
+            }
             return this._snippetOptionUpdate();
         }, false);
     }
@@ -5096,38 +5110,42 @@ class SnippetsMenu extends Component {
                 dropZoneEls = [...dropZoneEls].filter(dropzoneEl => {
                     return !dropzoneEl.closest("[data-snippet]:not(.s_popup), #website_cookies_bar");
                 });
-                hookEl = this._getClosestDropzone(dropZoneEls)
-                    || dropZoneEls[dropZoneEls.length - 1];
-                hookEl.classList.add("o_hook_drop_zone");
+                if (dropZoneEls?.length) {
+                    hookEl = this._getClosestDropzone(dropZoneEls)
+                        || dropZoneEls[dropZoneEls.length - 1];
+                    hookEl.classList.add("o_hook_drop_zone");
+                }
             } else {
                 hookEl = initialSnippetEl;
             }
 
-            const hookParentEl = hookEl.parentNode;
-            // Excludes snippets that cannot be placed at the target location.
-            [...this.snippets.values()].forEach((snippet) => {
-                if (snippet.disabled) {
-                    snippet.excluded = true;
-                } else {
-                    const $snippetSelectorChildren =
-                            this._getSelectors($(snippet.baseBody)).$selectorChildren;
-                    const hasSelectorChild = [...$snippetSelectorChildren].some(snippetSelectorChild => {
-                        return snippetSelectorChild === hookParentEl;
-                    });
-                    const forbidSanitize = snippet.data.oeForbidSanitize;
-                    let isForbidden = false;
-                    if (forbidSanitize === "form") {
-                        isForbidden = hookEl.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])');
-                    } else if (forbidSanitize) {
-                        isForbidden = hookEl.closest("[data-oe-sanitize]");
+            if (hookEl) {
+                const hookParentEl = hookEl.parentNode;
+                // Excludes snippets that cannot be placed at the target location.
+                [...this.snippets.values()].forEach((snippet) => {
+                    if (snippet.disabled) {
+                        snippet.excluded = true;
+                    } else {
+                        const $snippetSelectorChildren =
+                                this._getSelectors($(snippet.baseBody)).$selectorChildren;
+                        const hasSelectorChild = [...$snippetSelectorChildren].some(snippetSelectorChild => {
+                            return snippetSelectorChild === hookParentEl;
+                        });
+                        const forbidSanitize = snippet.data.oeForbidSanitize;
+                        let isForbidden = false;
+                        if (forbidSanitize === "form") {
+                            isForbidden = hookEl.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])');
+                        } else if (forbidSanitize) {
+                            isForbidden = hookEl.closest("[data-oe-sanitize]");
+                        }
+                        snippet.excluded = !hasSelectorChild || isForbidden;
                     }
-                    snippet.excluded = !hasSelectorChild || isForbidden;
-                }
-            });
+                });
+            }
 
             const hasIncludedSnippet = [...this.snippets.values()].some(snippet => snippet.excluded === false);
-            if (!hasIncludedSnippet) {
-                if (dropZoneEls) {
+            if (!hasIncludedSnippet || !hookEl) {
+                if (dropZoneEls?.length) {
                     dropZoneEls.forEach(dropZoneEl => dropZoneEl.remove());
                 }
                 this.options.wysiwyg.odooEditor.historyUnpauseSteps();

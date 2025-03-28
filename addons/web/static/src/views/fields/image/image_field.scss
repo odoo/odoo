@@ -1,9 +1,12 @@
 .o_field_image {
-    background-color: var(--ImageField-background-color, transparent);
 
     > div {
         height: 100%;
         width: 100%;
+
+        > img {
+            background-color: var(--ImageField-background-color, transparent);
+        }
     }
 
     button {

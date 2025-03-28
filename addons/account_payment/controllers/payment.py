@@ -60,11 +60,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs.update({
             'currency_id': currency_id,
             'partner_id': partner_id,
+            'reference_prefix': payment_reference,
         })  # Inject the create values taken from the invoice into the kwargs.
         tx_sudo = self._create_transaction(
             custom_create_values={
                 'invoice_ids': [Command.set(invoice_ids)],
-                'reference': payment_reference,
             },
             **kwargs,
         )

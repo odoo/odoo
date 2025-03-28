@@ -1,4 +1,3 @@
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { LivechatButton } from "@im_livechat/embed/common/livechat_button";
 import {
     defineLivechatModels,
@@ -39,7 +38,7 @@ test("do not save fold state of temporary live chats", async () => {
     onRpcBefore("/discuss/channel/fold", (args) => {
         step(`fold - ${args.state}`);
     });
-    const env = await start({ authenticateAs: false });
+    await start({ authenticateAs: false });
     await mountWithCleanup(LivechatButton);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
@@ -48,7 +47,6 @@ test("do not save fold state of temporary live chats", async () => {
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello" });
     await click(".o-mail-ChatWindow-header");
-    await waitNotifications([env, "discuss.Thread/fold_state"]);
     await contains(".o-mail-Message", { text: "Hello", count: 0 });
     await assertSteps(["fold - folded"]);
     await click(".o-mail-ChatBubble");

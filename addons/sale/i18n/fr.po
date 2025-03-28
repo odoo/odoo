@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 13:04+0000\n"
+"POT-Creation-Date: 2025-03-19 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -30,7 +30,7 @@ msgstr "Données récupérées"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr "# Bons de commande"
+msgstr "# Commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -646,7 +646,7 @@ msgid ""
 "            amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -692,14 +692,14 @@ msgstr ""
 "            <t t-if=\"object.origin\">\n"
 "                (avec la référence : <t t-out=\"object.origin or ''\"/> )\n"
 "            </t>\n"
-"            d'un montant de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10.00 €</span> est disponible.\n"
+"            d'un montant de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10 €</span> est disponible.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            <t t-out=\"doc_name or ''\">devis</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"            <t t-out=\"doc_name or ''\">devis</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (avec la référence : <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
-"            d'un montant de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10.00 €</span> attend votre validation.\n"
+"            d'un montant de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">10 €</span> attend votre validation.\n"
 "        </t>\n"
 "        <br/>\n"
 "        <t t-set=\"documents\" t-value=\"object._get_product_documents()\"/>\n"
@@ -1038,7 +1038,7 @@ msgstr "<strong>Votre Référence</strong>"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_date_order_conditional_required
 msgid "A confirmed sales order requires a confirmation date."
-msgstr "Un commande client confirmé nécessite une date de confirmation."
+msgstr "Une commande client confirmée nécessite une date de confirmation."
 
 #. module: sale
 #. odoo-python
@@ -1853,7 +1853,7 @@ msgstr "Créer des factures"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.mail_activity_plan_action_sale_order
 msgid "Create a Sale Order Activity Plan"
-msgstr "Créer un plan d'activité pour les bons de commande"
+msgstr "Créer un plan d'activité pour les commandes clients"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2530,7 +2530,7 @@ msgstr "Icône Font Awesome par ex. fa-tasks"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Valeurs interdites sur la ligne de commande de vente non comptable"
+msgstr "Valeurs interdites sur la ligne de commande client non comptable"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2709,7 +2709,7 @@ msgid ""
 "If set, the SO will invoice in this journal; otherwise the sales journal "
 "with the lowest sequence is used."
 msgstr ""
-"Si défini, le bon de commande sera facturé dans ce journal ; sinon, le "
+"Si défini, la commande client sera facturée dans ce journal ; sinon, le "
 "journal des ventes avec la séquence la plus basse est utilisé."
 
 #. module: sale
@@ -3230,7 +3230,7 @@ msgstr "Méthode de mise à jour des quantités livrées"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr "Champs manquants sur la ligne de commande de vente comptabilisée."
+msgstr "Champs manquants sur la ligne de commande client comptabilisée."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4311,7 +4311,7 @@ msgstr "Commande client"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr "Nombre de bons de commande"
+msgstr "Nombre de commandes clients"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_plan_action_sale_order
@@ -4326,12 +4326,12 @@ msgstr "Avertissements sur les commandes"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 msgid "Sale Orders"
-msgstr "Bons de commande"
+msgstr "Commandes clients"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_orders_count
 msgid "Sale Orders Count"
-msgstr "Nombre de bons de commande"
+msgstr "Nombre de commandes clients"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
@@ -4351,7 +4351,7 @@ msgstr "Configuration du mode de paiement sélectionné dans Ventes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__sale_order_ids
 msgid "Sale orders to cancel"
-msgstr "Bons de commande à annuler"
+msgstr "Commandes clients à annuler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -4432,7 +4432,7 @@ msgstr "Annulation de la commande"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr "Commande de vente confirmée"
+msgstr "Commande client confirmée"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
@@ -5061,7 +5061,8 @@ msgstr "Le jeton d'accès n'est pas valide."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_to_invoice
 msgid "The amount to invoice = Sale Order Total - Confirmed Down Payments."
-msgstr "Le montant à facturer = Total du bon de commande - Acomptes confirmés"
+msgstr ""
+"Le montant à facturer = Total de la commande client - Acomptes confirmés"
 
 #. module: sale
 #. odoo-python
@@ -5070,8 +5071,8 @@ msgid ""
 "The company is required, please select one before making any other changes "
 "to the sale order."
 msgstr ""
-"Veuillez sélectionner une société avant d'apporter d'autres modifications au"
-" bon de commande."
+"Veuillez sélectionner une société avant d'apporter d'autres modifications à "
+"la commande client."
 
 #. module: sale
 #. odoo-python
@@ -5124,8 +5125,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "The new invoice will deduct draft invoices linked to this sale order."
 msgstr ""
-"La nouvelle facture déduira les factures en brouillon liées à ce bon de "
-"commande."
+"La nouvelle facture déduira les factures en brouillon liées à cette commande"
+" client."
 
 #. module: sale
 #. odoo-python
@@ -5158,7 +5159,7 @@ msgstr "La quantité commandée a été mise à jour"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr "La communication de paiement de ce bon de commande."
+msgstr "La communication de paiement de cette commande client."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5566,11 +5567,6 @@ msgid "Untaxed Total"
 msgstr "Total hors taxes"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr "Remise hors taxes"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "UoM"
 msgstr "UdM"
@@ -5792,6 +5788,12 @@ msgstr ""
 "invitons à supprimer cette ligne et à en créer une nouvelle."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+msgid "You cannot modify the product of this order line."
+msgstr "Vous ne pouvez pas modifier le produit de cette ligne de commande."
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
@@ -5899,7 +5901,7 @@ msgstr "pour le"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "for this Sale Order."
-msgstr "pour ce bon de commande."
+msgstr "pour cette commande client."
 
 #. module: sale
 #. odoo-javascript
@@ -5916,7 +5918,7 @@ msgstr "devis."
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "sale order"
-msgstr "bon de commande"
+msgstr "commande client"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form

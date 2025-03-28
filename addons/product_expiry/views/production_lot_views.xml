@@ -63,8 +63,11 @@
                 <field name="product_expiry_alert"/>
             </xpath>
             <xpath expr="//field[@name='name']" position="after">
-                <span title="Alert" class="fa fa-exclamation-triangle text-danger ms-2" invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
-                <field name="alert_date" widget='remaining_days' class="ms-2"/>
+                <div>
+                    <span title="Alert" class="fa fa-exclamation-triangle text-danger me-2"
+                          invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
+                    <field name="alert_date" widget='remaining_days' class="d-inline-block"/>
+                </div>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">
                 <div invisible="not expiration_date">

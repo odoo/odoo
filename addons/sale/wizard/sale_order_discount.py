@@ -101,17 +101,31 @@ class SaleOrderDiscount(models.TransientModel):
         if self.discount_type == 'amount':
             if not self.sale_order_id.amount_total:
                 return
-            discount_percentage = self.discount_amount / self.sale_order_id.amount_total
+            so_amount = self.sale_order_id.amount_total
+            # Fixed taxes cannot be discounted, so they cannot be considered in the total amount
+            # when computing the discount percentage.
+            if any(tax.amount_type == 'fixed' for tax in self.sale_order_id.order_line.tax_id.flatten_taxes_hierarchy()):
+                fixed_taxes_amount = 0
+                for line in self.sale_order_id.order_line:
+                    taxes = line.tax_id.flatten_taxes_hierarchy()
+                    for tax in taxes.filtered(lambda tax: tax.amount_type == 'fixed'):
+                        fixed_taxes_amount += tax.amount * line.product_uom_qty
+                so_amount -= fixed_taxes_amount
+            discount_percentage = self.discount_amount / so_amount
         else: # so_discount
             discount_percentage = self.discount_percentage
         total_price_per_tax_groups = defaultdict(float)
         for line in self.sale_order_id.order_line:
             if not line.product_uom_qty or not line.price_unit:
                 continue
-            discounted_price = line.price_unit * (1 - (line.discount or 0.0)/100)
-            total_price_per_tax_groups[line.tax_id] += (discounted_price * line.product_uom_qty)
+            # Fixed taxes cannot be discounted.
+            taxes = line.tax_id.flatten_taxes_hierarchy()
+            fixed_taxes = taxes.filtered(lambda t: t.amount_type == 'fixed')
+            taxes -= fixed_taxes
+            total_price_per_tax_groups[taxes] += line.price_unit * (1 - (line.discount or 0.0) / 100) * line.product_uom_qty
 
         discount_dp = self.env['decimal.precision'].precision_get('Discount')
+        context = {'lang': self.sale_order_id._get_lang()}  # noqa: F841
         if not total_price_per_tax_groups:
             # No valid lines on which the discount can be applied
             return
@@ -131,8 +145,9 @@ class SaleOrderDiscount(models.TransientModel):
                 ),
             }]
         else:
-            vals_list = [
-                self._prepare_discount_line_values(
+            vals_list = []
+            for taxes, subtotal in total_price_per_tax_groups.items():
+                discount_line_value = self._prepare_discount_line_values(
                     product=discount_product,
                     amount=subtotal * discount_percentage,
                     taxes=taxes,
@@ -146,8 +161,8 @@ class SaleOrderDiscount(models.TransientModel):
                         "- On products with the following taxes %(taxes)s",
                         taxes=", ".join(taxes.mapped('name')),
                     )
-                ) for taxes, subtotal in total_price_per_tax_groups.items()
-            ]
+                )
+                vals_list.append(discount_line_value)
         return self.env['sale.order.line'].create(vals_list)
 
     def action_apply_discount(self):

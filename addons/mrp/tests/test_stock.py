@@ -317,6 +317,48 @@ class TestWarehouseMrp(common.TestMrpCommon):
         self.assertEqual(backorder.state, 'done')
         self.assertEqual(mo.move_raw_ids.move_line_ids.mapped('quantity_product_uom'), [20, 80])
 
+    def test_produce_with_zero_available_qty(self):
+        """ Test that producing with 0 qty_available for the component
+        still links the stock.move.line to the production order. """
+        mo, *_ = self.generate_mo()
+        mo.button_mark_done()
+        self.assertEqual(mo.move_raw_ids.move_line_ids.production_id, mo)
+
+    def test_unarchive_mto_route_active_needed_rules_only(self):
+        """ Ensure that activating a route will activate only its relevant rules.
+            Here, unarchiving the MTO route shouldn't active pull rule for the Pre-Production
+            location if manufacture is in 1 step since this location is archived.
+        """
+
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+
+        # initially 'WH: Stock → Pre-Production (MTO)' is inactive and not shown in MTO route.
+        self.assertEqual(self.warehouse_1.manufacture_steps, 'mrp_one_step')
+        self.assertFalse(self.warehouse_1.pbm_mto_pull_id.active)
+        self.assertFalse(self.warehouse_1.pbm_mto_pull_id.location_dest_id.active)
+        self.assertFalse(mto_route.active)
+        self.assertNotIn(self.warehouse_1.pbm_mto_pull_id, mto_route.rule_ids)
+
+        # Activate the MTO route and still 'WH: Stock → Pre-Production (MTO)' is not shown in MTO route.
+        mto_route.active = True
+        self.assertFalse(self.warehouse_1.pbm_mto_pull_id.active)
+        self.assertFalse(self.warehouse_1.pbm_mto_pull_id.location_dest_id.active)
+        self.assertNotIn(self.warehouse_1.pbm_mto_pull_id, mto_route.rule_ids)
+
+        # Change MRP steps mrp_one_step to pbm_sam and now that rule is shown in mto route.
+        self.warehouse_1.manufacture_steps = 'pbm_sam'
+        self.assertTrue(self.warehouse_1.pbm_mto_pull_id.active)
+        self.assertTrue(self.warehouse_1.pbm_mto_pull_id.location_dest_id.active)
+        self.assertIn(self.warehouse_1.pbm_mto_pull_id, mto_route.rule_ids)
+
+        # Revert to mrp_one_step MRP and confirm rules visibility is updated correctly
+        self.warehouse_1.manufacture_steps = 'mrp_one_step'
+        self.assertFalse(self.warehouse_1.pbm_mto_pull_id.active)
+        self.assertFalse(self.warehouse_1.pbm_mto_pull_id.location_dest_id.active)
+        self.assertNotIn(self.warehouse_1.pbm_mto_pull_id, mto_route.rule_ids)
+
+
 class TestKitPicking(common.TestMrpCommon):
     @classmethod
     def setUpClass(cls):
@@ -625,3 +667,57 @@ class TestKitPicking(common.TestMrpCommon):
         self.assertRecordValues(scrap.move_ids, [
             {'product_id': component.id, 'quantity': 1, 'state': 'done'}
         ])
+
+    def test_kit_with_packaging_different_uom(self):
+        """
+        Test that a quantity packaging is correctly computed on a move line
+        when a kit is in a different uom than its components.
+        - Component(uom=Kg)
+        - Kit (uom=unit) -> Bom (1 dozen) -> Component (10 g)
+        - Packaging (qty=2 units of kit)
+        """
+        bom = self.bom_4
+        bom.type = 'phantom'
+        kit = bom.product_id
+        kit.is_storable = True
+        # product is in unit and bom in dozen
+        kit.uom_id = self.uom_unit
+        bom.product_uom_id = self.uom_dozen
+        bom.product_qty = 1
+        # create a packaging with 2 units
+        packaging = self.env['product.packaging'].create({
+            'name': 'Packaging',
+            'qty': 2,
+            'product_id': kit.id,
+        })
+        # component is in Kg but bom_line in gram
+        component = bom.bom_line_ids.product_id
+        component.uom_id = self.uom_kg
+        bom.bom_line_ids.product_uom_id = self.uom_gram
+        bom.bom_line_ids.product_qty = 10
+
+        # create a delivery with 20 units of kit
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        stock_location = warehouse.lot_stock_id
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': kit.name,
+                'product_id': kit.id,
+                'product_uom_qty': 24,
+                'product_uom': kit.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+                'product_packaging_id': packaging.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 20
+        delivery.move_ids.picked = True
+        delivery.button_validate()
+        self.assertTrue(delivery.state, 'done')
+        self.assertEqual(delivery.move_ids.move_line_ids.product_packaging_qty, 12)

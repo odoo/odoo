@@ -116,7 +116,7 @@
                         <span t-else="" t-field="product.name"/>
                     </div>
                     <div class="o_label_left_column">
-                        <small class="text-nowrap" t-field="product.default_code"/>
+                        <small class="text-nowrap" t-field="product.default_code" style="font-size: 0.875em;"/>
                     </div>
                     <div class="text-end" style="padding: 0 4px;">
                         <strong class="o_label_price_small" t-out="pricelist._get_product_price(product, 1, pricelist.currency_id or product.currency_id)"

@@ -20,6 +20,7 @@
 # Martin Trigaux, 2024
 # Roy Sayag, 2024
 # דודי מלכה <Dudimalka6@gmail.com>, 2024
+# Ha Ketem <haketem@gmail.com>, 2024
 # david danilov, 2024
 # NoaFarkash, 2024
 # Yihya Hugirat <hugirat@gmail.com>, 2024
@@ -29,14 +30,13 @@
 # Mendi Soudry, 2024
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2025
 # yael terner, 2025
-# Ha Ketem <haketem@gmail.com>, 2025
 # or balmas, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: or balmas, 2025\n"
 "Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
@@ -59,8 +59,6 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_bill_count
-#: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
-#: model:ir.model.fields,field_description:purchase.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "מס' חשבונית ספק "
 
@@ -79,7 +77,7 @@ msgstr "%(product)s מאת %(original_receipt_date)s אל %(new_receipt_date)s"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "%(vendor)s confirmed the receipt will take place on %(date)s."
-msgstr "%(vendor)s אישר/ה שיתקבל ב- %(date)s."
+msgstr "%(vendor)s אישר/ה שהקבלה תתבצע ב- %(date)s."
 
 #. module: purchase
 #. odoo-python
@@ -3430,7 +3428,6 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_supplier_invoices
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
-#: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_account_buttons
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 msgid "Vendor Bills"
 msgstr "חשבוניות הספק"
@@ -3477,7 +3474,7 @@ msgstr "תצוגה"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "View Details"
-msgstr ""
+msgstr "צפה בפרטים"
 
 #. module: purchase
 #. odoo-python

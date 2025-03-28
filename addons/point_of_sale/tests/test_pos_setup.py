@@ -77,6 +77,44 @@ class TestPoSSetup(TestPoSCommon):
         self.assertEqual(sorted(tax_group_7_10.children_tax_ids.ids), sorted((tax7 | tax10).ids))
 
     def test_archive_used_journal(self):
-        journal = self.cash_pm1.journal_id
+        journal = self.env['account.journal'].create({
+            'name': 'BANKOS',
+            'company_id': self.company.id,
+            'code': 'BANKOS',
+            'type': 'bank',
+            'invoice_reference_type': 'none',
+            'invoice_reference_model': 'odoo'
+        })
+        payment_method = self.env['pos.payment.method'].create({'name': 'Lets Pay for Tests', 'journal_id': journal.id})
+        self.basic_config.write({'payment_method_ids': [payment_method.id]})
+        journal.write({'pos_payment_method_ids': [payment_method.id]})
+        session = self.env['pos.session'].create(
+            {
+                'name': 'lets sell some tests',
+                'config_id': self.basic_config.id,
+                'user_id': self.env.user.id,
+                'state': 'opened'
+            }
+        )
+        order = self.env['pos.order'].create(
+            {
+                'name': 'MIX',
+                'amount_tax': 0,
+                'amount_total': 0,
+                'amount_paid': 0,
+                'amount_return': 0,
+                'company_id': self.company.id,
+                'pricelist_id': self.currency_pricelist.id,
+                'session_id': session.id
+            }
+        )
+        self.env['pos.payment'].create(
+            {
+                'amount': 100,
+                'payment_date': '2025-01-01',
+                'payment_method_id': payment_method.id,
+                'pos_order_id': order.id
+            }
+        )
         with self.assertRaises(ValidationError):
             journal.action_archive()

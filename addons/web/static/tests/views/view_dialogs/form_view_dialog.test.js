@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts } from "@odoo/hoot-dom";
+import { click, edit, press, queryAllTexts, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -248,16 +248,15 @@ test("click on view buttons in a FormViewDialog", async () => {
 });
 
 test("formviewdialog is not closed when button handlers return a rejected promise", async () => {
-    expect.errors(1);
     Partner._views["form,false"] = /* xml */ `
         <form string="Partner">
             <sheet><group><field name="foo"/></group></sheet>
         </form>
     `;
-    let reject = true;
+    let reject;
     onRpc("web_save", async () => {
         if (reject) {
-            return Promise.reject();
+            return Promise.reject("rejected");
         }
     });
     await mountWithCleanup(WebClient);
@@ -267,24 +266,24 @@ test("formviewdialog is not closed when button handlers return a rejected promis
     });
 
     await animationFrame();
-    expect(".modal-body button").toHaveCount(0, { message: "should not have any button in body" });
-    expect(".modal-footer button").toHaveCount(3, { message: "should have 3 buttons in footer" });
+    expect(".modal-body button").not.toHaveCount();
+    expect(".modal-footer button:visible").toHaveCount(2);
 
-    // clickSave inside the dialog
-    await clickSave({ index: 1 });
+    // Click "save" inside the dialog (with rejection)
+    expect.errors(1);
+    reject = true;
+    await clickSave();
 
-    expect(".modal").toHaveCount(2, {
-        message: "there are 2 modal opened, 1 for the error and 1 for the form view dialog",
-    });
-    await click(".o_error_dialog .btn-primary");
-    await animationFrame();
+    expect.verifyErrors(["rejected"]);
 
-    expect(".modal").toHaveCount(1, { message: "modal should still be opened" });
+    // Close error modal
+    await click(waitFor(".o_error_dialog .btn:contains(Close)"));
 
+    // Click "save" inside the dialog (without rejection)
     reject = false;
-    // clickSave inside the dialog
-    await clickSave({ index: 1 });
-    expect(".modal").toHaveCount(0, { message: "modal should be closed" });
+    await clickSave();
+
+    expect(".modal").not.toHaveCount();
 });
 
 test("FormViewDialog with remove button", async () => {

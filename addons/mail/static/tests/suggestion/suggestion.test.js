@@ -409,6 +409,7 @@ test("Mention with @everyone", async () => {
     await contains(".o-mail-Composer-input", { value: "@everyone " });
     await click(".o-mail-Composer-send:enabled");
     await contains(".o-mail-Message-bubble.o-orange");
+    await contains(".o-mail-Message a:contains('@everyone')");
 });
 
 test("Suggestions that begin with the search term should have priority", async () => {

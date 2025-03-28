@@ -41,7 +41,7 @@ export class ControlButtons extends Component {
                 item: "none",
             },
         ];
-        for (const fiscalPos of this.pos.models["account.fiscal.position"].getAll()) {
+        for (const fiscalPos of this.pos.config.fiscal_position_ids) {
             fiscalPosList.push({
                 id: fiscalPos.id,
                 label: fiscalPos.name,
@@ -72,11 +72,14 @@ export class ControlButtons extends Component {
             fiscal_position_id: selectedFiscalPosition ? selectedFiscalPosition.id : false,
         });
     }
-    async clickPricelist() {
-        // Create the list to be passed to the SelectionPopup.
-        // Pricelist object is passed as item in the list because it
-        // is the object that will be returned when the popup is confirmed.
-        const selectionList = this.pos.models["product.pricelist"].map((pricelist) => ({
+    /**
+     * Create the list to be passed to the SelectionPopup on the `click` function.
+     * Pricelist object is passed as item in the list because it
+     * is the object that will be returned when the popup is confirmed.
+     * @returns {Array}
+     */
+    getPricelistList() {
+        const selectionList = this.pos.config.available_pricelist_ids.map((pricelist) => ({
             id: pricelist.id,
             label: pricelist.name,
             isSelected:
@@ -93,7 +96,10 @@ export class ControlButtons extends Component {
                 item: null,
             });
         }
-
+        return selectionList;
+    }
+    async clickPricelist() {
+        const selectionList = this.getPricelistList();
         const payload = await makeAwaitable(this.dialog, SelectionPopup, {
             title: _t("Select the pricelist"),
             list: selectionList,

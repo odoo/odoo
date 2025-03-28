@@ -52,8 +52,10 @@ function closeProfileDialog({content, totp_state}) {
 
     return [{
         content,
-        trigger,
-        run(helpers) {
+        //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
+        trigger: 'a[role=tab]:contains("Account Security").active',
+        async run(helpers) {
+            await waitFor(trigger, { timeout: 5000 });
             const modal = document.querySelector(".o_dialog");
             if (modal) {
                 modal.querySelector("button[name=preference_cancel]").click();
@@ -76,8 +78,12 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     url: '/odoo',
     steps: () => [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
-    trigger: 'button[name=action_totp_enable_wizard]',
-    run: "click",
+    //TODO: remove when PIPU macro PR is merged: https://github.com/odoo/odoo/pull/194508
+    trigger: 'a[role=tab]:contains("Account Security").active',
+    async run(actions) {
+        const el = await waitFor('button[name=action_totp_enable_wizard]', { timeout: 5000 });
+        await actions.click(el);
+    }
 },
 {
     trigger: ".modal div:contains(entering your password)",
@@ -362,8 +368,14 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     content: "go to Account security Tab",
     trigger: "a.nav-link:contains(Account Security)",
     run: "click",
-}, ...closeProfileDialog({
-    content: "check that test_user user has been de-totp'd",
-    totp_state: false,
-}),
+}, {
+    content: "check 2FA button",
+    trigger: 'body',
+    run: () => {
+        const button = document.querySelector('button[name=action_totp_enable_wizard]').disabled
+        if (!button) {
+            console.error("2FA button should be disabled.");
+        }
+    },
+}
 ]})
