@@ -16,10 +16,6 @@ class WebsiteMenu(models.Model):
         for event_menu in website_event_menus:
             to_update = event_updates.setdefault(event_menu.event_id, list())
             for menu_type, fname in event_menu.event_id._get_menu_type_field_matching().items():
-                # workaround for stable, remove this if in master, see 'save' method override
-                if menu_type == 'community' and event_menu.view_id:
-                    continue
-
                 if event_menu.menu_type == menu_type:
                     to_update.append(fname)
 
@@ -113,7 +109,7 @@ class WebsiteMenu(models.Model):
                     event_menu_values.append({
                         'menu_id': menu_record.id,
                         'event_id': parent_event_menu.event_id.id,
-                        'menu_type': 'community',  # dummy value for required field, adapt in master
+                        'menu_type': 'other',
                     })
 
                 # if the current user can create website.menu, then he should be able to

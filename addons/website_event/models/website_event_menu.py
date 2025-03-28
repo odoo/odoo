@@ -19,6 +19,7 @@ class WebsiteEventMenu(models.Model):
         [('community', 'Community Menu'),
          ('introduction', 'Home'),
          ('register', 'Practical'),
+         ('other', 'Other'),
         ], string="Menu Type", required=True)
 
     def copy(self, default=None):

@@ -76,6 +76,9 @@ class EventEvent(models.Model):
     community_menu_ids = fields.One2many(
         "website.event.menu", "event_id", string="Event Community Menus",
         domain=[("menu_type", "=", "community")])
+    other_menu_ids = fields.One2many(
+        "website.event.menu", "event_id", string="Other Menus",
+        domain=[("menu_type", "=", "other")])
     # live information
     is_ongoing = fields.Boolean(
         'Is Ongoing', compute='_compute_time_data', search='_search_is_ongoing',
@@ -246,13 +249,8 @@ class EventEvent(models.Model):
             default_menu_values = {'event_id': new_event.id}
             new_event.menu_id = old_event.menu_id.copy({'name': new_event.name, 'website_id': new_event.website_id.id})
             new_event.introduction_menu_ids = old_event.introduction_menu_ids.copy(default_menu_values)
-            custom_page_menus = old_event.community_menu_ids.filtered(lambda menu: menu.view_id)
-            if custom_page_menus:
-                # workaround for stable, 'regular' community menus are not supposed to be duplicated
-                # remove this if in master, see 'website.menu#save' method override
-                custom_page_menus.copy(default_menu_values)
-
-            (new_event.introduction_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
+            new_event.other_menu_ids = old_event.other_menu_ids.copy(default_menu_values)
+            (new_event.introduction_menu_ids + new_event.other_menu_ids + new_event.community_menu_ids + new_event.register_menu_ids).menu_id.parent_id = new_event.menu_id
 
     @api.model_create_multi
     def create(self, vals_list):
