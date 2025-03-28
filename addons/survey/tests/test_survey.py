@@ -669,6 +669,41 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
 
         self.assertEqual(question_and_page_ids - invalid_records, returned_questions_and_pages)
 
+    def test_survey_session_leaderboard(self):
+        """Check leaderboard rendering with small (max) scores values."""
+        start_time = fields.datetime(2023, 7, 7, 12, 0, 0)
+        test_survey = self.env['survey.survey'].create({
+            'title': 'Test This Survey',
+            'scoring_type': 'scoring_with_answers',
+            'session_question_start_time': start_time,
+            'session_start_time': start_time,
+            'session_state': 'in_progress',
+            'question_and_page_ids': [
+                Command.create({
+                    'question_type': 'simple_choice',
+                    'suggested_answer_ids': [
+                        Command.create({'value': 'In Asia', 'answer_score': 0.125, 'is_correct': True}),
+                        Command.create({'value': 'In Europe', 'answer_score': 0., 'is_correct': False}),
+                    ],
+                    'title': 'Where is india?',
+                }),
+            ]
+        })
+        question_1 = test_survey.question_and_page_ids[0]
+        answer_correct = question_1.suggested_answer_ids[0]
+        user_input = self.env['survey.user_input'].create({'survey_id': test_survey.id, 'is_session_answer': True})
+        user_input_line = self.env['survey.user_input.line'].create({
+            'user_input_id': user_input.id,
+            'question_id': question_1.id,
+            'answer_type': 'suggestion',
+            'suggested_answer_id': answer_correct.id,
+        })
+        self.assertEqual(user_input_line.answer_score, 0.125)
+        self.env['ir.qweb']._render('survey.user_input_session_leaderboard', {
+            'animate': True,
+            'leaderboard': test_survey._prepare_leaderboard_values()
+        })
+
     def test_notify_subscribers(self):
         """Check that messages are posted only if there are participation followers"""
         survey_2 = self.survey.copy()
