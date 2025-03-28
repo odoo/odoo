@@ -112,6 +112,94 @@
         <field name="stage_id" ref="stage_job1"/>
     </record>
 
+    <!-- applicant -->
+    <record id="hr_case_cto1" model="hr.applicant">
+        <field name="partner_name">Ryan Mitchell</field>
+        <field name="email_from">ryan@gmail.example.com</field>
+        <field name="partner_phone">8951245</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_cto"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job0"/>
+    </record>
+
+    <record id="hr_case_cto2" model="hr.applicant">
+        <field name="partner_name">Emily Brooks</field>
+        <field name="email_from">emily@gmail.example.com</field>
+        <field name="partner_phone">6965545</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_cto"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job1"/>
+    </record>
+
+    <record id="hr_case_cto3" model="hr.applicant">
+        <field name="partner_name">Noah Bennett</field>
+        <field name="email_from">noah@gmail.example.com</field>
+        <field name="partner_phone">8951245</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_cto"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job2"/>
+    </record>
+
+    <record id="hr_case_cto4" model="hr.applicant">
+        <field name="partner_name">Ethan Carter</field>
+        <field name="email_from">ethan@gmail.example.com</field>
+        <field name="partner_phone">987891</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_cto"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">1</field>
+        <field name="stage_id" ref="stage_job3"/>
+    </record>
+
+    <record id="hr_case_cto5" model="hr.applicant">
+        <field name="partner_name">Alex Parker</field>
+        <field name="email_from">alex@gmail.example.com</field>
+        <field name="partner_phone">9817891</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_cto"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="stage_id" ref="stage_job2"/>
+        <field name="refuse_reason_id" ref="refuse_reason_8"></field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="hr_case_cto6" model="hr.applicant">
+        <field name="partner_name">Natalie Foster</field>
+        <field name="email_from">natalie@gmail.example.com</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_cto"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="stage_id" ref="stage_job0"/>
+    </record>
+    
     <record id="hr_case_dev0" model="hr.applicant">
         <field name="partner_name">Johan Duck</field>
         <field name="email_from">coincoin@gmail.example.com</field>
@@ -167,6 +255,21 @@
         <field name="stage_id" ref="stage_job1"/>
     </record>
 
+    <record id="hr_case_dev4" model="hr.applicant">
+        <field name="partner_name">Cameron Ellis</field>
+        <field name="email_from">cameron@yahoo.example.com</field>
+        <field name="partner_phone">6547654</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">0</field>
+        <field name="stage_id" ref="stage_job1"/>
+        <field name="refuse_reason_id" ref="refuse_reason_6"></field>
+        <field name="active" eval="False"/>
+    </record>
+
     <record id="hr_case_traineemca0" model="hr.applicant">
         <field name="partner_name">Marie Justine</field>
         <field name="email_from">justinemarie@outlook.example.com</field>
@@ -184,6 +287,25 @@
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
     </record>
 
+    <record id="hr_case_traineemca1" model="hr.applicant">
+        <field name="partner_name">Lucas Anderson</field>
+        <field name="email_from">lucas@outlook.example.com</field>
+        <field name="partner_phone">99855</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_sales"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">2</field>
+        <field name="stage_id" ref="stage_job3"/>
+        <field name="partner_phone">6633225</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=17)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+        <field name="refuse_reason_id" ref="refuse_reason_1"></field>
+        <field name="active" eval="False"/>
+    </record>
+
     <record id="hr_case_fresher0" model="hr.applicant">
         <field name="partner_name">Jose</field>
         <field name="email_from">the.jose@gmail.example.com</field>
@@ -195,6 +317,51 @@
         <field name="user_id" ref="base.user_demo"/>
         <field name="priority">0</field>
         <field name="stage_id" ref="stage_job3"/>
+    </record>
+
+    <record id="hr_case_fresher1" model="hr.applicant">
+        <field name="partner_name">Daniel Parker</field>
+        <field name="email_from">daniel@gmail.example.com</field>
+        <field name="partner_phone">996735</field>
+        <field name="type_id" ref="degree_bachelor"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">0</field>
+        <field name="stage_id" ref="stage_job3"/>
+        <field name="refuse_reason_id" ref="refuse_reason_7"></field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="hr_case_fresher2" model="hr.applicant">
+        <field name="partner_name">Lily Patterson</field>
+        <field name="email_from">lilly@gmail.example.com</field>
+        <field name="partner_phone">996711135</field>
+        <field name="type_id" ref="degree_bachelor"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">0</field>
+        <field name="stage_id" ref="stage_job3"/>
+        <field name="refuse_reason_id" ref="refuse_reason_7"></field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="hr_case_fresher3" model="hr.applicant">
+        <field name="partner_name">Jordan Ellis</field>
+        <field name="email_from">jordan@gmail.example.com</field>
+        <field name="partner_phone">99673455</field>
+        <field name="type_id" ref="degree_bachelor"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="priority">0</field>
+        <field name="stage_id" ref="stage_job3"/>
+        <field name="refuse_reason_id" ref="refuse_reason_7"></field>
+        <field name="active" eval="False"/>
     </record>
 
     <record id="hr_case_mkt0" model="hr.applicant">
@@ -219,6 +386,49 @@
         <field name="user_id" ref="base.user_admin"/>
         <field name="priority">3</field>
         <field name="stage_id" ref="stage_job3"/>
+    </record>
+
+    <record id="hr_case_mkt2" model="hr.applicant">
+        <field name="partner_name">Natalie Foster</field>
+        <field name="email_from">natalie@gmail.example.com</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="stage_id" ref="stage_job0"/>
+        <field name="refuse_reason_id" ref="refuse_reason_5"></field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="hr_case_mkt3" model="hr.applicant">
+        <field name="partner_name">Daniel Parker</field>
+        <field name="email_from">daniel@gmail.example.com</field>
+        <field name="partner_phone">996735</field>
+        <field name="type_id" ref="degree_bachelor"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">1</field>
+        <field name="stage_id" ref="stage_job0"/>
+        <field name="refuse_reason_id" ref="refuse_reason_7"></field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="hr_case_mkt4" model="hr.applicant">
+        <field name="partner_name">Natalie Foster</field>
+        <field name="email_from">natalie@gmail.example.com</field>
+        <field name="type_id" ref="degree_graduate"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_manager')])]"/>
+        <field name="availability" eval="(DateTime.today() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_marketing"/>
+        <field name="department_id" ref="hr.dep_sales"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="stage_id" ref="stage_job0"/>
     </record>
 
     <record id="hr_case_yrsexperienceinphp0" model="hr.applicant">
@@ -247,6 +457,22 @@
         <field name="stage_id" ref="stage_job5"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=34)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_marketingjob1" model="hr.applicant">
+        <field name="partner_name">Mason Clark</field>
+        <field name="email_from">mason.clark@gmail.example.com</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
+        <field eval="(datetime.now()+relativedelta(months=-1)).strftime('%Y-%m-08 01:00:00')" name="create_date"/>
+        <field name="job_id" ref="hr.job_developer"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="stage_id" ref="stage_job5"/>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=34)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+        <field name="refuse_reason_id" ref="refuse_reason_8"></field>
+        <field name="active" eval="False"/>
     </record>
 
     <record id="hr_case_financejob0" model="hr.applicant">
@@ -278,6 +504,50 @@
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
     </record>
 
+    <record id="hr_case_financejob2" model="hr.applicant">
+        <field name="partner_name">Mitchel Armstrong</field>
+        <field name="email_from">mitchel.strongarm@gmail.example.com</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
+        <field name="partner_phone">339745</field>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_hrm"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">1</field>
+        <field name="stage_id" ref="stage_job2"/>
+        <field name="refuse_reason_id" ref="refuse_reason_1"></field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="hr_case_financejob3" model="hr.applicant">
+        <field name="partner_name">Elijah Thompson</field>
+        <field name="email_from">thompseli@gmail.example.com</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
+        <field name="partner_phone">339745</field>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_hrm"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">3</field>
+        <field name="stage_id" ref="stage_job2"/>
+    </record>
+
+    <record id="hr_case_financejob4" model="hr.applicant">
+        <field name="partner_name">Scarlett Rivera</field>
+        <field name="email_from">rivera.scarlett@gmail.example.com</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_reserve')])]"/>
+        <field name="partner_phone">33974325</field>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_hrm"/>
+        <field name="department_id" ref="hr.dep_administration"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="priority">2</field>
+        <field name="stage_id" ref="stage_job0"/>
+    </record>
+
     <record id="hr_case_traineemca1" model="hr.applicant">
         <field name="partner_name">Tina Augustie</field>
         <field name="email_from">tina.turner@gmail.example.com</field>
@@ -287,6 +557,34 @@
         <field name="job_id" ref="hr.job_trainee"/>
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="stage_id" ref="stage_job4"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=67)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_traineemca2" model="hr.applicant">
+        <field name="partner_name">Sebastian Carter</field>
+        <field name="email_from">carter.seb@gmail.example.com</field>
+        <field name="partner_phone">8643244</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="stage_id" ref="stage_job0"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=67)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_traineemca3" model="hr.applicant">
+        <field name="partner_name">Vincent Harris</field>
+        <field name="email_from">harris.vin.h@gmail.example.com</field>
+        <field name="partner_phone">845242</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="stage_id" ref="stage_job1"/>
         <field name="user_id" ref="base.user_admin"/>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=67)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
@@ -322,6 +620,72 @@
         <field name="salary_expected">11000.0</field>
         <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
         <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_advertisement2" model="hr.applicant">
+        <field name="partner_name">Dakota Lane</field>
+        <field name="email_from">dakota.lane@gmail.example.com</field>
+        <field name="partner_phone">9981214455</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+        <field name="department_id" ref="hr.dep_ps"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job2"/>
+        <field name="salary_expected">21000.0</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_advertisement3" model="hr.applicant">
+        <field name="partner_name">Abigail Carter</field>
+        <field name="email_from">abigail.carter@gmail.example.com</field>
+        <field name="partner_phone">8299291</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+        <field name="department_id" ref="hr.dep_ps"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job1"/>
+        <field name="salary_expected">51000.0</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_advertisement4" model="hr.applicant">
+        <field name="partner_name">Hunter Reynolds</field>
+        <field name="email_from">hunter@gmail.example.com</field>
+        <field name="partner_phone">8921231</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+        <field name="department_id" ref="hr.dep_ps"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job4"/>
+        <field name="salary_expected">71000.0</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+    </record>
+
+    <record id="hr_case_advertisement5" model="hr.applicant">
+        <field name="partner_name">Eren Yeager</field>
+        <field name="email_from">attack.eren@gmail.example.com</field>
+        <field name="partner_phone">8911101</field>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_sales')])]"/>
+        <field name="availability" eval="(DateTime.today() + relativedelta(months=3)).strftime('%Y-%m-%d')"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+        <field name="department_id" ref="hr.dep_ps"/>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="stage_id" ref="stage_job4"/>
+        <field name="salary_expected">51123.0</field>
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
+        <field name="date_last_stage_update" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+        <field name="refuse_reason_id" ref="refuse_reason_8"></field>
+        <field name="active" eval="False"/>
     </record>
 
     <record id="hr_case_dev2_cv" model="ir.attachment">
@@ -605,5 +969,14 @@
         <field name="summary">Call to propose a contract</field>
         <field name="create_uid" ref="base.user_admin"/>
         <field name="user_id" ref="base.user_admin"/>
+    </record>
+    <record id="talent_pool_0" model="hr.talent.pool">
+        <field name="name">Developer</field>
+        <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="talent_ids" eval="[
+            (4, ref('hr_recruitment.hr_case_cto3')), 
+            (4, ref('hr_recruitment.hr_case_cto4')),
+            (4, ref('hr_recruitment.hr_case_dev0')),
+        ]"/>
     </record>
 </odoo>
