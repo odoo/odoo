@@ -9173,7 +9173,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
                 args: [
                     "The message",
                     {
-                        name: "Sub view",
+                        name: "Create New Record",
                         res_model: "partner",
                         type: "ir.actions.act_window",
                         domain: [],
@@ -9210,7 +9210,7 @@ test(`form view is not broken if save operation fails with redirect warning`, as
     expect.verifySteps(["get_views", "onchange"]);
 
     // RedirectWarning dialog
-    expect(`.modal-title`).toHaveText("Sub view");
+    expect(`.modal-title`).toHaveText("Create New Record");
 });
 
 test(`form view is not broken if save failed in readonly mode on field changed`, async () => {
@@ -10270,7 +10270,7 @@ test(`discard after a failed save (and close notifications)`, async () => {
     //cannot save because there is a required field
     await contains(`.o_control_panel .o_form_button_save`).click();
     expect(`.o_notification`).toHaveCount(1);
-
+    
     await contains(`.o_control_panel .o_form_button_cancel`).click();
     expect(`.o_form_view`).toHaveCount(0);
     expect(`.o_kanban_view`).toHaveCount(1);
