@@ -455,6 +455,9 @@ class HolidaysType(models.Model):
                     },
                     leave_type.requires_allocation,
                     leave_type.id)
+                for recheck in extra_data[employee][leave_type]['to_recheck_leaves']:
+                    lt_info[1]['virtual_remaining_leaves'] -= recheck.number_of_days
+                    lt_info[1]['leaves_requested'] += recheck.number_of_days
                 for excess_date, excess_days in extra_data[employee][leave_type]['excess_days'].items():
                     amount = excess_days['amount']
                     lt_info[1]['virtual_excess_data'].update({

@@ -107,7 +107,10 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_allocation_remaining_display(self):
         current_date = date.today()
         allocations = self.env['hr.leave.allocation'].search([('employee_id', 'in', self.ids)])
-        leaves_taken = self._get_consumed_leaves(allocations.holiday_status_id)[0]
+        res = self._get_consumed_leaves(allocations.holiday_status_id)
+        leaves_taken = res[0]
+        if len(res) > 1:
+            recheck_leaves = res[1]
         for employee in self:
             employee_remaining_leaves = 0
             employee_max_leaves = 0
@@ -122,6 +125,9 @@ class HrEmployeeBase(models.AbstractModel):
                             if leave_type.request_unit in ['day', 'half_day']\
                             else virtual_remaining_leaves / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
                         employee_max_leaves += allocation.number_of_days
+                if recheck_leaves[employee][leave_type]['to_recheck_leaves']:
+                    for recheck_days in recheck_leaves[employee][leave_type]['to_recheck_leaves']:
+                        employee_remaining_leaves -= recheck_days.number_of_days
             employee.allocation_remaining_display = "%g" % float_round(employee_remaining_leaves, precision_digits=2)
             employee.allocation_display = "%g" % float_round(employee_max_leaves, precision_digits=2)
 

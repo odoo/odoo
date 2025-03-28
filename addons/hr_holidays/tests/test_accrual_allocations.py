@@ -2618,3 +2618,45 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                     single_employee_allocation.number_of_days, 0,
                     "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
                 )
+    
+    def test_to_recheck_leaves_impact(self):
+        single_day_accrual = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        'name': 'Single Accrual Day',
+        'date_from': datetime.date(2024, 1, 1),
+        'date_to': datetime.date(2024, 12, 31),
+        'employee_id': self.employee_emp.id,
+        'holiday_status_id': self.leave_type.id,
+        'number_of_days': 1,
+        'allocation_type': 'accrual',
+        })
+
+        active_allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+        'name': 'Active Allocation',
+        'date_from': datetime.date(2025, 1, 1),
+        'date_to': datetime.date(2025, 12, 31),
+        'employee_id': self.employee_emp.id,
+        'holiday_status_id': self.leave_type.id,
+        'number_of_days': 20,
+        'allocation_type': 'regular',
+        })
+
+        leave_request = self.env['hr.leave'].with_user(self.user_hrmanager_id).create({
+        'name': 'Test Leave Request',
+        'employee_id': self.employee_emp.id,
+        'holiday_status_id': self.leave_type.id,
+        'request_date_from': datetime.date(2025, 6, 11),
+        'request_date_to': datetime.date(2025, 6, 20),
+        'number_of_days': 8, 
+        })
+
+        active_allocation.action_validate()
+        single_day_accrual.action_validate()
+        leave_request.action_validate()
+
+        allocation_data = self.leave_type.get_allocation_data(self.employee_emp, datetime.date(2025, 3, 28))[self.employee_emp][0][1]
+    
+        self.assertEqual(allocation_data["virtual_remaining_leaves"], 12, "Remaining leaves should be 12 after leave request.")
+        self.assertEqual(allocation_data["leaves_requested"], 8, "Leaves requested should be 8.")
+
+
+    
