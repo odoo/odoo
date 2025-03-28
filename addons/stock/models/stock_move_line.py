@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter, defaultdict
+from ast import literal_eval
 
 from odoo import _, api, fields, models
 from odoo.addons.web.controllers.utils import clean_action
@@ -44,7 +45,6 @@ class StockMoveLine(models.Model):
         'stock.package', 'Source Package', ondelete='restrict',
         check_company=True,
         domain="[('location_id', '=', location_id)]")
-    package_level_id = fields.Many2one('stock.package_level', 'Package Level', check_company=True, index='btree_not_null')
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id)]", check_company=True)
@@ -54,6 +54,9 @@ class StockMoveLine(models.Model):
         ondelete='restrict', required=False, check_company=True,
         domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
+    result_package_dest_name = fields.Char('Destination Package Name', related='result_package_id.dest_complete_name')
+    package_history_id = fields.Many2one('stock.package.history', string="Package History")
+    is_entire_pack = fields.Boolean('Is added through entire package')
     date = fields.Datetime(
         'Date', default=fields.Datetime.now, required=True,
         help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.")
@@ -77,7 +80,6 @@ class StockMoveLine(models.Model):
         'stock.picking.type', 'Operation type', compute='_compute_picking_type_id', search='_search_picking_type_id')
     picking_type_use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=True)
-    picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
     state = fields.Selection(related='move_id.state', store=True)
     is_inventory = fields.Boolean(related='move_id.is_inventory')
     is_locked = fields.Boolean(related='move_id.is_locked', readonly=True)
@@ -680,6 +682,11 @@ class StockMoveLine(models.Model):
             mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
             extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
 
+        # Prepare package history records before any actual move
+        package_history_vals = mls_todo._prepare_package_history_vals()
+        if package_history_vals:
+            self.env['stock.package.history'].create(package_history_vals)
+
         for ml in mls_todo.with_context(quants_cache=quants_cache):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
@@ -691,6 +698,9 @@ class StockMoveLine(models.Model):
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
                     owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
             ml_ids_to_ignore.add(ml.id)
+
+        mls_todo.result_package_id._apply_dest_to_package()
+
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.write({
             'date': fields.Datetime.now(),
@@ -766,7 +776,7 @@ class StockMoveLine(models.Model):
         if 'package_id' in vals and vals['package_id'] != move.package_id.id:
             data['package_name'] = self.env['stock.package'].browse(vals.get('package_id')).name
         if 'package_result_id' in vals and vals['package_result_id'] != move.package_result_id.id:
-            data['result_package_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
+            data['result_package_dest_name'] = self.env['stock.package'].browse(vals.get('result_package_id')).name
         if 'owner_id' in vals and vals['owner_id'] != move.owner_id.id:
             data['owner_name'] = self.env['res.partner'].browse(vals.get('owner_id')).name
         record.message_post_with_source(
@@ -951,6 +961,25 @@ class StockMoveLine(models.Model):
         # To Override
         pass
 
+    def _prepare_package_history_vals(self):
+        history_vals = []
+        packages = self.env['stock.package'].browse(self.result_package_id._get_all_package_dest_ids())
+        for package in packages:
+            history_vals.append({
+                'location_id': package.location_id.id,
+                'location_dest_id': package.location_dest_id.id,
+                'move_line_ids': [Command.set(package.move_line_ids.ids)],
+                'picking_ids': [Command.set(package.picking_ids.ids)],
+                'package_id': package.id,
+                'package_name': package.complete_name,
+                'parent_orig_id': package.parent_package_id.id,
+                'parent_orig_name': package.parent_package_id.complete_name,
+                'parent_dest_id': package.package_dest_id.id,
+                'parent_dest_name': package.package_dest_id.dest_complete_name,
+            })
+
+        return history_vals
+
     @api.model
     def _prepare_stock_move_vals(self):
         self.ensure_one()
@@ -996,8 +1025,18 @@ class StockMoveLine(models.Model):
             'res_id': self.id,
         }
 
-    def _pre_put_in_pack_hook(self, **kwargs):
-        return self._check_destinations()
+    def _pre_put_in_pack_hook(self, package_id=False, package_type_id=False, package_name=False, from_package_wizard=False):
+        action = self._check_destinations()
+        if action:
+            return action
+        if not action and self._should_display_put_in_pack_wizard(package_id, package_type_id, package_name, from_package_wizard):
+            action = self.env["ir.actions.actions"]._for_xml_id("stock.action_put_in_pack_wizard")
+            action['context'] = {
+                **literal_eval(action.get('context', '{}')),
+                'default_move_line_ids': self.ids,
+                'default_location_dest_id': self.location_dest_id.id,
+            }
+            return action
 
     def _check_destinations(self):
         if len(self.location_dest_id) > 1:
@@ -1017,11 +1056,20 @@ class StockMoveLine(models.Model):
                 'target': 'new'
             }
 
-    def _put_in_pack(self):
-        package = self.env['stock.package'].create({})
-        package_type = self.move_id.packaging_uom_id.package_type_id
-        if len(package_type) == 1:
-            package.package_type_id = package_type
+    def _put_in_pack(self, package_id=False, package_type_id=False, package_name=False):
+        if package_id:
+            package = self.env['stock.package'].browse(package_id)
+        elif package_type_id:
+            package = self.env['stock.package'].create({
+                'name': package_name,
+                'package_type_id': package_type_id,
+            })
+        else:
+            package_vals = {'name': package_name}
+            package_type = self.move_id.packaging_uom_id.package_type_id
+            if len(package_type) == 1:
+                package_vals['package_type_id'] = package_type.id
+            package = self.env['stock.package'].create(package_vals)
         if len(self) == 1:
             default_dest_location = self._get_default_dest_location()
             self.location_dest_id = default_dest_location._get_putaway_strategy(
@@ -1041,7 +1089,7 @@ class StockMoveLine(models.Model):
             })
         return package
 
-    def _post_put_in_pack_hook(self, package, **kwargs):
+    def _post_put_in_pack_hook(self, package):
         if package and self.picking_type_id.auto_print_package_label:
             if self.picking_type_id.package_label_to_print == 'pdf':
                 action = self.env.ref("stock.action_report_package_barcode_small").report_action(package.id, config=False)
@@ -1065,13 +1113,14 @@ class StockMoveLine(models.Model):
             move_line_ids = quantity_move_line_ids
         return move_line_ids
 
-    def action_put_in_pack(self, **kwargs):
+    def action_put_in_pack(self, package_id=False, package_type_id=False, package_name=False):
         move_lines_to_pack = self._to_pack()
+        context = self.env.context
         if move_lines_to_pack:
-            res = move_lines_to_pack._pre_put_in_pack_hook(**kwargs)
+            res = move_lines_to_pack._pre_put_in_pack_hook(package_id, package_type_id, package_name, context.get('from_package_wizard'))
             if not res:
-                package = move_lines_to_pack._put_in_pack()
-                return move_lines_to_pack._post_put_in_pack_hook(package, **kwargs)
+                package = move_lines_to_pack._put_in_pack(package_id, package_type_id, package_name)
+                return move_lines_to_pack._post_put_in_pack_hook(package)
             return res
         raise UserError(_("There is nothing eligible to put in a pack. Either there are no quantities to put in a pack or all products are already in a pack."))
 
@@ -1134,3 +1183,11 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         moves = self.picking_id.move_ids.filtered(lambda x: x.product_id == self.product_id)
         return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
+
+    def _should_display_put_in_pack_wizard(self, package_id, package_type_id, package_name, from_package_wizard):
+        define_package_type = self._should_set_package()
+        return define_package_type and not from_package_wizard and (not package_id and not package_type_id and not package_name)
+
+    def _should_set_package(self):
+        package_type = self.picking_id.picking_type_id
+        return len(package_type) == 1 and package_type.set_package_type

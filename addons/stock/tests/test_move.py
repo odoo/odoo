@@ -1185,6 +1185,7 @@ class StockMove(TransactionCase):
         """
         package_type = self.env['stock.package.type'].create({
             'name': 'Super Package Type',
+            'identification_method': 'manual',
         })
 
         child_loc = self.stock_location.child_ids[:1]
@@ -6140,6 +6141,7 @@ class StockMove(TransactionCase):
         unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
         self.assertEqual(unpacked_ml.quantity_product_uom, 10)
         unpacked_ml.quantity = 10
+
         picking.action_put_in_pack()  # Create a second package
         self.assertEqual(len(picking.move_line_ids), 2)
 

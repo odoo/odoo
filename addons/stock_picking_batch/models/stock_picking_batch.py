@@ -271,13 +271,13 @@ class StockPickingBatch(models.Model):
         self.ensure_one()
         self.picking_ids.action_assign()
 
-    def action_put_in_pack(self):
+    def action_put_in_pack(self, package_id=False, package_type_id=False, package_name=False):
         """ Action to put move lines with 'Done' quantities into a new pack
         This method follows same logic to stock.picking.
         """
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
-            return self.move_line_ids.action_put_in_pack()
+            return self.move_line_ids.action_put_in_pack(package_id, package_type_id, package_name)
 
     def action_view_reception_report(self):
         action = self.picking_ids[0].action_view_reception_report()
@@ -343,6 +343,23 @@ class StockPickingBatch(models.Model):
                 'sticky': False,
                 'next': {'type': 'ir.actions.act_window_close'},
             }
+        }
+
+    def action_see_packages(self):
+        self.ensure_one()
+        return {
+            'name': self.env._("Packages"),
+            'res_model': 'stock.package',
+            'view_mode': 'list,kanban,form',
+            'views': [(self.env.ref('stock.view_stock_package_list_editable').id, 'list'), (False, 'kanban'), (False, 'form')],
+            'type': 'ir.actions.act_window',
+            'domain': [('picking_ids', 'in', self.picking_ids.ids)],
+            'context': {
+                'picking_id': self.picking_ids[:1].id,
+                'show_entire_packs': self.picking_type_id.show_entire_packs,
+                'allowed_pack_in_pack': self.picking_type_id.allow_pack_in_pack,
+                'search_default_main_packages': True,
+            },
         }
 
     # -------------------------------------------------------------------------
