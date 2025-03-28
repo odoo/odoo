@@ -40,7 +40,11 @@ class WebsiteSaleCollect(WebsiteSale):
         """ Override of `website_sale` to includes errors if no pickup location is selected or some
         products are unavailable. """
         errors = super()._get_shop_payment_errors(order)
-        if order._has_deliverable_products() and order.carrier_id.delivery_type == 'in_store':
+        if (
+            order.state != 'sale'
+            and order._has_deliverable_products()
+            and order.carrier_id.delivery_type == 'in_store'
+        ):
             if not order.pickup_location_data:
                 errors.append((
                     _("Sorry, we are unable to ship your order."),
