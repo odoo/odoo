@@ -288,12 +288,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         for line in self.line_ids:
             sku_code = line.product_id.default_code
             product_weight = line.weight  # Default weight to 1 if not defined
+            qty =1
 
             if sku_code not in grouped_lines:
                 grouped_lines[sku_code] = {
                     "sku_code": sku_code,
                     "name": line.product_id.name,
-                    "quantity": 0,
+                    "quantity": 1,
                     "remaining_quantity": 0,
                     "weight": product_weight,
                     "picking_id": line.picking_id.name if line.picking_id else "",
@@ -316,11 +317,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                     "carrier":line.picking_id.sale_id.carrier or "N/A",
                     "hs_code": line.product_id.hs_code or "N/A",
+                    "so_reference" : line.picking_id.client_order_ref or "N/A",
                     "cost_price": line.product_id.standard_price or "0.0",
                     "sale_price": line.product_id.list_price or "0.0",
                 }
 
-            grouped_lines[sku_code]["quantity"] += line.quantity
+            grouped_lines[sku_code]["quantity"] += qty
             grouped_lines[sku_code]["remaining_quantity"] += line.remaining_quantity
             grouped_lines[sku_code]["weight"] += product_weight * line.quantity
             total_weight += product_weight * line.quantity
@@ -394,7 +396,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         product_line = [{
             "sku_code": line.product_id.default_code,
             "name": line.product_id.name,
-            "quantity": line.quantity,
+            "quantity": 1,
             "remaining_quantity": line.remaining_quantity,
             "weight": line.weight,  # Use the actual weight from the line
             "picking_id": line.picking_id.name if line.picking_id else "",
@@ -417,6 +419,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
             "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
             "hs_code": line.product_id.hs_code or "N/A",
+            "so_reference" : line.picking_id.client_order_ref or "N/A",
             "cost_price": line.product_id.standard_price or "0.0",
             "sale_price": line.product_id.list_price or "0.0",
         }]
@@ -453,6 +456,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         try:
             response = requests.post(api_url, headers={'Content-Type': 'application/json'}, data=json_payload)
             response.raise_for_status()
+            #if respond.status_code !=200:
+             #   raise UserError(f"Failed to send data to One Tracker: {response.content.decode()}")
             _logger.info(f"Payload successfully sent to {api_url}")
         except requests.exceptions.RequestException as e:
             _logger.error(f"Error sending payload: {str(e)}")
@@ -469,6 +474,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         try:
             response = requests.post(api_url, headers={'Content-Type': 'application/json'}, data=json_payload)
             response.raise_for_status()
+            #if respond.status_code !=200:
+             #   raise UserError (f"Failed to send data to One Tracker: {response.content.decode()}")
             _logger.info(f"Payload successfully sent to {api_url}")
         except requests.exceptions.RequestException as e:
             _logger.error(f"Error sending payload: {str(e)}")
@@ -484,7 +491,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     default_code = fields.Char(related='product_id.default_code', string='SKU Code')
     available_quantity = fields.Float(string='Expected Quantity', compute='_compute_available_quantity', store=True)
     remaining_quantity = fields.Float(string='Remaining Quantity', compute='_compute_remaining_quantity', store=True)
-    quantity = fields.Float(string='Quantity', store=True)
+    quantity = fields.Float(string='Quantity', store=True, default=1.00)
     available_product_ids = fields.Many2many('product.product', string='Available Products',
                                              compute='_compute_available_products')
     picking_id = fields.Many2one('stock.picking', string='Picking Number', compute='_compute_picking_id', store=True)
