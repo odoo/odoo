@@ -272,6 +272,22 @@ class CrmLead(models.Model):
             else:
                 lead.company_currency = lead.company_id.currency_id
 
+    def _read_group_select(self, aggregate_spec, query) -> SQL:
+        """ Manage company_currency:array_agg_distinct to make all Monetary fields aggregable """
+        if aggregate_spec == 'company_currency:array_agg_distinct':
+            alias_company = query.make_alias(self._table, 'company_id')
+            company_field_sql = self._field_to_sql(self._table, 'company_id', query)
+            query.add_join('LEFT JOIN', alias_company, 'res_company', SQL(
+                "%s = %s", company_field_sql, SQL.identifier(alias_company, 'id'),
+            ))
+            company_currency_expr = self.env['res.company']._field_to_sql(alias_company, 'currency_id', query)
+            expr = SQL(
+                '(CASE WHEN %s IS NOT NULL THEN %s ELSE %s END)',
+                company_field_sql, company_currency_expr, self.env.company.currency_id.id
+            )
+            return SQL('ARRAY_AGG(DISTINCT %s ORDER BY %s)', expr, expr)
+        return super()._read_group_select(aggregate_spec, query)
+
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
