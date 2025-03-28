@@ -14,7 +14,7 @@ export function clickDownPaymentNumpad(num) {
     };
 }
 
-export function addDownPayment(percentage, soNth) {
+export function addDownPayment(percentage, soNth, downPaymentType) {
     const steps = [
         ProductScreen.clickControlButton("Quotation/Order"),
         {
@@ -22,12 +22,20 @@ export function addDownPayment(percentage, soNth) {
             trigger: `.o_sale_order .o_data_row:nth-child(${soNth}) .o_data_cell:nth-child(1)`,
             run: "click",
         },
-        {
+    ];
+    if (downPaymentType === "percent") {
+        steps.push({
             content: "Select 'Apply a down payment (percentage)'",
             trigger: ".modal-body button:contains('percentage')",
             run: "click",
-        },
-    ];
+        });
+    } else {
+        steps.push({
+            content: "Select 'Apply a down payment (fixed amount)'",
+            trigger: ".modal-body button:contains('fixed amount')",
+            run: "click",
+        });
+    }
     for (const num of percentage.split("")) {
         steps.push(clickDownPaymentNumpad(num));
     }
@@ -63,15 +71,27 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.73"),
                 ProductScreen.checkTaxAmount("0.10"),
                 ...payAndInvoice("0.73"),
-                ...addDownPayment("7", 2),
+                ...addDownPayment("0.73", 2, "fixed"),
+                ProductScreen.checkTotalAmount("0.73"),
+                ProductScreen.checkTaxAmount("0.10"),
+                ...payAndInvoice("0.73"),
+                ...addDownPayment("7", 3, "percent"),
                 ProductScreen.checkTotalAmount("2.56"),
                 ProductScreen.checkTaxAmount("0.33"),
                 ...payAndInvoice("2.56"),
-                ...addDownPayment("18", 3),
+                ...addDownPayment("2.56", 4, "fixed"),
+                ProductScreen.checkTotalAmount("2.56"),
+                ProductScreen.checkTaxAmount("0.33"),
+                ...payAndInvoice("2.56"),
+                ...addDownPayment("18", 5, "percent"),
+                ProductScreen.checkTotalAmount("6.60"),
+                ProductScreen.checkTaxAmount("0.87"),
+                ...payAndInvoice("6.60"),
+                ...addDownPayment("6.60", 6, "fixed"),
                 ProductScreen.checkTotalAmount("6.60"),
                 ProductScreen.checkTaxAmount("0.87"),
                 ...payAndInvoice("6.60"),
@@ -86,15 +106,27 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.73"),
                 ProductScreen.checkTaxAmount("0.1"),
                 ...payAndInvoice("0.73"),
-                ...addDownPayment("7", 2),
+                ...addDownPayment("0.73", 2, "fixed"),
+                ProductScreen.checkTotalAmount("0.73"),
+                ProductScreen.checkTaxAmount("0.1"),
+                ...payAndInvoice("0.73"),
+                ...addDownPayment("7", 3, "percent"),
                 ProductScreen.checkTotalAmount("2.57"),
                 ProductScreen.checkTaxAmount("0.33"),
                 ...payAndInvoice("2.57"),
-                ...addDownPayment("18", 3),
+                ...addDownPayment("2.57", 4, "fixed"),
+                ProductScreen.checkTotalAmount("2.57"),
+                ProductScreen.checkTaxAmount("0.33"),
+                ...payAndInvoice("2.57"),
+                ...addDownPayment("18", 5, "percent"),
+                ProductScreen.checkTotalAmount("6.60"),
+                ProductScreen.checkTaxAmount("0.87"),
+                ...payAndInvoice("6.60"),
+                ...addDownPayment("6.60", 6, "fixed"),
                 ProductScreen.checkTotalAmount("6.60"),
                 ProductScreen.checkTaxAmount("0.87"),
                 ...payAndInvoice("6.60"),
@@ -109,15 +141,27 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.73"),
                 ProductScreen.checkTaxAmount("0.10"),
                 ...payAndInvoice("0.73"),
-                ...addDownPayment("7", 2),
+                ...addDownPayment("0.73", 2, "fixed"),
+                ProductScreen.checkTotalAmount("0.73"),
+                ProductScreen.checkTaxAmount("0.10"),
+                ...payAndInvoice("0.73"),
+                ...addDownPayment("7", 3, "percent"),
                 ProductScreen.checkTotalAmount("2.56"),
                 ProductScreen.checkTaxAmount("0.33"),
                 ...payAndInvoice("2.56"),
-                ...addDownPayment("18", 3),
+                ...addDownPayment("2.56", 4, "fixed"),
+                ProductScreen.checkTotalAmount("2.56"),
+                ProductScreen.checkTaxAmount("0.33"),
+                ...payAndInvoice("2.56"),
+                ...addDownPayment("18", 5, "percent"),
+                ProductScreen.checkTotalAmount("6.60"),
+                ProductScreen.checkTaxAmount("0.87"),
+                ...payAndInvoice("6.60"),
+                ...addDownPayment("6.60", 6, "fixed"),
                 ProductScreen.checkTotalAmount("6.60"),
                 ProductScreen.checkTaxAmount("0.87"),
                 ...payAndInvoice("6.60"),
@@ -132,15 +176,27 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.73"),
                 ProductScreen.checkTaxAmount("0.10"),
                 ...payAndInvoice("0.73"),
-                ...addDownPayment("7", 2),
+                ...addDownPayment("0.73", 2, "fixed"),
+                ProductScreen.checkTotalAmount("0.73"),
+                ProductScreen.checkTaxAmount("0.10"),
+                ...payAndInvoice("0.73"),
+                ...addDownPayment("7", 3, "percent"),
                 ProductScreen.checkTotalAmount("2.57"),
                 ProductScreen.checkTaxAmount("0.33"),
                 ...payAndInvoice("2.57"),
-                ...addDownPayment("18", 3),
+                ...addDownPayment("2.57", 4, "fixed"),
+                ProductScreen.checkTotalAmount("2.57"),
+                ProductScreen.checkTaxAmount("0.33"),
+                ...payAndInvoice("2.57"),
+                ...addDownPayment("18", 5, "percent"),
+                ProductScreen.checkTotalAmount("6.60"),
+                ProductScreen.checkTaxAmount("0.87"),
+                ...payAndInvoice("6.60"),
+                ...addDownPayment("6.60", 6, "fixed"),
                 ProductScreen.checkTotalAmount("6.60"),
                 ProductScreen.checkTaxAmount("0.87"),
                 ...payAndInvoice("6.60"),
@@ -155,7 +211,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("1.92"),
                 ProductScreen.checkTaxAmount("0.63"),
                 ...payAndInvoice("1.92"),
@@ -170,7 +226,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("1.92"),
                 ProductScreen.checkTaxAmount("0.63"),
                 ...payAndInvoice("1.92"),
@@ -185,7 +241,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("1.92"),
                 ProductScreen.checkTaxAmount("0.63"),
                 ...payAndInvoice("1.92"),
@@ -200,7 +256,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("1.92"),
                 ProductScreen.checkTaxAmount("0.63"),
                 ...payAndInvoice("1.92"),
@@ -215,7 +271,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.86"),
                 ProductScreen.checkTaxAmount("0.15"),
                 ...payAndInvoice("0.86"),
@@ -230,7 +286,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.86"),
                 ProductScreen.checkTaxAmount("0.15"),
                 ...payAndInvoice("0.86"),
@@ -245,7 +301,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.86"),
                 ProductScreen.checkTaxAmount("0.15"),
                 ...payAndInvoice("0.86"),
@@ -260,7 +316,7 @@ registry
                 Chrome.startPoS(),
                 Dialog.confirm("Open Register"),
 
-                ...addDownPayment("2", 1),
+                ...addDownPayment("2", 1, "percent"),
                 ProductScreen.checkTotalAmount("0.86"),
                 ProductScreen.checkTaxAmount("0.15"),
                 ...payAndInvoice("0.86"),

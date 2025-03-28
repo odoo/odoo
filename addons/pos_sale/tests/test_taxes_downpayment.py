@@ -20,41 +20,58 @@ class TestTaxesDownPaymentPOS(TestTaxCommonPOS, TestTaxCommonSale, TestTaxesDown
         cls.main_pos_config.available_pricelist_ids = [Command.clear()]
 
     def assert_pos_orders_and_invoices(self, tour, tests_with_orders):
+        all_so = self.env['sale.order']
         for _test_code, document, _soft_checking, _amount_type, _amount, _expected_values in tests_with_orders:
             so = self.convert_document_to_sale_order(document)
             so.currency_id = self.env.company.currency_id  # No foreign currency in the POS
             so.action_confirm()
+            all_so += so
         super().assert_pos_orders_and_invoices(tour, tests_with_orders)
+        all_so.action_cancel()
 
     def test_taxes_l10n_in_pos(self):
         tests = self._test_taxes_l10n_in()
-        round_per_line_excluded_tests = [next(tests) for _i in range(19)]
+        round_per_line_excluded_tests = [next(tests) for _i in range(22)]
+        self.ensure_products_on_document(round_per_line_excluded_tests[0][1], 'product_1')
         self.assert_pos_orders_and_invoices('test_taxes_l10n_in_pos_downpayment_round_per_line_price_excluded', [
-            round_per_line_excluded_tests[16],
-            round_per_line_excluded_tests[5],
+            round_per_line_excluded_tests[19],
+            round_per_line_excluded_tests[18],
+            round_per_line_excluded_tests[7],
+            round_per_line_excluded_tests[6],
+            round_per_line_excluded_tests[1],
             round_per_line_excluded_tests[0],
         ])
 
-        round_globally_excluded_tests = [next(tests) for _i in range(19)]
+        round_globally_excluded_tests = [next(tests) for _i in range(22)]
+        self.ensure_products_on_document(round_globally_excluded_tests[0][1], 'product_2')
         self.assert_pos_orders_and_invoices('test_taxes_l10n_in_pos_downpayment_round_globally_price_excluded', [
-            round_globally_excluded_tests[16],
-            round_globally_excluded_tests[5],
+            round_globally_excluded_tests[19],
+            round_globally_excluded_tests[18],
+            round_globally_excluded_tests[7],
+            round_globally_excluded_tests[6],
+            round_globally_excluded_tests[1],
             round_globally_excluded_tests[0],
         ])
 
-        round_per_line_included_tests = [next(tests) for _i in range(19)]
+        round_per_line_included_tests = [next(tests) for _i in range(22)]
         self.ensure_products_on_document(round_per_line_included_tests[0][1], 'product_3')
         self.assert_pos_orders_and_invoices('test_taxes_l10n_in_pos_downpayment_round_per_line_price_included', [
-            round_per_line_included_tests[16],
-            round_per_line_included_tests[5],
+            round_per_line_included_tests[19],
+            round_per_line_included_tests[18],
+            round_per_line_included_tests[7],
+            round_per_line_included_tests[6],
+            round_per_line_included_tests[1],
             round_per_line_included_tests[0],
         ])
 
-        round_globally_included_tests = [next(tests) for _i in range(19)]
+        round_globally_included_tests = [next(tests) for _i in range(22)]
         self.ensure_products_on_document(round_globally_included_tests[0][1], 'product_4')
         self.assert_pos_orders_and_invoices('test_taxes_l10n_in_pos_downpayment_round_globally_price_included', [
-            round_globally_included_tests[16],
-            round_globally_included_tests[5],
+            round_globally_included_tests[19],
+            round_globally_included_tests[18],
+            round_globally_included_tests[7],
+            round_globally_included_tests[6],
+            round_globally_included_tests[1],
             round_globally_included_tests[0],
         ])
 

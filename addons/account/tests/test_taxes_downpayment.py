@@ -142,6 +142,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_per_line, price_excluded", document, False, 'percent', 2, expected_values
+            yield "round_per_line, price_excluded", document, True, 'fixed', 0.73, expected_values
 
             # Down Payment 3-6%
             for percent in range(3, 7):
@@ -199,6 +200,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_per_line, price_excluded", document, False, 'percent', 7, expected_values
+            yield "round_per_line, price_excluded", document, True, 'fixed', 2.56, expected_values
 
             # Down Payment 8-17%
             for percent in range(8, 18):
@@ -256,6 +258,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_per_line, price_excluded", document, False, 'percent', 18, expected_values
+            yield "round_per_line, price_excluded", document, True, 'fixed', 6.6, expected_values
 
             # Down Payment 19-20%
             for percent in range(19, 21):
@@ -365,6 +368,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_globally, price_excluded", document, False, 'percent', 2, expected_values
+            yield "round_globally, price_excluded", document, True, 'fixed', 0.73, expected_values
 
             # Down Payment 3-6%
             for percent in range(3, 7):
@@ -422,6 +426,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_globally, price_excluded", document, False, 'percent', 7, expected_values
+            yield "round_globally, price_excluded", document, True, 'fixed', 2.57, expected_values
 
             # Down Payment 8-17%
             for percent in range(8, 18):
@@ -479,6 +484,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_globally, price_excluded", document, False, 'percent', 18, expected_values
+            yield "round_globally, price_excluded", document, True, 'fixed', 6.6, expected_values
 
             # Down Payment 19-20%
             for percent in range(19, 21):
@@ -599,6 +605,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_per_line, price_included", document, False, 'percent', 2, expected_values
+            yield "round_per_line, price_included", document, True, 'fixed', 0.73, expected_values
 
             # Down Payment 3-6%
             for percent in range(3, 7):
@@ -656,6 +663,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_per_line, price_included", document, False, 'percent', 7, expected_values
+            yield "round_per_line, price_included", document, True, 'fixed', 2.56, expected_values
 
             # Down Payment 8-17%
             for percent in range(8, 18):
@@ -713,6 +721,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_per_line, price_included", document, False, 'percent', 18, expected_values
+            yield "round_per_line, price_included", document, True, 'fixed', 6.6, expected_values
 
             # Down Payment 19-20%
             for percent in range(19, 21):
@@ -822,6 +831,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_globally, price_included", document, False, 'percent', 2, expected_values
+            yield "round_per_line, price_included", document, True, 'fixed', 0.73, expected_values
 
             # Down Payment 3-6%
             for percent in range(3, 7):
@@ -879,6 +889,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_globally, price_included", document, False, 'percent', 7, expected_values
+            yield "round_per_line, price_included", document, True, 'fixed', 2.57, expected_values
 
             # Down Payment 8-17%
             for percent in range(8, 18):
@@ -936,6 +947,7 @@ class TestTaxesDownPayment(TestTaxCommon):
                 ],
             }
             yield "round_globally, price_included", document, False, 'percent', 18, expected_values
+            yield "round_per_line, price_included", document, True, 'fixed', 6.6, expected_values
 
             # Down Payment 19-20%
             for percent in range(19, 21):
