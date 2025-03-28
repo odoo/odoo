@@ -189,11 +189,12 @@
         <field name="name">fleet.vehicle.list</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <list string="Vehicle" 
+            <list string="Vehicle"
                 decoration-warning="contract_renewal_due_soon and not contract_renewal_overdue"
                 decoration-danger="contract_renewal_overdue"
                 multi_edit="1"
-                sample="1">
+                sample="1"
+                js_class="fleet_vehicle_list_view">
                 <field name="active" column_invisible="True"/>
                 <field name="license_plate" readonly="1"/>
                 <field name="model_id" widget="many2one_avatar" readonly="1"/>
@@ -285,7 +286,9 @@
         <field name="name">fleet.vehicle.kanban</field>
         <field name="model">fleet.vehicle</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state_id" sample="1" quick_create_view="fleet.fleet_vehicle_view_form_quick_create">
+            <kanban default_group_by="state_id" sample="1"
+                    quick_create_view="fleet.fleet_vehicle_view_form_quick_create"
+                    js_class="fleet_vehicle_kanban_view">
                 <field name="contract_renewal_due_soon" />
                 <field name="contract_renewal_overdue" />
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -364,18 +367,18 @@
         </field>
     </record>
 
+    <record id="action_load_demo_data" model="ir.actions.server">
+        <field name="name">Load demo data</field>
+        <field name="model_id" ref="model_fleet_vehicle"/>
+        <field name="state">code</field>
+        <field name="code">action = model._action_load_fleet_vehicle_scenario()</field>
+    </record>
+
     <record id='fleet_vehicle_action' model='ir.actions.act_window'>
         <field name="name">Vehicles</field>
         <field name="path">fleet</field>
         <field name="res_model">fleet.vehicle</field>
         <field name="view_mode">kanban,list,form,pivot,activity</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Ready to manage your fleet more efficiently?
-          </p><p>
-            Let's create your first vehicle.
-          </p>
-        </field>
     </record>
 
     <menuitem name="Fleet" parent="menu_root" id="fleet_vehicles" sequence="2" groups="fleet_group_user"/>
