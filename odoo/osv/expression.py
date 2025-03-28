@@ -300,7 +300,7 @@ def prettify_domain(domain, pre_indent=0):
     # craft the final string. All terms are indented according to their
     # commit indentation level and separated by a new line.
 
-    # TODO deprecate
+    warnings.warn("Since 19.0, prettify_domain is deprecated", DeprecationWarning)
     stack = [{'left_count': 1, 'terms': []}]
     commits = []
 
