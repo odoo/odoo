@@ -15,7 +15,7 @@ class ProductProduct(models.Model):
         return super().action_open_quants()
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
-        return super(ProductProduct, self.with_context(with_expiration=to_date or datetime.datetime.now()))._compute_quantities_dict(lot_id, owner_id, package_id, from_date, to_date)
+        return super(ProductProduct, self.with_context(with_expiration=to_date or datetime.date.today()))._compute_quantities_dict(lot_id, owner_id, package_id, from_date, to_date)
 
     free_qty = fields.Float(help="Available quantity (computed as Quantity On Hand "
              "- reserved quantity - quantity to remove)\n"
