@@ -143,7 +143,14 @@
                             invisible="not has_scrap_move"/>
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
-                            invisible="not has_packages"/>
+                            invisible="state == 'done'">
+                            <field name="packages_count" widget="statinfo" string="Packages"/>
+                        </button>
+                        <button name="action_see_package_histories" type="object"
+                            class="oe_stat_button" icon="fa-cubes"
+                            invisible="state != 'done'">
+                            <field name="packages_count" widget="statinfo" string="Packages"/>
+                        </button>
                         <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action" invisible="state != 'done' or not has_tracking" groups="stock.group_production_lot">
                             <div class="o_stat_info">
                                 <span class="o_stat_text">Traceability</span>
@@ -281,7 +288,6 @@
                                     <field name="show_lots_m2o" column_invisible="True"/>
                                     <field name="is_initial_demand_editable" column_invisible="True"/>
                                     <field name="display_import_lot" column_invisible="True"/>
-                                    <field name="picking_type_entire_packs" column_invisible="True"/>
                                     <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart"
                                         invisible="not product_id or product_uom_qty == 0 or quantity == 0 and forecast_availability &lt;= 0 or (parent.picking_type_code == 'outgoing' and state != 'draft')"/>
@@ -304,7 +310,7 @@
                                         context="{'default_company_id': company_id, 'default_product_id': product_id, 'active_picking_id': parent.id}"
                                         domain="[('product_id','=',product_id)]"
                                     />
-                                    <button name="action_show_details" type="object" icon="fa-list" title="Details"
+                                    <button name="action_show_details" type="object" string="Details" title="Details"
                                             invisible="not show_details_visible"/>
                                 </list>
                             </field>

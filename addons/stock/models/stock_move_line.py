@@ -54,6 +54,7 @@ class StockMoveLine(models.Model):
         ondelete='restrict', required=False, check_company=True,
         domain="['|', '|', ('location_id', '=', False), ('location_id', '=', location_dest_id), ('id', '=', package_id)]",
         help="If set, the operations are packed into this package")
+    is_entire_pack = fields.Boolean('Is added through entire package')
     date = fields.Datetime(
         'Date', default=fields.Datetime.now, required=True,
         help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.")
@@ -76,7 +77,6 @@ class StockMoveLine(models.Model):
         'stock.picking.type', 'Operation type', compute='_compute_picking_type_id', search='_search_picking_type_id')
     picking_type_use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=True)
-    picking_type_entire_packs = fields.Boolean(related='picking_id.picking_type_id.show_entire_packs', readonly=True)
     state = fields.Selection(related='move_id.state', store=True)
     is_inventory = fields.Boolean(related='move_id.is_inventory')
     is_locked = fields.Boolean(related='move_id.is_locked', readonly=True)
@@ -668,6 +668,11 @@ class StockMoveLine(models.Model):
             mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id,
             extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
 
+        # Prepare package history records before any actual move
+        package_history_vals = mls_todo._prepare_package_history_vals()
+        if package_history_vals:
+            self.env['stock.package.history'].create(package_history_vals)
+
         for ml in mls_todo.with_context(quants_cache=quants_cache):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
@@ -679,6 +684,9 @@ class StockMoveLine(models.Model):
                     abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
                     owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
             ml_ids_to_ignore.add(ml.id)
+
+        mls_todo.result_package_id._apply_dest_to_package()
+
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.write({
             'date': fields.Datetime.now(),
@@ -929,6 +937,27 @@ class StockMoveLine(models.Model):
         # To Override
         pass
 
+    def _prepare_package_history_vals(self):
+        history_vals = []
+        mls_by_package = self.grouped('result_package_id')
+        for package, move_lines in mls_by_package.items():
+            if not package:
+                continue
+            if len(move_lines.location_dest_id) > 1:
+                raise UserError(self.env._("You cannot split the same package into two different locations."))
+
+            history_vals.append({
+                'location_id': package.location_id.id,
+                'location_dest_id': move_lines.location_dest_id.id,
+                'move_line_ids': [Command.set(move_lines.ids)],
+                'package_id': package.id,
+                'package_name': package.complete_name,
+                'parent_orig_id': package.parent_package_id.id,
+                'parent_dest_id': package.package_dest_id.id,
+            })
+
+        return history_vals
+
     @api.model
     def _prepare_stock_move_vals(self):
         self.ensure_one()
@@ -996,10 +1025,12 @@ class StockMoveLine(models.Model):
             }
 
     def _put_in_pack(self):
-        package = self.env['stock.package'].create({})
+        package_vals = {}
         package_type = self.move_id.packaging_uom_id.package_type_id
         if len(package_type) == 1:
-            package.package_type_id = package_type
+            package_vals['package_type_id'] = package_type.id
+
+        package = self.env['stock.package'].create(package_vals)
         if len(self) == 1:
             default_dest_location = self._get_default_dest_location()
             self.location_dest_id = default_dest_location._get_putaway_strategy(

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_stock_package_history_list" model="ir.ui.view" >
+        <field name="name">stock.package.history.list</field>
+        <field name="model">stock.package.history</field>
+        <field eval="15" name="priority"/>
+        <field name="arch" type="xml">
+            <list string="Packages" create="0">
+                <field name="package_name" string="Package"/>
+                <field name="package_type_id"/>
+                <field name="location_id"/>
+                <field name="parent_orig_id"/>
+                <field name="location_dest_id"/>
+                <field name="parent_dest_id"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+</odoo>

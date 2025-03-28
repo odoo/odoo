@@ -228,10 +228,14 @@ class TestPacking(TestPackingCommon):
             'delivery_steps': 'pick_pack_ship',
             'company_id': company_b.id,
         })
-
+        reusable_type = self.env['stock.package.type'].create({
+            'name': 'Reusable',
+            'package_use': 'reusable',
+            'identification_method': 'manual',
+        })
         reusable_box = self.env['stock.package'].create({
             'name': 'Reusable Box',
-            'package_use': 'reusable',
+            'package_type_id': reusable_type.id,
         })
 
         delivery_company_a = self.env['stock.picking'].create({

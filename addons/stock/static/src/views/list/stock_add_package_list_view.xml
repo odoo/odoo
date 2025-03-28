@@ -1,0 +1,7 @@
+<templates>
+    <t t-name="stock.AddPackageListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <button class="btn btn-primary" t-if="pickingId" t-on-click="onClickAdd" data-hotkey="q">Add</button>
+        </xpath>
+    </t>
+</templates>

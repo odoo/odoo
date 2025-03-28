@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_package_add_form" model="ir.ui.view">
+        <field name="name">stock.add.entire.packages.form</field>
+        <field name="model">stock.add.entire.packages</field>
+        <field name="arch" type="xml">
+            <form string="Add a Package">
+                <group>
+                    <field name="new_package_ids"
+                           domain="[('location_id', 'child_of', location_id), ('id', 'not in', linked_package_ids), ('id', 'not in', new_package_ids)]"
+                           widget="many2many_tags" required="True"/>
+                </group>
+                <footer>
+                    <button name="action_add_entire_packs" type="object" string="Add" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" special="cancel" data-hotkey="x" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

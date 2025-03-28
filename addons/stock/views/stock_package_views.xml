@@ -10,6 +10,8 @@
                 <field name="location_id"/>
                 <field name="package_type_id"/>
                 <filter string="In internal locations" name="internal" domain="['|', ('location_id.usage', '=', 'internal'), ('location_id', '=', False)]" groups="stock.group_stock_multi_locations"/>
+                <filter string="Main Packages" name="main_packages" invisible="not context.get('main_package_ids')" domain="[('id', 'in', context.get('main_package_ids'))]"/>
+                <filter string="Smallest Packages" name="smallest_packages" invisible="not context.get('main_package_ids')" domain="[('child_package_ids', '=', False)]"/>
                 <group  expand='0' string='Group by...'>
                    <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}" groups="stock.group_stock_multi_locations"/>
                    <filter string='Package Type' name="package_type" domain="[]" context="{'group_by' : 'package_type_id'}"/>
@@ -35,23 +37,26 @@
                     </div>
                     <div class="oe_title">
                         <label for="name" string="Package Reference"/>
-                        <h1><field name="name" class="oe_inline" placeholder="e.g. PACK0000007"/></h1>
+                        <h1><field name="name" class="oe_inline" placeholder="e.g. PACK0000007" readonly="is_named_by_seq"/></h1>
                     </div>
                     <group>
                         <group>
+                            <field name="complete_name" string="Full name (to be removed)"/>
                             <field name="package_type_id"/>
-                            <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
                             <field name="location_id" options="{'no_create': True}"/>
+                            <field name="parent_package_id"/>
                         </group>
                         <group>
+                            <field name='company_id' groups="base.group_multi_company"/>
                             <field name="pack_date"/>
                         </group>
                     </group>
                     <separator string="Content"/>
-                    <field name="quant_ids">
+                    <field name="contained_quant_ids">
                         <list>
                             <field name="product_id"/>
+                            <field name="package_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
                             <field name="product_uom_id" groups="uom.group_uom"/>
@@ -83,7 +88,25 @@
                 <field name="display_name"/>
                 <field name="package_type_id"/>
                 <field name="location_id" options="{'no_create': True}"/>
-                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_stock_package_list_editable" model="ir.ui.view">
+        <field name="name">stock.package.list.editable</field>
+        <field name="model">stock.package</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" create="0" js_class="stock_add_package_list_view">
+                <header>
+                    <button class="btn-primary" name="action_open_put_in_pack_wizard" type="object" string="Put in Pack"/>
+                </header>
+                <field name="display_name" string="Package"/>
+                <field name="package_type_id"/>
+                <field name="location_dest_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                <field name="parent_package_id" string="Origin Container"/>
+                <field name="package_dest_id" domain="['|', ('location_id', '=', False), ('location_id', 'in', location_dest_ids)]"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
     </record>
@@ -106,7 +129,8 @@
     <record id="action_package_view" model="ir.actions.act_window">
         <field name="name">Packages</field>
         <field name="res_model">stock.package</field>
-        <field name="view_mode">kanban,list,form</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="view_id" ref="view_package_tree"/>
         <field name="context">{
             'search_default_location': True,
             'search_default_internal': True,

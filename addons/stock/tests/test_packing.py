@@ -71,10 +71,6 @@ class TestPacking(TestPackingCommon):
         picking.action_assign()
         picking.button_validate()
 
-        self.warehouse.pick_type_id.show_entire_packs = True
-        self.warehouse.pack_type_id.show_entire_packs = True
-        self.warehouse.out_type_id.show_entire_packs = True
-
         pack_move_a = pick_move_a.move_dest_ids[0]
         pack_picking = pack_move_a.picking_id
         pack_picking.action_assign()
@@ -118,7 +114,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
-        picking.picking_type_id.show_entire_packs = True
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
@@ -172,7 +167,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
-        picking.picking_type_id.show_entire_packs = True
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
@@ -197,7 +191,6 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
-        picking.picking_type_id.show_entire_packs = True
         package_level = self.env['stock.package_level'].create({
             'package_id': pack.id,
             'picking_id': picking.id,
@@ -457,10 +450,6 @@ class TestPacking(TestPackingCommon):
         self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
         self.env.user.write({'group_ids': [(3, grp_pack.id)]})
         self.warehouse.reception_steps = 'two_steps'
-        # Settings of receipt.
-        self.warehouse.in_type_id.show_entire_packs = True
-        # Settings of internal transfer.
-        self.warehouse.store_type_id.show_entire_packs = True
 
         # Creates two new locations for putaway.
         location_form = Form(self.env['stock.location'])
@@ -594,10 +583,6 @@ class TestPacking(TestPackingCommon):
         self.env.user.write({'group_ids': [(3, grp_multi_step_rule.id)]})
         self.env.user.write({'group_ids': [(3, grp_pack.id)]})
         self.warehouse.reception_steps = 'two_steps'
-        # Settings of receipt.
-        self.warehouse.in_type_id.show_entire_packs = True
-        # Settings of internal transfer.
-        self.warehouse.store_type_id.show_entire_packs = True
 
         # Creates two new locations for putaway.
         location_form = Form(self.env['stock.location'])
@@ -750,11 +735,8 @@ class TestPacking(TestPackingCommon):
 
         pack_picking = pack_move_a.picking_id
 
-        pack_picking.picking_type_id.show_entire_packs = True
-
         pack_picking.action_assign()
 
-        pack_picking.move_line_ids.quantity = 3
         pack_picking.action_put_in_pack()
 
     def test_serial_partial_put_in_pack(self):
@@ -867,7 +849,6 @@ class TestPacking(TestPackingCommon):
         self.warehouse.delivery_steps = 'ship_only'
         package = self.env["stock.package"].create({"name": "Src Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
-        self.warehouse.out_type_id.show_entire_packs = True
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -912,7 +893,6 @@ class TestPacking(TestPackingCommon):
         self.warehouse.delivery_steps = 'ship_only'
         package = self.env["stock.package"].create({"name": "Src Pack"})
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100, package_id=package)
-        self.warehouse.out_type_id.show_entire_packs = True
         picking = self.env['stock.picking'].create({
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
@@ -1006,7 +986,6 @@ class TestPacking(TestPackingCommon):
         moveB.picked = True
         picking.action_put_in_pack()
         picking.button_validate()
-        delivery_type.show_entire_packs = True
         picking = moveA.move_dest_ids.picking_id
         packB = picking.package_level_ids[1]
         picking.package_level_ids_details[0].is_done = True
@@ -1827,9 +1806,6 @@ class TestPacking(TestPackingCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack2)
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1, package_id=pack3)
 
-        # Enable move entire package for the delivery picking type
-        self.warehouse.out_type_id.show_entire_packs = True
-
         # Create a delivery that require the quantities in the first two packages
         delivery = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.out_type_id.id,
@@ -1944,13 +1920,23 @@ class TestPackagePropagation(TestPackingCommon):
     def test_reusable_package_propagation(self):
         """ Test a reusable package should not be propagated to the next picking
         of a mto chain """
+        reusable_type = self.env['stock.package'].create({
+            'name': 'Reusable',
+            'package_use': 'reusable',
+            'identification_method': 'manual',
+        })
         reusable_package = self.env['stock.package'].create({
             'name': 'Reusable Package',
-            'package_use': 'reusable',
+            'package_type_id': reusable_type.id,
+        })
+        disposable_type = self.env['stock.package'].create({
+            'name': 'Disposable',
+            'package_use': 'disposable',
+            'identification_method': 'manual',
         })
         disposable_package = self.env['stock.package'].create({
             'name': 'disposable Package',
-            'package_use': 'disposable',
+            'package_type_id': disposable_type.id,
         })
         self.productA = self.env['product.product'].create({
             'name': 'productA',
