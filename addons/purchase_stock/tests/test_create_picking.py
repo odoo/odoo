@@ -235,7 +235,7 @@ class TestCreatePicking(ProductVariantsCommon):
         # check the delivered quantity
         self.assertEqual(po.order_line.qty_received, 3.0)
 
-    def test_mtso_multi_pg_order(self):
+    def test_mtso_multi_reference_order(self):
         """ Run 2 procurements for a product at the same times then receipt them via a purchase
         order. Check the reservation search for stock move of the same procurement group in priority
         even if the stock move are in MTS. """
@@ -263,11 +263,9 @@ class TestCreatePicking(ProductVariantsCommon):
         }, {
             'name': 'ref 2',
         }])
-        pg1 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-1'})
-        pg2 = self.env['procurement.group'].create({'name': 'Test-pg-mtso-mts-2'})
 
-        self.env['procurement.group'].run([
-            pg1.Procurement(
+        self.env['stock.rule'].run([
+            self.env['stock.rule'].Procurement(
                 self.product_id_1,
                 2.0,
                 self.product_id_1.uom_id,
@@ -277,11 +275,10 @@ class TestCreatePicking(ProductVariantsCommon):
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
-                    'group_id': pg1,
                     'reference_ids': ref1,
                 }
             ),
-            pg2.Procurement(
+            self.env['stock.rule'].Procurement(
                 self.product_id_1,
                 2.0,
                 self.product_id_1.uom_id,
@@ -291,7 +288,6 @@ class TestCreatePicking(ProductVariantsCommon):
                 warehouse.company_id,
                 {
                     'warehouse_id': warehouse,
-                    'group_id': pg2,
                     'reference_ids': ref2,
                 }
             ),
@@ -310,7 +306,7 @@ class TestCreatePicking(ProductVariantsCommon):
             ('state', '=', 'assigned'),
         ])
         self.assertEqual(len(reserved_delivery), 1)
-        self.assertEqual(reserved_delivery.group_id, lines[1].order_id.group_id)
+        self.assertEqual(reserved_delivery.reference_ids, lines[1].order_id.reference_ids)
 
     def test_04_mto_multiple_po(self):
         """ Simulate a mto chain with 2 purchase order.
@@ -560,7 +556,7 @@ class TestCreatePicking(ProductVariantsCommon):
         })
         po.picking_ids.button_validate()
 
-        pickings = self.env['stock.picking'].search([('group_id', '=', po.group_id.id)])
+        pickings = self.env['stock.picking'].search([('reference_ids', '=', po.reference_ids.id)])
         for picking in pickings:
             self.assertEqual(picking.scheduled_date.date(), date.today())
 
@@ -611,9 +607,8 @@ class TestCreatePicking(ProductVariantsCommon):
                 values = {
                     'warehouse_id': picking_type_out.warehouse_id,
                     'action': 'pull_push',
-                    'group_id': procurement_group,
                 }
-            return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            return self.env['stock.rule'].run([self.env['stock.rule'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
                 product.name, '/', self.env.company, values)
             ])
@@ -641,17 +636,12 @@ class TestCreatePicking(ProductVariantsCommon):
             'price': 12.0,
         })
 
-        procurement_group = self.env['procurement.group'].create({
-            'move_type': 'direct',
-            'partner_id': vendor.id
-        })
         # Create initial procurement that will generate the initial move and its picking.
         create_run_procurement(product, 50, {
-            'group_id': procurement_group,
             'warehouse_id': picking_type_out.warehouse_id,
             'partner_id': vendor
         })
-        customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
+        customer_move = self.env['stock.move'].search([('product_id', '=', product.id)])
         purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
         self.assertTrue(purchase_order, 'No purchase order created.')
 

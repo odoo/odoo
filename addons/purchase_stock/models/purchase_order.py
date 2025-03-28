@@ -24,7 +24,6 @@ class PurchaseOrder(models.Model):
         help="This will determine operation type of incoming shipment")
     default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',
         help="Technical field used to display the Drop Ship Address", readonly=True)
-    group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
     reference_ids = fields.Many2many(
         'stock.reference', 'stock_reference_purchase_rel', 'purchase_id',
         'reference_id', string='References', copy=False)
@@ -141,6 +140,9 @@ class PurchaseOrder(models.Model):
 
             pickings_to_cancel_ids.update(order.picking_ids.filtered(lambda r: r.state != 'cancel').ids)
 
+            if order.reference_ids:
+                order.reference_ids.purchase_ids = [Command.unlink(order.id)]
+
         order_lines = self.env['purchase.order.line'].browse(order_lines_ids)
 
         moves_to_cancel_ids = OrderedSet()
@@ -158,8 +160,6 @@ class PurchaseOrder(models.Model):
                     moves_to_cancel_ids.update(move_dest_ids.ids)
                 else:
                     moves_to_recompute_ids.update(move_dest_ids.ids)
-            if order_line.group_id:
-                order_line.group_id.purchase_line_ids = [Command.unlink(order_line.id)]
 
         if moves_to_cancel_ids:
             moves_to_cancel = self.env['stock.move'].browse(moves_to_cancel_ids)
@@ -310,13 +310,6 @@ class PurchaseOrder(models.Model):
             self.env['stock.warehouse']._warehouse_redirect_warning()
         return picking_type[:1]
 
-    def _prepare_group_vals(self):
-        self.ensure_one()
-        return {
-            'name': self.name,
-            'partner_id': self.partner_id.id,
-        }
-
     def _prepare_reference_vals(self):
         self.ensure_one()
         return {
@@ -324,8 +317,6 @@ class PurchaseOrder(models.Model):
         }
 
     def _prepare_picking(self):
-        if not self.group_id:
-            self.group_id = self.group_id.create(self._prepare_group_vals())
         if not self.reference_ids:
             self.reference_ids = self.reference_ids.create(self._prepare_reference_vals())
         if not self.partner_id.property_stock_supplier.id:

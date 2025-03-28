@@ -1234,6 +1234,7 @@ class MrpProduction(models.Model):
             - Manually added components, i.e. "default_" values in view
             - Moves from a copied MO, i.e. move.create
             - Existing moves during backorder creation """
+
         source_location = self.location_src_id
         data = {
             'sequence': bom_line.sequence if bom_line else 10,

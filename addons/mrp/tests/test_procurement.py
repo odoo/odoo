@@ -536,9 +536,8 @@ class TestProcurement(TestMrpCommon):
                 values = {
                     'warehouse_id': self.warehouse_1,
                     'action': 'pull_push',
-                    'group_id': procurement_group,
                 }
-            return self.env['procurement.group'].run([self.env['procurement.group'].Procurement(
+            return self.env['stock.rule'].run([self.env['stock.rule'].Procurement(
                 product, product_qty, self.uom_unit, vendor.property_stock_customer,
                 product.name, '/', self.env.company, values)
             ])
@@ -580,7 +579,7 @@ class TestProcurement(TestMrpCommon):
         })
 
         reference = self.env['stock.reference'].create({
-            'move_type': 'direct',
+            'name': 'reference',
         })
         # Create initial procurement that will generate the initial move and its picking.
         create_run_procurement(product, 10, {
@@ -588,7 +587,7 @@ class TestProcurement(TestMrpCommon):
             'warehouse_id': self.warehouse_1,
             'partner_id': vendor,
         })
-        customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
+        customer_move = self.env['stock.move'].search([('reference_ids', 'in', reference.id), ('picking_type_id', '=', self.picking_type_out.id)])
         manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertTrue(manufacturing_order, 'No manufacturing order created.')
 
@@ -759,7 +758,7 @@ class TestProcurement(TestMrpCommon):
             'product_max_qty': 2,
         }])
 
-        self.env['procurement.group'].run_scheduler()
+        self.env['stock.rule'].run_scheduler()
 
         mos = self.env['mrp.production'].search([('product_id', '=', finished.id)], order='origin')
         self.assertRecordValues(mos, [
