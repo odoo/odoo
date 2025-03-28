@@ -1491,7 +1491,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not order_sudo:
             return request.redirect('/shop')
 
-        errors = self._get_shop_payment_errors(order_sudo)
+        errors = self._get_shop_payment_errors(order_sudo) if order_sudo.state != 'sale' else []
         if errors:
             first_error = errors[0]  # only display first error
             error_msg = f"{first_error[0]}\n{first_error[1]}"
