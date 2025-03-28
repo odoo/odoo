@@ -341,6 +341,16 @@ msgid ""
 "<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -359,6 +369,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Thank you for contacting us. We appreciate your interest in our products/services.<br/>\n"
+"    Our team is currently reviewing your inquiry and will respond to your email as soon as possible.<br/>\n"
+"    If you have any further questions or concerns in the meantime, please do not hesitate to let us know. We are here to help.<br/><br/>\n"
+"    Thank you for your patience.<br/>\n"
+"    Best regards,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -725,7 +748,7 @@ msgstr "Administrador"
 #. module: project
 #: model:res.groups,comment:project.group_project_manager
 msgid "Administrator can manage the employees' schedule"
-msgstr ""
+msgstr "Administrator can manage the employees' schedule"
 
 #. module: project
 #. odoo-javascript
@@ -2185,7 +2208,7 @@ msgstr "Olá"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Hide Sub-tasks"
-msgstr ""
+msgstr "Hide Sub-tasks"
 
 #. module: project
 #. odoo-javascript
@@ -5269,7 +5292,7 @@ msgstr "Usuário"
 #. module: project
 #: model:res.groups,comment:project.group_project_user
 msgid "User can user the your employees' schedule"
-msgstr ""
+msgstr "User can user the your employees' schedule"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -5459,7 +5482,7 @@ msgstr "Você pode abrir subtarefas a partir do cartão Kanban."
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
 msgid "You cannot convert this task into a sub-task because it is recurrent."
-msgstr ""
+msgstr "You cannot convert this task into a sub-task because it is recurrent."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
@@ -5692,7 +5715,7 @@ msgstr "projeto."
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 msgid "project_id"
-msgstr ""
+msgstr "project_id"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline

@@ -3,8 +3,10 @@
 # 	* stock
 # 
 # Translators:
-# Wil Odoo, 2025
 # Jiří Podhorecký <jirka.p@volny.cz>, 2025
+# Denis Gobin, 2025
+# Wil Odoo, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Jiří Podhorecký <jirka.p@volny.cz>, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -547,22 +549,22 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Back Orders</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Zpětné objednávky</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Late</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Opožděné</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Operations</span>"
-msgstr ""
+msgstr "<span class=\"col-6\">Operace</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<span class=\"col-6\">Waiting</span>"
-msgstr ""
+msgstr "Čekající"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -590,7 +592,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lot/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Šarže / Sériová čísla</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -607,7 +609,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "<span class=\"o_stat_text\">Moves</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Pohyby</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1407,7 +1409,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
 msgid "Automate"
-msgstr ""
+msgstr "Automatizovat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -2008,7 +2010,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
 msgid "Consignment"
-msgstr "Zásilka"
+msgstr "Konsignace"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
@@ -4804,7 +4806,7 @@ msgstr "Naposledy upraveno dne"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__last_used
 msgid "Last Used"
-msgstr ""
+msgstr "Naposledy použité"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
@@ -5389,7 +5391,7 @@ msgstr "Pohyby"
 #: model:ir.actions.act_window,name:stock.stock_move_action
 #: model:ir.ui.menu,name:stock.stock_move_menu
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Analýza pohybů"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
@@ -7546,7 +7548,7 @@ msgstr "Doplňovací umístění"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__should_replenish
 msgid "Replenish Quantities"
-msgstr ""
+msgstr "Doplnit množství"
 
 #. module: stock
 #. odoo-python
@@ -8031,12 +8033,12 @@ msgstr "Výrobky ve zmetkové podobě"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_reason_tag_ids
 msgid "Scrap Reason"
-msgstr ""
+msgstr "Důvod Vyřazení"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scrap_reason_tag
 msgid "Scrap Reason Tag"
-msgstr ""
+msgstr "Štítek Důvodu Vyřazení"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__scrap_id
@@ -9597,7 +9599,7 @@ msgstr "K počtu"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Deliver"
-msgstr ""
+msgstr "k vydání"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_graph
@@ -9655,7 +9657,7 @@ msgstr "Zpracovat"
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "přijmout"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -9778,7 +9780,7 @@ msgstr "Výkaz sledovatelnosti"
 #: model:ir.model.fields,field_description:stock.field_product_template__is_storable
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_storable
 msgid "Track Inventory"
-msgstr ""
+msgstr "Sledovat Zboží"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__module_product_expiry
@@ -10232,7 +10234,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Viditelné pro všechny"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__shipping_volume

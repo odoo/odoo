@@ -35,6 +35,15 @@ msgid ""
 "            * OOOO is the sequence number.\n"
 "    "
 msgstr ""
+"\n"
+"        Leesbare referentie voor deze bestelling.\n"
+"            * Formaat: YYLL-SSS-FOOOO\n"
+"            * YY is het jaar\n"
+"            * LL is het inlognummer (proxy naar het apparaat)\n"
+"            * SSS is de sessie-id\n"
+"            * F is 1 of 0 (1 als het volgnummer wordt gegenereerd vanaf de klant)\n"
+"            * OOOO is het volgnummer.\n"
+"    "
 
 #. module: point_of_sale
 #. odoo-python
@@ -159,7 +168,7 @@ msgstr "0.00"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "0014-001-00001"
-msgstr ""
+msgstr "0014-001-00001"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -509,6 +518,8 @@ msgid ""
 "A session-unique sequence number for the order. Negative if generated from "
 "the client"
 msgstr ""
+"Een volgnummer dat uniek is voor de sessie van de bestelling. Het is "
+"negatief als het door de klant wordt gegenereerd."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__receipt_footer
@@ -721,7 +732,7 @@ msgstr "Voeg een nieuwe betaling toe"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_preset_form
 msgid "Add a new preset"
-msgstr ""
+msgstr "Voeg een nieuw preset toe"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_printer_form
@@ -841,6 +852,8 @@ msgstr ""
 msgid ""
 "All quantity in the cart will be in negative. Ideal for return managment."
 msgstr ""
+"Alle hoeveelheden in de winkelwagen worden negatief. Ideaal voor "
+"retourbeheer."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -1143,7 +1156,7 @@ msgstr "Beschikbare kassa productcategorieën"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_preset_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_available_preset_ids
 msgid "Available Presets"
-msgstr ""
+msgstr "Beschikbare presets"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -1386,7 +1399,7 @@ msgstr "WISSELGELD"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "CUSTOMER NOTE"
-msgstr ""
+msgstr "OPMERKING VAN DE KLANT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1767,6 +1780,7 @@ msgstr "Vink deze optie aan als je het product wilt tonen in de kassa."
 msgid ""
 "Check if you want to group products of this unit in point of sale orders"
 msgstr ""
+"Controleer of je producten van deze eenheid wilt groeperen in Kassaorders"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
@@ -1823,7 +1837,7 @@ msgstr "Kies een order"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_list.xml:0
 msgid "Choose customer"
-msgstr ""
+msgstr "Klant kiezen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_ticket_portal_url_display_mode
@@ -2252,12 +2266,12 @@ msgstr "Aantal"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_config
 msgid "Count Linked Config"
-msgstr ""
+msgstr "Aantal gekoppelde configuraties"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__count_linked_orders
 msgid "Count Linked Orders"
-msgstr ""
+msgstr "Aantal gekoppelde orders"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2537,7 +2551,7 @@ msgstr "Klant is vereist voor %s betaalmethode."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Customer required"
-msgstr ""
+msgstr "Klant vereist"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2554,7 +2568,7 @@ msgstr "Klanten"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "DUPLICATA !"
-msgstr ""
+msgstr "DUPLICAAT!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2635,13 +2649,13 @@ msgstr "Standaard dagboeken"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Default POS Receivable Account"
-msgstr ""
+msgstr "Standaard Kassa-debiteurenrekening"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_preset_id
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_preset_id
 msgid "Default Preset"
-msgstr ""
+msgstr "Standaardpreset"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2663,7 +2677,7 @@ msgstr "Standaard QR-code"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__default_pos_receivable_account_name
 msgid "Default Receivable Account Name"
-msgstr ""
+msgstr "Naam van de standaarddebiteurenrekening"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__sale_tax_id
@@ -2700,6 +2714,8 @@ msgstr "Definieer een nieuwe categorie"
 msgid ""
 "Define presets to manage taxes & prices for eat in, take out, members..."
 msgstr ""
+"Stel presets in om btw en prijzen te beheren voor eten ter plaatse, "
+"afhaalmaaltijden, leden, enzovoort."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
@@ -2757,7 +2773,7 @@ msgstr "Verwijder onbetaalde orders"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Delivery to:"
-msgstr ""
+msgstr "Leveren aan:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2809,6 +2825,10 @@ msgid ""
 "identity of the device where the UI is opened. And as such, it is the LL "
 "part of the pos_reference field of the pos.order model."
 msgstr ""
+"Bepaalt het aantal keren dat de gebruikersinterface wordt geopend. Het wordt"
+" gebruikt als proxy voor de identiteit van het apparaat waar de "
+"gebruikersinterface wordt geopend. Het maakt deel uit van het LL-gedeelte "
+"van het pos_reference-veld in het pos.order-model."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3044,7 +3064,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "Laad moeiteloos een reeks configuratieopties"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3343,7 +3363,7 @@ msgstr "Voettekst"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_tree
 msgid "For all point of sale."
-msgstr ""
+msgstr "Voor alle kassasystemen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -3433,7 +3453,7 @@ msgstr "Meubelwinkel"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__general_customer_note
 msgid "General Customer Note"
-msgstr ""
+msgstr "Algemene klantenopmerking"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3619,6 +3639,8 @@ msgid ""
 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
 "Make sure to close all sessions first to avoid any issues."
 msgstr ""
+"Wacht even! Producten archiveren terwijl Kassasessies actief zijn, is alsof je een bord weghaalt midden in de maaltijd.\n"
+"Zorg ervoor dat je eerst alle sessies afsluit om problemen te voorkomen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_time
@@ -3628,7 +3650,7 @@ msgstr "Uur"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__preset_time
 msgid "Hour of the day for the order"
-msgstr ""
+msgstr "Uur van de dag voor de bestelling"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3711,7 +3733,7 @@ msgstr "ID"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/order_change_receipt_template.xml:0
 msgid "INTERNAL NOTE"
-msgstr ""
+msgstr "INTERNE OPMERKING"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__proxy_ip
@@ -3886,7 +3908,7 @@ msgstr "Interne notities"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_preset__interval_time
 msgid "Interval time (in min)"
-msgstr ""
+msgstr "Intervaltijd (in min)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4285,7 +4307,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Limited"
-msgstr ""
+msgstr "Beperkt"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6555,7 +6577,7 @@ msgstr "Productsjabloon kenmerk waarde"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "Producteenheid"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom

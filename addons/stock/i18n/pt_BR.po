@@ -554,6 +554,39 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        We are glad to inform you that your order has been shipped.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
+"            Your tracking reference is\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        Thank you,\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -685,6 +718,9 @@ msgid ""
 "                                            Forecasted\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                            Forecasted\n"
+"                                        </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -765,7 +801,7 @@ msgstr "<strong>Endereço de entrega</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Done Date:</strong>"
-msgstr ""
+msgstr "<strong>Done Date:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -797,7 +833,7 @@ msgstr "<strong>Qtd. mín.:</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Operator:</strong>"
-msgstr ""
+msgstr "<strong>Operator:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -879,7 +915,7 @@ msgstr "<strong>Endereço do fornecedor</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Vendor:</strong>"
-msgstr ""
+msgstr "<strong>Vendor:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -889,7 +925,7 @@ msgstr "<strong>Endereço do armazém</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse:</strong>"
-msgstr ""
+msgstr "<strong>Warehouse:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1952,7 +1988,7 @@ msgstr "Calcular custos de envio e enviar com Easypost"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "Compute shipping costs and ship with Envia.com"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2785,7 +2821,7 @@ msgstr "Métodos de entrega"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Delivery Note"
-msgstr ""
+msgstr "Delivery Note"
 
 #. module: stock
 #. odoo-python
@@ -3320,7 +3356,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "Envia.com Connector"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -3762,7 +3798,7 @@ msgstr "Ir para Armazéns"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Goods Receipt Note"
-msgstr ""
+msgstr "Goods Receipt Note"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_customer_lot_filter
@@ -4390,7 +4426,7 @@ msgstr "Locais internos"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Internal Move"
-msgstr ""
+msgstr "Internal Move"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__ref
@@ -5423,7 +5459,7 @@ msgstr "Regras para estoque mínimo"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Mitchel Admin"
-msgstr ""
+msgstr "Mitchel Admin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__move_ids
@@ -6458,7 +6494,7 @@ msgstr "Embalagem"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_packaging_barcode
 msgid "Packaging Barcodes (ZPL)"
-msgstr ""
+msgstr "Packaging Barcodes (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -8089,7 +8125,7 @@ msgstr "Amostra de dados"
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
-msgstr ""
+msgstr "Save the product form before updating the Quantity On Hand."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8564,7 +8600,7 @@ msgstr "Mostrar tipo de separação"
 #: model:ir.model.fields,field_description:stock.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_qty_update_button
 msgid "Show Qty Update Button"
-msgstr ""
+msgstr "Show Qty Update Button"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
@@ -9136,6 +9172,8 @@ msgid ""
 "The Picking Operations report has been deleted so you cannot print at this "
 "time unless the report is restored."
 msgstr ""
+"The Picking Operations report has been deleted so you cannot print at this "
+"time unless the report is restored."
 
 #. module: stock
 #. odoo-python
@@ -9634,6 +9672,8 @@ msgid ""
 "This order point has been created automatically.\n"
 "snoozing it will not affect future ones created for the same product."
 msgstr ""
+"This order point has been created automatically.\n"
+"snoozing it will not affect future ones created for the same product."
 
 #. module: stock
 #. odoo-python
@@ -10725,6 +10765,9 @@ msgid ""
 "<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
 "the need. %(suffix)s"
 msgstr ""
+"When products are needed in <b>%(destination)s</b>, <br> "
+"<b>%(operation)s</b> are created from <b>%(source_location)s</b> to fulfill "
+"the need. %(suffix)s"
 
 #. module: stock
 #. odoo-python

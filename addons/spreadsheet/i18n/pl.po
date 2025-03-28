@@ -3,8 +3,8 @@
 # 	* spreadsheet
 # 
 # Translators:
-# Wil Odoo, 2025
 # Marta Wacławek, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Marta Wacławek, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -575,13 +575,14 @@ msgid ""
 "end_date were no more than one year apart)."
 msgstr ""
 "Skrót tekstowy dla jednostki czasu. Akceptowane wartości to \"Y\" (liczba "
-"pełnych lat między start_date a end_date), \"M\" (liczba pełnych miesięcy "
-"między start_date a end_date), \"D\" (liczba dni między start_date a "
-"end_date), \"MD\" (liczba dni między start_date a end_date po odjęciu "
-"pełnych miesięcy), \"YM\" (liczba pełnych miesięcy między start_date a "
-"end_date po odjęciu pełnych lat), \"YD\" (liczba dni między start_date a "
-"end_date, przy założeniu, że start_date i end_date nie były oddalone od "
-"siebie o więcej niż jeden rok)."
+"pełnych lat między datą_początkową a datą_końcową), \"M\" (liczba pełnych "
+"miesięcy między datą_początkową a datą_końcową), \"D\" (liczba dni między "
+"datą_początkową a datą_końcową), \"MD\" (liczba dni między datą_początkową a"
+" datą_końcową po odjęciu pełnych miesięcy), \"YM\" (liczba pełnych miesięcy "
+"między datą_początkową a datą_końcową po odjęciu pełnych lat), \"YD\" "
+"(liczba dni między datą_początkową a datą_końcową, przy założeniu, że "
+"data_początkowa i data_końcowa nie były oddalone od siebie o więcej niż "
+"jeden rok)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -693,8 +694,7 @@ msgstr "Dodaj zakres"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Additional column or row containing true or false values."
-msgstr ""
-"Dodatkowa kolumna lub rząd zawierające wartości prawdziwe lub falseywe."
+msgstr "Dodatkowa kolumna lub rząd zawierające wartości true lub false."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5003,13 +5003,13 @@ msgstr "Logiczny operator `xor`."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Logical value `false`."
-msgstr "Wartość logiczna 'false'."
+msgstr "Wartość logiczna 'fałsz'."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Logical value `true`."
-msgstr "Wartość logiczna 'prawda'."
+msgstr "Wartość logiczna 'true'."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7618,7 +7618,7 @@ msgid ""
 "corresponding entries in array_x and added together."
 msgstr ""
 "Tablica lub zakres wartości, których kwadraty zostaną dodane do kwadratów "
-"odpowiadających im wpisów w array_x i zsumowane."
+"odpowiadających im wpisów w tablicy_x i zsumowane."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7654,13 +7654,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The array that contains the columns to be returned."
-msgstr "Tablica, która zawiera kolumny, które mają zostać zwrócone."
+msgstr "Tablica, która zawiera kolumny do zwrócenia."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The array that contains the rows to be returned."
-msgstr "Tablica, która zawiera rzędy, która mają zostać zwrócone."
+msgstr "Tablica, która zawiera rzędy do zwrócenia."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7914,7 +7914,7 @@ msgstr "Dane do posortowania."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The data to filter by unique entries."
-msgstr "Dane do filtrowania według unikalnych wpisów."
+msgstr "Dane do filtrowania według unikatowych wpisów."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8793,7 +8793,7 @@ msgid ""
 "TRUE."
 msgstr ""
 "Maksimum (%s) i minimum (%s) muszą być liczbami całkowitymi, kiedy "
-"whole_number jest Prawda"
+"whole_number jest TRUE"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8900,7 +8900,7 @@ msgid ""
 "renamed/deleted)."
 msgstr ""
 "Model (%(model)s) tego globalnego filtra nie jest ważny (być może jego nazwa"
-" została zmieniona/był usunięty)."
+" została zmieniona/był usunięty)/"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10549,7 +10549,7 @@ msgstr "Wartość musi być liczbą"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The value must be a text that contains \"%s\""
-msgstr "Wartość musi być tekstem, który zawiera \"%s\""
+msgstr "Wartość musi być tekstem, zawierającym \"%s\""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11236,7 +11236,7 @@ msgstr "Linia trendu dla %s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Trim whitespace"
-msgstr "Usuń nadmiarowe spacje"
+msgstr "Obetnij marginesy"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11856,7 +11856,7 @@ msgid ""
 "Whether the array should be scanned by column. True scans the array by column and false (default) \n"
 "      scans the array by row."
 msgstr ""
-"Czy tabela powinna być skanowana przez kolumnę. Prawda skanuje tabelę według kolumny a false (domyślne)\n"
+"Czy tabela powinna być skanowana przez kolumnę. True skanuje tabelę według kolumny a false (domyślne)\n"
 "       skanuje tabelę według rzędu."
 
 #. module: spreadsheet
@@ -11964,7 +11964,7 @@ msgid ""
 "Wraps the provided row or column of cells by columns after a specified "
 "number of elements to form a new array."
 msgstr ""
-"Zawija podany rząd lub kolumnę komórek według kolumn po określonej liczbie "
+"Zawija podany rząd lub kolumnę komórek według kolumny po określonej liczbie "
 "elementów, aby stworzyć nową tabelę"
 
 #. module: spreadsheet
@@ -12320,7 +12320,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "match_mode should be a value in [-1, 0, 1, 2]."
-msgstr "match_mode powinno być wartością z przedziału [-1, 0, 1, 2]."
+msgstr "match_mode powinno być wartością w [-1, 0, 1, 2]."
 
 #. module: spreadsheet
 #. odoo-javascript

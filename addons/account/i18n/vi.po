@@ -3763,12 +3763,12 @@ msgstr "Cơ bản"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__batch_payment_sequence_id
 msgid "Batch Payment Sequence"
-msgstr "Thứ tự thanh toán hàng loạt"
+msgstr "Thứ tự thanh toán theo lô"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
-msgstr "Thanh toán hàng loạt"
+msgstr "Thanh toán theo lô"
 
 #. module: account
 #. odoo-javascript
@@ -4757,7 +4757,7 @@ msgstr "Mã tài chính quốc gia của công ty"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Phần giữ chỗ cho số đăng ký công ty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -8751,7 +8751,7 @@ msgstr "Incoterm"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__incoterm_location
 #: model:ir.model.fields,field_description:account.field_account_move__incoterm_location
 msgid "Incoterm Location"
-msgstr "Vị trí Incoterm"
+msgstr "Địa điểm Incoterm"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_incoterms__code
@@ -10334,7 +10334,7 @@ msgid ""
 msgstr ""
 "Thủ công: Nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp dịch vụ thanh toán: Mỗi Nhà cung cấp dịch vụ thanh toán có phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh toán do đối tác lưu khi mua hoặc đăng ký online.\n"
-"Gửi hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Nộp theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và nộp theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
 "Ghi nợ trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy quyền mà đối tác sẽ cấp cho bạn. Cần có phân hệ account_sepa.\n"
 
 #. module: account
@@ -10362,7 +10362,7 @@ msgstr ""
 "Thủ công: Thanh toán hoặc nhận thanh toán bằng bất kỳ phương thức nào bên ngoài Odoo.\n"
 "Nhà cung cấp dịch vụ thanh toán: Mỗi nhà cung cấp dịch vụ thanh toán có phương thức thanh toán riêng. Yêu cầu giao dịch trên/vào thẻ nhờ token thanh toán do đối tác lưu khi mua hoặc đăng ký online.\n"
 "Séc: Thanh toán hóa đơn bằng séc và in từ Odoo.\n"
-"Gửi hàng loạt: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và gửi hàng loạt tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
+"Nộp theo lô: Thu thập nhiều séc của khách hàng cùng một lúc để tạo và nộp theo lô tới ngân hàng. Cần có phân hệ account_batch_payment.\n"
 "Chuyển khoản tín dụng SEPA: Thanh toán trong khu vực SEPA bằng cách gửi tệp chuyển khoản tín dụng SEPA cho ngân hàng của bạn. Cần có phân hệ account_sepa.\n"
 "Ghi nợ trực tiếp SEPA: Nhận thanh toán trong khu vực SEPA nhờ vào giấy ủy quyền mà đối tác sẽ cấp cho bạn. Cần có phân hệ account_sepa.\n"
 
@@ -16520,7 +16520,7 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
-"Việc này cho phép bạn nhóm các khoản thanh toán vào một loạt duy nhất và giúp việc đối chiếu trở nên dễ dàng.\n"
+"Việc này cho phép bạn nhóm các khoản thanh toán vào một lô duy nhất và giúp việc đối chiếu trở nên dễ dàng.\n"
 "- Phân hệ account_batch_payment cần được cài đặt."
 
 #. module: account
@@ -17510,7 +17510,7 @@ msgstr "Sử dụng kế toán anglo-saxon"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_batch_payment
 msgid "Use batch payments"
-msgstr "Sử dụng thanh toán hàng loạt"
+msgstr "Sử dụng thanh toán theo lô"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -18687,11 +18687,8 @@ msgstr "Bạn không thể ghi nhận thanh toán cho các bút toán khác."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
-msgid ""
-"You cannot remove parts of the audit trail. Archive the record instead."
+msgid "You cannot remove parts of the audit trail."
 msgstr ""
-"Bạn không thể xóa các phần của dấu vết kiểm toán. Thay vào đó, hãy lưu trữ "
-"bản ghi."
 
 #. module: account
 #. odoo-python

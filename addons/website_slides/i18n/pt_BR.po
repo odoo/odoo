@@ -126,25 +126,25 @@ msgstr "'. Mostrando resultados para '"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://drive.google.com/file/d/ABC/view)."
-msgstr ""
+msgstr "(ex.: https://drive.google.com/file/d/ABC/view)."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://drive.google.com/file/d/ABC/view?usp=sharing)."
-msgstr ""
+msgstr "(ex.: https://drive.google.com/file/d/ABC/view?usp=sharing)."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://vimeo.com/ABC)."
-msgstr ""
+msgstr "(ex.: https://vimeo.com/ABC)."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(e.g., https://youtube/ABC)."
-msgstr ""
+msgstr "(ex.: https://youtube/ABC)."
 
 #. module: website_slides
 #. odoo-javascript
@@ -158,6 +158,8 @@ msgstr "(vazio)"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "(which means only accessible via link, not searchable)."
 msgstr ""
+"(o que significa que só pode ser acessado por meio de um link, não pode ser "
+"pesquisado)."
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_1_5
@@ -261,6 +263,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        <p style=\"margin: 0px;\">Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
+"                        <p><b>Congratulations!</b></p>\n"
+"                        <p>You've completed the course <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b></p>\n"
+"                        <p>Check out the other available courses.</p><br/>\n"
+"\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a href=\"/slides/all\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                Explore courses\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        Enjoy this exclusive content!\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.mail_template_channel_shared
@@ -286,6 +308,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <strong t-out=\"object.name or ''\">document</strong> with you!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_absolute_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px;                                 text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                                View <strong t-out=\"object.name or ''\">Document</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -310,6 +352,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> shared the <t t-out=\"object.slide_category or ''\">document</t> <strong t-out=\"object.name or ''\">Trees</strong> with you!\n"
+"                        </p><div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View <strong t-out=\"object.name or ''\">Trees</strong></a>\n"
+"                        </div>\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_published
@@ -338,6 +399,29 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                        Hello<br/><br/>\n"
+"                        There is something new in the course <strong t-out=\"object.channel_id.name or ''\">Trees, Wood and Gardens</strong> you are following:<br/><br/>\n"
+"                        </p><center><strong t-out=\"object.name or ''\">Trees</strong></center>\n"
+"                        <t t-if=\"object.image_1024\">\n"
+"                            <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                                <a t-att-href=\"object.website_share_url\">\n"
+"                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.slide/{{ object.id }}/image_1024\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
+"                            </a>\n"
+"                        </div>\n"
+"                        </t>\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                            <a t-att-href=\"object.website_share_url\" style=\"background-color: #875a7b; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">View content</a>\n"
+"                        </div>\n"
+"                        Enjoy this exclusive content!\n"
+"                        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"                            <br/>\n"
+"                            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"                        </t>\n"
+"                    \n"
+"                </div>\n"
+"            "
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.user_profile_content
@@ -1439,7 +1523,7 @@ msgstr "Quem tiver o link"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Anyone with the link."
-msgstr ""
+msgstr "Quem tiver o link"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__challenge_category
@@ -2197,7 +2281,7 @@ msgstr "Copiar link"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Copy the shareable link"
-msgstr ""
+msgstr "Copiar link compartilhável"
 
 #. module: website_slides
 #: model:slide.answer,comment:website_slides.slide_slide_demo_1_4_question_0_0
@@ -3228,7 +3312,7 @@ msgstr "Vídeo do Google Drive"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Google Drive:"
-msgstr ""
+msgstr "Google Drive:"
 
 #. module: website_slides
 #. odoo-javascript
@@ -3329,7 +3413,7 @@ msgstr "Como adicionar conteúdo novo?"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to Add New Content:"
-msgstr ""
+msgstr "Como adicionar novo conteúdo:"
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_slide_demo_0_3
@@ -3363,7 +3447,7 @@ msgstr "Como plantar um potted.list"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "How to upload Videos:"
-msgstr ""
+msgstr "Como fazer upload de vídeos:"
 
 #. module: website_slides
 #: model_terms:slide.slide,description:website_slides.slide_slide_demo_2_2
@@ -3689,7 +3773,7 @@ msgstr "Está publicado"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__is_visible
 msgid "Is Visible On Website"
-msgstr ""
+msgstr "É visível no site"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__is_category
@@ -4159,6 +4243,7 @@ msgstr "Mais votado"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Most formats via Google Drive (Docs, Sheets, PowerPoints, etc)."
 msgstr ""
+"A maioria dos formatos via Google Drive (Docs, Sheets, PowerPoints, etc.)."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -4555,7 +4640,7 @@ msgstr "Conteúdo em PDF"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "PDFs (local uploads)."
-msgstr ""
+msgstr "PDFs (uploads locais)."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -4681,7 +4766,7 @@ msgstr "Apresentação"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.js:0
 msgid "Presentation / Doc"
-msgstr ""
+msgstr "Apresentação/Doc"
 
 #. module: website_slides
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
@@ -5295,13 +5380,13 @@ msgstr "Sequência"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Set file permissions to"
-msgstr ""
+msgstr "Definir as permissões de arquivo como"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Set permissions to"
-msgstr ""
+msgstr "Definir permissões para"
 
 #. module: website_slides
 #: model:ir.actions.act_window,name:website_slides.website_slides_action_settings
@@ -5651,7 +5736,7 @@ msgstr "Tenha sucesso e ganhe karma"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Supported Files:"
-msgstr ""
+msgstr "Arquivos suportados:"
 
 #. module: website_slides
 #. odoo-javascript
@@ -5829,14 +5914,14 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_absolute_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_absolute_url
 msgid "The full absolute URL to access the document through the website."
-msgstr ""
+msgstr "O URL absoluto completo para acessar o documento pelo site."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
 msgid "The full relative URL to access the document through the website."
-msgstr ""
+msgstr "O URL relativo completo para acessar o documento pelo site,"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_completed
@@ -6174,12 +6259,14 @@ msgstr "Grupos de upload"
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload a PDF file from your computer or share a Google Drive link."
 msgstr ""
+"Faça upload de um arquivo PDF do seu computador ou compartilhe um link do "
+"Google Drive."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload as"
-msgstr ""
+msgstr "Carregar como"
 
 #. module: website_slides
 #. odoo-javascript
@@ -6192,13 +6279,13 @@ msgstr "Carregar arquivo do dispositivo"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload the file to Drive."
-msgstr ""
+msgstr "Carreguar o arquivo no Drive."
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Upload the file to Google Drive."
-msgstr ""
+msgstr "Fazer o upload do arquivo no Google Drive."
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__user_id
@@ -6256,7 +6343,7 @@ msgstr "Voto do usuário"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Using Google Drive:"
-msgstr ""
+msgstr "Com o Google Drive:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
@@ -6342,7 +6429,7 @@ msgstr "Vídeo do Vimeo"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "Vimeo:"
-msgstr ""
+msgstr "Vimeo:"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_published
@@ -6418,7 +6505,7 @@ msgstr "Site/slides"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_absolute_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "URL absoluto do site"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__website_message_ids
@@ -6783,7 +6870,7 @@ msgstr "Vídeo do YouTube"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "YouTube:"
-msgstr ""
+msgstr "YouTube:"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.mail_notification_channel_invite
@@ -6889,7 +6976,7 @@ msgstr "trilha de navegação"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_dialog.xml:0
 msgid "button to get a link"
-msgstr ""
+msgstr "para obter um link"
 
 #. module: website_slides
 #. odoo-javascript
@@ -7079,7 +7166,7 @@ msgstr "faça login"
 #. odoo-python
 #: code:addons/website_slides/models/gamification_karma_tracking.py:0
 msgid "slide.channel"
-msgstr ""
+msgstr "slide.channel"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join

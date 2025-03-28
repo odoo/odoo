@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Ilya Rozhkov, 2025
 # Wil Odoo, 2025
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4645,7 +4645,7 @@ msgstr "Фискальный код страны"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Маска регистрационного номера компании"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -4951,7 +4951,7 @@ msgstr "Создать платежи"
 #. module: account
 #: model:ir.model,website_form_label:account.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Создать клиента"
 
 #. module: account
 #. odoo-python
@@ -7044,6 +7044,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Ошибка при загрузке локализации: отсутствует налоговая метка %(tag_name)s "
+"для страны %(country_name)s. Возможно, вам следует сначала обновить "
+"приложение локализации."
 
 #. module: account
 #. odoo-python
@@ -9008,7 +9011,7 @@ msgstr "Виджет \"Просроченные счета-фактуры\" Кр
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
 msgid "Invoice PDF"
-msgstr ""
+msgstr " Счёт-фактура PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -11848,7 +11851,7 @@ msgstr "Партнер"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
 msgid "Partner Company Registry Placeholder"
-msgstr ""
+msgstr "Маска регистрационного номера компании партнёра"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -18631,9 +18634,8 @@ msgstr "Вы не можете регистрировать платежи дл�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
-msgid ""
-"You cannot remove parts of the audit trail. Archive the record instead."
-msgstr "Части журнала аудита удалять нельзя. Вместо этого архивируйте запись."
+msgid "You cannot remove parts of the audit trail."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -19320,7 +19322,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "reversed"
-msgstr ""
+msgstr "отменено"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain

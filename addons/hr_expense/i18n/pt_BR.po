@@ -63,7 +63,7 @@ msgstr "%(expense_name)s: é sua própria despesa"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "%(expense_name)s: You are neither a Manager nor a HR Officer"
-msgstr ""
+msgstr "%(expense_name)s: Você não é um gerente nem um diretor de RH"
 
 #. module: hr_expense
 #. odoo-python
@@ -90,7 +90,7 @@ msgid ""
 "'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
-"'Expense - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"'Despesas - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 
 #. module: hr_expense
@@ -124,7 +124,7 @@ msgstr "<i class=\"oi oi-arrow-right\"/> Configurar seu domínio de alias"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "<span class=\"o_stat_text\">Expense</span>"
-msgstr "<span class=\"o_stat_text\">Expense</span>"
+msgstr "<span class=\"o_stat_text\">Despesas</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -169,9 +169,9 @@ msgid ""
 "paid expenses. You can alternatively specify one in the Journal for the "
 "%(method)s payment method."
 msgstr ""
-"A default outstanding account must be defined in the settings for company-"
-"paid expenses. You can alternatively specify one in the Journal for the "
-"%(method)s payment method."
+"Uma conta pendente padrão deve ser definida nas definições de despesas pagas"
+" pela empresa. Como alternativa, você pode especificar uma no diário do "
+"método de pagamento %(method)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -192,7 +192,7 @@ msgstr "Data contábil"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_post_wizard_view
 msgid "Accounting date"
-msgstr "Accounting date"
+msgstr "Data contábil"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_needaction
@@ -243,7 +243,7 @@ msgstr "Todos os aprovadores"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All Paid"
-msgstr "All Paid"
+msgstr "Tudo pago"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -253,12 +253,12 @@ msgstr "Todos os métodos de pagamento são permitidos"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Pay"
-msgstr "All to Pay"
+msgstr "Tudo a pagar"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "All to Post"
-msgstr "All to Post"
+msgstr "Tudo a lançar"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -378,7 +378,7 @@ msgstr "Anexos"
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_users_view_form_preferences
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
 msgid "Auto-validation"
-msgstr "Auto-validation"
+msgstr "Autovalidação"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_base
@@ -476,7 +476,7 @@ msgstr "Custo:"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 msgid "Create a new expense"
-msgstr "Create a new expense"
+msgstr "Criar uma nova despesa"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -644,8 +644,8 @@ msgid ""
 "Each expense paid by the company must have a distinct and dedicated journal "
 "entry."
 msgstr ""
-"Each expense paid by the company must have a distinct and dedicated journal "
-"entry."
+"Cada despesa paga pela empresa deve ter um lançamento contábil distinto e "
+"dedicado."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -701,7 +701,7 @@ msgstr "Despesa"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_department_filtered
 msgid "Expense Analysis"
-msgstr "Expense Analysis"
+msgstr "Análise de despesas"
 
 #. module: hr_expense
 #: model:mail.activity.type,name:hr_expense.mail_act_expense_approval
@@ -870,7 +870,7 @@ msgstr "Despesas do membro da sua equipe"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expenses_to_approve_count
 msgid "Expenses to Approve"
-msgstr ""
+msgstr "Despesas a serem aprovadas"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_to_process
@@ -891,6 +891,8 @@ msgid ""
 "Failed to send mails for submitted expenses. No valid email was found for "
 "the company"
 msgstr ""
+"Falha ao enviar e-mails dedespesas enviadas. Nenhum e-mail válido foi "
+"encontrado para a empresa"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee__filter_for_expense
@@ -922,7 +924,7 @@ msgstr "Ícone do Font Awesome. Ex: fa-tasks"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__former_sheet_id
 msgid "Former Report"
-msgstr ""
+msgstr "Relatório anterior"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
@@ -933,7 +935,7 @@ msgstr "Atividades futuras"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Generated Expense(s)"
-msgstr ""
+msgstr "Despesa(s) gerada(s)"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.expense_product_gift_product_template
@@ -949,7 +951,7 @@ msgstr "Brindes para clientes ou fornecedores"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Go to employees"
-msgstr ""
+msgstr "Ir para funcionários"
 
 #. module: hr_expense
 #. odoo-python
@@ -1113,13 +1115,13 @@ msgstr "Item de diário"
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from these expenses: %(links)s"
-msgstr ""
+msgstr "Lançamento de diário criado a partir dessas despesas: %(links)s"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/account_move.py:0
 msgid "Journal entry created from this expense: %(link)s"
-msgstr ""
+msgstr "Lançamento de diário criado a partir dessa despesa: %(link)s"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
@@ -1204,6 +1206,8 @@ msgid ""
 "Managers can approve the expense here, then an accountant can post the "
 "accounting entries."
 msgstr ""
+"Os gerentes podem aprovar a despesa aqui e, em seguida, um contador pode "
+"lançar os lançamentos contábeis."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -1274,7 +1278,7 @@ msgstr "Novo"
 #. odoo-python
 #: code:addons/hr_expense/wizard/hr_expense_post_wizard.py:0
 msgid "New expense entries"
-msgstr ""
+msgstr "Novos lançamentos de despesas"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses

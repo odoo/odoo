@@ -314,7 +314,7 @@ msgstr "(seriële barcode)"
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid ")^FS"
-msgstr ""
+msgstr ")^FS"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
@@ -1207,7 +1207,7 @@ msgstr "Toegestane route"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Toegestane maateenheid"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1345,6 +1345,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Aangezien andere maateenheden (bijv. %(problem_uom)s) dan %(uom)s al zijn "
+"gebruikt voor dit product, kan de maateenheid niet worden gewijzigd. Als je "
+"dit wilt wijzigen, archiveer dan het product en maak een nieuw product aan."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -7460,7 +7463,7 @@ msgstr "Reden"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
 msgid "Reason for relocation"
-msgstr "Reden van verhuizing"
+msgstr "Reden van verplaatsing"
 
 #. module: stock
 #. odoo-javascript
@@ -8270,6 +8273,8 @@ msgstr "Niet ondersteunde selectie."
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Verkoop en aankoop van producten in verschillende eenheden van maat of "
+"verpakkingen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10232,7 +10237,7 @@ msgstr "Stuks"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Eenheden & Verpakkingen"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -11439,52 +11444,52 @@ msgstr "]<br/>min:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FO150,165 ^A0N,25^FH ^FD"
-msgstr ""
+msgstr "^FO150,165 ^A0N,25^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FO150,210 ^A0N,25^FH ^FD("
-msgstr ""
+msgstr "^FO150,210 ^A0N,25^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 msgid "^FO160,185 ^A0N,18^FH ^FD("
-msgstr ""
+msgstr "^FO160,185 ^A0N,18^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 msgid "^FO290,165 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,165 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FO290,50 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,50 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr ""
+msgstr "^FO300,200 ^A0N,40^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
@@ -11500,6 +11505,8 @@ msgid ""
 "^FS\n"
 "^FT35,48^A0N,15^FD"
 msgstr ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
@@ -11507,22 +11514,24 @@ msgid ""
 "^FS\n"
 "^FT35,65^A0N,20^FD"
 msgstr ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form

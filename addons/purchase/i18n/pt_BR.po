@@ -124,6 +124,36 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is a reminder that the delivery of the purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        is expected for \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">undefined</span>.\n"
+"        </t>\n"
+"        Could you please confirm it will be delivered on time?\n"
+"        <br/><br/>\n"
+"        <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Acknowledge</a>\n"
+"        <br/><br/>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -158,6 +188,35 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is in attachment a purchase order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br/><br/>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            The receipt is expected for <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br/><br/>\n"
+"            Could you please acknowledge the receipt of this order?\n"
+"            <br/><br/>\n"
+"            <a t-att-href=\"object.get_acknowledge_url()\" target=\"_blank\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"                Acknowledge</a>\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -185,6 +244,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Here is in attachment a request for quotation <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            with reference: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br/><br/>\n"
+"        If you have any questions, please do not hesitate to contact us.\n"
+"        <br/><br/>\n"
+"        Best regards,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -288,7 +369,7 @@ msgstr "<span class=\"o_stat_text\">Correspondência de contas</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span class=\"o_stat_text\">Price Comparison</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Price Comparison</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -414,7 +495,7 @@ msgstr "<strong>Data da solicitação de cotação:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
-msgstr ""
+msgstr "<strong>Requested Ship Date:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
@@ -502,7 +583,7 @@ msgstr "Entrada de despesa acumulada"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Acknowledge"
-msgstr ""
+msgstr "Acknowledge"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__acknowledged
@@ -604,7 +685,7 @@ msgstr "Tudo"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Days to Order"
-msgstr ""
+msgstr "All Days to Order"
 
 #. module: purchase
 #. odoo-javascript
@@ -622,19 +703,19 @@ msgstr "Todas as SDCs atrasadas"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt RFQs"
-msgstr ""
+msgstr "All Late Receipt RFQs"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Not Acknowledged RFQs"
-msgstr ""
+msgstr "All Not Acknowledged RFQs"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Sent RFQs"
-msgstr ""
+msgstr "All Sent RFQs"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -1138,7 +1219,7 @@ msgstr "Dias para confirmar"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days to Order"
-msgstr ""
+msgstr "Days to Order"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1566,6 +1647,8 @@ msgid ""
 "It indicates that the vendor has acknowledged the receipt of the purchase "
 "order."
 msgstr ""
+"It indicates that the vendor has acknowledged the receipt of the purchase "
+"order."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -1606,13 +1689,13 @@ msgstr "Atividades atrasadas"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late RFQ"
-msgstr ""
+msgstr "Late RFQ"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late Receipt"
-msgstr ""
+msgstr "Late Receipt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1781,7 +1864,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My"
-msgstr ""
+msgstr "My"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1804,13 +1887,13 @@ msgstr "Minhas SDCs atrasadas"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late Receipt RFQs"
-msgstr ""
+msgstr "My Late Receipt RFQs"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Not Acknowledged RFQs"
-msgstr ""
+msgstr "My Not Acknowledged RFQs"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2270,7 +2353,7 @@ msgstr "Linhas de conta de compras"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Purchase Comparison for %s"
-msgstr ""
+msgstr "Purchase Comparison for %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2832,12 +2915,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO"
-msgstr ""
+msgstr "Send PO"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send RFQ"
-msgstr ""
+msgstr "Send RFQ"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2902,7 +2985,7 @@ msgstr "Compartilhar"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__show_comparison
 msgid "Show Comparison"
-msgstr ""
+msgstr "Show Comparison"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3227,7 +3310,7 @@ msgstr "Valor total"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_total_cc
 msgid "Total in currency"
-msgstr ""
+msgstr "Total in currency"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_pivot
@@ -3298,7 +3381,7 @@ msgstr "Destravar"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Unsupported operator"
-msgstr ""
+msgstr "Unsupported operator"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3616,13 +3699,13 @@ msgstr "pedidos de compra mesclados"
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_id"
-msgstr ""
+msgstr "res_id"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "res_model_id"
-msgstr ""
+msgstr "res_model_id"
 
 #. module: purchase
 #. odoo-python
