@@ -804,8 +804,11 @@ export function getAllActionsAndOperations(comp) {
     };
 }
 function _shouldClean(comp, hasClean, isApplied) {
+    if (!hasClean) {
+        return false;
+    }
     const shouldToggle = !comp.env.selectableContext;
-    const shouldClean = shouldToggle && hasClean && isApplied;
+    const shouldClean = shouldToggle && isApplied;
     return comp.props.inverseAction ? !shouldClean : shouldClean;
 }
 
