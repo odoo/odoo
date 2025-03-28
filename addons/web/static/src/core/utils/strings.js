@@ -1,3 +1,5 @@
+import { isObject } from "./objects";
+
 export const nbsp = "\u00a0";
 
 /**
@@ -96,7 +98,7 @@ export function intersperse(str, indices, separator = "") {
  * @returns {string}
  */
 export function sprintf(s, ...values) {
-    if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
+    if (values.length === 1 && isObject(values[0])) {
         const valuesDict = values[0];
         s = s.replace(/%\(([^)]+)\)s/g, (match, value) => valuesDict[value]);
     } else if (values.length > 0) {
@@ -328,7 +330,8 @@ export function unaccent(str, caseSensitive) {
  */
 export function isEmail(value) {
     // http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-    const re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    const re =
+        /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     return re.test(value);
 }
 

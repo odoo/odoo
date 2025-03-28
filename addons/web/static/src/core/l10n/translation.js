@@ -4,6 +4,7 @@ import { formatList } from "@web/core/l10n/utils";
 import { isIterable } from "@web/core/utils/arrays";
 import { Deferred } from "@web/core/utils/concurrency";
 import { htmlEscape } from "@web/core/utils/html";
+import { isObject } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
 
 export const translationLoaded = Symbol("translationLoaded");
@@ -124,7 +125,7 @@ export async function loadLanguages(orm) {
 function _safeFormatAndSprintf(str, ...values) {
     let hasMarkup = false;
     let valuesObject = values;
-    if (values.length === 1 && Object.prototype.toString.call(values[0]) === "[object Object]") {
+    if (values.length === 1 && isObject(values[0])) {
         valuesObject = values[0];
     }
     for (const [key, value] of Object.entries(valuesObject)) {
@@ -149,7 +150,7 @@ function _safeFormatAndSprintf(str, ...values) {
  * @returns {any[]|[Object]}
  */
 function _escapeNonMarkup(values) {
-    if (Object.prototype.toString.call(values[0]) === "[object Object]") {
+    if (isObject(values[0])) {
         const sanitized = {};
         for (const [key, value] of Object.entries(values[0])) {
             sanitized[key] = htmlEscape(value);
