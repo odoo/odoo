@@ -2,6 +2,7 @@
 
 from odoo import fields, models, api
 from odoo.addons.mail.tools.discuss import Store
+from odoo.fields import Command
 
 
 class ResUsers(models.Model):
@@ -90,6 +91,19 @@ class ResUsers(models.Model):
     def _compute_has_access_livechat(self):
         for user in self.sudo():
             user.has_access_livechat = user.has_group('im_livechat.im_livechat_group_user')
+
+    def write(self, vals):
+        if vals.get("group_ids"):
+            operator_group = self.env.ref("im_livechat.im_livechat_group_user")
+            if operator_group in self.all_group_ids:
+                result = super().write(vals)
+                lost_operators = self.filtered_domain([("all_group_ids", "not in", operator_group.id)])
+                # sudo - im_livechat.channel: user manager can remove user from livechat channels
+                self.env["im_livechat.channel"].sudo() \
+                    .search([("user_ids", "in", lost_operators.ids)]) \
+                    .write({"user_ids": [Command.unlink(operator.id) for operator in lost_operators]})
+                return result
+        return super().write(vals)
 
     def _init_store_data(self, store: Store):
         super()._init_store_data(store)
