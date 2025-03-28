@@ -3,10 +3,46 @@ export const computeComboItems = (
     childLineConf,
     pricelist,
     decimalPrecision,
-    productTemplateAttributeValueById
+    productTemplateAttributeValueById,
+    priceUnit = false
 ) => {
     const comboItems = [];
-    const parentLstPrice = parentProduct.getPrice(pricelist, 1, 0, false, parentProduct);
+    childLineConf = computeComboItemsPrice(
+        parentProduct,
+        childLineConf,
+        pricelist,
+        decimalPrecision,
+        productTemplateAttributeValueById,
+        priceUnit
+    );
+
+    for (const conf of childLineConf) {
+        const attribute_value_ids = conf.configuration?.attribute_value_ids.map(
+            (id) => productTemplateAttributeValueById[id]
+        );
+        comboItems.push({
+            combo_item_id: conf.combo_item_id,
+            price_unit: conf.price_unit,
+            attribute_value_ids,
+            attribute_custom_values: conf.configuration?.attribute_custom_values || {},
+        });
+    }
+
+    return comboItems;
+};
+
+export const computeComboItemsPrice = (
+    parentProduct,
+    childLineConf,
+    pricelist,
+    decimalPrecision,
+    productTemplateAttributeValueById,
+    priceUnit = false
+) => {
+    const parentLstPrice =
+        priceUnit === false
+            ? parentProduct.getPrice(pricelist, 1, 0, false, parentProduct)
+            : priceUnit;
     const originalTotal = childLineConf.reduce((acc, conf) => {
         const originalPrice = conf.combo_item_id.combo_id.base_price;
         return acc + originalPrice;
@@ -29,13 +65,7 @@ export const computeComboItems = (
             .map((attr) => attr?.price_extra || 0)
             .reduce((acc, price) => acc + price, 0);
         const totalPriceExtra = priceUnit + attributesPriceExtra + comboItem.extra_price;
-        comboItems.push({
-            combo_item_id: comboItem,
-            price_unit: totalPriceExtra,
-            attribute_value_ids,
-            attribute_custom_values: conf.configuration?.attribute_custom_values || {},
-        });
+        conf.price_unit = totalPriceExtra;
     }
-
-    return comboItems;
+    return childLineConf;
 };

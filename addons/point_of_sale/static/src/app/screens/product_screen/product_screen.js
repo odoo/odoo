@@ -130,14 +130,18 @@ export class ProductScreen extends Component {
             {
                 value: "discount",
                 text: _t("%"),
-                disabled: !this.pos.config.manual_discount || this.pos.cashier._role === "minimal",
+                disabled:
+                    !this.pos.config.manual_discount ||
+                    this.pos.cashier._role === "minimal" ||
+                    Boolean(this.currentOrder?.getSelectedOrderline()?.combo_parent_id),
             },
             {
                 value: "price",
                 text: _t("Price"),
                 disabled:
                     !this.pos.cashierHasPriceControlRights() ||
-                    this.pos.cashier._role === "minimal",
+                    this.pos.cashier._role === "minimal" ||
+                    Boolean(this.currentOrder?.getSelectedOrderline()?.combo_parent_id),
             },
             BACKSPACE,
         ]).map((button) => ({
