@@ -62,3 +62,14 @@ class TestTodoUi(HttpCaseWithUserDemo):
             'email': 'mitchell.admin@example.com',
         })
         self.start_tour("/odoo", 'project_todo_main_functions', login='admin')
+
+    @users('admin')
+    def test_project_todo_history(self):
+        """This tour will check that the history works properly."""
+
+        self.env['project.task'].create({
+            'name': 'Test History Todo',
+            'project_id': False
+        })
+
+        self.start_tour('/odoo', 'project_todo_history_tour', login='admin')
