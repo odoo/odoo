@@ -44,9 +44,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertTrue("-001" in mo.name)
         self.assertEqual(mo.state, "confirmed")
         # Each generated serial number should have its own mo
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), count)
+        self.assertEqual(len(mo.production_group_id.production_ids), count)
         # Check generated serial numbers
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#1", "sn#2", "sn#3", "sn#4", "sn#5"])
+        self.assertEqual(mo.production_group_id.production_ids.lot_producing_id.mapped('name'), ["sn#1", "sn#2", "sn#3", "sn#4", "sn#5"])
 
     def test_smp_produce_all_but_one(self):
         """Create a MO for a product tracked by serial number.
@@ -71,7 +71,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard.action_prepare()
 
         # Last MO in sequence is the backorder
-        bo = mo.procurement_group_id.mrp_production_ids[-1]
+        bo = mo.production_group_id.production_ids[-1]
         self.assertEqual(bo.backorder_sequence, count)
         self.assertEqual(bo.state, "confirmed")
 
@@ -115,14 +115,14 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         wizard.action_generate_production_text()
         wizard.action_prepare()
         # 1st & 2nd MO in sequence should have only 1 move lines (1 lot) for product_to_use_1 (2nd in bom)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[0].move_raw_ids[1].move_lines_count, 1)
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[1].move_raw_ids[1].move_lines_count, 1)
+        self.assertEqual(mo.production_group_id.production_ids[0].move_raw_ids[1].move_lines_count, 1)
+        self.assertEqual(mo.production_group_id.production_ids[1].move_raw_ids[1].move_lines_count, 1)
         # 3rd MO should have 2 move lines (2 different lots) for product_to_use_1
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids[2].move_raw_ids[1].move_lines_count, 2)
+        self.assertEqual(mo.production_group_id.production_ids[2].move_raw_ids[1].move_lines_count, 2)
 
         # Verify mark as done
 
-        mos = mo.procurement_group_id.mrp_production_ids
+        mos = mo.production_group_id.production_ids
         mos.button_mark_done()
 
         self.assertRecordValues(mos.lot_producing_id, [
@@ -230,17 +230,17 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertTrue("-001" in mo.name)
         self.assertEqual(mo.state, "confirmed")
         # Each generated serial number should have its own mo
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+        self.assertEqual(len(mo.production_group_id.production_ids), 2)
         # Check generated serial numbers
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#3", "sn#4"])
+        self.assertEqual(mo.production_group_id.production_ids.lot_producing_id.mapped('name'), ["sn#3", "sn#4"])
         #check byproduct quantity
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.move_byproduct_ids.mapped('quantity'), [1, 1])
+        self.assertEqual(mo.production_group_id.production_ids.move_byproduct_ids.mapped('quantity'), [1, 1])
         # check the component quantity
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.move_raw_ids.mapped('quantity'), [1, 1])
+        self.assertEqual(mo.production_group_id.production_ids.move_raw_ids.mapped('quantity'), [1, 1])
         # Mark the MOs as done
-        mo.procurement_group_id.mrp_production_ids.move_raw_ids.picked = True
-        mo.procurement_group_id.mrp_production_ids.button_mark_done()
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped('state'), ['done', 'done'])
+        mo.production_group_id.production_ids.move_raw_ids.picked = True
+        mo.production_group_id.production_ids.button_mark_done()
+        self.assertEqual(mo.production_group_id.production_ids.mapped('state'), ['done', 'done'])
 
     def test_mass_produce_with_tracked_product_2(self):
         """
@@ -267,9 +267,9 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertIn("-001", mo.name)
         self.assertEqual(mo.state, "to_close")
         # Each generated serial number should have its own mo
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.lot_producing_id.mapped('name'), ["sn#5", "sn#6", "sn#7"])
+        self.assertEqual(mo.production_group_id.production_ids.lot_producing_id.mapped('name'), ["sn#5", "sn#6", "sn#7"])
         # check the component quantity
-        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids.move_raw_ids, [
+        self.assertRecordValues(mo.production_group_id.production_ids.move_raw_ids, [
             {'quantity': 1.0, 'picked': True},
             {'quantity': 1.0, 'picked': True},
             {'quantity': 1.0, 'picked': False},
@@ -277,8 +277,8 @@ class TestMrpSerialMassProduce(TestMrpCommon):
             {'quantity': 1.0, 'picked': False},
             {'quantity': 0.0, 'picked': False},
         ])
-        mo.procurement_group_id.mrp_production_ids.button_mark_done()
-        self.assertEqual(mo.procurement_group_id.mrp_production_ids.mapped('state'), ['done', 'done', 'done'])
+        mo.production_group_id.production_ids.button_mark_done()
+        self.assertEqual(mo.production_group_id.production_ids.mapped('state'), ['done', 'done', 'done'])
         self.assertEqual(comp1.qty_available, 2.0)
         self.assertEqual(comp2.qty_available, -3.0)
 
@@ -330,7 +330,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         self.assertTrue("-001" in mo.name)
         self.assertEqual(mo.state, "confirmed")
         # Each generated serial number should have its own mo
-        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 12)
+        self.assertEqual(len(mo.production_group_id.production_ids), 12)
 
     def test_smp_two_steps(self):
         """Create a MO for a product tracked by lot and with a component untracked and tracked by lot.
