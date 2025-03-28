@@ -553,7 +553,8 @@ actual arch.
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
-        if self.key and default and 'key' not in default:
+        default = default or {}
+        if self.key and 'key' not in default:
             new_key = self.key + '_%s' % str(uuid.uuid4())[:6]
             default = dict(default or {}, key=new_key)
         return super(View, self).copy(default)
