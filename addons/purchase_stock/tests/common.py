@@ -9,14 +9,13 @@ from odoo import tools
 class PurchaseTestCommon(TestStockCommon):
 
     def _create_make_procurement(self, product, product_qty, date_planned=False):
-        ProcurementGroup = self.env['procurement.group']
+        StockRule = self.env['stock.rule']
         order_values = {
             'warehouse_id': self.warehouse_1,
             'action': 'pull_push',
             'date_planned': date_planned or fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
-            'group_id': self.env['procurement.group'],
         }
-        return ProcurementGroup.run([self.env['procurement.group'].Procurement(
+        return StockRule.run([self.env['stock.rule'].Procurement(
             product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id,
             product.name, '/', self.env.company, order_values)
         ])

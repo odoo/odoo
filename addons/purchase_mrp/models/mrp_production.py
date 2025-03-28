@@ -12,7 +12,7 @@ class MrpProduction(models.Model):
         compute='_compute_purchase_order_count',
         groups='purchase.group_purchase_user')
 
-    @api.depends('procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id', 'procurement_group_id.stock_move_ids.move_orig_ids.purchase_line_id.order_id')
+    @api.depends('reference_ids', 'reference_ids.purchase_ids')
     def _compute_purchase_order_count(self):
         for production in self:
             production.purchase_order_count = len(production._get_purchase_orders())
@@ -45,11 +45,7 @@ class MrpProduction(models.Model):
 
     def _get_purchase_orders(self):
         self.ensure_one()
-        linked_po = self.procurement_group_id.stock_move_ids.created_purchase_line_ids.order_id \
-                  | self.env['stock.move'].browse(self.procurement_group_id.stock_move_ids._rollup_move_origs()).purchase_line_id.order_id
-        group_po = self.procurement_group_id.purchase_line_ids.order_id
-
-        return linked_po | group_po
+        return self.reference_ids.purchase_ids
 
     def _prepare_merge_orig_links(self):
         origs = super()._prepare_merge_orig_links()
