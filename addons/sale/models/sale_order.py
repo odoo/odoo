@@ -1735,10 +1735,11 @@ class SaleOrder(models.Model):
 
     def payment_action_void(self):
         """ Void all transactions linked to this sale order. """
+        self.ensure_one()
         payment_utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
-        self.authorized_transaction_ids.sudo().action_void()
+        return self.authorized_transaction_ids.sudo().action_void()
 
     def get_portal_last_transaction(self):
         self.ensure_one()

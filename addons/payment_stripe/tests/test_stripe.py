@@ -53,6 +53,19 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         )
 
     @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_tx_state_after_send_capture_request_when_request_error(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
+            '._stripe_make_request', return_value=self.response_error,
+        ):
+            tx = source_tx._send_capture_request()
+        self.assertEqual(
+            tx.state, 'error', msg="When request failed tx state should be changed to error."
+        )
+
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
     def test_tx_state_after_send_void_request(self):
         self.provider.capture_manually = True
         tx = self._create_transaction('redirect', state='authorized')
@@ -65,6 +78,19 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
             tx._send_void_request()
         self.assertEqual(
             tx.state, 'cancel', msg="The state should be 'cancel' after voiding the transaction."
+        )
+
+    @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
+    def test_tx_state_after_send_void_request_when_request_error(self):
+        self.provider.capture_manually = True
+        source_tx = self._create_transaction(flow='direct', state='authorized')
+        with patch(
+            'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
+            '._stripe_make_request', return_value=self.response_error,
+        ):
+            void_tx = source_tx._send_void_request()
+        self.assertEqual(
+            void_tx.state, 'error', msg="When request failed tx state should be changed to error."
         )
 
     @mute_logger('odoo.addons.payment_stripe.controllers.main')
@@ -135,7 +161,9 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
     def test_only_create_webhook_if_not_already_done(self):
         """ Test that a webhook is created only if the webhook secret is not already set. """
         self.stripe.stripe_webhook_secret = False
-        with patch.object(type(self.env['payment.provider']), '_stripe_make_request') as mock:
+        with patch.object(
+            type(self.env['payment.provider']), '_stripe_make_request', return_value={}
+        ) as mock:
             self.stripe.action_stripe_create_webhook()
             self.assertEqual(mock.call_count, 1)
 

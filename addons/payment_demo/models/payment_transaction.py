@@ -3,7 +3,8 @@
 import logging
 
 from odoo import _, fields, models
-from odoo.exceptions import UserError, ValidationError
+
+from odoo.addons.payment import const as payment_const
 
 
 _logger = logging.getLogger(__name__)
@@ -72,7 +73,8 @@ class PaymentTransaction(models.Model):
             return
 
         if not self.token_id:
-            raise UserError("Demo: " + _("The transaction is not linked to a token."))
+            self._set_error(payment_const.TX_NOT_LINKED_TO_TOKEN_ERROR)
+            return
 
         simulated_state = self.token_id.demo_simulated_state
         notification_data = {'reference': self.reference, 'simulated_state': simulated_state}
@@ -140,9 +142,7 @@ class PaymentTransaction(models.Model):
         reference = notification_data.get('reference')
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'demo')])
         if not tx:
-            raise ValidationError(
-                "Demo: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
         return tx
 
     def _process_notification_data(self, notification_data):

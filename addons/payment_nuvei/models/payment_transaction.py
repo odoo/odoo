@@ -5,9 +5,10 @@ from urllib.parse import urlencode
 from uuid import uuid4
 
 from odoo import _, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 from odoo.tools import float_round
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_nuvei import const
 from odoo.addons.payment_nuvei.controllers.main import NuveiController
@@ -121,15 +122,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('invoice_id')
         if not reference:
-            raise ValidationError(
-                "Nuvei: " + _("Received data with missing reference.")
-            )
+            _logger.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'nuvei')])
         if not tx:
-            raise ValidationError(
-                "Nuvei: " + _("No transaction found matching reference %(ref)s.", ref=reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
 
         return tx
 
@@ -163,7 +161,8 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         status = notification_data.get('Status') or notification_data.get('ppp_status')
         if not status:
-            raise ValidationError("Nuvei: " + _("Received data with missing payment state."))
+            self._set_error(payment_const.MISSING_PAYMENT_STATUS)
+            return
         status = status.lower()
         if status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
@@ -182,7 +181,7 @@ class PaymentTransaction(models.Model):
                 "for transaction with reference %(ref)s",
                 {'status': status, 'reason': status_description, 'ref': self.reference},
             )
-            self._set_error("Nuvei: " + _(
+            self._set_error(_(
                 "Received invalid transaction status %(status)s and reason '%(reason)s'.",
                 status=status, reason=status_description
             ))

@@ -5,8 +5,8 @@ import logging
 from werkzeug import urls
 
 from odoo import _, api, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_asiapay import const
 from odoo.addons.payment_asiapay.controllers.main import AsiaPayController
@@ -110,8 +110,6 @@ class PaymentTransaction(models.Model):
         :param dict notification_data: The notification data sent by the provider.
         :return: The transaction if found.
         :rtype: recordset of `payment.transaction`
-        :raise ValidationError: If inconsistent data are received.
-        :raise ValidationError: If the data match no transaction.
         """
         tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'asiapay' or len(tx) == 1:
@@ -119,15 +117,12 @@ class PaymentTransaction(models.Model):
 
         reference = notification_data.get('Ref')
         if not reference:
-            raise ValidationError(
-                "AsiaPay: " + _("Received data with missing reference %(ref)s.", ref=reference)
-            )
+            _logger.warning(payment_const.MISSING_REFERENCE_ERROR)
+            return tx
 
         tx = self.search([('reference', '=', reference), ('provider_code', '=', 'asiapay')])
         if not tx:
-            raise ValidationError(
-                "AsiaPay: " + _("No transaction found matching reference %s.", reference)
-            )
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, reference)
 
         return tx
 
@@ -138,7 +133,6 @@ class PaymentTransaction(models.Model):
 
         :param dict notification_data: The notification data sent by the provider.
         :return: None
-        :raise ValidationError: If inconsistent data are received.
         """
         super()._process_notification_data(notification_data)
         if self.provider_code != 'asiapay':
@@ -158,17 +152,19 @@ class PaymentTransaction(models.Model):
         success_code = notification_data.get('successcode')
         primary_response_code = notification_data.get('prc')
         if not success_code:
-            raise ValidationError("AsiaPay: " + _("Received data with missing success code."))
+            self._set_error(_("Received data with missing success code."))
+            return
         if success_code in const.SUCCESS_CODE_MAPPING['done']:
             self._set_done()
         elif success_code in const.SUCCESS_CODE_MAPPING['error']:
             self._set_error(_(
-                "An error occurred during the processing of your payment (success code %(success_code)s; primary "
-                "response code %(response_code)s). Please try again.", success_code=success_code, response_code=primary_response_code,
+                "An error occurred during the processing of your payment (success code %(success_code)s; primary"
+                " response code %(response_code)s). Please try again.", success_code=success_code,
+                response_code=primary_response_code,
             ))
         else:
             _logger.warning(
-                "Received data with invalid success code (%s) for transaction with primary response "
-                "code %s and reference %s.", success_code, primary_response_code, self.reference
+                "Received data with invalid success code (%s) for transaction with primary response"
+                " code %s and reference %s.", success_code, primary_response_code, self.reference
             )
-            self._set_error("AsiaPay: " + _("Unknown success code: %s", success_code))
+            self._set_error(_("Unknown success code: %s", success_code))

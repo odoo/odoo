@@ -14,6 +14,11 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
         'click [name="o_payment_expand_button"]': '_hideExpandButton',
         'click [name="o_payment_submit_button"]': '_submitForm',
     }),
+    errorMapping: {
+        'paymentProcessingError': _t("Payment processing failed"),
+        'incorrectPaymentDetails': _t("Incorrect payment details"),
+        'displayFormError': _t("Cannot display the payment form"),
+    },
 
     // #=== WIDGET LIFECYCLE ===#
 
@@ -370,11 +375,19 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
      * @return {void}
      */
     async _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
-        // Create a transaction and retrieve its processing values.
-        await rpc(
-            this.paymentContext['transactionRoute'],
-            this._prepareTransactionRouteParams(),
-        ).then(processingValues => {
+        try {
+            // Create a transaction and retrieve its processing values.
+            const processingValues = await rpc(
+                this.paymentContext['transactionRoute'],
+                this._prepareTransactionRouteParams(),
+            )
+            if (processingValues.state === 'error') {
+                this._displayErrorDialog(
+                    this.errorMapping['paymentProcessingError'], processingValues.state_message
+                );
+                this._enableButton(); // The button has been disabled before initiating the flow.
+                return;
+            }
             if (flow === 'redirect') {
                 this._processRedirectFlow(
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
@@ -388,13 +401,14 @@ publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
                     providerCode, paymentOptionId, paymentMethodCode, processingValues
                 );
             }
-        }).catch(error => {
+        } catch (error) {
             if (error instanceof RPCError) {
-                this._displayErrorDialog(_t("Payment processing failed"), error.data.message);
+                this._displayErrorDialog(this.errorMapping['displayFormError'], error.data.message);
                 this._enableButton(); // The button has been disabled before initiating the flow.
+            } else {
+                return Promise.reject(error);
             }
-            return Promise.reject(error);
-        });
+        }
     },
 
     /**

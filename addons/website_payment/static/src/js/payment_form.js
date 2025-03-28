@@ -81,7 +81,7 @@ PaymentForm.include({
                     });
                 }
                 this._displayErrorDialog(
-                    _t("Payment processing failed"),
+                    this.errorMapping['paymentProcessingError'],
                     _t("Some information is missing to process your payment.")
                 );
                 this._enableButton();

@@ -7,8 +7,8 @@ import re
 import requests
 
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
+from odoo.addons.payment import const as payment_const
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import const
 
@@ -77,7 +77,9 @@ class PaymentProvider(models.Model):
 
     #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
-    def _adyen_make_request(self, endpoint, endpoint_param=None, payload=None, method='POST', idempotency_key=None):
+    def _adyen_make_request(
+        self, endpoint, endpoint_param=None, payload=None, method='POST', idempotency_key=None,
+    ):
         """ Make a request to Adyen API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -91,7 +93,6 @@ class PaymentProvider(models.Model):
         :param str idempotency_key: The idempotency key to pass in the request.
         :return: The JSON-formatted content of the response
         :rtype: dict
-        :raise: ValidationError if an HTTP error occurs
         """
 
         def _build_url(prefix_, version_, endpoint_):
@@ -120,20 +121,17 @@ class PaymentProvider(models.Model):
         if method == 'POST' and idempotency_key:
             headers['idempotency-key'] = idempotency_key
         try:
-            response = requests.request(method, url, json=payload, headers=headers, timeout=60)
-            try:
-                response.raise_for_status()
-            except requests.exceptions.HTTPError:
-                _logger.exception(
-                    "invalid API request at %s with data %s: %s", url, payload, response.text
-                )
-                msg = response.json().get('message', '')
-                raise ValidationError(
-                    "Adyen: " + _("The communication with the API failed. Details: %s", msg)
-                )
-        except requests.exceptions.ConnectionError:
-            _logger.exception("unable to reach endpoint at %s", url)
-            raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
+            response = requests.request(
+                method, url, json=payload, headers=headers, timeout=payment_const.TIMEOUT
+            )
+            response.raise_for_status()
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception(payment_const.UNABLE_TO_REACH_ENDPOINT, url)
+            return payment_utils.format_error_response(payment_const.API_CONNECTION_ERROR)
+        except requests.exceptions.HTTPError as err:
+            _logger.exception(payment_const.INVALID_API_REQUEST, url, payload, err.response.text)
+            msg = err.response.json().get('message', '')
+            return payment_utils.format_error_response(payment_const.API_COMMUNICATION_ERROR + msg)
         return response.json()
 
     def _adyen_compute_shopper_reference(self, partner_id):

@@ -7,7 +7,6 @@ import pprint
 from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 from odoo.addons.payment import utils as payment_utils
@@ -28,7 +27,7 @@ class PaypalController(http.Controller):
         :param string order_id: The order id provided by PayPal to identify the order.
         :param str reference: The reference of the transaction, used to generate the idempotency
                               key.
-        :return: None
+        :return: dict
         """
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'paypal', {'reference_id': reference}
@@ -39,11 +38,18 @@ class PaypalController(http.Controller):
         response = tx_sudo.provider_id._paypal_make_request(
             f'/v2/checkout/orders/{order_id}/capture', idempotency_key=idempotency_key
         )
+        if payment_utils.get_request_error(response):
+            return response
         normalized_response = self._normalize_paypal_data(response)
+        if error := payment_utils.get_request_error(normalized_response):
+            _logger.error(error)
+            return normalized_response
+
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'paypal', normalized_response
         )
         tx_sudo._handle_notification_data('paypal', normalized_response)
+        return {}
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
     def paypal_webhook(self):
@@ -55,26 +61,24 @@ class PaypalController(http.Controller):
         :rtype: str
         """
         data = request.get_json_data()
+        response = request.make_json_response('')
         if data.get('event_type') in const.HANDLED_WEBHOOK_EVENTS:
-            normalized_data = self._normalize_paypal_data(
-                data.get('resource'), from_webhook=True
-            )
+            normalized_data = self._normalize_paypal_data(data.get('resource'), from_webhook=True)
+            if error := payment_utils.get_request_error(normalized_data):
+                _logger.error(error)
+                return response
             _logger.info("Notification received from PayPal with data:\n%s", pprint.pformat(data))
-            try:
-                # Check the origin and integrity of the notification.
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'paypal', normalized_data
-                )
-                self._verify_notification_origin(data, tx_sudo)
+            # Check the origin and integrity of the notification.
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'paypal', normalized_data
+            )
+            if not tx_sudo:
+                return response
+            self._verify_notification_origin(data, tx_sudo)
 
-                # Handle the notification data.
-                tx_sudo._handle_notification_data('paypal', normalized_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed.
-                _logger.warning(
-                    "Unable to handle the notification data; skipping to acknowledge.",
-                    exc_info=True,
-                )
-        return request.make_json_response('')
+            # Handle the notification data.
+            tx_sudo._handle_notification_data('paypal', normalized_data)
+        return response
 
     def _normalize_paypal_data(self, data, from_webhook=False):
         """ Normalize the payment data received from PayPal.
@@ -106,7 +110,9 @@ class PaypalController(http.Controller):
                     'txn_type': 'CAPTURE',
                 })
             else:
-                raise ValidationError("PayPal: " + _("Invalid response format, can't normalize."))
+                return payment_utils.format_error_response(
+                    _("Invalid response format, can't normalize.")
+                )
         return result
 
     def _verify_notification_origin(self, notification_data, tx_sudo):

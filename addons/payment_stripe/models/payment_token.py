@@ -4,7 +4,8 @@ import logging
 import pprint
 
 from odoo import _, fields, models
-from odoo.exceptions import ValidationError
+
+from odoo.addons.payment import utils as payment_utils
 
 
 _logger = logging.getLogger(__name__)
@@ -27,7 +28,7 @@ class PaymentToken(models.Model):
 
         Note: self.ensure_one()
 
-        :return: None
+        :return: str
         """
         self.ensure_one()
 
@@ -41,12 +42,15 @@ class PaymentToken(models.Model):
             },
             method='GET'
         )
+        if error_msg := payment_utils.get_request_error(response_content):
+            return error_msg
         _logger.info("received payment_methods response:\n%s", pprint.pformat(response_content))
 
         # Store the payment method ID on the token
         payment_methods = response_content.get('data', [])
         payment_method_id = payment_methods and payment_methods[0].get('id')
         if not payment_method_id:
-            raise ValidationError("Stripe: " + _("Unable to convert payment token to new API."))
+            return _("Unable to convert payment token to new API.")
         self.stripe_payment_method = payment_method_id
         _logger.info("converted token with id %s to new API", self.id)
+        return ''

@@ -2,7 +2,6 @@
 
 from unittest.mock import patch
 
-from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -41,13 +40,16 @@ class PaypalTest(PaypalCommon, PaymentHttpCommon):
         self.assertEqual(tx.state, 'done')
         self.assertEqual(tx.provider_reference, normalized_data['id'])
 
+    @mute_logger('odoo.addons.payment_paypal.models.payment_transaction')
     def test_feedback_processing(self):
         normalized_data = PaypalController._normalize_paypal_data(
             self, self.notification_data.get('resource'), from_webhook=True
         )
         # Unknown transaction
-        with self.assertRaises(ValidationError):
-            self.env['payment.transaction']._handle_notification_data('paypal', normalized_data)
+        empty_tx = self.env['payment.transaction']._handle_notification_data(
+            'paypal', normalized_data
+        )
+        self.assertFalse(empty_tx)
 
         # Confirmed transaction
         tx = self._create_transaction('direct')

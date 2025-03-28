@@ -6,9 +6,10 @@ import pprint
 from werkzeug import urls
 
 from odoo import _, models
-from odoo.exceptions import ValidationError
 
 from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
+from odoo.addons.payment import const as payment_const
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_mollie import const
 from odoo.addons.payment_mollie.controllers.main import MollieController
 
@@ -35,6 +36,8 @@ class PaymentTransaction(models.Model):
         payload = self._mollie_prepare_payment_request_payload()
         _logger.info("sending '/payments' request for link creation:\n%s", pprint.pformat(payload))
         payment_data = self.provider_id._mollie_make_request('/payments', data=payload)
+        if payment_utils.set_tx_error_from_response(self, payment_data):
+            return payment_data
 
         # The provider reference is set now to allow fetching the payment status after redirection
         self.provider_reference = payment_data.get('id')
@@ -95,9 +98,7 @@ class PaymentTransaction(models.Model):
             [('reference', '=', notification_data.get('ref')), ('provider_code', '=', 'mollie')]
         )
         if not tx:
-            raise ValidationError("Mollie: " + _(
-                "No transaction found matching reference %s.", notification_data.get('ref')
-            ))
+            _logger.warning(payment_const.NO_TX_FOUND_EXCEPTION, notification_data.get('ref'))
         return tx
 
     def _process_notification_data(self, notification_data):
@@ -115,6 +116,8 @@ class PaymentTransaction(models.Model):
         payment_data = self.provider_id._mollie_make_request(
             f'/payments/{self.provider_reference}', method="GET"
         )
+        if payment_utils.set_tx_error_from_response(self, payment_data):
+            return
 
         # Update the payment method.
         payment_method_type = payment_data.get('method', '')
@@ -134,12 +137,7 @@ class PaymentTransaction(models.Model):
         elif payment_status == 'paid':
             self._set_done()
         elif payment_status in ['expired', 'canceled', 'failed']:
-            self._set_canceled("Mollie: " + _("Cancelled payment with status: %s", payment_status))
+            self._set_canceled(_("Cancelled payment with status: %s", payment_status))
         else:
-            _logger.info(
-                "received data with invalid payment status (%s) for transaction with reference %s",
-                payment_status, self.reference
-            )
-            self._set_error(
-                "Mollie: " + _("Received data with invalid payment status: %s", payment_status)
-            )
+            _logger.info(payment_const.INVALID_PAYMENT_STATUS, payment_status, self.reference)
+            self._set_error(_("Received data with invalid payment status: %s", payment_status))
