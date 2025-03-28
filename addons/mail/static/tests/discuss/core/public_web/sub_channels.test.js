@@ -271,3 +271,26 @@ test("muted channel hides sub-thread unless channel is selected or thread has un
     );
     await contains(".o-mail-DiscussSidebar-item:contains('New Thread')");
 });
+
+test("show notification when clicking on deleted thread", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "Test Channel" });
+    const activeThreadId = pyEnv["discuss.channel"].create({
+        name: "Message 1",
+        parent_channel_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: `<div class="o_mail_notification"> started a thread:<a href="#" class="o_channel_redirect" data-oe-id="${activeThreadId}" data-oe-model="discuss.channel">Message 1</a></div>`,
+        message_type: "notification",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["discuss.channel"].unlink(activeThreadId);
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-NotificationMessage a", { text: "Message 1" });
+    await contains(".o_notification:has(.o_notification_bar.bg-danger)", {
+        text: "This thread is no longer available.",
+    });
+});
