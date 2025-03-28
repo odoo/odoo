@@ -187,6 +187,7 @@ export class SplitPlugin extends Plugin {
         firstPart.append(...children.slice(0, offset));
         secondPart.append(...children.slice(offset));
         element.remove();
+        this.dispatchTo("after_split_element_handlers", { firstPart, secondPart });
         return [firstPart, secondPart];
     }
 
