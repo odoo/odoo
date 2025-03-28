@@ -514,7 +514,7 @@ const isValidFieldValue = (record, fieldDef) => {
             return Number.isInteger(value);
         }
         case "json":
-            return typeof value === "string" || isObject(value);
+            return typeof value === "string" || Array.isArray(value) || isObject(value);
         case "many2many":
         case "one2many": {
             return (

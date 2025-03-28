@@ -163,7 +163,7 @@ const ensureError = (error) => (error instanceof Error ? error : new Error(error
 const getAssignAction = (options) => {
     const shouldAdd = options?.mode === "add";
     return function assign(target, key, value) {
-        if (shouldAdd && isObject(target[key])) {
+        if (shouldAdd && target[key] === Object(target[key])) {
             // Add value
             if (Array.isArray(target[key])) {
                 target[key].push(...value);
