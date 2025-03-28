@@ -170,13 +170,12 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        """Search function for message_follower_ids"""
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             return NotImplemented
         if not (self.env.su or self.env.user._is_internal()):
             user_partner = self.env.user.partner_id
             allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
-            operand_values = operand if isinstance(operand, Iterable) else [operand]
+            operand_values = operand if isinstance(operand, Iterable) and not isinstance(operand, str) else [operand]
             if not allow_partner_ids.issuperset(operand_values):
                 raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
 
