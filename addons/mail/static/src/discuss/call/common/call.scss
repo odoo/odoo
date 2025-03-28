@@ -12,13 +12,34 @@
         min-height: auto;
     }
 
+    .o-resize-Call-Button {
+        background: rgba(0, 0, 0, 0.5);
+
+        button:hover i {
+            transform: scale(1.2);
+            text-shadow: 0px 0px 8px rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    &.o-collapsed {
+        height: fit-content;
+        min-height: fit-content;
+        max-height: max-content;
+    }
+
     &.o-minimized {
         height: 20%; // ensures that the view returns to the right height when resized
         min-height: #{"max(20%, 130px)"};
-        &.o-compact {
-            height: 10%;
-            min-height: #{"max(10%, 100px)"};
-        }
+    }
+
+    .o-resize-Call-Button {
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    &.o-collapsed {
+        height: fit-content;
+        min-height: fit-content;
+        max-height: max-content;
     }
 }
 
