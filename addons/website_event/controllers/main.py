@@ -181,8 +181,6 @@ class WebsiteEventController(http.Controller):
             values['main_object'] = event
         except ValueError:
             # page not found
-            values['path'] = re.sub(r"^website_event\.", '', page)
-            values['from_template'] = 'website_event.default_page'  # .strip('website_event.')
             page = 'website.page_404'
 
         return request.render(page, values)
