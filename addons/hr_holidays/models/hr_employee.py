@@ -351,6 +351,5 @@ class HrEmployee(models.Model):
 
     def _get_hours_per_day(self, date_from):
         ''' Return 24H to handle the case of Fully Flexible (ones without a working calendar)'''
-        self.ensure_one()
         calendars = self._get_calendars(date_from)
         return calendars[self.id].hours_per_day if calendars[self.id] else 24
