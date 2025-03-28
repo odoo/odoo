@@ -58,6 +58,16 @@ registerWebsitePreviewTour(
             trigger: '[data-select-data-attribute="!selected"]',
             run: "click",
         },
+        {
+            content: "Open model selector",
+            trigger: "we-select:has([data-select-data-attribute='2'])",
+            run: "click",
+        },
+        {
+            content: "Set model to tag #2",
+            trigger: "[data-select-data-attribute='2']",
+            run: "click",
+        },
         ...clickOnSave(),
         {
             content: "Name field is shown",
