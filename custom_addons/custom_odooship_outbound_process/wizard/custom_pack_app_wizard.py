@@ -317,7 +317,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
                     "carrier":line.picking_id.sale_id.carrier or "N/A",
                     "hs_code": line.product_id.hs_code or "N/A",
-                    "so_reference" : line.picking_id.client_order_ref or "N/A",
+                    "so_reference" : line.picking_id.sale_id.client_order_ref or "N/A",
                     "cost_price": line.product_id.standard_price or "0.0",
                     "sale_price": line.product_id.list_price or "0.0",
                 }
@@ -419,7 +419,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
             "carrier": line.picking_id.sale_id.carrier if line.picking_id.sale_id else "N/A",
             "hs_code": line.product_id.hs_code or "N/A",
-            "so_reference" : line.picking_id.client_order_ref or "N/A",
+            "so_reference" : line.picking_id.sale_id.client_order_ref or "N/A",
             "cost_price": line.product_id.standard_price or "0.0",
             "sale_price": line.product_id.list_price or "0.0",
         }]
