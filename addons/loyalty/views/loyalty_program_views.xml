@@ -94,7 +94,13 @@
                                 id="trigger_products"
                                 invisible="program_type not in ['gift_card', 'ewallet']"
                             >
-                                <field name="trigger_product_ids" widget="many2many_tags"/>
+                                <field
+                                    name="trigger_product_ids"
+                                    widget="many2many_tags"
+                                    context="{
+                                        'loyalty_is_gift_card_product': program_type == 'gift_card'
+                                    }"
+                                />
                             </div>
                             <field name="payment_program_discount_product_id" groups="base.group_no_one" invisible="program_type not in ('gift_card', 'ewallet')"/>
                             <field name="mail_template_id" invisible="program_type not in ('gift_card', 'ewallet')"/>
