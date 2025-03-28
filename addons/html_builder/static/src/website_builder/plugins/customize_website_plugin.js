@@ -189,6 +189,10 @@ export class CustomizeWebsitePlugin extends Plugin {
             websiteConfig: {
                 isReload: true,
                 prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
+                getPriority: ({ param }) => {
+                    const views = param.views || [];
+                    return views.length;
+                },
                 isApplied: ({ param }) => {
                     const views = param.views || [];
                     return views.every((v) => this.getConfigKey(v));

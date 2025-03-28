@@ -111,9 +111,16 @@ export function useBuilderComponent() {
     }
     useSubEnv(newEnv);
 }
-export function useDependencyDefinition(id, item) {
+export function useDependencyDefinition(id, item, { onReady } = {}) {
     const comp = useComponent();
-    comp.env.dependencyManager.add(id, item);
+    if (onReady) {
+        onReady.then(() => {
+            comp.env.dependencyManager.add(id, item);
+        });
+    } else {
+        comp.env.dependencyManager.add(id, item);
+    }
+
     onWillDestroy(() => {
         comp.env.dependencyManager.removeByValue(item);
     });
@@ -302,11 +309,15 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
     }
 
     if (id) {
-        useDependencyDefinition(id, {
-            isActive: isSelectableActive,
-            getActions,
-            cleanSelectedItem: env.selectableContext?.cleanSelectedItem,
-        });
+        useDependencyDefinition(
+            id,
+            {
+                isActive: isSelectableActive,
+                getActions,
+                cleanSelectedItem: env.selectableContext?.cleanSelectedItem,
+            },
+            { onReady }
+        );
     }
 
     const state = useDomState(
@@ -357,6 +368,19 @@ export function useClickableBuilderComponent() {
         (comp.props.preview === true ||
             (comp.props.preview === undefined && comp.env.weContext.preview !== false));
 
+    const getReloadTarget = (el) => {
+        if (el.closest("header")) {
+            return "header";
+        }
+        if (el.closest("main")) {
+            return "main";
+        }
+        if (el.closest("footer")) {
+            return "footer";
+        }
+        return null;
+    };
+
     const operation = {
         commit: () => {
             if (hasReloadAction) {
@@ -366,8 +390,7 @@ export function useClickableBuilderComponent() {
                         callApply(...args),
                         comp.env.editor.shared.savePlugin.save(),
                     ]);
-                    const inHeader = editingElement.closest("header");
-                    const target = inHeader ? "header" : null;
+                    const target = getReloadTarget(editingElement);
                     comp.env.editor.config.reloadEditor({ target });
                 });
             } else {
@@ -426,7 +449,6 @@ export function useClickableBuilderComponent() {
         }
         const hasClean = applySpecs.some((applySpec) => applySpec.clean);
         const shouldClean = _shouldClean(comp, hasClean, isApplied());
-        // const hasReload = applySpecs.some((applySpec) => applySpec.isReload);
         const proms = [];
         for (const applySpec of applySpecs) {
             if (shouldClean) {
