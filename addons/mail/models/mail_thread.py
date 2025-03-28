@@ -143,7 +143,13 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        """Search function for message_follower_ids"""
+        if not (self.env.su or self.env.user._is_internal()):
+            user_partner = self.env.user.partner_id
+            allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
+            operand_values = operand if isinstance(operand, Iterable) and not isinstance(operand, str) else [operand]
+            if not allow_partner_ids.issuperset(operand_values):
+                raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
+
         neg = ''
         if operator in expression.NEGATIVE_TERM_OPERATORS:
             neg = 'not '
@@ -414,21 +420,6 @@ class MailThread(models.AbstractModel):
         if "form" in res["views"] and isinstance(self.env[self._name], self.env.registry['mail.activity.mixin']):
             res["models"][self._name]["has_activities"] = True
         return res
-
-    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query: Query) -> SQL:
-        if self.env.su or self.env.user._is_internal():
-            return super()._condition_to_sql(alias, field_expr, operator, value, query)
-        if field_expr != 'message_partner_ids':
-            return super()._condition_to_sql(alias, field_expr, operator, value, query)
-        user_partner = self.env.user.partner_id
-        allow_partner_ids = set((user_partner | user_partner.commercial_partner_id).ids)
-        if isinstance(value, Iterable) and not isinstance(value, str):
-            operand = value
-        else:
-            operand = {value}
-        if not allow_partner_ids.issuperset(operand):
-            raise AccessError(self.env._("Portal users can only filter threads by themselves as followers."))
-        return super(MailThread, self.sudo())._condition_to_sql(alias, field_expr, operator, value, query)
 
     # ------------------------------------------------------
     # MODELS / CRUD HELPERS
