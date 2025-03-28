@@ -22,7 +22,6 @@ class ResPartner(models.Model):
         'Level Weight', compute='_compute_partner_weight',
         readonly=False, store=True, tracking=True,
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.")
-    grade_id = fields.Many2one('res.partner.grade', 'Partner Level', tracking=True)
     grade_sequence = fields.Integer(related='grade_id.sequence', readonly=True, store=True)
     activation = fields.Many2one('res.partner.activation', 'Activation', index='btree_not_null', tracking=True)
     date_partnership = fields.Date('Partnership Date')
