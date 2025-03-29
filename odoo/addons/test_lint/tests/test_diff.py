@@ -7,10 +7,11 @@ import subprocess
 from collections import defaultdict
 from lxml import etree
 
+import odoo.addons
+
 from odoo.modules.module import get_manifest
 from odoo.tests import BaseCase
 from odoo.tools import OrderedSet, config
-from odoo.tools.misc import file_open, file_path
 from odoo.tools.which import which
 
 
@@ -34,6 +35,7 @@ def get_repos() -> list[str]:
                 repo_paths.add(repo_path)
         except Exception as e:
             continue
+    _logger.info(f"Found {len(repo_paths)} repos")
     return list(repo_paths)
 
 
@@ -59,7 +61,7 @@ def get_base_version(repo_path: str) -> str | None:
 
 
 def get_diff_files(repo_path: str, base_version: str, filter: str | None = None) -> list[str]:
-    files = []
+    """ get the files that are in the diff for the given base version """
     filter_cmd = ['--', filter] if filter else []
     try:
         git = which('git')
@@ -70,16 +72,24 @@ def get_diff_files(repo_path: str, base_version: str, filter: str | None = None)
             text=True,
             cwd=repo_path
         ).stdout.strip()
-        if result:
-            files = result.split('\n')
-        return files
+        if not result:
+            return []
+        return result.split('\n')
     except Exception as e:
-        return files
+        return []
 
 
-def get_diff_lines(repo_path: str, file: str, base_version) -> set[int]:
+def get_diff_lines(git_path: str, repo_path: str, base_version: str) -> set[int]:
+    """ get the lines of the diff for the given file
+    
+    :param repo_path: the absolute path of the git repo
+    :param file: the relative path of the file to the git repo
+    :param base_version: the base version to get the diff for
+
+    :return: the lines of the diff for the given file
+    """
     git = which('git')
-    p1 = subprocess.Popen([git, "diff", "--unified=0", base_version, "--", file], stdout=subprocess.PIPE, cwd=repo_path)
+    p1 = subprocess.Popen([git, "diff", "--unified=0", base_version, "--", git_path], stdout=subprocess.PIPE, cwd=repo_path)
     p2 = subprocess.Popen(["grep", "^@@"], stdin=p1.stdout, stdout=subprocess.PIPE, text=True)
     line_regex = re.compile(r'^@@ -[0-9,]+ \+(?P<start>[0-9]+),?(?P<count>[0-9]*) @@')
     lines = set()
@@ -91,6 +101,32 @@ def get_diff_lines(repo_path: str, file: str, base_version) -> set[int]:
     return lines
 
 
+class FileInfo:
+    root_path = os.path.abspath(config.root_path)
+    addons_paths = [
+        os.path.normpath(os.path.normcase(addons_path)) + os.sep
+        for addons_path in odoo.addons.__path__
+    ]
+
+    def __init__(self, /, *, repo_path: str = '', git_path: str = '', base_version: str = ''):
+        self.base_version: str = base_version
+        self.repo_path: str = repo_path and os.path.normpath(os.path.normcase(repo_path))  # /Users/username/project/odoo
+        self.git_path: str = git_path and os.path.normpath(os.path.normcase(git_path))  # odoo/addons/base/models/res_partner.py
+        self.abs_path = os.path.join(self.repo_path, self.git_path)  # /Users/username/project/odoo/odoo/addons/base/models/res_partner.py
+        self.odoo_path: str = self.parse_odoo_path(self.abs_path) or ''  # base/models/res_partner.py
+        self.module_name: str = self.odoo_path.split(os.sep)[0]  # base
+        self.module_path: str = self.odoo_path[len(self.module_name) + len(os.sep):]  # models/res_partner.py
+
+    @classmethod
+    def parse_odoo_path(cls, abs_path: str) -> str | None:
+        """ parse the odoo path from the given absolute path """
+        for addons_path in cls.addons_paths:
+            if abs_path.startswith(addons_path) and len(abs_path) > len(addons_path):
+                odoo_path = abs_path[len(addons_path):].strip(os.sep)
+                return odoo_path
+        return None
+
+
 class EvalRefVisitor(ast.NodeVisitor):
     def __init__(self, filepath, line=0):
         self.issues = []
@@ -98,7 +134,7 @@ class EvalRefVisitor(ast.NodeVisitor):
         self.filepath = filepath
 
     def _is_ref_raise_if_not_found(self, node):
-        """Check if the node is a call to env.ref with raise_if_not_found=True"""
+        """Check if the node is a call to env.ref without raise_if_not_found=False"""
         raise_if_not_found = True  # default to True
         for keyword in node.keywords:
             if keyword.arg == 'raise_if_not_found':
@@ -174,49 +210,58 @@ class FileEnvRefVisitor(EvalRefVisitor):
         self.generic_visit(node)
 
 
-def _check_data_xml_ref(odoo_path, diff_lines):
-
-    def process_issue(end_line):
-        nonlocal last_issue
-        if last_issue:
-            start_line, type, message = last_issue
-            if any(line in diff_lines for line in range(start_line, max(start_line + 1, end_line))):
-                issues[type].append(message)
-            last_issue = None
-
+def check_data_xml_ref(module_name, abs_path, diff_lines):
     issues = defaultdict(list)
-    module_name = odoo_path.split('/')[0]
-    path = file_path(odoo_path)
-    last_issue = None  # (start_line, type, message)
-    with file_open(odoo_path, 'rb') as fp:
+    previous_tag_line = 0
+    _logger.info(f"Checking {abs_path}")
+    with open(abs_path, 'rb') as fp:
         context = etree.iterparse(fp, events=("start", "end"))
         for event, element in context:
             if event == "start":
-                process_issue(element.sourceline)
+                # elemen.source line is the last line of the tag declaration
+                # start_line should be the first line of the tag declaration
+                # the below is an estimation with one corner case
+                #
+                # ...  > <field ref='xxx'
+                # ... />
+                # 
+                # where
+                # 1. the end of the previous tag and the start line of the current tag are in the same line
+                # 2. the current tag is multiline
+                # 3. only the start line of the current tag is modified
+                # usually in a easy to read xml, if a start tag follows the prvious tag in the same line,
+                # its closing tag should be in the same line. So the corner case is acceptable.
+                start_line = min(element.sourceline, previous_tag_line + 1)
+                if not any(line in diff_lines for line in range(start_line, element.sourceline + 1)):
+                    continue
+                # check the element if the start tag is modified
                 if element.tag == 'record':
                     record = element
                     id_attr = record.get('id')
                     force_create = record.get('force_create', 'True').lower()
                     if id_attr and '.' in id_attr and not id_attr.startswith(f'{module_name}.') and force_create not in ('0', 'false'):
-                        last_issue = (record.sourceline, 'id', f'{path}, line {record.sourceline}')
+                        issues['id'].append(f'{abs_path}, line {record.sourceline}')
                 elif element.tag == 'field':
                     field = element
                     ref_attr = field.get('ref')
                     if ref_attr and '.' in ref_attr and not ref_attr.startswith(f'{module_name}.'):
-                        last_issue = (field.sourceline, 'ref', f'{path}, line {field.sourceline}')
+                        issues['ref'].append(f'{abs_path}, line {field.sourceline}')
                     elif eval_attr := field.get('eval'):
                         # parse as python ast, check function ref
                         # add to issues if ref for another module without raise_if_not_found=False
                         tree = ast.parse(eval_attr)
-                        visitor = EvalRefVisitor(path, line=field.sourceline)
+                        visitor = EvalRefVisitor(abs_path, line=field.sourceline)
                         visitor.visit(tree)
                         if visitor.issues:
-                            last_issue = (field.sourceline, 'eval', visitor.issues[0])
+                            issues['eval'].append(visitor.issues[0])
+                previous_tag_line = element.sourceline
             elif event == "end":
-                process_issue(element.sourceline)
-            element.clear()
+                previous_tag_line = element.sourceline
+                element.clear()
+                
 
     return issues
+
 
 class TestDiff(BaseCase):
     def test_env_ref_usage(self):
@@ -232,72 +277,57 @@ class TestDiff(BaseCase):
             except SyntaxError:
                 return []
 
-        diff_files = {}  # {repo_path: [file]}
-        repos = get_repos()
-        _logger.info(f"Found {len(repos)} repos")
+        diff_files = []  # [FileInfo]
         for repo_path in get_repos():
             base_version = get_base_version(repo_path)
             if not base_version:
                 continue
-            diff_files[(repo_path, base_version)] = get_diff_files(repo_path, base_version, '*py')
+            diff_files.extend(
+                FileInfo(repo_path=repo_path, base_version=base_version, git_path=file)
+                for file in get_diff_files(repo_path, base_version, '*py')
+            )
 
         issues = []
-        for (repo_path, base_version), files in diff_files.items():
-            for file in files:
-                diff_lines = get_diff_lines(repo_path, file, base_version)
-                file_path = os.path.join(repo_path, file)
-                file_issues = check_file(file_path, diff_lines)
-                if file_issues:
-                    issues.extend(file_issues)
+        for file_info in diff_files:
+            diff_lines = get_diff_lines(file_info.git_path, file_info.repo_path, file_info.base_version)
+            file_issues = check_file(file_info.abs_path, diff_lines)
+            if file_issues:
+                issues.extend(file_issues)
 
         self.assertFalse(
             bool(issues),
-            "Found env.ref calls with raise_if_not_found=True:\n" + "\n".join(issues)
+            "Found env.ref calls without raise_if_not_found=False\n" + "\n".join(issues)
         )
 
     def test_data_xml_ref_usage(self):
         """Check for ref for other modules"""
-        def _get_odoo_path(file) -> tuple[str, str] | tuple[None, None]:
-            # test diff except odoo/odoo/addons
-            for addons_path in config['addons_path']:
-                if file.startswith(addons_path):
-                    odoo_path = file[len(addons_path):].strip('/')
-                    module = odoo_path.split('/')[0]
-                    if not module.startswith('test_'):
-                        return module, odoo_path
-            return None, None
-
-        diff_files = {}  # {repo_path: [file]}
-        repos = get_repos()
-        _logger.info(f"Found {len(repos)} repos")
+        diff_files: list[FileInfo] = []
         for repo_path in get_repos():
             base_version = get_base_version(repo_path)
             if not base_version:
                 continue
-            diff_files[(repo_path, base_version)] = get_diff_files(repo_path, base_version, None)
-        
-        module_files = defaultdict(lambda: defaultdict(list))  # {(repo_path, base_version): {module_name: [file]}}
-        for (repo_path, base_version), files in diff_files.items():
-            for file in files:
-                file_path_ = os.path.join(repo_path, file)
-                module_name, file_path_ = _get_odoo_path(file_path_)
-                if module_name:
-                    module_files[(repo_path, base_version)][module_name].append(file_path_)
+            diff_files.extend(
+                FileInfo(repo_path=repo_path, git_path=file, base_version=base_version)
+                for file in get_diff_files(repo_path, base_version, '*.xml')
+            )
 
-        issues = defaultdict(list)
-        for (repo_path, base_version), module_files_ in module_files.items():
-            for module_name, files in module_files_.items():
-                # check if module is in the data of the manifest
-                manifest = get_manifest(module_name)
-                data_files = set(manifest.get('data'))
-                for file in files:
-                    if file.strip(module_name + '/') not in data_files:
-                        continue
-                    diff_lines = get_diff_lines(repo_path, file_path(file), base_version)
-                    file_issues = _check_data_xml_ref(file, diff_lines)
-                    for type, messages in file_issues.items():
-                        issues[type].extend(messages)
-        
+        module_files: dict[str, list[FileInfo]] = defaultdict(list)  # {module_name: [file_info]}
+        for file_info in diff_files:
+            if file_info.odoo_path and file_info.module_name != 'base' and not file_info.module_name.startswith('test_'):
+                module_files[file_info.module_name].append(file_info)
+
+        issues: dict[str, list[str]] = defaultdict(list)
+        for module_name, file_infos in module_files.items():
+            manifest = get_manifest(module_name)
+            data_files = set(manifest['data'])  # ignore manifest['demo']
+            for file_info in file_infos:
+                if file_info.module_path not in data_files:
+                    continue
+                diff_lines = get_diff_lines(file_info.git_path, file_info.repo_path,file_info.base_version)
+                file_issues = check_data_xml_ref(module_name, file_info.abs_path, diff_lines)
+                for type, messages in file_issues.items():
+                    issues[type].extend(messages)
+
         messages = ''
         if issues['id']:
             messages += '\n\nFound id= for another module without force_create="0":\n' + "\n".join(issues['id'])
