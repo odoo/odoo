@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Chloe Wang, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -43,12 +43,6 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr "公司由Odoo合作伙伴自动完成的服务"
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
@@ -76,6 +70,11 @@ msgid "Created on"
 msgstr "创建日期"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
 msgid "Display Name"
 msgstr "显示名称"
@@ -107,6 +106,11 @@ msgid "IAP Partner Autocomplete API"
 msgstr "IAP合作伙伴自动完成API"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
 msgid "ID"
 msgstr "ID"
@@ -159,12 +163,6 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr "合作伙伴自动完成： 与远程数据库同步"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Odoo合作伙伴自动完成服务并创建伙伴"
-
-#. module: partner_autocomplete
 #. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 msgid "Search Worldwide 🌎"
@@ -193,4 +191,4 @@ msgstr "测试模式"
 #. odoo-python
 #: code:addons/partner_autocomplete/models/res_partner.py:0
 msgid "Unable to enrich company (no credit was consumed)."
-msgstr ""
+msgstr "无法丰富公司信息（未消耗任何信用点）。"

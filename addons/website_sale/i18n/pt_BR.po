@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 08:40+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -584,6 +584,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
 msgstr "<u>Termos e Condições</u>"
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
+msgid "A combo product can't be empty. Please select at least one option."
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -1808,11 +1814,6 @@ msgid "Delivery and Installation"
 msgstr "Delivery and Installation"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.total
-msgid "Delivery will be updated after choosing a new delivery method"
-msgstr "A entrega será atualizada após a escolha de um novo método de entrega"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 msgid "Description"
 msgstr "Descrição"
@@ -2241,6 +2242,8 @@ msgstr "Insira o seu endereço"
 msgid ""
 "Final price may vary based on selection. Tax will be calculated at checkout."
 msgstr ""
+"O preço final pode variar de acordo com a seleção. Os impostos serão "
+"calculados na finalização da compra."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__fiscal_position_id
@@ -3297,7 +3300,7 @@ msgstr "Transações de pagamento"
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "Payment is already being processed."
-msgstr ""
+msgstr "O pagamento já está sendo processado."
 
 #. module: website_sale
 #. odoo-python
@@ -3408,7 +3411,7 @@ msgstr "Lista de preços disponíveis para este E-commerce/Site"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Price will be updated after choosing a delivery method"
-msgstr ""
+msgstr "O preço será atualizado após a escolha do método de entrega"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -4428,7 +4431,7 @@ msgstr "O token de acesso é inválido."
 #. odoo-python
 #: code:addons/website_sale/controllers/payment.py:0
 msgid "The cart has already been paid. Please refresh the page."
-msgstr ""
+msgstr "O carrinho já foi pago. Atualize a página."
 
 #. module: website_sale
 #. odoo-python
@@ -4470,6 +4473,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
+#: code:addons/website_sale/controllers/combo_configurator.py:0
 #: code:addons/website_sale/models/sale_order.py:0
 msgid ""
 "The given product does not have a price therefore it cannot be added to "

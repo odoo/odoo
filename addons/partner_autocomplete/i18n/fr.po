@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -45,14 +45,6 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_company.py:0
-msgid "Company auto-completed by Odoo Partner Autocomplete Service"
-msgstr ""
-"Autocomplétion de l'entreprise par le service d'autocomplétion de partenaire"
-" d'Odoo"
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__partner_gid
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__partner_gid
@@ -80,6 +72,11 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
@@ -111,6 +108,11 @@ msgid "IAP Partner Autocomplete API"
 msgstr "Autocomplétion API du partenaire IAP"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_iap_autocomplete_api__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_ir_http__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
 msgid "ID"
 msgstr "ID"
@@ -163,12 +165,6 @@ msgid "Partner Autocomplete: Sync with remote DB"
 msgstr ""
 "Autocomplétion de partenaires : Synchroniser avec une base de données à "
 "distance"
-
-#. module: partner_autocomplete
-#. odoo-python
-#: code:addons/partner_autocomplete/models/res_partner.py:0
-msgid "Partner created by Odoo Partner Autocomplete Service"
-msgstr "Partenaire créé par le service d'autocomplétion de partenaires d'Odoo"
 
 #. module: partner_autocomplete
 #. odoo-javascript

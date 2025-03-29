@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:57+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Cengiz Cokay Global Nonwoven, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -1140,6 +1140,7 @@ msgid "Allowed Route"
 msgstr "İzin Verilen Rota"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
@@ -6354,6 +6355,11 @@ msgid "Packaging"
 msgstr "Paketleme"
 
 #. module: stock
+#: model:ir.actions.report,name:stock.label_packaging_barcode
+msgid "Packaging Barcodes (ZPL)"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
 msgid "Packaging Height"
 msgstr "Paket Yüksekliği"
@@ -8999,7 +9005,6 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "The Picking Operations report has been deleted so you cannot print at this "
 "time unless the report is restored."

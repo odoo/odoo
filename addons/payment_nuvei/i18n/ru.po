@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-13 23:07+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2025-03-20 14:37+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "%(payment_method)s requires both a first and last name."
-msgstr ""
+msgstr "%(payment_method)s требует указания имени и фамилии."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -32,11 +33,25 @@ msgid ""
 "An error occurred during the processing of your payment (%(reason)s). Please"
 " try again."
 msgstr ""
+"Произошла ошибка при обработке вашего платежа (%(reason)s). Пожалуйста, "
+"попробуйте снова."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__code
 msgid "Code"
 msgstr "Код"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: payment_nuvei
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_nuvei.field_payment_transaction__id
+msgid "ID"
+msgstr "Идентификатор"
 
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
@@ -52,22 +67,22 @@ msgstr "Не найдено ни одной транзакции, соответ
 #. module: payment_nuvei
 #: model:ir.model.fields.selection,name:payment_nuvei.selection__payment_provider__code__nuvei
 msgid "Nuvei"
-msgstr ""
+msgstr "Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "Nuvei Merchant Identifier"
-msgstr ""
+msgstr "Идентификатор торговца Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
 msgid "Nuvei Secret Key"
-msgstr ""
+msgstr "Секретный ключ Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "Nuvei Site Identifier"
-msgstr ""
+msgstr "Идентификатор сайта Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
@@ -106,7 +121,7 @@ msgstr "Секретный ключ"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
-msgstr ""
+msgstr "Идентификатор сайта"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
@@ -122,7 +137,7 @@ msgstr "Клиент покинул страницу оплаты."
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "The site identifier code associated with the merchant account."
-msgstr ""
+msgstr "Код идентификатора сайта, связанный с торговым счетом."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code

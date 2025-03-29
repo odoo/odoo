@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:57+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -320,6 +320,11 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* جديد: تم إنشاء حركة المخزون ولكن لم يتم تأكيدها.\n"
+"* بانتظار حركة أخرى: يجب القيام بحركة مخزون مرتبطة قبل هذه الحركة.\n"
+"* قيد الانتظار: تم تأكيد حركة المخزون ولكن لا يمكن حجز المنتج.\n"
+"* متاح: تم حجز منتج حركة المخزون.\n"
+"* تم الانتهاء: تم نقل المنتج وتم تأكيد عملية النقل. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -1178,6 +1183,7 @@ msgid "Allowed Route"
 msgstr "المسار المسموح به "
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
@@ -6414,6 +6420,11 @@ msgid "Packaging"
 msgstr "التعبئة"
 
 #. module: stock
+#: model:ir.actions.report,name:stock.label_packaging_barcode
+msgid "Packaging Barcodes (ZPL)"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
 msgid "Packaging Height"
 msgstr "ارتفاع الطرد "
@@ -9071,7 +9082,6 @@ msgstr "رقم المجموعة/الرقم التسلسلي (%s) مرتبط بم
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "The Picking Operations report has been deleted so you cannot print at this "
 "time unless the report is restored."

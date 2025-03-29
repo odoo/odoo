@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-24 15:31+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -948,7 +948,7 @@ msgstr "Varattu aika:"
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__auto_account_id
 msgid "Analytic Account"
-msgstr "Analyyttinen tili"
+msgstr "Kustannuspaikka"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -981,7 +981,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__03_approved
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__03_approved
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__03_approved
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__state__03_approved
 msgid "Approved"
 msgstr "Hyväksytty"
 
@@ -1281,7 +1280,6 @@ msgstr "Tehtävien edistymiskäyrä"
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_canceled
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_canceled
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__state__1_canceled
 #: model:project.project.stage,name:project.project_project_stage_3
 #: model:project.task.type,name:project.project_personal_stage_admin_6
 #: model:project.task.type,name:project.project_personal_stage_demo_6
@@ -1293,7 +1291,6 @@ msgstr "Peruttu"
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__02_changes_requested
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__02_changes_requested
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__02_changes_requested
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__state__02_changes_requested
 #: model:mail.message.subtype,description:project.mt_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_project_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
@@ -1477,7 +1474,7 @@ msgstr "Konsultointi"
 #: model:ir.model,name:project.model_res_partner
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_phone
@@ -1971,7 +1968,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__1_done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__1_done
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__state__1_done
 #: model:project.project.stage,name:project.project_project_stage_2
 #: model:project.task.type,name:project.project_personal_stage_admin_5
 #: model:project.task.type,name:project.project_personal_stage_demo_5
@@ -2324,7 +2320,6 @@ msgstr "Piilota suljetut tehtävät"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__1
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__priority__1
 msgid "High"
 msgstr "Korkea"
 
@@ -2498,7 +2493,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__01_in_progress
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__01_in_progress
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__01_in_progress
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__state__01_in_progress
 #: model:project.project.stage,name:project.project_project_stage_1
 #: model:project.task.type,name:project.project_stage_1
 msgid "In Progress"
@@ -2788,7 +2782,6 @@ msgstr "Etsi"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__priority__0
 msgid "Low"
 msgstr "Alin"
 
@@ -2924,7 +2917,7 @@ msgstr "Toimenpiteeni määräaika"
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "My Deadline"
-msgstr "Määräaika"
+msgstr "Määräaikani"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2934,7 +2927,7 @@ msgstr "Omat suosikkini"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Projects"
-msgstr "Omat projektit"
+msgstr "Omat projektini"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_my_task
@@ -2942,12 +2935,12 @@ msgstr "Omat projektit"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
-msgstr "Omat tehtävät"
+msgstr "Omat tehtäväni"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "My Updates"
-msgstr "Omat päivitykset"
+msgstr "Omat päivitykseni"
 
 #. module: project
 #. odoo-python
@@ -4304,10 +4297,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Jotkin valituista analyyttisistä tileistä liittyvät projektiin:\n"
+"Jotkin valituista kustannuspaikoista liittyvät projektiin:\n"
 "%(accountList)s\n"
 "\n"
-"Näiden tilien arkistointi poistaa mahdollisuuden kirjata työaikakirjanpitoa vastaavien projektien osalta.\n"
+"Niiden arkistointi poistaa mahdollisuuden kirjata työaikakirjanpitoa vastaavien projektien osalta.\n"
 "\n"
 "Oletko varma, että haluat jatkaa?"
 
@@ -4816,8 +4809,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
-"Projektin yritystä ei voi muuttaa, jos sen analyyttisellä tilillä on "
-"analyyttisiä rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
+"Projektin yritystä ei voi muuttaa, jos sen kustannuspaikalla on analyyttisiä"
+" rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4943,10 +4936,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Tämä analyyttinen tili liittyy seuraaviin hankkeisiin:\n"
+"Tämä kustannuspaikka liittyy seuraaviin hankkeisiin:\n"
 "%(projectList)s\n"
 "\n"
-"Tilin arkistointi poistaa mahdollisuuden kirjata näiden projektien työaikakirjauksia.\n"
+"Tilin arkistoinnin jälkeen näiden projektien työaikakirjauksia ei enää voida kirjata.\n"
 "\n"
 "Oletko varma, että haluat jatkaa?"
 
@@ -5206,7 +5199,7 @@ msgid ""
 "associated with the project on relevant documents."
 msgstr ""
 "Seuraa projektin kustannuksia, tuloja ja katetta asettamalla projektiin "
-"liittyvä analyyttinen tili asiaankuuluviin asiakirjoihin."
+"liittyvä kustannuspaikka asiaankuuluviin asiakirjoihin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5422,7 +5415,6 @@ msgstr "Näkyvyys"
 #: model:ir.model.fields.selection,name:project.selection__project_task__state__04_waiting_normal
 #: model:ir.model.fields.selection,name:project.selection__project_task_burndown_chart_report__state__04_waiting_normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__04_waiting_normal
-#: model:ir.model.fields.selection,name:project.selection__report_project_task_user_fsm__state__04_waiting_normal
 msgid "Waiting"
 msgstr "Odottaa"
 

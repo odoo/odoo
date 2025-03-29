@@ -3,7 +3,6 @@
 # 	* account
 # 
 # Translators:
-# Martin Trigaux, 2025
 # Wil Odoo, 2025
 # Abe Manyo, 2025
 # 
@@ -11,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:57+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -111,11 +110,6 @@ msgstr "# Barisan Laporan Rekonsiliasi"
 #: model:ir.model.fields,field_description:account.field_res_users__supplier_invoice_count
 msgid "# Vendor Bills"
 msgstr "# Tagihan Pemasok"
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
-msgid "# of Digits"
-msgstr "# dari Digit"
 
 #. module: account
 #. odoo-python
@@ -244,10 +238,9 @@ msgstr "%s (Salinan)"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #: code:addons/account/models/account_journal.py:0
+#: code:addons/account/models/account_payment_term.py:0
 #: code:addons/account/models/account_reconcile_model.py:0
 #: code:addons/account/models/account_report.py:0
-#: code:addons/account/models/account_payment_term.py:0
-#, python-format
 msgid "%s (copy)"
 msgstr "%s (salin)"
 
@@ -1891,6 +1884,7 @@ msgstr "Pergerakkan Akun Kirim Wizard"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
+#: model:ir.model.fields,field_description:account.field_account_move_line__account_name
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Account Name"
 msgstr "Nama Akun"
@@ -2724,6 +2718,11 @@ msgid "Allowed Journals"
 msgstr "Jurnal yang dibolehkan"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__allowed_uom_ids
+msgid "Allowed Uom"
+msgstr "Satuan Ukuran yang Diizinkan"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__account_control_ids
 msgid "Allowed accounts"
 msgstr "Akun dibolehkan"
@@ -3554,6 +3553,7 @@ msgstr "Nama Akun Bank"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_number
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
 msgid "Bank Account Number"
 msgstr "Nomor Rekening Bank"
 
@@ -4569,6 +4569,7 @@ msgstr "Tutup"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__code
 #: model:ir.model.fields,field_description:account.field_account_code_mapping__code
 #: model:ir.model.fields,field_description:account.field_account_incoterms__code
+#: model:ir.model.fields,field_description:account.field_account_move_line__account_code
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_method_code
 #: model:ir.model.fields,field_description:account.field_account_payment_method__code
 #: model:ir.model.fields,field_description:account.field_account_payment_method_line__code
@@ -4762,6 +4763,11 @@ msgstr "Company Document Layout"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
 msgid "Company Fiscal Country Code"
 msgstr "Kode Negara Fiskal Perusahaan"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
+msgid "Company Registry Placeholder"
+msgstr "Placeholder Registri Perusahaan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -7146,11 +7152,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid ""
-"Error while loading the localization. You should probably update your "
-"localization app first."
+"Error while loading the localization: missing tax tag %(tag_name)s for "
+"country %(country_name)s. You should probably update your localization app "
+"first."
 msgstr ""
-"Eror selagi memuat lokalisasi. Anda sebaiknya mengupdate app lokalisasi Anda"
-" terlebih dahulu."
+"Error selagi memuat lokalisasi: kurang tag pajak %(tag_name)s untuk negara "
+"%(country_name)s. Anda mungkin harus mengupdate aplikasi lokalisasi Anda "
+"terlebih dahulu."
 
 #. module: account
 #. odoo-python
@@ -7816,6 +7824,11 @@ msgid "From label"
 msgstr "From label"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
+msgid "From last fiscal year"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
 msgid "From previous tax period"
 msgstr "Dari periode pajak sebelumnya"
@@ -8193,11 +8206,6 @@ msgstr "Horizontal Split Side"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
 msgstr "Bagaimana jumlah pajak total dihitung pada order dan faktur"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_base_document_layout
-msgid "IBAN"
-msgstr "IBAN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_preview
@@ -9108,6 +9116,11 @@ msgid "Invoice Outstanding Credits Debits Widget"
 msgstr "Invoice Outstanding Credits Debits Widget"
 
 #. module: account
+#: model:ir.actions.report,name:account.account_invoices
+msgid "Invoice PDF"
+msgstr "PDF Faktur"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
@@ -9546,6 +9559,12 @@ msgstr "Sepertinya terdapat beberapa depending closing move untuk direkam"
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr ""
 "Sebelumnya merupakan '%(previous)s' dan sekarang adalah '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -11433,6 +11452,12 @@ msgid "One or more invoices couldn't be processed."
 msgstr "Satu atau lebih faktur tidak dapat diproses."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Satu atau lebih baris memerlukan distribusi analitik 100%."
+
+#. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "Pembayaran Online"
@@ -11796,11 +11821,6 @@ msgid "PAY001"
 msgstr "PAY001"
 
 #. module: account
-#: model:ir.actions.report,name:account.account_invoices
-msgid "PDF"
-msgstr "PDF"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_pdf_report_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_pdf_report_id
 msgid "PDF Attachment"
@@ -11937,6 +11957,12 @@ msgstr "Terbayar Sebagian"
 #: model_terms:ir.ui.view,arch_db:account.view_account_various_payment_tree
 msgid "Partner"
 msgstr "Rekanan"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
+#: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
+msgid "Partner Company Registry Placeholder"
+msgstr "Placeholder Registri Perusahaan Partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -13013,14 +13039,14 @@ msgid "Reconciliation Parts"
 msgstr "Bagian Rekonsiliasi"
 
 #. module: account
-#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
-msgid "Record a new vendor bill"
-msgstr "Catat tagihan vendor baru"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Record"
 msgstr "Catatan"
+
+#. module: account
+#: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier_bills
+msgid "Record a new vendor bill"
+msgstr "Catat tagihan vendor baru"
 
 #. module: account
 #. odoo-javascript
@@ -13680,6 +13706,7 @@ msgstr "Scan barcode"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#: code:addons/account/wizard/account_payment_register.py:0
 msgid "Scan me with your banking app."
 msgstr "Scan dengan aplikasi perbankan Anda."
 
@@ -13844,6 +13871,12 @@ msgstr "Token Keamanan"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "See all activities"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -15654,16 +15687,6 @@ msgid "The entry is secured with an inalterable hash."
 msgstr "Entri diamankan dengan hash yang tidak dapat diubah."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move_send.py:0
-msgid ""
-"The existing PDFs will be used for sending. If you want to regenerate them, "
-"please delete the attachment from the invoice."
-msgstr ""
-"PDF yang tersedia akan digunakan untuk mengirim. Bila Anda ingin membuat "
-"ulang mereka, silakan hapus lampiran dari faktur."
-
-#. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
 #: model:ir.model.fields,help:account.field_res_company__expense_account_id
 msgid ""
@@ -16478,13 +16501,6 @@ msgid "This Quarter"
 msgstr "Triwulan Ini"
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid "This specific error occurred during the import:"
-msgstr "Error spesifik ini terjadi pada impor:"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_tax_period
 msgid "This Tax Period"
 msgstr "Periode Pajak Ini"
@@ -16700,14 +16716,6 @@ msgid "This journal entry has been secured."
 msgstr "Entri jurnal ini sudah diamankan."
 
 #. module: account
-#. odoo-python
-#: code:addons/account/models/account_journal.py:0
-msgid ""
-"This journal is associated with a payment method. You cannot archive it"
-msgstr ""
-"Jurnal ini terkait dengan metode pembayaran. Anda tidak dapat mengarsipnya"
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
 msgid ""
 "This line and its children will be hidden when all of their columns are 0."
@@ -16796,6 +16804,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting cannot be changed after an invoice is created."
 msgstr "Pengaturan ini tidak dapat diubah setelah faktur dibuat."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "This specific error occurred during the import:"
+msgstr "Error spesifik ini terjadi pada impor:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17501,12 +17515,6 @@ msgid "Upload Invoices"
 msgstr "Unggah Faktur"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/mail_attachments/mail_attachments_selector.js:0
-msgid "Uploading error"
-msgstr "Unggah eror"
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Use Bill Reference"
 msgstr "Gunakan Referensi Tagihan"
@@ -17811,8 +17819,8 @@ msgstr "Tagihan Vendor Dibuat"
 #. odoo-python
 #: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:account.journal,name:account.1_purchase
+#: model:ir.actions.act_window,name:account.res_partner_action_supplier_bills
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__counterpart_type__purchase
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -18552,7 +18560,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
-#, python-format
 msgid "You cannot deprecate an account that is used in a tax distribution."
 msgstr "Anda tidak dapat menghapus akun yang digunakan di distribusi pajak."
 
@@ -18729,10 +18736,8 @@ msgstr "Anda tidak dapat mendaftarkan pembayaran untuk entri miscellaneous."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
-msgid ""
-"You cannot remove parts of the audit trail. Archive the record instead."
+msgid "You cannot remove parts of the audit trail."
 msgstr ""
-"Anda tidak dapat menghapus bagian-bagian dari trail audit. Arsip recordnya."
 
 #. module: account
 #. odoo-python

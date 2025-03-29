@@ -7949,6 +7949,41 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"Správa vlastních šeků\n"
+"---------------------\n"
+"\n"
+"Modul rozšiřuje modul „Základní tisk šeků“ o správu vlastních šeků s dalšími funkcemi:\n"
+"\n"
+"* umožňuje použití vlastních šeků, které nejsou tištěné, ale vyplněné ručně uživatelem\n"
+"* umožňuje použití odložených nebo elektronických šeků\n"
+"  * tisk je vypnut\n"
+"  * číslo šeku je nastaveno ručně uživatelem\n"
+"* přidání volitelného pole „Datum inkasa šeku“ pro post-datované šeky (odložené platby)\n"
+"* přidání menu pro sledování vlastních šeků\n"
+"\n"
+"Správa šeků třetích stran\n"
+"-----------------------------\n"
+"\n"
+"Přidání nové funkce \"Správa šeků třetích stran\".\n"
+"\n"
+"Dva nové způsoby přidání platebních metod::\n"
+"\n"
+"* Nové šeky třetích stran:\n"
+"\n"
+"  * Platby této platební metody představují šek, který obdržíte od zákazníka při platbě (z faktury nebo manuální platby)\n"
+"\n"
+"* Existující šeky třetích stran:\n"
+"\n"
+"  * Platby této platební metody slouží k sledování pohybů šeku, například:\n"
+"\n"
+"    * Použití šeku k platbě dodavateli\n"
+"    * Uložení šeku na bankovní účet\n"
+"    * Vrácení šeku z banky (odmítnutí)\n"
+"    * Vrácení šeku od dodavatele (odmítnutí nebo vrácení)\n"
+"    * Převod šeku z jednoho deníku šeků třetích stran do druhého (z jednoho obchodu do druhého)\n"
+"\n"
+"  * Tyto operace lze provádět s více šeky najednou\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -8756,6 +8791,18 @@ msgid ""
 "The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail.\n"
 "\n"
 msgstr ""
+"\n"
+"Švýcarská lokalizace\n"
+"==================\n"
+"Tento modul definuje účetní osnovu pro Švýcarsko (Swiss PME/KMU 2015), daně a umožňuje generování QR-faktury při tisku faktury nebo jejím zasílání e-mailem. QR-faktura je připojena k faktuře a usnadňuje její platbu.\n"
+"\n"
+"QR-faktura bude vygenerována, pokud:\n"
+"    - Partner nastavený na vaší faktuře má kompletní adresu (ulice, město, PSČ a země) ve Švýcarsku\n"
+"    - Možnost generování švýcarského QR-kódu je vybrána na faktuře (výchozí nastavení)\n"
+"     - Na vašem bankovním deníku je nastaven správný účetní číslo/QR IBAN - (při použití QR-IBAN): platba faktury má QR-referenci\n"
+"\n"
+"Generování QR-faktury je automatické, pokud splníte předchozí kritéria. QR-faktura bude připojena za fakturu při tisku nebo zasílání poštou.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ch_hr_payroll
@@ -8773,6 +8820,19 @@ msgid ""
 "    * Integrated with Leaves Management\n"
 "    * Compute payslips according to ELM 5 standard\n"
 msgstr ""
+"\n"
+"Švýcarská mzdová pravidla.\n"
+"==========================\n"
+"\n"
+"* Údaje o zaměstnanci\n"
+"* Zaměstnanecké smlouvy\n"
+"* Smlouvy na základě pasu\n"
+"* Povolenky / odpočty\n"
+"* Povolit konfiguraci základního / hrubého / čistého platu\n"
+"* Výplatní páska zaměstnance\n"
+"* Měsíční registrace mezd\n"
+"* Integrováno s řízením dovolených\n"
+"* Výpočet platebních pásek v souladu se standardem ELM 5\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_reports_tds_tcs
@@ -8780,6 +8840,8 @@ msgid ""
 "\n"
 "TDS TCS Reports Handler\n"
 msgstr ""
+"\n"
+"Zpracování výkazů TDS TCS\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -8803,6 +8865,12 @@ msgid ""
 "- Tax report\n"
 "- Fiscal position\n"
 msgstr ""
+"\n"
+"Tanzanská lokalizace obsahující:\n"
+"- Účtovou osnovu\n"
+"- Daně\n"
+"- Daňový výkaz\n"
+"- Fiskální pozici\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -8811,6 +8879,8 @@ msgid ""
 "\n"
 "Technical module.\n"
 msgstr ""
+"\n"
+"Technický modul.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_saft
@@ -8818,6 +8888,8 @@ msgid ""
 "\n"
 "The Austrian Standard Audit File for Tax (SAF-T) is a standard file format for exporting various types of accounting transactional data using the XML format.\n"
 msgstr ""
+"\n"
+"Standardní rakouský soubor auditu pro daně (SAF-T) je standarizovaný formát souboru pro export různých účetních a transakčních dat z použitím formátu XML.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_anz_ubl_pint
@@ -8825,6 +8897,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Australia & New Zealand is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"Formát elektronické fakturace UBL PINT pro Austrálii a Nový Zéland je založen na modelu Peppol International (PINT) pro fakturaci.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jp_ubl_pint
@@ -8832,6 +8906,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Japan is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"Formát elektronické fakturace UBL PINT pro Japonsko je založen na modelu Peppol International (PINT) pro fakturaci.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_my_ubl_pint
@@ -8839,6 +8915,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Malaysia is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"Formát elektronické fakturace UBL PINT pro Malajsii je založen na modelu Peppol International (PINT) pro fakturaci.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_ubl_pint
@@ -8846,6 +8924,8 @@ msgid ""
 "\n"
 "The UBL PINT e-invoicing format for Singapore is based on the Peppol International (PINT) model for Billing.\n"
 msgstr ""
+"\n"
+"Formát elektronické fakturace UBL PINT pro Singapur je založen na modelu Peppol International (PINT) pro fakturaci.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_repair
@@ -8862,6 +8942,17 @@ msgid ""
 "    * Repair quotation report\n"
 "    * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"Cílem je mít kompletní modul pro správu oprav všech produktů.\n"
+"================================================== ===================\n"
+"\n"
+"Tento modul pokrývá následující témata:\n"
+"------------------------------------------------------\n"
+"* Přidat/odebrat produkty v opravě\n"
+"* Dopad na zásoby\n"
+"* Koncept Záruky\n"
+"* Zpráva o nabídce oprav\n"
+"* Poznámky pro technika a pro konečného zákazníka\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -8880,6 +8971,19 @@ msgid ""
 "\n"
 "If you want to save your employees' time and avoid them to always have coins in their pockets, this module is essential.\n"
 msgstr ""
+"\n"
+"Základní modul pro řízení oběda.\n"
+"================================\n"
+"\n"
+"Mnoho společností objednává sendviče, pizzy a další jídla od běžných dodavatelů pro své zaměstnance, aby jim nabídly více komfortu.\n"
+"\n"
+"Správa obědů v rámci společnosti však vyžaduje řádnou správu, zejména pokud je důležitý počet zaměstnanců nebo prodejců.\n"
+"\n"
+"Modul “Objednání oběda” byl vyvinut s cílem usnadnit tuto správu, ale také nabídnout zaměstnancům více nástrojů a použitelnosti.\n"
+"\n"
+"Kromě kompletního stravování a správy dodavatelů nabízí tento modul možnost zobrazit varování a poskytuje rychlý výběr objednávek podle preferencí zaměstnance.\n"
+"\n"
+"Pokud chcete ušetřit čas svých zaměstnanců a zabránit tomu, aby měli neustále po kapsách mince, je tento modul nezbytný.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock
@@ -8891,6 +8995,12 @@ msgid ""
 "It is only when a delivery order is validated that you can create the delivery\n"
 "guide.\n"
 msgstr ""
+"\n"
+"Průvodce doručením (Complemento XML Carta de Porte) je potřeba jako důkaz,\n"
+"že posíláte zboží mezi A a B.\n"
+"\n"
+"Průvodce doručením můžete vytvořit pouze tehdy, když je objednávka dodávky\n"
+"ověřena.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi_stock
@@ -8903,6 +9013,12 @@ msgid ""
 "It is only when a delivery order is validated that you can create the delivery\n"
 "guide.\n"
 msgstr ""
+"\n"
+"Průvodce doručením (Guía de Remisión) je potřeba jako důkaz,\n"
+"že posíláte zboží mezi A a B.\n"
+"\n"
+"Průvodce doručením můžete vytvořit pouze tehdy, když je objednávka dodávky\n"
+"ověřena.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -8919,6 +9035,17 @@ msgid ""
 "guide.  Then it will follow the same flow as for the invoices, sending it to\n"
 "the SII.\n"
 msgstr ""
+"\n"
+"Dodací průvodka (guia de despacho) slouží jako doklad o tom,\n"
+"že posíláte zboží mezi místem A a místem B. \n"
+"\n"
+"U partnera lze nastavit, zda jsou na dodací průvodce\n"
+"potřeba ceny a zda musí pocházet z prodejní objednávky\n"
+"nebo ze samotného výrobku. \n"
+"\n"
+"Dodací průvodku můžete vytvořit až po potvrzení objednávky na\n"
+"dodání. Následně bude proces pokračovat stejně jako u faktur, tedy odesláním do SII.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_passkey
@@ -8930,6 +9057,12 @@ msgid ""
 "Passkeys are a secure alternative to a username and a password.\n"
 "When a user logs in with a Passkey, MFA will not be required.\n"
 msgstr ""
+"\n"
+"Implementace přístupových klíčů s použitím protokolu WebAuthn.\n"
+"===========================================================\n"
+"\n"
+"Přístupové klíče jsou alternativou k uživatelskému jménu a heslu.\n"
+"¨Když se uživatel přihlašuje s použitím přístupového klíče, MFA nebude vyžadovaná.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -8973,6 +9106,11 @@ msgid ""
 "limitation on the number of columns in a table. The values of all sparse\n"
 "fields are stored in a \"serialized\" field in the form of a JSON mapping.\n"
 msgstr ""
+"\n"
+"Účelem tohoto modulu je implementovat \"zřídkavé\" pole, tj. pole,\n"
+"které jsou většinou nulové. Tato implementace obchází omezení PostgreSQL\n"
+"na počet sloupců v tabulce. Hodnoty všech polí typu sparse\n"
+"jsou uloženy v poli \"serializované\" ve formě mapování JSON.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_media
@@ -8981,6 +9119,9 @@ msgid ""
 "The purpose of this technical module is to provide a front for\n"
 "social media configuration for any other module that might need it.\n"
 msgstr ""
+"\n"
+"Účelem tohoto technického modulu je poskytnout uživatelské rozhraní pro \n"
+"konfigurace sociálních médií pro jakýkoli jiný modul, který by jej mohl potřebovat.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_pos_cert
@@ -9023,6 +9164,8 @@ msgid ""
 "\n"
 "This bridge module adds some smart buttons between Purchase and Subcontracting\n"
 msgstr ""
+"\n"
+"Tento propojovací modul přidává několik chytrých tlačítek mezi nákup a subdodávky.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_dropshipping
@@ -9030,6 +9173,8 @@ msgid ""
 "\n"
 "This bridge module allows to manage subcontracting with the dropshipping module.\n"
 msgstr ""
+"\n"
+"Tento spojovací modul umožňuje spravovat subdodávky s modulem dropshipping.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account
@@ -9037,6 +9182,8 @@ msgid ""
 "\n"
 "This bridge module allows to manage subcontracting with valuation.\n"
 msgstr ""
+"\n"
+"Tento spojovací modul umožňuje spravovat subdodávky s oceněním.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise_holidays
@@ -9044,6 +9191,8 @@ msgid ""
 "\n"
 "This bridge module is auto-installed when the modules sale_timesheet_enterprise and project_timesheet_holidays are installed.\n"
 msgstr ""
+"\n"
+"Tento propojovací modul je nainstalován automaticky, kdy jsou nainstalovány moduly sale_timesheet_enterprise a project_timesheet_holidays.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_mrp_subcontracting
@@ -9051,6 +9200,8 @@ msgid ""
 "\n"
 "This bridge module is auto-installed when the modules stock_barcode and mrp_subcontracting are installed.\n"
 msgstr ""
+"\n"
+"Tento propojovací model je nainstalován automaticky, když jsou nainstalovány moduly stock_barcode a mrp_subcontracting.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_quality_control
@@ -9058,6 +9209,8 @@ msgid ""
 "\n"
 "This bridge module is auto-installed when the modules stock_barcode and quality_control are installed.\n"
 msgstr ""
+"\n"
+"Tento propojovací model je nainstalován automaticky, když jsou nainstalovány moduly stock_barcode a quality_control.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_partner
@@ -9065,6 +9218,8 @@ msgid ""
 "\n"
 "This is a base module. It holds website-related stuff for Contact model (res.partner).\n"
 msgstr ""
+"\n"
+"Toto je základní modul. Obsahuje materiály týkající se webových stránek pro kontaktní model (res.partner).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_payment
@@ -9072,6 +9227,8 @@ msgid ""
 "\n"
 "This is a bridge module that adds multi-website support for payment providers.\n"
 msgstr ""
+"\n"
+"Toto je propojovací modul, který přidává podporu více webových stránek pro poskytovatele plateb.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_calendar
@@ -9087,6 +9244,16 @@ msgid ""
 "\n"
 "If you need to manage your meetings, you should install the CRM module.\n"
 msgstr ""
+"\n"
+"Kalendářový systém s úplným rozsahem funkcí.\n"
+"========================================\n"
+"\n"
+"Podporuje:\n"
+"------------\n"
+"    - Kalendář událostí\n"
+"    - Opakující se události\n"
+"\n"
+"Pokud potřebujete spravovat schůzky, nainstalujte si modul CRM.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_mrp
@@ -9094,6 +9261,8 @@ msgid ""
 "\n"
 "This is a link module between Point of Sale and Mrp.\n"
 msgstr ""
+"\n"
+"Toto je spojovací modul mezi Pokladním systémem a Mrp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi
@@ -9110,6 +9279,18 @@ msgid ""
 "\n"
 "Set the payment reference type from the Sales Journal.\n"
 msgstr ""
+"\n"
+"Toto je modul Odoo pro správu účetnictví ve Finsku.\n"
+"============================================================\n"
+"\n"
+"Po instalaci tohoto modulu budete mít přístup k:\n"
+" :\n"
+"    * Finské účetní osnově\n"
+"    * Fiskálním pozicím\n"
+"    * Typům referencí pro platby faktur (finský standardní odkaz a finský věřitelský odkaz (RF))\n"
+"    * Finskému formátu referencí pro prodejní objednávky\n"
+"\n"
+"Nastavte typ platební reference v deníku prodeje.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_uom
@@ -9118,6 +9299,9 @@ msgid ""
 "This is the base module for managing Units of measure.\n"
 "========================================================================\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu měrných jednotek.\n"
+"================================================= ========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
@@ -9142,6 +9326,24 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu produktů a ceníků v Odoo.\n"
+"================================================== ========================\n"
+"\n"
+"Produkty podporují varianty, různé metody stanovení cen, informace o prodejcích, skladové zásoby / objednávky, různé měrné jednotky, balení a vlastnosti.\n"
+"\n"
+"Podpora ceníků:\n"
+"-------------------\n"
+"* Víceúrovňová sleva (podle produktu, kategorie, množství)\n"
+"* Výpočet ceny na základě různých kritérií:\n"
+"* Další ceník\n"
+"* Nákladová cena\n"
+"* Koncový ceník\n"
+"* Prodejní cena\n"
+"\n"
+"Cenové preference podle produktů a / nebo partnerů.\n"
+"\n"
+"Tisk štítků s čárovým kódem.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs
@@ -9151,6 +9353,10 @@ msgid ""
 "This module is based on the official document \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
 "Source: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro srbskou lokalizaci. Spravuje účetní osnovu a daně.\n"
+"Tento modul je vytvořen na základě dokumentu \"Pravilnik o kontnom okviru i sadržini računa u kontnom okviru za privredna društva, zadruge i preduzetnike (\"Sl. glasnik RS\", br. 89/2020)\"\n"
+"Zdroj: https://www.paragraf.rs/propisi/pravilnik-o-kontnom-okviru-sadrzini-racuna-za-privredna-drustva-zadruge.html\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bh
@@ -9167,6 +9373,17 @@ msgid ""
 " - Fiscal Positions\n"
 " - States\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetního diagramu pro Bahrajn v Odoo.\n"
+"===========================================================================\n"
+"Základní účtové osnovy a účetní lokalizace pro Bahrajn.\n"
+"\n"
+"Aktivuje:\n"
+" - Účtovou osnovu\n"
+" - Daně\n"
+" - Daňové výkazy\n"
+" - Fiskální pozice\n"
+" - Státy\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -9200,6 +9417,31 @@ msgid ""
 "        **Path to access:** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers\n"
 "\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Belgii v Odoo.\n"
+"================================================== =============================\n"
+"\n"
+"Po instalaci tohoto modulu se spustí průvodce konfigurací účetnictví.\n"
+"* Máme šablony účtů, které mohou být užitečné při vytváření účtových osnov.\n"
+"* V tomto konkrétním průvodci budete požádáni, abyste zadali název společnosti,\n"
+"šablonu účtové osnovy, počet číslic pro generování, kód pro váš účet a bankovní účet, měnu pro vytvoření deníků.\n"
+"\n"
+"Tímto způsobem je vygenerována čistá kopie šablony účetní osnovy.\n"
+"\n"
+"Průvodci poskytovaní tímto modulem:\n"
+"--------------------------------\n"
+"* Partnerská DPH Intra: Seznam partnerů s jejich příslušnou DPH a fakturovanými\n"
+"částkami. Připraví soubor ve formátu XML.\n"
+"\n"
+"** Cesta k přístupu: ** Fakturace / Vykazování / Právní zprávy / Belgické přiznání / Partnerská DPH Intra\n"
+"* Periodické prohlášení o DPH: Připraví soubor XML pro DPH přiznání\n"
+" hlavní společnosti uživatele, který je právě přihlášen.\n"
+"\n"
+"** Cesta k přístupu: ** Fakturace / Vykazování / Právní zprávy / Belgické přiznání / Pravidelné prohlášení o DPH\n"
+"* Roční seznam zákazníků podléhajících DPH: Připraví soubor XML pro DPH\n"
+"přiznání hlavní společnosti uživatele, který je právě přihlášen, na základě fiskálního roku.\n"
+"\n"
+"** Cesta k přístupu: ** Fakturace / Vykazování / Právní zprávy / Belgické přiznání / Roční seznam zákazníků podléhajících DPH\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_eg
@@ -9219,6 +9461,20 @@ msgid ""
 "- Other Taxes Report\n"
 "- Fiscal Positions\n"
 msgstr ""
+"\n"
+"Egyptský účetní modul\n"
+"==============================================================================\n"
+"Egyptské základní tabulky a lokalizace účetnictví.\n"
+"\n"
+"Aktivuje:\n"
+"\n"
+"- Účtovou osnovu\n"
+"- Daně\n"
+"- Přiznání k DPH\n"
+"- Výkaz o srážkové dani\n"
+"- Plán daňového výkazu\n"
+"- Výkaz o ostatních daních\n"
+"- Fiskální pozice\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ee
@@ -9226,6 +9482,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Estonsko v Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9284,6 +9542,13 @@ msgid ""
 "- Chart of accounts\n"
 "- Taxes\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účtové osnovy pro Irak v Odoo.\n"
+"==============================================================================\n"
+"Základní účtová osnova a lokalizace pro Irak.\n"
+"Aktivuje:\n"
+"- Účtovou osnovu\n"
+"- Daně\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_jo
@@ -9304,6 +9569,21 @@ msgid ""
 "\n"
 "- Fiscal positions\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účtové osnovy pro Jordánsko v Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Základní jordánská účtová osnova a lokalizace.\n"
+"\n"
+"Aktivuje:\n"
+"\n"
+"- Účtovou osnovu\n"
+"\n"
+"- Daně\n"
+"\n"
+"- Daňové výkazy\n"
+"\n"
+"- Fiskální pozice\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_kw
@@ -9315,6 +9595,12 @@ msgid ""
 "Activates:\n"
 "- Chart of accounts\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Kuvajt v Odoo.\n"
+"==============================================================================\n"
+"Základní účtová osnova a lokalizace pro Kuvajt.\n"
+"Aktivuje:\n"
+"- Účtovou osnovu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lb_account
@@ -9328,6 +9614,19 @@ msgid ""
 "* Taxes\n"
 "* Fiscal Positions\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účtové osnovy pro Libanon v Odoo.\n"
+"==============================================================================\n"
+"\n"
+"Základní libanonská účtová osnova a lokalizace.\n"
+"\n"
+"Aktivuje:\n"
+"\n"
+"- Účtovou osnovu\n"
+"\n"
+"- Daně\n"
+"\n"
+"- Fiskální pozice\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu
@@ -9366,6 +9665,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Malaysia in Odoo.\n"
 "==============================================================================\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Malajsii v Odoo.\n"
+"==============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mc
@@ -9382,6 +9684,10 @@ msgid ""
 "\n"
 "This module has been built with the help of Caudigef.\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Maroko.\n"
+"\n"
+"Tento modul byl vytvořen s pomocí Caudigef.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_qa
@@ -9393,6 +9699,12 @@ msgid ""
 "Activates:\n"
 "- Chart of accounts\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Katar v Odoo.\n"
+"==============================================================================\n"
+"Základní účtová osnova a lokalizace pro Katar.\n"
+"Aktivuje:\n"
+"- Účtovou osnovu\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ie
@@ -9400,6 +9712,8 @@ msgid ""
 "\n"
 "This is the base module to manage the accounting chart for Republic of Ireland in Odoo.\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Irskou republiku v Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tw
@@ -9408,6 +9722,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Taiwan in Odoo.\n"
 "==============================================================================\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Tchaj-wan v Odoo.\n"
+"==============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -9424,6 +9741,15 @@ msgid ""
 "- Taxes\n"
 "- Tax Report\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Turecko v Odoo\n"
+"===========================================================================\n"
+"Turecko základní účetní osnova a lokalizace.\n"
+"-------------------------------------------------\n"
+"Aktivuje:\n"
+"- Účtovou osnovu\n"
+"- Daně\n"
+"- Daňové výkazy\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mu_account
@@ -9436,6 +9762,14 @@ msgid ""
 "    - Fiscal positions\n"
 "    - Default settings\n"
 msgstr ""
+"\n"
+"Toto je základní modul pro správu účetní osnovy pro Mauricijskou republiku v Odoo.\n"
+"==============================================================================================\n"
+":\n"
+"- Účtová osnova\n"
+"- Daně\n"
+"- Fiskální pozice\n"
+"- Výchozí nastavení\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ug
@@ -9449,6 +9783,14 @@ msgid ""
 "    - Default settings\n"
 "    - Tax report\n"
 msgstr ""
+"\n"
+"Toto je základní ugandská lokalizace nezbytná pro spouštění Odoo v UG:\n"
+"================================================================================\n"
+"    - Účtová osnova\n"
+"    - Daně\n"
+"    - Fiskální pozice\n"
+"    - Výchozí nastavení\n"
+"    - Daňový výkaz\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_zm_account
@@ -9461,6 +9803,13 @@ msgid ""
 "    - Fiscal Positions\n"
 "    - Default Settings\n"
 msgstr ""
+"\n"
+"Toto je základní zambijská lokalizace nezbytná pro spouštění Odoo v ZM:\n"
+"================================================================================\n"
+"    - Účtová osnova\n"
+"    - Daně\n"
+"    - Fiskální pozice\n"
+"    - Výchozí nastavení\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_id
@@ -9508,6 +9857,14 @@ msgid ""
 " - Taxes and tax report\n"
 " - Multiple Fiscal positions\n"
 msgstr ""
+"\n"
+"Toto je nejnovější základní izraelská lokalizace nezbytná pro spuštění Odoo v Izraeli:\n"
+"================================================================================\n"
+"\n"
+"Tento modul obsahuje:\n"
+" - Generickou izraelskou účtovou osnovu\n"
+" - Daně a daňový výkaz\n"
+" - Více fiskálních pozicí\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -9534,6 +9891,12 @@ msgid ""
 "\n"
 "Romanian accounting chart and localization.\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účtové osnovy, struktury DIČ, fiskální pozice a daňového mapování.\n"
+"Přidává také registrační číslo pro Rumunsko v Odoo.\n"
+"================================================== ===============================================================\n"
+"\n"
+"Rumunská účtová osnova a lokalizace.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca
@@ -9565,6 +9928,28 @@ msgid ""
 "4) An international vendor charge you your provincial tax. They are registered with your\n"
 "position.\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu kanadské účtové osnovy v Odoo.\n"
+"================================================== =========================================\n"
+"\n"
+"Kanadské účtové osnovy a lokalizace.\n"
+"\n"
+"Mapování daní\n"
+"\n"
+"----------------\n"
+"\n"
+"Při zvažování použití daní je důležitá provincie, kde dochází k dodávce.\n"
+"Proto jsme se rozhodli implementovat nejběžnější případ ve fiskálních pozicích: dodání je odpovědností dodavatele a provádí se u zákazníka.\n"
+"\n"
+"Nějaké příklady:\n"
+"\n"
+"1) Máte zákazníka z jiné provincie a doručujete na jeho místo. Na zákazníka nastavte fiskální pozici do jeho provincii.\n"
+"\n"
+"2) Máte zákazníka z jiné provincie. Tento zákazník však přijíždí k vám kamionem, aby si vyzvedl produkty. Na zákazníka nenastavujte žádnou fiskální pozici.\n"
+"\n"
+"3) Mezinárodní prodejce vám neúčtuje žádnou daň. Daně jsou vybírány na celních poplatcích celním makléřem. Na prodejci nastavte fiskální pozici na mezinárodní.\n"
+"\n"
+"4) Mezinárodní prodejce vám účtuje vaši provinční daň. Jsou registrováni podle vaší pozice.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pl
@@ -9580,6 +9965,16 @@ msgid ""
 "Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
 "Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účtové osnovy a daní pro Polsko v Odoo\n"
+"==================================================================================\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont, podatków, obszarów podatkowych i\n"
+"rejestrów podatkowych. Moduł ustawia też konta do kupna i sprzedaży towarów\n"
+"zakładając, że wszystkie towary są w obrocie hurtowym.\n"
+"\n"
+"Niniejszy moduł jest przeznaczony dla odoo 8.0.\n"
+"Wewnętrzny numer wersji OpenGLOBE 1.02\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dz
@@ -9619,6 +10014,17 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účtové osnovy pro Francii v Odoo.\n"
+"==========================================================================\n"
+"\n"
+"Tento modul se vztahuje na společnosti se sídlem ve Francii. Nevztahuje se na společnosti se sídlem v DOM-TOM (Guadeloupe, Martinik, Guyane, Réunion, Mayotte).\n"
+"\n"
+"Tento lokalizační modul vytváří daně DPH typu „včetně daně“ pro nákupy (je to zejména nutné, když používáte modul „hr_expense“). Mějte na paměti, že tyto „daně z přidané hodnoty“ nejsou spravovány mapování daní poskytnutými tímto modulem (protože je složité spravovat scénáře „vyloučené daně“ i „zahrnuty do daně“ ve fiskálních pozicích).\n"
+"\n"
+"Tento lokalizační modul neřeší scénář, když francouzsko-pevninská společnost prodává služby společnosti se sídlem v DOM. Mohli bychom to zvládnout ve fiskálních pozicích, ale vyžadovalo by to rozlišovat mezi „daněmi z produktů“ a daněmi ze služebních daní. Domníváme se, že je příliš \"těžké\" mít to ve výchozím nastavení v l10n_fr; společnosti, které prodávají služby společnostem se sídlem v DOM, by měly aktualizovat konfiguraci svých daní a fiskálních pozic ručně.\n"
+"\n"
+"**Kredity:** Sistheo, Zeekom, CrysaLEAD, Akretion a Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -9650,6 +10056,9 @@ msgid ""
 "This is the module to manage the accounting chart for Tunisia in Odoo.\n"
 "=======================================================================\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účetní osnovy pro Tunis v Odoo.\n"
+"=======================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -9670,6 +10079,21 @@ msgid ""
 "    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) for VietQR.\n"
 "\n"
 msgstr ""
+"\n"
+"Toto je modul pro správu účetní osnovy a bankovních informací pro Vietnam v Odoo.\n"
+"========================================================================================\n"
+"\n"
+"- Tento modul se vztahuje na společnosti, které používají vietnamskou účetní normu (VAS)\n"
+"  s účetní osnovou podle Nařízení č. 200/2014/TT-BTC.\n"
+"- Přidává vietnamské bankovní informace (jako je název, BIC atd.), jak je oznámeno a každoročně aktualizováno Státní bankou\n"
+"  Vietnamu (https://sbv.gov.vn/webcenter/portal/en/home/sbv/paytreasury/bankidno).\n"
+"- Přidává funkci VietQR pro faktury\n"
+"\n"
+"**Zásluhy:**\n"
+"    - General Solutions.\n"
+"    - Trobz\n"
+"    - Jean Nguyen - The Bean Family (https://github.com/anhjean/vietqr) za VietQR.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_address_autocomplete
@@ -9684,6 +10108,8 @@ msgid ""
 "\n"
 "This module adapts the behavior of the PoS when the pos_hr and pos_restaurant are installed.\n"
 msgstr ""
+"\n"
+"Tento modul adaptuje chování PoS když jsou nainstalovány pos_hr a pos_restaurant.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_ubl_cii_tax_extension
@@ -9692,6 +10118,9 @@ msgid ""
 "This module adds 2 useful fields on the taxes for electronic invoicing: the tax category code and the tax exemption reason code.\n"
 "These fields will be read when generating Peppol Bis 3 or Factur-X xml, for instance.\n"
 msgstr ""
+"\n"
+"Tento modul přidává 2 užitečná pole o daních pro elektronickou fakturaci: kód daňové kategorie a kód důvodu osvobození od daně.\n"
+"Tato pole budou načtena například při generování Peppol Bis 3 nebo Factur-X xml.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -9703,6 +10132,12 @@ msgid ""
 "\n"
 "Finally, the module comes with an option to display an attribute summary table in product web pages (available in Customize menu).\n"
 msgstr ""
+"\n"
+"Tento modul přidává do vašeho elektronického obchodu srovnávací nástroj, aby zákazníci mohli snadno porovnávat produkty na základě jejich atributů. Toto výrazně urychlí jejich rozhodnutí o nákupu.  \n"
+"\n"
+"Chcete-li nakonfigurovat atributy produktu, aktivujte v Nastavení webových stránek *atributy a varianty*. Tím dojde k přidání vyhrazené části ve formuláři produktu. V konfiguraci modul přidává pole kategorie do atributů produktu za účelem struktury porovnávací tabulky kupujícího. \n"
+"\n"
+"Konečně modul je dodáván s možností zobrazení tabulky shrnutí atributů na webových stránkách produktu (dostupné v nabídce Přizpůsobit).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_dashboard
@@ -9712,6 +10147,9 @@ msgid ""
 "This new type of view contains some basic statistics, a graph, and a pivot subview that allow you to get a quick overview of your online sales.\n"
 "It also provides new tools to analyse your data.\n"
 msgstr ""
+"\n"
+"Tento modul přidává nový Ovládací panel do webové aplikace. Tento nový typ zobrazení obsahuje některé základní statistiky, graf a pivotní podřízené zobrazení, které vám umožňují získat rychlý přehled o vašich online prodejích. \n"
+"Poskytuje také nové nástroje k analýze dat.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing_sms
@@ -9720,6 +10158,10 @@ msgid ""
 "This module adds a new template to the Newsletter Block to allow \n"
 "your visitors to subscribe with their phone number.\n"
 msgstr ""
+"\n"
+"Tento modul přidává novou šablonu do bloku newsletteru, aby umožnil\n"
+" vašim návštěvníkům přihlásit se k odběru pomocí svého mobilu.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting_crm
@@ -9730,6 +10172,11 @@ msgid ""
 "\n"
 "This shortcut allows you to generate a rental order based on the selected case.\n"
 msgstr ""
+"\n"
+"Tento modul přidává zkratku v jednom nebo několika případech příležitostí v CRM.\n"
+"================================================== ==========================\n"
+"\n"
+"Tato zkratka umožňuje vygenerovat objednávku pronájmu na základě vybraného případu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -9745,6 +10192,16 @@ msgid ""
 "We suggest you to install this module, if you installed both the sale and the crm\n"
 "modules.\n"
 msgstr ""
+"\n"
+"Tento modul přidává zkratku v jednom nebo několika případech příležitosti v CRM.\n"
+"================================================= ==========================\n"
+"\n"
+"Tato zkratka umožňuje vygenerovat prodejní objednávku na základě vybraného případu.\n"
+"Pokud jsou otevřeny různé případy (seznam), vygeneruje jednu prodejní objednávku případ od případu.\n"
+"Případ je poté uzavřen a propojen s vygenerovanou prodejní objednávkou.\n"
+"\n"
+"Doporučujeme vám nainstalovat tento modul, pokud jste nainstalovali oba moduly prodeje a\n"
+" CRM.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_survey
@@ -9752,6 +10209,8 @@ msgid ""
 "\n"
 "This module adds an integration with Survey to ask feedbacks to any employee, based on a survey to fill.\n"
 msgstr ""
+"\n"
+"Tento modul přidává integraci s průzkumem pro získání zpětné vazby od jakéhokoli zaměstnance na základě dotazníku, který je třeba vyplnit.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi_proxy_client
@@ -9764,6 +10223,13 @@ msgid ""
 "- Encryption features allows to decrypt all the user's data when receiving it from the proxy.\n"
 "- Authentication offers an additionnal level of security to avoid impersonification, in case someone gains to the user's database.\n"
 msgstr ""
+"\n"
+"Tento modul přidává obecné funkce pro registraci databáze Odoo na proxy serveru odpovědném za přijem dat (prostřednictvím požadavků od webových služeb).\n"
+"- edi_proxy_user má jedinečnou identifikaci pro specifický typ proxy (např. l10n_it_edi, peppol), což\n"
+" umožňuje jeho identifikaci při příjmu dokumentu určeného pro něj. Je propojen s konkrétní společností v konkrétní\n"
+" databázi Odoo.\n"
+"- Funkce šifrování umožňují dešifrovat všechna uživatelská data při jejich přijetí z proxy serveru.\n"
+"- Autentizace poskytuje další úroveň zabezpečení, aby se předešlo zneužití identity v případě, že někdo získá přístup k uživatelské databázi.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_portal
@@ -9789,6 +10255,8 @@ msgid ""
 "\n"
 "This module adds support for SEPA Credit Transfer QR-code generation.\n"
 msgstr ""
+"\n"
+"Tento modul přidává podporu pro generování QR kódů SEPA Credit Transfer.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_margin
@@ -9800,6 +10268,12 @@ msgid ""
 "This gives the profitability by calculating the difference between the Unit\n"
 "Price and Cost Price.\n"
 msgstr ""
+"\n"
+"Tento modul přidává pole 'Marže' k zakázkám.\n"
+"=============================================\n"
+"\n"
+"Díky tomu lze zjistit ziskovost spočtením rozdílu mezi cenou položky\n"
+"a nákladem na položku.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_picking_batch
@@ -9808,6 +10282,9 @@ msgid ""
 "This module adds the batch transfer option in warehouse management\n"
 "==================================================================\n"
 msgstr ""
+"\n"
+"Tento modul přidává možnost hromadného přesunu v řízení skladu\n"
+"=================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cz_reports_2025
@@ -9829,6 +10306,9 @@ msgid ""
 "This module adds to the approvals workflow the possibility to generate\n"
 "RFQ from an approval purchase request.\n"
 msgstr ""
+"\n"
+"Tento modul přidává do pracovního postupu schválení možnost generovat\n"
+"RFQ ze žádosti o schválení nákupu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_attendance
@@ -9840,6 +10320,11 @@ msgid ""
 "Keeps account of the attendances of the employees on the basis of the\n"
 "actions(Check in/Check out) performed by them.\n"
 msgstr ""
+"\n"
+"Cílem tohoto modulu je spravovat docházky zaměstnanců.\n"
+"==================================================\n"
+"\n"
+"Vede záznamy o účasti zaměstnanců na základě akcí, které provedli (Check in / Check out).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_mondialrelay
@@ -9847,6 +10332,8 @@ msgid ""
 "\n"
 "This module allow your customer to choose a Point Relais® and use it as shipping address.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje zákazníkovi vybrat si Point Relais® a použít jej jako dodací adresu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_mondialrelay
@@ -9857,6 +10344,11 @@ msgid ""
 "\n"
 "Delivery price pre-configured is an example, you need to adapt the pricing's rules.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje zákazníkovi vybrat si Point Relais® a použít jej jako dodací adresu.\n"
+"Tento modul neimplementuje službu WebService. Jedná se pouze o integraci widgetu.\n"
+"\n"
+"Předkonfigurovaná cena dodání je příkladem, je třeba přizpůsobit pravidla pro tvorbu cen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_hr
@@ -9865,6 +10357,9 @@ msgid ""
 "This module allows Employees (and not users) to log in to the Point of Sale application using a barcode, a PIN number or both.\n"
 "The actual till still requires one user but an unlimited number of employees can log on to that till and process sales.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje zaměstnancům (a nikoli uživatelům) přihlásit se do aplikace Pokladní systém pomocí čárového kódu, PINu nebo obojím.\n"
+"Skutečná pokladna stále vyžaduje jednoho uživatele, ale k této pokladně se může přihlásit neomezený počet zaměstnanců a prodávat.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -9881,6 +10376,8 @@ msgid ""
 "\n"
 "This module allows ecommerce users to book an order with the shiprocket using cash on delivery feature.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje uživatelům elektronického obchodu rezervovat objednávku pomocí Shiprocket s využitím funkce platby na dobírku.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_ups
@@ -9888,6 +10385,8 @@ msgid ""
 "\n"
 "This module allows ecommerce users to enter their UPS account number and delivery fees will be charged on that account number.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje uživatelům elektronického obchodu zadat své číslo účtu UPS a na daném účtu budou účtovány poplatky za doručení.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_real_estates
@@ -9895,6 +10394,8 @@ msgid ""
 "\n"
 "This module allows the user to add real estate related data to the Spanish localization and generates a mod 347 report.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje uživateli přidávat údaje o nemovitostech do španělské lokalizace a generuje zprávu mod 347.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_recruitment_integration_website
@@ -9911,6 +10412,8 @@ msgid ""
 "\n"
 "This module allows to configure commissions for resellers.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje konfigurovat provize pro prodejce.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_product_matrix
@@ -9919,6 +10422,9 @@ msgid ""
 "This module allows to fill Purchase Orders rapidly\n"
 "by choosing product variants quantity through a Grid Entry.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje rychlé vyplnění objednávek\n"
+" výběrem množství variant produktu prostřednictvím produktové mřížky.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_product_matrix
@@ -9927,6 +10433,9 @@ msgid ""
 "This module allows to fill Sales Order rapidly\n"
 "by choosing product variants quantity through a Grid Entry.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje rychlé vyplnění prodejních objednávek\n"
+" výběrem množství variant produktu prostřednictvím produktové mřížky.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -9941,6 +10450,11 @@ msgid ""
 "Sales Team, or an opportunity which still has status pending after 14 days might\n"
 "trigger an automatic reminder email.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje implementovat pravidla automatizace pro libovolný objekt. \n"
+"============================================================ \n"
+"Použijte pravidla automatizace k automatickému spuštění akcí pro různé obrazovky. \n"
+"**Příklad:** Obchodní potenciál vytvořený konkrétním uživatelem může být automaticky nastaven na určitý tým obchodníků, nebo příležitost, která má ještě stav po uplynutí 14 dní, může způsobit automatické připomenutí e-mailu.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_onboarding
@@ -9949,6 +10463,9 @@ msgid ""
 "This module allows to manage onboardings and their progress\n"
 "================================================================================\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje správu onboardingu a kontrolu jeho postupu\n"
+"================================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_check_printing
@@ -9970,6 +10487,20 @@ msgid ""
 "- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje tisknout vaše platby na předtištěný šekový papír. Můžete nakonfigurovat výstup (rozložení, informace o útržcích atd.) V nastavení společnosti a spravovat číslování šeků (pokud používáte předtištěné šeky bez čísel) v nastavení deníku.\n"
+"\n"
+"Podporované formáty\n"
+"-----------------\n"
+"Tento modul podporuje tři nejběžnější formáty šeků a bude fungovat po vybalení z krabice s propojenými šeky z checkdepot.net.\n"
+"\n"
+"Zobrazit všechny kontroly na: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
+"\n"
+"Můžete si vybrat mezi:\n"
+"\n"
+"- Šeky nahoře: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
+"- Šeky uprostřed: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
+"- Šeky dole: Standard ADP (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -9977,6 +10508,8 @@ msgid ""
 "\n"
 "This module allows to print your payments on pre-printed checks.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje tisknout vaše platby na předem vytištěných šecích.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -9993,6 +10526,15 @@ msgid ""
 "- Check on middle: Peachtree standard\n"
 "- Check on bottom: ADP standard\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje tisknout vaše platby na předtištěných šecích. Můžete nakonfigurovat výstup (rozvržení, formát papíru atd.) V nastavení společnosti a spravovat číslování šeků (pokud používáte předtištěné šeky bez čísel) v nastavení deníku.\n"
+"Podle Kanadské platební asociace (https://www.payments.ca/sites/default/files/standard_006_complete_0.pdf)\n"
+"\n"
+"Podporované formáty\n"
+"-----------------\n"
+"- Šeky nahoře: Quicken / QuickBooks standard\n"
+"- Šeky uprostřed: Peachtree standard\n"
+"- Šeky dole: standard ADP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_partner_assign
@@ -10012,6 +10554,19 @@ msgid ""
 "The automatic assignment is figured from the weight of partner levels and the geolocalization. Partners get leads that are located around them.\n"
 "\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje publikovat vaše prodejce / partnery na vašem webu a předávat jim příchozí potenciální zákazníky / příležitosti.\n"
+"\n"
+"\n"
+"**Publikovat partnera**\n"
+"\n"
+"Chcete-li partnera publikovat, nastavte *úroveň* v jeho kontaktním formuláři (v části Přiřazení partnera) a klikněte na tlačítko *Publikovat*.\n"
+"\n"
+"**Přeposlat zájemce**\n"
+"\n"
+"Předání zájemce lze provádět pro jeden nebo několik zájemců najednou. Akce je k dispozici v části *Přiřazený partner* v zobrazení formuláře pro zájemce / příležitost a v nabídce *Akce* v zobrazení seznamu.\n"
+"\n"
+"Automatické přiřazení se vypočítává z váhy úrovní partnerů a geolokalizace. Partneři získávají potenciální zákazníky, kteří se nacházejí kolem nich.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_update_tax_tags
@@ -10031,6 +10586,9 @@ msgid ""
 "This module allows users to more easily identify subcontracting orders when applying landed costs,\n"
 "by also displaying the associated picking reference in the search view.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje uživatelům jednoduše identifikovat objednávky subdodavatelů při uplatnění pořizovacích nákladů\n"
+"zobrazením související vychystávací reference ve zobrazení vyhledávání.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_barcode_barcodelookup
@@ -10039,6 +10597,9 @@ msgid ""
 "This module allows you to create products from barcode using Barcode Lookup API Key\n"
 "if the product doesn't exists, inside barcode application.\n"
 msgstr ""
+"\n"
+"Tento modul vám umožňuje vytvářet produkty z čárového kódu pomocí API klíče pro vyhledávání čárových kódů,\n"
+" pokud produkt neexistuje v aplikaci Čárové kódy.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
@@ -10048,6 +10609,10 @@ msgid ""
 "and decide the split of these costs among their stock moves in order to \n"
 "take them into account in your stock valuation.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje snadno přidat další náklady na výrobní zakázku\n"
+"a rozhodnout o rozdělení těchto nákladů mezi jejich pohyby akcií, aby\n"
+"vzít je v úvahu při oceňování akcií.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -10066,6 +10631,19 @@ msgid ""
 "It is integrated with sales and accounting to allow you to automatically\n"
 "invoice and send propositions for membership renewal.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje spravovat všechny operace pro správu členství.\n"
+"==========================================================================\n"
+"\n"
+"Podporuje různé druhy členů:\n"
+"------------------------------------------\n"
+"    * Volný člen\n"
+"    * Přidružený člen (např.: skupina se přihlásila k členství u všech dceřiných společností)\n"
+"    * Placení členové\n"
+"    * Speciální ceny členů\n"
+"\n"
+"Je integrován s prodejem a účetnictvím, což vám umožní automaticky\n"
+"fakturovat a zasílat návrhy na obnovení členství.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription
@@ -10115,6 +10693,14 @@ msgid ""
 "\n"
 "Forecast shifts and keep an eye on the hours consumed on your plannable products.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje naplánovat prodejní objednávku na základě konfigurace produktu.\n"
+"\n"
+"U produktů, u kterých je povolena možnost \"Plánování služeb\", budete mít možnost\n"
+"automaticky plánovat směny pro zaměstnance, kteří mohou směnu nastoupit.\n"
+"(tj. zaměstnanci, kteří mají stejnou roli, jaká je nakonfigurována na produktu).\n"
+"\n"
+"Předpovídejte směny a sledujte spotřebu hodin u plánovatelných produktů.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_planning
@@ -10128,6 +10714,14 @@ msgid ""
 "\n"
 "Plan shifts and keep an eye on the hours consumed on your plannable products.\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje naplánovat prodejní objednávku na základě konfigurace produktu.\n"
+"\n"
+"U produktů, u kterých je povolena možnost \"Plánování služeb\", budete mít možnost\n"
+"automaticky plánovat směny pro zaměstnance, kteří mohou směnu nastoupit.\n"
+"(tj. zaměstnanci, kteří mají stejnou roli, jaká je nakonfigurována na produktu).\n"
+"\n"
+"Plánujte směny a sledujte spotřebu hodin u plánovatelných produktů.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_renting
@@ -10137,6 +10731,9 @@ msgid ""
 "This module allows you to sell rental products in your eCommerce with\n"
 "appropriate views and selling choices.\n"
 msgstr ""
+"\n"
+"Tento modul vám umožňuje prodávat produkty k pronájmu ve vašem e-shopu\n"
+"s vhodnými zobrazeními a možnostmi prodeje.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_subscription
@@ -10145,6 +10742,9 @@ msgid ""
 "This module allows you to sell subscription products in your eCommerce with\n"
 "appropriate views and selling choices.\n"
 msgstr ""
+"\n"
+"Tento modul vám umožňuje prodávat produkty předplatného ve vašem e-shopu\n"
+"s vhodnými zobrazeními a možnostmi prodeje.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_hourly_cost
@@ -10162,6 +10762,9 @@ msgid ""
 "This module brings a new building block with a mailing list widget to drop on any page of your website.\n"
 "On a simple click, your visitors can subscribe to mailing lists managed in the Email Marketing app.\n"
 msgstr ""
+"\n"
+"Tento modul přináší nový stavební blok s widgetem mailingového seznamu, který lze umístit na libovolnou stránku vašeho webu. \n"
+"Na jednoduché kliknutí se mohou vaši návštěvníci přihlásit k odběru e-mailových konferencí spravovaných v aplikaci E-mail Marketing\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar_pos
@@ -10197,6 +10800,11 @@ msgid ""
 "Install this if you are using the Point of Sale app in Germany.\n"
 "\n"
 msgstr ""
+"\n"
+"Tento modul přináší technický požadavek na nové německé nařízení s technickým bezpečnostním systémem pomocí cloudového řešení s Fiskaly.\n"
+"\n"
+"Nainstalujte si to, pokud používáte aplikaci Pokladní systém v Německu. \n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_pos_res_cert
@@ -10215,6 +10823,8 @@ msgid ""
 "\n"
 "This module contains all the common features of Sales Management and eCommerce.\n"
 msgstr ""
+"\n"
+"Tento modul obsahuje všechny společné funkce řízení prodeje a eCommerce.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_test_pos_qr_payment
@@ -10253,6 +10863,12 @@ msgid ""
 "\n"
 "This module follows the implementation guidelines issued by the Bacs Payment Schemes Limited (BPSL). For more information about the BACS standards: https://www.bacs.co.uk/\n"
 msgstr ""
+"\n"
+"Tento modul umožňuje generování platebních příkazů dle požadavků standardů BACS Direct Debit a Direct Credit. Vygenerované soubory ve formátu prostého textu lze poté nahrát do vaší banky ke zpracování.\n"
+"\n"
+"Direct Debit umožňuje podnikům vybírat platby přímo z bankovních účtů zákazníků, zatímco funkce Direct Credit umožňuje podnikům provádět platby přímo na bankovní účty jednotlivců nebo jiných podniků.\n"
+"\n"
+"Tento modul se řídí prováděcími pokyny vydanými společností Bacs Payment Schemes Limited (BPSL). Více informací o standardech BACS: https://www.bacs.co.uk/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_saft

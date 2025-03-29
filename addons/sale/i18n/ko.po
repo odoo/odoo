@@ -3,17 +3,17 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2025
 # Daye Jeong, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:58+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2237,6 +2237,7 @@ msgstr "미결 청구서 경고 표시"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__display_name
@@ -2642,6 +2643,7 @@ msgstr "숨김"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale.field_base_document_layout__id
 #: model:ir.model.fields,field_description:sale.field_crm_team__id
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__id
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:sale.field_payment_provider__id
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__id
@@ -4813,6 +4815,11 @@ msgid ""
 msgstr "온라인 결제 양식을 통해 완료된 거래 중 '완료' 또는 '승인됨' 상태이며 이 주문과 연결된 거래의 총 금액입니다."
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "시스템 매개 변수"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -5396,11 +5403,6 @@ msgstr "청구된 공급가액"
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
 msgstr "공급가액 합계"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr "면세 할인"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

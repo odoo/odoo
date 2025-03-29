@@ -3,16 +3,16 @@
 # 	* sale
 # 
 # Translators:
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:58+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2129,6 +2129,7 @@ msgstr "顯示草稿發票警告"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__display_name
@@ -2534,6 +2535,7 @@ msgstr "隱藏"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale.field_base_document_layout__id
 #: model:ir.model.fields,field_description:sale.field_crm_team__id
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__id
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:sale.field_payment_provider__id
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__id
@@ -4695,6 +4697,11 @@ msgid ""
 msgstr "連結至此訂單、透過網上付款表單進行，以及處於「完成」或「已授權」狀態的交易的總和。"
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "系統參數"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -5272,11 +5279,6 @@ msgstr "未連稅已開立發票金額"
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
 msgstr "未連稅總額"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr "稅前折扣"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

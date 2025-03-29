@@ -4,16 +4,16 @@
 # 
 # Translators:
 # a75f12d3d37ea5bf159c4b3e85eb30e7_0fa6927, 2025
-# Wil Odoo, 2025
 # Maitê Dietze, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:58+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2276,6 +2276,7 @@ msgstr "Exibir aviso de fatura em rascunho"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale.field_base_document_layout__display_name
 #: model:ir.model.fields,field_description:sale.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_provider__display_name
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__display_name
@@ -2692,6 +2693,7 @@ msgstr "Oculto"
 #: model:ir.model.fields,field_description:sale.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale.field_base_document_layout__id
 #: model:ir.model.fields,field_description:sale.field_crm_team__id
+#: model:ir.model.fields,field_description:sale.field_ir_config_parameter__id
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__id
 #: model:ir.model.fields,field_description:sale.field_payment_provider__id
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__id
@@ -4908,6 +4910,11 @@ msgstr ""
 "estão no estado \"Concluído\" ou \"Autorizado\" e vinculadas a esse pedido."
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Parâmetros do sistema"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -5533,11 +5540,6 @@ msgstr "Total faturado sem impostos"
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
 msgid "Untaxed Total"
 msgstr "Total sem impostos"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_line_wizard_form
-msgid "Untaxed discount"
-msgstr "Desconto sem impostos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form

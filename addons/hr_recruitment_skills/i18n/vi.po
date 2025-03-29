@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -47,7 +47,10 @@ msgid "Created on"
 msgstr "Được tạo vào"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__display_name
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__display_name
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
@@ -57,7 +60,10 @@ msgid "Expected Skills"
 msgstr "Kỹ năng mong đợi"
 
 #. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate__id
 #: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_candidate_skill__id
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_job__id
 msgid "ID"
 msgstr "ID"
 
@@ -171,7 +177,7 @@ msgid "The skill level %(level)s is not valid for skill type: %(type)s"
 msgstr "Cấp độ kỹ năng %(level)s không khớp cho loại kỹ năng: %(type)s"
 
 #. module: hr_recruitment_skills
-#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_candidate_skill__unique_skill
+#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_candidate_skill_HrCandidateSkill__unique_skill
 msgid "Two levels for the same skill is not allowed"
 msgstr "Hai cấp độ cho cùng một kỹ năng không được phép"
 

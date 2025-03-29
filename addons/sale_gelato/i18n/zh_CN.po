@@ -3,16 +3,16 @@
 # 	* sale_gelato
 # 
 # Translators:
-# Wil Odoo, 2025
 # Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-04 14:39+0000\n"
+"POT-Creation-Date: 2025-03-27 20:37+0000\n"
 "PO-Revision-Date: 2025-02-09 04:00+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,6 +133,19 @@ msgid "Could not synchronize with Gelato"
 msgstr "无法与 Gelato 同步"
 
 #. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_product_document__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_res_partner__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "显示名称"
+
+#. module: sale_gelato
 #: model:delivery.carrier,name:sale_gelato.express_delivery
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
 msgid "Express Delivery"
@@ -144,6 +157,7 @@ msgid "Express Delivery (Gelato)"
 msgstr "快递送货（Gelato）"
 
 #. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__module_sale_gelato
 #: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
@@ -210,6 +224,19 @@ msgid "Gelato: Order status update"
 msgstr "Gelato：订单状态更性"
 
 #. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__id
+#: model:ir.model.fields,field_description:sale_gelato.field_product_document__id
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__id
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__id
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__id
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__id
+#: model:ir.model.fields,field_description:sale_gelato.field_res_partner__id
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_gelato.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_gelato
 #: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
 msgid "Is Gelato"
 msgstr "是 Gelato"
@@ -230,6 +257,11 @@ msgstr "缺失打印图像"
 #: code:addons/sale_gelato/models/product_template.py:0
 msgid "Missing product variants and images have been successfully created."
 msgstr "已成功创建缺失的产品变体和图像。"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr "通过 Gelato 的按需印刷服务下订单"
 
 #. module: sale_gelato
 #: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form

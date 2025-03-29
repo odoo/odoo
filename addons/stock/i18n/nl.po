@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:57+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -1189,11 +1189,12 @@ msgid "Allowed Route"
 msgstr "Toegestane route"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Toegestane maateenheid"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -1333,6 +1334,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Aangezien andere maateenheden (bijv. %(problem_uom)s) dan %(uom)s al zijn "
+"gebruikt voor dit product, kan de maateenheid niet worden gewijzigd. Als je "
+"dit wilt wijzigen, archiveer dan het product en maak een nieuw product aan."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -6483,6 +6487,11 @@ msgid "Packaging"
 msgstr "Verpakking"
 
 #. module: stock
+#: model:ir.actions.report,name:stock.label_packaging_barcode
+msgid "Packaging Barcodes (ZPL)"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
 msgid "Packaging Height"
 msgstr "Verpakkingshoogte"
@@ -7474,7 +7483,7 @@ msgstr "Reden"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__message
 msgid "Reason for relocation"
-msgstr "Reden van verhuizing"
+msgstr "Reden van verplaatsing"
 
 #. module: stock
 #. odoo-javascript
@@ -9171,7 +9180,6 @@ msgstr "Partij/serienummer (%s) is gekoppeld aan een ander product."
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
-#, python-format
 msgid ""
 "The Picking Operations report has been deleted so you cannot print at this "
 "time unless the report is restored."

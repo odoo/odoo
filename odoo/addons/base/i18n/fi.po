@@ -2739,7 +2739,7 @@ msgid ""
 "* Cost structure report\n"
 msgstr ""
 "\n"
-"Analyyttinen kirjanpito MRP-valmistusmoduulissa\n"
+"Analyyttinen kirjanpito Tarvelaskennassa\n"
 "==========================\n"
 "\n"
 "* Kustannusrakenneraportti\n"
@@ -2759,12 +2759,12 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Analyyttinen kirjanpito MRP:ssä\n"
+"Analyyttinen kirjanpito Tarvelaskennassa\n"
 "==========================\n"
 "\n"
 "* Kustannusrakenneraportti\n"
 "\n"
-"Mahdollistaa myös tuotteen kustannusten laskemisen sen BoM:n perusteella käyttäen sen komponenttien ja työkeskustoimintojen kustannuksia.\n"
+"Mahdollistaa myös tuotteen kustannusten laskemisen sen materiaaliluettelon perusteella käyttäen sen komponenttien ja työkeskustoimintojen kustannuksia.\n"
 "Se lisää painikkeen itse tuotteeseen, mutta myös toiminnon tuotteiden luettelonäkymään.\n"
 "Jos automaattinen varaston arvonmääritys on aktiivinen, tarvittavat kirjanpitokirjaukset luodaan.\n"
 "\n"
@@ -6999,17 +6999,17 @@ msgstr ""
 "============================\n"
 "\n"
 "Tämän sovelluksen avulla voit hallita työntekijöidesi päivittäisiä kuluja. Se antaa sinulle pääsyn työntekijöidesi palkkiomerkintöihin ja antaa sinulle oikeuden täydentää ja vahvistaa tai hylätä merkinnät. Vahvistuksen jälkeen se luo työntekijälle laskun.\n"
-"Työntekijä voi koodata omat kulunsa, ja validointivirta siirtää sen automaattisesti kirjanpitoon johtajien validoinnin jälkeen.\n"
+"Työntekijä voi koodata omat kulunsa, ja vahvistuskulku siirtää sen automaattisesti kirjanpitoon esimiesten vahvistuksen jälkeen.\n"
 "\n"
 "\n"
-"Koko virtaus on toteutettu seuraavasti:\n"
+"Koko työnkulku on toteutettu seuraavasti:\n"
 "---------------------------------\n"
 "* Kululuonnos\n"
 "* Työntekijä toimittaa sen esimiehelleen\n"
-"* Esimiehen hyväksymä\n"
-"* Kirjanpitäjä validoi ja luo kirjanpitokirjaukset\n"
+"* Esimies hyväksyy sen\n"
+"* Kirjanpitäjä vahvistaa ja luo kirjanpitokirjaukset\n"
 "\n"
-"Tässä moduulissa käytetään myös analyyttistä kirjanpitoa ja se on yhteensopiva laskutus työaikataulusta -moduulin kanssa, jotta voit laskuttaa asiakkaidesi kulut automaattisesti uudelleen, jos työskentelet projektikohtaisesti.\n"
+"Tässä moduulissa käytetään myös analyyttistä kirjanpitoa ja se on yhteensopiva \"laskutus työaikakirjausten perusteella\" -moduulin kanssa, jotta voit laskuttaa asiakkaidesi kulut automaattisesti uudelleen, jos työskentelet projektikohtaisesti.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_management
@@ -20846,7 +20846,7 @@ msgstr "Konsultointipalvelut"
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -25217,7 +25217,7 @@ msgstr "Suotimen nimen pitää olla yksilöllinen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Filter on my documents"
-msgstr "Suodata dokumenttejani"
+msgstr "Suodata asiakirjojani"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_filters
@@ -25231,7 +25231,7 @@ msgstr "Suotimet"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters created by myself"
-msgstr "Omat suotimeni"
+msgstr "Omat suodattimeni"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_search
@@ -45857,7 +45857,7 @@ msgstr "esim. massa-arkiston yhteystiedot"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
 msgid "e.g. My Company"
-msgstr "esim. Oma Yritys"
+msgstr "esim. Oma Yritykseni"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form

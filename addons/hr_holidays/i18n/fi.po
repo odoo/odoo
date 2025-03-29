@@ -3,8 +3,8 @@
 # 	* hr_holidays
 # 
 # Translators:
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,7 +99,7 @@ msgstr "%(leave_type)s: %(duration)s (%(start)s)"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_allocation_generate_multi_wizard.py:0
 msgid "%(name)s (%(duration)s %(request_unit)s(s))"
-msgstr "%(name)s (%(duration)s %(request_unit)s(s))"
+msgstr "%(name)s (%(duration)s %(request_unit)s(t))"
 
 #. module: hr_holidays
 #. odoo-python
@@ -154,7 +154,7 @@ msgstr "%s (kopio)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%s: Time Off"
-msgstr "%s: Poissa"
+msgstr "%s: Vapaat"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -290,7 +290,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                            Vapaa-aika\n"
+"                            Vapaat\n"
 "                        </span>"
 
 #. module: hr_holidays
@@ -301,13 +301,13 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                           Vapaa-aika\n"
+"                           Vapaat\n"
 "                        </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Accruals</span>"
-msgstr "<span class=\"o_stat_text\">Karttumat</span>"
+msgstr "<span class=\"o_stat_text\">Kertymät</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -317,7 +317,7 @@ msgstr "<span class=\"o_stat_text\">Kohdistukset</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr "<span class=\"o_stat_text\">Vapaa-aika</span>"
+msgstr "<span class=\"o_stat_text\">Vapaat</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -344,7 +344,7 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>\n"
 "                    ("
 msgstr ""
-"<span>Työntekijällä on eri aikavyöhyke kuin sinulla! Tässä päivämäärät ja kellonajat näytetään työntekijän aikavyöhykkeellä</span>\n"
+"<span>Työntekijällä on eri aikavyöhyke kuin sinulla! Päivämäärät ja kellonajat näytetään työntekijän aikavyöhykkeellä</span>\n"
 "                   ("
 
 #. module: hr_holidays
@@ -384,14 +384,13 @@ msgid ""
 "A great way to keep track on your time off requests, sick days, and approval"
 " status."
 msgstr ""
-"Loistava tapa seurata vapaa-aikapyyntöjäsi, sairauspäiviäsi ja hyväksynnän "
-"tilaa."
+"Loistava tapa seurata lomapyyntöjäsi, sairauslomia ja hyväksynnän tilaa."
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "A time off cannot be duplicated."
-msgstr "Vapaa-aikaa ei voi kahdentaa."
+msgstr "Vapaasta ei voi luoda kaksoiskappaletta."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__show_leaves
@@ -399,7 +398,7 @@ msgstr "Vapaa-aikaa ei voi kahdentaa."
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
 msgid "Able to see Remaining Time Off"
-msgstr "Pystyy näkemään jäljellä olevan vapaa-ajan"
+msgstr "Näet jäljellä olevat vapaat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__leave
@@ -419,7 +418,7 @@ msgid ""
 "validated on today"
 msgstr ""
 "Poissa olevat työntekijät, joiden vapaata koskevat pyynnöt on joko "
-"vahvistettu tai varmistettu tänään"
+"vahvistettu tai validoitu tänään"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_employee_action_from_department
@@ -445,12 +444,12 @@ msgstr "Kertymä (tuleva):"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr "Karttumien kohdentaminen"
+msgstr "Kertymän kohdentaminen"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Accrual Level"
-msgstr "Karttumataso"
+msgstr "Kertymän taso"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_plan
@@ -459,30 +458,30 @@ msgstr "Karttumataso"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__accrual_plan_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Accrual Plan"
-msgstr "Karttumajärjestelmä"
+msgstr "Kertymäsuunnitelma"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr "Karttumajärjestelmän taso"
+msgstr "Kertymäsuunnitelman taso"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Accrual Plan's Employees"
-msgstr "Karttumajärjestelmän työntekijät"
+msgstr "Kertymissuunnitelman työntekijät"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_accrual_plans
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_accrual_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_tree
 msgid "Accrual Plans"
-msgstr "Karttumajärjestelmän suunnitelmat"
+msgstr "Kertymissuunnitelmat"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr "Karttuneet vapaat: Päivittää vapaiden määrän"
+msgstr "Kertyneet vapaat: Päivittää vapaiden määrän"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrual_validity
@@ -502,12 +501,12 @@ msgstr "Kertymä voimassaolon tyyppi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accruals_ids
 msgid "Accruals"
-msgstr "Karttumat"
+msgstr "Kertymät"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__accrual_count
 msgid "Accruals count"
-msgstr "Karttumien määrä"
+msgstr "Kertymän määrä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__accrued_gain_time
@@ -542,7 +541,7 @@ msgstr "Aktiivinen työntekijä"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 msgid "Active but on leave"
-msgstr "Aktiivinen mutta lomalla"
+msgstr "Aktiivinen, mutta lomalla"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_ids
@@ -566,7 +565,7 @@ msgstr "Toimenpiteen tila"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Toimenpiteen ikoni"
+msgstr "Toimenpidetyypin kuvake"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.mail_activity_type_action_config_hr_holidays
@@ -605,7 +604,7 @@ msgstr "Ylläpitäjä"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__end_of_accrual
 msgid "After this accrual's period"
-msgstr "Tämän karttuman jakson jälkeen"
+msgstr "Tämän kertymäjakson jälkeen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__request_date_from_period__pm
@@ -621,7 +620,7 @@ msgstr "Kaikki varaukset"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_action_approve_department
 msgid "All Time Off"
-msgstr "Kaikki vapaa-aika"
+msgstr "Kaikki vapaat"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__all
@@ -664,7 +663,7 @@ msgstr "Varausten hyväksyntä"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr "Kohdistuksen näyttö"
+msgstr "Kertymän näyttö"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_mode
@@ -675,7 +674,7 @@ msgstr "Varaustapa"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr "Kohdistusilmoituksen alatyyppi"
+msgstr "Kertymäilmoituksen alityyppi"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_remaining_display
@@ -683,7 +682,7 @@ msgstr "Kohdistusilmoituksen alatyyppi"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_remaining_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_remaining_display
 msgid "Allocation Remaining Display"
-msgstr "Kohdistuksen jäljellä oleva näyttö"
+msgstr "Kertymästa jäljellä -näyttö"
 
 #. module: hr_holidays
 #. odoo-python
@@ -716,7 +715,7 @@ msgstr "Varauksen toinen hyväksyntä"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allocation_type
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Allocation Type"
-msgstr "Kohdistustyyppi"
+msgstr "Kertymän tyyppi"
 
 #. module: hr_holidays
 #. odoo-python
@@ -733,13 +732,13 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Allocation of %(leave_type)s: %(amount).2f %(unit)s to %(target)s"
 msgstr ""
-"Varatun %(leave_type)s:n jakaminen: %(amount).2f %(unit)s - %(target)s: "
-"%(amount).2f %(unit)s - %(target)s"
+"%(leave_type)s:n jakaminen: %(amount).2f %(unit)s - %(target)s: %(amount).2f"
+" %(unit)s - %(target)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__week_day
 msgid "Allocation on"
-msgstr "Kohdistuksen kohdentaminen"
+msgstr "Jakaminen"
 
 #. module: hr_holidays
 #. odoo-python
@@ -748,8 +747,8 @@ msgid ""
 "Allocation request must be confirmed, second approval or validated in order "
 "to refuse it."
 msgstr ""
-"Varauspyyntö on vahvistettava, toisen hyväksyttävä tai validoitava, jotta se"
-" voidaan hylätä."
+"Varauspyyntö on vahvistettava, toiseen kertaan hyväksyttävä tai validoitava,"
+" jotta se voidaan hylätä."
 
 #. module: hr_holidays
 #. odoo-python
@@ -847,7 +846,7 @@ msgstr "Hyväksy"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr "Hyväksy kohdistukset"
+msgstr "Hyväksy varaukset"
 
 #. module: hr_holidays
 #. odoo-python
@@ -872,7 +871,7 @@ msgstr "Hyväksytty"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Approved Requests"
-msgstr "Hyväksytyt poissaolopyynnöt"
+msgstr "Hyväksytyt pyynnöt"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -899,7 +898,7 @@ msgstr "Arkistoitu"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 msgid "Are you sure you want to delete this record?"
-msgstr "Oletko varma että haluat poistaa tämän tietueen?"
+msgstr "Oletko varma, että haluat poistaa tämän kirjauksen?"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -916,7 +915,7 @@ msgstr "Nuolen kuvake"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_date__allocation
 msgid "At the allocation date"
-msgstr "Myöntämispäivänä"
+msgstr "Varauspäivänä"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__accrued_gain_time__end
@@ -968,14 +967,14 @@ msgid ""
 "Automatic time off spliting during batch generation is not managed for ovelapping time off declared in hours. Conflicting time off:\n"
 "%s"
 msgstr ""
-"Automaattista vapaa-ajan jakamista eräajon suorittamisen aikana ei hallita, jos tuntien muodossa ilmoitetut vapaa-ajat ovat päällekkäisiä. Ristiriitaiset vapaat:\n"
+"Automaattista vapaiden jakamista erien luomisen aikana ei hallita tunteina ilmoitettujen vapaiden osalta, jos ne ovat päällekkäisiä. Ristiriitaiset vapaat:\n"
 "%s"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Available"
-msgstr "Saatavilla"
+msgstr "Käytettävissä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__remaining_leaves
@@ -988,7 +987,7 @@ msgstr "Käytettävissä olevat vapaapäivät"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 msgid "Available:"
-msgstr "Saatavilla:"
+msgstr "Käytettävissä:"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1041,7 +1040,7 @@ msgstr "Sekä hyväksytty että vahvistettu."
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__company
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_generate_multi_wizard__allocation_mode__company
 msgid "By Company"
-msgstr "Yrityksittäin"
+msgstr "Yrityksen perusteella"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__department
@@ -1053,31 +1052,31 @@ msgstr "Osaston mukaan"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__employee
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_generate_multi_wizard__allocation_mode__employee
 msgid "By Employee"
-msgstr "Työntekijöittäin"
+msgstr "Työntekijän perusteella"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation_generate_multi_wizard__allocation_mode__category
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_generate_multi_wizard__allocation_mode__category
 msgid "By Employee Tag"
-msgstr "Työntekijätunnisteittain"
+msgstr "Työntekijöiden tunnisteiden perusteella"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__manager
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__manager
 msgid "By Employee's Approver"
-msgstr "Työntekijän hyväksyjä"
+msgstr "Työntekijän hyväksyjän perusteella"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "Työntekijän hyväksyjä ja vapaa-aikapäällikkö"
+msgstr "Työntekijän hyväksyjä ja lomapäällikkö"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Vapaa-aikapäällikön tekemänä"
+msgstr "Lomapäällikön perusteella"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_calendar_event
@@ -1103,7 +1102,7 @@ msgstr "Voi muuttaa arvotyyppiä"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__can_reset
 msgid "Can reset"
-msgstr "Voi alustaa"
+msgstr "Voi palauttaa"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1120,12 +1119,12 @@ msgstr "Peruuta"
 #: code:addons/hr_holidays/static/src/views/hooks.js:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Cancel Time Off"
-msgstr "Peruuta vapaa-aika"
+msgstr "Peruuta vapaat"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Time Off Wizard"
-msgstr "Peruuta vapaa-aika ohjatulla toiminnolla"
+msgstr "Ohjattu vapaiden peruuttaminen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1145,7 +1144,7 @@ msgstr "Peruttu"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Cancelled Time Off"
-msgstr "Peruutettu vapaa-aika"
+msgstr "Peruutetetut vapaat"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time
@@ -1160,7 +1159,7 @@ msgstr "Yläraja:"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__carried_over_days_expiration_date
 msgid "Carried over days expiration date"
-msgstr "Siirretty yli päivien voimassaolon päättymispäivän"
+msgstr "Siirrettyjen päivien voimassaolon päättymispäivä"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -1171,7 +1170,7 @@ msgstr "Siirretty voimassaolo"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__action_with_unused_accruals
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
 msgid "Carry over"
-msgstr "Siirto"
+msgstr "Siirrä"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__action_with_unused_accruals__maximum
@@ -1181,7 +1180,7 @@ msgstr "Siirto enintään"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Carry over:"
-msgstr "Siirto:"
+msgstr "Siirrä:"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -1233,8 +1232,8 @@ msgid ""
 "Choose the Time Off Officers who will be notified to approve allocation or "
 "Time Off Request. If empty, nobody will be notified"
 msgstr ""
-"Valitse vapaapäivävastaavat, joille ilmoitetaan vapaiden myöntämisen tai "
-"vapaapyynnön hyväksymisestä. Jos vastaus on tyhjä, kenellekään ei ilmoiteta"
+"Valitse lomapäälliköt, joille ilmoitetaan vapaiden myöntämisestä tai "
+"vapaapyynnön hyväksymisestä. Jos valinta on tyhjä, kenellekään ei ilmoiteta"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1274,13 +1273,13 @@ msgstr "Yritys"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.holiday_status_comp
 msgid "Compensatory Days"
-msgstr "Palkalliset päivät"
+msgstr "Korvauspäivät"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Configuration"
-msgstr "Asetukset"
+msgstr "Kokoonpano"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1309,7 +1308,7 @@ msgstr "Onnittelut. Näemme, että pyyntösi on vahvistettu."
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1317,13 +1316,13 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
-"Tämäntyyppisten (hyväksyttyjen tai hyväksyntää odottavien) vapaapäivien "
-"määrä, joiden voimassaoloaika alkaa tänä vuonna."
+"Tämäntyyppisten (hyväksyttyjen tai hyväksyntää odottavien) vapaaiden määrä, "
+"joiden voimassaoloaika alkaa tänä vuonna."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Count of plans linked to this time off type."
-msgstr "Tähän vapaatyyppiin liittyvien suunnitelmien lukumäärä."
+msgstr "Tähän lomtyyppiin liittyvien suunnitelmien lukumäärä."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1331,8 +1330,8 @@ msgid ""
 "Count of time off requests for this time off type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
-"Tämän tyyppisten (hyväksyttyjen tai hyväksyntää odottavien) vapaa-"
-"aikahakemusten lukumäärä, joiden alkamispäivä on kuluvana vuonna."
+"Tämän tyyppisten (hyväksyttyjen tai hyväksyntää odottavien) lomapyyntöjen "
+"lukumäärä, joiden alkamispäivä on kuluvana vuonna."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__country_id
@@ -1358,13 +1357,13 @@ msgstr "Luo varauksia"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr "Luo uusi vapaa-ajan kohdennus"
+msgstr "Luo uusi lomavaraus"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr "Luo uusi vapaa-ajan kohdentamista koskeva pyyntö"
+msgstr "Luo uusi lomavarauspyyntö"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__create_uid
@@ -1400,12 +1399,12 @@ msgstr "Luotu"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__current_leave_state
 msgid "Current Time Off Status"
-msgstr "Nykyinen vapaa-ajan tila"
+msgstr "Nykyisten vapaiden tila"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
 msgid "Current Time Off Type"
-msgstr "Nykyinen vapaa-aikatyyppi"
+msgstr "Nykyisten vapaiden tyyppi"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -1432,7 +1431,7 @@ msgstr "Päivittäin"
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_new_request
 #: model:ir.ui.menu,name:hr_holidays.hr_leave_menu_new_request
 msgid "Dashboard"
-msgstr "Työpöytä"
+msgstr "Koontinäyttö"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1447,12 +1446,12 @@ msgstr "Jakso alkaa"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__lastcall
 msgid "Date of the last accrual allocation"
-msgstr "Viimeisimmän suoriteperusteisen karttuman kohdentamispäivä"
+msgstr "Viimeisimmän lomakertymän varauspäivä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__nextcall
 msgid "Date of the next accrual allocation"
-msgstr "Seuraavan karttuman kohdentamisen päivä"
+msgstr "Seuraavan lomakertymän varauspäivä"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
@@ -1492,8 +1491,8 @@ msgid ""
 "Define the maximum level of negative days this kind of time off can reach. "
 "Value must be at least 1."
 msgstr ""
-"Määrittele negatiivisten päivien enimmäismäärä, jonka tällainen vapaapäivä "
-"voi saavuttaa. Arvon on oltava vähintään 1."
+"Määrittele negatiivisten päivien enimmäismäärä, joka sallitaan tällaiselle "
+"lomalle. Arvon on oltava vähintään 1."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1591,7 +1590,7 @@ msgstr "Näyttövaihtoehto"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr "Näyttää vapaa-aika kalenterissa"
+msgstr "Näyttää vapaat ja lomat kalenterissa"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1613,7 +1612,7 @@ msgid ""
 "this leave."
 msgstr ""
 "Yleisten vapaapäivien muutoksesta johtuen tätä lomaa ei ole enää "
-"käytettävissä tarvittava määrä, ja se on hylätty. Tarkista tämä loma "
+"käytettävissä tarvittavaa määrää, ja se on hylätty. Tarkista tämä loma "
 "uudelleen."
 
 #. module: hr_holidays
@@ -1622,8 +1621,7 @@ msgstr ""
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
-"Yleisten vapaapäivien muutoksen vuoksi sinulle on myönnetty %s päivää "
-"takaisin."
+"Yleisten vapaiden muutoksen vuoksi sinulle on myönnetty %s päivää takaisin."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
@@ -1666,7 +1664,7 @@ msgstr "Muokkaa varausta"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Edit Time Off"
-msgstr "Muokkaa vapaa-aikaa"
+msgstr "Muokkaa Vapaita"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee
@@ -1712,7 +1710,7 @@ msgstr "Työntekijän kertymä"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban_approve_department
 msgid "Employee's image"
-msgstr ""
+msgstr "Työntekijän kuva"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__emp
@@ -1764,9 +1762,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
-"Lisäpäiviä koskevat pyynnöt sallittu: Käyttäjä voi pyytää kohdentamista itselleen.\n"
+"Lisäpäiviä koskevat pyynnöt sallittu: Käyttäjä voi pyytää varausta itselleen.\n"
 "\n"
-"        Ei sallittu: Käyttäjä ei voi pyytää kohdentamista."
+"        Ei sallittu: Käyttäjä ei voi pyytää varausta."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -1781,8 +1779,8 @@ msgid ""
 "Field allowing to see the allocation duration in days or hours depending on "
 "the type_request_unit"
 msgstr ""
-"Kenttä, jonka avulla voidaan nähdä kohdentamisen jakamisen kesto päivinä tai"
-" tunteina type_request_unit-tyypin mukaan"
+"Kenttä, jonka avulla voidaan nähdä lomakertymän kesto päivinä tai tunteina "
+"type_request_unit-tyypin mukaan"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__duration_display
@@ -1842,7 +1840,7 @@ msgstr "Seuraajat (kumppanit)"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -ikoni esim.. fa-tasks"
+msgstr "Font awesome -kuvake, esim. fa-tasks"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_days_display
@@ -1852,10 +1850,10 @@ msgid ""
 "given to the employee, due to a previous start date, on the first run of the"
 " plan. This can be manually edited."
 msgstr ""
-"Kun kyseessä on suoriteperusteinen kohdentaminen, tämä kenttä sisältää "
-"teoreettisen ajan määrän, joka työntekijälle on annettu aikaisemman "
-"aloituspäivän vuoksi ohjelman ensimmäisellä ajokerralla. Tätä kenttää "
-"voidaan muokata manuaalisesti."
+"Kun kyseessä on lomakertymien varaus, tämä kenttä sisältää teoreettisen ajan"
+" määrän, joka työntekijälle on annettu aikaisemman aloituspäivän vuoksi "
+"ohjelman ensimmäisellä ajokerralla. Tätä kenttää voidaan muokata "
+"manuaalisesti."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__frequency
@@ -1872,7 +1870,7 @@ msgstr "Perjantai"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__start_datetime
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "From"
-msgstr "Alkaa"
+msgstr "Alkaen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
@@ -1890,19 +1888,19 @@ msgstr "Tulevat toimenpiteet"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
-msgstr "Luo vapaa-aika"
+msgstr "Luo vapaita"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_allocation_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_generate_multi_wizard_view_form
 msgid "Generate time off allocations for multiple employees"
-msgstr "Luo vapaa-ajan varaukset useille työntekijöille"
+msgstr "Luo lomavaraukset useille työntekijöille"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_generate_multi_wizard
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate time off for multiple employees"
-msgstr "Luo vapaata useille työntekijöille"
+msgstr "Luo vapaita useille työntekijöille"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1914,7 +1912,7 @@ msgstr "Luodut varaukset"
 #. odoo-python
 #: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
 msgid "Generated Time Off"
-msgstr "Luotu vapaa-aika"
+msgstr "Luodut vapaat"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1934,7 +1932,7 @@ msgstr "Ryhmittely"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__group_days_leave
 msgid "Group Time Off"
-msgstr "Ryhmittele vapaa-aika"
+msgstr "Ryhmittele vapaita"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
@@ -1944,7 +1942,7 @@ msgstr "HR-hyväksyntä"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Time Off Summary Report By Employee"
-msgstr "HR:n vapaa-ajan yhteenvetoraportti työntekijän mukaan"
+msgstr "HR:n Vapaiden yhteenvetoraportti työntekijöittäin"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_unit_half
@@ -1972,13 +1970,13 @@ msgstr "Sisältää viestin"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__has_valid_allocation
 msgid "Has Valid Allocation"
-msgstr "Sisältää voimassa olevan kohdentamisen"
+msgstr "Sisältää voimassa olevan lomavarauksen"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_hatched
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_hatched
 msgid "Hatched"
-msgstr "Kuoriutunut"
+msgstr "Ristikoitu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_employee_type_report__holiday_status
@@ -1998,7 +1996,7 @@ msgstr "Tunnit alkaen"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__request_hour_to
 msgid "Hour to"
-msgstr "Tunnit asti"
+msgstr "Tunnit"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__hourly
@@ -2061,7 +2059,7 @@ msgstr "Kuvake"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_exception_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake, joka kertoo poikkeustoiminnosta."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2118,15 +2116,15 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the time off "
 "type without removing it."
 msgstr ""
-"Jos aktiivinen-kentän arvoksi on asetettu false, voit piilottaa vapaatyypin "
-"poistamatta sitä."
+"Jos aktiivisen kentän arvoksi on asetettu epätosi (false), voit piilottaa "
+"lomatyypin poistamatta sitä."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_duration_check
 msgid ""
 "If you want to change the number of days you should use the 'period' mode"
 msgstr ""
-"Jos haluat muuttaa päivien lukumäärää, sinun on käytettävä 'period'-tilaa"
+"Jos haluat muuttaa päivien lukumäärää, sinun on käytettävä 'kausi'-tilaa"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__transition_mode__immediately
@@ -2137,7 +2135,7 @@ msgstr "Välittömästi"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "Incorrect state for new allocation"
-msgstr "Väärä tila uutta kohdennusta varten"
+msgstr "Väärä tila uutta varausta varten"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
@@ -2175,7 +2173,7 @@ msgstr "Tammikuu"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__job_id
 msgid "Job"
-msgstr "Tehtävä"
+msgstr "Työtehtävä"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2200,12 +2198,12 @@ msgstr "Kesäkuu"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 msgid "Keep track of your PTOs."
-msgstr "Pidä kirjaa vapaapäivistäsi."
+msgstr "Pidä kirjaa vapaistasi."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__time_type
 msgid "Kind of Time Off"
-msgstr "Eräänlainen vapaa-aika"
+msgstr "Eräänlainen loma"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave__write_uid
@@ -2244,7 +2242,7 @@ msgstr "Myöhässä olevat toimenpiteet"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__leave_id
 msgid "Leave"
-msgstr "Poissaolo"
+msgstr "Loma"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__leave_type_increases_duration
@@ -2260,7 +2258,7 @@ msgstr "Vasen"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/filter_panel/calendar_filter_panel.xml:0
 msgid "Legend"
-msgstr "Legenda"
+msgstr "Vanhentunut"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2272,7 +2270,7 @@ msgstr "Hyväksytään se"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's discover the Time Off application"
-msgstr "Tutustutaan Time Off -sovellukseen"
+msgstr "Tutustutaan Vapaat-sovellukseen"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2284,7 +2282,7 @@ msgstr "Mennään vahvistamaan se"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 msgid "Let's try to create a Sick Time Off, select it in the list"
-msgstr "Yritetään luoda sairausloma, valitse se luettelosta"
+msgstr "Yritetään luoda sairausloma; valitse se luettelosta"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_count
@@ -2347,22 +2345,22 @@ msgstr "Merkitse valmiiksi hyväksyttäväksi"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
 msgid "Max Leaves"
-msgstr "Suurin määrä poissaoloja"
+msgstr "Sallittu lomien enimmäismäärä"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
 msgid "Max Time Off:"
-msgstr "Suurin määrä poissaoloja:"
+msgstr "Sallittu vapaiden enimmäismäärä:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_leaves
 msgid "Maximum Allowed"
-msgstr "Maksimissaan sallittu"
+msgstr "Sallittu enimmäismäärä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__max_allowed_negative
 msgid "Maximum Excess Amount"
-msgstr "Suurin ylittävä määrä"
+msgstr "Suurin sallittu ylittävä määrä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__virtual_remaining_leaves
@@ -2370,13 +2368,13 @@ msgid ""
 "Maximum Time Off Allowed - Time Off Already Taken - Time Off Waiting "
 "Approval"
 msgstr ""
-"Suurin sallittu vapaa-aika - jo otettu vapaa-aika - hyväksyntää odottava "
-"vapaa-aika"
+"Vapaiden sallittu enimmäismäärä - jo pidetyt vapaat - hyväksyntää odottavat "
+"vapaat"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Maximum amount of accruals to transfer"
-msgstr "Siirrettävien karttumien enimmäismäärä"
+msgstr "Siirrettävien kertymien enimmäismäärä"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__may
@@ -2389,7 +2387,7 @@ msgstr "Toukokuu"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid "Meet the time off dashboard."
-msgstr "Tutustu vapaapäivien mittaristoon."
+msgstr "Tutustu vapaiden koontinäyttöön."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -2416,7 +2414,7 @@ msgstr "Viestit"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_ids
 msgid "Milestone"
-msgstr "Virstanpylväs"
+msgstr "Välitavoite"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
@@ -2479,7 +2477,7 @@ msgstr "Toimenpiteeni määräaika"
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Allocations"
-msgstr "Omat varaukset"
+msgstr "Omat varaukseni"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
@@ -2487,7 +2485,7 @@ msgstr "Omat varaukset"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Department"
-msgstr "Oma osasto"
+msgstr "Oma osastoni"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -2499,7 +2497,7 @@ msgstr "Omat pyyntöni"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "My Team"
-msgstr "Oma tiimi"
+msgstr "Oma tiimini"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
@@ -2542,13 +2540,13 @@ msgstr "Uusi %(leave_type)s pyyntö, jonka on luonut %(user)s"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/hooks.js:0
 msgid "New Allocation"
-msgstr "Uusi kohdennus"
+msgstr "Uusi varaus"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/dashboard/time_off_dashboard.xml:0
 msgid "New Allocation Request"
-msgstr "Uusi kohdentamispyyntö"
+msgstr "Uusi varauspyyntö"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2557,19 +2555,19 @@ msgid ""
 "New Allocation Request created by %(user)s: %(count)s Days of "
 "%(allocation_type)s"
 msgstr ""
-"Uusi kohdennuspyyntö, jonka on luonut %(user)s: %(count)s päiviä "
+"Uusi kohdennuspyyntö, jonka on luonut %(user)s: %(count)s päivää "
 "%(allocation_type)s"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "New Milestone"
-msgstr "Uusi virstanpylväs"
+msgstr "Uusi välitavoite"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.js:0
 msgid "New Time Off"
-msgstr "Uusi vapaa-aika"
+msgstr "Uusi loma"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -2631,7 +2629,7 @@ msgstr "Ei rajoituksia"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No rule has been set up for this accrual plan."
-msgstr "Tätä karttumasuunnitelmaa varten ei ole laadittu sääntöjä."
+msgstr "Tätä kertymissuunnitelmaa varten ei ole laadittu sääntöjä."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2661,12 +2659,12 @@ msgstr "Ei mitään. Kertynyt aika nollautuu 0:ksi"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__employee_requests__no
 msgid "Not Allowed"
-msgstr "Ei Sallittu"
+msgstr "Ei sallittu"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_ids
 msgid "Notified Time Off Officer"
-msgstr "Ilmoitettu vapaa-aika Virkamies"
+msgstr "Lomapäällikälle ilmoitettu"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__second_month__nov
@@ -2702,12 +2700,12 @@ msgstr "Tuntimäärä"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leaves_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leaves_count
 msgid "Number of Time Off"
-msgstr "Vapaa-aikojen määrä"
+msgstr "Vapaiden määrä"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days
 msgid "Number of days of the time off request. Used in the calculation."
-msgstr "Vapaapäivien lukumäärä. Käytetään laskennassa."
+msgstr "Vapaiden lukumäärä. Käytetään laskennassa."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error_counter
@@ -2718,7 +2716,7 @@ msgstr "Virheiden määrä"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_hours
 msgid "Number of hours of the time off request. Used in the calculation."
-msgstr "Vapaa-aikapyynnön tuntimäärä. Käytetään laskennassa."
+msgstr "Lomapyynnön tuntimäärä. Käytetään laskennassa."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction_counter
@@ -2747,21 +2745,21 @@ msgstr "Pois tänään"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "Officer: Manage all requests"
-msgstr "Esimies: Hallinnoi kaikki pyynnöt"
+msgstr "Esimies: Hallinnoi kaikkia pyyntöjä"
 
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/avatar_card_resource_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "On Time Off"
-msgstr "Vapaa-aikana"
+msgstr "Vapaalla"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_base__hr_icon_display__presence_holiday_absent
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee_public__hr_icon_display__presence_holiday_absent
 msgid "On leave"
-msgstr "Vapaalla"
+msgstr "Lomilla"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2785,8 +2783,8 @@ msgid ""
 "Only %s's Time Off Approver, a time off Officer/Responsible or Administrator"
 " can approve or refuse allocation requests."
 msgstr ""
-"Ainoastaan %sn vapaa-ajan hyväksyjä, vapaa-ajasta vastuullinen esimies tai "
-"pääkäyttäjä voi hyväksyä tai hylätä varauspyynnöt."
+"Ainoastaan %s:n vapaiden hyväksyjä, lomapäällikkä tai pääkäyttäjä voi "
+"hyväksyä tai hylätä varauspyynnöt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -3670,7 +3668,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
 msgid "This company does not have any employees."
-msgstr ""
+msgstr "Tällä yritysellä ei ole yhtäkään työntekijää"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_type

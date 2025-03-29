@@ -3,17 +3,17 @@
 # 	* hr_attendance
 # 
 # Translators:
+# Wil Odoo, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
-# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-06 13:57+0000\n"
+"POT-Creation-Date: 2025-03-27 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,8 +150,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"Lisää muutama työntekijä, jotta voit valita työntekijän täältä ja suorittaa hänen sisään-/uloskirjautumisensa.\n"
-"                Voit luoda työntekijöitä menemällä Työntekijät-valikkoon."
+"Lisää muutama työntekijä, jotta voit valita työntekijän tässä ja kirjata hänet sisään/ulos.\n"
+"                Voit luoda työntekijöitä siirtymällä Työntekijät-valikkoon."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
@@ -161,7 +161,7 @@ msgstr "Säätö"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
 msgid "Administrator"
-msgstr "Ylläpitäjä"
+msgstr "Järjestelmävalvoja"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -186,7 +186,7 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "counted, in benefit of the company"
 msgstr ""
-"Sallia yrityksen eduksi ajanjakso (työaikaan nähden), jolloin ylimääräistä "
+"Salli yrityksen eduksi ajanjakso (työaikaan nähden), jolloin ylimääräistä "
 "aikaa ei lasketa mukaan"
 
 #. module: hr_attendance
@@ -195,7 +195,7 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "deducted, in benefit of the employee"
 msgstr ""
-"Sallia työntekijän eduksi aika (työajan ympärillä), jolloin ylimääräistä "
+"Salli työntekijän eduksi aika (työajan ympärillä), jolloin ylimääräistä "
 "aikaa ei vähennetä"
 
 #. module: hr_attendance
@@ -269,24 +269,24 @@ msgstr "Osallistuminen Systraystä"
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_install_kiosk_pwa
 msgid "Attendance Kiosk"
-msgstr "Läsnäolokioski"
+msgstr "Läsnäolotabletti"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_delay
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_delay
 msgid "Attendance Kiosk Delay"
-msgstr "Läsnäolokioskin viive"
+msgstr "Läsnäolotabletin viive"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_key
 msgid "Attendance Kiosk Key"
-msgstr "Läsnäolokioskin avain"
+msgstr "Läsnäolotabletin avain"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_url
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_url
 msgid "Attendance Kiosk Url"
-msgstr "Läsnäolokioskin URL"
+msgstr "Läsnäolotabletin URL"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_mode
@@ -304,7 +304,7 @@ msgstr "Läsnäolo ylityö"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__attendance_state
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__attendance_state
 msgid "Attendance Status"
-msgstr "Läsnäolon tila"
+msgstr "Läsnäolon status"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -315,7 +315,7 @@ msgstr "Läsnäolo viivakoodilla"
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_check_out_cron_ir_actions_server
 msgid "Attendance: Automatically check-out employees"
-msgstr "Läsnäolo: Automaattisesti uloskirjautuvat työntekijät"
+msgstr "Läsnäolo: Kirjaa työntekijät ulos automaattisesti"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.hr_attendance_absence_cron_ir_actions_server
@@ -341,12 +341,12 @@ msgstr "Läsnäolot tässä kuussa"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances from Backend"
-msgstr "Läsnäolot Backendistä"
+msgstr "Läsnäolot palvelinpuolelta"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__auto_check_out_tolerance
 msgid "Auto Check Out Tolerance"
-msgstr "Automaattinen Uloskirjautuminen sallittu poikkeama"
+msgstr "Automaattisen uloskirjautumisen sallittu poikkeama"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__auto_check_out
@@ -371,13 +371,13 @@ msgid ""
 "Automatically Check-Out Employees based on their working schedule with an "
 "additional tolerance."
 msgstr ""
-"Kirjaudu automaattisesti ulos työntekijöistä heidän työaikataulujensa "
-"perusteella, ja sinulla on lisäasetuksia sallituissa aikarajoissa."
+"Kirjaa työntekijäsi ulos automaattisesti heidän työaikataulujensa "
+"perusteella, huomioiden sallitun poikkeaman työajoissa."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Automatically Checked-Out"
-msgstr "Automaattisesti uloskirjautunut"
+msgstr "Automaattisesti uloskirjattu"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -394,13 +394,13 @@ msgstr "Takakamera"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Badge with Barcode"
-msgstr "Nimilappu viivakoodilla"
+msgstr "Tunnuskortti viivakoodilla"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Badge with Barcode on Tablet"
-msgstr "Nimilappu viivakoodilla tabletissa"
+msgstr "Tunnuskortti viivakoodilla tabletissa"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_pivot
@@ -449,7 +449,7 @@ msgstr "Selain"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Can be converted as Time Off (cfr Time Off configuration)."
-msgstr "Voidaan muuntaa vapaa-ajaksi (vrt. Time Off -asetukset)."
+msgstr "Voidaan muuntaa vapaiksi (vrt. Vapaat-asetukset)."
 
 #. module: hr_attendance
 #. odoo-python
@@ -459,7 +459,7 @@ msgid ""
 "checked out since %(datetime)s"
 msgstr ""
 "Et voi luoda läsnäoloa työntekijälle %(empl_name)s, työntekijä ei ole "
-"kirjautunut ulos %(datetime)själkeen."
+"kirjautunut ulos %(datetime)s jälkeen."
 
 #. module: hr_attendance
 #. odoo-python
@@ -468,8 +468,8 @@ msgid ""
 "Cannot create new attendance record for %(empl_name)s, the employee was "
 "already checked in on %(datetime)s"
 msgstr ""
-"Et voi luoda läsnäoloa työntekijälle työntekijälle %(empl_name)s, työntekijä"
-" on edelleen kirjautuneena sisälle (%(datetime)s)."
+"Et voi luoda läsnäoloa työntekijälle %(empl_name)s, työntekijä on edelleen "
+"kirjautuneena sisään (%(datetime)s)."
 
 #. module: hr_attendance
 #. odoo-python
@@ -479,7 +479,7 @@ msgid ""
 "check in. Your attendances have probably been modified manually by human "
 "resources."
 msgstr ""
-"Et voi kirjata työntekijää %(empl_name)s ulos, koska työntekijälle ei löydy "
+"Et voi kirjata työntekijää %(empl_name)s ulos, koska työntekijällä ei ole "
 "sisäänkirautumista. Läsnäoloasi on saatettu muuttaa käsin "
 "henkilöstöhallinnan toimesta."
 
@@ -523,7 +523,7 @@ msgstr "Kirjaudu sisään"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Check out"
-msgstr "Lopeta"
+msgstr "Kirjaudu ulos"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee__attendance_state__checked_in
@@ -545,7 +545,7 @@ msgstr " Kirjautunut ulos"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Checked out at"
-msgstr " Kirjauduit ulos"
+msgstr " Kirjattu ulos"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -614,7 +614,7 @@ msgstr "Asetukset"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Connect an RFID reader, and scan a token."
-msgstr "Liitä RFID-lukija ja skannaa nimilappu."
+msgstr "Liitä RFID-lukija ja skannaa tunniste."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_country_name
@@ -651,7 +651,7 @@ msgstr "Luotu"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Currently Working"
-msgstr "Tällä hetkellä työskentelee"
+msgstr "Työskentelee tällä hetkellä"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -700,7 +700,7 @@ msgstr "Näytä lisätunnit"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Extra Hours in Kiosk mode and on User profile."
-msgstr "Näytä lisätunnit kioskitilassa ja käyttäjäprofiilissa."
+msgstr "Näytä lisätunnit tablettitilassa ja käyttäjäprofiilissa."
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -754,7 +754,7 @@ msgstr "Työntekijän avatar"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_kiosk_use_pin
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_kiosk_use_pin
 msgid "Employee PIN Identification"
-msgstr "Työntekijän PIN-tunnisteen tunnistaminen"
+msgstr "Työntekijän PIN-tunnistautuminen"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
@@ -816,7 +816,7 @@ msgstr "Lisätunnit"
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra-hours including the threshold duration"
-msgstr "Lisätunnit, mukaan lukien kynnyskesto"
+msgstr "Lisätunnit, mukaan lukien keseton kynnysarvo"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_follower_ids
@@ -856,7 +856,7 @@ msgstr "Luo uusi URL-osoite"
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 msgid "Go back"
-msgstr "Mene taaksepäin"
+msgstr "Palaa takaisin"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -869,7 +869,7 @@ msgstr "Näkemiin"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
 msgid "Group By"
-msgstr "Ryhmittely"
+msgstr "Ryhmittele"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__has_message
@@ -886,7 +886,7 @@ msgstr "Tunnit"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__hours_last_month
 msgid "Hours Last Month"
-msgstr "Tunteja viime kuussa"
+msgstr "Tunnit viime kuussa"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_last_month_display
@@ -897,7 +897,7 @@ msgstr "Viime kuun tuntien näyttö"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_previously_today
 msgid "Hours Previously Today"
-msgstr "Aiemmat tunnit tänään"
+msgstr "Tunnit aiemmin tänään"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -909,7 +909,7 @@ msgstr "Tunnit aiemmin tänään:"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__hours_today
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__hours_today
 msgid "Hours Today"
-msgstr "Tunteja tänään"
+msgstr "Tunnit tänään"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -950,8 +950,7 @@ msgstr "Tunnista manuaalisesti"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid ""
 "If checked, days not covered by an attendance will be visible in the Report."
-msgstr ""
-"Jos valittu, raportissa näkyvät päivät, joita läsnäolopäivät eivät koske."
+msgstr "Jos valittu, raportissa näkyvät päivät, joita läsnäolot eivät kata."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__message_needaction
@@ -972,7 +971,7 @@ msgstr "Syöttötila (sisään)"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Input Mode (Out)"
-msgstr "Syöttötila (Out)"
+msgstr "Syöttötila (ulos)"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1000,29 +999,29 @@ msgstr "On esimies"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__kiosk
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__kiosk
 msgid "Kiosk"
-msgstr "Kioski"
+msgstr "Tabletti"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_action_open_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode"
-msgstr "Kioskitila"
+msgstr "Tablettitila"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Mode Adress"
-msgstr "Kioskitilan osoite"
+msgstr "Tablettitilan osoite"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Kiosk Settings"
-msgstr "Kioskin asetukset"
+msgstr "Tabletin asetukset"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_overtime_search
 msgid "Last 3 Months"
-msgstr "Viim. 3 kuukautta"
+msgstr "Viimeiset 3 kuukautta"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
@@ -1033,7 +1032,7 @@ msgstr "Viimeisin läsnäolo"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_worked_hours
 msgid "Last Attendance Worked Hours"
-msgstr "Viimeisin läsnäolo Tehdyt työtunnit"
+msgstr "Viimeisimmän läsnäolon tehdyt työtunnit"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__write_uid
@@ -1065,7 +1064,7 @@ msgstr "Leveysaste (ulos)"
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_load_demo_data
 msgid "Load demo data"
-msgstr "Lataa Demodata"
+msgstr "Lataa demodata"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1102,7 +1101,7 @@ msgstr "Hallinta"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Manager"
-msgstr "Päällikkö"
+msgstr "Esimies"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__manual
@@ -1114,7 +1113,7 @@ msgstr "Manuaalinen"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Manual Attendance"
-msgstr "Läsnäolojen käsinsyöttö"
+msgstr "Läsnäolojen syöttö käsin"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1168,21 +1167,26 @@ msgstr "Tilat"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Attendances"
-msgstr "Omat läsnäolot"
+msgstr "Omat läsnäoloni"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "My Team"
-msgstr "Oma tiimi"
+msgstr "Oma tiimini"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "No Badge defined on employees. Set one to test."
 msgstr ""
-"Työntekijöille ei ole määritelty nimilappua. Aseta yksi, jotta voit testata "
-"toimintoa."
+"Työntekijöille ei ole määritelty tunnuskorttia. Aseta yksi, jotta voit "
+"testata toimintoa."
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__no_validated_overtime_hours
+msgid "No Validated Overtime Hours"
+msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1196,12 +1200,12 @@ msgstr "Läsnäoloja ei löytynyt"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
-msgstr "Ei työntekijää, joka vastaa virkamerkin tunnusta \"%(barcode)s\""
+msgstr "Ei työntekijää, joka vastaa tunnuskortin tunnusta \"%(barcode)s\""
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_action
 msgid "No overtime records found"
-msgstr "Ylityötietoja ei löytynyt"
+msgstr "Ylityökirjauksia ei löytynyt"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__message_needaction_counter
@@ -1233,12 +1237,12 @@ msgstr "OK"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Odoo Logo"
-msgstr "Odoo Logo"
+msgstr "Odoo-logo"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_officer
 msgid "Officer: Manage attendances"
-msgstr "Virkailija: Hallinnoi läsnäoloja"
+msgstr "Vastuuhenkilö: Hallinnoi läsnäoloja"
 
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.open_kiosk_url
@@ -1248,42 +1252,42 @@ msgstr "Avaa kioskin URL"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_browser
 msgid "Out Browser"
-msgstr "Ulosmenon selain"
+msgstr "Opt-out Browser ‑lisäosa"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_city
 msgid "Out City"
-msgstr "Ulosmenon kaupunki"
+msgstr "Opt-out -kaupunki"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_country_name
 msgid "Out Country Name"
-msgstr "Ulosmenon maan nimi"
+msgstr "Opt-out -nimi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_ip_address
 msgid "Out Ip Address"
-msgstr "Ulosmenon IP-osoite"
+msgstr "Opt-out -IP-osoite"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_latitude
 msgid "Out Latitude"
-msgstr "Ulosmenon leveysaste"
+msgstr "Opt-out -leveysaste"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_longitude
 msgid "Out Longitude"
-msgstr "Ulosmenon pituusaste"
+msgstr "Opt-out -pituusaste"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__out_mode
 msgid "Out Mode"
-msgstr "Ulosmenon tila"
+msgstr "Opt-out -tila"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__overtime_hours
 msgid "Over Time"
-msgstr "Ulosmenoaika"
+msgstr "Opt-out -aika"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1301,7 +1305,7 @@ msgstr "Ylityön tila"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 msgid "Overview"
-msgstr "Analyysi"
+msgstr "Yleiskatsaus"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1320,7 +1324,7 @@ msgstr "Palaa takaisin päävalikkoon."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Powered by"
-msgstr "Järjestelmää pyörittää"
+msgstr "Palvelun tarjoaa"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee_public
@@ -1403,13 +1407,15 @@ msgstr "Valitse tabletissa"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "Aseta PIN-koodit työntekijän tietoihin (HR-asetukset välilehti)."
+msgstr ""
+"Aseta PIN-koodit työntekijän tietojen lomakkeelle (HR-asetukset "
+"välilehdeltä)."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "Set my badge"
-msgstr "Määritä oma nimilappu"
+msgstr "Aseta oma tunnuskortti"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -1444,18 +1450,18 @@ msgstr "Tekninen"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "The attendance records of your employees will be displayed here."
-msgstr "Työntekijän läsnäolotiedot näytetään tässä."
+msgstr "Työntekijöidesi läsnäolokirjaukset näytetään tässä."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_management_action
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_reporting
 msgid "The attendance reporting of your employees will be displayed here."
-msgstr "Työntekijöiden läsnäoloraportit näkyvät tässä."
+msgstr "Työntekijöidesi läsnäoloraportit näkyvät tässä."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_overtime_action
 msgid "The overtime records of your employees will be displayed here."
-msgstr "Tässä näkyvät työntekijöidesi ylityötiedot."
+msgstr "Työntekijöidesi ylityökirjaukset näytetään tässä."
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__attendance_manager_id
@@ -1466,8 +1472,8 @@ msgid ""
 "The user set in Attendance will access the attendance of the employee "
 "through the dedicated app and will be able to edit them."
 msgstr ""
-"Käyttäjä, joka on määritetty läsnäolo-käyttäjäksi, pääsee työntekijän "
-"läsnäolotietoihin erityisen sovelluksen kautta ja voi muokata niitä."
+"Käyttäjä, joka on määritetty Läsnäolot-sovelluksessa, pääsee työntekijän "
+"läsnäolotietoihin sovelluksen kautta ja voi muokata niitä."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_own_reader
@@ -1475,7 +1481,8 @@ msgid ""
 "The user will have access to his own attendances on his user / employee "
 "profile"
 msgstr ""
-"Käyttäjällä on pääsy omiin läsnäoloihinsa käyttäjä-/työntekijäprofiilissaan"
+"Käyttäjällä on pääsy omiin läsnäolotietoihinsa "
+"käyttäjä-/työntekijäprofiilissaan"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_officer
@@ -1484,7 +1491,7 @@ msgid ""
 "employees where he's set as an attendance manager"
 msgstr ""
 "Käyttäjällä on pääsy niiden työntekijöiden läsnäolotietoihin ja "
-"raportointiin, joiden läsnäolopäälliköksi hän on määritetty"
+"-kirjauksiin, joiden läsnäolopäälliköksi hänet on määritetty"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1510,7 +1517,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__overtime_status__to_approve
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_management_view_filter
 msgid "To Approve"
-msgstr "Hyväksyttävänä"
+msgstr "Hyväksyttävä"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1554,19 +1561,19 @@ msgstr "Yhteensä tänään"
 #. module: hr_attendance
 #: model:ir.actions.server,name:hr_attendance.action_try_kiosk
 msgid "Try kiosk"
-msgstr "Kokeile kioskia"
+msgstr "Kokeile tablettipäätettä"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "Try the backend and reporting:"
-msgstr "Kokeile backendiä ja raportointia:"
+msgstr "Kokeile palvelinpuolta ja raportointia:"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "Try the kiosk"
-msgstr "Kokeile kioskia"
+msgstr "Kokeile tablettipäätettä"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1590,7 +1597,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use this url to access your kiosk mode from any device."
 msgstr ""
-"Käytä tätä URL-osoitetta päästäksesi kioskitilaan mistä tahansa laitteesta."
+"Käytä tätä URL-osoitetta päästäksesi tablettitilaan miltä tahansa "
+"laitteelta."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -1605,17 +1613,17 @@ msgstr "Käyttäjä: Lukee omat läsnäolonsa"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "View on Maps"
-msgstr "Näytä kartoilla"
+msgstr "Näytä kartassa"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__website_message_ids
 msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
+msgstr "Verkkosivun viestit"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1679,13 +1687,13 @@ msgstr "Sinulla ei ole oikeuksia suorittaa kyseistä toimintoa."
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "Your badge Id is now set, you can scan your badge."
-msgstr "Nimilappusi tunnus on nyt asetettu, voit skannata korttisi."
+msgstr "Tunnuskorttisi tunnus on nyt asetettu, voit skannata korttisi."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.js:0
 msgid "Your badge has already been set."
-msgstr "Nimilappusi on jo asetettu."
+msgstr "Tunnuskorttisi on jo asetettu."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1709,7 +1717,7 @@ msgstr "esim. 1102021021"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/views/attendance_helper_view.xml:0
 msgid "icon (e.g for work from home)"
-msgstr "kuvake (esim. kotoa käsin tehtävä työ)"
+msgstr "kuvake (esim. työskentely kotitoimistosta)"
 
 #. module: hr_attendance
 #. odoo-javascript

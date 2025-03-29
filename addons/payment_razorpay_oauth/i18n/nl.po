@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Manon Rondou, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:43+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,22 +34,23 @@ msgstr "Er is een fout opgetreden"
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
 msgid "An error occurred when communicating with the proxy."
-msgstr ""
+msgstr "Er is een fout opgetreden bij de communicatie met de proxy."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.authorization_error
 msgid "An error occurred while linking your Razorpay account with Odoo."
 msgstr ""
+"Er is een fout opgetreden bij het koppelen van je Razorpay-account met Odoo."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "Are you sure you want to disconnect?"
-msgstr ""
+msgstr "Weet je zeker dat je de verbinding wilt verbreken?"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.authorization_error
 msgid "Back to the Razorpay provider"
-msgstr ""
+msgstr "Terug naar de Razorpay-provider"
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -59,13 +61,13 @@ msgstr "Verbinden"
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
 msgid "Could not establish the connection."
-msgstr ""
+msgstr "De verbinding kon niet tot stand worden gebracht."
 
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/controllers/onboarding.py:0
 msgid "Could not find Razorpay provider with id %s"
-msgstr ""
+msgstr "Razorpay-provider met id %s kon niet worden gevonden"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__display_name
@@ -96,17 +98,17 @@ msgstr "Betaalprovider"
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_access_token
 msgid "Razorpay Access Token"
-msgstr ""
+msgstr "Toegangstoken Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_access_token_expiry
 msgid "Razorpay Access Token Expiry"
-msgstr ""
+msgstr "Vervaldatum Razorpay-toegangstoken"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_account_id
 msgid "Razorpay Account ID"
-msgstr ""
+msgstr "Account-ID Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_key_id
@@ -121,12 +123,12 @@ msgstr "Sleutel geheim Razorpay"
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_public_token
 msgid "Razorpay Public Token"
-msgstr ""
+msgstr "Publieke Razorpay-token"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_refresh_token
 msgid "Razorpay Refresh Token"
-msgstr ""
+msgstr "Vernieuwingstoken Razorpay"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,field_description:payment_razorpay_oauth.field_payment_provider__razorpay_webhook_secret
@@ -140,11 +142,13 @@ msgid ""
 "Razorpay is not available in your country; please use another payment "
 "provider."
 msgstr ""
+"Razorpay is niet beschikbaar in je land. Gebruik een andere "
+"betalingsprovider."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "Reset Your Razorpay Account"
-msgstr ""
+msgstr "Reset je Razorpay-account"
 
 #. module: payment_razorpay_oauth
 #: model:ir.model.fields,help:payment_razorpay_oauth.field_payment_provider__razorpay_key_id
@@ -156,7 +160,7 @@ msgstr ""
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
 msgid "This provider is linked with your Razorpay account."
-msgstr ""
+msgstr "Deze provider is gekoppeld aan je Razorpay-account."
 
 #. module: payment_razorpay_oauth
 #: model_terms:ir.ui.view,arch_db:payment_razorpay_oauth.payment_provider_form_razorpay_oauth
@@ -170,9 +174,12 @@ msgid ""
 "                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
 "                    method."
 msgstr ""
+"Je bent momenteel verbonden met Razorpay via de verouderde\n"
+"                    nloggegevensmethode. Klik op de knop 'Verbinden' hieronder om de aanbevolen OAuth-methode\n"
+"                    te gebruiken."
 
 #. module: payment_razorpay_oauth
 #. odoo-python
 #: code:addons/payment_razorpay_oauth/models/payment_provider.py:0
 msgid "Your Razorpay webhook was successfully set up!"
-msgstr ""
+msgstr "Je Razorpay-webhook is succesvol ingesteld!"

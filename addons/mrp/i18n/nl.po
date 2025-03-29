@@ -700,7 +700,7 @@ msgstr "Alle"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_ids
 msgid "All Move"
-msgstr "Alle verhuizingen"
+msgstr "Alle verplaatsingen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__all_move_raw_ids
@@ -770,7 +770,7 @@ msgstr "Toegestaan"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__allowed_uom_ids
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Toegestane maateenheid"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
@@ -847,6 +847,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If"
 " you want to change it, please archive the product and create a new one."
 msgstr ""
+"Aangezien andere maateenheden (bijv. %(problem_uom)s) dan %(uom)s al zijn "
+"gebruikt voor dit product, kan de maateenheid niet worden gewijzigd. Als je "
+"dit wilt wijzigen, archiveer dan het product en maak een nieuw product aan."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -1958,6 +1961,11 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+"Standaard aantal stuks (in producteenheid) dat gelijktijdig in dit "
+"werkcentrum kan worden geproduceerd. Bijvoorbeeld: als de capaciteit 5 is en"
+" je 10 eenheden moet produceren, verdubbelt de bewerkingstijd op de "
+"stuklijst. De tijd vóór en na de productie wordt echter slechts één keer "
+"meegerekend."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2882,17 +2890,17 @@ msgstr "Is een reden van vergrendelen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is paused"
-msgstr ""
+msgstr "Is gepauzeerd"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is running"
-msgstr ""
+msgstr "Wordt uitgevoerd"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Is stopped"
-msgstr ""
+msgstr "Is gestopt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_user_working
@@ -4539,7 +4547,7 @@ msgstr "Productsjabloon"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_capacity__product_uom_id
 msgid "Product Unit"
-msgstr ""
+msgstr "Producteenheid"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -4737,7 +4745,7 @@ msgstr "Aantal in productie"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_ready
 msgid "Quantity Ready"
-msgstr ""
+msgstr "Klaarstaande hoeveelheid"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
@@ -5669,7 +5677,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "The quantity produced must be positive."
-msgstr ""
+msgstr "De geproduceerde hoeveelheid moet positief zijn."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_qty_positive
@@ -6430,6 +6438,13 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
+"Wanneer een inkoop een 'produceer'-route met een specifiek bewerkingstype "
+"heeft, wordt geprobeerd een productieorder aan te maken voor dat product, "
+"met een stuklijst die hetzelfde bewerkingstype hanteert. Als er geen "
+"overeenkomstige stuklijst is, wordt het bewerkingstype niet meegenomen in de"
+" stuklijstzoekopdracht. Dit maakt het mogelijk om voorraadregels te "
+"definiëren die verschillende productieorders met bijbehorende stuklijsten "
+"activeren."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__manual_consumption
@@ -6830,6 +6845,8 @@ msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
 "cancel state."
 msgstr ""
+"Je kunt de geproduceerde hoeveelheid van een werkorder niet wijzigen als "
+"deze de status 'gereed' of 'geannuleerd' heeft."
 
 #. module: mrp
 #. odoo-python
@@ -6889,6 +6906,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot produce more than 1 unit of a serial product at a time."
 msgstr ""
+"Je kunt niet meer dan 1 eenheid van een serieproduct tegelijk produceren."
 
 #. module: mrp
 #. odoo-python
