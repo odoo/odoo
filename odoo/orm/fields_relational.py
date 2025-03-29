@@ -457,12 +457,17 @@ class Many2one(_Relational[M]):
                 SQL.identifier(coalias, 'id'),
             ))
 
-            if operator == 'not any':
-                sql = value._to_sql(comodel, coalias, query)
-                if not can_be_null:
+            sql = value._to_sql(comodel, coalias, query)
+            if operator == 'any':
+                if can_be_null:
+                    return SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
+                else:
+                    return sql
+            else:
+                if can_be_null:
+                    return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
+                else:
                     return SQL("(%s) IS NOT TRUE", sql)
-                return SQL("(%s IS NULL OR (%s) IS NOT TRUE)", sql_field, sql)
-            return value._to_sql(comodel, coalias, query)
 
         # execute search and generate condition with a SQL query
         domain_query = comodel.with_context(active_test=False)._search(value)
