@@ -5,6 +5,7 @@
     }
 
     .o_org_chart_entry {
+        scroll-snap-align: start;
         .o_media_object {
             width: $o-hr-org-chart-entry-pic-small-size;
             height: $o-hr-org-chart-entry-pic-small-size;
@@ -30,8 +31,16 @@
         padding-left: $o-hr-org-chart-entry-pic-size * .6;
     }
 
+    .o_org_chart_group_wrapper{
+        overflow:  hidden;
+        scroll-snap-type: y mandatory;
+        scroll-behavior: smooth;
+        padding-left: 2px;
+        position: relative;
+    }
+    
     // ORGANIGRAM LINES
-    .o_org_chart_group_up .o_treeEntry {
+    .o_org_chart_group_wrapper > .o_org_chart_group_up {
         --treeEntry-padding-h: 0px;
         --treeEntry--before-top: 50%;
         --treeEntry--after-display: none;
