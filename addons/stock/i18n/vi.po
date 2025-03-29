@@ -862,7 +862,7 @@ msgstr "Thêm danh mục lưu kho mới"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid ""
 "Add an internal note that will be printed on the Picking Operations sheet"
-msgstr "Thêm một ghi chú nội bộ sẽ được in trên phiếu Hoạt động lấy hàng"
+msgstr "Thêm một ghi chú nội bộ sẽ được in trên phiếu Hoạt động xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_adv_location
@@ -1292,7 +1292,7 @@ msgstr "Mã vạch là EAN hợp lệ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Transfers"
-msgstr "Lệnh chuyển hàng hàng loạt"
+msgstr "Lệnh chuyển hàng theo lô"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
@@ -1838,32 +1838,32 @@ msgstr "Tính số lượng"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr "Lấy hàng theo số lượng"
+msgstr "Số phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Lấy hàng theo số lượng Đơn hàng tách kiện"
+msgstr "Số phiếu xuất kho trong đơn hàng tách kiện"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "Lấy hàng theo số lượng Nháp"
+msgstr "Số phiếu xuất kho nháp"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr "Lấy hàng theo số lượng Trễ"
+msgstr "Số phiếu xuất kho trễ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "Lấy hàng theo số lượng Sẵn sàng"
+msgstr "Số phiếu xuất kho sẵn sàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "Lấy hàng theo số lượng Đang chờ"
+msgstr "Số phiếu xuất kho đang chờ"
 
 #. module: stock
 #. odoo-javascript
@@ -2423,7 +2423,7 @@ msgstr "Phương thức giao hàng"
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
 msgid "Delivery Orders"
-msgstr "Phiếu xuất kho"
+msgstr "Lệnh giao hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__delivery_route_id
@@ -2453,14 +2453,14 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
 msgid "Delivery order count"
-msgstr "Số phiếu xuất kho"
+msgstr "Số lệnh giao hàng"
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_lot.py:0
 #, python-format
 msgid "Delivery orders of %s"
-msgstr "Phiếu xuất kho của %s"
+msgstr "Lệnh giao hàng của %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
@@ -2502,7 +2502,7 @@ msgstr "Mô tả"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Description for Delivery Orders"
-msgstr "Mô tả Phiếu xuất kho"
+msgstr "Mô tả Lệnh giao hàng"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -2517,19 +2517,19 @@ msgstr "Mô tả Phiếu nhập kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__description_picking
 msgid "Description of Picking"
-msgstr "Mô tả Phiếu lấy hàng"
+msgstr "Mô tả Phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingout
 #: model:ir.model.fields,field_description:stock.field_product_template__description_pickingout
 msgid "Description on Delivery Orders"
-msgstr "Mô tả trên Phiếu xuất kho"
+msgstr "Mô tả trên Lệnh giao hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
-msgstr "Mô tả trên Phiếu lấy hàng"
+msgstr "Mô tả trên Phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
@@ -2540,7 +2540,7 @@ msgstr "Mô tả trên Phiếu nhập kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__description_picking
 msgid "Description picking"
-msgstr "Mô tả phiếu lấy hàng"
+msgstr "Mô tả phiếu xuất kho"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -2845,9 +2845,9 @@ msgid ""
 msgstr ""
 "Tận hưởng trải nghiệm tốc độ xử lý nhanh chóng với ứng dụng mã vạch. Ứng "
 "dụng này hoạt động nhanh như chớp ngay cả khi không có kết nối internet ổn "
-"định. Mọi quy trình đều được hỗ trợ: điều chỉnh tồn kho, lấy hàng hàng loạt,"
-" dịch chuyển lô hoặc pallet, kiểm tra hàng tồn kho thấp,... Đi đến menu "
-"\"Ứng dụng\" để kích hoạt phân hệ mã vạch."
+"định. Mọi quy trình đều được hỗ trợ: điều chỉnh tồn kho, lấy hàng theo lô, "
+"dịch chuyển lô hoặc pallet, kiểm tra hàng tồn kho thấp,... Đi đến menu \"Ứng"
+" dụng\" để kích hoạt phân hệ mã vạch."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -5046,7 +5046,7 @@ msgstr "(Các) lệnh chuyển hàng tiếp theo bị ảnh hưởng:"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr "Không có %s được chọn hoặc một phiếu xuất kho đã được chọn"
+msgstr "Không có %s được chọn hoặc một lệnh giao hàng đã được chọn"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -6019,7 +6019,7 @@ msgstr "Xử lý hoạt động trong lệnh chuyển hàng theo đợt"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr "Xử lý lệnh chuyển hàng hàng loạt theo từng nhân viên"
+msgstr "Xử lý lệnh chuyển hàng theo lô theo từng nhân viên"
 
 #. module: stock
 #: model:ir.model,name:stock.model_procurement_group
@@ -6934,7 +6934,7 @@ msgstr "Yêu cầu một lần kiểm đếm"
 #: model:res.groups,name:stock.group_stock_sign_delivery
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Require a signature on your delivery orders"
-msgstr "Yêu cầu chữ ký trên phiếu xuất kho của bạn"
+msgstr "Yêu cầu chữ ký trên lệnh giao hàng của bạn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_method
@@ -7101,7 +7101,7 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Hộp có thể tái sử dụng được dùng trong lấy hàng hàng loạt và bỏ hàng ra sau đó để tái sử dụng. Trong ứng dụng mã vạch, việc quét hộp có thể tái sử dụng sẽ thêm các sản phẩm có trong hộp này.\n"
+"Hộp có thể tái sử dụng được dùng trong lấy hàng theo lô và bỏ hàng ra sau đó để tái sử dụng. Trong ứng dụng mã vạch, việc quét hộp có thể tái sử dụng sẽ thêm các sản phẩm có trong hộp này.\n"
 "        Hộp dùng một lần không được tái sử dụng, khi quét hộp dùng một lần trong ứng dụng mã vạch, các sản phẩm chứa trong đó sẽ được thêm vào lệnh chuyển hàng."
 
 #. module: stock
@@ -7384,12 +7384,12 @@ msgstr "Bán và mua sản phẩm theo đơn vị tính khác nhau"
 msgid ""
 "Send an automatic confirmation SMS Text Message when Delivery Orders are "
 "done"
-msgstr "Tự động gửi một tin nhắn văn bản xác nhận khi Phiếu xuất kho hoàn tất"
+msgstr "Tự động gửi một tin nhắn văn bản xác nhận khi Lệnh giao hàng hoàn tất"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Send an automatic confirmation email when Delivery Orders are done"
-msgstr "Tự động gửi một email xác nhận khi Phiếu xuất kho hoàn tất"
+msgstr "Tự động gửi một email xác nhận khi Lệnh giao hàng hoàn tất"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
@@ -8632,7 +8632,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Ghi chú này sẽ hiển thị trên các phiếu xuất kho."
+msgstr "Ghi chú này sẽ hiển thị trên các lệnh giao hàng."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -10534,5 +10534,5 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Phiếu xuất kho (Mã {{ object.name or 'không có'"
+"{{ object.company_id.name }} Lệnh giao hàng (Mã {{ object.name or 'không có'"
 " }})"

@@ -38,10 +38,10 @@
 # Martin Trigaux, 2024
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2024
 # Сергей Шебанин <sergey@shebanin.ru>, 2024
-# Malaz Abuidris <msea@odoo.com>, 2024
 # Collex100, 2024
 # Смородин Даниил, 2024
 # Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # Ilya Rozhkov, 2025
 # 
 msgid ""
@@ -578,6 +578,9 @@ msgid ""
 "            Egyptian Tax Authority Invoice Integration\n"
 "        "
 msgstr ""
+"\n"
+"            Интеграция с налоговой службой Египта\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ke_edi_tremol
@@ -1123,6 +1126,9 @@ msgid ""
 "        E-Invoicing, Universal Business Language\n"
 "    "
 msgstr ""
+"\n"
+"        Электронные счета, универсальный язык бизнеса\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_reports
@@ -4929,6 +4935,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Функциональность\n"
+"----------\n"
+"\n"
+"Этот модуль добавляет функции учёта для аргентинской локализации, представляющие минимальную конфигурацию, необходимую для работы компании в Аргентине в соответствии с правилами и рекомендациями AFIP (Administración Federal de Ingresos Públicos).\n"
+"\n"
+"Следуйте этим шагам настройки для производственной среды:\n"
+"\n"
+"1. Перейдите в настройки вашей компании и укажите номер НДС и тип ответственности AFIP\n"
+"2. Перейдите в раздел Учёт / Настройки и выберите план счетов, который вы хотите использовать.\n"
+"3. Создайте журналы продаж с учётом данных POS AFIP.\n"
+"\n"
+"Демо-данные для тестирования:\n"
+"\n"
+"* Созданы 3 компании, по одной для каждого типа ответственности AFIP с установленным соответствующим планом счетов. Выберите подходящую компанию для тестирования:\n"
+"\n"
+"  * (AR) Responsable Inscripto\n"
+"  * (AR) Exento\n"
+"  * (AR) Monotributo\n"
+"\n"
+"* Журналы продаж настроены на предварительно напечатанные и экспортные счета во всех компаниях\n"
+"* Примеры счетов и других документов уже подтверждены в компании “(AR) Responsable Inscripto”\n"
+"* Примеры партнёров для разных типов ответственности:\n"
+"\n"
+"  * ADHOC (IVA Responsable Inscripto)\n"
+"  * Servicios Globales (IVA Sujeto Exento)\n"
+"  * Gritti (Monotributo)\n"
+"  * Montana Sur. IVA Liberado в зоне Франка\n"
+"  * Barcelona food (Клиент за пределами страны)\n"
+"  * Odoo (Поставщик за пределами страны)\n"
+"\n"
+"Основные особенности:\n"
+"\n"
+"* План счетов не устанавливается автоматически, каждый шаблон плана счетов зависит от типа ответственности AFIP компании, вам нужно установить подходящий план счетов самостоятельно.\n"
+"* Журналы продаж не создаются при установке плана счетов, их необходимо настроить вручную.\n"
+"* Тип документа будет автоматически выбран при создании счёта в зависимости от фискальной ответственности отправителя и получателя документа, а также связанного журнала.\n"
+"* Добавлен тип счёта CBU и валидация CBU\n"
+"\n"
+"\n"
+"Техническая часть\n"
+"---------\n"
+"\n"
+"Этот модуль добавляет модели и поля, которые будут использоваться в модуле электронных счетов. Вот краткое описание основных функций:\n"
+"\n"
+"Основные данные:\n"
+"\n"
+"* План счетов: по одному для каждого типа ответственности AFIP, связанного с юридическим лицом:\n"
+"\n"
+"  * Responsable Inscripto (RI)\n"
+"  * Exento (EX)\n"
+"  * Monotributo (Mono)\n"
+"\n"
+"* Аргентинские налоги и группы налогов (НДС с существующими ставками и другие типы)\n"
+"* Типы ответственности AFIP\n"
+"* Фискальные позиции (для соответствия налогов)\n"
+"* Типы юридических документов в Аргентине\n"
+"* Типы идентификации, действительные в Аргентине\n"
+"* Коды AFIP для стран и коды НДС для юридических лиц, физических лиц и других\n"
+"* Коды валют AFIP\n"
+"* Коды единиц измерения AFIP\n"
+"* Партнёры: Consumidor Final и AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -7031,6 +7098,18 @@ msgid ""
 "- Withholding Tax Report\n"
 "- Fiscal Positions\n"
 msgstr ""
+"\n"
+"Модуль бухгалтерского учета для Саудовской Аравии\n"
+"===========================================================\n"
+"Основные планы счетов и локализация бухгалтерского учета для Саудовской Аравии\n"
+"\n"
+"Активирует:\n"
+"\n"
+"- План счетов\n"
+"- Налоги\n"
+"- Отчет по заполнению НДС\n"
+"- Отчет по налогу у источника\n"
+"- Фискальные позиции\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sa_pos
@@ -7226,6 +7305,20 @@ msgid ""
 "\n"
 "5.3: Update taxes starting Q4 2024 according to BOE-A-2024-12944 (Royal Decree 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 msgstr ""
+"\n"
+"Испанские планы счетов (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"    * Определяет следующие шаблоны плана счетов:\n"
+"        * Общий испанский план счетов 2008 года\n"
+"        * Общий испанский план счетов 2008 года для малых и средних компаний\n"
+"        * Общий испанский план счетов 2008 года для ассоциаций\n"
+"    * Определяет шаблоны для НДС при продажах и закупках\n"
+"    * Определяет налоговые шаблоны\n"
+"    * Определяет налоговые позиции для испанского законодательства\n"
+"    * Определяет налоговые отчеты (модели 111, 115 и 303)\n"
+"\n"
+"5.3: Обновление налогов с 4-го квартала 2024 года в соответствии с BOE-A-2024-12944 (Королевский декрет 4/2024) https://www.boe.es/buscar/act.php?id=BOE-A-2024-12944\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -15809,7 +15902,7 @@ msgstr "Чешская республика"
 #. module: base
 #: model:res.country,name:base.ci
 msgid "Côte d'Ivoire"
-msgstr "Берег 🐘 Слоновой Кости"
+msgstr "Кот-д'Ивуар"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_D
@@ -17042,7 +17135,7 @@ msgstr "Ecuador - ATS Report"
 #: model:ir.module.module,description:base.module_l10n_ec_stock
 #: model:ir.module.module,shortdesc:base.module_l10n_ec_stock
 msgid "Ecuador - Stock"
-msgstr ""
+msgstr "Эквадор - Склад"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
@@ -17077,7 +17170,7 @@ msgstr "Египет - Бухгалтерия"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_eg_edi_eta
 msgid "Egypt E-Invoicing"
-msgstr ""
+msgstr "Электронные счета Египта"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__partner_share
@@ -19028,7 +19121,7 @@ msgstr "Создавайте отслеживаемые и короткие URL-
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_de_intrastat
 msgid "Generates Intrastat XML report for declaration."
-msgstr ""
+msgstr "Генерирует XML-отчет Интрастат для декларации."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_property_view_search
@@ -19077,7 +19170,7 @@ msgstr "Грузия"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_intrastat
 msgid "German Intrastat Declaration"
-msgstr ""
+msgstr "Немецкая декларация Интрастат"
 
 #. module: base
 #: model:res.country,name:base.de
@@ -21376,7 +21469,7 @@ msgstr "Италия — Бухгалтерские отчеты"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_riba
 msgid "Italy - Bank Receipts (Ri.Ba.)"
-msgstr ""
+msgstr "Италия — Банковские квитанции (Ri.Ba.)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_doi
@@ -22601,12 +22694,12 @@ msgstr "Мальта"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mt_pos
 msgid "Malta - Point of Sale"
-msgstr ""
+msgstr "Мальта — Точка продаж"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mt_pos
 msgid "Malta Compliance Letter for EXO Number"
-msgstr ""
+msgstr "Письмо соответствия Мальты для номера EXO"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_appointment_hr
@@ -27300,7 +27393,7 @@ msgstr "Приватные методы (такие как %s) не могут �
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Problematic record(s)"
-msgstr ""
+msgstr "Проблемная запись(и)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -29235,12 +29328,12 @@ msgstr "Саудовская Аравия — Электронные счета 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
 msgid "Saudi Arabia - Payroll"
-msgstr ""
+msgstr "Саудовская Аравия — Расчет заработной платы"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "Saudi Arabia - Payroll with Accounting"
-msgstr ""
+msgstr "Саудовская Аравия — Зарплата с учетом бухгалтерии"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -30308,7 +30401,7 @@ msgstr "Испания - Бухгалтерский учет (PGCE 2008) отч�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Испания — Бухгалтерские отчеты (обновление 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
@@ -31100,7 +31193,7 @@ msgstr "ИНН"
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii_tax_extension
 #: model:ir.module.module,summary:base.module_account_edi_ubl_cii_tax_extension
 msgid "Tax extension for UBL/CII"
-msgstr ""
+msgstr "Налоговое расширение для UBL/CII"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -32376,6 +32469,9 @@ msgid ""
 "         Please install the new \"Fedex Shipping\" module and uninstall this"
 " one as soon as possible. This integration will stop working in 2024."
 msgstr ""
+"Это устаревшая интеграция с FedEx, которая больше не поддерживается. "
+"Пожалуйста, установите новый модуль \"Fedex Shipping\" и удалите этот как "
+"можно скорее. Эта интеграция перестанет работать в 2024 году."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
@@ -32395,6 +32491,9 @@ msgid ""
 "States Postal Service (USPS) Shipping\" module and uninstall this one as "
 "soon as possible."
 msgstr ""
+"Это устаревшая интеграция с USPS. Пожалуйста, установите новый модуль "
+"\"United States Postal Service (USPS) Shipping\" и удалите этот как можно "
+"скорее."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -33458,12 +33557,12 @@ msgstr "Объединенные Арабские Эмираты - Бухгал�
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "United Arab Emirates - Payroll"
-msgstr ""
+msgstr "Объединенные Арабские Эмираты — Зарплата"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "United Arab Emirates - Payroll with Accounting"
-msgstr ""
+msgstr "Объединенные Арабские Эмираты — Зарплата с бухгалтерией"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
@@ -33498,7 +33597,7 @@ msgstr "Почтовая служба США (USPS) Доставка"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping (Legacy)"
-msgstr ""
+msgstr "Почтовая служба США (USPS) — Доставка (устаревшая)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom

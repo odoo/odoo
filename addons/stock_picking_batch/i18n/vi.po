@@ -71,7 +71,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of lines if the transfer is added to it.\n"
 "Leave this value as '0' if no line limit."
 msgstr ""
-"Lệnh chuyển hàng sẽ không được tự động thêm vào loạt lấy hàng nếu số lượng dòng này bị vượt quá khi thêm lệnh chuyển hàng.\n"
+"Lệnh chuyển hàng sẽ không được tự động thêm vào lô lấy hàng nếu số lượng dòng này bị vượt quá khi thêm lệnh chuyển hàng.\n"
 "Để giá trị này là '0' nếu không có giới hạn dòng."
 
 #. module: stock_picking_batch
@@ -80,7 +80,7 @@ msgid ""
 "A transfer will not be automatically added to batches that will exceed this number of transfers.\n"
 "Leave this value as '0' if no transfer limit."
 msgstr ""
-"Lệnh chuyển hàng sẽ không được tự động thêm vào loạt lấy hàng nếu vượt quá số lượng lệnh chuyển hàng.\n"
+"Lệnh chuyển hàng sẽ không được tự động thêm vào lô lấy hàng nếu vượt quá số lượng lệnh chuyển hàng.\n"
 "Để giá trị này là '0' nếu không có giới hạn lệnh chuyển hàng."
 
 #. module: stock_picking_batch
@@ -139,7 +139,7 @@ msgstr "Thêm vào đợt"
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 msgid "Add to batch"
-msgstr "Thêm vào loạt"
+msgstr "Thêm vào lô"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_add_to_wave_action_stock_picking
@@ -176,27 +176,27 @@ msgstr "Tự động xác nhận"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__auto_batch
 msgid "Automatic Batches"
-msgstr "Nhóm hàng loạt tự động"
+msgstr "Nhóm theo lô tự động"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 msgid "Automatically group batches by contacts."
-msgstr "Tự động nhóm loạt lấy hàng theo liên hệ."
+msgstr "Tự động nhóm lô lấy hàng theo liên hệ."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_destination
 msgid "Automatically group batches by destination country."
-msgstr "Tự động nhóm loạt lấy hàng theo quốc gia đích."
+msgstr "Tự động nhóm lô lấy hàng theo quốc gia đích."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Automatically group batches by their destination location."
-msgstr "Tự động nhóm loạt lấy hàng theo vị trí đích."
+msgstr "Tự động nhóm lô lấy hàng theo vị trí đích."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
 msgid "Automatically group batches by their source location."
-msgstr "Tự động nhóm loạt lấy hàng theo vị trí nguồn."
+msgstr "Tự động nhóm lô lấy hàng theo vị trí nguồn."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_type__auto_batch
@@ -212,7 +212,7 @@ msgstr "Mã vạch"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_form_inherit
 msgid "Batch"
-msgstr "Loạt"
+msgstr "Lô"
 
 #. module: stock_picking_batch
 #. odoo-python
@@ -228,35 +228,35 @@ msgstr "Loạt"
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_internal_search_inherit
 #, python-format
 msgid "Batch Transfer"
-msgstr "Lệnh chuyển hàng hàng loạt"
+msgstr "Lệnh chuyển hàng theo lô"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
 msgid "Batch Transfer Lines"
-msgstr "Chi tiết lệnh chuyển hàng hàng loạt"
+msgstr "Chi tiết lệnh chuyển hàng theo lô"
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Batch Transfers"
-msgstr "Lệnh chuyển hàng hàng loạt"
+msgstr "Lệnh chuyển hàng theo lô"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Batch Transfers not finished"
-msgstr "Lệnh chuyển hàng hàng loạt chưa hoàn thành"
+msgstr "Lệnh chuyển hàng theo lô chưa hoàn thành"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_move_line__batch_id
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
 msgid "Batch associated to this transfer"
-msgstr "Loạt lấy hàng liên kết với lệnh chuyển hàng này"
+msgstr "Lô lấy hàng liên kết với lệnh chuyển hàng này"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_type_kanban_batch
 msgid "Batches"
-msgstr "Loạt"
+msgstr "Lô"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_add_to_wave_form
@@ -322,17 +322,17 @@ msgstr "Liên hệ"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
 msgid "Count Picking Batch"
-msgstr "Đếm loạt lấy hàng"
+msgstr "Số phiếu xuất kho trong lô"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_wave
 msgid "Count Picking Wave"
-msgstr "Đếm đợt lấy hàng"
+msgstr "Số phiếu xuất kho trong đợt"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid "Create a new batch transfer"
-msgstr "Tạo một lệnh chuyển hàng hàng loạt mới"
+msgstr "Tạo một lệnh chuyển hàng theo lô mới"
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.action_picking_tree_wave
@@ -506,7 +506,7 @@ msgstr "Dòng"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
 msgid "List of transfers associated to this batch"
-msgstr "Danh sách lệnh chuyển hàng liên kết với loạt này"
+msgstr "Danh sách lệnh chuyển hàng liên kết với lô này"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
@@ -516,12 +516,12 @@ msgstr "Tệp đính kèm chính"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_lines
 msgid "Maximum lines per batch"
-msgstr "Số dòng tối đa cho mỗi loạt"
+msgstr "Số dòng tối đa cho mỗi lô"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_max_pickings
 msgid "Maximum transfers per batch"
-msgstr "Số lệnh chuyển hàng tối đa cho mỗi loạt"
+msgstr "Số lệnh chuyển hàng tối đa cho mỗi lô"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
@@ -621,8 +621,8 @@ msgstr "Kiểu lấy hàng"
 msgid ""
 "Please add 'Done' quantities to the batch picking to create a new pack."
 msgstr ""
-"Hãy thêm số lượng 'Hoàn tất' vào phiếu lấy hàng hàng loạt này để tạo một "
-"kiện hàng mới."
+"Hãy thêm số lượng 'Hoàn tất' vào phiếu xuất kho theo lô này để tạo một kiện "
+"hàng mới."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -687,14 +687,14 @@ msgid ""
 "                but this scheduled date will not be set for all transfers in batch."
 msgstr ""
 "Ngày theo kế hoạch để xử lý lệnh chuyển hàng.\n"
-"            - Nếu được đặt thủ công thì ngày theo kế hoạch cho tất cả lệnh chuyển hàng trong loạt sẽ tự động cập nhật đến ngày này.\n"
+"            - Nếu được đặt thủ công thì ngày theo kế hoạch cho tất cả lệnh chuyển hàng trong lô sẽ tự động cập nhật đến ngày này.\n"
 "            - Nếu không được thay đổi thủ công và các lệnh chuyển hàng được thêm/xóa/cập nhật thì đây sẽ là ngày theo kế hoạch sớm nhất của chúng\n"
-"              nhưng ngày theo kế hoạch này sẽ không được đặt cho tất cả lệnh chuyển hàng trong loạt."
+"              nhưng ngày theo kế hoạch này sẽ không được đặt cho tất cả lệnh chuyển hàng trong lô."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Search Batch Transfer"
-msgstr "Tìm kiếm lệnh chuyển hàng hàng loạt"
+msgstr "Tìm kiếm lệnh chuyển hàng theo lô"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -775,7 +775,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
 msgid "Stock Batch Transfer"
-msgstr "Lệnh chuyển hàng hàng loạt tồn kho"
+msgstr "Lệnh chuyển hàng theo lô tồn kho"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_move
@@ -811,7 +811,7 @@ msgid ""
 "\n"
 "Incompatibilities: %s"
 msgstr ""
-"Không thể thêm các lệnh chuyển hàng sau vào lệnh chuyển hàng hàng loạt %s. Vui lòng kiểm tra trạng thái và loại hoạt động của chúng, nếu chúng không phải là lệnh chuyển hàng ngay tức thì.\n"
+"Không thể thêm các lệnh chuyển hàng sau vào lệnh chuyển hàng theo lô %s. Vui lòng kiểm tra trạng thái và loại hoạt động của chúng, nếu chúng không phải là lệnh chuyển hàng ngay tức thì.\n"
 "\n"
 "Lệnh chuyển hàng không tương thích: %s"
 
@@ -823,9 +823,9 @@ msgid ""
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
 msgstr ""
-"Mục tiêu của lệnh chuyển hàng hàng loạt là nhóm các hoạt động có thể (cần) được\n"
+"Mục tiêu của lệnh chuyển hàng theo lô là nhóm các hoạt động có thể (cần) được\n"
 "             thực hiện vào với nhau để cải thiện hiệu quả. Điều này cũng có thể hữu ích\n"
-"             khi phân công công việc (một người = một loạt) hoặc giúp quản lý thời gian\n"
+"             khi phân công công việc (một người = một lô) hoặc giúp quản lý thời gian\n"
 "             của các hoạt động (nhiệm vụ sẽ được thực hiện lúc 1 giờ chiều)."
 
 #. module: stock_picking_batch
@@ -838,7 +838,7 @@ msgid ""
 msgstr ""
 "Mục tiêu của lệnh chuyển hàng theo đợt là nhóm các hoạt động từ lệnh chuyển hàng khác nhau\n"
 "             vào với nhau để cải thiện hiệu quả. Điều này cũng có thể hữu ích\n"
-"             khi phân công công việc (một người = một loạt) hoặc giúp quản lý thời gian\n"
+"             khi phân công công việc (một người = một lô) hoặc giúp quản lý thời gian\n"
 "             của các hoạt động (nhiệm vụ sẽ được thực hiện lúc 1 giờ chiều)."
 
 #. module: stock_picking_batch
@@ -872,7 +872,7 @@ msgstr "Các lệnh chuyển hàng được chọn phải thuộc về cùng m�
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__is_wave
 msgid "This batch is a wave"
-msgstr "Loạt này là một đợt"
+msgstr "Lô này là một đợt"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -964,26 +964,26 @@ msgstr "Lịch sử trao đổi qua trang web"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft
 msgid "When checked, create the batch in draft status"
-msgstr "Khi được chọn, hãy tạo loạt ở trạng thái nháp"
+msgstr "Khi được chọn, hãy tạo lô ở trạng thái nháp"
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You cannot delete Done batch transfers."
-msgstr "Bạn không thể xoá lệnh chuyển hàng hàng loạt đã Hoàn tất."
+msgstr "Bạn không thể xoá lệnh chuyển hàng theo lô đã Hoàn tất."
 
 #. module: stock_picking_batch
 #. odoo-python
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "You have to set some pickings to batch."
-msgstr "Bạn phải thiết lập một số phiếu kho vào loạt."
+msgstr "Bạn phải thiết lập một số phiếu kho vào lô."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__new
 msgid "a new batch transfer"
-msgstr "một lệnh chuyển hàng hàng loạt mới"
+msgstr "một lệnh chuyển hàng theo lô mới"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__new
@@ -993,7 +993,7 @@ msgstr "một lệnh chuyển hàng theo đợt mới"
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_to_batch__mode__existing
 msgid "an existing batch transfer"
-msgstr "một lệnh chuyển hàng hàng loạt hiện có"
+msgstr "một lệnh chuyển hàng theo lô hiện có"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_add_to_wave__mode__existing

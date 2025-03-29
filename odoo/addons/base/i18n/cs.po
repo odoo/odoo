@@ -19,6 +19,7 @@
 # Jiří Podhorecký <jirka.p@volny.cz>, 2024
 # Wil Odoo, 2025
 # Aleš Fiala <f.ales1@seznam.cz>, 2025
+# Marta Wacławek, 2025
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-10 10:09+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2025\n"
+"Last-Translator: Marta Wacławek, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7691,6 +7692,11 @@ msgid ""
 "\n"
 "This module provides the core of the Odoo Web Client.\n"
 msgstr ""
+"\n"
+"Základní modul webu Odoo.\n"
+"========================\n"
+"\n"
+"Tento modul poskytuje jádro webového klienta Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_tour
@@ -7788,6 +7794,41 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"Správa vlastních šeků\n"
+"---------------------\n"
+"\n"
+"Modul rozšiřuje modul „Základní tisk šeků“ o správu vlastních šeků s dalšími funkcemi:\n"
+"\n"
+"* umožňuje použití vlastních šeků, které nejsou tištěné, ale vyplněné ručně uživatelem\n"
+"* umožňuje použití odložených nebo elektronických šeků\n"
+"  * tisk je vypnut\n"
+"  * číslo šeku je nastaveno ručně uživatelem\n"
+"* přidání volitelného pole „Datum inkasa šeku“ pro post-datované šeky (odložené platby)\n"
+"* přidání menu pro sledování vlastních šeků\n"
+"\n"
+"Správa šeků třetích stran\n"
+"-----------------------------\n"
+"\n"
+"Přidání nové funkce \"Správa šeků třetích stran\".\n"
+"\n"
+"Dva nové způsoby přidání platebních metod::\n"
+"\n"
+"* Nové šeky třetích stran:\n"
+"\n"
+"  * Platby této platební metody představují šek, který obdržíte od zákazníka při platbě (z faktury nebo manuální platby)\n"
+"\n"
+"* Existující šeky třetích stran:\n"
+"\n"
+"  * Platby této platební metody slouží k sledování pohybů šeku, například:\n"
+"\n"
+"    * Použití šeku k platbě dodavateli\n"
+"    * Uložení šeku na bankovní účet\n"
+"    * Vrácení šeku z banky (odmítnutí)\n"
+"    * Vrácení šeku od dodavatele (odmítnutí nebo vrácení)\n"
+"    * Převod šeku z jednoho deníku šeků třetích stran do druhého (z jednoho obchodu do druhého)\n"
+"\n"
+"  * Tyto operace lze provádět s více šeky najednou\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -9294,13 +9335,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Toto je základní modul pro správu účetního diagramu pro Turecko v Odoo\n"
+"Toto je základní modul pro správu účetní osnovy pro Turecko v Odoo\n"
 "===========================================================================\n"
-"Turecko účetní základní grafy a lokalizace.\n"
+"Turecko základní účetní osnova a lokalizace.\n"
 "-------------------------------------------------\n"
-"Aktiva:\n"
+"Aktivuje:\n"
 "\n"
-"- Účtová osnova\n"
+"- Účtovou osnovu\n"
 "\n"
 "- Daně\n"
 "    "
@@ -9585,6 +9626,8 @@ msgid ""
 "\n"
 "This module adapts the behavior of the PoS when the pos_hr and pos_restaurant are installed.\n"
 msgstr ""
+"\n"
+"Tento modul adaptuje chování PoS když jsou nainstalovány pos_hr a pos_restaurant.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_twitter
@@ -24880,6 +24923,63 @@ msgid ""
 "perspectiva contable íntegramente. Por lo tanto, este PCGE no debe ser considerado en ningún aspecto\n"
 "como una guía con propósitos distintos del contable.\n"
 msgstr ""
+"Minimální sada účtů pro zahájení práce v Peru.\n"
+"=================================================\n"
+"\n"
+"Použití tohoto CoA musí odkazovat na oficiální dokumentaci k MEF.\n"
+"\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/VERSION_MODIFICADA_PCG_EMPRESARIAL.pdf\n"
+"https://www.mef.gob.pe/contenidos/conta_publ/documentac/PCGE_2019.pdf\n"
+"\n"
+"Všechny právní odkazy najdete zde.\n"
+"\n"
+"http://www.sunat.gob.pe/legislacion/general/index.html\n"
+"\n"
+"Úvahy.\n"
+"===============\n"
+"\n"
+"Účtová osnova:\n"
+"-----------------\n"
+"\n"
+"Strom CoA se provádí pomocí skupin účtů, nejběžnější účty jsou dostupné\n"
+"v rámci jejich skupiny, pokud chcete vytvořit nový účet, použijte\n"
+"skupiny jako referenční.\n"
+"\n"
+"Daně:\n"
+"------\n"
+"\n"
+"\"IGV\": {\"name\": \"VAT\", \"code\": \"S\"},\n"
+"\"IVAP\": {\"name\": \"VAT\", \"code\": ''},\n"
+"\"ISC\": {\"name\": \"EXC\", \"code\": \"S\"},\n"
+"\"ICBPER\": {\"name\": \"OTH\", \"code\": ''},\n"
+"\"EXP\": {\"name\": \"FRE\", \"code\": \"G\"},\n"
+"\"GRA\": {\"name\": \"FRE\", \"code\": \"Z\"},\n"
+"\"EXO\": {\"name\": \"VAT\", \"code\": \"E\"},\n"
+"\"INA\": {\"name\": \"FRE\", \"code\": \"O\"},\n"
+"\"OTROS\": {\"name\": \"OTH\", \"code\": \"S\"},\n"
+"\n"
+"Do tohoto modulu jsme přidali 3 pojmy z oblasti daní (nezbytné pro EDI\n"
+"podpis)\n"
+"\n"
+"EDI peruánský kód: používá se k výběru typu daně z kódu SUNAT\n"
+"EDI UNECE: používá se k výběru typu daně na základě EDI vlivu Hospodářské\n"
+"komise Organizace\n"
+"spojených národů. Důvod: typ ovlivnění IGV na základě katalogu 07\n"
+"\n"
+"Produkty:\n"
+"---------\n"
+"\n"
+"Kód produktů, které mají být použity v EDI, je k dispozici zde, aby bylo možné\n"
+"rozhodnout, které daňové použití je způsobeno tímto odkazem a python kódem:\n"
+"\n"
+"https://docs.google.com/spreadsheets/d/1f1fxV8uGhA-Qz9-R1L1-dJirZ8xi3Wfg/edit#gid=662652969\n"
+"\n"
+"**Poznámka:**\n"
+"---------\n"
+"\n"
+"**VZTAH MEZI SMLOUVOU O POSKYTOVÁNÍ SLUŽEB A DAŇOVOU LEGISLATIVOU:**\n"
+"\n"
+"Tato PCGE byla připravena jako účetní nástroj pro shromažďování informací, které je třeba zveřejnit v účetní závěrce nebo v příloze k této závěrce. Tato kumulace se provádí v účetních knihách nebo záznamech, jejichž označení a povaha závisí na prováděných činnostech a které umožňují ověřování, kontrolu a následné kroky. Úplné znění IFRS a IFRS pro malé a střední podniky neobsahují předpisy týkající se vedení účetnictví, a tedy ani účetních knih a jiných záznamů účetní povahy. Na druhou stranu je sice pravda, že účetnictví je mimo jiné také vstupem pro plnění daňových úkolů, ale tento PCGE nebyl připraven tak, aby splňoval daňové požadavky nebo jejich ověřování. Nicméně tam, kde neexistoval rozpor mezi finančním účetnictvím předepsaným IFRS a daňovou legislativou, byly do tohoto CGAAP zahrnuty dílčí účty, oddíly a pododdíly, aby se rozlišily složky s daňovou platností v rámci souboru složek, které odpovídají účetnímu pohledu jako celku. Proto by tento CGAAP neměl být v žádném ohledu považován za vodítko pro jiné účely než účetnictví.\n"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_B
@@ -25469,12 +25569,12 @@ msgstr "Nizozemí - SBR ICP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_ob_nummer
 msgid "Netherlands - SBR OB Nummer"
-msgstr ""
+msgstr "Nizozemí - SBR ICP Nummer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports_sbr_status_info
 msgid "Netherlands - SBR Status information service"
-msgstr ""
+msgstr "Nizozemí – SBR Stavová informační služba"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
@@ -29580,7 +29680,7 @@ msgstr "Soukromé metody (například %s) nelze volat vzdáleně."
 #: code:addons/base/models/ir_actions_report.py:0
 #, python-format
 msgid "Problematic record(s)"
-msgstr ""
+msgstr "Problematické záznam(y)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -31096,12 +31196,12 @@ msgstr "Inkaso SEPA"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit_008_001_08
 msgid "SEPA Direct Debit Schema (Pain 008.001.08) support."
-msgstr ""
+msgstr "Podpora schématu přímého inkasa SEPA (Pain 008.001.08)."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit_008_001_08
 msgid "SEPA Direct Debit pain 008.001.08"
-msgstr ""
+msgstr "SEPA Direct Debit Pain 008.001.08"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_sepa
@@ -31508,12 +31608,12 @@ msgstr "Saúdská Arábie - E-fakturace (zjednodušená)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
 msgid "Saudi Arabia - Payroll"
-msgstr ""
+msgstr "Saúdská Arábie - Mzdy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "Saudi Arabia - Payroll with Accounting"
-msgstr ""
+msgstr "Saúdská Arábie - Účtování mezd"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -32570,7 +32670,7 @@ msgstr "Španělsko - účetnictví (PGCE 2008) výkazy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Španělsko – účetní výkazy (aktualizace z roku 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_real_estates
@@ -33151,7 +33251,7 @@ msgstr "Švédsko Registrační pokladna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_pos
 msgid "Swiss - Point of Sale"
-msgstr ""
+msgstr "Švýcarsko - prodejní místo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -33361,7 +33461,7 @@ msgstr "DIČ"
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl_cii_tax_extension
 #: model:ir.module.module,summary:base.module_account_edi_ubl_cii_tax_extension
 msgid "Tax extension for UBL/CII"
-msgstr ""
+msgstr "Prodloužení daně pro UBL/CII"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_taxcloud_delivery
@@ -34620,6 +34720,9 @@ msgid ""
 "         Please install the new \"Fedex Shipping\" module and uninstall this"
 " one as soon as possible. This integration will stop working in 2024."
 msgstr ""
+"Toto je starší integrace s FedEx, která již není podporována.         "
+"Nainstalujte prosím nový modul „Přeprava FedEx“ a odinstalujte jej co "
+"nejdříve. Tato integrace přestane fungovat v roce 2024."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
@@ -34639,6 +34742,8 @@ msgid ""
 "States Postal Service (USPS) Shipping\" module and uninstall this one as "
 "soon as possible."
 msgstr ""
+"Toto je starší integrace s USPS. Nainstalujte si prosím nový modul „United "
+"States Postal Service (USPS) Shipping“ a odinstalujte jej co nejdříve."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no
@@ -34996,7 +35101,7 @@ msgstr "Čtvrtek"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai_multi_refund
 msgid "TicketBAI multi refund"
-msgstr ""
+msgstr "Vícenásobná refundace TicketBAI"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_helpdesk_livechat
@@ -35708,12 +35813,12 @@ msgstr "Spojené arabské emiráty - účetnictví"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "United Arab Emirates - Payroll"
-msgstr ""
+msgstr "Spojené arabské emiráty - Mzdy"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "United Arab Emirates - Payroll with Accounting"
-msgstr ""
+msgstr "Spojené arabské emiráty - Účtování mezd"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
@@ -35748,7 +35853,7 @@ msgstr "Poštovní služba Spojených států amerických (USPS)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_usps
 msgid "United States Postal Service (USPS) Shipping (Legacy)"
-msgstr ""
+msgstr "Poštovní služba Spojených států amerických (USPS) (starší)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_uom
@@ -36432,7 +36537,7 @@ msgstr "Venezuela - Účetnictví"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock_30
 msgid "Version 3.0 of the delivery guide (Complemento XML Carta de Porte)."
-msgstr ""
+msgstr "Verze 3.0 průvodce doručením (Complemento XML Carta de Porte)."
 
 #. module: base
 #. odoo-python
