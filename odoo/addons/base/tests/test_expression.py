@@ -1994,7 +1994,7 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE "res_partner__company_id"."name" LIKE %s
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -2004,14 +2004,24 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE "res_partner__company_id"."partner_id" IN (
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."partner_id" IN (
                 SELECT "res_partner"."id"
                 FROM "res_partner"
                 WHERE "res_partner"."name" LIKE %s
-            )
+            ))
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
+
+        with self.assertQueries(['''
+            SELECT "res_partner"."id"
+            FROM "res_partner"
+            LEFT JOIN "res_company" AS "res_partner__company_id" ON
+                ("res_partner"."company_id" = "res_partner__company_id"."id")
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."parent_id" IS NULL)
+            ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
+        ''']):
+            self.Partner.search([('company_id.parent_id', '=', False)])
 
         # auto_join on the second many2one
         self.patch(self.Partner._fields['company_id'], 'auto_join', False)
@@ -2044,7 +2054,7 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE "res_partner__company_id__partner_id"."name" LIKE %s
+            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2066,8 +2076,8 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_country" AS "res_partner__country_id" ON
                 ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                "res_partner__company_id"."name" LIKE %s
-                OR "res_partner__country_id"."code" LIKE %s
+                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc
         ''']):
@@ -2299,7 +2309,7 @@ class TestOne2many(TransactionCase):
                 WHERE (
                     "res_partner"."active" IS TRUE
                     AND "res_partner"."parent_id" IS NOT NULL
-                    AND "res_partner__state_id__country_id"."code" LIKE %s
+                    AND ("res_partner"."state_id" IS NOT NULL AND "res_partner__state_id__country_id"."code" LIKE %s)
                 )
             )
             ORDER BY "res_partner"."complete_name"asc,"res_partner"."id"desc

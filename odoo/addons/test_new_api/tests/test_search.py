@@ -90,10 +90,10 @@ class TestSubqueries(TransactionCase):
             FROM "test_new_api_multi"
             LEFT JOIN "res_partner" AS "test_new_api_multi__partner"
                 ON ("test_new_api_multi"."partner" = "test_new_api_multi__partner"."id")
-            WHERE (
+            WHERE ("test_new_api_multi"."partner" IS NOT NULL AND (
                 "test_new_api_multi__partner"."name" LIKE %s
                 OR "test_new_api_multi__partner"."phone" LIKE %s
-            )
+            ))
             ORDER BY "test_new_api_multi"."id"
         """]):
             self.env['test_new_api.multi'].search([
@@ -917,7 +917,7 @@ class TestFlushSearch(TransactionCase):
             FROM "test_new_api_city"
             LEFT JOIN "test_new_api_country" AS "test_new_api_city__country_id"
                 ON ("test_new_api_city"."country_id" = "test_new_api_city__country_id"."id")
-            WHERE "test_new_api_city__country_id"."name" LIKE %s
+            WHERE ("test_new_api_city"."country_id" IS NOT NULL AND "test_new_api_city__country_id"."name" LIKE %s)
             ORDER BY "test_new_api_city"."id"
         ''']):
             self.brussels.country_id = self.france
