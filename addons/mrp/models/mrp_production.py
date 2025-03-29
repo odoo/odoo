@@ -50,7 +50,7 @@ class MrpProduction(models.Model):
     def _get_default_is_locked(self):
         return not self.env.user.has_group('mrp.group_unlocked_by_default')
 
-    name = fields.Char('Reference', default='New', copy=False, readonly=True)
+    name = fields.Char('Reference', default=lambda self: _('New'), copy=False, readonly=True)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Components will be reserved first for the MO with the highest priorities.")
@@ -394,7 +394,7 @@ class MrpProduction(models.Model):
         for production in self:
             bom = production.bom_id
             if bom and (
-                not production.product_id or bom.product_tmpl_id != production.product_tmpl_id
+                not production.product_id or bom.product_tmpl_id != production.product_id.product_tmpl_id
                 or bom.product_id and bom.product_id != production.product_id
             ):
                 production.product_id = bom.product_id or bom.product_tmpl_id.product_variant_id

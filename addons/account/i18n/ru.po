@@ -4721,7 +4721,7 @@ msgstr "Фискальный код страны компании"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Маска регистрационного номера компании"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -7079,6 +7079,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Ошибка при загрузке локализации: отсутствует налоговая метка %(tag_name)s "
+"для страны %(country_name)s. Возможно, вам следует сначала обновить "
+"приложение локализации."
 
 #. module: account
 #. odoo-python
@@ -7731,7 +7734,7 @@ msgstr "Из метки"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "За прошлый финансовый год"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
@@ -8972,7 +8975,7 @@ msgstr "Виджет просроченных кредитов и дебетов
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
 msgid "Invoice PDF"
-msgstr ""
+msgstr " Счёт-фактура PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -11781,7 +11784,7 @@ msgstr "Партнёр"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
 msgid "Partner Company Registry Placeholder"
-msgstr ""
+msgstr "Маска регистрационного номера компании партнёра"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -18575,11 +18578,8 @@ msgstr "Вы не можете регистрировать платежи дл�
 #. module: account
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
-msgid ""
-"You cannot remove parts of the audit trail. Archive the record instead."
+msgid "You cannot remove parts of the audit trail."
 msgstr ""
-"Вы не можете удалить части аудиторского следа. Вместо этого архивируйте "
-"запись."
 
 #. module: account
 #. odoo-python

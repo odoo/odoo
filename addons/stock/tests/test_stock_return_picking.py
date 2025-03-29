@@ -181,7 +181,7 @@ class TestReturnPicking(TestStockCommon):
             'tracking': 'serial',
         })
         # Create a stock picking with moves
-        picking = self.PickingObj.create({
+        original_picking = self.PickingObj.create({
             'picking_type_id': self.picking_type_in,
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location,
@@ -190,25 +190,46 @@ class TestReturnPicking(TestStockCommon):
                 'product_id': product_serial.id,
                 'location_id': self.supplier_location,
                 'location_dest_id': self.stock_location,
-                'product_uom_qty': 1,
+                'product_uom_qty': 10,
                 'product_uom': self.uom_unit.id,
             })],
         })
-        picking.action_confirm()
+        original_picking.action_confirm()
         # Update the lots of move lines
-        picking.move_line_ids.write({
-            'lot_name': 'Alsh',
-        })
-        picking.button_validate()
+        for i in range(10):
+            original_picking.move_line_ids[i].lot_name = f'Test Lot {i}'
+        original_picking.button_validate()
         # Create a return picking with the above respected picking
-        return_picking = self.env['stock.return.picking'].with_context(active_id=picking.id, active_ids=picking.ids, active_model='stock.picking').create({})
+        return_picking_wizard = self.env['stock.return.picking'].with_context(
+            active_id=original_picking.id, active_ids=original_picking.ids, active_model='stock.picking'
+        ).create({})
         # Change the quantity of the product return move from 0 to 1
-        return_picking.product_return_moves.quantity = 1.0
+        return_picking_wizard.product_return_moves.quantity = 1.0
         # Create a return picking exchange
-        res = return_picking.action_create_exchanges()
-        return_picking = self.env['stock.picking'].browse(res['res_id'])
-        self.assertTrue(return_picking)
-        self.assertEqual(len(return_picking.move_ids), 1)
+        return_picking_wizard.action_create_exchanges()
+
+        # There should be 3 transfers: original, return, exchange
+        self.assertEqual(
+            len(self.env['stock.picking'].search([('product_id', '=', product_serial.id)])), 3
+        )
+
+        return_picking = original_picking.return_ids
+        exchange_picking = return_picking.return_ids
+
+        # Original: one return (return picking), type in, 10 items
+        self.assertEqual(original_picking.return_count, 1)
+        self.assertEqual(original_picking.picking_type_id.id, self.picking_type_in)
+        self.assertEqual(len(original_picking.move_line_ids), 10)
+
+        # Return: one return (exchange picking), type out, 1 item
+        self.assertEqual(return_picking.return_count, 1)
+        self.assertEqual(return_picking.picking_type_id.id, self.picking_type_out)
+        self.assertEqual(len(return_picking.move_line_ids), 1)
+
+        # Exchange: no returns, type in, 1 item
+        self.assertEqual(exchange_picking.return_count, 0)
+        self.assertEqual(exchange_picking.picking_type_id.id, self.picking_type_in)
+        self.assertEqual(len(exchange_picking.move_line_ids), 1)
 
     def test_stock_picking_report_has_return(self):
         """

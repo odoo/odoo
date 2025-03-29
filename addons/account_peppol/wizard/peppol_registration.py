@@ -108,14 +108,10 @@ class PeppolRegistration(models.TransientModel):
                     'message': _("The endpoint number might not be correct. "
                                 "Please check if you entered the right identification number."),
                 }
-            if wizard.company_id.country_code == 'BE' and wizard.peppol_eas not in (False, '0208'):
-                peppol_warnings['company_peppol_eas_warning'] = {
-                    'message': _("The recommended identification method for Belgium is your Company Registry Number."),
-                }
             if not wizard.smp_registration:
                 peppol_warnings['company_on_another_smp'] = {
                     'message': _("Your company is already registered on another Access Point for receiving invoices."
-                                 "We will register you on Odoo as a sender only.")
+                                 "We will register you as a sender only.")
                 }
             wizard.peppol_warnings = peppol_warnings or False
 
@@ -293,21 +289,18 @@ class PeppolRegistration(models.TransientModel):
         # success
         notifications = {
             'sender': {
-                'title': _('Registered as a sender.'),
                 'message': _('You can now send electronic invoices via Peppol.'),
             },
             'smp_registration': {  # TODO remove in master
-                'title': _('Registered to receive documents via Peppol.'),
-                'message': _('Your registration on Peppol network should be activated within a day. The updated status will be visible in Settings.'),
+                'message': _('Your Peppol registration will be activated soon. You can already send invoices.'),
             },
             'receiver': {
-                'title': _('Registered as a receiver.'),
                 'message': _('You can now send and receive electronic invoices via Peppol'),
             },
         }
         state = self.company_id.account_peppol_proxy_state
         return self._action_send_notification(
-            title=notifications[state]['title'],
+            title=None,
             message=notifications[state]['message'],
         )
 

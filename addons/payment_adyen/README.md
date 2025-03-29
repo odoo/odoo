@@ -2,13 +2,13 @@
 
 ## Technical details
 
-SDK: [Web Components](https://docs.adyen.com/online-payments/build-your-integration/?platform=Web&integration=Components)
-version `5.39.0`
+SDK: Web Components
+version `6.9.0`
 
 APIs:
 
-- [Checkout API](https://docs.adyen.com/api-explorer/Checkout/) version `70`
-- [Recurring API](https://docs.adyen.com/api-explorer/Recurring/) version `68`
+- [Checkout API](https://docs.adyen.com/api-explorer/Checkout/) version `71`
+- ~~[Recurring API](https://docs.adyen.com/api-explorer/Recurring/) version `68`~~
 
 This module relies on the Web Components SDK to render payment methods and their payment detail
 inputs on the payment form. The JS and CSS assets of the SDK are loaded directly from
@@ -21,8 +21,8 @@ the appropriate API endpoint.
 This combined solution allows the implementation of a good-quality direct payment flow whilst
 keeping the front-end development efforts low. The 3DS support is also entirely delegated to Adyen.
 
-This is achieved by following Web Components'
-"[Advanced flow](https://docs.adyen.com/online-payments/build-your-integration/additional-use-cases/advanced-flow-integration)".
+This is achieved by following the
+"[Advanced flow](https://docs.adyen.com/online-payments/build-your-integration/advanced-flow/?platform=Web&integration=Components)".
 It is preferred over the recommended "Sessions flow" that only requires dealing with the `/sessions`
 endpoint instead of three `/payment/*` endpoints because two of those are still required to
 implement tokenization and handle 3DS redirects.
