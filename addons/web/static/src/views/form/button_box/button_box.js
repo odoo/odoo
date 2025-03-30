@@ -1,8 +1,9 @@
 import { useService } from "@web/core/utils/hooks";
+import { Component, onWillRender } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { ButtonBoxBottomSheet } from './button_box_sheet';
 
-import { Component, onWillRender } from "@odoo/owl";
 export class ButtonBox extends Component {
     static template = "web.Form.ButtonBox";
     static components = { Dropdown, DropdownItem };
@@ -16,6 +17,8 @@ export class ButtonBox extends Component {
 
     setup() {
         const ui = useService("ui");
+        this.bottomSheet = useService("bottomSheet");
+
         onWillRender(() => {
             const maxVisibleButtons = [0, 0, 0, 7, 4, 5, 8][ui.size] ?? 8;
             const allVisibleButtons = Object.entries(this.props.slots)
@@ -37,5 +40,23 @@ export class ButtonBox extends Component {
 
     isSlotVisible(slot) {
         return !("isVisible" in slot) || slot.isVisible;
+    }
+
+    openBottomSheet() {
+        // Add the bottomSheet using the service
+        this.bottomSheet.add(
+            ButtonBoxBottomSheet,
+            {
+                additionalButtons: this.additionalButtons,
+                slots: this.props.slots,
+                parentEnv: this.env
+            },
+            {
+                context: this,
+                sheetClasses: 'o-form-buttonbox-small',
+                // Pass the parent environment to enable buttons click
+                env: this.env
+            }
+        );
     }
 }
