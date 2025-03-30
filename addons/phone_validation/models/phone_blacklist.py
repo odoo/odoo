@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections.abc import Iterable
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import SQL, _
+from odoo.tools import _
 
 
 class PhoneBlacklist(models.Model):
@@ -14,7 +12,7 @@ class PhoneBlacklist(models.Model):
     _description = 'Phone Blacklist'
     _rec_name = 'number'
 
-    number = fields.Char(string='Phone Number', required=True, tracking=True, help='Number should be E164 formatted')
+    number = fields.Char(string='Phone Number', required=True, tracking=True, search='_search_number', help='Number should be E164 formatted')
     active = fields.Boolean(default=True, tracking=True)
 
     _unique_number = models.Constraint(
@@ -69,15 +67,13 @@ class PhoneBlacklist(models.Model):
             values['number'] = sanitized
         return super().write(values)
 
-    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query) -> SQL:
-        if field_expr == 'number':
-            # sanitize the phone number
-            sanitize = self.env.user._phone_format
-            if isinstance(value, str):
-                value = sanitize(number=value) or value
-            elif isinstance(value, Iterable) and all(isinstance(number, str) for number in value):
-                value = [sanitize(number=number) or number for number in value]
-        return super()._condition_to_sql(alias, field_expr, operator, value, query)
+    def _search_number(self, operator, value):
+        sanitize = self.env.user._phone_format
+        if operator in ('in', 'not in'):
+            value = [sanitize(number=number) or number for number in value]
+        else:
+            value = sanitize(number=value) or value
+        return [('number', operator, value)]
 
     def add(self, number, message=None):
         sanitized = self.env.user._phone_format(number=number)
