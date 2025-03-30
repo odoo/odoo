@@ -819,16 +819,12 @@ class DomainCondition(Domain):
             parent_domain = DomainCondition(self.field_expr, self.operator, self.value)
             return DomainCondition(parent_fname, 'any', parent_domain)
 
-        # handle non-stored fields (replace by searchable/stored items)
-        if not field.store:
-            # check that we have just the field (basic optimization only)
-            if field.name != self.field_expr:
-                return self
-            # find the implementation of search and execute it
-            if not field.search:
-                _logger.error("Non-stored field %s cannot be searched.", field, stack_info=_logger.isEnabledFor(logging.DEBUG))
-                return _TRUE_DOMAIN
-            return self._optimize_field_search_method(model)
+        # handle searchable fields
+        if field.search and field.name == self.field_expr:
+            domain = self._optimize_field_search_method(model).optimize(model)
+            # the domain is optimized so that value data types are already comparable
+            if domain != self:
+                return domain
 
         # optimizations based on operator
         for opt in _OPTIMIZATIONS_BY_OPERATOR[self.operator]:

@@ -73,7 +73,7 @@ class ResPartnerBank(models.Model):
 
     active = fields.Boolean(default=True)
     acc_type = fields.Selection(selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_acc_type', string='Type', help='Bank account type: Normal or IBAN. Inferred from the bank account number.')
-    acc_number = fields.Char('Account Number', required=True)
+    acc_number = fields.Char('Account Number', required=True, search='_search_acc_number')
     clearing_number = fields.Char('Clearing Number')
     sanitized_acc_number = fields.Char(compute='_compute_sanitized_acc_number', string='Sanitized Account Number', readonly=True, store=True)
     acc_holder_name = fields.Char(string='Account Holder Name', help="Account holder name, in case it is different than the name of the Account Holder", compute='_compute_account_holder_name', readonly=False, store=True)
@@ -98,6 +98,13 @@ class ResPartnerBank(models.Model):
         for bank in self:
             bank.sanitized_acc_number = sanitize_account_number(bank.acc_number)
 
+    def _search_acc_number(self, operator, value):
+        if operator in ('in', 'not in'):
+            value = [sanitize_account_number(i) for i in value]
+        else:
+            value = sanitize_account_number(value)
+        return [('sanitized_acc_number', operator, value)]
+
     @api.depends('acc_number')
     def _compute_acc_type(self):
         for bank in self:
@@ -118,15 +125,6 @@ class ResPartnerBank(models.Model):
     def _compute_display_name(self):
         for acc in self:
             acc.display_name = f'{acc.acc_number} - {acc.bank_id.name}' if acc.bank_id else acc.acc_number
-
-    def _condition_to_sql(self, alias: str, field_expr: str, operator: str, value, query) -> SQL:
-        if field_expr == 'acc_number':
-            field_expr = 'sanitized_acc_number'
-            if not isinstance(value, str) and isinstance(value, Iterable):
-                value = [sanitize_account_number(i) for i in value]
-            else:
-                value = sanitize_account_number(value)
-        return super()._condition_to_sql(alias, field_expr, operator, value, query)
 
     def action_archive_bank(self):
         """

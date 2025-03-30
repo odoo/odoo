@@ -139,6 +139,7 @@ class Field(typing.Generic[T]):
         For instance, all ``'='`` are transformed to ``'in'``, and boolean
         fields conditions are made such that operator is ``'in'``/``'not in'``
         and value is ``[True]``.
+
         The method should ``return NotImplemented`` if it does not support the
         operator.
         In that case, the ORM can try to call it with other, semantically
@@ -146,6 +147,10 @@ class Field(typing.Generic[T]):
         its corresponding negative operator is not implemented.
         The method must return a :ref:`reference/orm/domains` that replaces
         ``(field, operator, value)`` in its domain.
+
+        Note that a stored field can actually have a search method. The search
+        method will be invoked to rewrite the condition. This may be useful for
+        sanitizing the values used in the condition, for instance.
 
         .. code-block:: python
 
@@ -610,7 +615,7 @@ class Field(typing.Generic[T]):
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
             self.inverse = self._inverse_related
-        if field._description_searchable:
+        if not self.store and field._description_searchable:
             # allow searching on self only if the related field is searchable
             self.search = self._search_related
 
