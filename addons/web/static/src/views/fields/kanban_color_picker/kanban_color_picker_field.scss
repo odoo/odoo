@@ -57,7 +57,25 @@
     }
 }
 
+%o-kanban-colorpicker-inline {
+    --KanbanColorPickerField-columns: 12;
+    --KanbanColorPickerField-gap: #{map-get($spacers, 2)};
+    --KanbanColorPickerField-padding: #{map-get($spacers, 2)};
+    --KanbanColorPickerField-marginBottom: #{map-get($spacers, 3)};
+    --KanbanColorPickerField-Entry-minWidth: 2.5rem;
+    --KanbanColorPickerField-Entry-aspectRatio: 1;
+
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
 .o_kanban_colorpicker {
     @include o-kanban-colorpicker-colors();
     @include o-kanban-colorpicker();
+
+    &.o_kanban_colorpicker_inline {
+        @extend %o-kanban-colorpicker-inline;
+    }
 }

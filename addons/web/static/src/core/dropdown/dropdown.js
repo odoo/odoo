@@ -59,6 +59,7 @@ export class Dropdown extends Component {
             shape: {
                 default: { optional: true },
                 content: { optional: true },
+                bottomSheetContent: { optional: true },
             },
         },
 
@@ -329,8 +330,18 @@ export class Dropdown extends Component {
             onClosed: () => this.onClosed(),
             refresher: this.popoverRefresher,
             items: this.props.items,
-            slots: this.props.slots,
         };
+
+        if (this.shouldUseBottomSheet() && this.props.slots.bottomSheetContent?.__ctx.templates?.bottomSheetContent) {
+            // BottomSheet with custom content
+            props.slots = {
+                ...this.props.slots,
+                content: this.props.slots.bottomSheetContent
+            };
+        } else {
+            // Either popover OR BottomSheet with regular content
+            props.slots = this.props.slots;
+        }
 
         if (this.shouldUseBottomSheet()) {
             // Get dropdown text/title from target element

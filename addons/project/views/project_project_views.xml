@@ -426,6 +426,82 @@
                                 </div>
                             </div>
                         </t>
+                        <t t-name="bottomSheetContent" groups="base.group_user">
+                            <field name="color" inline="true" widget="kanban_color_picker" groups="project.group_project_manager"/>
+                            <hr/>
+                            <div class="fw-bold mb-3 text-muted">View</div>
+                            <div name="card_bottom_sheet_view" class="grid text-center" style="--columns: 3">
+                                <a
+                                    name="action_view_tasks"
+                                    type="object"
+                                    class="btn_icon"
+                                    role="button"
+                                    >
+                                    <i class="fa fa-tasks btn btn-secondary rounded-circle p-3 fs-2" role="img"/>
+                                    Tasks
+                                </a>
+
+                                <a
+                                    t-if="record.allow_milestones.raw_value"
+                                    groups="project.group_project_milestone"
+                                    name="action_get_list_view"
+                                    type="object"
+                                    class="btn_icon"
+                                    role="button"
+                                    >
+                                    <i class="fa fa-flag-o btn btn-secondary rounded-circle p-3 fs-2" role="img"/>
+                                    Milestones
+                                </a>
+                            </div>
+                            <hr/>
+                            <div class="fw-bold mb-3 text-muted">Reporting</div>
+                            <div name="o_kanban_bottom_sheet_manage_reporting" class="list-group list-group-flush">
+                                <a
+                                    name="action_view_tasks_analysis"
+                                    type="object"
+                                    role="button"
+                                    class="list-group-item list-group-action"
+                                    groups="project.group_project_user"
+                                    >
+                                    Tasks Analysis
+                                </a>
+                                <a
+                                    name="action_project_task_burndown_chart_report"
+                                    type="object"
+                                    role="button"
+                                    class="list-group-item list-group-action"
+                                    groups="project.group_project_user"
+                                    >
+                                    Burndown Chart
+                                </a>
+                            </div>
+
+                            <div class="o_bottom_sheet_footer d-flex justify-content-between">
+                                <a
+                                    t-if="record.privacy_visibility.raw_value == 'portal'"
+                                    class="btn btn-secondary btn-lg"
+                                    role="button"
+                                    name="action_open_share_project_wizard"
+                                    type="object"
+                                    >
+                                    <i class="fa fa-share me-1" role="img"/>
+                                    Share
+                                </a>
+                                <a
+                                    class="btn btn-secondary btn-lg"
+                                    role="button"
+                                    name="copy"
+                                    type="object"
+                                    >
+                                    <i class="fa fa-clone me-1" role="img"/>
+                                    Clone
+                                </a>
+                                <a class="btn btn-secondary btn-lg" role="button" type="open">
+                                    <i class="fa fa-cog me-1" role="img"/>
+                                    Settings
+                                </a>
+                            </div>
+                        </t>
                         <t t-name="card">
                             <main class="o_project_kanban_main">
                                 <div class="d-flex align-items-baseline gap-1">
@@ -674,6 +750,18 @@
                     <div role="menuitem" groups="project.group_project_user">
                         <a name="project_update_all_action" type="object" t-attf-context="{'active_id': #{record.id.raw_value} }">Dashboard</a>
                     </div>
+                </xpath>
+                <xpath expr="//div[@name='o_kanban_bottom_sheet_manage_reporting']/a" position="before">
+                    <a
+                        name="project_update_all_action"
+                        type="object"
+                        role="button"
+                        t-attf-context="{'active_id': #{record.id.raw_value} }"
+                        class="list-group-item list-group-action"
+                        groups="project.group_project_user"
+                        >
+                        Dashboard
+                    </a>
                 </xpath>
             </field>
         </record>

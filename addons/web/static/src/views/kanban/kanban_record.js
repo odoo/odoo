@@ -15,7 +15,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewCompiler } from "@web/views/view_compiler";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
-import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE } from "./kanban_arch_parser";
+import { KANBAN_CARD_ATTRIBUTE, KANBAN_MENU_ATTRIBUTE, KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE } from "./kanban_arch_parser";
 import { KanbanCompiler } from "./kanban_compiler";
 import { KanbanCoverImageDialog } from "./kanban_cover_image_dialog";
 import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
@@ -178,6 +178,7 @@ export class KanbanRecord extends Component {
     ];
     static KANBAN_CARD_ATTRIBUTE = KANBAN_CARD_ATTRIBUTE;
     static KANBAN_MENU_ATTRIBUTE = KANBAN_MENU_ATTRIBUTE;
+    static KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE = KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE;
     static menuTemplate = "web.KanbanRecordMenu";
     static template = "web.KanbanRecord";
 
@@ -194,7 +195,8 @@ export class KanbanRecord extends Component {
 
         this.templates = useViewCompiler(ViewCompiler, templates);
 
-        this.showMenu = this.constructor.KANBAN_MENU_ATTRIBUTE in templates;
+        this.showMenu = this.constructor.KANBAN_MENU_ATTRIBUTE in templates ||
+                        this.constructor.KANBAN_BOTTOM_SHEET_MENU_ATTRIBUTE in templates;
 
         this.dataState = useState({ record: {}, widget: {} });
         this.createWidget(this.props);

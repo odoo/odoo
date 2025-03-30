@@ -2,7 +2,15 @@
 <templates xml:space="preserve">
 
     <t t-name="web.KanbanColorPickerField">
-        <ul t-if="!props.readonly" class="o_kanban_colorpicker grid list-unstyled" role="menu">
+        <ul
+            t-if="!props.readonly"
+            class="o_kanban_colorpicker grid list-unstyled"
+            t-att-class="{
+                o_kanban_colorpicker_inline : props.inline,
+                o_kanban_colorpicker_grid : !props.inline,
+            }"
+            role="menu"
+            >
             <t t-foreach="colors" t-as="color" t-key="color_index">
                 <li
                     role="menuitem"
