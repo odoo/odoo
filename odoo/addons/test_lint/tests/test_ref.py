@@ -105,7 +105,6 @@ def check_ref_for_python_file(abs_path: str, diff_lines: set[int]) -> list[str]:
 
 
 def check_ref_for_data_xml_element(element: '_Element', file_info: FileInfo) -> tuple[str, str] | None:
-    # check the element if the start tag is modified
     if element.tag == 'record':
         record = element
         id_attr = record.get('id', None)
@@ -125,9 +124,15 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: FileInfo) -> 
             visitor.visit(tree)
             if visitor.issues:
                 return 'eval', visitor.issues[0]
+    elif element.tag == 'template':
+        template = element
+        id_attr = template.get('inherit_id', None)
+        force_create = template.get('force_create', 'True').lower()
+        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and force_create not in ('0', 'false'):
+            return 'inherit_id', f'{file_info.abs_path}, line {template.sourceline}'
 
 
-class TestDiff(DiffCase):
+class TestRef(DiffCase):
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
         diff_files: list[FileInfo] = []
@@ -184,5 +189,36 @@ class TestDiff(DiffCase):
             messages += "\n\nFound ref= for another module:\n" + "\n".join(issues['ref'])
         if issues['eval']:
             messages += "\n\nFound eval uses ref( for another module without raise_if_not_found=False:\n" + "\n".join(issues['eval'])
+        if issues['inherit_id']:
+            messages += '\n\nFound inherit_id= for another module without force_create="0":\n' + "\n".join(issues['inherit_id'])
+
+        self.assertFalse(bool(messages), messages)
+        """Check for inherit_id for other modules"""
+        diff_files: list[FileInfo] = []
+        for repo_path, base_version in self.repos.items():
+            diff_files.extend(
+                FileInfo(repo_path=repo_path, git_path=file, base_version=base_version)
+                for file in self.get_diff_files(repo_path, base_version, '*.xml')
+            )
+
+        module_files: dict[str, list[FileInfo]] = defaultdict(list)
+        for file_info in diff_files:
+            if file_info.module_name and file_info.module_name != 'base' and not file_info.module_name.startswith('test_'):
+                module_files[file_info.module_name].append(file_info)
+
+        issues: dict[str, list[str]] = defaultdict(list)
+        for module_name, file_infos in module_files.items():
+            manifest = get_manifest(module_name)
+            data_files = set(manifest['views'])  # ignore manifest['demo']
+            for file_info in file_infos:
+                if file_info.module_path not in data_files:
+                    continue
+                diff_lines = self.get_diff_lines(file_info.git_path, file_info.repo_path,file_info.base_version)
+                for element in self.yield_xml_diff_elements(file_info.abs_path, diff_lines):
+                    if issue := check_ref_for_data_xml_element(element, file_info):
+                        issues[issue[0]].append(issue[1])
+
+        messages = ''
+        
 
         self.assertFalse(bool(messages), messages)
