@@ -360,17 +360,16 @@ class EventRegistration(models.Model):
             registration_id=self.id,
         )
 
-    def _message_get_default_recipients(self, with_cc=False, all_tos=False):
+    def _message_add_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
-        results = super()._message_get_default_recipients(with_cc=with_cc, all_tos=all_tos)
+        results = super()._message_add_default_recipients()
         for record in self:
-            email_to = results[record.id]['email_to']
-            if email_to:
-                results[record.id]['email_to'] = ','.join(
-                    formataddr((record.name or "", email))
-                    for email in email_normalize_all(email_to) if email
-                )
+            email_to_lst = results[record.id]['email_to_lst']
+            if len(email_to_lst) == 1:
+                email_normalized = email_normalize(email_to_lst[0])
+                if email_normalized and email_normalized == email_normalize(record.email):
+                    results[record.id]['email_to_lst'] = [formataddr((record.name or "", email_normalized))]
         return results
 
     def _message_post_after_hook(self, message, msg_vals):

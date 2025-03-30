@@ -401,7 +401,7 @@ class TestAPI(MailCommon, TestRecipients):
 
         # test default computation of recipients
         self.env.invalidate_all()
-        with self.assertQueryCount(20):
+        with self.assertQueryCount(22):
             defaults_withcc = test_records.with_context()._message_get_default_recipients(with_cc=True)
             defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
@@ -462,6 +462,7 @@ class TestAPI(MailCommon, TestRecipients):
             # do not propose alias domain emails
             {
                 'email_from': self.mail_alias_domain.catchall_email,
+                'name': 'Alias domain email',
             },
             # do not propose when partner = alias
             {
@@ -492,22 +493,22 @@ class TestAPI(MailCommon, TestRecipients):
         expected_all = [
             # nobody to suggest (no public !)
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
-            # FIXME should be nobody to suggest (no root !)
-            {'email_cc': '', 'email_to': '', 'partner_ids': [self.partner_root.id]},
-            # FIXME alias domain email is not ok
-            {'email_cc': '', 'email_to': 'catchall.test@test.mycompany.com', 'partner_ids': []},
-            # FIXME partner with alias email is not ok
-            {'email_cc': '', 'email_to': '', 'partner_ids': [self.test_partner_alias.id]},
-            # FIXME alias email is not ok
-            {'email_cc': '', 'email_to': 'test.alias.free@test.mycompany.com', 'partner_ids': []},
-            # FIXME alias email is not ok even if linked to partner
-            {'email_cc': '', 'email_to': 'test.alias.partner@test.mycompany.com', 'partner_ids': []},
+            # should be nobody to suggest (no root !)
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # alias domain email is not ok
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # partner with alias email is not ok
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # alias email is not ok
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # alias email is not ok even if linked to partner
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # archived is ok, customer
             {'email_cc': '', 'email_to': '', 'partner_ids': [self.test_partner_archived.id]},
             # active based on archived user is ok, customer
             {'email_cc': '', 'email_to': '', 'partner_ids': [self.partner_employee_archived.id]},
         ]
-        defaults = tickets._message_get_default_recipients(all_tos=False)
+        defaults = tickets._message_get_default_recipients()
         for ticket, expected in zip(tickets, expected_all, strict=True):
             with self.subTest(ticket_name=ticket.name):
                 self.assertDictEqual(defaults[ticket.id], expected)
@@ -539,6 +540,7 @@ class TestAPI(MailCommon, TestRecipients):
         ticket_partner_email = self.env['mail.test.ticket.mc'].create({
             'customer_id': False,
             'email_from': self.test_partner.email_formatted,
+            'name': 'Partner email',
             'phone_number': '+33199001015',
             'user_id': self.env.user.id,  # should not be proposed, already follower
         })
@@ -546,20 +548,42 @@ class TestAPI(MailCommon, TestRecipients):
         ticket_partner = self.env['mail.test.ticket.mc'].create({
             'customer_id': self.test_partner.id,
             'email_from': self.test_partner.email_formatted,
+            'name': 'Partner',
         })
-        for ticket in ticket_partner_email + ticket_partner:
+        # existing partner in followers -> should not propose it
+        ticket_partner_fol = self.env['mail.test.ticket.mc'].create({
+            'customer_id': self.test_partner.id,
+            'email_from': self.test_partner.email_formatted,
+            'name': 'Partner follower',
+        })
+        # existing partner in followers -> should not propose it
+        ticket_partner_fol_user = self.env['mail.test.ticket.mc'].create({
+            'customer_id': self.partner_employee.id,
+            'email_from': self.partner_employee.email_formatted,
+            'name': 'Partner follower (user)',
+        })
+        ticket_partner_fol.message_subscribe(partner_ids=self.test_partner.ids)
+        ticket_partner_fol.message_subscribe(partner_ids=self.partner_employee.ids)
+        for ticket, sugg_partner in zip(
+            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user,
+            (self.test_partner, self.test_partner, self.test_partner, False),
+            strict=True,
+        ):
             with self.subTest(ticket=ticket.name):
                 suggestions = ticket._message_get_suggested_recipients(no_create=True)
-                self.assertEqual(len(suggestions), 1)
-                self.assertDictEqual(
-                    suggestions[0],
-                    {
-                        'create_values': {},
-                        'email': self.test_partner.email_normalized,
-                        'name': self.test_partner.name,
-                        'partner_id': self.test_partner.id,
-                    }
-                )
+                if sugg_partner:
+                    self.assertEqual(len(suggestions), 1)
+                    self.assertDictEqual(
+                        suggestions[0],
+                        {
+                            'create_values': {},
+                            'email': sugg_partner.email_normalized,
+                            'name': sugg_partner.name,
+                            'partner_id': sugg_partner.id,
+                        }
+                    )
+                else:
+                    self.assertEqual(len(suggestions), 0)
 
     @users("employee")
     def test_message_get_suggested_recipients_banned(self):

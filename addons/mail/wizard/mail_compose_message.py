@@ -525,7 +525,7 @@ class MailComposeMessage(models.TransientModel):
                 composer.reply_to = False
 
     @api.depends('composition_mode', 'model', 'parent_id', 'res_domain',
-                 'res_ids', 'template_id')
+                 'res_ids', 'subtype_id', 'template_id')
     def _compute_partner_ids(self):
         """ Computation is coming either from template, either from context.
         When having a template it uses its 3 fields 'email_cc', 'email_to' and
@@ -544,7 +544,7 @@ class MailComposeMessage(models.TransientModel):
                 rendered_values = composer._generate_template_for_composer(
                     res_ids,
                     {'email_cc', 'email_to', 'partner_ids'},
-                    allow_suggested=composer.message_type == 'comment',
+                    allow_suggested=composer.message_type == 'comment' and not composer.subtype_is_log,
                     find_or_create_partners=True,
                 )[res_ids[0]]
                 if rendered_values.get('partner_ids'):
@@ -1128,7 +1128,10 @@ class MailComposeMessage(models.TransientModel):
                  'report_template_ids',
                  'scheduled_date',
                 ],
-                allow_suggested=self.composition_mode == 'comment' and not self.composition_batch and self.message_type == 'comment',
+                allow_suggested=(
+                    self.composition_mode == 'comment' and not self.composition_batch and
+                    self.message_type == 'comment' and not self.subtype_is_log
+                ),
                 find_or_create_partners=self.env.context.get("mail_composer_force_partners", True),
             )
             for res_id in res_ids:
@@ -1562,7 +1565,9 @@ class MailComposeMessage(models.TransientModel):
                     rendering_res_ids,
                     {template_fname},
                     # monorecord comment -> ok to use suggested recipients
-                    recipients_allow_suggested=self.message_type == 'comment',
+                    recipients_allow_suggested=(
+                        self.message_type == 'comment' and not self.subtype_is_log
+                    ),
                 )[rendering_res_ids[0]][template_fname]
             else:
                 self[composer_fname] = self.template_id[template_fname]
