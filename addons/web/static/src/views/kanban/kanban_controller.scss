@@ -89,11 +89,6 @@
         padding-left: var(--offcanvas-padding-x);
     }
 
-    .oe_kanban_action {
-        padding: map-get($spacers, 2) 0;
-        display: inline-block;
-    }
-
     .o_kanban_card_manage_settings {
         order: -1;
         padding-bottom: map-get($spacers, 2);
@@ -106,31 +101,29 @@
 
         div[class*="col-"] {
             width: 100%;
+
+            &:has(.o_field_kanban_color_picker) {
+                padding: 0;
+            }
         }
 
         .o_field_kanban_color_picker {
             --fieldWidget-display: block;
             --fieldWidget-margin-bottom: #{map-get($spacers, 3)};
-        }
 
-        .o_kanban_colorpicker {
-            max-width: none;
-            display: flex;
-            justify-content: space-between;
-            gap: map-get($spacers, 2);
-            margin: 0 calc(var(--offcanvas-padding-x) * -1) !important;
-            padding: map-get($spacers, 2) var(--offcanvas-padding-x);
-            overflow-x: auto;
+            --KanbanColorPickerField-columns: 12;
+            --KanbanColorPickerField-gap: #{map-get($spacers, 2)};
+            --KanbanColorPickerField-padding: 0;
+            --KanbanColorPickerField-Entry-minWidth: 2.5rem;
+            --KanbanColorPickerField-Entry-aspectRatio: 1;
 
-            > li {
-                margin: 0;
+            .o_kanban_colorpicker {
+                overflow: auto;
+                padding: map-get($spacers, 1) var(--BottomSheet-Entry-paddingX);
+                scrollbar-width: none;
+                -ms-overflow-style: none;
             }
 
-            > li > a:after {
-                width: 12vw;
-                height: auto;
-                aspect-ratio: 4/3;
-            }
         }
     }
 }
