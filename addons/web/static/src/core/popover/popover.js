@@ -60,6 +60,9 @@ export class Popover extends Component {
         fixedPosition: false,
         position: "bottom",
         setActiveElement: false,
+        useBottomSheet: true,
+        title: "",
+        sheetClasses: "",
     };
     static props = {
         // Main props
@@ -105,6 +108,15 @@ export class Popover extends Component {
         closeOnClickAway: { optional: true, type: Function },
         closeOnEscape: { optional: true, type: Boolean },
         setActiveElement: { optional: true, type: Boolean },
+        useBottomSheet: { optional: true, type: Boolean },
+        title: { optional: true, type: String },
+
+        // Bottom sheet specific options
+        sheetClasses: { optional: true, type: String },
+        initialHeightPercent: { optional: true, type: Number },
+        maxHeightPercent: { optional: true, type: Number },
+        startExpanded: { optional: true, type: Boolean },
+        preventDismissOnContentScroll: { optional: true, type: Boolean },
 
         // Technical props
         ref: { optional: true, type: Function },

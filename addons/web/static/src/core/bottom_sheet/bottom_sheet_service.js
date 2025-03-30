@@ -66,30 +66,66 @@ export const bottomSheetService = {
                 }
             }
 
-            // Determine which component to add
+            // Determine which component to add and how to configure it
             let componentToAdd = component;
             let propsToAdd = componentProps;
+            // Make a copy of options to avoid modifying the original
+            let bottomSheetOptions = { ...options };
+
+            // Check registry for custom component and options
+            let registration = null;
+            if (component.name) {
+                registration = registry.category("bottom_sheet_components").get(component.name, false);
+            }
 
             if (!hasDeclarativeSheet) {
+                // Apply custom component from registry if available
+                if (registration && registration.Component) {
+                    componentToAdd = registration.Component;
+                }
+
+                // Apply custom options from registry if available
+                if (registration && registration.options) {
+                    bottomSheetOptions = { ...bottomSheetOptions, ...registration.options };
+                }
+
                 // Normal case - wrap with BottomSheet
-                componentToAdd = BottomSheet;
                 propsToAdd = {
                     id: id,
-                    component,
+                    component: componentToAdd,
                     componentProps: componentProps,
-                    title: options.title || '',
-                    showBackBtn: options.showBackBtn || false,
-                    showCloseBtn: options.showCloseBtn || false,
-                    withBodyPadding: options.withBodyPadding !== undefined ? options.withBodyPadding : true,
-                    initialHeightPercent: options.initialHeightPercent || 50,
-                    maxHeightPercent: options.maxHeightPercent || 90,
-                    startExpanded: options.startExpanded || false,
-                    preventDismissOnContentScroll: options.preventDismissOnContentScroll || false,
-                    sheetClasses: options.sheetClasses || '',
-                    onClose: options.onClose,
-                    onBack: options.onBack,
-                    slots: options.slots || {},
+                    title: bottomSheetOptions.title || '',
+                    showBackBtn: bottomSheetOptions.showBackBtn || false,
+                    showCloseBtn: bottomSheetOptions.showCloseBtn || false,
+                    withBodyPadding: bottomSheetOptions.withBodyPadding !== undefined ? bottomSheetOptions.withBodyPadding : true,
+                    initialHeightPercent: bottomSheetOptions.initialHeightPercent || 50,
+                    maxHeightPercent: bottomSheetOptions.maxHeightPercent || 90,
+                    startExpanded: bottomSheetOptions.startExpanded || false,
+                    preventDismissOnContentScroll: bottomSheetOptions.preventDismissOnContentScroll || false,
+                    sheetClasses: bottomSheetOptions.sheetClasses || '',
+                    onClose: bottomSheetOptions.onClose,
+                    onBack: bottomSheetOptions.onBack,
+                    slots: bottomSheetOptions.slots || {},
                 };
+
+                // When using registry component, apply slot mappings if configured
+                if (registration && registration.slots) {
+                    const slotMappings = registration.slots;
+                    const wrappedSlots = {};
+
+                    // Map slots according to configuration
+                    Object.entries(slotMappings).forEach(([sourceSlot, targetSlot]) => {
+                        if (props[sourceSlot]) {
+                            wrappedSlots[targetSlot] = props[sourceSlot];
+                        }
+                    });
+
+                    // Merge with any existing slots
+                    propsToAdd.slots = { ...propsToAdd.slots, ...wrappedSlots };
+                }
+
+                // Use BottomSheet as the container
+                componentToAdd = BottomSheet;
             }
 
             // Create the sheet in the overlay
@@ -104,11 +140,11 @@ export const bottomSheetService = {
                         }
 
                         // Call onClose callback
-                        if (options.onClose) {
-                            options.onClose();
+                        if (bottomSheetOptions.onClose) {
+                            bottomSheetOptions.onClose();
                         }
                     },
-                    env: options.env // Pass the environment to overlay
+                    env: bottomSheetOptions.env // Pass the environment to overlay
                 }
             );
 
@@ -117,7 +153,7 @@ export const bottomSheetService = {
                 id,
                 removeFromDOM,
                 component,
-                options,
+                options: bottomSheetOptions,
             };
 
             // Return a function to close the sheet

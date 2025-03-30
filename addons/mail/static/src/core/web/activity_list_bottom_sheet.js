@@ -1,22 +1,17 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { compareDatetime } from "@mail/utils/common/misc";
+import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 
 import { Component, onWillUpdateProps } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
 
 /**
- * @typedef {Object} Props
- * @property {number[]} activityIds
- * @property {function} close
- * @property {number} [defaultActivityTypeId]
- * @property {function} onActivityChanged
- * @property {number} resId
- * @property {string} resModel
+ * Mobile-optimized version of ActivityListPopover
  * @extends {Component<Props, Env>}
  */
-export class ActivityListPopover extends Component {
-    static name = "ActivityListPopover";
+export class ActivityListBottomSheet extends Component {
     static components = { ActivityListPopoverItem };
     static props = [
         "activityIds",
@@ -24,11 +19,10 @@ export class ActivityListPopover extends Component {
         "defaultActivityTypeId?",
         "onActivityChanged",
         "resId",
-        /** Ids of record selection used to schedule activities in batch; it must include resId. */
         "resIds?",
         "resModel",
     ];
-    static template = "mail.ActivityListPopover";
+    static template = "mail.ActivityListBottomSheet";
 
     setup() {
         super.setup();
@@ -80,3 +74,22 @@ export class ActivityListPopover extends Component {
         this.store.insert(data);
     }
 }
+
+// Register this component as the bottom sheet alternative for ActivityListPopover
+registry.category("bottom_sheet_components").add(
+    "ActivityListPopover",
+    {
+        Component: ActivityListBottomSheet,
+        slots: {
+            content: "default",
+            footer: "footer",
+        },
+        options: {
+            initialHeightPercent: 60,
+            maxHeightPercent: 90,
+            withBodyPadding: false,
+            startExpanded: true,
+            sheetClasses: "o-mail-ActivityListBottomSheet-container"
+        }
+    }
+);

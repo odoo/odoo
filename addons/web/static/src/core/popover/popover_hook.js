@@ -4,6 +4,13 @@ import { useService } from "@web/core/utils/hooks";
 /**
  * @typedef {import("@web/core/popover/popover_service").PopoverServiceAddFunction} PopoverServiceAddFunction
  * @typedef {import("@web/core/popover/popover_service").PopoverServiceAddOptions} PopoverServiceAddOptions
+ * @property {boolean} [useBottomSheet] Whether to use bottom sheet on mobile (default: true)
+ * @property {string} [title] Title to display in the popover or bottom sheet header
+ * @property {string} [popoverClass] CSS classes to apply to the popover
+ * Specific to bottom sheet:
+ * @property {string} [sheetClasses] CSS classes to apply specifically to the bottom sheet
+ * @property {boolean} [initialHeightPercent] Initial height of bottom sheet as percentage
+ * @property {boolean} [maxHeightPercent] Maximum height of bottom sheet as percentage
  */
 
 /**
