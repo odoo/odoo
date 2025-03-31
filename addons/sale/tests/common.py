@@ -201,6 +201,11 @@ class TestSaleCommon(AccountTestInvoicingCommon):
 
         return company_data
 
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref('sales_team.group_sale_manager')
+
 
 class TestTaxCommonSale(TestTaxCommon):
 
