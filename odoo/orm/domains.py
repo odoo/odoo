@@ -887,7 +887,7 @@ class DomainCondition(Domain):
             "Unsupported operator on %(field_label)s %(model_label)s in %(domain)s",
             domain=repr(self),
             field_label=self._field(model).get_description(model.env, ['string'])['string'],
-            model_name=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
+            model_label=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
         ))
 
     def _to_sql(self, model: BaseModel, alias: str, query: Query) -> SQL:
@@ -1167,7 +1167,7 @@ def _optimize_like_str(condition, model):
 @field_type_optimization(['many2one', 'one2many', 'many2many'])
 def _optimize_relational_name_search(condition, model):
     """Search relational using `display_name`.
-    
+
     When a relational field is compared to a string, we actually want to make
     a condition on the `display_name` field.
     Negative conditions are translated into a "not any" for consistency.
