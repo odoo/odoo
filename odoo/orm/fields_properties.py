@@ -610,6 +610,30 @@ class Properties(Field):
                 property_definition.pop('value', None)
         return values_list
 
+    def expression_getter(self, field_expr):
+        _fname, property_name = parse_field_expr(field_expr)
+        if not property_name:
+            raise ValueError(f"Missing property name for {self}")
+
+        def get_property(record):
+            property_value = self.__get__(record)
+            value = property_value.get(property_name)
+            if value:
+                return value
+            # find definition to check the type
+            for definition in self._get_properties_definition(record) or ():
+                if definition.get('name') == property_name:
+                    break
+            else:
+                # definition not found
+                return value or False
+
+            if not value and definition['type'] in ('many2one', 'many2many'):
+                return record.env.get(definition.get('comodel'))
+            return value
+
+        return get_property
+
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
         check_property_field_value_name(property_name)
         return SQL("(%s -> %s)", field_sql, property_name)

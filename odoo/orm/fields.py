@@ -1381,6 +1381,23 @@ class Field(typing.Generic[T]):
 
     ############################################################################
     #
+    # Expressions and filtering of records
+    #
+
+    def expression_getter(self, field_expr: str) -> Callable[[BaseModel], typing.Any]:
+        """ Given some field expression (what you find in domain conditions),
+        return a function that returns the corresponding expression for a record::
+
+            field = record._fields['create_date']
+            get_value = field.expression_getter('create_date.month_number')
+            month_number = get_value(record)
+        """
+        if field_expr == self.name:
+            return self.__get__
+        raise ValueError(f"Expression not supported on {self}: {field_expr!r}")
+
+    ############################################################################
+    #
     # Alternatively stored fields: if fields don't have a `column_type` (not
     # stored as regular db columns) they go through a read/create/write
     # protocol instead
