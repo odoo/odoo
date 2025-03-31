@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit="calendar.AttendeeCalendarCommonRenderer.HeaderTemplate" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('holidays_div')]" position="inside">
+            <t t-foreach="mandatory_day_list" t-as="mandatory_day" t-key="mandatory_day_list[0]" t-if="mandatory_day_list">
+                <div>
+                    <i t-attf-class="holiday_icon o_mandatory_day_{{mandatory_day.color}} rounded-circle fa {{mandatory_day.icon}}" t-if="mandatory_day.title" t-att-data-index="mandatory_day_index" t-att-data-model="'mandatory_day'"/>
+                    <span t-out="mandatory_day.title" t-attf-class="px-1 fw-bolder holiday_title"/>
+                </div>
+            </t>
+            <t t-foreach="public_holiday_list" t-as="public_holiday" t-key="public_holiday_list[0]" t-if="public_holiday_list">
+                <div>
+                    <i t-attf-class="holiday_icon rounded-circle fa {{public_holiday.icon}}" t-if="public_holiday.title" t-att-data-index="public_holiday_index" t-att-data-model="'public_holiday'"/>
+                    <span t-out="public_holiday.title" t-attf-class="px-1 fw-bolder holiday_title"/>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[hasclass('location_div')]" position="attributes">
+            <attribute name="t-if">mandatory_day_list.length === 0 and public_holiday_list.length === 0</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="hr_holidays.holidayPopover">
+        <div t-att-class="` o_cw_popover o_calendar_color_${props.color} mw-100`">
+            <div class="card-header d-flex justify-content-between py-2 pe-2">
+                <span class="popover-header border-0">
+                    <i t-att-class="`o_mandatory_day_${props.color} fa fa-fw me-2 ${props.icon}`" role="img"/>
+                    <t t-out="props.title"/>
+                </span>
+                <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
+                    <i class="fc-close fc-icon fc-icon-x" />
+                </span>
+            </div>
+            <div class="o_cw_body">
+                <ul class="list-group list-group-flush">
+                    <div class="list-group-item d-flex flex-row align-items-center" t-if="props.jobs">
+                        <i class="fa fa-fw fa-users me-2"/>
+                        <div class="d-flex flex-row flex-wrap" t-if="props.jobs.length > 0">
+                            <t t-foreach="props.jobs" t-as="job" t-key="job_index">
+                                <span t-esc="job" class="o_badge badge rounded-pill o_tag o_tag_color_0 m-1"/>
+                            </t>
+                        </div>
+                        <t t-else="">
+                            <span class="mx-1">
+                                All Jobs
+                            </span>
+                        </t>
+                    </div>
+                    <div class="list-group-item d-flex flex-row align-items-center" t-if="props.departments">
+                        <i class="fa fa-fw fa-sitemap me-2"/>
+                        <div  class="d-flex flex-row flex-wrap" t-if="props.departments.length > 0">
+                            <t t-foreach="props.departments" t-as="department" t-key="department_index">
+                                <span t-esc="department" class="o_badge badge rounded-pill o_tag o_tag_color_0 m-1"/>
+                            </t>
+                        </div>
+                        <t t-else="">
+                            <span class="mx-1">
+                                All Departments
+                            </span>
+                        </t>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </t>
+</templates>

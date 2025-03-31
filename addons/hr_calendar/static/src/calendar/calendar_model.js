@@ -77,47 +77,31 @@ patch(AttendeeCalendarModel.prototype, {
             const dayISO = startDay.toISODate();
             const dayName = startDay.setLocale("en").weekdayLong.toLowerCase();
             for (const employeeId in res) {
-                if (this.multiCalendar) {
-                    if (!(dayISO in events)) {
-                        events[dayISO] = {};
-                    }
-                    if (res[employeeId].exceptions && dayISO in res[employeeId].exceptions) {
-                        // check if exception for that date
-                        const { location_type } = res[employeeId].exceptions[dayISO];
-                        if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
-                        } else {
-                            events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
-                        }
-                    }
-                    else {
-                        const locationKeyName = `${dayName}_location_id`;
-                        if (!(locationKeyName in res[employeeId])) {
-                            continue;
-                        }
-                        const {location_type} = res[employeeId][locationKeyName];
-                        if (!location_type) {
-                            continue;
-                        }
-                        if (location_type in events[dayISO]) {
-                            events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
-                        } else {
-                            events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
-                        }
-                    }
-                } else {
-                    const hasException = res[employeeId].exceptions && dayISO in res[employeeId].exceptions;
-                    const workLocationData = hasException ? res[employeeId].exceptions[dayISO] : res[employeeId][`${dayName}_location_id`];
-                    const currentEvent = this.createHomeworkingRecordAt(res[employeeId], startDay, workLocationData);
-                    const previousEvent = events[previousDay];
-                    if (previousEvent && previousEvent.icon === currentEvent.icon && previousEvent.title === currentEvent.title) {
-                        previousEvent.end = previousEvent.end.plus({days:1});
-                        currentEvent.display = false;
+                if (!(dayISO in events)) {
+                    events[dayISO] = {};
+                }
+                if (res[employeeId].exceptions && dayISO in res[employeeId].exceptions) {
+                    // check if exception for that date
+                    const { location_type } = res[employeeId].exceptions[dayISO];
+                    if (location_type in events[dayISO]) {
+                        events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO]));
                     } else {
-                        previousDay = dayISO;
+                        events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId].exceptions[dayISO])];
                     }
-                    if (currentEvent.title) {
-                        events[dayISO] = currentEvent;
+                }
+                else {
+                    const locationKeyName = `${dayName}_location_id`;
+                    if (!(locationKeyName in res[employeeId])) {
+                        continue;
+                    }
+                    const {location_type} = res[employeeId][locationKeyName];
+                    if (!location_type) {
+                        continue;
+                    }
+                    if (location_type in events[dayISO]) {
+                        events[dayISO][location_type].push(this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName]));
+                    } else {
+                        events[dayISO][location_type] = [this.createHomeworkingRecordAt(res[employeeId], startDay, res[employeeId][locationKeyName])];
                     }
                 }
             }

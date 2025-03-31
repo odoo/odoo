@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, models
+from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -22,6 +23,24 @@ class ResPartner(models.Model):
     @api.model
     def _get_on_leave_ids(self):
         return self.env['res.users']._get_on_leave_ids(partner=True)
+
+    def get_mandatory_days_data(self, start_date, end_date, everybody):
+        domain = self._get_data_domain(everybody)
+        employee_ids = self.env['hr.employee'].search(domain).ids
+        return self.env['hr.employee'].with_context({'employee_ids': employee_ids}).get_mandatory_days_data(start_date, end_date)
+
+    def get_public_holidays_data(self, start_date, end_date, everybody):
+        domain = self._get_data_domain(everybody)
+        employee_ids = self.env['hr.employee'].search(domain).ids
+        return self.env['hr.employee'].with_context({'employee_ids': employee_ids}).get_public_holidays_data(start_date, end_date)
+
+    def _get_data_domain(self, everybody):
+        if everybody:
+            work_contact_id_domain = Domain('work_contact_id', '!=', False)
+        else:
+            work_contact_id_domain = Domain('work_contact_id', 'in', self.ids)
+        domain = Domain.AND([work_contact_id_domain,Domain('company_id', '=', self.env.company.id)])
+        return domain
 
     def _to_store_defaults(self):
         def out_of_office_date_end(partner):
