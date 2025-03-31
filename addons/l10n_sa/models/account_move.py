@@ -54,10 +54,16 @@ class AccountMove(models.Model):
             if record.country_code == 'SA' and record.move_type in ('out_invoice', 'out_refund'):
                 if not record.l10n_sa_show_delivery_date:
                     raise UserError(_('Delivery Date cannot be empty'))
-                self.write({
-                    'l10n_sa_confirmation_datetime': fields.Datetime.now()
-                })
+                if not record.l10n_sa_confirmation_datetime:
+                    record.l10n_sa_confirmation_datetime = fields.Datetime.now()
         return res
+
+    def _l10n_sa_reset_confirmation_datetime(self):
+        self.filtered(lambda m: m.country_code == 'SA').l10n_sa_confirmation_datetime = False
+
+    def button_draft(self):
+        self._l10n_sa_reset_confirmation_datetime()
+        super().button_draft()
 
     def _get_l10n_sa_totals(self):
         self.ensure_one()
