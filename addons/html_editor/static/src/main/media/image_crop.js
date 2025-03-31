@@ -210,8 +210,6 @@ export class ImageCrop extends Component {
         this.props.onSave?.({
             aspectRatio: this.aspectRatio,
             ...cropperData,
-            // todo nby: what about `delete image.dataset.resizeWidth;` ? (see previously `processImageCrop`)
-            // todo nby: what about `forceModification: true,`? (see previously `processImageCrop`)
         });
         this.closeCropper();
     }
