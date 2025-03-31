@@ -67,7 +67,7 @@ class test_inherits(common.TransactionCase):
 
     def test_41_selection_extension(self):
         """ check that attribute selection_add=... extends selection on fields. """
-        model = self.env['test_new_api.selection']
+        model = self.env['test_orm.selection']
         field = model._fields['other']
         self.assertIsInstance(field.selection, str)
         self.assertEqual(field._description_selection(self.env), [('baz', 'Baz')])
@@ -159,25 +159,25 @@ class TestInherit(common.TransactionCase):
 class TestXMLIDS(common.TransactionCase):
     def test_xml_ids(self):
         """ check XML ids of selection fields. """
-        field = self.env['test_new_api.selection']._fields['state']
+        field = self.env['test_orm.selection']._fields['state']
         self.assertEqual(field.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
 
-        ir_field = self.env['ir.model.fields']._get('test_new_api.selection', 'state')
+        ir_field = self.env['ir.model.fields']._get('test_orm.selection', 'state')
         xml_ids = ir_field._get_external_ids()
         self.assertCountEqual(xml_ids.get(ir_field.id), [
-            'test_new_api.field_test_new_api_selection__state',
-            'test_inherit.field_test_new_api_selection__state',
+            'test_orm.field_test_orm_selection__state',
+            'test_inherit.field_test_orm_selection__state',
         ])
 
         foo, bar, baz = ir_field.selection_ids
         xml_ids = (foo + bar + baz)._get_external_ids()
         self.assertCountEqual(xml_ids.get(foo.id), [
-            'test_new_api.selection__test_new_api_selection__state__foo',
+            'test_orm.selection__test_orm_selection__state__foo',
         ])
         self.assertCountEqual(xml_ids.get(bar.id), [
-            'test_new_api.selection__test_new_api_selection__state__bar',
-            'test_inherit.selection__test_new_api_selection__state__bar',
+            'test_orm.selection__test_orm_selection__state__bar',
+            'test_inherit.selection__test_orm_selection__state__bar',
         ])
         self.assertCountEqual(xml_ids.get(baz.id), [
-            'test_inherit.selection__test_new_api_selection__state__baz',
+            'test_inherit.selection__test_orm_selection__state__baz',
         ])

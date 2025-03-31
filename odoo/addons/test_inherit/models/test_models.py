@@ -108,8 +108,8 @@ class Test_Inherit_Parent(models.AbstractModel):  # noqa: F811
 #
 
 
-class Test_New_ApiSelection(models.Model):
-    _inherit = 'test_new_api.selection'
+class TestOrmSelection(models.Model):
+    _inherit = 'test_orm.selection'
 
     state = fields.Selection(selection_add=[('bar', 'Bar'), ('baz', 'Baz')])
     other = fields.Selection('_other_values')
@@ -130,8 +130,8 @@ class Test_Inherit_Mixin(models.AbstractModel):
     published = fields.Boolean()
 
 
-class Test_New_ApiMessage(models.Model):
-    _inherit = 'test_new_api.message'
+class TestOrmMessage(models.Model):
+    _inherit = 'test_orm.message'
 
     body = fields.Text(translate=True)  # Test conversion of char (with trigram indexed) to jsonb postgreSQL type
 
