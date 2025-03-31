@@ -273,6 +273,11 @@ class Website(models.Model):
         """
         self.ensure_one()
 
+        ProductPricelist = self.env['product.pricelist']
+
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            return ProductPricelist  # Skip pricelist computation if pricelists are disabled.
+
         country_code = self._get_geoip_country_code()
         website = self.with_company(self.company_id)
 
@@ -296,7 +301,7 @@ class Website(models.Model):
             partner_pl_id=partner_pricelist_id,
         )
 
-        return self.env['product.pricelist'].browse(pricelist_ids)
+        return ProductPricelist.browse(pricelist_ids)
 
     def is_pricelist_available(self, pl_id):
         """ Return a boolean to specify if a specific pricelist can be manually set on the website.
@@ -365,7 +370,9 @@ class Website(models.Model):
         self.ensure_one()
 
         ProductPricelistSudo = self.env['product.pricelist'].sudo()
-        pricelist_sudo = ProductPricelistSudo
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            return ProductPricelistSudo  # Skip pricelist computation if pricelists are disabled.
+
         if PRICELIST_SESSION_CACHE_KEY in request.session:
             pricelist_sudo = ProductPricelistSudo.browse(
                 request.session[PRICELIST_SESSION_CACHE_KEY]
