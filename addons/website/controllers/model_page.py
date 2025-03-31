@@ -5,6 +5,7 @@ import werkzeug
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.http import Controller, request, route
 from odoo.osv.expression import AND, OR
+from odoo.addons.mail.tools.parser import domain_eval
 
 
 class ModelPageController(Controller):
@@ -45,7 +46,7 @@ class ModelPageController(Controller):
         if not Model.check_access_rights("read", raise_exception=False):
             raise werkzeug.exceptions.Forbidden()
 
-        rec_domain = ast.literal_eval(page.record_domain or "[]")
+        rec_domain = domain_eval(page.record_domain or "[]")
         domains = [rec_domain]
 
         if record_slug:
