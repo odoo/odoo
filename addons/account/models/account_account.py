@@ -432,7 +432,7 @@ class AccountAccount(models.Model):
             return NotImplemented
         roots = self.env['account.root'].browse(value)
         return Domain.OR(
-            Domain('placeholder_code', '=like', root.name + ('' if operator == 'in' and not root.parent_id else '%'))
+            Domain('placeholder_code', '=ilike', root.name + ('' if operator == 'in' and not root.parent_id else '%'))
             for root in roots
         )
 
