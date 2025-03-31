@@ -4308,7 +4308,8 @@ class AccountMove(models.Model):
         }
 
         def total_grouping_function(base_line, tax_data):
-            return not filter_tax_values_to_apply or filter_tax_values_to_apply(base_line, tax_data)
+            if tax_data:
+                return not filter_tax_values_to_apply or filter_tax_values_to_apply(base_line, tax_data)
 
         # Report the total amounts.
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, total_grouping_function)
