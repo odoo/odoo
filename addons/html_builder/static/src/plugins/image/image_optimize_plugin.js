@@ -1,4 +1,7 @@
-import { DEFAULT_IMAGE_QUALITY } from "@html_editor/main/media/image_post_process_plugin";
+import {
+    DEFAULT_IMAGE_QUALITY,
+    shouldPreventGifTransformation,
+} from "@html_editor/main/media/image_post_process_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { loadImage } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";
@@ -46,7 +49,7 @@ class ImageOptimizePlugin extends Plugin {
      * @private
      */
     async computeAvailableFormats(img, computeMaxDisplayWidth) {
-        if (!img.dataset.mimetypeBeforeConversion) {
+        if (!img.dataset.mimetypeBeforeConversion || shouldPreventGifTransformation(img)) {
             return [];
         }
 
@@ -79,7 +82,7 @@ class ImageOptimizePlugin extends Plugin {
     async getImageWidth(img) {
         const getNaturalWidth = () =>
             loadImage(img.dataset.originalSrc).then((i) => i.naturalWidth);
-        return img.dataset.width ? img.naturalWidth : await getNaturalWidth();
+        return img.dataset.width ? Math.round(img.dataset.width) : await getNaturalWidth();
     }
 }
 registry.category("website-plugins").add(ImageOptimizePlugin.id, ImageOptimizePlugin);
