@@ -391,12 +391,23 @@ class Domain:
         if self._opt_level >= level:
             return self
 
-        # determine a fixpoint for _optimize()
-        previous, domain, count = None, self, 0
-        while domain != previous:
-            if (count := count + 1) > MAX_OPTIMIZE_ITERATIONS:
-                raise RecursionError("Domain.optimize: too many loops")
-            previous, domain = domain, domain._optimize(model, full)
+        domain = self
+
+        if domain._opt_level < OptimizationLevel.BASIC:
+            # determine a fixpoint for _optimize() for level BASIC
+            previous, count = None, 0
+            while domain != previous:
+                if (count := count + 1) > MAX_OPTIMIZE_ITERATIONS:
+                    raise RecursionError("Domain.optimize: too many loops")
+                previous, domain = domain, domain._optimize(model, False)
+
+        if full and domain._opt_level < OptimizationLevel.FULL:
+            # determine a fixpoint for _optimize() for level FULL
+            previous, count = None, 0
+            while domain != previous:
+                if (count := count + 1) > MAX_OPTIMIZE_ITERATIONS:
+                    raise RecursionError("Domain.optimize: too many loops")
+                previous, domain = domain, domain._optimize(model, True)
 
         # set the optimization level if necessary (unlike DomainBool, for instance)
         if domain._opt_level < level:
