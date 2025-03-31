@@ -685,7 +685,7 @@
                                 </div>
                             </div>
                             <div>
-                                <div t-field="opportunity.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "mobile"]}'/>
+                                <div t-field="opportunity.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
                             </div>
                             <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
                             class="col d-flex align-items-baseline mb-0 mt-2">
@@ -838,10 +838,6 @@
                                     <div class="mb-3">
                                         <label class="col-form-label" for="phone">Phone</label>
                                         <input type="text" name="phone" class="form-control phone" t-att-value="opportunity.phone"/>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="col-form-label" for="mobile">Mobile</label>
-                                        <input type="text" name="mobile" class="form-control mobile" t-att-value="opportunity.mobile"/>
                                     </div>
                                     <div class="mb-3">
                                         <label class="col-form-label" for="email_from">Email</label>
