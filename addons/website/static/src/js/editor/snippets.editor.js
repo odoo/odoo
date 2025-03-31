@@ -292,8 +292,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
                 onMounted(() => this.props.onMounted(this.modalRef));
             }
             onClickSave() {
-                this.props.confirm(this.modalRef, this.state.apiKey);
-                this.props.close();
+                this.props.confirm(this.modalRef, this.state.apiKey, this.props.close);
             }
         };
 
@@ -305,7 +304,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
                         applyError.call($(modalRef.el), apiKeyValidation.message);
                     }
                 },
-                confirm: async (modalRef, valueAPIKey) => {
+                confirm: async (modalRef, valueAPIKey, close = undefined) => {
                     if (!valueAPIKey) {
                         applyError.call($(modalRef.el), _t("Enter an API Key"));
                         return;
@@ -316,7 +315,11 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
                     if (res.isValid) {
                         await this.orm.write("website", [websiteId], {google_maps_api_key: valueAPIKey});
                         invalidated = true;
-                        return true;
+                        if (close) {
+                            close();
+                        } else {
+                            resolve(true);
+                        }
                     } else {
                         applyError.call($(modalRef.el), res.message);
                     }
