@@ -6,3 +6,4 @@ from . import res_company
 from . import sale
 from . import stock
 from . import stock_replenish_mixin
+from . import stock_lot_customer
