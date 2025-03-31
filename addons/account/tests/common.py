@@ -269,9 +269,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_hr_manager', # hr
                     'group_mrp_manager', # mrp
                     'group_pos_manager', # point_of_sale
-                    'group_product_manager', # product
                     'group_purchase_manager', # purchase
-                    'group_sale_manager', # sales_team
                     'group_stock_manager', # stock
                     # enterprise groups
                     'group_hr_payroll_manager', # hr_payroll
@@ -279,7 +277,12 @@ class AccountTestInvoicingCommon(ProductCommon):
                 ))
             ]).mapped('res_id')
         )
-        return groups | cls.env.ref('account.group_account_manager') | cls.env.ref('account.group_account_user')
+        return (
+            groups
+            | cls.quick_ref('account.group_account_manager')
+            | cls.quick_ref('account.group_account_user')
+            | cls.quick_ref('base.group_system')  # company creation during setups
+        )
 
     @classmethod
     def setup_other_currency(cls, code, **kwargs):
