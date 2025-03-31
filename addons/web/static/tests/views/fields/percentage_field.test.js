@@ -7,7 +7,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { clear, click, edit } from "@odoo/hoot-dom";
+import { click, edit } from "@odoo/hoot-dom";
 
 class Partner extends models.Model {
     float_field = fields.Float({
@@ -45,26 +45,6 @@ test("PercentageField in form view", async () => {
     await clickSave();
 
     expect(".o_field_widget input").toHaveValue("24");
-});
-
-test("percentage field with placeholder", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: /* xml */ `<form><field name="float_field" widget="percentage" placeholder="Placeholder"/></form>`,
-    });
-
-    await click(".o_field_widget[name='float_field'] input");
-    await clear();
-
-    expect(".o_field_widget[name='float_field'] input").toHaveProperty(
-        "placeholder",
-        "Placeholder"
-    );
-    expect(".o_field_widget[name='float_field'] input").toHaveAttribute(
-        "placeholder",
-        "Placeholder"
-    );
 });
 
 test("PercentageField in form view without rounding error", async () => {

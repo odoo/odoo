@@ -13,7 +13,6 @@ export class PercentageField extends Component {
     static props = {
         ...standardFieldProps,
         digits: { type: Array, optional: true },
-        placeholder: { type: String, optional: true },
     };
 
     setup() {
@@ -54,7 +53,6 @@ export const percentageField = {
 
         return {
             digits,
-            placeholder: attrs.placeholder,
         };
     },
 };

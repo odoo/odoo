@@ -109,27 +109,13 @@ test("FloatTimeField with invalid value", async () => {
     });
 });
 
-test("float_time field with placeholder", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="qux" widget="float_time" placeholder="Placeholder"/>
-            </form>`,
-    });
-
-    await contains(".o_field_widget[name='qux'] input").clear();
-    expect(".o_field_widget[name='qux'] input").toHaveAttribute("placeholder", "Placeholder");
-});
-
 test("float_time field does not have an inputmode attribute", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
         arch: `
             <form>
-                <field name="qux" widget="float_time" placeholder="Placeholder"/>
+                <field name="qux" widget="float_time"/>
             </form>`,
     });
 
