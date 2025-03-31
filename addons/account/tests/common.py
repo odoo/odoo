@@ -267,14 +267,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     # TODO: Progressively remove groups from this list, hopefully no groups share the same name.
                     # This is a consequence of moving groups from data to demo data: https://github.com/odoo/odoo/pull/198078
                     'group_account_manager', # account
-                    'fleet_group_manager', # fleet
                     'group_hr_manager', # hr
-                    'group_hr_attendance_manager', # hr_attendance
-                    'group_hr_contract_manager', # hr_contract
-                    'group_hr_holidays_manager', # hr_holidays
-                    'group_hr_recruitment_manager', # hr_recruitment
-                    'group_timesheet_manager', # hr_timesheet
-                    'group_lunch_manager', # lunch
                     'group_mrp_manager', # mrp
                     'group_pos_manager', # point_of_sale
                     'group_product_manager', # product
@@ -283,15 +276,9 @@ class AccountTestInvoicingCommon(ProductCommon):
                     'group_sale_manager', # sales_team
                     'group_stock_manager', # stock
                     # enterprise groups
-                    'group_approval_manager', # approval
-                    'frontdesk_group_administrator', # frontdesk
-                    'group_helpdesk_manager', # helpdesk
-                    'group_hr_appraisal_manager', # hr_appraisal
                     'group_hr_payroll_manager', # hr_payroll
-                    'group_hr_recruitment_manager', # hr_referral -> duplicate from hr_recruitment /!\
                     'group_fsm_manager', # industry_fsm
                     'group_plm_manager', # mrp_plm
-                    'group_planning_manager', # planning
                 ))
             ]).mapped('res_id')
         )
