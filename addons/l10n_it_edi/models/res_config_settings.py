@@ -16,7 +16,6 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     l10n_it_edi_show_purchase_journal_id = fields.Boolean(compute='_compute_l10n_it_edi_show_purchase_journal_id')
-    company_parent_id = fields.Many2one(related='company_id.parent_id', readonly=True)  # TODO: remove in master
     use_root_proxy_user = fields.Boolean(compute='_compute_use_root_proxy_user')
 
     def _create_proxy_user(self, company_id, edi_mode):
