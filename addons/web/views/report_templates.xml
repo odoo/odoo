@@ -599,6 +599,7 @@
                 <t t-set="custom_layout_address" t-value="true"/>
                 <t t-call="web.address_layout"/>
             </div>
+            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title" class="opacity-0" t-att-style="'height: 0px'"/>
             <t t-out="0"/>
         </div>
 
