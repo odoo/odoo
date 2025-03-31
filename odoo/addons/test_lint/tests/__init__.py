@@ -1,6 +1,6 @@
 from . import test_dunderinit
 from . import test_checkers
-from . import test_ref
+from . import test_diff_case
 from . import test_pylint
 from . import test_pofile
 from . import test_eslint
@@ -12,6 +12,7 @@ from . import test_markers
 from . import test_onchange_domains
 from . import test_orm_import
 from . import test_override_signatures
+from . import test_ref
 from . import test_routes
 from . import test_i18n
 from . import test_test_holes
