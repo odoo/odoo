@@ -51,11 +51,22 @@ class AccountMove(models.Model):
         res = super()._post(soft)
         for move in self:
             if move.country_code == 'SA' and move.is_sale_document():
-                vals = {'l10n_sa_confirmation_datetime': fields.Datetime.now()}
+                if not move.l10n_sa_confirmation_datetime:
+                    vals = {'l10n_sa_confirmation_datetime': fields.Datetime.now()}
+                else:
+                    vals = {}
                 if not move.delivery_date:
                     vals['delivery_date'] = move.invoice_date
-                move.write(vals)
+                if vals:
+                    move.write(vals)
         return res
+
+    def _l10n_sa_reset_confirmation_datetime(self):
+        self.filtered(lambda m: m.country_code == 'SA').l10n_sa_confirmation_datetime = False
+
+    def button_draft(self):
+        self._l10n_sa_reset_confirmation_datetime()
+        super().button_draft()
 
     def _get_l10n_sa_totals(self):
         self.ensure_one()
