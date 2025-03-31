@@ -322,9 +322,6 @@ class PurchaseOrderLine(models.Model):
                 uom_id=line.product_uom,
                 params=params)
 
-            if seller or not line.date_planned:
-                line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
             # If not seller, use the standard price. It needs a proper currency conversion.
             if not seller:
                 line.discount = 0
@@ -356,6 +353,9 @@ class PurchaseOrderLine(models.Model):
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 line.price_unit = seller.product_uom._compute_price(price_unit, line.product_uom)
                 line.discount = seller.discount or 0.0
+
+            if seller or not line.date_planned:
+                line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
             # record product names to avoid resetting custom descriptions
             default_names = []

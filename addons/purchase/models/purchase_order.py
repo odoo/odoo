@@ -1251,9 +1251,6 @@ class PurchaseOrder(models.Model):
             partner_values['receipt_reminder_email'] = vals.pop('receipt_reminder_email')
         if 'reminder_date_before_receipt' in vals:
             partner_values['reminder_date_before_receipt'] = vals.pop('reminder_date_before_receipt')
-        # ignore costly re-write (because `_compute_price_unit_and_date_planned_and_name`)
-        if all(vals.get('partner_id') == po.partner_id.id != False for po in self):
-            del vals['partner_id']
         return vals, partner_values
 
     def _is_readonly(self):

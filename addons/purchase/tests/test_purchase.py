@@ -946,3 +946,24 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_write_on_partner_and_price_unit(self):
+        """
+        """
+        product = self.product_a
+        product.seller_ids = [Command.create({
+            'partner_id': self.partner_a,
+            'price': 55.0,
+        })]
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_qty': 1,
+            })],
+        })
+        purchase_order.write({
+            'partner_id': self.partner_a,
+            'order_line': [Command.update(purchase_order.order_line.id, {'price_unit': 33.0})],
+        })
+        self.assertEqual(purchase_order.order_line.price_unit, 33.0)
