@@ -67,7 +67,7 @@
                         <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
                         (<span t-out="record.date_tz.replace('_', ' ')"/>)
                     </div>
-                    <h5 class="text-truncate" t-field="record.name"/>
+                    <h3 class="h5-fs text-truncate" t-field="record.name"/>
                     <small class="text-muted" t-field="record.subtitle"/>
                 </div>
                 <div class="mt-2 fw-bold" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>

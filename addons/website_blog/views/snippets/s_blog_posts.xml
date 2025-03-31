@@ -21,10 +21,10 @@
                 <t t-call="website_blog.s_dynamic_snippet_template_author"/>
                 <t t-call="website_blog.s_dynamic_snippet_template_date"/>
             </div>
-            <h4 class="mt-2">
+            <h3 class="mt-2 h4-fs">
                 <span t-if="is_sample" class="bg-primary text-uppercase">Sample</span>
                 <span t-field="record.name"/>
-            </h4>
+            </h3>
             <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
         </a>
     </div>
@@ -72,7 +72,7 @@
                 <div class="col-12 col-md d-flex flex-column justify-content-between">
                     <a class="mb-2 mb-md-5 text-decoration-none text-reset" t-att-href="data['call_to_action_url']" t-att-title="'Read ' + data['name']">
                         <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                        <h4 class="mb-2 mt-0" t-field="record.name"/>
+                        <h3 class="mb-2 mt-0 h4-fs" t-field="record.name"/>
                         <t t-call="website_blog.s_dynamic_snippet_template_date"/>
                         <p class="s_blog_posts_post_subtitle mt-1 mb-0 lead overflow-hidden" t-field="record.subtitle"/>
                     </a>
@@ -101,7 +101,7 @@
                 </div>
                 <div class="card-body">
                     <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
-                    <h5 class="text-truncate" t-field="record.name"/>
+                    <h3 class="h5-fs text-truncate" t-field="record.name"/>
                     <t t-call="website_blog.s_dynamic_snippet_template_date"/>
                     <t t-call="website_blog.s_dynamic_snippet_template_teaser"/>
                 </div>

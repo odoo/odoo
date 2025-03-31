@@ -29,7 +29,7 @@ registerWebsitePreviewTour('snippet_popup_add_remove', {
     run: "click",
 }, {
     content: 'Edit s_popup snippet(2)',
-    trigger: ':iframe #wrap.o_editable [data-snippet="s_popup"] h2',
+    trigger: ':iframe #wrap.o_editable [data-snippet="s_popup"] h3',
     run: function() {
         // Simulating pressing enter.
         const anchor = this.anchor;
