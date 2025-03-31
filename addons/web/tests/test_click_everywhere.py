@@ -15,6 +15,8 @@ _logger = logging.getLogger(__name__)
 @odoo.tests.tagged('click_all', 'post_install', '-at_install', '-standard')
 class TestMenusAdmin(odoo.tests.HttpCase):
     def test_01_click_everywhere_as_admin(self):
+        if 'tour_enabled' in self.env['res.users']._fields:
+            self.env.ref('base.user_admin').tour_enabled = False
         menus = self.env['ir.ui.menu'].load_menus(False)
         for app_id in menus['root']['children']:
             with self.subTest(app=menus[app_id]['name']):
