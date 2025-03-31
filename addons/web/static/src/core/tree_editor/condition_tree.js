@@ -867,19 +867,13 @@ function _createBetweenOperator(c, [child1, child2]) {
         return;
     }
     if (c.value === "&" && child1.operator === ">=" && child2.operator === "<=") {
-        return condition(
-            child1.path,
-            "between",
-            normalizeValue([child1.value, child2.value]),
-            c.negate
-        );
+        return condition(child1.path, "between", normalizeValue([child1.value, child2.value]));
     }
     if (c.value === "|" && child1.operator === "<" && child2.operator === ">") {
         return condition(
             child1.path,
             "is_not_between",
-            normalizeValue([child1.value, child2.value]),
-            c.negate
+            normalizeValue([child1.value, child2.value])
         );
     }
 }

@@ -105,7 +105,6 @@ test("domainFromTree . treeFromDomain", () => {
     const toTest = [
         {
             domain: `[("foo", "=", False)]`,
-            result: `[("foo", "=", False)]`,
         },
         {
             domain: `[("foo", "=", true)]`,
@@ -117,35 +116,34 @@ test("domainFromTree . treeFromDomain", () => {
         },
         {
             domain: `[("foo", "=?", False)]`,
-            result: `[("foo", "=?", False)]`,
         },
         {
             domain: `["!", ("foo", "=?", False)]`,
-            result: `["!", ("foo", "=?", False)]`,
         },
         {
             domain: `[("foo", "=ilike", "%hello")]`,
-            result: `[("foo", "=ilike", "%hello")]`,
         },
         {
             domain: `["&", ("foo", ">=", 1), ("foo", "<=", 3)]`,
-            result: `["&", ("foo", ">=", 1), ("foo", "<=", 3)]`,
         },
         {
             domain: `["&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
-            result: `["&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
         },
         {
             domain: `["&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
-            result: `["&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         },
         {
             domain: `["&", ("foo", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("foo", "<=", datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
-            result: `["&", ("foo", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("foo", "<=", datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        },
+        {
+            domain: `["!", "&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
+        },
+        {
+            domain: `["!", "|", ("foo", "<", 1), ("foo", ">", uid)]`,
         },
     ];
     for (const { domain, result } of toTest) {
-        expect(domainFromTree(treeFromDomain(domain))).toBe(result);
+        expect(domainFromTree(treeFromDomain(domain))).toBe(result || domain);
     }
 });
 
