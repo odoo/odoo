@@ -1,4 +1,4 @@
-import WebsiteEventTrackSuggestion from "@website_event_track_live/js/website_event_track_suggestion";
+import WebsiteEventTrackSuggestion from "@website_event_track_live/interactions/website_event_track_suggestion";
 
 var WebsiteEventTrackSuggestionLiveQuiz = WebsiteEventTrackSuggestion.include({
     events: Object.assign({}, WebsiteEventTrackSuggestion.prototype.events, {
