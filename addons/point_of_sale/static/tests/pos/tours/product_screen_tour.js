@@ -12,6 +12,7 @@ import { scan_barcode, negateStep } from "@point_of_sale/../tests/generic_helper
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     checkDelay: 50,
@@ -593,5 +594,25 @@ registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
             ProductScreen.enterLotNumbers(["SN005", "SN006"]),
             ProductScreen.selectedOrderlineHas("Product A", "4.0"),
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("pos_preset_takeaway_timing_tour", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            TextInputPopup.inputText("John"),
+            Dialog.confirm(),
+            Chrome.clickPresetTimingSlot(),
+            Chrome.selectPresetTimingSlotHour("12:00"),
+            Chrome.presetTimingSlotIs("12:00"),
+            Chrome.clickPresetTimingSlot(),
+            Chrome.selectPresetTimingSlotHour("12:00"),
+            Chrome.presetTimingSlotIs("--:--"),
+            Chrome.clickPresetTimingSlot(),
+            Chrome.selectPresetTimingSlotHour("15:00"),
         ].flat(),
 });
