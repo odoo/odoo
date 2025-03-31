@@ -104,7 +104,6 @@ def test_get_data(self, template_code):
         'account.reconcile.model': {
             'test_account_reconcile_model_1': {
                 'name': 'test_reconcile_model_with_payment_tolerance',
-                'rule_type': 'invoice_matching',
                 'allow_payment_tolerance': True,
                 'payment_tolerance_type': 'percentage',
                 'payment_tolerance_param': 2.0,
