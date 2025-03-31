@@ -48,7 +48,7 @@ describe("file command", () => {
         expect(".odoo-editor-editable .o_file_box").toHaveCount(1);
     });
 
-    test("file card should have inline display, BS alert-info style and no download button", async () => {
+    test("file card should have block display, BS alert-info style and no download button", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         patchUpload(editor);
         execCommand(editor, "uploadFile");
@@ -56,7 +56,7 @@ describe("file command", () => {
         await waitFor('.o_file_box .o_file_name_container:contains("file.txt")');
         // Check that file card has inline display, with alert style.
         const fileCard = queryOne(".o_file_box");
-        expect(fileCard).toHaveStyle({ display: "inline-block" });
+        expect(fileCard).toHaveStyle({ display: "block" });
         expect(fileCard.firstElementChild).toHaveClass(["alert", "alert-info"]);
         // No download button in file card.
         expect(".o_file_box .fa-download").toHaveCount(0);
@@ -171,7 +171,7 @@ describe("zero width no-break space", () => {
         let content = getContent(el);
         // replace embedded component root with a <FILE/> placeholder for readability
         content = content.replace(/<span data-embedded="file".*?<\/span>/g, "<FILE/>");
-        expect(content).toBe("<p>\ufeff<FILE/>\ufeff<FILE/>\ufeff[]</p>");
+        expect(content).toBe("<p>\ufeff<FILE/>\ufeff<FILE/>\ufeff[]<br></p>");
     });
 
     test("should not add two contiguous ZWNBSP between two file cards (2)", async () => {
@@ -184,7 +184,7 @@ describe("zero width no-break space", () => {
         );
         press("Backspace");
         expect(getContent(el)).toBe(
-            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff[]<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
+            '<p>abc\ufeff<span data-embedded="file" class="o_file_box"><br></span>\ufeff[]<span data-embedded="file" class="o_file_box"><br></span>\ufeff</p>'
         );
     });
 });
