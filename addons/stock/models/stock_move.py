@@ -969,7 +969,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             domain = [('location_src_id', '=', move.location_dest_id.id), ('action', 'in', ('push', 'pull_push'))]
             # first priority goes to the preferred routes defined on the move itself (e.g. coming from a SO line)
             warehouse_id = move.warehouse_id or move.picking_id.picking_type_id.warehouse_id
-            if move.location_dest_id.company_id == self.env.company:
+            if move.location_dest_id.company_id in self.env.companies:
                 rule = self.env['procurement.group']._search_rule(move.route_ids, move.product_packaging_id, move.product_id, warehouse_id, domain)
             else:
                 procurement_group = self.env['procurement.group'].sudo()
