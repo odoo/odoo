@@ -11,6 +11,7 @@ import {
     getImageTransformationData,
     shouldPreventGifTransformation,
 } from "@html_editor/main/media/image_post_process_plugin";
+import { _t } from "@web/core/l10n/translation";
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -34,6 +35,7 @@ class ImageShapeOptionPlugin extends Plugin {
         "isTransformableShape",
         "isAnimableShape",
         "isTogglableRatioShape",
+        "getShapeLabel",
     ];
     resources = {
         builder_actions: this.getActions(),
@@ -405,6 +407,12 @@ class ImageShapeOptionPlugin extends Plugin {
         }
         const canTransform = this.imageShapes[shapeId].transform;
         return typeof canTransform === "undefined" ? true : canTransform;
+    }
+    getShapeLabel(shapeId) {
+        if (!shapeId) {
+            return _t("None");
+        }
+        return _t(this.imageShapes[shapeId].selectLabel || "None");
     }
     isAnimableShape(shape) {
         if (!shape) {

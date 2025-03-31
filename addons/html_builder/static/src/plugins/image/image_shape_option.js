@@ -12,6 +12,7 @@ export class ImageShapeOption extends BaseOptionComponent {
         this.toRatio = toRatio;
         this.state = useDomState((editingElement) => ({
             hasShape: !!editingElement.dataset.shape,
+            shapeLabel: this.imageShapeOption.getShapeLabel(editingElement.dataset.shape),
             showImageShape0: this.isShapeVisible(editingElement, 0),
             showImageShape1: this.isShapeVisible(editingElement, 1),
             showImageShape2: this.isShapeVisible(editingElement, 2),
