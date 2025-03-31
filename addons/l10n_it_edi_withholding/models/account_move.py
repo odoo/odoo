@@ -70,6 +70,8 @@ class AccountMove(models.Model):
         # Withholding tax amounts.
 
         def grouping_function_withholding(base_line, tax_data):
+            if not tax_data:
+                return None
             tax = tax_data['tax']
             return {
                 'tax_amount_field': -23.0 if tax.amount == -11.5 else tax.amount,
@@ -97,6 +99,8 @@ class AccountMove(models.Model):
         # Pension fund.
 
         def grouping_function_pension_funds(base_line, tax_data):
+            if not tax_data:
+                return None
             tax = tax_data['tax']
             flatten_taxes = base_line['tax_ids'].flatten_taxes_hierarchy()
             vat_tax = flatten_taxes.filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0)[:1]

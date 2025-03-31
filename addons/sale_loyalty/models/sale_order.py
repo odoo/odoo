@@ -356,6 +356,8 @@ class SaleOrder(models.Model):
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
 
         def grouping_function(base_line, tax_data):
+            if not tax_data:
+                return None
             return {
                 'taxes': base_line['discount_taxes'],
                 'skip': (

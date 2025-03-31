@@ -56,10 +56,10 @@ patch(accountTaxHelpers, {
 
         // Tax amounts.
         function grouping_function(base_line, tax_data) {
-            return {
+            return tax_data ? {
                 ...get_base_line_grouping_key(base_line),
                 l10n_in_tax_type: tax_data.tax.l10n_in_tax_type,
-            };
+            } : null;
         }
 
         const base_lines_aggregated_values = this.aggregate_base_lines_tax_details(base_lines, grouping_function);

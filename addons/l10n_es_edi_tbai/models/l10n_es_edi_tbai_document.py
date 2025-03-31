@@ -528,6 +528,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         AccountTax = self.env['account.tax']
 
         def tax_details_info_grouping_function(base_line, tax_data):
+            if not tax_data:
+                return None
             tax = tax_data['tax']
 
             return {
@@ -561,7 +563,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
 
         # Aggregate the base lines again (with no grouping) to add the base amount to the total.
         def totals_grouping_function(base_line, tax_data):
-            return True
+            return True if tax_data else None
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, totals_grouping_function)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
@@ -580,6 +582,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         AccountTax = self.env['account.tax']
 
         def tax_details_info_grouping_function(base_line, tax_data):
+            if not tax_data:
+                return None
             tax = tax_data['tax']
 
             return {
@@ -619,7 +623,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
 
         # Aggregate the base lines again (with no grouping) to add the base amount to the total.
         def totals_grouping_function(base_line, tax_data):
-            return True
+            return True if tax_data else None
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, totals_grouping_function)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
