@@ -9,7 +9,7 @@
                         class="o_filter_value_container"
                         t-as="filter"
                         t-foreach="filters"
-                        t-key="filter.id">
+                        t-key="activeDashboardId + '_' + filter.id">
                         <FilterValue
                             filter="filter"
                             model="state.activeDashboard.model"
