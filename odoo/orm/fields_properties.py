@@ -9,7 +9,7 @@ import uuid
 from collections import defaultdict
 from operator import attrgetter
 
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError
 from odoo.tools import SQL, OrderedSet, is_list_of
 from odoo.tools.misc import has_list_types
 from odoo.tools.translate import _
@@ -580,6 +580,28 @@ class Properties(Field):
         for property_definition in values_list:
             property_definition['value'] = values_dict.get(property_definition['name'])
         return values_list
+
+    def expression_getter(self, field_expr):
+        _fname, property_name = parse_field_expr(field_expr)
+        if not property_name:
+            raise ValueError(f"Missing property name for {self}")
+
+        def expression_property(record):
+            # TODO the implementation is slow for relational fields
+            record.ensure_one()
+            values = self.__get__(record)
+            for definition in self._get_properties_definition(record) or ():
+                if definition.get('name') == property_name:
+                    break
+            else:
+                # definition not found
+                return values.get(property_name, False)
+            value_dict = {**definition, 'value': values.get(property_name)}
+            env = record.env
+            res_ids_per_model = self._get_res_ids_per_model(env, [[value_dict]])
+            self._parse_json_types([value_dict], env, res_ids_per_model)
+            return value_dict['value']
+        return expression_property
 
     def property_to_sql(self, field_sql: SQL, property_name: str, model: BaseModel, alias: str, query: Query) -> SQL:
         check_property_field_value_name(property_name)

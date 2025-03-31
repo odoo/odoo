@@ -1356,6 +1356,16 @@ class Field(typing.Generic[T]):
 
     ############################################################################
     #
+    # Expressions and filtering of records
+    #
+
+    def expression_getter(self, field_expr: str) -> Callable[[BaseModel], typing.Any]:
+        if field_expr == self.name:
+            return self.__get__
+        raise ValueError(f"Expression not supported on {self}: {field_expr!r}")
+
+    ############################################################################
+    #
     # Alternatively stored fields: if fields don't have a `column_type` (not
     # stored as regular db columns) they go through a read/create/write
     # protocol instead
