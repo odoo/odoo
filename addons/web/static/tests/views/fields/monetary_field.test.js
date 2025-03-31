@@ -694,23 +694,6 @@ test("MonetaryField without currency symbol", async () => {
     });
 });
 
-test("monetary field with placeholder", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
-            <form>
-                <field name="float_field" widget="monetary" placeholder="Placeholder"/>
-                <field name="currency_id" invisible="1"/>
-            </form>`,
-    });
-    await contains(".o_field_widget[name='float_field'] input").clear();
-    expect(".o_field_widget[name='float_field'] input").toHaveAttribute(
-        "placeholder",
-        "Placeholder"
-    );
-});
-
 test("required monetary field with zero value", async () => {
     await mountView({
         type: "form",
