@@ -42,8 +42,8 @@
 # Jonatan Gk, 2025
 # Wil Odoo, 2025
 # EstudiTIC - estuditic.com <odoo@estuditic.com>, 2025
-# Noemi Pla, 2025
 # Santiago Payà <santiagopim@gmail.com>, 2025
+# Noemi Pla, 2025
 # 
 msgid ""
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Santiago Payà <santiagopim@gmail.com>, 2025\n"
+"Last-Translator: Noemi Pla, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -667,7 +667,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"         Estimat/a\n"
+"         Estimat/da\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
@@ -685,10 +685,10 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (amb la referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        per un import de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        per un import de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 €</span>\n"
 "        de <t t-out=\"object.company_id.name or ''\">La seva Companyia</t>.\n"
 "        <br/><br/>\n"
-"        No dubti a contactar-nos si té alguna pregunta. .\n"
+"        No dubti a contactar amb nosaltres si té alguna pregunta.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
@@ -752,7 +752,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Estimat/a\n"
+"        Estimat/da\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
@@ -770,28 +770,28 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "           (amb referència: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        amb un import total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"        de <t t-out=\"object.company_id.name or ''\">La seva Companyia</t>.\n"
+"        per un import total de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 €</span>\n"
+"        de <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Aquesta factura ja està pagada.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"             Feu el pagament el més aviat possible.\n"
+"             Si us plau, efectuï el pagament al més aviat possible.\n"
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
-"               Utilitzeu la següent referència per fer el pagament:<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
+"               Utilitzi la següent referència per efectuar el pagament:<strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
 "                    al compte <strong t-out=\"object.partner_bank_id.acc_number\"/>\n"
 "                </t>\n"
-"                .\n"
+"               .\n"
 "            </t>\n"
 "        </t>\n"
 "        <t t-if=\"hasattr(object, 'timesheet_count') and object.timesheet_count\">\n"
 "            <br/><br/>\n"
-"            Pot revisar les seves fulles d'assistència  <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">desde el portal.</a>\n"
+"            Pot revisar els seus fulls d'hores <a t-att-href=\"'/my/timesheets?search_in=invoice&amp;search=%s' % object.name\">des del portal.</a>\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        No dubti a contactar-nos si té alguna pregunta.\n"
+"        No dubti a contactar amb nosaltres si té alguna pregunta.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
@@ -822,14 +822,14 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Benvolgut <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Benvolgut/da <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
 "        Gràcies pel pagament.\n"
-"        Aquí teniu el rebut del mateix <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> d'un total\n"
-"        de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> de <t t-out=\"object.company_id.name or ''\">LaCompanyia</t>.\n"
+"        Aquí té el seu rebut de <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> per un import\n"
+"        de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</span> de <t t-out=\"object.company_id.name or ''\">LaSevaEmpresa</t>.\n"
 "        <br/><br/>\n"
-"        No dubteu a contactar amb nosaltres si teniu cap pregunta.\n"
+"        No dubti a contactar amb nosaltres si té qualsevol pregunta.\n"
 "        <br/><br/>\n"
-"         Salutacions cordials\n"
+"         Salutacions cordials,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
@@ -840,7 +840,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
 msgid "<em>Draft Invoice</em>"
-msgstr "<em>Esborrany de la factura</em>"
+msgstr "<em>Factura esborrany</em>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
@@ -860,7 +860,7 @@ msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "<i class=\"fa fa-download\"/> Descarrega"
+msgstr "<i class=\"fa fa-download\"/> Descarregar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -887,7 +887,7 @@ msgid ""
 "                                    <span class=\"d-none d-md-inline\"> Processing Payment</span>"
 msgstr ""
 "<i class=\"fa fa-fw fa-check\" aria-label=\"processing_payment\" title=\"Processing Payment\" role=\"img\"/>\n"
-"                                    <span class=\"d-none d-md-inline\"> Processant Pagament</span>"
+"                                    <span class=\"d-none d-md-inline\"> El pagament s'està processant</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -906,13 +906,13 @@ msgid ""
 "                        You also have the option to disable the feature for all vendors in the accounting settings."
 msgstr ""
 "<i class=\"fa fa-lightbulb-o\" role=\"img\"/>\n"
-"                        No us preocupeu, podreu canviar aquesta configuració després al formulari del proveïdor.\n"
-"                        ambé podeu desactivar la funció per a tots els proveïdors als paràmetres de Comptabilitat."
+"                        No et preocupis, podràs modificar aquesta configuració després al formulari del proveïdor.\n"
+"                        També pots desactivar la funció per a tots els proveïdors a l'apartat de configuració de l'aplicació Comptabilitat."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
-msgstr "<i class=\"oi oi-arrow-right me-1\"/>Torna a configuració"
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Tornar a la configuració"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1156,12 +1156,12 @@ msgstr "<span class=\"text-nowrap\">1.500,00</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span class=\"text-nowrap\">2,350.00</span>"
-msgstr "<span class=\"text-nowrap\">2,350.00</span>"
+msgstr "<span class=\"text-nowrap\">2.350,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
 msgid "<span class=\"text-warning\">Medium risk</span>: Iban"
-msgstr "<span class=\"text-warning\">Risc mitjà</span>: Iban"
+msgstr "<span class=\"text-warning\">Risc mitjà</span>: IBAN"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1207,7 +1207,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
 msgid "<span invisible=\"user_id\">everyone</span>"
-msgstr "<span invisible=\"user_id\">tots</span>"
+msgstr "<span invisible=\"user_id\">tothom</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1359,7 +1359,7 @@ msgstr "<span>Informes</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
-msgstr "<span>Impost 0%</span>"
+msgstr "<span>Impost 0 %</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview

@@ -6,17 +6,17 @@
 # Björn Hayer, 2024
 # Zou Haojun <haojunzou84@gmail.com>, 2024
 # Haojun Zou <apollo_zhj@msn.com>, 2024
-# Robin Calvin, 2024
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2024
+# Robin Calvin, 2024
 # Levi Siuzdak (sile), 2024
 # Kim Asplund <kim.asplund@gmail.com>, 2024
 # Kristoffer Grundström <lovaren@gmail.com>, 2024
 # Simon S, 2024
 # Martin Trigaux, 2024
 # Lasse L, 2024
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2024
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2024
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2024
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-16 13:41+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2024\n"
+"Last-Translator: Chrille Hedberg <hedberg.chrille@gmail.com>, 2025\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +35,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
 msgid "# of Opportunity"
-msgstr "# Möjligheter"
+msgstr "# möjligheter"
 
 #. module: website_crm_partner_assign
 #. odoo-javascript
@@ -161,7 +161,7 @@ msgid ""
 msgstr ""
 "<span class=\"text-danger error_partner_assign_desinterested\" "
 "style=\"display:none;\">Du måste fylla i nästa åtgärd och kontakta kunden "
-"innan du accepterar affärsmöjligheten</span>"
+"innan du accepterar lead</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -172,7 +172,7 @@ msgid ""
 msgstr ""
 "<span class=\"text-danger error_partner_assign_interested\" "
 "style=\"display:none;\">Du måste fylla i nästa åtgärd och kontakta kunden "
-"innan du accepterar affärsmöjligheten</span>"
+"innan du accepterar lead</span>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -192,7 +192,7 @@ msgstr "<strong class=\"col-12 col-sm-3\">Kund</strong>"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<strong class=\"col-12 col-sm-4\">Expected Closing</strong>"
-msgstr "<strong class=\"col-12 col-sm-4\">Förväntad stängning</strong>"
+msgstr "<strong class=\"col-12 col-sm-4\">Förväntat avslut</strong>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -293,6 +293,91 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Dina leads</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hej,<br/>\n"
+"                            Vi har blivit kontaktade av prospekt i din region. Därför har följande leads tilldelats <t t-out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"                            <ol>\n"
+"                                <li t-foreach=\"ctx['partner_leads']\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name or 'Subject Undefined'\">Ämne</a>, <t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or 'Contact Name Undefined'\">Kontakt</t>, <t t-out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or 'Country Undefined'\">Land</t>, <t t-out=\"lead['lead_id'].email_from or 'Email Undefined' or ''\">E-post</t>, <t t-out=\"lead['lead_id'].phone or ''\">Telefon</t> </li><br/>\n"
+"                            </ol>\n"
+"                            <t t-if=\"ctx.get('partner_in_portal')\">\n"
+"                                Logga in i <a t-att-href=\"'%s?db=%s' % (object.get_base_url(), object.env.cr.dbname)\">Partnerportalen</a> för fler uppgifter. För varje lead finns två knappar i övre vänsa hörnet du behöver klicka på efter att ha kontaktat prospektet: \"Jag är intresserad\" &amp; \"Jag är inte intresserad\".<br/>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                Du har inte åtkomst till vår portal ännu. \n"
+"                                <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'\">Kontakta oss</t> för att lösa det.<br/>\n"
+"                            </t>\n"
+"                            Detta lead kommer skickas till en annan partner om du inte kontakt inom 20 dagar.<br/><br/>\n"
+"                            Vänliga hälsningar,<br/>\n"
+"                            <t t-out=\"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
+"                            <br/>\n"
+"                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
+"                                PS: Det ser ut som att du inte har någon kontaktperson hos oss ännu. Om du hör av dig så ser vi till att lösa det.\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">Ditt företag</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <a t-if=\"user.company_id.email\" t-att-href=\"'mailto:%s' % user.company_id.email\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <a t-if=\"user.company_id.website\" t-att-href=\"'%s' % user.company_id.website\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Drivs av <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=website\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__activation
@@ -359,7 +444,7 @@ msgstr "Arkiverad"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_opportunity_partner_filter
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
 msgid "Assigned Partner"
-msgstr "Tilldelat företag"
+msgstr "Tilldelad partner"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
@@ -449,12 +534,12 @@ msgstr "Kontakt"
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Contact Name"
-msgstr "Namn Nödkontakt"
+msgstr "Kontaktens namn"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Contact name"
-msgstr "Kontakt namn"
+msgstr "Kontaktens namn"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__body
@@ -492,7 +577,7 @@ msgstr "Skapad av"
 #. module: website_crm_partner_assign
 #: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_own_opp
 msgid "Created by Partner"
-msgstr "Skapad av Partner"
+msgstr "Skapad av partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_date
@@ -505,7 +590,7 @@ msgstr "Skapad den"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Current stage of the opportunity"
-msgstr "Nuvarande etapp av möjligheten"
+msgstr "Nuvarande etapp för möjligheten"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -521,7 +606,7 @@ msgstr "Kund:"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
 msgstr ""
-"LÄGG BYGGKLISTER HÄR FÖR ATT GÖRA DEM TILLGÄNGLIGA FÖR ALLA ÅTERFÖRSÄLJARE"
+"SLÄPP BYGGBLOCK HÄR FÖR ATT GÖRA DEM TILLGÄNGLIGA FÖR ALLA ÅTERFÖRSÄLJARE"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -532,7 +617,7 @@ msgstr "Datum"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Date Partnership"
-msgstr "Datum Partnerskap"
+msgstr "Datum för partnerskap"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -547,7 +632,7 @@ msgstr "Beskrivning"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Details Next Activity"
-msgstr "Detaljer Nästa aktivitet"
+msgstr "Nästa aktivitet"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__display_name
@@ -594,7 +679,7 @@ msgstr "Förväntat"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Expected Closing:"
-msgstr "Förväntad stängning:"
+msgstr "Förväntat avslut:"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -635,17 +720,17 @@ msgstr "Följ och konvertera dina möjligheter"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
 msgid "Forward Leads To"
-msgstr "Skicka vidare denna affärsmöjlighet till"
+msgstr "Vidarebefordra denna affärsmöjlighet till"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__forward_type
 msgid "Forward selected leads to"
-msgstr "Skicka vidare valda affärsmöjligheter till"
+msgstr "Vidarebefordra valda affärsmöjligheter till"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.crm_lead_forward_to_partner_act
 msgid "Forward to Partner"
-msgstr "Vidarebefordra till företag"
+msgstr "Vidarebefordra till partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_crm_send_mass_forward
@@ -656,22 +741,22 @@ msgstr "Vidarebefordra till partner"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Future Activities"
-msgstr "Framtida aktiviteter"
+msgstr "Kommande aktiviteter"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
-msgstr "Skicka: kundämne:  {{ ctx['partner_id'].name }}"
+msgstr "Skicka: lead:  {{ ctx['partner_id'].name }}"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
 msgid "Geo Latitude"
-msgstr "Geo-latitud"
+msgstr "Geo latitud"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_longitude
 msgid "Geo Longitude"
-msgstr "Geo-longitud"
+msgstr "Geo longitud"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -689,8 +774,8 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
 msgstr ""
-"Ger sannolikheten att tilldela en affärsmöjlighet till denna partner. (0 "
-"betyder ingen tilldelning.)"
+"Ger sannolikheten att tilldela en lead till denna partner. (0 betyder ingen "
+"tilldelning.)"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -710,26 +795,25 @@ msgstr "Betyg"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
 msgid "Group By"
-msgstr "Grupp Av"
+msgstr "Gruppera efter"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "I am interested by this lead."
-msgstr "Jag är intresserad av detta kundämne."
+msgstr "Jag är intresserad av denna lead."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "I am not interested by this lead. I contacted the lead."
-msgstr "Jag är inte intresserad av detta kundämne. Jag kontaktade kundämnet."
+msgstr "Jag är inte intresserad av denna lead. Jag kontaktade dem."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "I am not interested by this lead. I have not contacted the lead."
-msgstr ""
-"Jag är inte intresserad av detta kundämne. Jag har inte kontaktat kundämnet."
+msgstr "Jag är inte intresserad av denna lead. Jag har inte kontaktat dem."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -759,13 +843,13 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_ids
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_ids
 msgid "Implementation References"
-msgstr "Implementeringsreferenser"
+msgstr "Referenser för implementering"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr "Implementerad Partner Antal"
+msgstr "Antal implementerade partners"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
@@ -821,49 +905,49 @@ msgstr "Senaste partnerrecension"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_id
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Lead"
-msgstr "Ledning"
+msgstr "Lead"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead -"
-msgstr "Kundämne -"
+msgstr "Lead -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_assignation
 msgid "Lead Assignation"
-msgstr "Tilldelning av kundämne"
+msgstr "Tilldelning av lead"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Lead Feedback"
-msgstr "Återkoppling på kundämne"
+msgstr "Återkoppling för lead"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,name:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Lead Forward: Send to partner"
-msgstr "Skicka vidare kundämne: Skicka till partner"
+msgstr "Skicka vidare lead: Skicka till partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_location
 msgid "Lead Location"
-msgstr "Plats affärsmöjlighet"
+msgstr "Lead plats"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead_forward_to_partner
 msgid "Lead forward to partner"
-msgstr "Skicka vidare affärsmöjlighet till partner"
+msgstr "Skicka vidare lead till partner"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Kundämne/Möjlighet"
+msgstr "Lead/möjlighet"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_menu_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "Leads"
-msgstr "Kundämnen"
+msgstr "Leads"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_partner_grade_form
@@ -873,19 +957,19 @@ msgstr "Nivå"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__name
 msgid "Level Name"
-msgstr "Kategori Namn"
+msgstr "Kategorinamn"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__partner_weight
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__partner_weight
 msgid "Level Weight"
-msgstr "Kategori Vikt"
+msgstr "Kategorivikt"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__lead_link
 msgid "Link to Lead"
-msgstr "Länk till kundämne"
+msgstr "Länk till lead"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -935,7 +1019,7 @@ msgstr "Nästa aktivitet"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Next Activity Date"
-msgstr "Nästa Aktivitetsdatum"
+msgstr "Nästa aktivitetsdatum"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
@@ -990,7 +1074,7 @@ msgstr "Möjligheter"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_graph
 msgid "Opportunities Assignment Analysis"
-msgstr "Analys av möjlighetstilldelning"
+msgstr "Analys för tilldelning av möjligheter"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1030,7 +1114,7 @@ msgstr "Partnertilldelning"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__date_partner_assign
 msgid "Partner Assignment Date"
-msgstr "Partnertilldelningsdatum"
+msgstr "Datum för partnertilldelning"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
@@ -1139,7 +1223,7 @@ msgstr "Sannolikhet"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating"
-msgstr "Omdöme"
+msgstr "Betyg"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1149,7 +1233,7 @@ msgstr "Betyg: #{lead.priority} av 3"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Rating: #{opportunity.priority} on 4"
-msgstr "Gradering: #{opportunity.priority} på 4"
+msgstr "Betyg: #{opportunity.priority} av 4"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1188,7 +1272,7 @@ msgstr "Återförsäljare"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Sales Team:"
-msgstr "Försäljningsteam:"
+msgstr "Säljteam:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -1198,7 +1282,7 @@ msgstr "Säljare"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Salesperson:"
-msgstr "Vår referens:"
+msgstr "Säljare:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1218,7 +1302,7 @@ msgstr "Se alla återförsäljare"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See categories filters"
-msgstr "Se kategorier filter"
+msgstr "Se kategorifilter"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1243,7 +1327,7 @@ msgstr "Skicka e-post"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr "Skickas till partner när ett lead har tilldelats honom"
+msgstr "Skickas till partner när ett lead har tilldelats"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1285,12 +1369,12 @@ msgstr "Spam"
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 msgid "Stage"
-msgstr "Läge"
+msgstr "Etapp"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Stage:"
-msgstr "Steg:"
+msgstr "Etapp:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1321,7 +1405,7 @@ msgstr "Fullständig URL för åtkomst av dokument via webbplatsen."
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
 msgid "There are no leads."
-msgstr "Det finns inga affärsmöjligheter."
+msgstr "Det finns inga leads."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
@@ -1337,7 +1421,7 @@ msgstr "Det finns inget land angivet i adresser för %(lead_names)s."
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "This lead is a spam"
-msgstr "Denna affärsmöjlighet är Spam"
+msgstr "Denna lead är spam"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner__partner_weight
@@ -1347,22 +1431,21 @@ msgid ""
 "contention for this partner to take this lead/opportunity."
 msgstr ""
 "Detta bör vara ett numeriskt värde större än 0 som kommer att avgöra "
-"argumentet för om denna partner kommer att acceptera denna "
-"affärsmöjlighet/möjlighet."
+"argumentet för om denna partner kommer att acceptera denna lead/möjlighet."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
 msgid ""
 "Those are used to know where your Partners stand in your onboarding process."
 msgstr ""
-"Dessa används för att veta var dina Partners befinner sig i din onboarding-"
+"Dessa används för att veta var dina partners befinner sig i din onboarding-"
 "process."
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Today Activities"
-msgstr "Välj ledighetstyp"
+msgstr "Dagens aktiviteter"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__turnover
@@ -1393,7 +1476,7 @@ msgstr "Webbplats"
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__website_url
 msgid "Website URL"
-msgstr "Webbplatsens URL"
+msgstr "Webbplats URL"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
