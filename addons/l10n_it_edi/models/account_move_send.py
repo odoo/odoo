@@ -86,24 +86,41 @@ class AccountMoveSend(models.AbstractModel):
         super()._call_web_service_after_invoice_pdf_render(invoices_data)
         attachments_vals = {}
         moves = self.env['account.move']
-        for move, move_data in invoices_data.items():
-            if 'it_edi_send' in move_data['extra_edis']:
-                if attachment := move.l10n_it_edi_attachment_id:
-                    attachments_vals[move] = {'name': attachment.name, 'raw': attachment.raw}
-                    moves |= move
-                elif edi_values := move_data.get('l10n_it_edi_values'):
-                    attachments_vals[move] = edi_values
-                    moves |= move
-        moves._l10n_it_edi_send(attachments_vals)
+
+        # Filter only l10n_it_edi attachments
+        moves_data = {
+            move: move_data
+            for move, move_data in invoices_data.items()
+            if 'it_edi_send' in move_data['extra_edis']
+        }
+
+        # Prepare attachment data
+        for move, move_data in moves_data.items():
+            if attachment := move.l10n_it_edi_attachment_id:
+                attachments_vals[move] = {'name': attachment.name, 'raw': attachment.raw}
+                moves |= move
+            elif edi_values := move_data.get('l10n_it_edi_values'):
+                attachments_vals[move] = edi_values
+                moves |= move
+
+        # Send
+        results = moves._l10n_it_edi_send(attachments_vals)
+
+        # Eventually update attachments with signed data
+        for move, move_data in moves_data.items():
+            if attachment := move.l10n_it_edi_attachment_id or move_data.get('l10n_it_edi_values'):
+                attachment_data = results.get(attachment['name'], {})
+                if attachment_data.get('signed') and (signed_data := attachment_data.get('signed_data')):
+                    attachment['raw'] = signed_data
 
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
 
         attachments_vals = [
-            invoice_data.get('l10n_it_edi_values')
+            invoice_data['l10n_it_edi_values']
             for invoice_data in invoices_data.values()
-            if invoice_data.get('l10n_it_edi_values')
+            if 'l10n_it_edi_values' in invoice_data
         ]
         if attachments_vals:
             attachments = self.env['ir.attachment'].sudo().create(attachments_vals)
