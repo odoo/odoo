@@ -15,7 +15,7 @@
         'hr_attendance',
         'hr_fleet',
         'hr_holidays',
-        'hr_homeworking',
+        'hr',
         'im_livechat',
         'mail',
         'mail_bot',

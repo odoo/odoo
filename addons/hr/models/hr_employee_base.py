@@ -7,6 +7,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import format_time
 
+from .hr_employee_location import DAYS
+
 
 class HrEmployeeBase(models.AbstractModel):
     _name = 'hr.employee.base'
@@ -70,14 +72,47 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_out_of_working_hour', 'Out of Working hours'),
         ('presence_absent', 'Absent'),
         ('presence_archive', 'Archived'),
-        ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
+        ('presence_undetermined', 'Undetermined'),
+        ('presence_home', 'At Home'),
+        ('presence_office', 'At Office'),
+        ('presence_other', 'At Other')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
     im_status = fields.Char(related="user_id.im_status")
     newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
 
+    # Remote work
+    monday_location_id = fields.Many2one('hr.work.location', string='Monday')
+    tuesday_location_id = fields.Many2one('hr.work.location', string='Tuesday')
+    wednesday_location_id = fields.Many2one('hr.work.location', string='Wednesday')
+    thursday_location_id = fields.Many2one('hr.work.location', string='Thursday')
+    friday_location_id = fields.Many2one('hr.work.location', string='Friday')
+    saturday_location_id = fields.Many2one('hr.work.location', string='Saturday')
+    sunday_location_id = fields.Many2one('hr.work.location', string='Sunday')
+    exceptional_location_id = fields.Many2one(
+        'hr.work.location', string='Current',
+        compute='_compute_exceptional_location_id',
+        help='This is the exceptional, non-weekly, location set for today.')
+    today_location_name = fields.Char()
+
     @api.model
     def _get_new_hire_field(self):
         return 'create_date'
+
+    @api.model
+    def _get_current_day_location_field(self):
+        return DAYS[fields.Date.today().weekday()]
+
+    # hack to allow groupby on today's location. Since there are 7 different fields, we have to use a placeholder
+    # in the search view and replace it with the correct field every time the views are fetched.
+    @api.model
+    def get_views(self, views, options=None):
+        res = super().get_views(views, options)
+        dayfield = self._get_current_day_location_field()
+        if 'search' in res['views']:
+            res['views']['search']['arch'] = res['views']['search']['arch'].replace('today_location_name', dayfield)
+        if 'list' in res['views']:
+            res['views']['list']['arch'] = res['views']['list']['arch'].replace('work_location_name', dayfield)
+        return res
 
     def _compute_newly_hired(self):
         new_hire_field = self._get_new_hire_field()
@@ -99,11 +134,13 @@ class HrEmployeeBase(models.AbstractModel):
         ])
         return [('id', operator, new_hires.ids)]
 
-    @api.depends("work_location_id.name", "work_location_id.location_type")
+    @api.depends("work_location_id.name", "work_location_id.location_type", "exceptional_location_id")
     def _compute_work_location_name_type(self):
+        dayfield = self._get_current_day_location_field()
         for employee in self:
-            employee.work_location_name = employee.work_location_id.name or None
-            employee.work_location_type = employee.work_location_id.location_type or 'other'
+            current_location_id = employee.exceptional_location_id or employee[dayfield]
+            employee.work_location_name = current_location_id.name or employee.work_location_name
+            employee.work_location_type = current_location_id.location_type or employee.work_location_type
 
     def _get_valid_employee_for_user(self):
         user = self.env.user
@@ -238,6 +275,29 @@ class HrEmployeeBase(models.AbstractModel):
         if employees_without_work_contact:
             employees_without_work_contact.sudo()._create_work_contacts()
 
+    def _compute_exceptional_location_id(self):
+        today = fields.Date.today()
+        current_employee_locations = self.env['hr.employee.location'].search([
+            ('employee_id', 'in', self.ids),
+            ('date', '=', today),
+        ])
+        employee_work_locations = {l.employee_id.id: l.work_location_id for l in current_employee_locations}
+
+        for employee in self:
+            employee.exceptional_location_id = employee_work_locations.get(employee.id, False)
+
+    @api.depends(*DAYS, 'exceptional_location_id', 'hr_presence_state')
+    def _compute_presence_icon(self):
+        dayfield = self._get_current_day_location_field()
+        for employee in self:
+            today_employee_location_id = employee.exceptional_location_id or employee[dayfield]
+            if not today_employee_location_id or (employee.hr_icon_display and employee.hr_icon_display.startswith('presence_holiday')):
+                employee.hr_icon_display = 'presence_' + employee.hr_presence_state
+                employee.show_hr_icon_display = bool(employee.user_id)
+            else:
+                employee.hr_icon_display = f'presence_{today_employee_location_id.location_type}'
+                employee.show_hr_icon_display = True
+
     @api.depends('company_id')
     def _compute_address_id(self):
         for employee in self:
@@ -248,16 +308,6 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_parent_id(self):
         for employee in self.filtered('department_id.manager_id'):
             employee.parent_id = employee.department_id.manager_id
-
-    @api.depends('resource_calendar_id', 'hr_presence_state')
-    def _compute_presence_icon(self):
-        """
-        This method compute the state defining the display icon in the kanban view.
-        It can be overriden to add other possibilities, like time off or attendances recordings.
-        """
-        for employee in self:
-            employee.hr_icon_display = 'presence_' + employee.hr_presence_state
-            employee.show_hr_icon_display = bool(employee.user_id)
 
     @api.depends('resource_calendar_id.flexible_hours')
     def _compute_is_flexible(self):
@@ -300,3 +350,12 @@ class HrEmployeeBase(models.AbstractModel):
             calendar = employee.resource_calendar_id or employee.company_id.resource_calendar_id
             calendar_periods_by_employee[employee] = [(start, stop, calendar)]
         return calendar_periods_by_employee
+
+    def action_copy_to_all(self):
+        self.ensure_one()
+        self.tuesday_location_id = self.monday_location_id
+        self.wednesday_location_id = self.monday_location_id
+        self.thursday_location_id = self.monday_location_id
+        self.friday_location_id = self.monday_location_id
+        self.saturday_location_id = self.monday_location_id
+        self.sunday_location_id = self.monday_location_id
