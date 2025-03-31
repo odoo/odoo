@@ -1,7 +1,6 @@
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 
 const { DateTime } = luxon;
@@ -72,12 +71,6 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
     ]);
     constructor(config) {
         super(config);
-
-        globalFiltersFieldMatchers["pivot"] = {
-            ...globalFiltersFieldMatchers["pivot"],
-            waitForReady: () => this._getPivotsWaitForReady(),
-            getFields: (pivotId) => this.getters.getPivot(pivotId).getFields(),
-        };
     }
 
     beforeHandle(cmd) {
@@ -194,7 +187,9 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                             }
                         }
                         // A group by value of "none"
-                        if (value === false) break;
+                        if (value === false) {
+                            break;
+                        }
                         if (JSON.stringify(currentValue) !== `[${value}]`) {
                             transformedValue = [value];
                         }
@@ -248,17 +243,5 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
             .filter((pivotId) => this.getters.getPivot(pivotId).type === "ODOO")) {
             this._addDomain(pivotId);
         }
-    }
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    _getPivotsWaitForReady() {
-        return this.getters
-            .getPivotIds()
-            .map((pivotId) => this.getters.getPivot(pivotId))
-            .filter((pivot) => pivot.type === "ODOO")
-            .map((pivot) => pivot.loadMetadata());
     }
 }

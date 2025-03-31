@@ -2,7 +2,6 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { getFirstListFunction } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 
 const { astToFormula } = spreadsheet;
@@ -31,12 +30,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         this.lists = {};
 
         this.custom = config.custom;
-
-        globalFiltersFieldMatchers["list"] = {
-            ...globalFiltersFieldMatchers["list"],
-            getFields: (listId) => this.getListDataSource(listId).getFields(),
-            waitForReady: () => this.getListsWaitForReady(),
-        };
     }
 
     beforeHandle(cmd) {
@@ -325,16 +318,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
         const dataSource = this.getListDataSource(id);
         await dataSource.load();
         return dataSource;
-    }
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    getListsWaitForReady() {
-        return this.getters
-            .getListIds()
-            .map((listId) => this.getListDataSource(listId).loadMetadata());
     }
 
     isListUnused(listId) {

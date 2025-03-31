@@ -8,6 +8,10 @@ import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { QUARTER_OPTIONS } from "@web/search/utils/dates";
 
+import { Registry } from "@spreadsheet/o_spreadsheet/o_spreadsheet";
+
+export const globalFieldMatchingRegistry = new Registry();
+
 /**
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  */

@@ -1,8 +1,5 @@
 import { Domain } from "@web/core/domain";
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { ChartDataSource } from "../data_source/chart_data_source";
-import { sprintf } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
 import { OdooUIPlugin } from "@spreadsheet/plugins";
 
 export class OdooChartUIPlugin extends OdooUIPlugin {
@@ -17,16 +14,6 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
 
         /** @type {Record<string, ChartDataSource>} */
         this.charts = {};
-
-        globalFiltersFieldMatchers["chart"] = {
-            ...globalFiltersFieldMatchers["chart"],
-            getTag: async (chartId) => {
-                const model = await this.getChartDataSource(chartId).getModelLabel();
-                return sprintf(_t("Chart - %s"), model);
-            },
-            waitForReady: () => this._getOdooChartsWaitForReady(),
-            getFields: (chartId) => this.getChartDataSource(chartId).getFields(),
-        };
     }
 
     beforeHandle(cmd) {
@@ -205,16 +192,6 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
     _setChartDataSource(chartId) {
         const chart = this.getters.getChart(chartId);
         chart.setDataSource(this.getChartDataSource(chartId));
-    }
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    _getOdooChartsWaitForReady() {
-        return this.getters
-            .getOdooChartIds()
-            .map((chartId) => this.getChartDataSource(chartId).loadMetadata());
     }
 
     _getOdooChartDataSourceId(chartId) {
