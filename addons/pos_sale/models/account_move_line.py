@@ -25,13 +25,18 @@ class AccountMoveLine(models.Model):
         total_lines = self.env['account.move.line']
         for line in lines_from_pos:
             sale_line = line.move_id.pos_order_ids.lines.filtered(lambda l: l.product_id == line.product_id).sale_order_line_id
-            if sale_line.is_downpayment:
+            if len(sale_line) > 1: # If multiple downpayments, you have to choose the correct one
+                sale_line =  sale_line.filtered(lambda sl: sl.price_unit == abs(line.price_subtotal))
+                if len(sale_line) > 1:
+                    sale_line = sale_line[0]
+            if sale_line and sale_line.is_downpayment:
                 # Indirect, but direct to original downpayment
                 lines = sale_line.invoice_lines.filtered(lambda l: l.move_id._is_downpayment())
                 # Indirect Indirect
                 indirect_line_invoice = sale_line.pos_order_line_ids.order_id.account_move
-                if indirect_line_invoice._is_downpayment():
-                    lines |= indirect_line_invoice.line_ids.filtered(lambda l: l.product_id == line.product_id)
+                downpayment_invoice = indirect_line_invoice.filtered(lambda inv: inv._is_downpayment())
+                if downpayment_invoice:
+                    lines |= downpayment_invoice.line_ids.filtered(lambda l: l.product_id == line.product_id)
             total_lines |= lines
 
         # Other pos lines stuff
