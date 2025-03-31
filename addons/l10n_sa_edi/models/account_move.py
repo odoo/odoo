@@ -16,7 +16,7 @@ class AccountMove(models.Model):
     l10n_sa_invoice_signature = fields.Char("Unsigned XML Signature", copy=False)
 
     l10n_sa_chain_index = fields.Integer(
-        string="ZATCA chain index", copy=False, readonly=True,
+        string="ZATCA chain index", copy=False, readonly=True, tracking=True,
         help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
     )
 
