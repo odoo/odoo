@@ -1,0 +1,24 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+{
+    'name': 'Test API',
+    'version': '1.0',
+    'category': 'Hidden/Tests',
+    'description': """A module to test the API.""",
+    'depends': ['base', 'web', 'web_tour'],
+    'installable': True,
+    'data': [
+        'security/ir.model.access.csv',
+        'security/test_new_api_security.xml',
+        'views/test_new_api_views.xml',
+        'data/test_new_api_data.xml',
+    ],
+    'assets': {
+        'web.assets_tests': [
+            'test_orm/static/tests/tours/constraint.js',
+            'test_orm/static/tests/tours/x2many.js',
+        ],
+    },
+    'author': 'Odoo S.A.',
+    'license': 'LGPL-3',
+}
