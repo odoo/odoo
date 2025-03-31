@@ -71,24 +71,51 @@ class AccountMoveSend(models.AbstractModel):
         super()._call_web_service_after_invoice_pdf_render(invoices_data)
         attachments_vals = {}
         moves = self.env['account.move']
-        for move, move_data in invoices_data.items():
-            if 'it_edi_send' in move_data['extra_edis']:
-                if attachment := move.l10n_it_edi_attachment_id:
-                    attachments_vals[move] = {'name': attachment.name, 'raw': attachment.raw}
-                    moves |= move
-                elif edi_values := move_data.get('l10n_it_edi_values'):
-                    attachments_vals[move] = edi_values
-                    moves |= move
-        moves._l10n_it_edi_send(attachments_vals)
+
+        # Filter only l10n_it_edi attachments
+        moves_data = {
+            move: move_data
+            for move, move_data in invoices_data.items()
+            if 'it_edi_send' in move_data['extra_edis']
+        }
+
+        # Prepare attachment data
+        for move, move_data in moves_data.items():
+            if attachment := move.l10n_it_edi_attachment_id:
+                attachments_vals[move] = {'name': attachment.name, 'raw': attachment.raw}
+                moves |= move
+            elif edi_values := move_data.get('l10n_it_edi_values'):
+                attachments_vals[move] = edi_values
+                moves |= move
+
+        # Send
+        results = moves._l10n_it_edi_send(attachments_vals)
+
+        # Eventually update attachments with signed data
+        def get_signed_data(results, name):
+            if (vals := results.get(name)) and vals.get('signed'):
+                return vals.get('signed_data')
+
+        for move, move_data in moves_data.items():
+            if (
+                (attachment := move.l10n_it_edi_attachment_id)
+                and (raw := get_signed_data(results, attachment.name))
+            ):
+                attachment.raw = raw
+            elif (
+                (edi_values := move_data.get('l10n_it_edi_values'))
+                and (raw := get_signed_data(results, edi_values['name']))
+            ):
+                edi_values['raw'] = raw
 
     def _link_invoice_documents(self, invoices_data):
         # EXTENDS 'account'
         super()._link_invoice_documents(invoices_data)
 
         attachments_vals = [
-            invoice_data.get('l10n_it_edi_values')
+            invoice_data['l10n_it_edi_values']
             for invoice_data in invoices_data.values()
-            if invoice_data.get('l10n_it_edi_values')
+            if 'l10n_it_edi_values' in invoice_data
         ]
         if attachments_vals:
             attachments = self.env['ir.attachment'].sudo().create(attachments_vals)
