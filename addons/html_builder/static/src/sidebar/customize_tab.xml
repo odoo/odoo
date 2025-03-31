@@ -3,7 +3,8 @@
 
 <t t-name="html_builder.CustomizeTab">
     <div class="o_customize_tab h-100">
-        <t t-if="!props.currentOptionsContainers.length || !this.state.hasContent">
+        <t t-set="currentOptionsContainers" t-value="this.getCurrentOptionsContainers()"/>
+        <t t-if="!currentOptionsContainers.length || !this.state.hasContent">
             <div class="text-center pt-5">
                 Select a block on your page to style it.
             </div>
@@ -14,7 +15,7 @@
                     editingElements="this.customizeComponent.editingEls"
                     comp="this.customizeComponent.component"
                     compProps="this.customizeComponent.props"/>
-                <t t-else="" t-foreach="props.currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
+                <t t-else="" t-foreach="currentOptionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
                     <OptionsContainer
                         snippetModel="props.snippetModel"
                         editingElement="optionsContainer.element"
