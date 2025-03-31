@@ -200,6 +200,12 @@ test("Can edit message comment in chatter", async () => {
     await contains(".o-mail-Message .o-mail-Composer-input", { value: "edited again\n" });
     await triggerHotkey("control+Enter"); // somehow press doesn't work :(
     await contains(".o-mail-Message-content", { text: "edited again (edited)" });
+    // save without change should keep (edited)
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await contains(".o-mail-Message:contains('Escape to cancel, CTRL-Enter to save')");
+    await triggerHotkey("control+Enter"); // somehow press doesn't work :(
+    await contains(".o-mail-Message-content", { text: "edited again (edited)" });
 });
 
 // test.tags("mobile");
