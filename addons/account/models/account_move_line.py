@@ -1757,19 +1757,6 @@ class AccountMoveLine(models.Model):
         return res
 
     @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not groupby or 'currency_id' in groupby or 'amount_currency' not in fields:
-            return super().read_group(domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True)
-
-        fields.append('currency_id:count_distinct')
-        res = super().read_group(domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True)
-        for group_line in res:
-            if group_line['currency_id'] != 1:
-                group_line['amount_currency'] = False
-
-        return res
-
-    @api.model
     def _format_aml_name(self, line_name, move_ref, move_name=None):
         ''' Format the display of an account.move.line record. As its very costly to fetch the account.move.line
         records, only line_name, move_ref, move_name are passed as parameters to deal with sql-queries more easily.
@@ -3378,6 +3365,15 @@ class AccountMoveLine(models.Model):
 
     def _check_edi_line_tax_required(self):
         return True
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        # Hide total amount_currency from read_group when view is not grouped by currency_id. Avoids mix of currencies
+        res = super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+        if 'currency_id' not in groupby and 'amount_currency' in fields:
+            for group_line in res:
+                group_line['amount_currency'] = False
+        return res
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
