@@ -52,7 +52,7 @@ export class PresetSlotsPopup extends Component {
 
     isSelected(slot, preset) {
         const order = this.pos.getOrder();
-        return order.preset_time.ts === slot.datetime.ts && order.preset_id?.id === preset.id;
+        return order.preset_time?.ts === slot.datetime.ts && order.preset_id?.id === preset.id;
     }
 
     getSlotsForDate(preset, date) {
