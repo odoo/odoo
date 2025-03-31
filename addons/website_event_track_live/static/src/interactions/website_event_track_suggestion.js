@@ -1,75 +1,56 @@
-import { PublicWidget } from "@web/legacy/js/public/public_widget";
+import { Interaction } from "@web/public/interaction";
+import { redirect } from "@web/core/utils/urls";
+import { registry } from "@web/core/registry";
 
-var WebsiteEventTrackSuggestion = PublicWidget.extend({
-    template: 'website_event_track_live.website_event_track_suggestion',
-    events: {
-        'click .owevent_track_suggestion_next': '_onNextTrackClick',
-        'click .owevent_track_suggestion_close': '_onCloseClick',
-        'click .owevent_track_suggestion_replay': '_onReplayClick'
-    },
+export class WebsiteEventTrackSuggestion extends Interaction {
+    static selector = ".owevent_track_video_suggestion";
+    dynamicContent = {
+        ".owevent_track_suggestion_next": {
+            "t-on-click": this.onNextTrackClick,
+            "t-att-class": () => ({ invisible: !this.nextVisible }),
+        },
+        ".owevent_track_suggestion_close": {
+            "t-on-click": this.onCloseClick,
+        },
+        ".owevent_track_suggestion_replay": {
+            "t-on-click": this.onReplayClick,
+        },
+    };
 
-    init: function (parent, options) {
-        this._super(...arguments);
+    setup() {
+        this.nextVisible = true;
+        this.trackUrl = this.el.dataset.websiteUrl;
+        this.timerEl = this.el.querySelector(".owevent_track_suggestion_timer_text");
+        this.timer = parseInt(this.timerEl.textContent);
+        this.timerInterval = setInterval(this.updateTimer.bind(this), 1000);
+    }
 
-        this.currentTrack = {
-            'name': options.current_track.name,
-            'imageSrc': options.current_track.website_image_url,
-        };
-        this.suggestion = {
-            'name': options.suggestion.name,
-            'speakerName': options.suggestion.speaker_name,
-            'trackUrl': options.suggestion.website_url,
-        };
-    },
-
-    start: function () {
-        var self = this;
-        this._super(...arguments).then(function () {
-            self.timerInterval = setInterval(self._updateTimer.bind(self), 1000);
-        });
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * If the user clicks on replay, remove this suggestion window and send an
-     * event to the parent so that it can rewind the video to the beginning.
-     */
-    _onReplayClick: function () {
-        this.trigger_up('replay');
+    onReplayClick() {
+        this.el.dispatchEvent(new Event("replay"));
         clearInterval(this.timerInterval);
-        this.destroy();
-    },
+        this.el.remove();
+    }
 
-    _onCloseClick: function () {
+    onCloseClick(event) {
+        event.stopPropagation();
         clearInterval(this.timerInterval);
-        this.$('.owevent_track_suggestion_next').addClass('invisible');
-    },
+        this.nextVisible = false;
+    }
 
-    _onNextTrackClick: function (ev) {
-        if ($(ev.target).hasClass('owevent_track_suggestion_close')) {
-            return;
-        }
+    onNextTrackClick() {
+        redirect(this.trackUrl);
+    }
 
-        window.location = this.suggestion.trackUrl;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _updateTimer: function () {
-        var secondsLeft = parseInt(this.$('.owevent_track_suggestion_timer_text').text());
-
-        if (secondsLeft > 1) {
-            secondsLeft -= 1;
-            this.$('.owevent_track_suggestion_timer_text').text(secondsLeft);
+    updateTimer() {
+        if (this.timer > 1) {
+            this.timer--;
+            this.timerEl.textContent = ` ${this.timer}`;
         } else {
-            window.location = this.suggestion.trackUrl;
+            redirect(this.trackUrl);
         }
     }
-});
+}
 
-export default WebsiteEventTrackSuggestion;
+registry
+    .category("public.interactions")
+    .add("website_event_track_live.WebsiteEventTrackSuggestion", WebsiteEventTrackSuggestion);
