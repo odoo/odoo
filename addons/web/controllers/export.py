@@ -329,7 +329,7 @@ class Export(http.Controller):
                     #     'name': 'aa34746a6851ee4e',
                     #     'string': 'Partner',
                     #     'type': 'many2one',
-                    #     'comodel': 'test_new_api.partner',
+                    #     'comodel': 'test_orm.partner',
                     #     'default': [1337, 'Bob'],
                     # }
                     if (
