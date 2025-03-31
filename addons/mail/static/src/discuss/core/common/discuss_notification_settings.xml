@@ -20,7 +20,6 @@
                 </div>
                 <div class="flex-grow-1"/>
                 <select class="form-select w-auto d-flex" t-on-change="onChangeMuteDuration">
-                    <option value="default">Select duration</option>
                     <t t-foreach="store.settings.MUTES" t-as="mute" t-key="mute.label">
                         <option t-att-value="mute.value" t-esc="mute.name" t-att-selected="mute.value === state.selectedDuration"/>
                     </t>
