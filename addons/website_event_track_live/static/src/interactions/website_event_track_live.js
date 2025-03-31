@@ -1,8 +1,8 @@
 /* global YT */
 
 import publicWidget from "@web/legacy/js/public/public_widget";
-import TrackSuggestionWidget from "@website_event_track_live/js/website_event_track_suggestion";
-import ReplaySuggestionWidget from "@website_event_track_live/js/website_event_track_replay_suggestion";
+import TrackSuggestionWidget from "@website_event_track_live/interactions/website_event_track_suggestion";
+import ReplaySuggestionWidget from "@website_event_track_live/interactions/website_event_track_replay_suggestion";
 import { rpc } from "@web/core/network/rpc";
 
 publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
