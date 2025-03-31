@@ -43,7 +43,7 @@ class TestTimesheetHolidays(TestCommonTimesheet):
         self.internal_project = self.env.company.internal_project_id
         self.internal_task_leaves = self.env.company.leave_timesheet_task_id
 
-        self.hr_leave_type_with_ts = self.env['hr.leave.type'].create({
+        self.hr_leave_type_with_ts = self.env['hr.leave.type'].sudo().create({
             'name': 'Time Off Type with timesheet generation',
             'requires_allocation': 'no',
         })
