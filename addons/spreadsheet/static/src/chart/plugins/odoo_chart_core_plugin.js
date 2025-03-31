@@ -1,4 +1,3 @@
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
 import { Domain } from "@web/core/domain";
@@ -32,15 +31,6 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
 
         /** @type {Object.<string, Chart>} */
         this.charts = {};
-
-        globalFiltersFieldMatchers["chart"] = {
-            getIds: () => this.getters.getOdooChartIds(),
-            getDisplayName: (chartId) => this.getters.getOdooChartDisplayName(chartId),
-            getFieldMatching: (chartId, filterId) =>
-                this.getOdooChartFieldMatching(chartId, filterId),
-            getModel: (chartId) =>
-                this.getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
-        };
     }
 
     allowDispatch(cmd) {
@@ -126,7 +116,7 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
             if (sheet.figures) {
                 for (const figure of sheet.figures) {
                     if (figure.tag === "chart" && figure.data.type.startsWith("odoo_")) {
-                        this._addOdooChart(figure.id, figure.data.fieldMatching);
+                        this._addOdooChart(figure.id, figure.data.fieldMatching ?? {});
                     }
                 }
             }
@@ -191,14 +181,10 @@ export class OdooChartCorePlugin extends OdooCorePlugin {
      * @param {Object} fieldMatching
      */
     _addOdooChart(chartId, fieldMatching = undefined) {
-        const charts = { ...this.charts };
-        if (!fieldMatching) {
-            const model = this.getters.getChartDefinition(chartId).metaData.resModel;
-            fieldMatching = this.getters.getFieldMatchingForModel(model);
-        }
-        charts[chartId] = {
-            fieldMatching,
-        };
-        this.history.update("charts", charts);
+        const model = this.getters.getChartDefinition(chartId).metaData.resModel;
+        this.history.update("charts", chartId, {
+            id: chartId,
+            fieldMatching: fieldMatching || this.getters.getFieldMatchingForModel(model),
+        });
     }
 }

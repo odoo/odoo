@@ -1,6 +1,4 @@
 import { CommandResult } from "../../o_spreadsheet/cancelled_reason";
-import { _t } from "@web/core/l10n/translation";
-import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import { deepCopy } from "@web/core/utils/objects";
 import { OdooCorePlugin } from "@spreadsheet/plugins";
@@ -19,13 +17,6 @@ export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
 
         /** @type {Object.<string, GFLocalList>} */
         this.fieldMatchings = {};
-        globalFiltersFieldMatchers["list"] = {
-            getIds: () => Object.keys(this.fieldMatchings),
-            getDisplayName: (listId) => this.getters.getListName(listId),
-            getTag: (listId) => _t(`List #%(list_id)s`, { list_id: listId }),
-            getFieldMatching: (listId, filterId) => this.getListFieldMatching(listId, filterId),
-            getModel: (listId) => this.getters.getListDefinition(listId).model,
-        };
     }
 
     /**
@@ -142,7 +133,7 @@ export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
     import(data) {
         if (data.lists) {
             for (const [id, list] of Object.entries(data.lists)) {
-                this._addList(id, list.fieldMatching);
+                this._addList(id, list.fieldMatching ?? {});
             }
         }
     }
