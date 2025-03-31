@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Ilya Rozhkov, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-02-20 10:02+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Ilya Rozhkov, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,22 +36,24 @@ msgid ""
 "        (|(mail=%s)(uid=%s))\n"
 "    "
 msgstr ""
-"Фильтр, используемый для поиска учетных записей пользователей в базе данных LDAP. Это произвольный фильтр LDAP в строковом представлении. Любой `%s` заполнитель будет заменен логином (идентификатором), предоставленным пользователем, фильтр должен содержать хотя бы один такой заполнитель. \n"
+"Фильтр для поиска учетных записей пользователей в базе данных LDAP. Это произвольный LDAP-фильтр в строковом виде. Все заполнители `%s` будут заменены логином (идентификатором), указанным пользователем; фильтр должен содержать хотя бы один такой заполнитель.\n"
 "\n"
-"   Фильтр должен дать ровно один (1) результат, иначе логин будет считаться недействительным. \n"
+"Фильтр должен возвращать ровно один (1) результат, иначе логин будет считаться недействительным.\n"
 "\n"
-"   Пример (фактические атрибуты зависят от сервера LDAP и настроек): \n"
+"Пример (конкретные атрибуты зависят от настроек LDAP-сервера):\n"
 "\n"
-"(&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
 "\n"
-"   или\n"
-" (|(mail=%s)(uid=%s))"
+"или\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "An error occurred: %(error)s"
-msgstr ""
+msgstr "Произошла ошибка: %(error)s"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
@@ -58,14 +61,14 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Автоматически создавать локальную учётную запись для новых пользователей "
-"прошедших проверку подлинности LDAP"
+"Автоматически создавать локальные учетные записи для новых пользователей, "
+"прошедших аутентификацию через LDAP"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Cannot contact LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Не удалось подключиться к серверу LDAP по адресу %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -80,30 +83,32 @@ msgstr "Компания"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr "Конфигурирование LDAP компании"
+msgstr "Конфигурация LDAP компании"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr "Параметры конфигурации"
+msgstr "Настройки конфигурации"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "Тест соединения не пройден!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection Test Successful!"
-msgstr "Тест соединения успешно завершен!"
+msgstr "Тест соединения успешно пройден!"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Connection to LDAP server at %(server)s:%(port)d timed out"
 msgstr ""
+"Время ожидания подключения к серверу LDAP по адресу %(server)s:%(port)d "
+"истекло"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
@@ -113,12 +118,12 @@ msgstr "Создать пользователя"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
 msgid "Created by"
-msgstr "Создано"
+msgstr "Создано пользователем"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
-msgstr "Создано"
+msgstr "Дата создания"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
@@ -126,8 +131,8 @@ msgid ""
 "DN of the user search scope: all descendants of this base will be searched "
 "for users."
 msgstr ""
-"DN области поиска пользователей: все потомки этой базы будут искать "
-"пользователей. "
+"DN области поиска пользователей: все потомки этой базы будут просмотрены для"
+" поиска пользователей."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company__display_name
@@ -149,7 +154,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Invalid credentials for bind DN %(binddn)s"
-msgstr ""
+msgstr "Неверные учетные данные для bind DN %(binddn)s"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.res_company_ldap_view_tree
@@ -181,12 +186,12 @@ msgstr "Порт сервера LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
 msgid "LDAP base"
-msgstr "LDAP base"
+msgstr "База LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_binddn
 msgid "LDAP binddn"
-msgstr "LDAP binddn"
+msgstr "Bind DN LDAP"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_filter
@@ -201,30 +206,30 @@ msgstr "Пароль LDAP"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
 msgid "Last Updated by"
-msgstr "Последнее обновление"
+msgstr "Последний раз обновил"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_date
 msgid "Last Updated on"
-msgstr "Последнее обновление"
+msgstr "Дата последнего обновления"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Login Information"
-msgstr "Регистрационная инфо"
+msgstr "Информация для входа"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
-"Не найден локальный пользователь для входа в LDAP и не настроен для его "
-"создания"
+"Локальный пользователь для входа через LDAP не найден, и создание нового не "
+"настроено"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Process Parameter"
-msgstr "Параметры подключения"
+msgstr "Параметры процесса"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
@@ -233,9 +238,9 @@ msgid ""
 "option requires a server with STARTTLS enabled, otherwise all authentication"
 " attempts will fail."
 msgstr ""
-"Запросить поддержку TLS/SSL шифрования при подключении к LDAP серверу. Для "
-"подключения требуется LDAP сервер с поддержкой параметра STARTTLS, в "
-"противном случае все попытки проверки подлинности потерпят неудачу."
+"Запросить шифрование TLS/SSL при подключении к серверу LDAP. Для этой опции "
+"требуется сервер с включенным STARTTLS, иначе все попытки аутентификации "
+"завершатся неудачей."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -250,13 +255,13 @@ msgstr "Информация о сервере"
 #. module: auth_ldap
 #: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
 msgid "Setup your LDAP Server"
-msgstr "Настройте параметры поключения к LDAP серверу"
+msgstr "Настройка вашего сервера LDAP"
 
 #. module: auth_ldap
 #. odoo-python
 #: code:addons/auth_ldap/models/res_company_ldap.py:0
 msgid "Successfully connected to LDAP server at %(server)s:%(port)d"
-msgstr ""
+msgstr "Успешно подключено к серверу LDAP по адресу %(server)s:%(port)d"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__user
@@ -266,7 +271,7 @@ msgstr "Шаблон пользователя"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "Test Connection"
-msgstr "Тест подключения"
+msgstr "Проверить соединение"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
@@ -274,8 +279,8 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
-"Пароль пользователя LDAP, который будет использован при запросах в LDAP "
-"каталог."
+"Пароль учетной записи пользователя на сервере LDAP, используемый для "
+"запросов к каталогу."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
@@ -283,8 +288,8 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"Учетная запись пользователя LDAP, которая будет использована при запросах в "
-"LDAP каталог. Оставьте пустым для анонимного подключения."
+"Учетная запись пользователя на сервере LDAP, используемая для запросов к "
+"каталогу. Оставьте пустым для анонимного подключения."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
@@ -299,9 +304,9 @@ msgstr "Пользователь"
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
 msgid "User Information"
-msgstr "Сведения о пользователе"
+msgstr "Информация о пользователе"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__user
 msgid "User to copy when creating new users"
-msgstr "Шаблон локального пользователя для создания новых учетных записей"
+msgstr "Пользователь, копируемый при создании новых пользователей"
