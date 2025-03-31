@@ -876,3 +876,14 @@ class TestDomainOptimize(TransactionCase):
             (self.number_domain & self.number_domain).optimize(model),
             self.number_domain
         )
+
+    def test_optimize_level_by_level(self):
+        def search_foo(model, operator, value):
+            # groups values to check that it is called once
+            return [('name', '=', str(tuple(value)))]
+
+        self.patch(self.registry['test_new_api.bar'], '_search_foo', search_foo)
+        bar = self.env['test_new_api.bar']
+        domain = Domain('foo', '=', 4) | Domain('foo', '=', 5)
+        domain = domain.optimize(bar, full=True)
+        self.assertEqual(domain, Domain('name', 'in', OrderedSet(['(4, 5)'])))
