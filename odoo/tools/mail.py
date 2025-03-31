@@ -205,7 +205,12 @@ def tag_quote(el):
     is_signature_wrapper = 'odoo_signature_wrapper' in el_class or 'gmail_signature' in el_class or el_id == "Signature"
     is_outlook_auto_message = 'appendonsend' in el_id
     # gmail and outlook reply quote
-    is_outlook_reply_quote = 'divRplyFwdMsg' in el_id
+    is_outlook_reply_quote = (
+        'divRplyFwdMsg' in el_id
+        or 'x_divRplyFwdMsg' in el_id
+        or 'mail-editor-reference-message-container' in el_id
+        or 'ms-outlook-mobile-reference-message' in el_class
+    )
     is_gmail_quote = 'gmail_quote' in el_class
     is_quote_wrapper = is_signature_wrapper or is_gmail_quote or is_outlook_reply_quote
     if is_quote_wrapper:
