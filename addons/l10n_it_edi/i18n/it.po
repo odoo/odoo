@@ -360,6 +360,18 @@ msgstr "Fatturazione Elettronica"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Error sending file from the Proxy Server to SdI"
+msgstr "Errore nell'invio del file dal Proxy Server al SdI"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Error signing the XML"
+msgstr "Errore nella firma dell'XML"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
 "Error uploading the e-invoice file %(file)s.\n"
 "%(error)s"
@@ -875,6 +887,12 @@ msgid "Province of the register-of-companies office"
 msgstr "Provincia dell'ufficio del registro delle imprese"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Proxy Server configuration error"
+msgstr "Errore di configurazione del Server Proxy"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
 msgstr "Tipo proxy"
@@ -894,11 +912,6 @@ msgstr "Acquisto"
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_origin_document_type__purchase_order
 msgid "Purchase Order"
 msgstr "Ordine d'Acquisto"
-
-#. module: l10n_it_edi
-#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__requires_user_signature
-msgid "Requires user signature"
-msgstr "Richiede Firma Utente"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_state
@@ -967,16 +980,6 @@ msgstr "Invia l'XML della Fatturazione Elettronica all'Agenzia delle Entrate"
 #: code:addons/l10n_it_edi/models/account_move_send.py:0
 msgid "Send to Tax Agency"
 msgstr "Invia Agenzia Entrate"
-
-#. module: l10n_it_edi
-#. odoo-python
-#: code:addons/l10n_it_edi/models/account_move.py:0
-msgid ""
-"Sending invoices to Public Administration partners is not supported.\n"
-"The IT EDI XML file is generated, please sign the document and upload it through the 'Fatture e Corrispettivi' portal of the Tax Agency."
-msgstr ""
-"L'invio della Fatturazione Elettronica ai Partner della Pubblica Amministrazione non è supportato\n"
-"Il file XML è stato generato, va firmato e inviato tramite il portale 'Fatture e Corrispettivi' dell'Agenzia delle Entrate."
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1060,7 +1063,7 @@ msgstr "La Data Documento Origine non può essere nel futuro."
 msgid ""
 "The amount_total %(current_total)s is different than PrezzoTotale "
 "%(expected_total)s for '%(move_name)s'"
-msgstr ""
+msgstr "L'importo totale %(current_total)s è diverso dal PrezzoTotale %(expected_total)s per '%(move_name)s'"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_liquidation_state__ls
@@ -1196,6 +1199,12 @@ msgid ""
 msgstr ""
 "La fattura elettronca %s è stata inviata all'SdI per esser validata.\n"
 "Non è stata ancora considerata accettata, per favore attendere ulteriori notifiche."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "The e-invoice file %s was signed and sent to the SdI for processing."
+msgstr "Il file fattura %s è stato firmato e inviato al SdI per essere processato."
 
 #. module: l10n_it_edi
 #. odoo-python
