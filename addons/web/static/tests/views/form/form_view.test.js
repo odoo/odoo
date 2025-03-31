@@ -59,6 +59,7 @@ import { browser } from "@web/core/browser/browser";
 import { cookie } from "@web/core/browser/cookie";
 import { makeErrorFromResponse } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { config as transitionConfig } from "@web/core/transition";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
@@ -12778,4 +12779,21 @@ test("executing new action, closes dialog, and avoid reload previous view", asyn
         "web_search_read",
         "has_group",
     ]);
+});
+
+test.tags("mobile")(`pager is up to date`, async () => {
+    patchWithCleanup(transitionConfig, { disabled: true });
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resIds: [1, 2],
+        resId: 1,
+    });
+    await contains(`.o_pager_next`).click();
+    await animationFrame();
+    expect(".o_pager_indicator").toHaveCount(1, {
+        message: "the pager indicator should be displayed",
+    });
+    expect(".o_pager_indicator").toHaveText("2 / 2");
 });
