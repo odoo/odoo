@@ -177,7 +177,7 @@ class ProductProduct(models.Model):
         }
         if self.website_meta_description or self.description_sale:
             markup_data['description'] = self.website_meta_description or self.description_sale
-        if self.rating_count:
+        if website.is_view_active('website_sale.product_comment') and self.rating_count:
             markup_data['aggregateRating'] = {
                 '@type': 'AggregateRating',
                 'ratingValue': self.rating_avg,
