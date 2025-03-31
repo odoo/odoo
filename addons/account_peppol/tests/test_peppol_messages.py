@@ -344,14 +344,16 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             }])
 
         new_partner.peppol_endpoint = '0477472701'
+        new_partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(
             new_partner, [{
-                'peppol_verification_state': 'valid',  # should validate automatically
+                'peppol_verification_state': 'valid',
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
             }])
 
         new_partner.peppol_endpoint = '3141592654'
+        new_partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(
             new_partner, [{
                 'peppol_verification_state': 'not_valid',
@@ -364,6 +366,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'invoice_edi_format': 'xrechnung',
             'peppol_endpoint': '0477472701',
         })
+        new_partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(
             new_partner, [{
                 'peppol_verification_state': 'not_valid_format',
