@@ -11,7 +11,7 @@ from lxml import etree
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_sa_uuid = fields.Char(string='Document UUID (SA)', copy=False, help="Universally unique identifier of the Invoice")
+    l10n_sa_uuid = fields.Char(string='Document UUID (SA)', copy=False, tracking=True, help="Universally unique identifier of the Invoice")
 
     l10n_sa_invoice_signature = fields.Char("Unsigned XML Signature", copy=False)
 

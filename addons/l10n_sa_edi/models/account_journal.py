@@ -484,7 +484,9 @@ class AccountJournal(models.Model):
         except (ValueError, HTTPError) as ex:
             # In the case of an explicit error from ZATCA, i.e we got a response but the code of the response is not 2xx
             return {
-                'error': _("Server returned an unexpected error: %(error)s", error=(request_response.text or str(ex))),
+                'error': "[" + str(ex.response.status_code) + "] " + _("Server returned an unexpected error: %(error)s",
+                                                                       error=(request_response.text or str(ex))),
+                'rejected': (ex.response.status_code == 400),
                 'blocking_level': 'error'
             }
         except RequestException as ex:
