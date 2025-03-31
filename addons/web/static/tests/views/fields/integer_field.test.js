@@ -203,15 +203,6 @@ test("basic flow in editable list view", async () => {
     expect(queryAllTexts("td.o_data_cell")).toEqual(["-28", "10"]);
 });
 
-test("with placeholder", async () => {
-    await mountView({
-        type: "form",
-        resModel: "product",
-        arch: `<form><field name="price" placeholder="Placeholder"/></form>`,
-    });
-    expect(".o_field_widget input").toHaveAttribute("placeholder", "Placeholder");
-});
-
 test("with enable_formatting option as false", async () => {
     // `localization > grouping` required for this test is [3, 0], which is the default in mock server
     Product._records = [{ id: 1, price: 8069 }];

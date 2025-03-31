@@ -10,7 +10,7 @@
                 <span t-if="!props.hideSymbol and currency and currency.position === 'after'" t-out="nbsp + currencySymbol"/>
             </span>
             <span class="opacity-0" t-if="!props.hideSymbol and currency and currency.position === 'before'" t-out="currencySymbol + nbsp"/>
-            <input t-ref="numpadDecimal" t-on-input="onInput" t-att-id="props.id" t-att-type="props.inputType" t-att-placeholder="props.placeholder" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
+            <input t-ref="numpadDecimal" t-on-input="onInput" t-att-id="props.id" t-att-type="props.inputType" class="o_input flex-grow-1 flex-shrink-1" autocomplete="off"/>
             <span class="opacity-0" t-if="!props.hideSymbol and currency and currency.position === 'after'" t-out="nbsp + currencySymbol"/>
         </div>
     </t>

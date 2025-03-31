@@ -409,20 +409,6 @@ test("field with enable_formatting option as false in editable list view", async
     });
 });
 
-test("float_field field with placeholder", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: '<form><field name="float_field" placeholder="Placeholder"/></form>',
-    });
-
-    await contains(".o_field_widget[name='float_field'] input").clear();
-    expect(".o_field_widget[name='float_field'] input").toHaveAttribute(
-        "placeholder",
-        "Placeholder"
-    );
-});
-
 test("float field can be updated by another field/widget", async () => {
     class MyWidget extends Component {
         static template = xml`<button t-on-click="onClick">do it</button>`;

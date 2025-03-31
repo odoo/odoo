@@ -16,7 +16,6 @@ export class FloatField extends Component {
         inputType: { type: String, optional: true },
         step: { type: Number, optional: true },
         digits: { type: Array, optional: true },
-        placeholder: { type: String, optional: true },
         humanReadable: { type: Boolean, optional: true },
         decimals: { type: Number, optional: true },
     };
@@ -141,7 +140,6 @@ export const floatField = {
             humanReadable: !!options.human_readable,
             step: options.step,
             digits,
-            placeholder: attrs.placeholder,
             decimals: options.decimals || 0,
         };
     },
