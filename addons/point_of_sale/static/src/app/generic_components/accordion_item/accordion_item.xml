@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_hr.AccordionItem">
+        <div class="accordion position-relative" t-att-class="{'disabled': props.disabled}">
+            <button class="accordion-header dropdown-item" tabindex="0"
+                    t-att-class="{'open': state.open}"
+                    t-att-aria-expanded="state.open ? 'true' : 'false'"
+                    t-on-click="toggle"
+            >
+                <t t-slot="header"/>
+            </button>
+            <div t-ref="content_container" class="accordion-content-container" t-attf-style="max-height: {{state.open ? contentHeight : 0}}px;">
+                <div class="accordion-content" >
+                    <t t-slot="content"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

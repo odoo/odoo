@@ -1,0 +1,121 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_update_tax_tags
+# 
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Junko Augias, 2024\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__company_id
+msgid "Company"
+msgstr "会社"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__create_uid
+msgid "Created by"
+msgstr "作成者"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__create_date
+msgid "Created on"
+msgstr "作成日"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,help:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
+msgid "Date from which journal items will be updated."
+msgstr "仕訳帳の項目が更新される日付。"
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid "Discard"
+msgstr "破棄"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_lock_date_warning
+msgid "Display Lock Date Warning"
+msgstr "ロック日警告を表示"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__write_uid
+msgid "Last Updated by"
+msgstr "最終更新者"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__write_date
+msgid "Last Updated on"
+msgstr "最終更新日"
+
+#. module: account_update_tax_tags
+#: model:ir.model.fields,field_description:account_update_tax_tags.field_account_update_tax_tags_wizard__date_from
+msgid "Starting from"
+msgstr "開始日"
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid ""
+"The date you chose is violating the tax lock date, do this at your own risk."
+msgstr "選択した日付は税ロックの日付に違反しています。ご自身の責任で行って下さい。"
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid "Update"
+msgstr "更新"
+
+#. module: account_update_tax_tags
+#: model:ir.model,name:account_update_tax_tags.model_account_update_tax_tags_wizard
+msgid "Update Tax Tags Wizard"
+msgstr "税タグウィザードを更新"
+
+#. module: account_update_tax_tags
+#: model:ir.actions.act_window,name:account_update_tax_tags.action_open_wizard
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.res_config_settings_view_form
+msgid "Update tax tags on existing Journal Entries"
+msgstr "既存の仕訳で税タグを更新"
+
+#. module: account_update_tax_tags
+#. odoo-python
+#: code:addons/account_update_tax_tags/wizard/account_update_tax_tags_wizard.py:0
+msgid ""
+"Update with children taxes that are child of multiple parents is not "
+"supported."
+msgstr "複数の親を持つ子の税金の更新はサポートされていません。"
+
+#. module: account_update_tax_tags
+#: model_terms:ir.ui.view,arch_db:account_update_tax_tags.view_account_update_tax_tags_wizard_form
+msgid ""
+"Updating tax tags on existing Journal Entries is an <b>irreversible</b> action that will impact\n"
+"                    your reports.<br/>\n"
+"                    It is highly recommended to backup your database beforehand.<br/>\n"
+"                    The update will change tax tags on your accounting history, starting from and including selected date,\n"
+"                    so that it matches with the current configuration of your taxes.<br/>"
+msgstr ""
+"既存の仕訳で税タグを更新することは <b>不可逆な</b> アクションであり\n"
+"                    レポートに影響を与えます。<br/>\n"
+"                    先にデータベースをバックアップすることを強くお勧めします。<br/>\n"
+"                    この更新により、選択した日付から始まる会計履歴の税タグが変更され、\n"
+"                    現在の税の設定に一致するようになります。<br/>"

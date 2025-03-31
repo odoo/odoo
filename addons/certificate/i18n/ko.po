@@ -1,0 +1,481 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* certificate
+# 
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "A private key is required to decrypt data."
+msgstr "데이터를 해독하려면 개인 키가 필요합니다."
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__active
+msgid "Active"
+msgstr "활성화"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete certificates."
+msgstr "인증서를 추가, 편집 및 삭제합니다."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete keys."
+msgstr "키를 추가, 편집 및 삭제합니다."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived"
+msgstr "보관됨"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Archived certificates"
+msgstr "보관된 인증서"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived keys"
+msgstr "보관된 키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_start
+msgid "Available date"
+msgstr "사용 가능한 날짜"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Certificate"
+msgstr "인증서"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pkcs12_password
+msgid "Certificate Password"
+msgstr "인증서 암호"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pem_certificate
+msgid "Certificate in PEM format"
+msgstr "PEM 형식의 인증서"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__scope
+msgid "Certificate scope"
+msgstr "인증서 범위"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_certificate_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates"
+msgstr "인증서"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates and Keys"
+msgstr "인증서 및 키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__company_id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__company_id
+msgid "Company"
+msgstr "회사"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__country_code
+msgid "Country Code"
+msgstr "국가 코드"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
+msgid "Create a first certificate"
+msgstr "첫 번째 인증서 만들기"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_key_action_view_list
+msgid "Create a first key"
+msgstr "첫 번째 키 만들기"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_uid
+msgid "Created by"
+msgstr "작성자"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_date
+msgid "Created on"
+msgstr "작성일자"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_key
+msgid "Cryptographic Keys"
+msgstr "암호화 키"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__der
+msgid "DER"
+msgstr "DER"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__display_name
+msgid "Display Name"
+msgstr "표시명"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_end
+msgid "Expiration date"
+msgstr "만료 일자"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__scope__general
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General"
+msgstr "일반"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General certificates"
+msgstr "일반 인증서"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__id
+msgid "ID"
+msgstr "ID"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Invalid"
+msgstr "유효하지 않음"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "Key"
+msgstr "키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__pem_key
+msgid "Key bytes in PEM format"
+msgstr "PEM 형식의 키 바이트"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__content
+msgid "Key file"
+msgstr "키 파일"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_key_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Keys"
+msgstr "키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_uid
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_date
+msgid "Last Updated on"
+msgstr "최근 갱신 일자"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__loading_error
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__loading_error
+msgid "Loading error"
+msgstr "로딩 오류"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a private key to sign documents."
+msgstr "문서 서명에는 반드시 개인 키를 사용해야 합니다."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your certificates"
+msgstr "인증서 관리하기"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your keys"
+msgstr "키 관리하기"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__name
+msgid "Name"
+msgstr "이름"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"No private key linked to the certificate, it is required to sign documents."
+msgstr "문서에 서명하는 데 필요한 개인 키가 인증서에 연결되어 있지 않습니다."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Not valid certificates"
+msgstr "유효하지 않은 인증서"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content_format
+msgid "Original certificate format"
+msgstr "원본 인증서 형식"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pem
+msgid "PEM"
+msgstr "PEM"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pkcs12
+msgid "PKCS12"
+msgstr "PKCS12"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__pkcs12_password
+msgid "Password to decrypt the PKS file."
+msgstr "PKS 파일의 암호를 해독하기 위한 비밀번호입니다."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Private"
+msgstr "비공개"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__private_key_id
+msgid "Private Key"
+msgstr "개인 키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__password
+msgid "Private key password"
+msgstr "개인 키 비밀번호"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Public"
+msgstr "공개"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__public_key_id
+msgid "Public Key"
+msgstr "일반 키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__public
+msgid "Public/Private key"
+msgstr "공개/개인 키"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__serial_number
+msgid "Serial number"
+msgstr "일련번호"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__active
+msgid "Set active to false to archive the certificate"
+msgstr "인증서를 보관하려면 인증서의 상태를 비활성으로 설정하세요."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_key__active
+msgid "Set active to false to archive the key."
+msgstr "보관하려면 키 상태를 비활성으로 설정합니다."
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__subject_common_name
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Subject Name"
+msgstr "제목 이름"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"두 개의 문자로 된 ISO 국가 코드.\n"
+"이 필드는 빠른 검색을 위해 사용할 수 있습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and private key are not compatible."
+msgstr "인증서와 개인 키가 호환되지 않습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and public key are not compatible."
+msgstr "인증서와 공개 키가 호환되지 않습니다."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
+msgid "The date on which the certificate expires (UTC)"
+msgstr "인증서가 만료되는 날짜 (UTC)"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
+msgid "The date on which the certificate starts to be valid (UTC)"
+msgstr "인증서의 유효 기간이 시작되는 날짜 (UTC)"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The private key could not be loaded."
+msgstr "개인 키를 불러올 수 없습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public key could not be loaded."
+msgstr "공개 키를 불러올 수 없습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The public key from the certificate could not be loaded."
+msgstr "인증서에서 공개 키를 불러오지 못했습니다."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr "전자 문서에 추가할 일련번호"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"This certificate could not be loaded. Either the content or the password is "
+"erroneous."
+msgstr "이 인증서를 불러올 수 없습니다. 콘텐츠 또는 암호가 올바르지 않습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "This certificate is not valid, its validity has expired."
+msgstr "이 인증서는 만료 날짜가 지났으므로 더 이상 유효하지 않습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"This key could not be loaded. Either its content or its password is "
+"erroneous."
+msgstr "이 키를 불러올 수 없습니다. 콘텐츠 또는 암호가 올바르지 않습니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"decryption: RSA."
+msgstr "지원되지 않는 비대칭 암호화 알고리즘 '%s'입니다. 암호 해독의 경우 RSA만 지원됩니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: EC and RSA."
+msgstr "지원되지 않는 비대칭 암호화 알고리즘 '%s'입니다. 현재 서명은 EC 및 RSA만 지원됩니다."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
+" RSA."
+msgstr "지원되지 않는 비대칭 암호화 알고리즘 '%s'입니다. 지원되는 알고리즘은 EC 및 RSA입니다."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
+msgid ""
+"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
+"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"             "
+msgstr ""
+"인증서에 자체적으로 포함된 공개 키에 오류가 있는 경우 공개 키를 설정하는 데 사용됩니다.\n"
+"                이 방법으로 공개 키를 설정하면 인증서에 있는 키 대신에 이 공개 키가 사용됩니다.\n"
+"             "
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__is_valid
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid"
+msgstr "유효"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid certificates"
+msgstr "유효한 인증서"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Validity"
+msgstr "유효함"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "certificate form"
+msgstr "인증서 양식"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "certificate list"
+msgstr "인증서 목록"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "certificate search"
+msgstr "인증서 검색"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "e.g. New Certificate"
+msgstr "예: 새 인증서"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_form
+msgid "key form"
+msgstr "키 양식"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "key list"
+msgstr "키 목록"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "key search"
+msgstr "키 검색"

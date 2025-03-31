@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record forcecreate="True" id="ir_cron_sync_all_cals" model="ir.cron">
+            <field name="name">Outlook: synchronization</field>
+            <field name="model_id" ref="model_res_users"/>
+            <field name="state">code</field>
+            <field name="code">
+model._sync_all_microsoft_calendar()
+            </field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <template id="label_product_product_view">
+		<t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="product_info">
+                    <t t-set="barcode" t-value="product_info['barcode']"/>
+                    <t t-set="currency_id" t-value="pricelist.currency_id or product.currency_id"/>
+                    <t t-foreach="range(product_info['quantity'])" t-as="qty">
+                        <t t-translation="off">
+^XA^CI28
+^FT100,80^A0N,40,30^FD<t t-out="product_info['display_name_markup']"/>^FS
+<t t-if="product.default_code and len(product.default_code) &gt; 15">
+^FT100,115^A0N,30,24^FD<t t-out="product_info['default_code'][0]"/>^FS
+^FT100,150^A0N,30,24^FD<t t-out="product_info['default_code'][1]"/>^FS
+</t>
+<t t-else="">
+^FT100,150^A0N,30,24^FD<t t-out="product_info['default_code'][0]"/>^FS
+</t>
+<t t-if="price_included">
+^FO600,100,1
+<t t-if="currency_id.position == 'after'">
+^A0N,66,48^FH^FD<t t-esc="pricelist._get_product_price(product, 1, currency_id)" t-options='{"widget": "float", "precision": 2}'/><t t-esc="currency_id.symbol"/>^FS
+</t>
+<t t-if="currency_id.position == 'before'">
+^A0N,66,48^FH^FD<t t-esc="currency_id.symbol"/><t t-esc="pricelist._get_product_price(product, 1, currency_id)" t-options='{"widget": "float", "precision": 2}'/>^FS
+</t>
+</t>
+<t t-if="barcode">
+^FO100,160^BY3
+^BCN,100,Y,N,N
+^FD<t t-out="barcode"/>^FS
+</t>
+^XZ
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <template id="label_lot_template_view">
+            <t t-foreach="docs" t-as="lot">
+                <t t-translation="off">
+^XA^CI28
+^FO100,50
+^A0N,44,33^FD<t t-out="lot['display_name_markup']"/>^FS
+^FO100,100
+^A0N,44,33^FDLN/SN: <t t-out="lot['name']"/>^FS
+                    <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
+                        <t t-set="final_barcode" t-value="''" />
+                        <t t-if="lot['lot_record'].product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(lot['lot_record'].product_id.barcode)) + lot['lot_record'].product_id.barcode"/>
+                        <!-- TODO: must keep lot/sn as last value in barcode because we cannot pad '0's without changing lot/sn name until we can scan in FNC1. -->
+                        <t t-if="lot['lot_record'].product_id.tracking == 'lot'" name="datamatrix_lot" t-set="final_barcode" t-value="(final_barcode or '') + '10' + lot['name']"/>
+                        <t t-elif="lot['lot_record'].product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + lot['name']"/>
+^FO425,150^BY3
+^BXN,8,200
+^FD<t t-out="final_barcode"/>^FS
+                    </t>
+                    <t t-else="" name="code128_barcode">
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-out="lot['name']"/>^FS
+                    </t>
+^XZ
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

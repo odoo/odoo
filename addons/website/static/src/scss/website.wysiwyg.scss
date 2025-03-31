@@ -1,0 +1,333 @@
+
+@each $font-name, $font-config in $o-theme-font-configs {
+    $url: map-get($font-config, 'url');
+    @if $url {
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
+    } @else {
+        $name: map-get($font-config, 'name');
+        $attachment: map-get($font-config, 'attachment');
+        @if $attachment {
+            @import url("/web/content/#{$attachment}/google-font-#{unquote($name)}");
+        }
+    }
+}
+
+#oe_snippets {
+    top: 0;
+    .oe-toolbar {
+        .color-indicator {
+            padding: 0 2px 2px 2px;
+        }
+    }
+}
+
+html[lang] > body.editor_enable [data-oe-translation-state] {
+    &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+        background: rgba($o-we-content-to-translate-color, 0.5) !important;
+    }
+
+    &[data-oe-translation-state="translated"] {
+        &, .o_translation_select_option, &[data-oe-field="mega_menu_content"] * {
+            background: rgba($o-we-translated-content-color, 0.5) !important;
+        }
+    }
+
+    &.o_dirty, &.oe_translated, .oe_translated {
+        background: rgba($o-we-translated-content-color, 0.25) !important;
+
+        &[data-oe-field="mega_menu_content"] * {
+            background: rgba($o-we-translated-content-color, 0.25) !important;
+        }
+    }
+}
+
+html[data-edit_translations="1"] {
+    .o_translate_mode_hidden {
+        display: none !important;
+    }
+}
+
+.o_snippet_override_invisible {
+    display: block !important;
+    opacity: 70%;
+    position: relative;
+
+    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+        // e.g. Useful if "Height" option (50% or 100%) is enabled.
+        display: flex !important;
+    }
+    &::before {
+        position: absolute;
+        // Content is 0px wide => use available width.
+        width: -webkit-fill-available;
+        width: -moz-available;
+        right: 20px;
+        z-index: 100;
+        background-color: $o-we-accent;
+        font-size: 0px;
+        pointer-events: none;
+        content: "."; // Content is mandatory.
+    }
+    &.d-md-none::before, &.d-lg-none::before {
+        height: 50px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/desktop_invisible.svg") no-repeat 100% 100%;
+    }
+    &:not(.d-md-none):not(.d-lg-none)::before {
+        height: 30px;
+        -webkit-mask: url("/website/static/src/img/snippets_options/mobile_invisible.svg") no-repeat 100% 100%;
+    }
+}
+
+// SNIPPET PANEL
+.o_we_add_font_btn {
+    border-top: 1px solid currentColor !important;
+}
+
+#oe_snippets > .o_we_customize_panel {
+    .o_we_user_value_widget.o_palette_color_preview_button {
+        display: inline-flex;
+        margin: 1% 0;
+        padding-right: 0.3rem;
+        width: 50%;
+        background: transparent;
+
+        &.active, &:hover {
+            background: transparent;
+
+            > div {
+                box-shadow: 0 0 0 2px $o-we-bg-darkest, 0 0 0 3px $o-we-accent;
+            }
+        }
+
+        > div {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: stretch;
+            justify-content: flex-end;
+            margin: 3px;
+            min-height: $o-we-sidebar-content-field-dropdown-grid-item-height * .5;
+            border-radius: $o-we-sidebar-content-field-dropdown-grid-item-height;
+            box-shadow: 0 0 0 1px $o-we-bg-darkest;
+        }
+
+        .o_palette_color_preview {
+            flex: 1 0 0;
+        }
+    }
+
+    we-select.o_scroll_effects_selector we-button {
+        padding-top: $o-we-item-spacing;
+        padding-bottom: $o-we-item-spacing;
+
+        img {
+            max-height: 80px;
+            width: auto;
+            margin-right: $o-we-item-spacing;
+            margin-left: $o-we-item-spacing * .5;
+        }
+    }
+
+    we-button.o_we_device {
+        > div {
+            // FIXME maybe there is some refactoring to do so that all SVG icons
+            // can be properly aligned with extra CSS rules...
+            display: flex;
+            align-items: center;
+
+            svg {
+                width: 12px;
+                fill: $o-we-sidebar-content-field-clickable-color;
+                margin-bottom: 0;
+
+                &:hover {
+                    fill: $o-we-sidebar-content-field-pressed-color;
+                }
+            }
+        }
+        &.active > div svg {
+            fill: $o-we-color-danger;
+            &:hover {
+                fill: darken($o-we-color-danger, 7.5%);
+            }
+        }
+    }
+
+    // A modifier applied on `<we-select/>` to give it a grid appearance.
+    we-select.o_we_select_grid {
+        we-selection-items {
+            we-button {
+                padding: $o-we-sidebar-content-padding-base * 2 $o-we-sidebar-content-padding-base / 2;
+                border: $o-we-item-border-width solid $o-we-bg-darkest;
+                border-radius: 2px;
+                justify-content: center;
+
+                &.active {
+                    border: 2px solid $o-we-color-success !important;
+                }
+                // Text highlight related style.
+                &[data-set-text-highlight] {
+                    --text-highlight-width: .15em;
+                    --text-highlight-color: #{$o-we-fg-light};
+
+                    > div {
+                        flex: none;
+                        position: relative;
+                        width: 60%;
+                        font-size: $o-we-sidebar-font-size * 1.3;
+                        font-weight: bold;
+                        overflow: visible;
+                        isolation: isolate;
+
+                        svg {
+                            z-index: -1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //----------------------------------------------------------------------
+    // 'Options' Tab Specific Components
+    //----------------------------------------------------------------------
+
+    // Theme Colors Editor
+    .o_we_theme_colors_selector {
+
+        > we-title {
+            display: none
+        }
+        .o_we_theme_colors_selector_group {
+            flex: 1 0 auto;
+            display: flex;
+            justify-content: flex-start;
+            padding-top: 2em;
+
+            > we-title {
+                font-style: italic;
+                white-space: nowrap;
+                position: absolute;
+                margin-top: -2em;
+            }
+
+            > .o_we_user_value_widget {
+                margin-right: $o-we-sidebar-content-field-multi-spacing;
+            }
+        }
+        .o_we_so_color_palette.o_we_user_value_widget .o_we_color_preview {
+            width: $o-we-sidebar-content-field-colorpicker-size-large;
+            height: $o-we-sidebar-content-field-colorpicker-size-large;
+        }
+        > div, we-select.o_we_theme_colors_select, we-toggler {
+            display: flex;
+        }
+        > div {
+            align-items: stretch;
+            width: 100%;
+        }
+        we-select.o_we_theme_colors_select {
+            > div, we-toggler {
+                justify-content: flex-end;
+                height: 100%;
+            }
+
+            we-selection-items {
+                padding-top: $o-we-dropdown-item-height * .5;
+                padding-bottom: $o-we-dropdown-item-height * .5;
+                background: $o-we-dropdown-item-active-bg;
+            }
+        }
+        we-toggler {
+            align-items: center;
+            padding: 0 0.4rem;
+            font-size: 1.5em;
+
+            &:after {
+                content: none;
+            }
+        }
+    }
+
+    // Palettes Dropdown
+    .o_palette_color_preview_button > div {
+        min-height: 24px;
+    }
+
+    // CC Edition
+    .o_we_cc_preview_wrapper {
+        // Use box-shadow rather than borders in order to
+        // avoid misalignments in the 'Options' tab.
+        box-shadow: 0 0 0 1px $o-we-sidebar-content-field-dropdown-border-color;
+
+        + .o_we_collapse_toggler {
+            height: 35px; // FIXME hardcoded...
+        }
+    }
+}
+
+// SNIPPET OPTIONS
+.o_we_border_preview {
+    display: inline-block;
+    width: 999px;
+    max-width: 100%;
+    margin-bottom: 2px;
+    border-width: 4px;
+    border-bottom: none !important;
+}
+
+.pac-container { // google map autosuggestion (note: their CSS lib is not used)
+    z-index: $zindex-modal-backdrop; // > $o-we-zindex
+    width: ceil($o-we-sidebar-width * 0.9) !important;
+    font-size: $o-we-sidebar-font-size;
+    margin-left: -$o-we-sidebar-width/2;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
+    border-top: none;
+    border-radius: $o-we-item-border-radius;
+    overflow: hidden;
+    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
+    margin-top: $o-we-sidebar-content-field-dropdown-spacing;
+    transform: translate(41px);
+
+    &:after {
+        display: none;
+    }
+
+    .pac-item {
+        @include o-text-overflow(block);
+        line-height: $o-we-sidebar-content-field-dropdown-item-height;
+        color: $o-we-sidebar-content-field-clickable-color;
+        padding: 0 1em 0 (2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size);
+        border-top: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+        color: $o-we-sidebar-content-field-clickable-color;
+        font-size: $o-we-sidebar-font-size;
+
+        &:hover, &:focus, &.pac-item-selected {
+            background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+            cursor: pointer;
+        }
+
+        .pac-icon-marker {
+            position: absolute;
+            margin-left: -1em;
+
+            &::after {
+                content: '\f041';
+                font-family: FontAwesome;
+            }
+        }
+
+        .pac-item-query {
+            margin-right: 0.4em;
+            color: inherit;
+        }
+    }
+}
+
+// Editor UI
+.o_table_ui {
+    // TODO make a proper way to not instantiate table UI in the website.
+    display: none !important;
+}

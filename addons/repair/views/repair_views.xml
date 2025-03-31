@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+    <record id="repair_order_view_activity" model="ir.ui.view">
+        <field name="name">repair.order.view.activity</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <activity string="Activity view">
+                <templates>
+                    <div t-name="activity-box">
+                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                        <div>
+                            <field name="name" display="full" class="o_text_block o_text_bold"/>
+                            <field name="product_id" class="o_text_block"/>
+                            <field name="schedule_date" class="d-block"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <record id="view_repair_order_tree" model="ir.ui.view">
+        <field name="name">repair.list</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <list string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                <field name="company_id" column_invisible="True"/>
+                <field name="priority" optional="show" widget="priority" nolabel="1"/>
+                <field name="name"/>
+                <field name="schedule_date" optional="show" widget="remaining_days"/>
+                <field name="product_id" readonly="1" optional="show"/>
+                <field name="parts_availability_state" column_invisible="True"/>
+                <field name="parts_availability"
+                    invisible="state not in ['confirmed', 'under_repair']"
+                    optional="show"
+                    decoration-success="parts_availability_state == 'available'"
+                    decoration-warning="parts_availability_state == 'expected'"
+                    decoration-danger="parts_availability_state == 'late'"/>
+                <field name="product_qty" optional="hide" string="Quantity" readonly="state != 'draft'"/>
+                <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide"/>
+                <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
+                <field name="partner_id" readonly="1" optional="show"/>
+                <field name="picking_id" optional="hide"/>
+                <field name="is_returned" optional="hide"/>
+                <field name="sale_order_id" optional="show"/>
+                <field name="location_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
+                <field name="state" optional="show" widget='badge'
+                    decoration-success="state == 'done'"
+                    decoration-info="state == 'confirmed'"
+                    decoration-warning="state == 'under_repair'"
+                    decoration-danger="state == 'cancel'"
+                    decoration-muted="state == 'draft'"
+                />
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_repair_order_form" model="ir.ui.view">
+        <field name="name">repair.form</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <form string="Repair Order">
+                <field name="has_uncomplete_moves" invisible="1"/>
+                <field name="unreserve_visible" invisible="1"/>
+                <field name="reserve_visible" invisible="1"/>
+               <header>
+                   <button name="action_validate" invisible="state != 'draft'" type="object" string="Confirm Repair" class="oe_highlight" data-hotkey="v"/>
+                   <button name="action_repair_start" invisible="state != 'confirmed'" type="object" string="Start Repair" class="oe_highlight" data-hotkey="q"/>
+                   <button name="action_repair_end" invisible="state != 'under_repair' or not has_uncomplete_moves" type="object" string="End Repair" class="oe_highlight" data-hotkey="x" confirm="For some of the parts, there is a difference between the initial demand and the actual quantity that was used. Are you sure you want to confirm ?"/>
+                   <button name="action_repair_end" invisible="state != 'under_repair' or has_uncomplete_moves" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
+                   <button name="action_assign" invisible="not reserve_visible" string="Check availability" type="object"/>
+                   <button name="action_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
+                   <button name="action_create_sale_order" type="object" string="Create Quotation" invisible="state == 'cancel' or sale_order_id"/>
+                   <button name="action_repair_cancel" string="Cancel Repair" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
+                   <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
+                   <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
+               </header>
+               <sheet string="Repairs order">
+                    <div class="oe_button_box" name="button_box">
+                        <!-- No groups attribute on the next button as "stock.group_stock_user" is needed for Repair, and as this group is granted 'sale.order' read/write accesses in sale_stock module (forcefully loaded as transitive dependency) -->
+                        <button name="action_view_sale_order" type="object" string="Sale Order" icon="fa-dollar" class="oe_stat_button" invisible="not sale_order_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="sale_order_id" widget="statinfo" nolabel="1" class="mr4"/>
+                                </span>
+                                <span class="o_stat_text">Sale Order</span>
+                            </div>
+                        </button>
+                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" invisible="state not in ['done', 'cancel']"/>
+                    </div>
+                    <div class="oe_title">
+                        <label class="o_form_label" for="name"/>
+                        <h1 class="d-flex">
+                            <field name="priority" widget="priority" class="me-3"/>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="allowed_lot_ids" invisible="1"/>
+                            <field name="repair_request" invisible="not sale_order_line_id"/>
+                            <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" readonly="sale_order_id"/>
+                            <field name="product_id" readonly="state in ['cancel', 'done']"/>
+                            <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" options="{'no_create': True, 'no_create_edit': True}" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done'" required="tracking in ['serial', 'lot']"/>
+                            <field name="product_uom_category_id" invisible="1"/>
+                            <label for="product_qty" invisible="not product_id"/>
+                            <div class="o_row" invisible="not product_id">
+                                <field name="product_qty" readonly="tracking == 'serial' or state in ('done', 'cancel')"/>
+                                <field name="product_uom" groups="uom.group_uom" readonly="state != 'draft'"/>
+                            </div>
+                            <field name="picking_id" options="{'no_create': True}"/>
+                            <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
+                        </group>
+                        <group>
+                            <field name="schedule_date" readonly="state in ['done', 'cancel']"/>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="parts_availability_state" invisible="True"/>
+                            <field name="parts_availability"
+                                invisible="state not in ['confirmed', 'under_repair']"
+                                decoration-success="parts_availability_state == 'available'"
+                                decoration-warning="parts_availability_state == 'expected'"
+                                decoration-danger="parts_availability_state == 'late'"/>
+                        </group>
+                        <field name="repair_properties" nolabel="1" columns="2" hideAddButton="1"/>
+                    </group>
+                <notebook>
+                    <page string="Parts" name="parts">
+                        <field name="move_ids" readonly="state == 'cancel' or state == 'done'"
+                        context="{'default_repair_id': id, 'default_product_uom_qty': 1, 'default_company_id': company_id, 'default_date': schedule_date, 'default_repair_line_type': 'add'}">
+                            <list string="Operations" editable="bottom">
+                                <control>
+                                    <create string="Add a line"/>
+                                    <button name="action_add_from_catalog_repair" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
+                                </control>
+                                <field name="company_id" column_invisible="True"/>
+                                <field name="name" column_invisible="True"/>
+                                <field name="state" column_invisible="True"/>
+                                <field name="repair_line_type" required="1"/>
+                                <field name="picking_type_id" column_invisible="True"/>
+                                <field name="location_id" column_invisible="True"/>
+                                <field name="location_dest_id" column_invisible="True"/>
+                                <field name="partner_id" column_invisible="True" readonly="state == 'done'"/>
+                                <field name="scrapped" column_invisible="True"/>
+                                <field name="picking_code" column_invisible="True"/>
+                                <field name="show_details_visible" column_invisible="True"/>
+                                <field name="additional" column_invisible="True"/>
+                                <field name="move_lines_count" column_invisible="True"/>
+                                <field name="is_locked" column_invisible="True"/>
+                                <field name="product_uom_category_id" column_invisible="True"/>
+                                <field name="is_storable" column_invisible="True"/>
+                                <field name="has_tracking" column_invisible="True"/>
+                                <field name="display_assign_serial" column_invisible="True"/>
+                                <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
+                                <field name="description_picking" string="Description" optional="hide"/>
+                                <field name="date" optional="hide"/>
+                                <field name="date_deadline" optional="hide"/>
+                                <field name="product_packaging_id" groups="product.group_stock_packaging"/>
+                                <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
+                                <field name="forecast_expected_date" column_invisible="True"/>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" column_invisible="parent.state != 'draft'" invisible="forecast_availability &lt; 0 and repair_line_type == 'add'"/>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0 or repair_line_type != 'add'"/>
+                                <field name="forecast_availability" string="Forecasted" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
+                                <field name="product_qty" readonly="1" column_invisible="True"/>
+                                <field name="quantity" string="Done" readonly="not product_id"/>
+                                <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
+                                <field name="picked" string="Used"/>
+                                <field name="lot_ids" widget="many2many_tags"
+                                    groups="stock.group_production_lot"
+                                    invisible="not show_details_visible or has_tracking != 'serial'"
+                                    optional="hide"
+                                    context="{'default_product_id': product_id}"
+                                    domain="[('product_id','=',product_id)]"/>
+                                <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
+                                        invisible="not show_details_visible" options='{"warn": true}'
+                                        context="{'default_location_dest_id': location_dest_id}"
+                                    />
+                            </list>
+                        </field>
+                        <div class="clearfix"/>
+                    </page>
+                    <page string="Repair Notes" name="repair_notes">
+                        <field name="internal_notes" placeholder="Add internal notes."/>
+                    </page>
+                    <page string="Miscellaneous" name="page_miscellaneous">
+                        <group>
+                            <field name="picking_type_id" options="{'no_create': True}" readonly="state in ('done', 'cancel')"/>
+                        </group>
+                        <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
+                            <field name="product_location_src_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="location_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                        </group>
+                    </page>
+                </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="view_repair_kanban" model="ir.ui.view">
+        <field name="name">repair.kanban</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1" quick_create="false">
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                <templates>
+                    <t t-name="card">
+                        <div class="row">
+                            <field name="name" class="col-6 fw-bolder mb-1"/>
+                            <field name="state" class="col-6 text-end mb-1" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'danger', 'done': 'success', 'under_repair': 'secondary'}}"/>
+                            <div class="col-6 text-muted">
+                                <field name="product_id" />
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            </div>
+                            <div class="col-6">
+                                <field name="partner_id" class="float-end"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_repair_order_form_filter" model="ir.ui.view">
+        <field name="name">repair.select</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Repair Orders">
+                <field name="name" string="Repair Order" filter_domain="['|', ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
+                <field name="product_id"/>
+                <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                <field name="sale_order_id"/>
+                <filter string="New" domain="[('state', '=', 'draft')]" name="filter_draft" />
+                <filter string="Confirmed" domain="[('state', '=', 'confirmed')]" name="filter_confirmed" />
+                <filter string="Under Repair" name="filter_under_repair" domain="[('state', '=', 'under_repair')]"/>
+                <filter string="Repaired" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="filter_cancel" domain="[('state', '=', 'cancel')]"/>
+                <filter string="Returned" name="returned" domain="[('picking_id', '!=', False), ('picking_id.state', '=', 'done')]"/>
+                <separator/>
+                <filter invisible="1" name="before" string="Before" domain="[('search_date_category', '=', 'before')]"/>
+                <filter invisible="1" name="yesterday" string="Yesterday" domain="[('search_date_category', '=', 'yesterday')]"/>
+                <filter invisible="1" name="today" string="Today" domain="[('search_date_category', '=', 'today')]"/>
+                <filter invisible="1" name="day_1" string="Tomorrow" domain="[('search_date_category', '=', 'day_1')]"/>
+                <filter invisible="1" name="day_2" string="The day after tomorrow" domain="[('search_date_category', '=', 'day_2')]"/>
+                <filter invisible="1" name="after" string="After" domain="[('search_date_category', '=', 'after')]"/>
+                <filter string="Ready" name="ready" domain="[('state', '=', 'confirmed'), ('is_parts_available', '=', True)]" invisible="True"/>
+                <filter string="Late" name="filter_late" domain="[('state', '=', 'confirmed'), ('schedule_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_create_date" date="create_date"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Customer" name="partner" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_repair_graph" model="ir.ui.view">
+        <field name="name">repair.graph</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <graph string="Repair Orders" sample="1">
+                <field name="create_date"/>
+                <field name="product_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_repair_pivot" model="ir.ui.view">
+        <field name="name">repair.pivot</field>
+        <field name="model">repair.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Repair Orders" sample="1">
+                <field name="create_date" type="row"/>
+                <field name="product_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_repair_order_form" model="ir.actions.act_window">
+        <field name="name">Repair Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">repair.order</field>
+        <field name="view_mode">form</field>
+    </record>
+
+         <record id="action_repair_order_tree" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="path">repairs</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">list,kanban,graph,pivot,form,activity</field>
+            <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No repair order found. Let's create one!
+              </p><p>
+                In a repair order, you can detail the components you remove,
+                add or replace and record the time you spent on the different
+                operations.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_repair_order_graph" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="context">{
+                'search_default_product': 1,
+                'search_default_createDate': 1,
+            }
+            </field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">list,kanban,graph,pivot,form</field>
+            <field name="view_id" ref="view_repair_graph"/>
+        </record>
+
+        <record id="action_picking_repair" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="domain">[('picking_type_id', '=', active_id)]</field>
+            <field name="context">{'default_picking_type_id': active_id}</field>
+        </record>
+
+        <record id="action_picking_repair_graph" model="ir.actions.act_window">
+            <field name="name">Repair Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repair.order</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_repair_order_form_filter"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_filter_confirmed': 1}</field>
+        </record>
+
+        <record id="view_repair_tag_form" model="ir.ui.view">
+            <field name="name">repair.tag.form</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <form string="Repair Tags">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_repair_tag_tree" model="ir.ui.view">
+            <field name="name">repair.tag.list</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <list string="Tags" editable="bottom">
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_repair_tag_search" model="ir.ui.view">
+            <field name="name">repair.tag.search</field>
+            <field name="model">repair.tags</field>
+            <field name="arch" type="xml">
+                <search string="Tags">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_repair_order_tag" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">repair.tags</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                Create a new tag
+              </p>
+            </field>
+        </record>
+
+        <record id="action_repair_picking_type_kanban" model="ir.actions.act_window">
+            <field name="name">Repair Overview</field>
+            <field name="path">repair-types</field>
+            <field name="res_model">stock.picking.type</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="domain">[('code', '=', 'repair_operation')]</field>
+            <field name="view_id" ref="stock.stock_picking_type_kanban"/>
+        </record>
+
+        <record id="action_repair_overview" model="ir.actions.server">
+            <field name="name">stock.repair.type.overview</field>
+            <field name="model_id" ref="model_stock_picking_type"/>
+            <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_repair_overview()
+            </field>
+        </record>
+
+        <menuitem id="menu_repair_order" groups="stock.group_stock_user" name="Repairs" sequence="165"
+                  web_icon="repair,static/description/icon.png"/>
+
+        <menuitem
+            id="repair_picking_type_menu"
+            name="Overview"
+            action="action_repair_overview"
+            groups="stock.group_stock_user"
+            parent="menu_repair_order"
+            sequence="0"
+        />
+
+        <menuitem id="repair_order_menu" name="Orders" action="action_repair_order_tree" groups="stock.group_stock_user"
+                  parent="menu_repair_order"/>
+
+        <menuitem id="repair_menu_reporting" name="Reporting" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+
+        <menuitem id="repair_menu" name="Repairs" parent="repair_menu_reporting" action="action_repair_order_graph"/>
+
+        <menuitem id="repair_menu_config" name="Configuration" parent="menu_repair_order" groups="stock.group_stock_manager"/>
+
+        <menuitem id="repair_menu_tag" name="Repair Orders Tags" parent="repair_menu_config" action="action_repair_order_tag" sequence="1"/>
+        <menuitem id="repair_menu_product_template" name="Products" action="stock.product_template_action_product"
+            parent="repair_menu_config" sequence="2"/>
+        <menuitem id="repair_menu_product_product" name="Product Variants" action="stock.stock_product_normal_action"
+            parent="repair_menu_config" sequence="3" groups="product.group_product_variant"/>
+    </data>
+</odoo>

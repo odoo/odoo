@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="bis3_AddressType">
+        <t
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:StreetName t-out="vals.get('street_name')" />
+            <cbc:AdditionalStreetName t-out="vals.get('additional_street_name')" />
+            <cbc:CityName t-out="vals.get('city_name')" />
+            <cbc:PostalZone t-out="vals.get('postal_zone')" />
+            <cbc:CountrySubentity t-out="vals.get('country_subentity')" />
+            <cac:Country>
+                <cbc:IdentificationCode t-out="vals.get('country_identification_code')" />
+            </cac:Country>
+        </t>
+    </template>
+
+    <template id="bis3_ContactType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:Name t-out="vals.get('name')" />
+            <cbc:Telephone t-out="vals.get('telephone')" />
+            <cbc:ElectronicMail t-out="vals.get('electronic_mail')" />
+        </t>
+    </template>
+
+    <template id="bis3_PartyType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cac:PartyName>
+                <cbc:Name t-out="vals.get('party_name')" />
+            </cac:PartyName>
+            <cac:PostalAddress>
+                <t t-call="purchase_edi_ubl_bis3.bis3_AddressType">
+                    <t t-set="vals" t-value="vals.get('postal_address_vals', {})" />
+                </t>
+            </cac:PostalAddress>
+            <cac:PartyTaxScheme t-if="vals.get('party_tax_scheme_vals')">
+                <t t-set="party_tax_scheme_vals" t-value="vals.get('party_tax_scheme_vals')" />
+                <cbc:CompanyID t-out="party_tax_scheme_vals.get('company_id')" />
+                <cac:TaxScheme>
+                    <t t-set="tax_scheme_vals" t-value="party_tax_scheme_vals['tax_scheme_vals']" />
+                    <cbc:ID t-out="tax_scheme_vals['id']" />
+                </cac:TaxScheme>
+            </cac:PartyTaxScheme>
+            <cac:PartyLegalEntity t-if="'party_legal_entity_vals' in vals">
+                <t t-set="party_legal_entity_vals" t-value="vals['party_legal_entity_vals']" />
+                <cbc:RegistrationName t-out="party_legal_entity_vals['registration_name']" />
+                <cbc:CompanyID t-out="party_legal_entity_vals['company_id']" />
+                <cac:RegistrationAddress t-if="'registration_address' in party_legal_entity_vals">
+                    <t t-call="purchase_edi_ubl_bis3.bis3_AddressType">
+                        <t t-set="vals"
+                            t-value="party_legal_entity_vals['registration_address_vals']" />
+                    </t>
+                </cac:RegistrationAddress>
+            </cac:PartyLegalEntity>
+            <cac:Contact t-if="vals.get('contact_vals')">
+                <t t-call="purchase_edi_ubl_bis3.bis3_ContactType">
+                    <t t-set="vals" t-value="vals.get('contact_vals')" />
+                </t>
+            </cac:Contact>
+        </t>
+    </template>
+
+    <template id="bis3_PaymentTermsType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:Note t-out="vals['note']" />
+        </t>
+    </template>
+
+    <template id="bis3_TaxCategoryType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('id')" />
+            <cbc:Percent t-out="vals.get('percent')" />
+            <cac:TaxScheme>
+                <t t-set="tax_scheme_vals" t-value="vals.get('tax_scheme_vals', {})" />
+                <cbc:ID t-out="tax_scheme_vals.get('id')" />
+            </cac:TaxScheme>
+        </t>
+    </template>
+
+    <template id="bis3_AllowanceChargeType">
+        <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ChargeIndicator t-out="vals.get('charge_indicator')" />
+            <cbc:AllowanceChargeReasonCode t-out="vals.get('allowance_charge_reason_code')" />
+            <cbc:AllowanceChargeReason t-out="vals.get('allowance_charge_reason')" />
+            <cbc:MultiplierFactorNumeric t-out="vals.get('multiplier_factor')" />
+            <cbc:Amount
+                t-att-currencyID="vals.get('currency_id')"
+                t-out="format_float(vals.get('amount'), vals.get('currency_dp'))" />
+            <cbc:BaseAmount
+                t-att-currencyID="vals.get('currency_id')"
+                t-out="format_float(vals.get('base_amount'), vals.get('currency_dp'))" />
+        </t>
+    </template>
+
+    <template id="bis3_DeliveryType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cac:DeliveryParty>
+                <cac:PartyName>
+                    <cbc:Name t-out="vals.get('party_name')"/>
+                </cac:PartyName>
+                <cac:PostalAddress>
+                    <t t-call="purchase_edi_ubl_bis3.bis3_AddressType">
+                        <t t-set="vals" t-value="vals.get('postal_address_vals')" />
+                    </t>
+                </cac:PostalAddress>
+                <cac:Contact t-if="vals.get('contact_vals')">
+                    <t t-call="purchase_edi_ubl_bis3.bis3_ContactType">
+                        <t t-set="vals" t-value="vals.get('contact_vals')" />
+                    </t>
+                </cac:Contact>
+            </cac:DeliveryParty>
+        </t>
+    </template>
+
+    <template id="bis3_AnticipatedMonetaryTotalType">
+        <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:LineExtensionAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('line_extension_amount'), vals.get('currency_dp'))" />
+            <cbc:TaxExclusiveAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('tax_exclusive_amount'), vals.get('currency_dp'))" />
+            <cbc:TaxInclusiveAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('tax_inclusive_amount'), vals.get('currency_dp'))" />
+            <cbc:PrepaidAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('prepaid_amount'), vals.get('currency_dp'))" />
+            <cbc:PayableAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('payable_amount'), vals.get('currency_dp'))" />
+        </t>
+    </template>
+
+    <template id="bis3_ItemType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:Name t-out="vals.get('name')" />
+            <cbc:Description t-out="vals.get('description')" />
+            <cac:StandardItemIdentification>
+                <cbc:ID t-out="vals.get('standard_item_identification')" />
+            </cac:StandardItemIdentification>
+            <cac:ClassifiedTaxCategory t-if="vals.get('classified_tax_category_vals')" >
+                <t t-call="purchase_edi_ubl_bis3.bis3_TaxCategoryType">
+                    <t t-set="vals" t-value="vals.get('classified_tax_category_vals')" />
+                </t>
+            </cac:ClassifiedTaxCategory>
+            <cac:AdditionalItemProperty t-foreach="vals.get('variant_info')" t-as="variant">
+                <cbc:Name t-out="variant.get('name')" />
+                <cbc:Value t-out="variant.get('value')" />
+            </cac:AdditionalItemProperty>
+        </t>
+    </template>
+
+    <template id="bis3_LineItemType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('id')" />
+            <cbc:Quantity
+                t-att-unitCode="vals.get('quantity_unit_code')"
+                t-out="vals.get('quantity')" />
+            <cbc:LineExtensionAmount
+                t-att-currencyID="vals.get('currency_id')"
+                t-out="vals.get('line_extension_amount')" />
+            <cac:AllowanceCharge t-if="vals.get('allowance_charge_vals')">
+                <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
+                    <t t-set="vals" t-value="vals.get('allowance_charge_vals')"/>
+                </t>
+            </cac:AllowanceCharge>
+            <cac:Price>
+                <t t-set="price_vals" t-value="vals.get('price')" />
+                <cbc:PriceAmount
+                    t-att-currencyID="price_vals.get('currency_id')"
+                    t-out="price_vals.get('price_amount')" />
+                <cbc:BaseQuantity
+                    t-att-unitCode="price_vals.get('base_quantity_unit_code')"
+                    t-out="price_vals.get('base_quantity')" />
+            </cac:Price>
+            <cac:Item>
+                <t t-call="purchase_edi_ubl_bis3.bis3_ItemType">
+                    <t t-set="vals" t-value="vals.get('item')" />
+                </t>
+            </cac:Item>
+        </t>
+    </template>
+
+
+    <template id="bis3_OrderType">
+        <Order
+            xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:order:3</cbc:CustomizationID>
+            <cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:ordering:3</cbc:ProfileID>
+            <cbc:ID t-out="vals.get('id')" />
+            <cbc:IssueDate t-out="vals.get('issue_date')" />
+            <cbc:Note t-out="vals.get('note')" />
+            <cac:OriginatorDocumentReference>
+                <cbc:ID t-out="vals.get('originator_document_reference')"/>
+            </cac:OriginatorDocumentReference>
+            <cbc:DocumentCurrencyCode t-out="vals.get('document_currency_code')" />
+            <cac:BuyerCustomerParty>
+                <cac:Party>
+                    <t t-call="purchase_edi_ubl_bis3.bis3_PartyType">
+                        <t t-set="vals" t-value="vals.get('customer_party_vals')" />
+                    </t>
+                </cac:Party>
+            </cac:BuyerCustomerParty>
+            <cac:SellerSupplierParty>
+                <cac:Party>
+                    <t t-call="purchase_edi_ubl_bis3.bis3_PartyType">
+                        <t t-set="vals" t-value="vals.get('supplier_party_vals')" />
+                    </t>
+                </cac:Party>
+            </cac:SellerSupplierParty>
+            <cac:Delivery t-if="vals.get('delivery_party_vals')">
+                <t t-call="purchase_edi_ubl_bis3.bis3_DeliveryType">
+                    <t t-set="vals" t-value="vals.get('delivery_party_vals')" />
+                </t>
+            </cac:Delivery>
+            <cac:PaymentTerms t-if="vals.get('payment_terms_vals')">
+                <t t-set="payment_terms_vals" t-value="vals.get('payment_terms_vals')" />
+                <cbc:Note t-out="payment_terms_vals.get('note')" />
+            </cac:PaymentTerms>
+            <cac:AllowanceCharge>
+                <t t-call="purchase_edi_ubl_bis3.bis3_AllowanceChargeType">
+                    <t t-set="vals" t-value="vals.get('allowance_charge_vals', {})" />
+                </t>
+            </cac:AllowanceCharge>
+            <cac:TaxTotal>
+                <cbc:TaxAmount
+                    t-att-currencyID="vals.get('currency_id')"
+                    t-out="vals.get('tax_amount')" />
+            </cac:TaxTotal>
+            <cac:AnticipatedMonetaryTotal>
+                <t t-call="purchase_edi_ubl_bis3.bis3_AnticipatedMonetaryTotalType">
+                    <t t-set="vals" t-value="vals.get('anticipated_monetary_total_vals')" />
+                </t>
+            </cac:AnticipatedMonetaryTotal>
+            <cac:OrderLine t-foreach="vals.get('order_lines')" t-as="line_vals">
+                <cac:LineItem>
+                    <t t-call="purchase_edi_ubl_bis3.bis3_LineItemType">
+                        <t t-set="vals" t-value="line_vals" />
+                    </t>
+                </cac:LineItem>
+            </cac:OrderLine>
+        </Order>
+    </template>
+</odoo>

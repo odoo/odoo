@@ -1,0 +1,59 @@
+// = jQueryUI dropdown adaptations
+// ----------------------------------------------------------------------------
+.ui-widget.ui-autocomplete {
+    top: 0;       // Compute initial position
+    min-width: 0; // Compute initial width
+    color: $dropdown-color;
+
+    // Needed because .ui-widget are rendered at a
+    // lower stacking contex compared to modals.
+    z-index: $zindex-modal + 1;
+
+    &.ui-widget-content {
+        background-color: $dropdown-bg;
+        border: $dropdown-border-width solid $dropdown-border-color;
+        @include border-radius($dropdown-border-radius);
+        @include box-shadow($dropdown-box-shadow);
+    }
+
+    .ui-menu-item {
+        > a {
+            @include o-hover-text-color($dropdown-link-color, $dropdown-link-hover-color);
+
+            &.dropdown-item {
+                padding: $o-dropdown-vpadding $o-dropdown-hpadding;
+            }
+            &.ui-state-active {
+                margin: 0;
+                border: none;
+                font-weight: $font-weight-normal;
+                color: $dropdown-link-hover-color;
+                background-color: $dropdown-link-hover-bg;
+            }
+        }
+
+        &.o_m2o_dropdown_option, &.o_m2o_start_typing, &.o_m2o_no_result {
+            text-indent: $o-dropdown-hpadding * .5;
+        }
+
+        &.o_m2o_dropdown_option > a {
+            color: $link-color;
+
+            &.ui-state-active {
+                color: $link-hover-color;
+            }
+        }
+
+        &.o_m2o_start_typing, &.o_m2o_no_result {
+            font-style: italic;
+            cursor: default;
+            a.ui-menu-item-wrapper, a.ui-state-active, a.ui-state-active:hover {
+                background: none;
+            }
+        }
+
+        &.o_m2o_start_typing > a.ui-state-active {
+            color: $dropdown-link-color;
+        }
+    }
+}

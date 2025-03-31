@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_purchase_requisition" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.purchase.requisition</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="25"/>
+        <field name="inherit_id" ref="purchase.res_config_settings_view_form_purchase"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='purchase']/block[@name='purchase_setting_container']/setting[@id='manage_purchase_agreements']/div[hasclass('content-group')]" position="after">
+                <div class="row mt-2" invisible="not module_purchase_requisition">
+                    <field name="group_purchase_alternatives" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                    <div class="col ps-0">
+                        <label for="group_purchase_alternatives"/>
+                        <div class="text-muted">Link RFQs together and compare them</div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

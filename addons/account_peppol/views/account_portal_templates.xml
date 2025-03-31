@@ -1,0 +1,21 @@
+<odoo>
+    <template id="portal_my_details_fields" inherit_id="account.portal_my_details_fields">
+        <xpath expr="//select[@name='invoice_sending_method']/../.." position="after">
+            <div t-if="peppol_eas_list" class="col-xl-6 portal_peppol_toggle">
+                <label class="col-form-label" for="peppol_eas">Peppol e-Address (EAS)</label>
+                <select name="peppol_eas" t-attf-class="form-select #{error.get('invalid_peppol_config') and 'is-invalid' or ''}">
+                    <t t-foreach="peppol_eas_list" t-as="eas">
+                        <option t-att-value="eas" t-att-selected="(peppol_eas or partner.peppol_eas) == eas">
+                            <t t-esc="eas_value"/>
+                        </option>
+                    </t>
+                </select>
+                <label class="col-form-label" for="peppol_endpoint">Peppol Endpoint</label>
+                <input type="text"
+                       name="peppol_endpoint"
+                       t-attf-class="form-control #{error.get('invalid_peppol_endpoint') and 'is-invalid' or ''}"
+                       t-att-value="peppol_endpoint or partner.peppol_endpoint"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

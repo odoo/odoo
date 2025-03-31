@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="account_analytic_distribution_model_tree_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.model.inherit.list</field>
+            <field name="model">account.analytic.distribution.model</field>
+            <field name="inherit_id" ref="analytic.account_analytic_distribution_model_tree_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='partner_id']" position="before">
+                        <field name="prefix_placeholder" column_invisible="1"/> <!-- Needed for the char_with_placeholder_field widget -->
+                        <field name="account_prefix" string="Accounts Prefixes" optional="show" widget="char_with_placeholder_field" options="{'placeholder_field': 'prefix_placeholder'}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="before">
+                            <field name="product_id" optional="show"/>
+                            <field name="product_categ_id" optional="hide"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="account_analytic_distribution_model_form_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.distribution.model.inherit.form</field>
+            <field name="model">account.analytic.distribution.model</field>
+            <field name="inherit_id" ref="analytic.account_analytic_distribution_model_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='partner_category_id']" position="after">
+                        <field name="prefix_placeholder" invisible="1"/> <!-- Needed for the char_with_placeholder_field widget -->
+                        <field name="account_prefix" string="Accounts Prefixes" options="{'placeholder_field': 'prefix_placeholder'}"/>
+                    </xpath>
+                    <xpath expr="//field[@name='company_id']" position="before">
+                            <field name="product_id"/>
+                            <field name="product_categ_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

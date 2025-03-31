@@ -1,0 +1,196 @@
+/*
+ * EVENT TOOL: REMINDER WIDGET
+ */
+.o_wevent_event .o_wetrack_js_reminder {
+    // Icon only
+    &.btn-link {
+        padding: 0;
+    }
+
+    i {
+        &.fa-bell,&.fa-bell-o {
+            color: $o-gray-600;
+            -webkit-text-stroke-color: $o-gray-600;
+        }
+    }
+}
+
+/*
+ * AGENDA
+ */
+
+ .o_weagenda_index {
+    hr {
+        border-color: lighten($o-wevent-bg-color-base-contrast, 50%);
+    }
+
+    .o_we_agenda_horizontal_scroller_container {
+        z-index: $zindex-toast;
+
+        .o_we_agenda_horizontal_scroller {
+            height: 1px;
+        }
+    }
+}
+
+.o_we_online_agenda {
+    $-events-spacing: map-get($spacers, 1);
+
+    border-top: $border-width solid transparent;
+    overflow-x: auto;
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0em 0em;
+        font-size: .9em;
+
+        tr {
+            height: 15px;
+            line-height: 1em;
+            &.active {
+                td.active {
+                    padding: 0em 0.5em;
+                    font-size: 0.81em;
+                    border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+                }
+            }
+        }
+        th.active, td:not(.active) {
+            border: 0px;
+            border-right: $-events-spacing solid $body-bg;
+            vertical-align: middle;
+            span {
+                word-break: break-word;
+            }
+        }
+        th:not(.active), td.active {
+            width: 100px;
+        }
+        th.position-sticky {
+            left: 0;
+        }
+        td {
+            border: 0px;
+
+            @for $size from 1 through 20 {
+                @if #{$size} != 1 {
+                    &.o_location_size_#{$size} {
+                        width: calc(100% / (#{$size} - 1));
+                        min-width: 220px;
+                    }
+                } @else {
+                    width: calc(100%);
+                }
+            }
+
+            &.active {
+                --bg-opacity: 0.8;
+
+                z-index: 1;
+                position: sticky;
+                left: 0;
+                white-space: nowrap;
+                backdrop-filter: blur(2px);
+            }
+            div.o_we_agenda_card_content {
+                height: 100%;
+                .o_we_agenda_card_title, small {
+                    word-break: break-word;
+                }
+                .badge:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .o_we_agenda_card_filter_badges .badge {
+                padding: $btn-padding-y $btn-padding-x;
+                cursor: pointer;
+            }
+            
+            &.invisible {
+                visibility: visible !important;
+                opacity: 0.3;
+            }
+            &.o_we_agenda_time_slot_main, &.o_we_agenda_time_slot_half {
+                padding: 0;
+                position: relative;
+                > div {
+                    position: absolute;
+                    top: 0;
+                    width: 100%;
+                }
+            }
+            &.o_we_agenda_time_slot_main > div {
+                padding: 0.3em;
+                border-top: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+            }
+            &.o_we_agenda_time_slot_half > div {
+                padding: 0.3em;
+                border-top: 1px dashed lighten($o-wevent-bg-color-base-contrast, 50%);
+            }
+            &.event_track {
+                position: relative;
+                padding: 0;
+                &::before {
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    position: absolute;
+                    top: 0;
+                }
+                &::after {
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    position: absolute;
+                    bottom: 0;
+                    border-bottom: 1px solid lighten($o-wevent-bg-color-base-contrast, 50%);
+                    margin-bottom: -1px;
+                    z-index: 1;
+                }
+                > div {
+                    padding: 0.3em;
+                }
+                // For unpublished tracks, opacity is already reduced
+                [data-publish='off'] .o_weagenda_track_badges > .o_wevent_online_badge_unpublished {
+                    opacity: unset;
+                }
+
+
+            }
+        }
+    }
+}
+
+.o_weagenda_index {
+    .o_we_track_day_header {
+        z-index: 2;
+    }
+
+    .o_we_online_agenda_overlay {
+        @include o-position-absolute(0, 0, 63px);
+        background-image: linear-gradient(90deg, rgba($body-color, 0), rgba($body-color, 0.1), rgba($body-color, 0.3));
+        opacity: 0;
+        transition: opacity .1s ease;
+    }
+
+    .o_we_online_agenda_has_scroll {
+        border-top-color: $border-color;
+    }
+
+    .o_we_online_agenda_has_content_hidden + .o_we_online_agenda_overlay {
+        opacity: 1;
+        transition: opacity .5s ease;
+    }
+
+
+    .o_we_online_agenda_has_scroll.o_we_online_agenda_is_scrolling + .o_we_online_agenda_overlay {
+        opacity: .5;
+    }
+}
+
+.o_wevent_event {
+    .o_wesession_list li.border-bottom:has(.collapse.show) {
+        border-bottom-color: transparent !important;
+    }
+}

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="event_product.product_product_event_standard" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+    <record id="event_product.product_product_event_vip" model="product.product">
+        <field name="invoice_policy">order</field>
+    </record>
+    <!-- ****** Registrations ****** -->
+    <!-- Design fair -->
+    <record id="event_0_sale_order_0" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_1"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=2)"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_0_sale_order_0_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_0_sale_order_0"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">1000</field>
+        <field name="product_uom_qty">2</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ticket_id" ref="event.event_0_ticket_1"/>
+    </record>
+    <record id="event_0_sale_order_0_line_1" model="sale.order.line">
+        <field name="order_id" ref="event_0_sale_order_0"/>
+        <field name="name">Event Registration</field>
+        <field name="product_id" ref="event_product.product_product_event"/>
+        <field name="price_unit">0</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="event_ticket_id" ref="event.event_0_ticket_0"/>
+    </record>
+
+    <!-- Conference for architects -->
+    <record id="event_2_sale_order_0" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_2"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=0.5)"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_2_sale_order_0_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_2_sale_order_0"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">1000</field>
+        <field name="product_uom_qty">2</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
+    </record>
+    <record id="event_2_sale_order_0_line_1" model="sale.order.line">
+        <field name="order_id" ref="event_2_sale_order_0"/>
+        <field name="name">Event Registration - VIP</field>
+        <field name="product_id" ref="event_product.product_product_event_vip"/>
+        <field name="price_unit">1500</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="event_ticket_id" ref="event.event_2_ticket_2"/>
+    </record>
+
+    <record id="event_2_sale_order_1" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_3"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=1)"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_2_sale_order_1_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_2_sale_order_1"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">1000</field>
+        <field name="product_uom_qty">2</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="event_ticket_id" ref="event.event_2_ticket_1"/>
+    </record>
+
+    <!-- Business Workshop -->
+    <record id="event_4_sale_order_0" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_7"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=8)"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_4_sale_order_0_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_4_sale_order_0"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">499</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_4"/>
+        <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
+    </record>
+
+    <record id="event_4_sale_order_1" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_13"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=7)"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_4_sale_order_1_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_4_sale_order_1"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">499</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_4"/>
+        <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
+    </record>
+
+    <record id="event_4_sale_order_2" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_14"/>
+        <field name="date_order" eval="DateTime.now() - relativedelta(days=7)"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_4_sale_order_2_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_4_sale_order_2"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">499</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_4"/>
+        <field name="event_ticket_id" ref="event.event_4_ticket_0"/>
+    </record>
+
+    <!-- OpenWood Collection Online Reveal: Gemini (all) -->
+    <record id="event_7_sale_order_0" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_5"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_7_sale_order_0_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_7_sale_order_0"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">0</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_1"/>
+    </record>
+    <record id="event_7_sale_order_0_line_1" model="sale.order.line">
+        <field name="order_id" ref="event_7_sale_order_0"/>
+        <field name="name">Event Registration - VIP</field>
+        <field name="product_id" ref="event_product.product_product_event_vip"/>
+        <field name="price_unit">0</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_2"/>
+    </record>
+
+    <record id="event_7_sale_order_1" model="sale.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_address_25"/>
+        <field name="state">sale</field>
+    </record>
+    <record id="event_7_sale_order_1_line_0" model="sale.order.line">
+        <field name="order_id" ref="event_7_sale_order_1"/>
+        <field name="name">Event Registration - Standard</field>
+        <field name="product_id" ref="event_product.product_product_event_standard"/>
+        <field name="price_unit">0</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_1"/>
+    </record>
+    <record id="event_7_sale_order_1_line_1" model="sale.order.line">
+        <field name="order_id" ref="event_7_sale_order_1"/>
+        <field name="name">Event Registration - VIP</field>
+        <field name="product_id" ref="event_product.product_product_event_vip"/>
+        <field name="price_unit">0</field>
+        <field name="product_uom_qty">1</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_2"/>
+    </record>
+</data></odoo>

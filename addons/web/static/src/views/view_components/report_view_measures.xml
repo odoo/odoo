@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ReportViewMeasures">
+      <Dropdown>
+        <button class="btn btn-primary">
+          Measures <i class="fa fa-caret-down ms-1"/>
+        </button>
+        <t t-set-slot="content">
+          <t t-foreach="props.measures" t-as="measure" t-key="measure_value.name">
+            <div t-if="!measure_first and measure == '__count'" role="separator" class="dropdown-divider"/>
+            <DropdownItem class="{ o_menu_item: true, selected: this.props.activeMeasures.includes(measure) }"
+              closingMode="'none'"
+              t-esc="props.measures[measure].string"
+              onSelected="() => this.props.onMeasureSelected({ measure: measure_value.name })"
+            />
+          </t>
+        </t>
+      </Dropdown>
+    </t>
+
+</templates>

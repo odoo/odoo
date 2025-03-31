@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="ir.module.category" id="base.module_category_marketing_surveys">
+            <field name="description">Helps you manage your survey for review of different users.</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Survey users -->
+        <record model="res.groups" id="group_survey_user">
+            <field name="name">User</field>
+            <field name="category_id" ref="base.module_category_marketing_surveys"/>
+        </record>
+
+        <!-- Survey managers -->
+        <record model="res.groups" id="group_survey_manager">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="base.module_category_marketing_surveys"/>
+            <field name="implied_ids" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="base.default_user" model="res.users">
+            <field name="groups_id" eval="[(4, ref('group_survey_user'))]"/>
+        </record>
+
+        <!-- SURVEY: SURVEY, PAGE, STAGE, QUESTION, LABEL -->
+        <record id="survey_survey_rule_survey_manager" model="ir.rule">
+            <field name="name">Survey: manager: all</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        
+        <record id="survey_survey_rule_survey_user" model="ir.rule">
+            <field name="name">Survey: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[
+                '|', ('restrict_user_ids', 'in', user.id), ('restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="survey_question_rule_survey_manager" model="ir.rule">
+            <field name="name">Survey question: manager: all</field>
+            <field name="model_id" ref="survey.model_survey_question"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="survey_question_rule_survey_user" model="ir.rule">
+            <field name="name">Survey question: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_question"/>
+            <field name="domain_force">[
+                '|', ('survey_id.restrict_user_ids', 'in', user.id), ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="survey_question_answer_rule_survey_manager" model="ir.rule">
+            <field name="name">Survey question answer: manager: all</field>
+            <field name="model_id" ref="survey.model_survey_question_answer"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        
+        <record id="survey_question_answer_rule_survey_user" model="ir.rule">
+            <field name="name">Survey question answer: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_question_answer"/>
+            <field name="domain_force">[
+                '|',
+                    '|', ('question_id.survey_id.restrict_user_ids', 'in', user.id), ('matrix_question_id.survey_id.restrict_user_ids', 'in', user.id),
+                    '|', ('question_id.survey_id.restrict_user_ids', '=', False), ('matrix_question_id.survey_id.restrict_user_ids', '=', False)]
+            </field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <!-- SURVEY: USER_INPUT, USER_INPUT_LINE -->
+        <record id="survey_user_input_rule_survey_manager" model="ir.rule">
+            <field name="name">Survey user input: manager: all non specialized surveys</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="survey_user_input_line_rule_survey_manager" model="ir.rule">
+            <field name="name">Survey user input line: manager: all non specialized surveys</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+        
+        <record id="survey_user_input_rule_survey_user" model="ir.rule">
+            <field name="name">Survey user input: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="survey_user_input_line_rule_survey_user" model="ir.rule">
+            <field name="name">Survey user input line: officer: unrestricted survey or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_user_input_line"/>
+            <field name="domain_force">[
+                '&amp;', ('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey')),
+                '|', ('survey_id.restrict_user_ids', 'in', user.id),
+                     ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <!-- SURVEY: INVITE -->
+        <record id="survey_invite_survey_user" model="ir.rule">
+            <field name="name">Survey invite: officer: unrestricted or in restricted users</field>
+            <field name="model_id" ref="survey.model_survey_invite"/>
+            <field name="domain_force">['|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                ('survey_id.restrict_user_ids', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_user'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="survey_invite_survey_manager" model="ir.rule">
+            <field name="name">Survey invite: manager: all</field>
+            <field name="model_id" ref="survey.model_survey_invite"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('group_survey_manager'))]"/>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+    </data>
+</odoo>

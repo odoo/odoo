@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+	<!-- EVENT.TYPE.TICKET -->
+	<record id="event_type_ticket_view_tree_from_type" model="ir.ui.view">
+        <field name="name">event.type.ticket.view.list.from.type</field>
+        <field name="model">event.type.ticket</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <list string="Event Template Tickets" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description" optional="hide"/>
+                <field name="seats_max"/>
+                <field name="seats_limited"/>
+            </list>
+        </field>
+	</record>
+
+    <record id="event_type_ticket_view_form_from_type" model="ir.ui.view">
+        <field name="name">event.type.ticket.view.form.from.type</field>
+        <field name="model">event.type.ticket</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+        <form string="Event Template Ticket">
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="seats_limited"/>
+                    <field name="seats_max"/>
+                </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <record id="event_type_ticket_view_tree" model="ir.ui.view">
+        <field name="name">event.type.ticket.view.list</field>
+        <field name="model">event.type.ticket</field>
+        <field name="inherit_id" ref="event_type_ticket_view_tree_from_type"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="editable"></attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="event_type_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_type_ticket_view_form" model="ir.ui.view">
+        <field name="name">event.type.ticket.view.form</field>
+        <field name="model">event.type.ticket</field>
+        <field name="inherit_id" ref="event_type_ticket_view_form_from_type"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="event_type_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- EVENT.TICKET -->
+    <record id="event_event_ticket_view_tree_from_event" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.list.from.event</field>
+        <field name="model">event.event.ticket</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <list string="Tickets" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description" optional="hide"/>
+                <field name="start_sale_datetime" optional="show"/>
+                <field name="end_sale_datetime" optional="show"/>
+                <field name="seats_max" sum="Total" width="105px" string="Maximum"/>
+                <field name="seats_taken" sum="Total" width="105px" string="Registration"/>
+                <field name="color" widget="color" optional="hidden"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_form_from_event" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.form.from.event</field>
+        <field name="model">event.event.ticket</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <form string="Ticket">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="start_sale_datetime"/>
+                            <field name="end_sale_datetime"/>
+                        </group><group>
+                            <field name="seats_max"/>
+                            <field name="seats_reserved"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_kanban_from_event" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.kanban.from.event</field>
+        <field name="model">event.event.ticket</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex">
+                            <field class="fw-bolder" name="name"/>
+                        </div>
+                        <i><field name="seats_reserved"/> reserved</i>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_view_tree" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.list</field>
+        <field name="model">event.event.ticket</field>
+        <field name="inherit_id" ref="event_event_ticket_view_tree_from_event"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="editable"></attribute>
+            </xpath>
+            <field name="name" position="after">
+                <field name="event_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_event_ticket_form_view" model="ir.ui.view">
+        <field name="name">event.event.ticket.view.form</field>
+        <field name="model">event.event.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Event's Ticket">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Ticket Type"/>
+                        <h1><field name="name" placeholder="e.g. VIP Ticket"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="seats_limited"/>
+                            <field name="seats_available"/>
+                            <field name="start_sale_datetime"/>
+                            <field name="end_sale_datetime"/>
+                        </group>
+                        <group>
+                            <field name="seats_max"/>
+                            <field name="seats_reserved"/>
+                            <field name="seats_used"/>
+                            <field name="is_expired"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</data></odoo>

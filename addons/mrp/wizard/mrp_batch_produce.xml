@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_mrp_batch_produce_form" model="ir.ui.view">
+        <field name="name">view_mrp_batch_produce_form</field>
+        <field name="model">mrp.batch.produce</field>
+        <field name="arch" type="xml">
+            <form string="Mass Produce">
+                <field name="production_id" invisible="1"/>
+                <group>
+                    <group>
+                        <field name="lot_name"/>
+                    </group>
+                    <group>
+                        <label for="lot_qty"/>
+                        <div class="o_row">
+                            <field name="lot_qty"/>
+                            <button name="action_generate_production_text"
+                                type="object" string="Generate"
+                                class="btn btn-secondary" title="Generate Serial Numbers"/>
+                        </div>
+                    </group>
+                </group>
+                <field name="production_text_help" nolabel="1"/>
+                <field name="production_text" nolabel="1"/>
+                <group>
+                    <group>
+                        <field name="component_separator" groups="base.group_no_one"/>
+                        <field name="lots_quantity_separator" groups="base.group_no_one"/>
+                    </group>
+                    <group>
+                        <field name="lots_separator" groups="base.group_no_one"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_prepare" string="Prepare MO" type="object" class="btn-primary"/>
+                    <button name="action_done" string="Produce" type="object" class="btn-primary"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mrp_batch_produce" model="ir.actions.act_window">
+        <field name="name">Batch Production</field>
+        <field name="res_model">mrp.batch.produce</field>
+        <field name="view_id" ref="view_mrp_batch_produce_form"/>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

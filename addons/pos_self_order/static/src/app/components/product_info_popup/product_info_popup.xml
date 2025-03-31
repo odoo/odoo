@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductInfoPopup">
+        <div class="self_order_product_info_popup o_dialog" t-att-id="id">
+            <div role="dialog" class="modal d-block" tabindex="-1">
+                <div class="modal-dialog" role="document" t-on-click.stop="">
+                    <div class="modal-content rounded">
+                        <div class="modal-header">
+                            <h1 class="modal-title fw-bolder" t-esc="props.product.name"/>
+                            <button type="button" class="btn-close" t-on-click.stop="() => this.props.close()"></button>
+                        </div>
+                        <span class="modal-body o_self_order_main_desc fs-3 p-4 ps-5 overflow-auto" t-out="props.product.public_description" />
+                        <div class="modal-footer d-flex flex-row-reverse justify-content-between align-items-center">
+                            <button type="button" class="btn btn-primary" t-on-click.stop="() => this.addToCartAndClose()">Add to Cart</button>
+                            <div t-if="!props.product.isCombo() and !props.product.isConfigurable() > 0" class="o_self_order_incr_button btn-group " role="group" aria-label="Quantity select" >
+                                <button type="button"
+                                    t-on-click = "() => this.changeQuantity(false)"
+                                    class="btn btn-secondary"><span class="fs-2 lh-1 fa-fw d-inline-block">－</span></button>
+                                <div class="o-so-tabular-nums d-flex align-items-center px-3 text-bg-200" t-esc="state.qty"/>
+                                <button type="button"
+                                    t-on-click = "() => this.changeQuantity(true)"
+                                    class="btn btn-secondary"><span class="fs-2 lh-1 fa-fw d-inline-block">＋</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

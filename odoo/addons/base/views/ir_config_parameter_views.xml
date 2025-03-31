@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_ir_config_search">
+            <field name="model">ir.config_parameter</field>
+            <field name="arch" type="xml">
+                <search string="System Properties">
+                    <field name="key" string="Key"/>
+                    <field name="value"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ir_config_list">
+            <field name="model">ir.config_parameter</field>
+            <field name="arch" type="xml">
+                <list string="System Parameters">
+                    <field name="key"/>
+                    <field name="value"/>
+                </list>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_ir_config_form">
+            <field name="model">ir.config_parameter</field>
+            <field name="arch" type="xml">
+                <form string="System Parameters">
+                  <sheet>
+                    <group>
+                        <field name="key"/>
+                        <field name="value"/>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="ir_config_list_action" model="ir.actions.act_window">
+            <field name="name">System Parameters</field>
+            <field name="res_model">ir.config_parameter</field>
+            <field name="path">system-parameters</field>
+        </record>
+        <menuitem id="ir_config_menu" name="System Parameters" parent="menu_ir_property" action="ir_config_list_action"/>
+</odoo>

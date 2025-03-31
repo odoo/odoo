@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.SettingsFormView" t-inherit="web.FormView" t-inherit-mode="primary">
+        <xpath expr="./div[@t-ref='root']" position="attributes">
+            <attribute name="class">o-settings-form-view o_field_highlight</attribute>
+        </xpath>
+        <xpath expr="//Layout/t[@t-set-slot='layout-actions']" position="replace">
+            <t t-set-slot="layout-actions">
+                <div class="o_cp_searchview d-flex w-100" role="search">
+                    <div class="o_searchview form-control d-flex align-items-center py-1" role="search" aria-autocomplete="list">
+                        <i class="o_searchview_icon oi oi-search me-2" role="img" aria-label="Search..." title="Search..." />
+                        <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
+                            <input type="text" class="o_searchview_input o_input flex-grow-1 w-auto border-0" accesskey="Q" placeholder="Search..." role="searchbox" t-model="searchState.value" t-ref="autofocus"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-status-indicator']" position="replace"/>
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-additional-actions']" position="replace"/>
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="initialApp">initialApp</attribute>
+        </xpath>
+        <xpath expr="//Layout/t[@t-component='props.Renderer']" position="inside">
+            <t t-set-slot="NoContentHelper" isVisible="state.displayNoContent">
+                <t t-call="web.NoContentHelper">
+                    <t t-set="title" t-value="'No setting found'"/>
+                    <t t-set="description" t-value="'Try searching for another keyword'"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//Layout" position="inside">
+            <t t-set-slot="control-panel-status-indicator">
+                <t t-call="{{ props.buttonTemplate }}"/>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="web.SettingsFormView.Buttons" t-inherit="web.FormView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//div" position="attributes">
+            <attribute name="class" add="order-first w-auto" separator=" "/>
+        </xpath>
+        <xpath expr="//div" position="after">
+            <span t-if="model.root.dirty" class="text-muted ms-2 o_dirty_warning">Unsaved changes</span>
+        </xpath>
+    </t>
+</templates>

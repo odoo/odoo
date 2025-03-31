@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <!-- LOCATIONS -->
+    <record id="res_partner_location_0" model="res.partner">
+        <field name="name">Reno Airfield</field>
+        <field name="is_company">1</field>
+        <field name="street">1235 Columbia Hill Rd</field>
+        <field name="city">Reno</field>
+        <field name="state_id" ref='base.state_us_23'/>
+        <field name="zip">89508</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <record id="res_partner_location_1" model="res.partner">
+        <field name="name">Wembley Stadium</field>
+        <field name="is_company">1</field>
+        <field name="street">Wembley HA9 0WS</field>
+        <field name="city">London</field>
+        <field name="state_id" ref='base.state_uk117'/>
+        <field name="country_id" ref="base.uk"/>
+    </record>
+
+    <record id="res_partner_location_2" model="res.partner">
+        <field name="name">Los Angeles Convention Center</field>
+        <field name="is_company">1</field>
+        <field name="street">1201 S Figueroa St</field>
+        <field name="city">Los Angeles</field>
+        <field name="state_id" ref='base.state_us_5'/>
+        <field name="zip">90015</field>
+        <field name="country_id" ref="base.us"/>
+    </record>
+
+    <!-- SPONSORS / OTHER COUNTRIES -->
+    <record id="res_partner_event_1" model="res.partner">
+        <field name="name">Bloem GmbH</field>
+        <field name="is_company" eval="True"/>
+        <field name="image_1920" type="base64" file="event/static/src/img/partner_bloem.png"/>
+        <field name="street">Behrenstraße 55</field>
+        <field name="zip">10117</field>
+        <field name="city">Berlin</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="phone">+49 30 12345678</field>
+        <field name="mobile">+49 30 87654321</field>
+        <field name="email">flower@example.com</field>
+        <field name="website">www.flower.example.com</field>
+    </record>
+
+    <record id="res_partner_event_3" model="res.partner">
+        <field name="name">Tree Dealers SP</field>
+        <field name="is_company" eval="True"/>
+        <field name="image_1920" type="base64" file="event/static/src/img/partner_tree_dealers.png"/>
+        <field name="street">Place d'Youville, 995</field>
+        <field name="zip">QC G1R 3P1</field>
+        <field name="city">Ville de Quebec</field>
+        <field name="country_id" ref="base.ca"/>
+        <field name="phone">+1 418 123 4567</field>
+        <field name="mobile">+1 418 765 4321</field>
+        <field name="email">tree@example.com</field>
+        <field name="website">www.tree.example.com</field>
+    </record>
+    <record id="res_partner_event_4" model="res.partner">
+        <field name="name">Shangai Pterocarpus Furniture Co., Ltd.</field>
+        <field name="is_company" eval="True"/>
+        <field name="image_1920" type="base64" file="event/static/src/img/partner_pterocarpus.png"/>
+        <field name="street">68 Taicang Rd, Shi Men Er Lu Jie Dao, Huangpu Qu</field>
+        <field name="zip">200000</field>
+        <field name="city">Shanghai Shi</field>
+        <field name="country_id" ref="base.cn"/>
+        <field name="phone">+86 21 1234 5678</field>
+        <field name="mobile">+86 21 8765 4321</field>
+        <field name="email">ptero@example.com</field>
+        <field name="website">www.pterocarpus.example.com</field>
+    </record>
+
+</data></odoo>

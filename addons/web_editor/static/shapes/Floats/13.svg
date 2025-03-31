@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="none" width="100%" height="100%">
+	<style>
+		@keyframes rotate {
+			0%   {transform: rotate(0deg);}
+			100% {transform: rotate(360deg);}
+		}
+		@keyframes rotate_reverse {
+			0%   {transform: rotate(0deg);}
+			100% {transform: rotate(-360deg);}
+		}
+		@keyframes translate_up {
+			0%, 100% {transform: translate(0, 0);}
+			50%      {transform: translate(0, -100%);}
+		}
+		@keyframes translate_down {
+			0%, 100% {transform: translate(0, 0);}
+			50%      {transform: translate(0, 100%);}
+		}
+		@keyframes zig_01 {
+			0%, 100% {transform: scale(1) rotate(0deg);}
+			50%      {transform: scale(.75) rotate(-15deg);}
+		}
+		@keyframes zig_02 {
+			0%, 100% {transform: translate(0, 0);}
+			50%      {transform: translate(-30%, 0);}	
+		}
+		@keyframes triangle_01 {
+			0%, 100% {transform: translate(0, 0) rotate(0deg);}
+			50%      {transform: translate(-50%, 50%) rotate(-15deg);}
+		}
+
+		g,
+		g > * {
+			transform-box: fill-box;
+			transform-origin: center;
+		}
+
+		#half_circle_01 {animation: rotate_reverse 50s linear infinite;}
+		#circle_01 {animation: translate_down 10s linear infinite;}
+		#circle_02 {animation: translate_down 20s linear infinite;}
+		#circle_03 {animation: translate_up 10s linear infinite;}
+		#zig_01 {animation: zig_01 15s linear infinite;}
+		#zig_02 {animation: zig_02 30s linear infinite;}
+		#square_01 {animation: rotate 30s linear infinite;}
+		#square_02 {animation: rotate_reverse 30s linear infinite;}
+		#triangle_01 {animation: triangle_01 15s linear infinite;}
+
+		@media only screen and (max-width: 300px) {
+			path,
+			polyline,
+			polygon,
+			rect {transform: scale(2);}
+			
+			/* Disable rotate animations on thumbnail to prevent an issue in Firefox */
+			#half_circle_01,
+			#square_02,
+			#square_01,
+			#triangle_01 {animation: none;}
+		}
+	</style>
+	<svg id="sub-svg-1" viewBox="0 0 400 600" preserveAspectRatio="xMinYMid meet" width="33%" height="100%">
+		<g id="circle_02">
+			<path d="M299.57,35.51a10.46,10.46,0,1,1-10.46-10.46A10.46,10.46,0,0,1,299.57,35.51Z" fill="none" stroke="#383E45" stroke-linejoin="round" stroke-width="5"/>
+		</g>
+		<g id="circle_01">
+			<path d="M144.3,210.89a10.46,10.46,0,1,1-10.46-10.46A10.46,10.46,0,0,1,144.3,210.89Z" fill="#3AADAA"/>
+		</g>
+		<g id="half_circle_01">
+			<path d="M374.08,469.72l-.14-.19a15.91,15.91,0,1,0-24.63,20.16l.16.17" fill="none" stroke="#7C6576" stroke-linejoin="round" stroke-width="5" stroke-linecap="round"/>
+		</g>
+		<g id="square_01">
+			<rect x="63.62" y="552.98" width="19.54" height="19.54" rx="2.92" fill="#3AADAA"/>
+		</g>
+		<g id="zig_01">
+			<polyline points="73.37 389.55 91.5 391.23 92.85 372.71 110.98 374.39 112.33 355.87 130.46 357.55 131.81 339.03 149.94 340.71 151.29 322.19" fill="none" stroke="#7C6576" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+		</g>
+	</svg>
+	<svg id="sub-svg-2" viewBox="0 0 400 600" preserveAspectRatio="xMaxYMid meet" x="67%" width="33%" height="100%">
+		<g id="triangle_01">
+			<polygon points="332.66 366.71 345.06 355.73 331.9 345.76 318.74 335.78 319.51 356.74 320.27 377.7 332.66 366.71" fill="none" stroke="#7C6576" stroke-linejoin="round" stroke-width="5"/>
+		</g>
+		<g id="circle_03">
+			<path d="M304.21,512.1a10.46,10.46,0,1,1-10.46-10.46A10.46,10.46,0,0,1,304.21,512.1Z" fill="#3AADAA"/>
+		</g>
+		<g id="square_02">
+			<rect x="198.33" y="175.36" width="19.54" height="19.54" fill="none" stroke="#3AADAA" stroke-linejoin="round" stroke-width="5"/>
+		</g>
+		<g id="zig_02">
+			<path d="M225.4,102.39c-8.38-2.74-11.06,9.27-17.63,7.12s-1.62-13.42-10-16.17-11.06,9.28-17.63,7.13-1.62-13.43-10-16.17-11.06,9.27-17.63,7.12-1.62-13.42-10-16.17-11.06,9.28-17.63,7.13-1.62-13.43-10-16.17-11.06,9.27-17.63,7.12-1.62-13.42-10-16.17" fill="none" stroke="#7C6576" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+		</g>
+	</svg>
+</svg>

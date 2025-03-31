@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <!-- MAIN MENU -->
+    <menuitem name="Events"
+        id="event_main_menu"
+        sequence="125"
+        groups="event.group_event_registration_desk"
+        web_icon="event,static/description/icon.png"/>
+
+    <!-- HEADER: EVENTS -->
+    <menuitem name="Events"
+        id="menu_event_event"
+        sequence="1"
+        parent="event.event_main_menu"
+        groups="event.group_event_registration_desk"/>
+
+    <!-- HEADER: REPORTING -->
+    <menuitem name="Reporting"
+        id="menu_reporting_events"
+        sequence="50"
+        parent="event_main_menu"
+        groups="event.group_event_user"/>
+
+    <!-- HEADER: CONFIGURATION -->
+    <menuitem name="Configuration"
+        id="menu_event_configuration"
+        sequence="99"
+        parent="event_main_menu"
+        groups="event.group_event_user"/>
+    <menuitem name="Event Templates"
+        id="menu_event_type"
+        sequence="1"
+        parent="menu_event_configuration"/>
+    <menuitem name="Event Stages"
+        id="event_stage_menu"
+        sequence="2"
+        parent="menu_event_configuration"/>
+    <menuitem name="Mail Schedulers"
+        id="menu_event_mail_schedulers"
+        sequence="10"
+        parent="menu_event_configuration"
+        groups="base.group_no_one"/>
+    <menuitem name="Event Tags Categories"
+        id="menu_event_category"
+        sequence="3"
+        parent="menu_event_configuration"/>
+
+</data></odoo>

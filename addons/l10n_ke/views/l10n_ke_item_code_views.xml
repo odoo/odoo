@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_l10n_ke_item_code_tree" model="ir.ui.view">
+            <field name="name">l10n_ke.item.code.list</field>
+            <field name="model">l10n_ke.item.code</field>
+            <field name="arch" type="xml">
+                <list string="KRA Item Code">
+                    <field name="code"/>
+                    <field name="description"/>
+                    <field name="tax_rate"/>
+                </list>
+            </field>
+        </record>
+        <record id="view_l10n_ke_item_code_search" model="ir.ui.view">
+            <field name="name">l10n_ke.item.code.search</field>
+            <field name="model">l10n_ke.item.code</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="code"/>
+                    <field name="description"/>
+                    <filter string="Exempted" domain="[('tax_rate','=','E')]" name="type_exempted"/>
+                    <filter string="Zero Rated" domain="[('tax_rate','=','C')]" name="type_zero_rated"/>
+                    <filter string="Taxable at 8%" domain="[('tax_rate','=','B')]" name="type_eight_rated"/>
+                    <filter name="group_by_tax_rate" string="By Tax Rate" context="{'group_by': 'tax_rate'}"/>
+                </search>
+            </field>
+        </record>
+    </data>
+</odoo>

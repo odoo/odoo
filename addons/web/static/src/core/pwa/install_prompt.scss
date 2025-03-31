@@ -1,0 +1,29 @@
+.o_install_prompt {
+    /* We don't use a rounded-x class for this dialog to match the look of a native OS dialog */
+    border-radius: 20px;
+    height: unset !important;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    background: rgba($white, .7);
+    inset: 0 auto auto 0 !important;
+    width: fit-content !important;
+
+    &.o_touch_bounce {
+        animation: none;
+    }
+
+    @media screen and (max-width: 768px) {
+        inset: auto auto 0 0 !important;
+        width: 90% !important;
+        margin: 5% !important;
+
+        .modal-header {
+            background: none !important;
+            border: none !important;
+
+            button {
+                color: $black !important;
+            }
+        }
+    }
+}

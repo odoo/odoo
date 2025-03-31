@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Stages -->
+    <record id="project_project_stage_0" model="project.project.stage">
+        <field name="sequence">10</field>
+        <field name="name">To Do</field>
+    </record>
+
+    <record id="project_project_stage_1" model="project.project.stage">
+        <field name="sequence">15</field>
+        <field name="name">In Progress</field>
+    </record>
+
+    <record id="project_project_stage_2" model="project.project.stage">
+        <field name="sequence">20</field>
+        <field name="name">Done</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <record id="project_project_stage_3" model="project.project.stage">
+        <field name="sequence">25</field>
+        <field name="name">Cancelled</field>
+        <field name="fold" eval="True"/>
+    </record>
+
+    <!-- Project Task export template -->
+    <record id="project_task_export_template" model="ir.exports">
+        <field name="name">Tasks</field>
+        <field name="resource">project.task</field>
+    </record>
+
+    <record id="project_task_export_template_line_id" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">id</field>
+    </record>
+
+    <record id="project_task_export_template_line_project_id" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">project_id</field>
+    </record>
+
+    <record id="project_task_export_template_line_name" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">name</field>
+    </record>
+
+    <record id="project_task_export_template_line_user_ids" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">user_ids</field>
+    </record>
+
+    <record id="project_task_export_template_line_stage_id" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">stage_id</field>
+    </record>
+
+    <record id="project_task_export_template_line_state" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">state</field>
+    </record>
+
+    <record id="project_task_export_template_line_tag_ids" model="ir.exports.line">
+        <field name="export_id" ref="project_task_export_template"/>
+        <field name="name">tag_ids</field>
+    </record>
+</odoo>

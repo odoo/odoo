@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="loyalty_card_update_balance_form" model="ir.ui.view">
+        <field name="name">loyalty.card.update.balance.view.form</field>
+        <field name="model">loyalty.card.update.balance</field>
+        <field name="arch" type="xml">
+            <form string="Update Balance">
+                <sheet>
+                    <h3>You are about to change the balance of the card</h3>
+                    <group>
+                        <field name="card_id" invisible="1"/>
+                        <field name="old_balance"/>
+                        <field name="new_balance"/>
+                        <field name="description" placeholder="Example: Gift for customer"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_update_card_point"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="s"
+                    >
+                        Confirm
+                    </button>
+                    <button special="cancel" data-hotkey="x">Cancel</button>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

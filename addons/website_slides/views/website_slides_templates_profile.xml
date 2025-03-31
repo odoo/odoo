@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <!--Access Denied - Profile Page-->
+    <template id="profile_access_denied" inherit_id="website_profile.profile_access_denied">
+        <xpath expr="//div[@id='profile_access_denied_return_link_container']" position="inside">
+            <t t-if="request.params.get('channel_id')">
+                <p><a t-attf-href="/slides/course-#{request.params.get('channel_id')}">Return to the course.</a></p>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
+        <xpath expr="//div[@id='profile_about_badge']" position="before">
+            <t t-if="channel">
+                <div class="mb32">
+                    <h5 class="border-bottom pb-1">Completed Courses</h5>
+                    <t t-if="courses_completed" t-call="website_slides.display_course">
+                        <t t-set="courses" t-value="courses_completed"></t>
+                    </t>
+                    <div t-elif="request.env.user == user" class="text-muted d-inline-block">
+                        Go through all its content to see a Course in this section. <br />
+                        <a href="/slides/" class="btn-link">
+                            <i class="fa fa-arrow-right"></i> Start Learning
+                        </a>
+                    </div>
+                    <div t-else="" class="text-muted d-inline-block">No completed courses yet!</div>
+                    <div t-if="request.env.user != user" class="text-end d-inline-block pull-right">
+                        <a href="/slides/all" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Courses</a>
+                    </div>
+                </div>
+                <div class="mb32">
+                    <h5 class="border-bottom pb-1">Ongoing Courses</h5>
+                    <t t-if="courses_ongoing" t-call="website_slides.display_course">
+                        <t t-set="courses" t-value="courses_ongoing"></t>
+                    </t>
+                     <p t-elif="request.env.user == user" class="text-muted">
+                        All the courses you attend will appear here. <br />
+                        <a href="/slides/" class="btn-link">
+                            <i class="fa fa-arrow-right"></i> Start Learning
+                        </a>
+                    </p>
+                    <p t-else="" class="text-muted">No ongoing courses yet!</p>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="display_course">
+        <div class="row">
+            <div class="col-12 col-lg-6" t-foreach="courses" t-as="course">
+                <div class="card mb-2">
+                    <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
+                        t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
+                        <div t-field="course.channel_id.image_1920" t-options="{'widget': 'image', 'class':'o_wslides_course_card_image', 'preview_image': 'image_512'}" class="rounded-start"/>
+                        <div class="p-2 w-100">
+                            <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
+
+                            <div class="overflow-hidden mb-1" style="height:24px">
+                                <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
+                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
+                                </t>
+                            </div>
+
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1" style="height:0.5em">
+                                    <div class="progress-bar bg-primary" t-att-style="'width: '+ str(course.completion)+'%'"/>
+                                </div>
+                                <small class="fw-bold ps-2"><span t-esc="course.completion"/> %</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</data></odoo>

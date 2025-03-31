@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.MessagingMenu">
+    <t t-if="env.inDiscussApp" t-call="mail.MessagingMenu.content"/>
+</t>
+
+<t t-name="mail.MessagingMenu.content">
+    <div t-if="!(ui.isSmall and env.inDiscussApp and store.discuss.activeTab === 'main')" t-att-class="`${discussSystray.contentClass} o-mail-MessagingMenu`">
+        <div t-if="!env.inDiscussApp or store.discuss.activeTab !== 'main'" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto flex-grow-1 list-group list-group-flush px-2 py-1 gap-1" t-ref="notification-list">
+            <t t-foreach="threads" name="threads" t-as="thread" t-key="thread.localId">
+                <t t-set="message" t-value="thread.isChatChannel or (thread.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentNotEmptyOfAllMessage : thread.needactionMessages.at(-1)"/>
+                <NotificationItem
+                    isActive="state.activeIndex === itemIndex"
+                    body="message?.inlineBody or message?.subtype_description"
+                    counter="thread.needactionCounter"
+                    datetime="message?.datetime"
+                    iconSrc="thread.avatarUrl"
+                    hasMarkAsReadButton="thread.isUnread"
+                    muted="thread.mute_until_dt ? 2 : !thread.isUnread ? 1 : 0"
+                    onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
+                    onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeLeft="hasTouch() and thread.canUnpin ? { action: () => thread.unpin(), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
+                    nameMaxLine="1"
+                    textMaxLine="2"
+                >
+                    <t t-set-slot="name">
+                        <div t-if="thread.parent_channel_id" class="d-flex align-items-center">
+                            <span class="text-truncate flex-shrink-0 opacity-75 mw-50" t-esc="thread.parent_channel_id.displayName"/>
+                            <i class="oi oi-chevron-right o-xsmaller mx-1"/>
+                            <span class="text-truncate min-w-0" t-esc="thread.displayName"/>
+                        </div>
+                        <t t-else="" t-esc="thread.displayName"/>
+                    </t>
+                    <t t-set-slot="icon">
+                        <ImStatus t-if="thread.channel_type === 'chat' and thread.correspondent" member="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                        <CountryFlag t-if="thread.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-NotificationItem-country position-absolute border'"/>
+                    </t>
+                    <t t-if="message" t-set-slot="body-icon">
+                        <t t-call="mail.message_preview_prefix">
+                            <t t-set="message" t-value="message"/>
+                        </t>
+                    </t>
+                </NotificationItem>
+                <t t-set="itemIndex" t-value="itemIndex + 1"/>
+            </t>
+            <t t-if="store.channels.status === 'fetching'">
+                <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>
+            </t>
+        </div>
+    </div>
+    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100 btn-group">
+        <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2 mx-0 pb-4" t-att-class="{
+            'text-primary fw-bolder o-active': store.discuss.activeTab === tab.id,
+            'border-end': !tab_last,
+        }" t-on-click="() => this.onClickNavTab(tab.id)">
+            <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>
+            <span class="small" t-esc="tab.label"/>
+        </button>
+    </div>
+</t>
+
+</templates>

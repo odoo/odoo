@@ -1,0 +1,43 @@
+// Heading element normally takes the full width of the parent,
+// so the char_field wrapper should take the same width.
+@include media-breakpoint-up(md) {
+    .o_field_char {
+        width: inherit;
+    }
+}
+
+.o_field_widget:has(.o_field_translate + .o_field_input_buttons) {
+    position: relative;
+}
+
+.o_field_input_buttons {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    display: inline-flex;
+    visibility: hidden;
+
+    .o_field_char & {
+        align-items: center;
+    }
+    .o_field_text & {
+        align-items: flex-start;
+    }
+
+    .btn.o_field_translate {
+        position: relative;
+        right: auto;
+        top: auto;
+
+        &:only-child {
+            padding-right: 10px;
+        }
+    }
+}
+
+.o_field_widget:hover,
+.o_field_widget:focus-within {
+    .o_field_input_buttons {
+        visibility: visible;
+    }
+}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="res_partner_activation_form">
+        <field name="name">res.partner.activation.form</field>
+        <field name="model">res.partner.activation</field>
+        <field name="arch" type="xml">
+            <form string="Activation">
+                <sheet>
+                    <group col="4">
+                        <field name="name" />
+                        <field name="sequence" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="res_partner_activation_tree">
+        <field name="name">res.partner.activation.list</field>
+        <field name="model">res.partner.activation</field>
+        <field name="arch" type="xml">
+            <list string="Activation" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="res_partner_activation_view_search" model="ir.ui.view">
+        <field name="name">res.partner.activation.view.search</field>
+        <field name="model">res.partner.activation</field>
+        <field name="arch" type="xml">
+            <search string="Activation">
+                <field name="name" string="Partner Activation"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="res_partner_activation_act">
+        <field name="name">Partner Activations</field>
+        <field name="res_model">res.partner.activation</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+           <p class="o_view_nocontent_smiling_face">
+              Create a Partner Activation
+           </p><p>
+              Those are used to know where your Partners stand in your onboarding process.
+           </p>
+        </field>
+    </record>
+</odoo>

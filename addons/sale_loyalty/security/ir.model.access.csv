@@ -1,0 +1,18 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_program_salesman,Loyalty Program (Salesperson),loyalty.model_loyalty_program,sales_team.group_sale_salesman,1,0,0,0
+access_program_manager,Loyalty Program (Manager),loyalty.model_loyalty_program,sales_team.group_sale_manager,1,1,1,1
+access_applicability_salesman,Loyalty Rule (Salesperson),loyalty.model_loyalty_rule,sales_team.group_sale_salesman,1,0,0,0
+access_applicability_manager,Loyalty Rule (Manager),loyalty.model_loyalty_rule,sales_team.group_sale_manager,1,1,1,1
+access_coupon_salesman,Loyalty (Salesperson),loyalty.model_loyalty_card,sales_team.group_sale_salesman,1,1,0,0
+access_coupon_manager,Loyalty (Manager),loyalty.model_loyalty_card,sales_team.group_sale_manager,1,1,1,0
+access_reward_salesman,Loyalty Reward (Salesperson),loyalty.model_loyalty_reward,sales_team.group_sale_salesman,1,0,0,0
+access_reward_manager,Loyalty Reward (Manager),loyalty.model_loyalty_reward,sales_team.group_sale_manager,1,1,1,1
+access_communication_salesman,Loyalty Communication (Salesperson),loyalty.model_loyalty_mail,sales_team.group_sale_salesman,1,0,0,0
+access_communication_manager,Loyalty Communication (Manager),loyalty.model_loyalty_mail,sales_team.group_sale_manager,1,1,1,1
+access_sale_coupon_apply_code,Loyalty Coupon Wizard,model_sale_loyalty_coupon_wizard,sales_team.group_sale_salesman,1,1,1,0
+access_sale_coupon_apply_code_line,Loyalty Reward Wizard,model_sale_loyalty_reward_wizard,sales_team.group_sale_salesman,1,1,1,0
+access_sale_coupon_generate,Coupon Generation,loyalty.model_loyalty_generate_wizard,sales_team.group_sale_salesman,1,1,1,0
+access_sale_order_coupon_points_manager,Coupon Points (Manager),model_sale_order_coupon_points,sales_team.group_sale_manager,1,1,1,1
+access_sale_order_coupon_points_salesman,Coupon Points (Salesperson),model_sale_order_coupon_points,sales_team.group_sale_salesman,1,0,0,0
+access_loyalty_history_salesman,Loyalty History (Salesperson),loyalty.model_loyalty_history,sales_team.group_sale_salesman,1,1,1,0
+access_loyalty_card_update_balance_salesman,Loyalty Card Update Balance (Salesperson),loyalty.model_loyalty_card_update_balance,sales_team.group_sale_salesman,1,1,1,0

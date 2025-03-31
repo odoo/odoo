@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="resource_mail.Many2OneAvatarResourceField" t-inherit="mail.Many2OneAvatarUserField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_m2o_avatar')]" position="attributes">
+            <attribute name="t-attf-class" add="{{ displayResourcePopover ? 'o_field_many2one_avatar': '' }}" separator=" "/>
+        </xpath>
+        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="attributes">
+            <attribute name="t-if">props.record.data.resource_type !== 'material' &amp;&amp; props.record.data[props.name] !== false</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="after">
+            <t t-if="props.record.data.resource_type === 'material'">
+                <span t-if="props.record.data[props.name] !== false"
+                      t-att-title="props.record.data[props.name][1]"
+                      class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1">
+                    <i class="fa fa-wrench"/>
+                </span>
+                <span t-elif="!props.readonly" class="o_m2o_avatar_empty"></span>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="resource_mail.KanbanMany2OneAvatarResourceField" t-inherit="mail.KanbanMany2OneAvatarUserField" t-inherit-mode="primary">
+        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="attributes">
+            <attribute name="t-if">props.record.data.resource_type !== 'material' &amp;&amp; props.record.data[props.name] !== false</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o_m2o_avatar')]/img" position="after">
+            <t t-if="props.record.data.resource_type === 'material'">
+                <span t-if="props.record.data[props.name] !== false"
+                      t-att-title="props.record.data[props.name][1]"
+                      class="d-inline-flex align-items-center justify-content-center rounded o_material_resource cursor-default me-1">
+                    <i class="fa fa-wrench"/>
+                </span>
+                <span t-elif="!props.readonly" class="o_m2o_avatar_empty"></span>
+            </t>
+        </xpath>
+    </t>
+</templates>

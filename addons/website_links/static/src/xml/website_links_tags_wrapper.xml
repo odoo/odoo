@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="website_links.WebsiteLinksTagsWrapper">
+    <input t-att-name="props.model.split('.')[1]+'-select'" type="hidden" class="form-control" t-att-value="state.value"/>
+    <SelectMenu
+        t-props="state"
+        onInput.bind="loadChoice"
+        onSelect.bind="onSelect">
+        <t t-if="showCreateOption" t-set-slot="bottomArea" t-slot-scope="select">
+            <DropdownItem
+                onSelected="() => this.onCreateOption(select.data.searchValue)"
+                class="'o_select_menu_item p-2'"
+            >
+                Create option "<span class="fw-bold text-muted" t-out="select.data.searchValue"/>"
+            </DropdownItem>
+        </t>
+    </SelectMenu>
+</t>
+
+</templates>

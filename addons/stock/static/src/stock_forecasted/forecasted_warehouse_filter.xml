@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="stock.ForecastedWarehouseFilter">
+        <div t-if="displayWarehouseFilter" class="btn-group">
+            <Dropdown menuClass="o_filter_menu" items="warehousesItems">
+                <button class="btn btn-secondary">
+                    <span class="fa fa-home"/> Warehouse: <t t-out="activeWarehouse.name"/>
+                </button>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>

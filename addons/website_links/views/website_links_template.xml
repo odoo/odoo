@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="create_shorten_url">
+            <div class="o_website_links_create_tracked_url">
+                <div class="container">
+                    <div class="notification mb-3"/>
+
+                    <div t-attf-class="row mb-4 pt-3 #{'' if can_create_link_tracker else 'd-none'}">
+                        <h2 class="o_page_header">Create a Link tracker</h2>
+                        <div class="col-md-7">
+                            <form id="o_website_links_link_tracker_form">
+
+                                <div class="mb-3 row">
+                                    <label class="col-md-3 col-form-label text-start">Target Link</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="url" class="form-control required-form-control"  required="True" placeholder="e.g. https://www.odoo.com/contactus" t-att-value="u"/>
+                                    </div>
+                                </div>
+
+                                <div class="o_website_links_utm_forms">
+                                    <div class="mb-3 row">
+                                        <label class="col-md-3 col-form-label">Campaign</label>
+                                        <div class="col-md-9" id="campaign-select-wrapper"></div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-md-3 col-form-label">Medium</label>
+                                        <div class="col-md-9" id="channel-select-wrapper"></div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-md-3 col-form-label">Source</label>
+                                        <div class="col-md-9" id="source-select-wrapper"></div>
+                                    </div>
+                                    <div class="mb-3 row">
+                                        <label class="col-md-3 col-form-label">Name</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="label" class="form-control" placeholder="e.g. &quot;Black Friday Mailing Campaign&quot;" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="offset-md-3 col-md-9">
+                                        <button type="submit" class="btn btn-primary mb-3" id="btn_shorten_url">Generate Link Tracker</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="generated_tracked_link" class="d-none">
+                                <div class="row">
+                                    <label class="col-md-3 col-form-label text-start">Tracked Link</label>
+                                    <p class="o_website_links_edition col-md-9 d-flex flex-nowrap gap-2 align-items-center mb-0">
+                                        <span class="o_website_links_short_url d-flex align-items-center text-nowrap text-truncate" id="short_url"><span id="short-url-host" class="text-truncate"/><span id="o_website_links_code"/></span>
+                                        <span class="o_website_links_edit_tools text-nowrap" style="display:none;">
+                                            <a role="button" class="o_website_links_ok_edit btn btn-sm btn-primary" href="#">ok</a> or
+                                            <a class="o_website_links_cancel_edit" href="#">cancel</a>
+                                        </span>
+                                        <a t-attf-class="#{'' if can_create_link_tracker_code else 'd-none'} o_website_links_edit_code" aria-label="Edit code" title="Edit code"><i class="fa fa-pencil gray"/></a>
+                                        <a class="copy-to-clipboard btn btn-success text-nowrap"><i class="fa fa-copy me-2"/>Copy</a>
+                                    </p>
+                                </div>
+                                <div class="offset-md-3 col-md-9 px-2">
+                                    <p class="o_website_links_code_error text-danger fw-bold" style="display:none;"/>
+                                    <button class="o_website_links_new_link_tracker btn btn-primary my-3">Create another Tracker</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="offset-md-1 col-md-4 d-none d-md-block">
+                            <p class="text-muted text-justify">Share this page with a <strong>short link</strong> that includes <strong>analytics trackers</strong>.</p>
+                            <p class="text-muted text-justify">Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to track opportunities and related revenues.</p>
+                            <a target="_blank" href="https://www.odoo.com/documentation/18.0/applications/websites/website/reporting/link_tracker.html">Read More</a>
+                        </div>
+                    </div>
+
+                    <div class="o_page_header d-flex justify-content-between align-items-center mb-4 pt-3">
+                        <h2>Your tracked links</h2>
+                        <small class="d-none d-md-block" id="filters">
+                            <span class="text-muted me-1">Sort By:</span>
+                            <div class="btn-group">
+                                <button data-bs-toggle="dropdown" class="o_website_links_sort_by btn btn-light dropdown-toggle">
+                                    Newest
+                                </button>
+                                <div id="recent_links_sort_by" class="dropdown-menu dropdown-menu-end">
+                                    <a data-filter="newest" class="dropdown-item active" href="#">Newest</a>
+                                    <a data-filter="most-clicked" class="dropdown-item" href="#">Number of Clicks</a>
+                                    <a data-filter="recently-used" class="dropdown-item" href="#">Last Clicks</a>
+                                </div>
+                            </div>
+                        </small>
+                    </div>
+
+                    <div id="o_website_links_recent_links" class="pb-4">
+                        <div class="o_website_links_recent_links_notification"></div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="page_shorten_url" name="Link Tracker">
+            <t t-call="website.layout">
+                <t t-call="website_links.create_shorten_url"/>
+            </t>
+        </template>
+
+</odoo>

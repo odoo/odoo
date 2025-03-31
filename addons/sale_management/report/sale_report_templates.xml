@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_saleorder_document_inherit_sale_management" inherit_id="sale.report_saleorder_document">
+    <xpath expr="//div[@name='signature']" position="after">
+        <div t-if="not (doc.sale_order_option_ids and doc.state in ['draft', 'sent'])" class="oe_structure">&#8203;</div>
+        <div t-else="">
+            <t t-set="has_option_discount" t-value="any(option.discount != 0.0 for option in doc.sale_order_option_ids)" />
+            <h4 name="h_optional_products">
+                <span>Options</span>
+            </h4>
+            <table name="table_optional_products" class="table table-sm">
+                <thead class="fw-bold">
+                    <tr>
+                        <td name="th_option_name" class="text-start">Description</td>
+                        <td t-if="has_option_discount" name="th_option_discount" class="text-start">Disc.%</td>
+                        <td name="th_option_price_unit" class="text-end">Unit Price</td>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+                    <tr t-foreach="doc.sale_order_option_ids" t-as="option">
+                        <td name="td_option_name">
+                            <span t-field="option.name">Extra Chips</span>
+                        </td>
+                        <td t-if="has_option_discount" name="td_option_discount">
+                            <strong t-if="option.discount != 0.0" class="text-info">
+                                <t t-out="((option.discount % 1) and '%s' or '%d') % option.discount">-</t>%
+                            </strong>
+                        </td>
+                        <td name="td_option_price_unit">
+                            <strong class="text-end">
+                                <div t-field="option.price_unit"
+                                    t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                    t-att-style="option.discount and 'text-decoration: line-through' or None"
+                                    t-att-class="option.discount and 'text-danger' or None">1.5</div>
+                                <div t-if="option.discount">
+                                    <t t-out="((1-option.discount / 100.0) * option.price_unit)" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'> </t>
+                                </div>
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="oe_structure">&#8203;</div>
+        </div>
+    </xpath>
+</template>
+</odoo>

@@ -1,0 +1,35 @@
+.s_progress_bar[data-vcss="001"] {
+    .s_progress_bar_wrapper {
+        flex-direction: column;
+    }
+
+    .progress {
+        --progress-bg: #{fade-currentColor(20%)};
+        --progress-font-size: #{$font-size-base};
+    }
+
+    // Options
+    &.s_progress_bar_label_inline {
+        .progress {
+            --progress-height: 1.6em;
+        }
+    }
+
+    &.s_progress_bar_label_below {
+        .s_progress_bar_text {
+            //Default alignment, can be override by the user
+            text-align: right;
+        }
+    }
+
+    &.s_progress_bar_label_after {
+        .s_progress_bar_wrapper {
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .progress {
+            flex-basis: 100%;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+.table.o_sale_product_configurator_table {
+    & tr:first-child > td {
+        padding-top: 0 !important;
+    }
+
+    > :not(caption) > *:last-child > * {
+        border-bottom: 0;
+    }
+}
+
+.o_sale_product_configurator_img {
+    width: 40px;
+    max-height: 240px;
+
+    @include media-breakpoint-up(md) {
+        width: 120px;
+    }
+}
+
+.o_sale_product_configurator_qty {
+    width: 64px;
+
+    @include media-breakpoint-up(md) {
+        width: 160px;
+    }
+}
+
+.o_sale_product_configurator_price {
+    width: 100px;
+
+    @include media-breakpoint-up(md) {
+        width: 160px;
+    }
+}

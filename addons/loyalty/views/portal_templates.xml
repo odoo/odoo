@@ -1,0 +1,105 @@
+<odoo>
+    <template id="loyalty_buttons" inherit_id="portal.side_content">
+        <div name="portal_contact" position="after">
+            <div class='o_loyalty_container'>
+                <div
+                    t-foreach="cards_per_programs"
+                    t-as="program"
+                    class="portal-loyalty-buttons cursor-pointer"
+                >
+                    <div
+                        t-att-data-card_id="card.id"
+                        t-foreach="cards_per_programs[program]"
+                        t-as="card"
+                        class="o_loyalty_card d-flex my-2"
+                    >
+                        <span
+                            t-attf-class="o_notification_bar rounded-start"
+                            style="width: 0.5rem; background-color: var(--cyan)"
+                        />
+                        <div class="w-100 py-3 ps-3 pe-5 border border-start-0 rounded-end d-flex flex-row gap-3">
+                            <img
+                                class="img-fluid"
+                                t-attf-src="/loyalty/static/src/img/{{ program.program_type }}.svg"
+                                width="40"
+                            />
+                            <div class="d-flex flex-column gap-1">
+                                <div>
+                                    <strong t-out="program.display_name"/>
+                                </div>
+                                <p id="card_points" class="m-0 text-600">
+                                    <t t-out="card.points_display"/>
+                                </p>
+                                <t t-if="
+                                    program.program_type == 'loyalty'
+                                    and any(
+                                        reward.required_points &lt;= card.points for reward in program.reward_ids
+                                    )
+                                ">
+                                    <p class="m-0 text-info">A reward is waiting for you</p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="loyalty_card_history_template" name="My Loyalty History">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Loyalty Transaction</t>
+            </t>
+            <t t-if="not history_lines">
+                <p class="alert alert-warning">
+                    There are currently no transaction lines for this card.
+                </p>
+            </t>
+            <t t-else="" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Description</th>
+                        <th>Order</th>
+                        <th>Date</th>
+                        <th>Issued</th>
+                        <th>Used</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="history_lines" t-as="line">
+                        <td><span t-out="line.description"/></td>
+                        <td t-if="line.order_id">
+                            <t t-set="order_portal_url" t-value="line._get_order_portal_url()"/>
+                            <t t-set="order_description" t-value="line._get_order_description()"/>
+                            <a t-if="order_portal_url" t-att-href="order_portal_url">
+                                <t t-out="order_description"/>
+                            </a>
+                            <t t-else="">
+                                <t t-out="order_description"/>
+                            </t>
+                        </td>
+                        <td t-else=""/>
+                        <td><span t-out="line.create_date"/></td>
+                        <td><span t-out="line.card_id._format_points(line.issued)"/></td>
+                        <td><span t-out="line.card_id._format_points(line.used)"/></td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template
+        id="portal_loyalty_history_breadcrumbs"
+        name="Portal layout : Loyalty History Lines"
+        inherit_id="portal.portal_breadcrumbs"
+    >
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li class="breadcrumb-item" t-if="page_name == 'loyalty_history'">
+                <span>History</span>
+            </li>
+        </xpath>
+    </template>
+
+</odoo>

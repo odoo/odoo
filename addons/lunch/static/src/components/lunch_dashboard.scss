@@ -1,0 +1,17 @@
+.lunch_topping:before {
+    content: '+ ';
+}
+
+.o_lunch_content {
+    .o-autocomplete--input {
+        cursor: pointer;
+    }
+    // Force LunchCurrency in primary button to be inline
+    summary div {
+        display: inline-flex !important;
+
+        span {
+            width: auto;
+        }
+    }
+}

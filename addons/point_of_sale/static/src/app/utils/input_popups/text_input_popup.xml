@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.TextInputPopup">
+        <Dialog title="props.title">
+            <t t-foreach="props.buttons" t-as="button" t-key="button_index">
+                <button t-on-click="() => this.buttonClick(button)" type="button" t-attf-class="btn btn-lg me-2 mb-2 toggle-button {{button.isSelected? 'btn-primary' : 'btn-secondary'}} lh-lg" >
+                    <t t-esc="button.label"/>
+                </button>
+            </t>
+            <textarea t-att-rows="props.rows" class="form-control form-control-lg mx-auto" type="text" t-model="state.inputValue" t-ref="input" t-att-placeholder="props.placeholder" t-on-keydown="onKeydown" />
+            <t t-set-slot="footer">
+                <button class="btn btn-primary btn-lg lh-lg o-default-button" t-on-click="confirm">Apply</button>
+                <button class="btn btn-secondary btn-lg lh-lg o-default-button" t-on-click="close">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

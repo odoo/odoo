@@ -1,0 +1,76 @@
+$o-chart-line-color: #ababb1;
+
+.o_hierarchy_renderer {
+    .o_hierarchy_container {
+        gap: 25px;
+
+        .o_hierarchy_row {
+            &.o_hierarchy_hover {
+                background-color: $hierarchy_element_hover-background;
+                box-shadow: -1px -1px 0px 0px $hierarchy_element_hover-border inset,
+                    1px 1px 0px 0px $hierarchy_element_hover-border inset;
+            }
+
+            &:has(.o_hierarchy_node_unfolded) .o_hierarchy_node_container:not(.o_hierarchy_node_unfolded) {
+                opacity: 50%;
+            }
+        }
+
+        .o_hierarchy_separator {
+            position: relative;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+
+            .o_hierarchy_line_left {
+                &:before {
+                    border-top: 2px solid $o-chart-line-color;
+                    border-left: 2px solid $o-chart-line-color;
+                    border-top-left-radius: 8px;
+                    margin-left: -10%;
+                    margin-top: -2px;
+                }
+
+                &:after {
+                    border-bottom: 2px solid $o-chart-line-color;
+                    border-right: 2px solid $o-chart-line-color;
+                    border-bottom-right-radius: 6px;
+                    margin-left: 30%;
+                    margin-top: -12px;
+                }
+            }
+
+            .o_hierarchy_line_right {
+                &:before {
+                    border-bottom: 2px solid $o-chart-line-color;
+                    border-left: 2px solid $o-chart-line-color;
+                    border-bottom-left-radius: 6px;
+                    margin-left: calc(-10% - 1px);
+                    margin-top: -12px;
+                }
+
+                &:after {
+                    border-top: 2px solid $o-chart-line-color;
+                    border-right: 2px solid $o-chart-line-color;
+                    border-top-right-radius: 8px;
+                    margin-left: 30%;
+                    margin-top: -2px;
+                }
+            }
+
+            .o_hierarchy_line_part {
+                border-top: 2px solid $o-chart-line-color;
+                margin: 0 10%;
+                width: 30%;
+            }
+
+            .o_hierarchy_line_part:before, .o_hierarchy_line_part:after {
+                content: "";
+                width: calc(10% + 1px);
+                height: 12px;
+                position: absolute;
+                display: block;
+            }
+        }
+    }
+}

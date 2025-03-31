@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_data_recycle_record_list">
+            <field name="name">Field Recycle Record List</field>
+            <field name="model">data_recycle.record</field>
+            <field name="arch" type="xml">
+                <list js_class="data_recycle_list" sample="1" create="0" export_xlsx="0">
+                    <field name="active" column_invisible="True" />
+                    <field name="res_model_name" column_invisible="True" />
+                    <field name="res_id" />
+                    <field name="recycle_model_id" string="Recycle Rule" optional="hide" />
+                    <field name="name" />
+                    <button icon="fa-check" string="Validate" type="object" name="action_validate" />
+                    <button icon="fa-times" string="Discard" type="object" name="action_discard" invisible="not active" />
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_data_recycle_record_search">
+            <field name="name">Field Recycle Record Search</field>
+            <field name="model">data_recycle.record</field>
+            <field name="arch" type="xml">
+                <search string="Records">
+                    <filter name="active" string="Discarded" domain="[('active', '=', False)]" />
+                    <searchpanel>
+                        <field name="recycle_model_id" icon="fa-bars" string="Recycle Rules" />
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_data_recycle_record">
+            <field name="name">Field Recycle Records</field>
+            <field name="path">field-recycle</field>
+            <field name="res_model">data_recycle.record</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain"></field>
+            <field name="search_view_id" ref="view_data_recycle_record_search" />
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No cleaning suggestions
+              </p>
+              <p>
+              Configure rules to identify records to clean
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_data_recycle_record_notification">
+            <field name="name">Field Recycle Records</field>
+            <field name="res_model">data_recycle.record</field>
+            <field name="view_mode">list,form</field>
+            <field name="context">{ 'searchpanel_default_recycle_model_id': active_id }</field>
+            <field name="search_view_id" ref="view_data_recycle_record_search" />
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                No cleaning suggestions
+              </p>
+              <p>
+              Configure rules to identify records to clean
+              </p>
+            </field>
+        </record>
+    </data>
+</odoo>

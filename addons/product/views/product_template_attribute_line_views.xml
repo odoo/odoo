@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="product_template_attribute_line_view_tree" model="ir.ui.view">
+        <field name="name">product.template.attribute.line.view.list</field>
+        <field name="model">product.template.attribute.line</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" multi_edit="1" create="false">
+                <field name="product_tmpl_id" readonly="1"/>
+                <field name="attribute_id" readonly="1"/>
+                <field name="value_ids"
+                       widget="many2many_tags"
+                       options="{'no_create_edit': True}"
+                       context="{'default_attribute_id': attribute_id}"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

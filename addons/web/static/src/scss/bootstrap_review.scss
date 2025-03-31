@@ -1,0 +1,110 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in all places
+/// where it is used in Odoo (backend / frontend / reports / ...)
+///
+
+.alert {
+    // Alerts are block elements with relative positioning.
+    // They would go over floating elements, which is never what we want.
+    clear: both;
+}
+
+.accordion {
+    .collapsing, .collapse.show {
+        > .card-body:first-child {
+            // Above background color would overflow on the card-header border
+            // without this
+            margin-top: $card-border-width;
+        }
+    }
+}
+
+.toast-header {
+    background-clip: border-box;
+}
+
+// Modify modals so that their scrollable element is the modal-body (except in
+// mobile).
+// TODO: should be replaced by .modal-dialog-scrollable class
+@include media-breakpoint-up(sm) {
+    :not(.s_popup) > .modal {
+        .modal-dialog {
+            height: 100%;
+            padding: $modal-dialog-margin-y-sm-up 0;
+            margin: 0 auto;
+        }
+        .modal-content {
+            max-height: 100%;
+        }
+        .modal-header, .modal-footer {
+            flex: 0 0 auto;
+        }
+        .modal-body {
+            overflow: auto;
+            min-height: 0;
+        }
+    }
+}
+
+// Do not display the backdrop element added by bootstrap in the body and add a
+// background on the modal to keep the same effect. The bootstrap backdrop was
+// probably useful for compatibility with <IE9 but is no longer needed. This
+// also avoids z-index issues because modals could be opened in an element
+// (e.g. the website #wrapwrap) whose stacking context is different of the body
+// one (where the backdrop is opened). This would make the backdrop appears on
+// top of the modal.
+.modal-backdrop {
+    display: none;
+}
+.modal:not([data-bs-backdrop="false"]) {
+    background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+}
+
+// Force field label pointer to cursor
+.form-check {
+    @include o-field-pointer();
+}
+
+// Update the border color when hovering form-select elements
+.form-select:where(:not(:disabled)):hover {
+    border-color: $form-check-input-checked-border-color;
+}
+
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
+}
+
+// Disable RTL for the popover position
+.popover {
+    right: auto#{"/*rtl:ignore*/"};
+}
+
+// Review $link-decoration behavior
+@if $link-decoration and $link-decoration != none {
+    .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .fa {
+        &, &:hover, &:focus {
+            text-decoration: none;
+        }
+    }
+}
+
+// Disable markers when using Carousel's indicators on list
+.carousel-indicators {
+    list-style: none;
+}
+
+
+// Progress Bar
+
+// Solve a BS 5.3 issue causing progress bar's animation to flicker when
+// the component's height is modified using CSS variables.
+@keyframes progress-bar-stripes {
+    0% { background-position-x: var(--progress-height, #{$progress-height}); }
+}

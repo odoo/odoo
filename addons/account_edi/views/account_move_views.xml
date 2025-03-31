@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_edi.action_open_edi_documents" model="ir.actions.act_window">
+            <field name="name">Electronic invoicing</field>
+            <field name="res_model">account.edi.document</field>
+            <field name="view_mode">list</field>
+            <field name="domain">[('move_id', '=', active_id), ('error', '!=', False)]</field>
+        </record>
+
+        <record id="view_out_invoice_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.list.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_invoice_tree" />
+            <field name="arch" type="xml">
+                <field name="status_in_payment" position="before">
+                    <field name="edi_state" optional="hide" class="fw-bold"
+                    decoration-muted="edi_blocking_level == 'info'"
+                    decoration-danger="edi_blocking_level == 'error'"
+                    decoration-warning="edi_blocking_level == 'warning'"
+                    />
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_out_credit_note_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.list.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_out_credit_note_tree" />
+            <field name="arch" type="xml">
+                <field name="status_in_payment" position="before">
+                    <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_in_invoice_refund_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.list.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_refund_tree" />
+            <field name="arch" type="xml">
+                <field name="status_in_payment" position="before">
+                    <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_in_bill_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+            <field name="arch" type="xml">
+                <field name="status_in_payment" position="before">
+                    <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/group/filter[@name='status']" position="after">
+                    <filter string="Electronic invoicing state" name="edi_state" groups="base.group_no_one"
+                            context="{'group_by': 'edi_state'}"/>
+                    <separator/>
+                    <filter string="Electronic invoicing processing needed" name="edi_to_process" groups="base.group_no_one" 
+                            domain="[('edi_state', 'in', [('to_send'), ('to_cancel')])]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_cancel']" position="after">
+                    <field name="edi_show_cancel_button" invisible="1"/>
+                    <field name="edi_show_abandon_cancel_button" invisible="1"/>
+                    <field name="edi_show_force_cancel_button" invisible="1"/>
+                    <button name="button_cancel_posted_moves"
+                            string="Request EDI Cancellation"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            invisible="not edi_show_cancel_button"
+                            data-hotkey="x"/>
+                    <button name="button_abandon_cancel_posted_posted_moves"
+                            string="Call off EDI Cancellation"
+                            type="object"
+                            groups="account.group_account_invoice"
+                            invisible="not edi_show_abandon_cancel_button"/>
+                </xpath>
+                <xpath expr="//header" position="after">
+                    <field name="edi_blocking_level" invisible="1" />
+                    <field name="edi_error_count" invisible="1" />
+                    <div class="d-flex alert alert-info justify-content-between" role="alert"
+                        invisible="edi_web_services_to_process in ['', False] or state == 'draft'">
+                         <div>The invoice will soon be sent to
+                             <field name="edi_web_services_to_process" class="w-auto"/>
+                         </div>
+                         <button name="button_process_edi_web_services" type="object" class="oe_link ps-0 text-decoration-underline" string="Process now"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'error'">
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                            <button name="button_force_cancel"
+                                string="Force Cancel"
+                                type="object"
+                                groups="account.group_account_invoice"
+                                confirm="Are you sure you want to cancel this invoice without waiting for the EDI document to be canceled?"
+                                invisible="not edi_show_force_cancel_button" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
+                            <button name="action_retry_edi_documents_error" type="object" class="oe_link oe_inline" string="Retry" />
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'warning'">
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
+                        </div>
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                        invisible="edi_error_count == 0 or edi_blocking_level != 'info'">
+                        <div class="o_row">
+                            <field name="edi_error_message" />
+                            <button name="%(account_edi.action_open_edi_documents)d" string="⇒ See errors" type="action" class="oe_link" invisible="edi_error_count == 1" />
+                        </div>
+                    </div>
+                </xpath>
+                <xpath expr="//div[@name='journal_div']" position="after">
+                    <field name="edi_state" invisible="not edi_state or state == 'draft'"/>
+                </xpath>
+                <xpath expr="//page[@id='other_tab']" position="after">
+                    <page id="edi_documents"
+                          string="EDI Documents"
+                          name="page_edi_documents"
+                          groups="base.group_no_one"
+                          invisible="not edi_document_ids">
+                        <field name="edi_document_ids">
+                            <list create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
+                                <field name="name"/>
+                                <field name="edi_format_name"/>
+                                <field name="state"/>
+                                <field name="error" column_invisible="True"/>
+                                <field name="blocking_level" column_invisible="True"/>
+                                <button name="action_export_xml"
+                                        type="object"
+                                        class="oe_link oe_inline"
+                                        string="Download"
+                                        groups="base.group_no_one"
+                                        invisible="not error or blocking_level == 'info'"/>
+                            </list>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

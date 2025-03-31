@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.NumericInput">
+        <div t-attf-class="{{props.class}} d-flex input-group" >
+            <button class="btn btn-secondary border" t-on-click="() => this.setValue(this.getValue() - 1)" t-att-disabled="getValue() lte props.min">
+                <i class="fa fa-minus center"/>
+            </button>
+            <div class="form-control border-top border-bottom">
+                <input class="border-0 text-center text-bg-light py-1" type="number"
+                    t-on-focus="ev=>ev.target.select()"
+                    t-att-value="getValue()"
+                    t-att-min="props.min"
+                    t-on-input="(event) => this.setValue(parseInt(event.target.value))" />
+            </div>
+            <button class="btn btn-secondary border" t-on-click="() => this.setValue(this.getValue() + 1)">
+                <i class="fa fa-plus"/>
+            </button>
+        </div>
+    </t>
+</templates>

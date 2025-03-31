@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t
+        t-name="website_slides_survey.SlideUploadCategory"
+        t-inherit="website_slides.SlideUploadCategory"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//canvas[@id='data_canvas']" position="before">
+            <t t-if="props.slideCategory === 'certification'">
+                <SelectMenu
+                    choices="state.choices.certifications" 
+                    value="state.choices.certificationId"
+                    required="true"
+                    onSelect.bind="onCertificationSelect"
+                    togglerClass="'text-dark pe-1'"
+                >
+                    <t t-out="displayCertificationValue"/>
+                </SelectMenu>
+                <span t-if="state.showCertificationRequiredError" class="text-danger">Please select a certification.</span>
+            </t>
+        </xpath>
+    </t>
+</template>

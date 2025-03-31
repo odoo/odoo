@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_product_template_form_inherit_repair" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.repair</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <group name="group_general" position="inside">
+                <field name="create_repair" invisible="type not in ('consu', 'service')"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="product_view_search_catalog" model="ir.ui.view">
+        <field name="name">product.view.search.catalog.inherit.repair</field>
+        <field name="model">product.product</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="product.product_view_search_catalog"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='goods']" position="after">
+                <filter string="In the Repair Order"
+                    invisible="context.get('active_model') != 'stock.move' or
+                                context.get('product_catalog_order_model') != 'repair.order'"
+                    name="products_in_repair"
+                    domain="[('product_catalog_product_is_in_repair', '=', True)]"/>
+                <separator />
+                <filter name="bom_parts" string="BoM Components" domain="[('id', 'in', context.get('catalog_bom_product_ids'))]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

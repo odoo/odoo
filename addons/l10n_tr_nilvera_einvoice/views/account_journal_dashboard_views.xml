@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//kanban" position="inside">
+                    <field name="is_nilvera_journal" invisible="1"/>
+                    <field name="l10n_tr_nilvera_api_key" invisible="1"/>
+                </xpath>
+
+                <xpath expr="//t[@id='account.JournalBodySalePurchase']//div" position="inside">
+                    <t t-if="record.l10n_tr_nilvera_api_key and record.l10n_tr_nilvera_api_key.raw_value">
+                        <t t-if="journal_type == 'sale'">
+                            <div class="w-100">
+                                <a type="object" name="l10n_tr_nilvera_get_message_status" groups="account.group_account_invoice">Fetch Nilvera invoice status</a>
+                            </div>
+                        </t>
+                        <t t-elif="journal_type == 'purchase' and record.is_nilvera_journal.raw_value">
+                            <div class="w-100">
+                                <a type="object" name="l10n_tr_nilvera_get_documents" groups="account.group_account_invoice">Fetch from Nilvera</a>
+                            </div>
+                        </t>
+                    </t>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

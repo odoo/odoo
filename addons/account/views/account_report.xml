@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <record id="account_invoices" model="ir.actions.report">
+            <field name="name">Invoice PDF</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_invoice_with_payments</field>
+            <field name="report_file">account.report_invoice_with_payments</field>
+            <field name="is_invoice_report">True</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" eval="False"/>  <!-- removes the action from the Print menu (forced False value for update) -->
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice')),
+ (4, ref('account.group_account_readonly'))]"/>
+        </record>
+
+        <record id="action_account_original_vendor_bill" model="ir.actions.report">
+            <field name="name">Original Bills</field>
+            <field name="model">account.move</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_original_vendor_bill</field>
+            <field name="report_file">account.report_original_vendor_bill</field>
+            <field name="attachment">'original_vendor_bill.pdf'</field>
+            <field name="attachment_use">True</field>
+            <field name="domain" eval="[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('message_main_attachment_id', '!=', False)]"/>
+        </record>
+
+        <record id="account_invoices_without_payment" model="ir.actions.report">
+            <field name="name">PDF without Payment</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_invoice</field>
+            <field name="report_file">account.report_invoice</field>
+            <field name="print_report_name">(object._get_report_base_filename())</field>
+            <field name="attachment"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="domain" eval="[('move_type', '!=', 'entry')]"/>
+        </record>
+
+        <record id="action_report_payment_receipt" model="ir.actions.report">
+            <field name="name">Payment Receipt</field>
+            <field name="model">account.payment</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_payment_receipt</field>
+            <field name="report_file">account.report_payment_receipt</field>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- The top margin on the default A4 format is way too big -->
+        <record id="paperformat_euro_bank_statement" model="report.paperformat">
+            <field name="name">A4 - statement</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">20</field>
+            <field name="margin_bottom">32</field>
+            <field name="margin_left">7</field>
+            <field name="margin_right">7</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">15</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="action_report_account_statement" model="ir.actions.report">
+            <field name="name">Statement</field>
+            <field name="model">account.bank.statement</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_statement</field>
+            <field name="report_file">account.report_statement</field>
+            <field name="paperformat_id" ref="account.paperformat_euro_bank_statement"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <record id="action_report_account_hash_integrity" model="ir.actions.report">
+            <field name="name">Hash integrity result PDF</field>
+            <field name="model">res.company</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_hash_integrity</field>
+            <field name="report_file">account.report_hash_integrity</field>
+        </record>
+
+    </data>
+</odoo>

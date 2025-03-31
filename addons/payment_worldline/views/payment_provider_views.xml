@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">Worldline Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position='inside'>
+                <group invisible="code != 'worldline'">
+                    <field
+                        name="worldline_pspid"
+                        string="PSPID"
+                        required="code == 'worldline' and state != 'disabled'"
+                    />
+                    <field
+                        name="worldline_api_key"
+                        string="API Key"
+                        required="code == 'worldline' and state != 'disabled'"
+                    />
+                    <field
+                        name="worldline_api_secret"
+                        string="API Secret"
+                        required="code == 'worldline' and state != 'disabled'"
+                        password="True"
+                    />
+                    <field
+                        name="worldline_webhook_key"
+                        string="Webhook Key"
+                        required="code == 'worldline' and state != 'disabled'"
+                    />
+                    <field
+                        name="worldline_webhook_secret"
+                        string="Webhook Secret"
+                        required="code == 'worldline' and state != 'disabled'"
+                        password="True"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

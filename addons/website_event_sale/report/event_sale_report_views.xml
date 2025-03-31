@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_sale_report_view_search" model="ir.ui.view">
+        <field name="name">event.sale.report.view.search.inherit.website</field>
+        <field name="model">event.sale.report</field>
+        <field name="inherit_id" ref="event_sale.event_sale_report_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Published Events" name="is_published" domain="[('is_published', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_tree_account_edi_document" model="ir.ui.view">
+            <field name="name">Account.edi.document.list</field>
+            <field name="model">account.edi.document</field>
+            <field name="arch" type="xml">
+                <list create="false" delete="false" edit="false"
+                      decoration-info="blocking_level == 'info'"
+                      decoration-warning="blocking_level == 'warning'"
+                      decoration-danger="blocking_level == 'error'">
+                    <field name="edi_format_name" />
+                    <field name="error" />
+                    <field name="blocking_level" column_invisible="True" />
+                </list>
+            </field>
+        </record>
+    </data>
+</odoo>

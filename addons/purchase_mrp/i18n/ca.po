@@ -1,0 +1,138 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_mrp
+# 
+# Translators:
+# Josep Anton Belchi, 2024
+# Manel Fernandez Ramirez <manelfera@outlook.com>, 2024
+# CristianCruzParra, 2024
+# Ivan Espinola, 2024
+# marcescu, 2024
+# Quim - coopdevs <quim.rebull@coopdevs.org>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Quim - coopdevs <quim.rebull@coopdevs.org>, 2024\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">Fabricat</span>"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Comprat</span>"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "Informe de visió general del LDM"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Llista de material"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr "Línia de Llista de Materials"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+msgid "Components cost share have to be positive or equals to zero."
+msgstr "El cost compartit dels components ha de ser positiu o igual a zero."
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_bom_line__cost_share
+msgid "Cost Share (%)"
+msgstr "Cost compartit (%)"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr "Recompte d'hores extres"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr "Comptador del PO generat"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_account_move_line
+msgid "Journal Item"
+msgstr "Apunt comptable"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_report_mrp_report_mo_overview
+msgid "MO Overview Report"
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Ordre de fabricació"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/purchase.py:0
+msgid "Manufacturing Source of %s"
+msgstr "Ordre de producció %s"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/stock_move.py:0
+msgid ""
+"Odoo is not able to generate the anglo saxon entries. The total valuation of"
+" %s is zero."
+msgstr ""
+"Odoo no és capaç de generar les entrades de saxons anglòfons. La valoració "
+"total%s és zero"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "Comanda de compra"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Línia de la comanda de compra"
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+msgid "Purchase Order generated from %s"
+msgstr "Ordre de compra generat a partir de %s"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_stock_move
+msgid "Stock Move"
+msgstr "Moviment d'estoc"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,help:purchase_mrp.field_mrp_bom_line__cost_share
+msgid ""
+"The percentage of the component repartition cost when purchasing a kit.The "
+"total of all components' cost have to be equal to 100."
+msgstr ""
+"El percentatge del cost de repartició del component quan es compra un kit.El"
+" cost total de tots els components ha de ser igual a 100."
+
+#. module: purchase_mrp
+#. odoo-python
+#: code:addons/purchase_mrp/models/mrp_bom.py:0
+msgid "The total cost share for a BoM's component have to be 100"
+msgstr "La quota de cost total per a un component de BoM ha de ser 100"

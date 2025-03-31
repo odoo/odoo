@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="challenge_line_list_view" model="ir.ui.view">
+        <field name="name">Challenge line list</field>
+        <field name="model">gamification.challenge.line</field>
+        <field name="arch" type="xml">
+            <list string="Challenge Lines" >
+                <field name="definition_id"/>
+                <field name="target_goal" string="Target"/>
+            </list>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.AttachmentList" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='nonImageMain']" position="replace">
+            <t t-if="attachment.voice" class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 bg-100">
+                <VoicePlayer attachment="attachment"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-AttachmentCard')]" position="attributes">
+            <attribute name="t-attf-class" remove="bg-300" add="{{ attachment.voice ? 'bg-100' : 'bg-300'}}"/>
+            <attribute name="t-on-click">() => !attachment.voice ? this.fileViewer.open(attachment, props.attachments) : ""</attribute>
+        </xpath>
+        <xpath expr="//button[hasclass('o-mail-AttachmentCard-unlink')]" position="attributes">
+            <attribute name="t-attf-class">{{ env.inComposer ? 'o-inComposer position-absolute btn-primary transition-base' : (attachment.voice ? 'bg-100' : 'bg-300') }}</attribute>
+        </xpath>
+        <xpath expr="//button[@title='Download']" position="attributes">
+            <attribute name="t-attf-class" remove="bg-300" add="{{ attachment.voice ? 'bg-100' : 'bg-300'}}"/>
+        </xpath>
+    </t>
+</templates>

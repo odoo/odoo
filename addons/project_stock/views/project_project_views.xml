@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_embedded_action_from_wh" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">80</field>
+        <field name="name">From WH</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_deliveries</field>
+        <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <record id="project_embedded_action_to_wh" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">90</field>
+        <field name="name">To WH</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_receipts</field>
+        <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+
+    <record id="project_embedded_action_all_pickings" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">92</field>
+        <field name="name">Stock Moves</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_all_pickings</field>
+        <field name="groups_ids" eval="[(4, ref('stock.group_stock_user'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record model="ir.ui.view" id="stock_package_type_form">
+    <field name="name">stock.package.type.form</field>
+    <field name="model">stock.package.type</field>
+    <field name="arch" type="xml">
+        <form string="Package Type">
+            <sheet>
+                <div class="oe_button_box" name="button_box"/>
+                <label for="name"/>
+                <h1>
+                    <field name="name"/>
+                </h1>
+                <group name="delivery">
+                    <group>
+                        <label for="length_uom_name" string="Size"/>
+                        <div class="o_row" name="size">
+                            <field name="packaging_length" placeholder="Length"/>
+                            <span>&#215;</span>
+                            <field name="width" placeholder="Width"/>
+                            <span>&#215;</span>
+                            <field name="height" placeholder="Height"/>
+                            <span><field name="length_uom_name" help="Size: Length &#215; Width &#215; Height"/></span>
+                        </div>
+                        <label for="base_weight"/>
+                        <div class="o_row" name="base_weight">
+                            <field name="base_weight"/>
+                            <span><field name="weight_uom_name"/></span>
+                        </div>
+                        <label for="max_weight"/>
+                        <div class="o_row" name="max_weight">
+                            <field name="max_weight"/>
+                            <span><field name="weight_uom_name"/></span>
+                        </div>
+                        <field name="barcode"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+                <group name="storage_categories" groups="stock.group_stock_multi_locations">
+                    <group>
+                        <field name="storage_category_capacity_ids" context="{'default_package_type_id': id}">
+                            <list editable="bottom">
+                                <field name="storage_category_id"/>
+                                <field name="quantity"/>
+                            </list>
+                        </field>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="stock_package_type_tree">
+    <field name="name">stock.package.type.list</field>
+    <field name="model">stock.package.type</field>
+    <field name="arch" type="xml">
+        <list string="Package Types">
+            <field name="sequence" widget="handle"/>
+            <field name="name"/>
+            <field name="height"/>
+            <field name="width"/>
+            <field name="packaging_length"/>
+            <field name="max_weight"/>
+            <field name="barcode" optional="hide"/>
+        </list>
+    </field>
+</record>
+
+<record id="action_package_type_view" model="ir.actions.act_window">
+    <field name="name">Package Types</field>
+    <field name="res_model">stock.package.type</field>
+    <field name="view_ids" eval="[(5, 0, 0),
+        (0, 0, {'view_mode': 'list', 'view_id': ref('stock.stock_package_type_tree')}),
+        (0, 0, {'view_mode': 'form', 'view_id': ref('stock.stock_package_type_form')})]"/>
+</record>
+
+<menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_config_settings" groups="stock.group_stock_manager" sequence="50"/>
+<menuitem id="menu_packaging_types" name="Package Types" parent="menu_delivery" action="action_package_type_view" groups="stock.group_tracking_lot"/>
+
+</odoo>

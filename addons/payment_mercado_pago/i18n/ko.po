@@ -1,0 +1,222 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_mercado_pago
+# 
+# Translators:
+# Wil Odoo, 2024
+# Daye Jeong, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Daye Jeong, 2024\n"
+"Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Access Token"
+msgstr "사용 권한 토큰"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"Call your card issuer to activate your card or use another payment method. "
+"The phone number is on the back of your card."
+msgstr "카드 발급사에 전화하여 카드를 활성화하거나 다른 결제 방법을 사용하세요. 전화번호는 카드 뒷면에 나와 있습니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check expiration date."
+msgstr "만료일을 확인합니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the card number."
+msgstr "카드 번호를 확인합니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the card security code."
+msgstr "카드 보안 코드를 확인합니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the data."
+msgstr "데이터를 확인합니다."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
+msgid "Code"
+msgstr "코드"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "API 연결을 설정할 수 없습니다."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
+msgid "Mercado Pago"
+msgstr "Mercado Pago"
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
+msgid "Mercado Pago Access Token"
+msgstr "Mercado Pago 액세스 토큰"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "%s 참조와 일치하는 거래 항목이 없습니다."
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_provider
+msgid "Payment Provider"
+msgstr "결제대행업체"
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "지불 거래"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Payment was not processed, use another card or contact issuer."
+msgstr "결제가 처리되지 않은 경우, 다른 카드를 사용하거나 발급 회사에 문의하세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with invalid status: %s"
+msgstr "잘못된 상태의 데이터를 수신했습니다: %s"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing payment id."
+msgstr "결제 ID가 누락된 데이터가 수신되었습니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr "참조가 누락된 데이터가 수신되었습니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing status."
+msgstr "누락된 상태의 데이터가 수신되었습니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. Mercado Pago gave us the following "
+"information: '%(error_message)s' (code %(error_code)s)"
+msgstr ""
+"API와의 통신에 실패했습니다. Mercado Pago 에서 다음 정보를 확인했습니다: '%(error_message)s'(코드 "
+"%(error_code)s)."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr "응답이 비어 있어 API와의 통신에 실패했습니다. 액세스 토큰을 확인해 주세요."
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "이 결제대행업체의 기술 코드입니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "This payment method does not process payments in installments."
+msgstr "이 결제 방법은 할부 결제를 지원하지 않습니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We are processing your payment. Don't worry, in less than 2 business days, "
+"we will notify you by e-mail if your payment has been credited."
+msgstr "현재 결제를 처리 중입니다. 영업일 기준 2일 이내에 결제 금액이 입금되면 이메일로 알려드리니 안심하세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We are processing your payment. Don't worry, less than 2 business days we "
+"will notify you by e-mail if your payment has been credited or if we need "
+"more information."
+msgstr ""
+"현재 결제를 처리 중입니다. 영업일 기준 2일 이내에 결제 금액이 입금되었는지 또는 추가 정보가 필요한지 여부에 대해 이메일로 알려드리니"
+" 안심하세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We were unable to process your payment, please check your card information."
+msgstr "결제를 처리할 수 없습니다. 카드 정보를 확인해 주세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "We were unable to process your payment, please use another card."
+msgstr "결제를 처리할 수 없습니다. 다른 카드를 사용해 주세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"You have already made a payment for that value. If you need to pay again, "
+"use another card or another payment method."
+msgstr "이미 해당 금액을 결제했습니다. 다시 결제해야 하는 경우 다른 카드나 다른 결제 방법을 사용하세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"You have reached the limit of allowed attempts. Choose another card or other"
+" means of payment."
+msgstr "허용된 시도 횟수를 초과했습니다. 다른 카드 또는 다른 결제 수단을 선택해 주세요."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "You must authorize the payment with this card."
+msgstr "이 카드로 결제를 승인해야 합니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Your card has not enough funds."
+msgstr "카드의 잔액이 부족합니다."
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"Your payment has been credited. In your summary you will see the charge as a"
+" statement descriptor."
+msgstr "결제 금액이 입금되었습니다. 요약에 청구 금액이 명세서 설명자로 표시됩니다."

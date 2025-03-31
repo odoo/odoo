@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+    <!-- Purchase Orders -->
+
+    <record model="ir.actions.act_window" id="action_purchase_requisition_to_so">
+        <field name="name">Request for Quotation</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">form,list</field>
+        <field name="domain">[('requisition_id','=',active_id)]</field>
+        <field name="context">{
+            "default_requisition_id":active_id,
+            }
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_purchase_requisition_list">
+        <field name="name">Request for Quotations</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('requisition_id','=',active_id)]</field>
+        <field name="context">{
+            "default_requisition_id":active_id,
+            }
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_purchase_requisition_form">
+        <field name="name">purchase.requisition.form</field>
+        <field name="model">purchase.requisition</field>
+        <field name="arch" type="xml">
+            <form string="Purchase Agreements">
+            <field name="company_id" invisible="1"/>
+            <field name="currency_id" invisible="1"/>
+            <field name="active" invisible="1"/>
+            <header>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                <button name="%(action_purchase_requisition_to_so)d" type="action"
+                    string="New Quotation" class="btn-primary"
+                    context="{'default_currency_id': currency_id, 'default_user_id': user_id}"
+                    invisible="state != 'confirmed'"/>
+                <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object" class="btn-primary"/>
+                <button name="action_done" invisible="state != 'confirmed' or requisition_type == 'purchase_template'" string="Close" type="object" class="btn-primary"/>
+                <button name="action_draft" invisible="state != 'cancel'" string="Reset to Draft" type="object"/>
+                <button name="action_cancel" invisible="state not in ('draft', 'confirmed')" string="Cancel" type="object"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" invisible="requisition_type == 'purchase_template'"/>
+            </header>
+            <sheet>
+                <div class="oe_button_box" name="button_box">
+                    <button name="%(action_purchase_requisition_list)d" type="action" class="oe_stat_button" icon="fa-list-alt"
+                        invisible="state == 'draft'" context="{'default_currency_id': currency_id}">
+                        <field name="order_count" widget="statinfo" string="RFQs/Orders"/>
+                    </button>
+                </div>
+                <div class="oe_title">
+                    <label for="name" class="oe_inline"/>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="vendor_id" context="{'res_partner_search_mode': 'supplier'}" readonly="state in ['confirmed', 'done'] and requisition_type == 'blanket_order'" required="requisition_type == 'blanket_order'"/>
+                        <field name="user_id" string="Buyer" readonly="state != 'draft'" domain="[('share', '=', False)]"/>
+                        <field name="requisition_type" readonly="state != 'draft'" options="{'no_create': True}"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                    </group>
+                    <group>
+                        <label for="date_start" string="Agreement Validity" invisible="requisition_type == 'purchase_template'"/>
+                        <div class="o_row" invisible="requisition_type == 'purchase_template'">
+                            <span><strong>From</strong></span>
+                            <field name="date_start" widget="date" readonly="state not in ('draft', 'confirmed')"/>
+                            <span><strong>to</strong></span>
+                            <field name="date_end" widget="date" readonly="state not in ('draft', 'confirmed')"/>
+                        </div>
+                        <field name="reference" placeholder="e.g. PO0025"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" readonly="state != 'draft'"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Products" name="products">
+                        <field name="line_ids" readonly="state == 'done'">
+                            <list string="Products" editable="bottom">
+                                <field name="product_id"
+                                       domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]"/>
+                                <field name="product_description_variants" invisible="product_description_variants == ''"/>
+                                <field name="product_qty"/>
+                                <field name="qty_ordered" optional="show" column_invisible="parent.requisition_type == 'purchase_template'"/>
+                                <field name="product_uom_category_id" column_invisible="True"/>
+                                <field name="product_uom_id" string="UoM" groups="uom.group_uom" optional="show" required="product_id"/>
+                                <field name="analytic_distribution" widget="analytic_distribution"
+                                       optional="hide"
+                                       groups="analytic.group_analytic_accounting"
+                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
+                                <field name="price_unit"/>
+                            </list>
+                            <form string="Products">
+                                <group>
+                                    <field name="product_id"
+                                           domain="[('purchase_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" />
+                                    <field name="product_qty"/>
+                                    <field name="qty_ordered"/>
+                                    <field name="product_uom_category_id" invisible="1"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
+                                    <field name="analytic_distribution" widget="analytic_distribution"
+                                           groups="analytic.group_analytic_accounting"
+                                           options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                </group>
+                            </form>
+                        </field>
+                        <separator string="Terms and Conditions"/>
+                        <field name="description" class="oe-bordered-editor"/>
+                    </page>
+                </notebook>
+            </sheet>
+            <chatter/>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_purchase_requisition_tree">
+        <field name="name">purchase.requisition.list</field>
+        <field name="model">purchase.requisition</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Agreements" sample="1">
+                <field name="message_needaction" column_invisible="True"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="vendor_id" optional="show"/>
+                <field name="requisition_type" optional="show"/>
+                <field name="user_id" optional="show" widget='many2one_avatar_user'/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                <field name="date_start" optional="show"/>
+                <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
+                <field name="reference" optional="show"/>
+                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                <field name="activity_exception_decoration" widget="activity_exception"/>
+            </list>
+      </field>
+    </record>
+
+    <record id="view_purchase_requisition_kanban" model="ir.ui.view">
+        <field name="name">purchase.requisition.kanban</field>
+        <field name="model">purchase.requisition</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex mb-1">
+                            <field name="name" class="fw-bolder fs-5"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'done': 'success', 'close': 'danger'}}" readonly="1" class="ms-auto"/>
+                        </div>
+                        <field name="requisition_type" class="text-muted"/>
+                        <footer>
+                            <field name="vendor_id"/>
+                            <field name="user_id" widget="many2one_avatar_user" class="ms-auto"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_purchase_requisition_filter" model="ir.ui.view">
+            <field name="name">purchase.requisition.list.select</field>
+            <field name="model">purchase.requisition</field>
+            <field name="arch" type="xml">
+                <search string="Search Purchase Agreements">
+                    <field name="vendor_id"/>
+                    <field name="name" string="Reference" filter_domain="['|', ('name', 'ilike', self), ('reference', 'ilike', self)]"/>
+                    <field name="user_id"/>
+                    <field name="product_id"/>
+                    <filter string="My Agreements" name="my_agreements" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Blanket Orders" name="blanket_order" domain="[('requisition_type', '=', 'blanket_order')]"/>
+                    <filter string="Purchase Templates" name="purchase_template" domain="[('requisition_type', '=', 'purchase_template')]"/>
+                    <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" help="New Agreements"/>
+                    <filter string="Done" name="done" domain="[('state', '=', 'done')]"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                    <filter invisible="1" string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                        <filter string="Ordering Date" name="date_start" domain="[]" context="{'group_by': 'date_start'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+    <record model="ir.actions.act_window" id="action_purchase_requisition">
+        <field name="name">Purchase Agreements</field>
+        <field name="res_model">purchase.requisition</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_purchase_requisition_filter"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Start a new purchase agreement
+          </p><p>
+            An example of a purchase agreement is a blanket order.
+          </p><p>
+            For a blanket order, you can record an agreement for a specific period
+            (e.g. a year) and you order products within this agreement to benefit
+            from the negotiated prices.
+          </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_purchase_requisition_pro_mgt"
+        sequence="10"
+        parent="purchase.menu_procurement_management"
+        action="action_purchase_requisition"/>
+
+    </data>
+</odoo>

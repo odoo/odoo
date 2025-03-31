@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_wizard_preview" inherit_id="web.report_invoice_wizard_preview">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="din5008_document_information">
+                <div class="information_block" t-if="company and company._name=='base.document.layout'">
+                    <table>
+                        <tr>
+                            <td>Invoice No.:</td>
+                            <td>INV/<t t-out="company.l10n_din5008_invoice_date.year"/>/12345</td>
+                        </tr>
+                        <tr>
+                            <td>Invoice Date:</td>
+                            <td><t t-out="company.l10n_din5008_invoice_date" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Due Date:</td>
+                            <td><t t-out="company.l10n_din5008_due_date" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Delivery Date:</td>
+                            <td><t t-out="company.l10n_din5008_delivery_date" t-options="{'widget': 'date'}"/></td>
+                        </tr>
+                        <tr>
+                            <td>Reference:</td>
+                            <td>SO/2021/45678</td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

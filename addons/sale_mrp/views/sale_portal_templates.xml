@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="sale_order_portal_content_inherit_sale_mrp"
+        name="Orders MOs"
+        inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//div[@id='informations']" position="inside">
+            <t t-set="mrp_productions" t-value="sale_order.mrp_production_ids"/>
+            <t t-if="mrp_productions">
+                <div>
+                    <strong>Manufacturing Orders</strong>
+                </div>
+                <div>
+                    <t t-foreach="mrp_productions" t-as="mo">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div>
+                                <span t-out="mo.name"/>
+                                <div class="small d-lg-inline-block ms-3">
+                                    Date:
+                                    <span class="text-muted"
+                                        t-field="mo.date_finished"
+                                        t-options="{'date_only': True}"/>
+                                    <span t-if="mo.state in ['draft', 'confirmed', 'progress', 'to_close']"
+                                        class="text-muted"
+                                        t-field="mo.date_finished"
+                                        t-options="{'date_only': True}"/>
+                                </div>
+                            </div>
+                            <span t-if="mo.state in ['to_close', 'done']"
+                                class="small badge text-bg-success orders_label_text_align">
+                                <i class="fa fa-fw fa-check"/> <b>Manufactured</b>
+                            </span>
+                            <span t-elif="mo.state == 'cancel'"
+                                class="small badge text-bg-danger orders_label_text_align">
+                                <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
+                            </span>
+                            <span t-elif="mo.state in ['confirmed']"
+                                class="small badge text-bg-info orders_label_text_align">
+                                <i class="fa fa-fw fa-clock-o"/> <b>Confirmed</b>
+                            </span>
+                            <span t-elif="mo.state in ['progress']"
+                                class="small badge text-bg-warning orders_label_text_align">
+                                <i class="fa fa-fw fa-clock-o"/> <b>In progress</b>
+                            </span>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

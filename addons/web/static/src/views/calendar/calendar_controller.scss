@@ -1,0 +1,132 @@
+// Variables
+$o-cw-color-today-accent: $o-danger;
+$o-cw-filter-avatar-size: 20px;
+
+// Animations
+@keyframes backgroundfade {
+    from {
+        background-color: rgba($info, 0.5);
+    }
+    to {
+        background-color: rgba($info, 0.1);
+    }
+}
+
+.o_calendar_container {
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-columns: 1fr auto auto;
+
+    .o_calendar_header {
+        grid-area: 1 / 1 / 2 / 3;
+    }
+
+    .o_sidebar_toggler {
+        grid-area: 1 / 3;
+    }
+
+    .o_calendar_wrapper {
+        grid-area: 3 / 1 / 3 / 4;
+
+        &:has(.fc-popover) {
+            overflow: auto !important;
+
+            @include media-breakpoint-down(md) {
+                .o_actionswiper_overflow_container {
+                    overflow: visible !important;
+                }
+            }
+        }
+    }
+}
+
+.o_calendar_sidebar_container {
+    --Avatar-size: #{$o-cw-filter-avatar-size};
+
+    flex: 0 0 auto;
+
+    .o_calendar_sidebar {
+        @include o-webclient-padding($top: $o-horizontal-padding/2);
+        @include media-breakpoint-up(xl){
+            width: 210px;
+        }
+
+        .o_datetime_picker {
+            --DateTimePicker__Cell-size-md: 1.8rem;
+            @include media-breakpoint-up(xl){
+                --DateTimePicker__Cell-size-md: 1.5rem;
+            }
+            padding-right: 0 !important;
+            padding-left: 0 !important;
+
+            .o_day_of_week_cell {
+                --background-color: transparent;
+                border: none !important;
+            }
+
+            .o_cell_md {
+                font-size: .75rem;
+            }
+        }
+
+        // sync buttons are only displayed on calendar.event views
+        .o_calendar_sync {
+            padding-bottom: 0.5em;
+        }
+    }
+
+    .o_calendar_filter {
+
+        .o_calendar_filter_items_checkall,
+        .o_calendar_filter_item {
+
+            button.o_remove {
+                transform: translate(100%, -50%);
+            }
+
+            &:hover {
+                button.o_remove {
+                    transform: translate(0%, -50%);
+                }
+            }
+        }
+
+        .o_field_many2one {
+            margin-top: 1rem;
+            width: 100%;
+        }
+    }
+}
+
+.modal {
+    .o_attendee_head {
+        width: 32px;
+        margin-right: 5px;
+    }
+}
+
+.o_dashboard {
+    .o_calendar_container .o_calendar_sidebar_container {
+        display: none;
+    }
+}
+
+//  Print
+@include media-only(print) {
+    html:has(.o_action_manager .o_calendar_view.o_view_controller.o_action) {
+        @extend %o-html-layout-fill;
+
+        .o_calendar_renderer {
+            .fc-theme-standard .fc-scrollgrid {
+                border-top: 0;
+            }
+
+            .o_actionswiper, .o_actionswiper_overflow_container, .o_actionswiper_target_container, .o_calendar_widget, .fc .fc-daygrid-body, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+                height: 100% !important;
+            }
+
+            .fc-col-header, .fc-daygrid-body, .fc-scrollgrid-sync-table {
+                width: 100% !important;
+            }
+        }
+    }
+}

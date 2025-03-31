@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="stock.GenerateSerials">
+        <button class="btn btn-link" t-on-click="openDialog">Generate Serials/Lots</button>
+    </t>
+    <t t-name="stock.ImportLots">
+        <button class="btn btn-link" t-on-click="openDialog">Import Serials/Lots</button>
+    </t>
+    <t t-name="stock.generate_serial_dialog">
+        <Dialog size="size" title="title" withBodyPadding="false">
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="_onGenerate">Generate</button>
+                <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                    Discard
+                </button>
+            </t>
+            <div class="o_form_view o_form_nosheet">
+                <t t-if="props.mode === 'generate'">
+                    <div class="grid o_inner_group">
+                        <div class="d-flex d-sm-contents">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="next_serial_0">
+                                    <t t-if="props.move.data.has_tracking === 'lot'">First Lot Number</t>
+                                    <t t-else="">First Serial Number</t>
+                                </label>
+                            </div>
+                            <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                                <div name="next_serial" class="o_field_widget o_field_char">
+                                    <input placeholder="e.g. LOT-PR-00012" class="o_input" t-ref="nextSerial" id="next_serial_0" type="text"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex d-sm-contents">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="next_serial_count_0">
+                                    <t t-if="props.move.data.has_tracking === 'lot'">Quantity per Lot</t>
+                                    <t t-else="">Number of SN</t>
+                                </label>
+                            </div>
+                            <div class="o_row">
+                                <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                                    <div name="next_serial_count" class="o_field_widget o_field_integer">
+                                        <input inputmode="numeric" t-ref="nextSerialCount" class="o_input" id="next_serial_count_0" type="text"/>
+                                    </div>
+                                </div>
+                                <span t-if="props.move.data.has_tracking === 'lot'" t-esc="props.move.data.product_uom[1]"/>
+                            </div>
+                        </div>
+                        <div t-if="props.move.data.has_tracking === 'lot'" class="d-flex d-sm-contents">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="total_received_0">Quantity Received</label>
+                            </div>
+                            <div class="o_row">
+                                <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                                    <div name="total_received" class="o_field_widget o_field_integer">
+                                        <input inputmode="numeric" t-ref="totalReceived" class="o_input" id="total_received_0" type="text"/>
+                                    </div>
+                                </div>
+                                <span t-esc="props.move.data.product_uom[1]"/>
+                            </div>
+                        </div>
+                        <div class="d-flex d-sm-contents">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="keep_lines_0">Keep current lines</label>
+                            </div>
+                            <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                                <div name="keep_lines">
+                                    <input type="checkbox" t-ref="keepLines" id="keep_lines_0"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="props.mode === 'import'" class="d-flex">
+                    <div class="grid o_inner_group">
+                        <div class="d-flex">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="next_serial_0">
+                                    <t t-if="props.move.data.has_tracking==='lot'">Lot numbers</t>
+                                    <t t-else="">Serial numbers</t>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                            <div name="next_serial" class="o_field_widget o_field_char">
+                                <textarea
+                                    placeholder="Write one lot/serial name per line, followed by the quantity."
+                                    class="o_input" t-ref="lots" id="next_serial_0" type="text"/>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="o_cell flex-grow-0 flex-sm-grow-0 text-900 pe-3">
+                                <label class="o_form_label" for="keep_lines_0">Keep current lines</label>
+                            </div>
+                        </div>
+                        <div class="o_cell flex-grow-1 flex-sm-grow-0">
+                            <div name="keep_lines">
+                                <input type="checkbox" t-ref="keepLines" id="keep_lines_0"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+</templates>

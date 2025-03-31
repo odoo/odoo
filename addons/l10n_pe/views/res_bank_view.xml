@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record model="ir.ui.view" id="view_res_bank_inherit_l10n_pe_bank">
+        <field name="name">view.res.bank.inherit.l10n_pe_bank</field>
+        <field name="model">res.bank</field>
+        <field name="inherit_id" ref="base.view_res_bank_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bic']" position="after">
+                <field name="country_code" invisible="1"/>
+                <field name="l10n_pe_edi_code" invisible="country_code != 'PE'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

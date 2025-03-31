@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_generate_multi_wizard_view_form" model="ir.ui.view">
+        <field name="model">hr.leave.generate.multi.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate time off for multiple employees">
+                <group>
+                    <group>
+                        <field name="holiday_status_id" domain="[('requires_allocation', '=', 'no')]"/>
+                        <field name="allocation_mode" string="Mode"/>
+                        <field name="employee_ids" invisible="allocation_mode != 'employee'" required="allocation_mode == 'employee'" widget="many2many_avatar_user"/>
+                        <field name="company_id" invisible="allocation_mode != 'company'"/>
+                        <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>
+                        <field name="category_id" invisible="allocation_mode != 'category'" required="allocation_mode == 'category'"/>
+                        <label for="date_from" string="Dates"/>
+                        <div class="o_row">
+                            <field
+                                name="date_from"
+                                widget="daterange"
+                                options="{'end_date_field': 'date_to'}"/>
+                            <field name="date_to" invisible="1" />
+                        </div>
+                        <field name="name" widget="text" placeholder="e.g. Extra recuperation, Company unavailability, ..."/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_time_off" type="object" class="btn-primary" string="Generate Time Off" accesskey="c"/>
+                    <button special="cancel" string="Discard" close="1" accesskey="j" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_leave_generate_multi_wizard" model="ir.actions.act_window">
+        <field name="name">Multiple Requests</field>
+        <field name="res_model">hr.leave.generate.multi.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr_holidays.model_hr_leave"/>
+    </record>
+
+</odoo>

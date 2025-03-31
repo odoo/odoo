@@ -1,0 +1,19 @@
+// ------- Graph renderer -------
+.o_graph_view {
+    --ControlPanel-border-bottom: none;
+
+    .o_cp_bottom_left {
+        display: block;
+    }
+
+    :not(.o-dashboard-action) > & .o_graph_canvas_container {
+        min-height: 50vh;
+    }
+}
+
+// ------- Sample mode -------
+.o_graph_view .o_view_sample_data {
+    .o_graph_canvas_container {
+        @include o-sample-data-disabled;
+    }
+}

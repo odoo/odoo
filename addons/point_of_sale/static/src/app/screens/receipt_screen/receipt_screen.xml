@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ReceiptScreen">
+        <div class="receipt-screen screen h-100 bg-100">
+            <div class="screen-content d-flex flex-column h-100">
+                <div class="default-view d-flex flex-lg-row flex-column overflow-hidden flex-grow-1">
+                    <div class="actions d-flex flex-column justify-content-between flex-lg-grow-1 flex-grow-0 flex-shrink-1 flex-basis-0 border-end">
+                        <div class="o_payment_successful d-flex flex-column w-100 w-xxl-75 p-3 pt-xxl-5 mx-auto">
+                            <div class="d-flex flex-column align-items-center p-1 p-lg-3 border border-success rounded-3 bg-success-subtle text-success fs-3">
+                                <i t-if="!ui.isSmall" class="fa fa-fw fa-2x fa-check-circle"/>
+                                <span class="fs-3 fw-bolder">Payment Successful</span>
+                                <div class="fs-4 fw-bold d-flex justify-content-center align-items-center gap-2">
+                                    <span t-esc="orderAmountPlusTip" />
+                                    <span t-if="this.currentOrder.nb_print === 0" class="edit-order-payment badge bg-success text-white rounded cursor-pointer pt-1" t-on-click="() => this.pos.orderDetails(this.currentOrder)">Edit Payment</span>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="receipt-options d-flex flex-column gap-2">
+                                <div class="d-flex gap-1">
+                                    <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doFullPrint.call()">
+                                        <i t-attf-class="fa {{doFullPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Full Receipt
+                                    </button>
+                                    <button t-if="pos.config.basic_receipt" class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doBasicPrint.call()">
+                                        <i t-attf-class="fa {{doBasicPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Basic Receipt
+                                    </button>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="d-flex">
+                                        <input type="text" class="flex-grow-1 border p-3 bg-view pe-5 border-end-0 rounded-start-2 position-relative send-receipt-email-input" t-attf-placeholder="e.g. john.doe@mail.com" t-model="state.email" />
+                                        <div>
+                                            <button t-att-style="`width: ${this.ui.isSmall ? '4rem' : '8rem'}`" class="btn btn-primary btn-lg lh-lg rounded-start-0 h-100" t-att-disabled="!isValidEmail" t-on-click="() => this.actionSendReceiptOnEmail()">
+                                                <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-paper-plane'}}" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-1">
+                                        <input t-if="showPhoneInput()" type="text" class="flex-grow-1 border p-3 bg-view pe-5 rounded-2 position-relative send-receipt-phone-input" t-attf-placeholder="e.g. 0123456789" t-model="state.phone" />
+                                        <div class="sending-receipt-management d-flex gap-1" />
+                                    </div>
+                                </div>
+                                <div class="notice text-center">
+                                    <t t-set="usedMethod" t-value="sendReceipt.lastArgs?.[0]?.name" />
+                                    <div t-if="sendReceipt.status === 'loading'" class="text-info">Sending <t t-esc="usedMethod"/> in progress</div>
+                                    <div t-if="sendReceipt.status === 'success'" class="text-success"><t t-esc="usedMethod"/> is sent successfully</div>
+                                    <div t-if="sendReceipt.status === 'error'" class="text-danger">Sending <t t-esc="usedMethod"/> failed. Please try again</div>
+                                </div>
+                            </div>
+                        </div>
+                        <t t-set="splittedOrder" t-value="this.currentOrder.originalSplittedOrder and !this.currentOrder.originalSplittedOrder.finalized"/>
+                        <div id="action_btn_desktop" t-if="!ui.isSmall" class="validation-buttons d-flex w-100 gap-2 p-2 sticky-bottom">
+                            <button class="button next validation btn btn-primary btn-lg w-100 py-4 lh-lg" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
+                                New Order
+                            </button>
+                        </div>
+                    </div>
+                    <div class="pos-receipt-container d-flex flex-grow-1 flex-lg-grow-0 w-100 w-lg-50 user-select-none justify-content-center bg-200 text-center overflow-hidden">
+                        <div t-att-class="{ 'w-50': !ui.isSmall }" class="d-inline-block m-2 m-lg-3 p-3 border rounded bg-view text-start overflow-y-auto">
+                            <OrderReceipt data="pos.orderExportForPrinting(pos.get_order())" formatCurrency="env.utils.formatCurrency" />
+                        </div>
+                    </div>
+                </div>
+                <div  id="action_btn_mobile" t-if="ui.isSmall" class="switchpane d-flex gap-2 p-2">
+                    <div class="btn-switchpane validation-button btn btn-primary btn-lg py-3 flex-fill lh-lg" t-att-class="{ highlight: !locked }" t-if="!splittedOrder" t-on-click="orderDone" name="done">
+                                New Order
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

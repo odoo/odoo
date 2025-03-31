@@ -1,0 +1,32 @@
+.o_stock_forecasted_page {
+    .o_priority {
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        &.o_priority_star {
+            background-color: transparent;
+            font-size: 1.35em;
+            &.fa-star-o {
+                color: #a8a8a8;
+                &:hover {
+                    color: gold;
+                    &:before{
+                        content: "\f005";
+                    }
+                }
+            }
+            &.fa-star {
+                color: gold;
+                &:hover {
+                    color: #a8a8a8;
+                    &:before{
+                        content: "\f006";
+                    }
+                }
+            }
+        }
+    }
+    .table td {
+        vertical-align: middle;
+    }
+}

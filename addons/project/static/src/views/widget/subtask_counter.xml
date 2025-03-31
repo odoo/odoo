@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates>
+
+    <t t-name="project.SubtaskCounter" owl="1">
+        <a t-att-title="counterTitle"
+           class="subtask_list_button btn-link text-dark"
+           t-on-click.prevent="() => this.onClick()">
+            <span class="fa fa-check-square-o me-1"/>
+            <t t-esc="counterDisplay"/>
+        </a>
+    </t>
+
+</templates>

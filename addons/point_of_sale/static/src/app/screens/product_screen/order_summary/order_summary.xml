@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.OrderSummary">
+      <OrderWidget lines="currentOrder.getSortedOrderlines()" t-slot-scope="scope" class="'bg-light'"
+          taxTotals="currentOrder.taxTotals"
+          generalNote="currentOrder.general_note or ''">
+          <t t-set="line" t-value="scope.line" />
+          <Orderline line="line.getDisplayData()"
+              t-on-click="(event) => this.clickLine(event, line)"
+              class="{ ...line.getDisplayClasses(), 'selected' : line.isSelected() }">
+              <t t-set-slot="product-name">
+                <!-- FIXME: pos_sale does not always correctly import orders -->
+                <!-- that makes is such that we might have a line w\o product; that's why we need the  conditional chaining here-->
+                  <i t-if="line.get_product()?.isTracked()"
+                      t-on-click.stop="() => this.editPackLotLines(line)" role="img"
+                      t-attf-class="{{ line.has_valid_product_lot() ? 'text-success' : 'text-danger'}} fa fa-list line-lot-icon ms-1"
+                      t-attf-title="{{ line.has_valid_product_lot() ? 'Valid product lot' : 'Invalid product lot'}}" />
+              </t>
+          </Orderline>
+          <t t-set-slot="details" />
+      </OrderWidget>
+    </t>
+</templates>

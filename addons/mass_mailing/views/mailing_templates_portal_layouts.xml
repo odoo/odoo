@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- new layout for mass_mailing -->
+    <template id="mass_mailing.layout" name="Mass Mailing Layout">
+        <t t-set="html_data" t-value="{'lang': lang and lang.replace('_', '-')}"/>
+        <t t-call="web.frontend_layout">
+            <body class="bg-white o_mailing_portal_body">
+                <header>
+                    <div><title>Odoo</title></div>
+                    <div class="text-center">
+                        <img t-attf-src="/web/binary/company_logo?company={{ res_company.id }}"/>
+                    </div>
+                </header>
+                <div id="wrap" class="oe_structure oe_empty"/>
+                <main>
+                    <t t-out="0"/>
+                </main>
+            </body>
+            <xpath expr="//head/t[@t-call-assets][last()]" position="after">
+                <t t-call-assets="mass_mailing.mailing_assets" lazy_load="True"/>
+            </xpath>
+            <xpath expr="//header" position="before">
+                <t t-set="no_header" t-value="True"/>
+            </xpath>
+         </t>
+     </template>
+</odoo>

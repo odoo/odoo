@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_account_peppol" model="ir.ui.view">
+        <field name="name">res.partner.form.account.peppol</field>
+            <field name="model">res.partner</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='invoice_sending_method']" position="before">
+                    <field name="available_peppol_sending_methods" invisible="1"/>
+                    <field name="available_peppol_edi_formats" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_sending_method']" position="attributes">
+                    <attribute name="widget">filterable_selection</attribute>
+                    <attribute name="options">{'whitelist_fname': 'available_peppol_sending_methods'}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='invoice_edi_format']" position="attributes">
+                    <attribute name="widget">filterable_selection</attribute>
+                    <attribute name="options">{'whitelist_fname': 'available_peppol_edi_formats'}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='invoice_edi_format']" position="after">
+                    <field name="bank_account_count" invisible="1"/>
+                    <div class="alert alert-warning mb-0"
+                         colspan="2"
+                         role="alert"
+                         invisible="country_code != 'BE' or not peppol_endpoint or peppol_eas in (False, '0208')">
+                         The recommended identification method for Belgium is your Company Registry Number.
+                    </div>
+                    <div class="alert alert-warning"
+                         colspan="2"
+                         role="alert"
+                         invisible="peppol_verification_state != 'valid' or country_code">
+                         To generate complete electronic invoices, also set a country for this partner.
+                    </div>
+                </xpath>
+                <xpath expr="//field[@name='peppol_endpoint']" position="after">
+                    <field name="peppol_verification_state" invisible="1" force_save="1"/>
+                    <label for="peppol_verification_state"
+                           groups="base.group_no_one"
+                           invisible="not peppol_endpoint"/>
+                    <div class="row"
+                         groups="base.group_no_one"
+                         invisible="not peppol_endpoint">
+                        <div class="col-6">
+                            <field name="peppol_verification_state" readonly="1"/>
+                        </div>
+                        <div class="col-6 pt-0">
+                            <button name="button_account_peppol_check_partner_endpoint"
+                                    class="btn btn-secondary"
+                                    type="object"
+                                    string="Verify"
+                                    help="Verify partner's PEPPOL endpoint"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="partner_action_verify_peppol" model="ir.actions.server">
+        <field name="name">Verify Peppol</field>
+        <field name="model_id" ref="account_peppol.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            for record in records:
+                record.button_account_peppol_check_partner_endpoint()
+        </field>
+    </record>
+</odoo>

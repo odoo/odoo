@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!-- Event-related subtypes for new track / Chatter -->
+    <record id="mt_event_track" model="mail.message.subtype">
+        <field name="name">New Track</field>
+        <field name="res_model">event.event</field>
+        <field name="default" eval="False"/>
+    </record>
+
+    <!-- Track subtypes -->
+    <record id="mt_track_blocked" model="mail.message.subtype">
+        <field name="name">Track Blocked</field>
+        <field name="res_model">event.track</field>
+        <field name="default" eval="False"/>
+        <field name="internal" eval="True"/>
+        <field name="description">Track blocked</field>
+    </record>
+    <record id="mt_track_ready" model="mail.message.subtype">
+        <field name="name">Track Ready</field>
+        <field name="res_model">event.track</field>
+        <field name="default" eval="True"/>
+        <field name="internal" eval="True"/>
+        <field name="description">Track Ready for Next Stage</field>
+    </record>
+</data></odoo>

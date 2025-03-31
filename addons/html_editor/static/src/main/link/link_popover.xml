@@ -1,0 +1,121 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="html_editor.linkPopover">
+        <div class="o-we-linkpopover d-flex bg-white overflow-auto shadow" t-on-keydown="onKeydown">
+            <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper"  data-prevent-closing-overlay="true">
+                <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
+                    <div class="input-group mb-1">
+                        <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                        <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
+                    </div>
+                </div>
+                <div t-else="" class="d-flex">
+                    <div class="col p-2" style="max-width: 250px;">
+                        <div class="input-group mb-1">
+                            <input t-ref="label" class="o_we_label_link form-control form-control-sm" t-model="state.label" title="Label" placeholder="Type your link label"/>
+                        </div>
+                        <div class="input-group mb-1">
+                            <input t-ref="url" class="o_we_href_input_link form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                            <span class="ms-1" t-if="props.canUpload and !state.url">
+                                or <button class="btn btn-secondary btn-sm" t-on-click="uploadFile">Upload File</button>
+                            </span>
+
+                        </div>
+                        <div class="input-group" t-on-change="onChangeClasses">
+                            <select name="link_type" class="form-select form-select-sm" t-att-class="{'mb-1': state.type !==  ''}" t-on-change="(ev)=>this.state.type = ev.target.value">
+                                <t t-foreach="this.colorsData" t-as="colorData" t-key="colorData.type">
+                                    <t t-if="colorData.type !== 'custom'">
+                                        <option t-att-value="colorData.type" t-att-selected="state.type === colorData.type" t-attf-class="o_btn_preview">
+                                            <span t-esc="colorData.label"/>
+                                        </option>
+                                    </t>
+                                </t>
+                            </select>
+                            <div t-if="state.type !== 'custom' and state.type !==  ''" class="input-group mb-1">
+                                    <select name="link_style_size" class="form-select form-select-sm link-style" t-on-change="(ev)=>this.state.buttonSize = ev.target.value">
+                                        <t t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size">
+                                            <option t-att-value="buttonSizesData.size" t-att-selected="state.buttonSize === buttonSizesData.size">
+                                                <span t-esc="buttonSizesData.label"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                    <select name="link_style_shape" class="form-select form-select-sm link-style ms-1" t-on-change="(ev)=>this.state.buttonStyle = ev.target.value">
+                                        <t t-foreach="this.buttonStylesData" t-as="buttonStylesData" t-key="buttonStylesData.style">
+                                            <option t-att-value="buttonStylesData.style" t-att-selected="state.buttonStyle === buttonStylesData.style">
+                                                <span t-esc="buttonStylesData.label"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                            </div>
+                            <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'ms-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
+                        </div>
+                    </div>
+
+                    <div t-if="!this.ui.isSmall and state.url" class="col o_link_dialog_preview" style="max-width: 125px;border-left: 1px solid var(--border-color);">
+                        <div class="text-center p-2">
+                            <label>Preview</label>
+                            <div style="max-width: 100px; max-height: 200px;" class="text-truncate">
+                                <a href="#" t-if="state.url" id="link-preview" aria-label="Preview" title="Preview" t-attf-class="{{state.classes}} text-truncate" style="max-width: 90px;">
+                                    <t t-esc="state.label or state.url"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-else="" style="width: 260px;" data-prevent-closing-overlay="true">
+                <div class="d-flex flex-column p-2">
+                    <div class="d-flex">
+                        <span class="o_we_preview_favicon" style="width: 16px; height: 32px">
+                            <img t-if="state.previewIcon.type === 'imgSrc'" t-att-src="state.previewIcon.value" class="align-content-center"/>
+                            <span t-elif="state.previewIcon.type === 'mimetype'" class="o_image" t-att-data-mimetype="state.previewIcon.value"/>
+                            <i t-else="" t-attf-class="fa fa-fw {{state.previewIcon.value}}"></i>
+                        </span>
+                        <div class="ms-1 w-100">
+                            <div class="d-flex">
+                                <a href="#" target="_blank" t-attf-href="{{state.url}}" class="o_we_url_link fw-bold flex-grow-1 text-truncate" style="max-width: 160px;" t-attf-title="{{state.urlTitle}}">
+                                    <t t-esc="state.urlTitle"/>
+                                </a>
+                                <div class="flex-grow-1 d-flex justify-content-end">
+                                    <a href="#" class="mx-1 o_we_copy_link text-dark" t-on-click="onClickCopy" title="Copy Link">
+                                        <i class="fa fa-clone"></i>
+                                    </a>
+                                    <t t-if="props.canEdit">
+                                        <a href="#" class="mx-1 o_we_edit_link text-dark" t-on-click="onClickEdit" title="Edit Link">
+                                            <i class="fa fa-edit"></i>
+                                        </a>
+                                        <a href="#" class="ms-1 o_we_remove_link text-dark" t-on-click="onClickRemove" title="Remove Link">
+                                            <i class="fa fa-chain-broken"></i>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                            <div t-if="state.urlTitle and state.url and state.urlTitle !== state.url" class="text-truncate" style="max-width: 200px; font-size: 12px;">
+                                <span t-attf-class="o_we_full_url text-muted o_we_webkit_box" t-attf-title="{{state.url}}">
+                                    <t t-esc="state.url || 'No URL specified'"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="state.imgSrc" class="o_extra_info_card" style="align-self: center; max-width: 235px">
+                            <a href="#" target="_blank" t-attf-href="{{state.url}}" title="Open in a new tab">
+                                <img t-att-src="state.imgSrc" class="img-fluid mb-1" style="max-width: 230; max-height: 100%;"/>
+                            </a>
+                    </div>
+                    <div t-if="state.urlDescription" class="d-flex">
+                        <i class="fa fa-align-right align-content-center"></i>
+                        <span class="ms-1 o_we_description_link_preview" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 12px;color: gray; overflow: hidden;" t-attf-title="{{state.urlDescription}}">
+                            <t t-esc="state.urlDescription"/>
+                        </span>
+                    </div>
+                </div>
+                <div t-if="state.urlTitle and ((state.url === state.label and state.urlTitle !== state.label ) || (state.url === state.label+'/' and state.urlTitle !== state.label+'/'))" class="d-flex align-items-baseline" style="background-color: var(--primary);">
+                    <i class="fa fa-magic fa-fw m-1" style="color: var(--o-cc1-btn-primary-text);"></i>
+                    <span class="me-2 flex-grow-1" style="color: var(--o-cc1-btn-primary-text);font-size: smaller;">Replace URL with its title?</span>
+                    <button class=" btn btn-sm btn-primary o_we_replace_title_btn" style="margin: 1px;font-size: smaller;" t-on-click="onClickReplaceTitle">Yes</button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

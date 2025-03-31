@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="web.SwitchCompanyItem">
+    <span
+        class="d-flex o_switch_company_item dropdown-item p-0 w-100"
+        t-att-class="{
+            'disabled': !isCompanyAllowed,
+            'o-navigable': isCompanyAllowed,
+            'alert-secondary': isCompanySelected,
+        }"
+        tabindex="0"
+        data-menu="company"
+        t-att-data-company-id="props.company.id"
+    >
+        <div
+            role="menuitemcheckbox"
+            t-att-aria-checked="isCompanySelected ? 'true' : 'false'"
+            t-att-aria-label="props.company.name"
+            t-att-title="(isCompanySelected ? 'Hide ' : 'Show ') + props.company.name + ' content.'"
+            class="border-end"
+            t-att-class="{ 'border-primary': isCompanySelected, 'disabled': !isCompanyAllowed }"
+            t-on-click.stop="() => this.toggleCompany()"
+        >
+            <span class="btn border-0 px-2" t-att-class="isCompanyAllowed ? 'btn-link text-primary' : 'disabled'">
+                <i class="fa fa-fw py-1" t-att-class="isCompanySelected ? 'fa-check-square text-primary' : 'fa-square-o'"/>
+            </span>
+        </div>
+
+        <div
+            role="button"
+            t-att-aria-pressed="isCurrent ? 'true' : 'false'"
+            t-att-aria-label="'Switch to ' + props.company.name"
+            t-att-title="'Switch to ' + props.company.name"
+            class="d-flex flex-grow-1 align-items-center py-0 log_into ps-2"
+            t-att-class="isCurrent ? 'bg-primary-subtle' : 'btn fw-normal border-0 ' + (isCompanyAllowed ? 'btn-link text-primary' : 'disabled')"
+            t-on-click="() => this.logIntoCompany()"
+        >
+            <span
+                class="company_label text-700 text-truncate"
+                t-attf-style="padding-left:{{props.level * 20}}px;">
+                <t t-out="props.company.name"/>
+            </span>
+        </div>
+    </span>
+</t>
+
+</templates>

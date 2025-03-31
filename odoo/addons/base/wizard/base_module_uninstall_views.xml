@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_module_uninstall" model="ir.ui.view">
+            <field name="name">Uninstall module</field>
+            <field name="model">base.module.uninstall</field>
+            <field name="arch" type="xml">
+                <form string="Uninstall module">
+                    <div class="alert alert-warning oe_button_box" role="alert">
+                        <p class="mt-3">
+                            Uninstalling modules can be risky, we recommend you to try it on a duplicate or test database first.
+                        </p>
+                    </div>
+                    <div class="d-flex bd-highlight">
+                        <div class="me-auto p-2 bd-highlight"><h3>Apps to Uninstall</h3></div>
+                        <div class="p-2 bd-highlight"><field name="show_all"/> Show All</div>
+                    </div>
+                    <field name="module_ids" mode="kanban" class="o_modules_field">
+                        <kanban create="false" class="o_modules_kanban">
+                            <field name="state"/>
+                                <templates>
+                                    <t t-name="card" class="flex-row align-items-center">
+                                        <aside>
+                                            <field name="icon" widget="image_url" options="{'size': [50, 50]}" alt="Icon"/>
+                                        </aside>
+                                        <main t-att-title="record.shortdesc.value">
+                                            <field class="fw-bold fs-5 mb-0" name="shortdesc" />
+                                            <p class="text-muted small my-1 lh-sm">
+                                                <field groups="!base.group_no_one" name="summary" />
+                                                <code groups="base.group_no_one">
+                                                    <field name="name" />
+                                                </code>
+                                            </p>
+                                        </main>
+                                    </t>
+                                </templates>
+                        </kanban>
+                    </field>
+                    <h3>Documents to Delete</h3>
+                    <field name="model_ids" string="Models" nolabel="1">
+                        <list string="Models">
+                            <field name="name" string="Document"/>
+                            <field name="count"/>
+                        </list>
+                    </field>
+                    <footer>
+                        <button string="Uninstall" class="btn-secondary" type="object" name="action_uninstall" data-hotkey="q"/>
+                        <button string="Discard" class="btn-primary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

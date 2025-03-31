@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+
+    <!--base.user_demo-->
+    <record id="karma_tracking_user_demo_1st_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="old_value">0</field>
+        <field name="new_value">1000</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=1, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_demo_2nd_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="old_value">1000</field>
+        <field name="new_value">1500</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=2, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_demo_5th_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="old_value">1500</field>
+        <field name="new_value">2000</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=5, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_demo_20th_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="old_value">2000</field>
+        <field name="new_value">2050</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=20, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_demo_today" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="old_value">2050</field>
+        <field name="new_value">2500</field>
+        <field name="tracking_date" eval="(DateTime.now()).strftime('%Y-%m-%d')"/>
+    </record>
+    <function model="gamification.karma.tracking" name="unlink">
+        <value model="gamification.karma.tracking" eval="obj().search([
+                ('user_id', '=', ref('base.user_demo')),
+                ('old_value', '=', 0),
+                ('new_value', '=', 2500)
+            ]).id"/>
+    </function>
+
+    <!--base.demo_user0 -->
+    <record id="karma_tracking_user_portal_2nd_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.demo_user0"/>
+        <field name="old_value">0</field>
+        <field name="new_value">5</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=2, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_portal_3rd_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.demo_user0"/>
+        <field name="old_value">5</field>
+        <field name="new_value">10</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=3, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_portal_10th_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.demo_user0"/>
+        <field name="old_value">10</field>
+        <field name="new_value">20</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=10, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_portal_yesterday" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.demo_user0"/>
+        <field name="old_value">20</field>
+        <field name="new_value">25</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_portal_today" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.demo_user0"/>
+        <field name="old_value">25</field>
+        <field name="new_value">30</field>
+        <field name="tracking_date" eval="DateTime.now()"/>
+    </record>
+    <function model="gamification.karma.tracking" name="unlink">
+        <value model="gamification.karma.tracking" eval="obj().search([
+                ('user_id', '=', ref('base.demo_user0')),
+                ('old_value', '=', 0),
+                ('new_value', '=', 30)
+            ]).id"/>
+    </function>
+
+    <!--base.user_admin (already have a tracking to 2500)-->
+    <record id="karma_tracking_user_admin_1st_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="old_value">0</field>
+        <field name="new_value">2000</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=1, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_admin_5th_day_last_month" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="old_value">2000</field>
+        <field name="new_value">2250</field>
+        <field name="tracking_date" eval="(DateTime.now() - relativedelta(day=5, months=1)).strftime('%Y-%m-%d')"/>
+    </record>
+    <record id="karma_tracking_user_admin_today" model="gamification.karma.tracking">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="old_value">2250</field>
+        <field name="new_value">2500</field>
+        <field name="tracking_date" eval="(DateTime.now()).strftime('%Y-%m-%d')"/>
+    </record>
+    <function model="gamification.karma.tracking" name="unlink">
+        <value model="gamification.karma.tracking" eval="obj().search([
+                ('user_id', '=', ref('base.user_admin')),
+                ('old_value', '=', 0),
+                ('new_value', '=', 2500)
+            ]).id"/>
+    </function>
+
+</data>
+</odoo>

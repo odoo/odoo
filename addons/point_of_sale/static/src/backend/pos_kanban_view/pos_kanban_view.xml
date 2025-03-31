@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="point_of_sale.PosKanbanController" t-inherit="web.KanbanView" t-inherit-mode="primary">
+        <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
+            <attribute name="initialPosState">initialPosState</attribute>
+        </xpath>
+    </t>
+
+    <t t-name="point_of_sale.PosKanbanRenderer">
+        <div class="d-flex flex-column">
+            <t t-call="web.KanbanRenderer" />
+            <div class="position-relative container" t-att-class="{ 'border-top mt-2': showTopBorder() }" t-if="this.posState.show_predefined_scenarios">
+                <div class="flex-grow-1 text-center" t-att-class="{ 'disable-buttons': !posState.has_chart_template || loadScenario.status === 'loading' }">
+                    <p class="h1 text-primary mt-4" t-if="!posState.has_pos_config">Want to try with sample products?</p>
+                    <p t-if="!posState.has_chart_template" class="h2 m-3">
+                        Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click="() => action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
+                    </p>
+                    <p t-else="" class="h2 m-3">Choose your store</p>
+                    <div t-attf-class="d-flex {{posState.is_restaurant_installed ? 'flex-column' : 'flex-column-reverse'}}">
+                        <div class="shop-scenarios row p-3">
+                            <t t-foreach="shopScenarios" t-as="item" t-key="item_index">
+                                <t t-call="point_of_sale.ScenarioCard" />
+                            </t>
+                        </div>
+                        <div class="restaurant-scenarios row p-3 justify-content-center">
+                            <t t-foreach="restaurantScenarios" t-as="item" t-key="item_index">
+                                <t t-call="point_of_sale.ScenarioCard" />
+                            </t>
+                        </div>
+                    </div>
+                    <div class="text-center my-4">
+                        <div class="row">
+                            <div class="col">
+                                <hr class="my-2"/>
+                            </div>
+                            <div class="col-auto">
+                                <span class="px-3 h4">or</span>
+                            </div>
+                            <div class="col">
+                                <hr class="my-2"/>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-large">
+                        <a role="button" class="btn btn-lg btn-secondary fw-bolder"
+                            t-on-click="createNewProducts"
+                            t-att-class="{ 'disabled': !posState.has_chart_template || loadScenario.status === 'loading' }">
+                            Create my own products
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="point_of_sale.ScenarioCard">
+        <div class="col-lg-4">
+            <div class="card mb-3 rounded-3 scenario-card" style="max-width: 540px;"
+                t-on-click="() => this.clickLoadScenario(item)">
+                <div class="row g-0">
+                    <div class="col-lg-4">
+                        <div class="img-container m-2 d-flex align-items-center justify-content-center">
+                            <img t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" class="scenario-img" />
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card-body text-start p-3 m-2">
+                            <h3 class="card-title fw-bolder" t-esc="item.name"/>
+                            <p class="card-text text-large" t-esc="item.description"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</odoo>

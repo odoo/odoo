@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="UF" model="res.currency">
+            <field name="name">UF</field>
+            <field name="symbol">UF</field>
+            <field name="rounding">0.01</field>
+            <field name="position">after</field>
+            <field name="currency_unit_label">Development Unit</field>
+            <field name="l10n_cl_short_name">Development Unit</field>
+        </record>
+
+        <record id="UTM" model="res.currency">
+            <field name="name">UTM</field>
+            <field name="symbol">UTM</field>
+            <field name="rounding">0.01</field>
+            <field name="position">after</field>
+            <field name="currency_unit_label">Monthly Tax Unit</field>
+            <field name="l10n_cl_short_name">Monthly Tax Unit</field>
+        </record>
+
+        <record id="OTR" model="res.currency">
+            <field name="name">OTR</field>
+            <field name="symbol">OTR</field>
+            <field name="rounding">1</field>
+            <field name="l10n_cl_currency_code">900</field>
+            <field name="l10n_cl_short_name">OTR</field>
+        </record>
+    </data>
+</odoo>

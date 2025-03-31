@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_tax_tree_inherit_l10n_es_edi_facturae" model="ir.ui.view">
+            <field name="name">account.tax.list.inherit.l10n_es_edi_facturae</field>
+            <field name="inherit_id" ref="account.view_tax_tree"/>
+            <field name="model">account.tax</field>
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="country_code" column_invisible="True"/>
+                    <field name="l10n_es_edi_facturae_tax_type" string="Spanish Tax Type" optional="hide"
+                           invisible="country_code != 'ES'"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_account_move_reversal_inherit_l10n_es_edi_facturae" model="ir.ui.view">
+            <field name="name">account.move.reversal.form.inherit.l10n_es_edi_facturae</field>
+            <field name="inherit_id" ref="account.view_account_move_reversal"/>
+            <field name="model">account.move.reversal</field>
+            <field name="arch" type="xml">
+                <field name="reason" position="replace">
+                    <field name="country_code" invisible="1"/>
+                    <field name="l10n_es_edi_facturae_reason_code" string="Reason" invisible="country_code != 'ES'"/>
+                    <field name="reason" string="Reason" invisible="move_type == 'entry' and country_code == 'ES'"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

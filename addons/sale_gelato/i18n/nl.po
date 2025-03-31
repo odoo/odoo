@@ -1,0 +1,383 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_gelato
+# 
+# Translators:
+# Manon Rondou, 2025
+# Wil Odoo, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-10 13:24+0000\n"
+"PO-Revision-Date: 2025-02-09 01:00+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_gelato
+#: model:mail.template,body_html:sale_gelato.order_status_update
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        We are glad to inform you that your order is in transit.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Your tracking number is <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                            <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Your tracking numbers are:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                    <!-- Order delivered body -->\n"
+"                    <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        We are glad to inform you that your order has been delivered.\n"
+"                        <br/><br/>\n"
+"                    </t>\n"
+"                    Thank you,\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                    <!-- Order in transit body -->\n"
+"                    <t t-if=\"ctx.get('tracking_data')\">\n"
+"                        We zijn blij je te kunnen informeren dat je bestelling onderweg is.\n"
+"                        <t t-if=\"len(ctx['tracking_data']) == 1\">\n"
+"                            <t t-set=\"tracking_url\" t-value=\"list(ctx['tracking_data'].keys())[0]\"/>\n"
+"                            Je trackingnummer is <a t-attf-href=\"tracking_url\" t-out=\"ctx['tracking_data'][tracking_url]\"/>.\n"
+"                           <br/><br/>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            Je trackingnummers zijn:\n"
+"                            <ul>\n"
+"                                <li t-foreach=\"ctx['tracking_data']\" t-as=\"tracking_url\">\n"
+"                                    <a t-attf-href=\"{{tracking_url}}\" t-out=\"ctx['tracking_data'][tracking_url]\"/>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </t>\n"
+"                    </t>\n"
+"                   <!-- Order delivered body -->\n"
+"                   <t t-if=\"ctx.get('order_delivered')\">\n"
+"                        We zijn blij je te kunnen informeren dat je bestelling is afgeleverd.\n"
+"                       <br/><br/>\n"
+"                   </t>\n"
+"                    Hartelijk dank,\n"
+"                    <t t-if=\"object.user_id.name\" data-o-mail-quote-container=\"1\">\n"
+"                        <br/>\n"
+"                        <t t-out=\"object.user_id.name or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
+msgstr ""
+"<i title=\"All print images are set\" invisible=\"gelato_missing_images\" class=\"fa fa-check-circle text-success fs-3 me-3\"/>\n"
+"                        <i title=\"Some print images are missing\" invisible=\"not gelato_missing_images\" class=\"fa fa-question-circle text-danger fs-3 me-3\"/>"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "API Key"
+msgstr "API key"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie-instellingen"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/utils.py:0
+msgid "Could not establish the connection to the Gelato API."
+msgstr "Kon de verbinding met de Gelato API niet tot stand brengen."
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_template.py:0
+msgid "Could not synchronize with Gelato"
+msgstr "Kan niet synchroniseren met Gelato"
+
+#. module: sale_gelato
+#: model:delivery.carrier,name:sale_gelato.express_delivery
+#: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__express
+msgid "Express Delivery"
+msgstr "Express levering"
+
+#. module: sale_gelato
+#: model:product.template,name:sale_gelato.express_delivery_product_product_template
+msgid "Express Delivery (Gelato)"
+msgstr "Spoedorder (Gelato)"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__module_sale_gelato
+#: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__delivery_type__gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Gelato"
+msgstr "Gelato"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_api_key
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_api_key
+msgid "Gelato API Key"
+msgstr "Gelato API-sleutel"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_image_ids
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_image_ids
+msgid "Gelato Print Images"
+msgstr "Gelato afdrukken"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_product_uid
+msgid "Gelato Product UID"
+msgstr "Gelato Product UID"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_product_uid
+msgid "Gelato Product Uid"
+msgstr "Gelato Product Uid"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__gelato_shipping_service_type
+msgid "Gelato Shipping Service Type"
+msgstr "Gelato verzendservicetype"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_template_ref
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_template_ref
+msgid "Gelato Template Reference"
+msgstr "Gelato sjabloon referentie"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_res_company__gelato_webhook_secret
+#: model:ir.model.fields,field_description:sale_gelato.field_res_config_settings__gelato_webhook_secret
+msgid "Gelato Webhook Secret"
+msgstr "Gelato Webhook Geheim"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
+msgid ""
+"Gelato could not proceed with the fulfillment of order %(order_reference)s: "
+"%(gelato_message)s"
+msgstr ""
+"Gelato kon niet doorgaan met de uitvoering van order %(order_reference)s: "
+"%(gelato_message)s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/controlers/main.py:0
+msgid "Gelato has returned order %(reference)s."
+msgstr "Gelato heeft order %(reference)s teruggestuurd."
+
+#. module: sale_gelato
+#: model:mail.template,name:sale_gelato.order_status_update
+msgid "Gelato: Order status update"
+msgstr "Gelato: Statusupdate order"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_document__is_gelato
+msgid "Is Gelato"
+msgstr "Is Gelato"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Manage Delivery Methods"
+msgstr "Aflevermethoden beheren"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_product_product__gelato_missing_images
+#: model:ir.model.fields,field_description:sale_gelato.field_product_template__gelato_missing_images
+msgid "Missing Print Images"
+msgstr "Ontbrekende afdrukafbeeldingen"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_template.py:0
+msgid "Missing product variants and images have been successfully created."
+msgstr ""
+"Ontbrekende productvarianten en afbeeldingen zijn succesvol aangemaakt."
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Place orders through Gelato's print-on-demand service"
+msgstr "Plaats orders via Gelato's printing-on-demand service"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Print Images"
+msgstr "Afbeeldingen afdrukken"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_document.py:0
+msgid "Print images must be set on products before they can be ordered."
+msgstr ""
+"Afdrukafbeeldingen moeten op producten worden ingesteld voordat ze kunnen "
+"worden besteld."
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_product_template
+msgid "Product"
+msgstr "Product"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_product_document
+msgid "Product Document"
+msgstr "Document product"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_easy_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_product_normal_form
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Product UID"
+msgstr "Product UID"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_product_product
+msgid "Product Variant"
+msgstr "Productvariant"
+
+#. module: sale_gelato
+#: model:ir.model.fields,field_description:sale_gelato.field_delivery_carrier__delivery_type
+msgid "Provider"
+msgstr "Provider"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: sale_gelato
+#: model:mail.template,description:sale_gelato.order_status_update
+msgid "Sent to the customer when Gelato updates the status of an order"
+msgstr ""
+"Verzonden naar de klant wanneer Gelato de status van een order bijwerkt"
+
+#. module: sale_gelato
+#: model:ir.model,name:sale_gelato.model_delivery_carrier
+msgid "Shipping Methods"
+msgstr "Verzendwijzes"
+
+#. module: sale_gelato
+#: model:delivery.carrier,name:sale_gelato.standard_delivery
+#: model:ir.model.fields.selection,name:sale_gelato.selection__delivery_carrier__gelato_shipping_service_type__normal
+msgid "Standard Delivery"
+msgstr "Standaard levering"
+
+#. module: sale_gelato
+#: model:product.template,name:sale_gelato.standard_delivery_product_product_template
+msgid "Standard Delivery (Gelato)"
+msgstr "Standaard levering (Gelato)"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/product_template.py:0
+msgid "Successfully synchronized with Gelato"
+msgstr "Succesvol gesynchroniseerd met Gelato"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Synchronize"
+msgstr "Synchroniseer"
+
+#. module: sale_gelato
+#: model:ir.model.fields,help:sale_gelato.field_product_product__gelato_template_ref
+#: model:ir.model.fields,help:sale_gelato.field_product_template__gelato_template_ref
+msgid "Synchronize to fetch variants from Gelato"
+msgstr "Synchroniseren om varianten op te halen uit Gelato"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.product_template_form
+msgid "Template Reference"
+msgstr "Sjabloonverwijzing"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/delivery_carrier.py:0
+msgid "The delivery method is not available for this order."
+msgstr "De bezorgmethode is niet beschikbaar voor deze order."
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/delivery_carrier.py:0
+msgid "The following required address fields are missing: %s"
+msgstr "De volgende verplichte adresvelden ontbreken: %s"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid "The order has been successfully passed on Gelato."
+msgstr "De order is succesvol doorgegeven aan Gelato."
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid ""
+"The order with reference %(order_reference)s was not sent to Gelato.\n"
+"Reason: %(error_message)s"
+msgstr ""
+"De order met referentie %(order_reference)s is niet verzonden naar Gelato.\n"
+"Reden: %(error_message)s"
+
+#. module: sale_gelato
+#: model_terms:ir.ui.view,arch_db:sale_gelato.res_config_settings_form
+msgid "Webhook Secret"
+msgstr "Webhook geheim"
+
+#. module: sale_gelato
+#. odoo-python
+#: code:addons/sale_gelato/models/sale_order.py:0
+msgid ""
+"You cannot mix Gelato products with non-Gelato products in the same order."
+msgstr ""
+"Je kunt Gelato-producten niet combineren met niet-Gelato-producten in "
+"dezelfde order."
+
+#. module: sale_gelato
+#: model:mail.template,subject:sale_gelato.order_status_update
+msgid "{{ object.reference }}"
+msgstr "{{ object.reference }}"

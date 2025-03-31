@@ -1,0 +1,91 @@
+$o-wevent-bg-color-base: $gray-100;
+$o-wevent-bg-color-base-contrast: color-contrast($o-wevent-bg-color-base);
+$o-wevent-bg-color-light: mix($o-wevent-bg-color-base, #E9ECEF);
+$o-wevent-bg-color-dark: mix($o-wevent-bg-color-base, #24363a);
+$o-wevent-color: $body-color;
+
+.o_wevent_index, .o_wevent_event {
+
+    .event_track > div {
+        border-top: $border-width * 3 solid var(--bg-solid);
+        background-color: var(--bg-light);
+        color: var(--bg-light-contrast);
+    }
+
+    .o_wesession_list_item {
+        background: var(--bg-light);
+        color: var(--bg-light-contrast);
+        border: $border-width solid var(--o-border-color);
+        border-left: $border-width * 3 solid var(--bg-solid);
+    }
+
+    /*
+     * COMMON MENU STYLING
+     */
+
+    .o_wevent_index_topbar_filters {
+        .dropdown-menu {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+    }
+
+    /*
+     * COMMON TO ALL ONLINE-* PAGES
+     */
+
+    .o_wevent_online {
+        // unpublished badge: put opacity to distinguish form other badges
+        .o_wevent_online_badge_unpublished{
+            opacity: 0.4;
+        }
+
+        .o_wesession_list_item {
+            margin: map-get($spacers, 2) 0;
+        }
+
+        .o_wevent_online_page_container {
+
+            // Sponsor Avatar
+            .o_wevent_online_page_avatar {
+                min-width: 64px;
+                img {
+                    max-width: 96px;
+                }
+            }
+        }
+    }
+
+    // To be more efficiently implemented by using default Bootstrap accordion
+    // components
+    .o_wevent_collapse_link:not(.collapsed) .oi {
+        transform: rotate(180deg);
+    }
+
+    .o_wevent_cta  {
+        color: #fff;
+        background-color: $o-enterprise-color;
+        border: $o-enterprise-color;
+        &:hover {
+            color: #fff;
+            background-color: #624159;
+            border-color: #52374b;
+        }
+        &:focus {
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(134, 102, 126, 0.5);
+        }
+    }
+}
+
+.o_wevent_badge {
+    padding: ($spacer * .5) $spacer;
+    border-radius: 10rem;
+    font-weight: $font-weight-normal;
+}
+
+.modal-open {
+    > .modal-backdrop {
+        z-index: $zindex-dropdown - 1;
+    }
+}

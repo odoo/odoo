@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_holidays.TimeOffCalendarCommonPopover.footer" t-inherit="web.CalendarCommonPopover.footer" t-inherit-mode="primary" owl="1">
+        <xpath expr="//t" position="inside">
+            <button t-attf-class="btn btn-secondary"
+                t-if="isManager and ['confirm', 'refuse'].includes(state)"
+                name="action_approve" t-on-click="onClickButton" data-hotkey="g">Approve</button>
+            <button t-attf-class="btn btn-secondary"
+                t-if="isManager and state === 'validate1'"
+                name="action_validate" t-on-click="onClickButton" data-hotkey="g">Validate</button>
+            <button t-attf-class="btn btn-secondary"
+                t-if="isManager and state !== 'refuse'"
+                name="action_refuse" t-on-click="onClickButton" data-hotkey="z">Refuse</button>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,20 @@
+<odoo>
+    <record id="action_report_pos_hash_integrity" model="ir.actions.report">
+        <field name="name">Hash integrity result PDF</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_fr_pos_cert.report_pos_hash_integrity</field>
+        <field name="report_file">l10n_fr_pos_cert.report_pos_hash_integrity</field>
+    </record>
+    <record model="ir.actions.server" id="action_check_pos_hash_integrity">
+        <field name="name">POS Inalterability Check</field>
+        <field name="model_id" ref="account.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = env.company._action_check_pos_hash_integrity()
+        </field>
+    </record>
+        <menuitem id="pos_fr_statements_menu" name="French Statements" parent="point_of_sale.menu_point_rep" sequence="9" />
+        <menuitem action="l10n_fr_pos_cert.action_list_view_account_sale_closing" id="menu_account_closing" parent="pos_fr_statements_menu" sequence="80"/>
+        <menuitem action="l10n_fr_pos_cert.action_check_pos_hash_integrity" id="menu_check_move_integrity_reporting" parent="pos_fr_statements_menu" sequence="90"/>
+</odoo>

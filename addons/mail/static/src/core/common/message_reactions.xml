@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+<t t-name="mail.MessageReactions">
+    <div class="o-mail-MessageReactions position-relative d-flex flex-wrap mt-n1"
+        t-att-class="{
+            'flex-row-reverse me-3': env.inChatWindow and env.alignedRight,
+            'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.is_discussion),
+            'o-emojiPickerOpen': emojiPicker.isOpen,
+        }">
+        <t t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content">
+            <MessageReactionList message="this.props.message" openReactionMenu="this.props.openReactionMenu" reaction="reaction"/>
+        </t>
+        <button t-if="props.message.canAddReaction()" class="o-mail-MessageReactions-add btn bg-inherit d-flex px-1 py-0 border-0 rounded-0 mb-1 align-items-center fs-5 opacity-75 opacity-100-hover" title="Add Reaction" t-ref="add"><i class="oi fa-fw oi-smile-add"/></button>
+    </div>
+</t>
+</templates>

@@ -1,0 +1,25 @@
+// Shadow dom for portal chatter should use the backend fonts
+:host {
+    --#{$prefix}font-sans-serif: #{inspect($font-family-sans-serif)};
+    --#{$prefix}font-monospace: #{inspect($font-family-monospace)};
+    --#{$prefix}gradient: #{$gradient};
+    --#{$prefix}root-font-size: #{$font-size-root};
+    --#{$prefix}body-font-family: #{$font-family-base};
+    --#{$prefix}body-font-size: #{$font-size-base};
+    --#{$prefix}body-font-weight: #{$font-weight-base};
+    --#{$prefix}body-line-height: #{$line-height-base};
+    @if $body-text-align != null {
+        --#{$prefix}body-text-align: #{$body-text-align};
+    }
+}
+
+:host {
+    font-family: var(--#{$prefix}body-font-family);
+    @include font-size(var(--#{$prefix}body-font-size));
+    font-weight: var(--#{$prefix}body-font-weight);
+    line-height: var(--#{$prefix}body-line-height);
+}
+
+.bg-view {
+    background-color: var(--body-bg) !important;
+}

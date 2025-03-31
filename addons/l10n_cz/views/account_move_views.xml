@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_move_form_l10n_cz" model="ir.ui.view">
+        <field name="name">account.move.form.l10n_cz</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='due_date']" position="after">
+                <field name="taxable_supply_date" invisible="country_code != 'CZ' or move_type == 'entry'" readonly="state != 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

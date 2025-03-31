@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+        <record id="ir_rule_discuss_channel_all" model="ir.rule">
+            <field name="name">discuss.channel: can access channels (as member or as group allowed)</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    "|",
+                        "&amp;",
+                            ("channel_type", "!=", "channel"),
+                            ("is_member", "=", True),
+                        "&amp;",
+                            ("channel_type", "=", "channel"),
+                            "|",
+                                "&amp;",
+                                    ("parent_channel_id", "=", False),
+                                    "|",
+                                        ("group_public_id", "=", False),
+                                        ("group_public_id", "in", user.groups_id.ids),
+                                "&amp;",
+                                    ("parent_channel_id", "!=", False),
+                                    "|",
+                                        ("parent_channel_id.group_public_id", "=", False),
+                                        ("parent_channel_id.group_public_id", "in", user.groups_id.ids),
+                ]
+            </field>
+        </record>
+
+        <record id="ir_rule_discuss_channel_group_system" model="ir.rule">
+            <field name="name">discuss.channel: admin full access</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_is_self_all" model="ir.rule">
+            <field name="name">discuss.channel.member: access their own entries</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    ('is_self', '=', True),
+                    "|",
+                        ("channel_id.channel_type", "!=", "channel"),
+                        "|",
+                            "&amp;",
+                                ("channel_id.parent_channel_id", "=", False),
+                                "|",
+                                    ("channel_id.group_public_id", "=", False),
+                                    ("channel_id.group_public_id", "in", user.groups_id.ids),
+                            "&amp;",
+                                ("channel_id.parent_channel_id", "!=", False),
+                                "|",
+                                    ("channel_id.parent_channel_id.group_public_id", "=", False),
+                                    ("channel_id.parent_channel_id.group_public_id", "in", user.groups_id.ids),
+                ]
+            </field>
+            <!--
+                create() is controlled by other rules because create() rules are applied after the record contains
+                its data, which means just using 'is_self' would allow any user to add themselves in any channel.
+            -->
+            <field name="perm_create" eval="False"/>
+            <!--
+                read() is controlled by other rules, in particular the current rule for reading self member is
+                "contained" within the rule for reading any member of accessible channel which is more generic.
+            -->
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_read_all" model="ir.rule">
+            <field name="name">discuss.channel.member: read members of accessible channels</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    "|",
+                        "&amp;",
+                            ("channel_id.channel_type", "!=", "channel"),
+                            ("channel_id.is_member", "=", True),
+                        "&amp;",
+                            ("channel_id.channel_type", "=", "channel"),
+                            "|",
+                                "&amp;",
+                                    ("channel_id.parent_channel_id", "=", False),
+                                    "|",
+                                        ("channel_id.group_public_id", "=", False),
+                                        ("channel_id.group_public_id", "in", user.groups_id.ids),
+                                "&amp;",
+                                    ("channel_id.parent_channel_id", "!=", False),
+                                    "|",
+                                        ("channel_id.parent_channel_id.group_public_id", "=", False),
+                                        ("channel_id.parent_channel_id.group_public_id", "in", user.groups_id.ids),
+                ]
+            </field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_create_is_group_matching_all" model="ir.rule">
+            <field name="name">discuss.channel.member: can join group restricted channels when group is matching</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups"
+                eval="[
+                    Command.link(ref('base.group_user')),
+                    Command.link(ref('base.group_portal')),
+                    Command.link(ref('base.group_public')),
+                ]"
+            />
+            <field name="domain_force">
+                [
+                    ('is_self', '=', True),
+                    ('channel_id.channel_type', '=', 'channel'),
+                    '|',
+                        ('channel_id.group_public_id', '=', False),
+                        ('channel_id.group_public_id', 'in', user.groups_id.ids)
+                ]
+            </field>
+            <!--
+                This is the only case where the current user can join themselves (is_self = True) when the channel
+                is already created, in all other cases they must be invited by someone else.
+            -->
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_create_is_group_matching_group_user" model="ir.rule">
+            <field name="name">discuss.channel.member: internal users can invite others in group restricted channels when group is matching</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">
+                [
+                    ('is_self', '=', False),
+                    ('channel_id.channel_type', '=', 'channel'),
+                    '|',
+                        ('channel_id.group_public_id', '=', False),
+                        ('channel_id.group_public_id', 'in', user.groups_id.ids)
+                ]
+            </field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_create_is_member_group_user" model="ir.rule">
+            <field name="name">discuss.channel.member: internal users can invite others in channels they are member of</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">
+                [
+                    ('is_self', '=', False),
+                    ('channel_id.channel_type', 'not in', ('channel', 'chat')),
+                    ('channel_id.is_member', '=', True)
+                ]
+            </field>
+            <!--
+                create() for the current user is controlled by other rules because create() rules are applied after the record
+                contains its data, which means allowing 'is_self' would allow any user to add themselves in any channel.
+            -->
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="ir_rule_discuss_channel_member_group_system" model="ir.rule">
+            <field name="name">discuss.channel.member: admin can manipulate all entries</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="discuss_gif_favorite_user_rule" model="ir.rule">
+            <field name="name">Discuss.gif.favorite: User access</field>
+            <field name="model_id" ref="model_discuss_gif_favorite"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        </record>
+
+        <record id="discuss_gif_favorite_admin_rule" model="ir.rule">
+            <field name="name">Discuss.gif.favorite: admin full access</field>
+            <field name="model_id" ref="model_discuss_gif_favorite"/>
+            <field name="groups" eval="[Command.link(ref('base.group_erp_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="ir_rule_mail_notifications_group_user" model="ir.rule">
+            <field name="name">mail.notifications: group_user: write its own entries</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user')), Command.link(ref('base.group_portal'))]"/>
+            <field name="domain_force">[('res_partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+
+        <record id="mail_message_subtype_rule_public" model="ir.rule">
+            <field name="name">mail.message.subtype: portal/public: read public subtypes</field>
+            <field name="model_id" ref="model_mail_message_subtype"/>
+            <field name="domain_force">[('internal', '=', False)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
+        </record>
+
+        <record id="mail_activity_rule_user" model="ir.rule">
+            <field name="name">mail.activity: user: write/unlink only (created or assigned)</field>
+            <field name="model_id" ref="model_mail_activity"/>
+            <field name="domain_force">['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="mail_activity_plan_rule_admin" model="ir.rule">
+            <field name="name">Administrators can access all activity plans.</field>
+            <field name="model_id" ref="model_mail_activity_plan"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="mail_activity_plan_template_rule_admin" model="ir.rule">
+            <field name="name">Administrators can access all activity plan templates.</field>
+            <field name="model_id" ref="model_mail_activity_plan_template"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="mail_compose_message_rule" model="ir.rule">
+            <field name="name">Mail Compose Message Rule</field>
+            <field name="model_id" ref="model_mail_compose_message"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="mail_template_employee_rule" model="ir.rule">
+            <field name="name">Employees can only modify templates they have created or been assigned</field>
+            <field name="model_id" ref="model_mail_template"/>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="mail_template_editor_rule" model="ir.rule">
+            <field name="name">Mail Template Editors - Edit All Templates</field>
+            <field name="model_id" ref="model_mail_template"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('group_mail_template_editor')), Command.link(ref('base.group_system'))]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="res_users_settings_volumes_rule_user" model="ir.rule">
+            <field name="name">res.users.settings.volumes: access their own entries</field>
+            <field name="model_id" ref="model_res_users_settings_volumes"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('user_setting_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="res_users_settings_volumes_rule_admin" model="ir.rule">
+            <field name="name">Administrators can access all User Settings volumes.</field>
+            <field name="model_id" ref="model_res_users_settings_volumes"/>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <record id="ir_rule_mail_canned_response_admin" model="ir.rule">
+            <field name="name">Canned response: admin can do all</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('group_mail_canned_response_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <!-- Internal user: rationale is that they read their own or the one belonging to
+        their user groups. They can modify only their own -->
+        <record id="ir_rule_mail_canned_response_user_read" model="ir.rule">
+            <field name="name">Canned response: User read: own or in groups</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('group_ids', 'in', user.groups_id.ids)]</field>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        <record id="ir_rule_mail_canned_response_user_update" model="ir.rule">
+            <field name="name">Canned response: User write/unlink: own only</field>
+            <field name="model_id" ref="model_mail_canned_response"/>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_read" eval="False"/>
+        </record>
+        <record id="ir_rule_mail_scheduled_message_user" model="ir.rule">
+            <field name="model_id" ref="model_mail_scheduled_message"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+</odoo>

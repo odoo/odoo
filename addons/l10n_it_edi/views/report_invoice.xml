@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <div name="comment" position="before">
+            <t t-if="o.l10n_it_stamp_duty"><b>Stamp Duty: </b><span t-field="o.l10n_it_stamp_duty"></span><br/></t>
+            <t t-if="o.l10n_it_ddt_id"><b>Transport Document: </b><span t-field="o.l10n_it_ddt_id"></span><br/></t>
+            <div t-if="o.l10n_it_origin_document_type" name="pa_fields">
+                <b><span t-field="o.l10n_it_origin_document_type"/></b>: <span t-field="o.l10n_it_origin_document_name"/><br/>
+                <t t-if="o.l10n_it_origin_document_date"><b>Document Date: </b><span t-field="o.l10n_it_origin_document_date"/><br/></t>
+                <t t-if="o.l10n_it_cig"><b>CIG: </b><span t-field="o.l10n_it_cig"/><br/></t>
+                <t t-if="o.l10n_it_cup"><b>CUP: </b><span t-field="o.l10n_it_cup"/><br/></t>
+            </div>
+        </div>
+
+        <p name="payment_communication" position="inside">
+            <t t-if="o.country_code == 'IT'">
+                <t t-set="term_lines" t-value="o.line_ids.filtered(lambda line: line.display_type == 'payment_term')"/>
+                <br/><b>Payment Conditions:</b> <t t-if="len(term_lines) == 1">TP02 pagamento completo</t><t t-else="">TP01 pagamento a rate</t><br/>
+            </t>
+        </p>
+    </template>
+</odoo>

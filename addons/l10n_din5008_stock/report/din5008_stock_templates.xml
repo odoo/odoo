@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="din5008_address_block">
+                <tr t-if="o and o._name=='stock.picking' and o.partner_id">
+                    <td class="shipping_address">
+                        <t t-if="o.picking_type_id.code == 'incoming'">
+                            <span class="fw-bold">Vendor Address:</span>
+                            <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                        </t>
+                        <t t-if="o.picking_type_id.code == 'internal'">
+                            <span class="fw-bold">Warehouse Address:</span>
+                            <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                        </t>
+                        <t t-if="o.picking_type_id.code == 'outgoing'">
+                            <t t-set="main_address_box" t-value="o.move_ids[0].partner_id if o.should_print_delivery_address() else o.partner_id"/>
+                            <t t-if="main_address_box.id != o.partner_id.commercial_partner_id.id">
+                                <span class="fw-bold">Beneficiary:</span>
+                                <address class="mb-0" t-esc="o.partner_id.commercial_partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                                <div t-if="o.partner_id.vat">
+                                    <t t-if="o.partner_id.company_id.account_fiscal_country_id.vat_label" t-out="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-else="">Tax ID</t>: <span t-field="o.partner_id.vat"/>
+                                </div>
+                            </t>
+                            <t t-if="main_address_box.id != o.partner_id.id">
+                                <span class="fw-bold">Customer Address:</span>
+                                <address t-esc="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True}'/>
+                            </t>
+                        </t>
+                    </td>
+                </tr>
+            </t>
+        </xpath>
+    </template>
+</odoo>

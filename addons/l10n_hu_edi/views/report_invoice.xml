@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-if="o._get_name_invoice_report() == 'l10n_hu_edi.report_invoice_document'" t-call="l10n_hu_edi.report_invoice_document" t-lang="lang"/>
+        </xpath>
+    </template>
+
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <xpath expr="//t[@t-set='forced_vat']" position="replace"/>
+        <xpath expr="//t[@t-set='o']" position="after">
+            <t t-set="sign" t-value="-1 if 'refund' in o.move_type else 1"/>
+            <t t-set="custom_header" t-value="'l10n_hu_edi.custom_header'"/>
+            <t t-set="information_block">
+            <div class="col-6">
+                <div><strong>Supplier:</strong></div>
+                <div class="float-start company_address">
+                    <ul class="list-unstyled">
+                        <li><t t-out="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                        <li>
+                            <t t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_group_vat">Group Tax ID</t>
+                            <t t-else="else" t-out="o.company_id.account_fiscal_country_id.vat_label or 'Tax ID'"/>:
+                            <span t-if="o.fiscal_position_id.foreign_vat" t-out="o.fiscal_position_id.foreign_vat"/>
+                            <span t-else="else" t-out="o.company_id.vat"/>
+                        </li>
+                        <li t-if="not o.fiscal_position_id.foreign_vat and o.company_id.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.company_id.partner_id.l10n_hu_group_vat"/></li>
+                        <li t-if="o.partner_id.commercial_partner_id.country_id and o.partner_id.commercial_partner_id.country_id.code!='HU'">
+                            EU Tax ID: <span t-out="'HU%s' % o.company_id.vat[:8]"/>
+                        </li>
+                        <li t-if="'out' in o.move_type and o.partner_bank_id">Bank Account: <span t-field="o.partner_bank_id.acc_number"/></li>
+                        <li t-if="o.company_id.l10n_hu_tax_regime=='ie'">The issuer of the invoice is <u>Exempt from VAT</u>.</li>
+                        <li t-if="o.company_id.l10n_hu_tax_regime=='ca'">The issuer of the invoice is <u>Cash accounting</u>.</li>
+                        <li t-if="o.company_id.l10n_hu_tax_regime=='sb'">The issuer of the invoice is <u>Small taxpayer</u>.</li>
+                    </ul>
+                </div>
+            </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='invoice_date']/t[1]" position="attributes">
+            <attribute name="t-if">o.move_type == 'out_invoice' or (o.move_type == 'out_refund' and not o.reversed_entry_id)</attribute>
+        </xpath>
+        <xpath expr="//div[@name='address_not_same_as_shipping']//address" position="before">
+            <strong>Customer:</strong>
+        </xpath>
+        <xpath expr="//div[@name='shipping_address_block']/../.." position="replace"/>
+        <xpath expr="//div[@name='address_not_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
+            <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
+            <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
+                <div/>
+                <strong>Shipping Address:</strong>
+                <div t-field="o.partner_shipping_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//address" position="before">
+            <strong>Customer:</strong>
+        </xpath>
+        <xpath expr="//div[@name='address_same_as_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
+            <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//address" position="before">
+            <strong>Customer:</strong>
+        </xpath>
+        <xpath expr="//div[@name='no_shipping']//span[@t-field='o.partner_id.vat']/.." position="after">
+            <div t-if="o.partner_id.l10n_hu_group_vat">Group Member Tax ID: <span t-field="o.partner_id.l10n_hu_group_vat"/></div>
+        </xpath>
+        <xpath expr="//div[@name='due_date']" position="after">
+            <div class="col" t-if="o.l10n_hu_payment_mode" name="l10n_hu_payment_mode">
+                <strong>Payment Mode</strong>
+                <div t-field="o.l10n_hu_payment_mode"/>
+            </div>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']//span[@t-field='line.quantity']" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">line.quantity * sign if line.quantity != 0 else line.quantity</attribute>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']//span[@t-field='line.price_subtotal']" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">line.price_subtotal * sign</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']//span[@t-out='current_subtotal']" position="attributes">
+            <attribute name="t-out">current_subtotal * sign</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//span[@t-field='o.amount_residual']" position="attributes">
+            <attribute name="t-field"/>
+            <attribute name="t-out">o.amount_residual * sign</attribute>
+            <attribute name="t-options">{"widget": "monetary", "display_currency": o.currency_id}</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//t[@t-call='account.document_tax_totals']" position="attributes">
+            <attribute name="t-call">l10n_hu_edi.document_tax_totals</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('clearfix')]//t[@t-set='tax_totals']" position="attributes">
+            <attribute name="t-value">o._l10n_hu_get_invoice_totals_for_report()</attribute>
+        </xpath>
+        <xpath expr="//td[@name='account_invoice_line_name']/span" position="after">
+            <div t-if="line.product_id.l10n_hu_product_code_type and line.product_id.l10n_hu_product_code">
+                <span t-if="line.product_id.l10n_hu_product_code_type == 'OTHER'">Other Product Code</span>
+                <span t-else="else" t-out="line.product_id.l10n_hu_product_code_type"/>
+                :
+                <span t-out="line.product_id.l10n_hu_product_code"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="document_tax_totals" inherit_id="account.document_tax_totals" primary="True">
+        <xpath expr="//tr[hasclass('o_total')]" position="after">
+            <tr t-if="o.currency_id.name != 'HUF'">
+                <td><strong>Total VAT amount in HUF</strong></td>
+                <td class="text-end text-nowrap">
+                    <span t-out="tax_totals['formatted_total_vat_amount_in_huf']"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="custom_header">
+        <div class="row mb8">
+            <div class="col-6">
+                <img t-if="company.logo" class="o_company_logo_small" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+            </div>
+            <div class="col-6 text-end mb4">
+                <div class="mt0 h4" t-field="company.report_header"/>
+            </div>
+        </div>
+    </template>
+</odoo>

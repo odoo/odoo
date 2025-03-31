@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Todo Kanban view -->
+    <record id="project_task_view_todo_kanban" model="ir.ui.view">
+        <field name="name">project.task.kanban</field>
+        <field name="model">project.task</field>
+        <field name="priority">800</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color"
+                    default_group_by="personal_stage_type_id"
+                    class="o_kanban_small_column"
+                    on_create="quick_create"
+                    quick_create_view="project_todo.project_task_view_todo_quick_create_form"
+                    sample="1"
+                    js_class="project_task_kanban"
+                    default_order="state, priority desc, date_deadline asc, sequence, id desc">
+                <field name="color"/>
+                <field name="sequence"/>
+                <field name="active"/>
+                <field name="state"/>
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                <templates>
+                    <t t-name="menu">
+                        <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
+                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <field name="color" widget="kanban_color_picker"/>
+                    </t>
+                    <t t-name="card">
+                        <t t-set="todoHasAssignees" t-value="record.user_ids.raw_value.length &gt; 1"/>
+                        <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
+                            <field name="name" class="fw-bolder fs-5" widget="name_with_subtask_count"/>
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                            <field t-if="record.displayed_image_id.value" name="displayed_image_id" widget="attachment_image"/>
+                        </div>
+                        <div class="d-flex pt-2">
+                            <div class="d-flex" t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value)}">
+                                <field name="priority" class="me-2" widget="priority"/>
+                                <field name="activity_ids" widget="kanban_activity"/>
+                            </div>
+                            <div class="d-flex ms-auto">
+                                <div t-att-class="{'opacity-50': ['1_done', '1_canceled'].includes(record.state.raw_value), 'o_todo_hide_avatar': !todoHasAssignees}">
+                                    <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
+                                </div>
+                                <field name="state" widget="todo_done_checkmark"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- To-do List View -->
+    <record id="project_task_view_todo_tree" model="ir.ui.view">
+        <field name="name">project.task.todo.list</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <list string="To-dos"
+                  default_group_by="personal_stage_type_id"
+                  editable="bottom"
+                  multi_edit="1"
+                  open_form_view="True"
+                  js_class="todo_list">
+                <field name="priority" widget="priority" nolabel="1"/>
+                <field name="state" widget="todo_done_checkmark" nolabel="1"/>
+                <field name="name"/>
+                <field name="user_ids" optional="show" required="1" widget="many2many_avatar_user" options="{'no_quick_create': True}"/>
+                <field name="tag_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                <field name="personal_stage_type_id" string="Stage" optional="hide"/>
+                <field name="activity_ids" optional="show" widget="list_activity"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Todo Form view -->
+    <record id="project_task_view_todo_form" model="ir.ui.view">
+        <field name="name">project.task.view.todo.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="To-do"
+                  class="o_todo_form_view"
+                  js_class="todo_form">
+                <header>
+                    <field name="personal_stage_type_id"
+                           domain="[('user_id','=',uid)]"
+                           widget="statusbar"
+                           options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                    <field name="active" invisible="1"/>
+                </header>
+                <sheet class="o_todo_form_sheet_bg">
+                    <widget name="web_ribbon" class="todo_archived" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title pe-0">
+                        <h1 class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex w-100">
+                                <field name="priority" widget="priority_switch" class="me-3"/>
+                                <field name="name" options="{'line_breaks': False}" widget="text" class="o_task_name text-truncate w-md-75 w-100 pe-2" placeholder="To-do..."/>
+                            </div>
+                            <div class="d-flex justify-content-end o_state_container">
+                                <field name="state" widget="todo_done_checkmark" class="o_task_state_widget"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_ids"
+                                widget="many2many_avatar_user"
+                                required="1"
+                                options="{'no_quick_create': True}"
+                                placeholder="Assignees"/>
+                        </group>
+                        <group>
+                            <field name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color', 'no_create_edit': True}"
+                                class="me-2"/>
+                        </group>
+                    </group>
+                    <field name="description" type="html" class="oe_description" default_focus="1" options="{'resizable': false, 'collaborative': true}"
+                        placeholder="Type Here..."/>
+                </sheet>
+                <widget name="todo_chatter_panel"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- To-do Quick create form  view -->
+    <record id="project_task_view_todo_quick_create_form" model="ir.ui.view">
+        <field name="name">project.task.view.todo.quick.create.todo</field>
+        <field name="model">project.task</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form class="o_form_project_tasks">
+                <group>
+                    <field name="name" string="To-do Title" placeholder="e.g. Send Invitations"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Todo conversion form (used by an action added in TodoFormView (contoller) -->
+    <record id="project_task_view_todo_conversion_form" model="ir.ui.view">
+        <field name="model">project.task</field>
+        <field name="name">project.task.view.todo.conversion.form</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Task"
+                  js_class="todo_conversion_form">
+                <sheet>
+                    <group>
+                        <!-- company_id field is used in the domain filtering project_id in
+                             hr_timesheet. Creating a bridge module just to add that field is
+                             overkill so it is added here. -->
+                        <field name="company_id" invisible="1"/>
+                        <field name="project_id"
+                               required="1"
+                               default_focus="1"/>
+                        <field name="user_ids"
+                               class="o_task_user_field"
+                               options="{'no_open': True, 'no_quick_create': True}"
+                               widget="many2many_avatar_user"/>
+                        <field name="tag_ids" widget="many2many_tags"
+                               options="{'color_field': 'color', 'no_create_edit': True}"
+                               context="{'project_id': project_id}"
+                               placeholder="Choose tags from the selected project"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_convert_to_task" string="Convert to Task" type="object" class="btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Todo Activity  -->
+    <record id="project_task_view_todo_activity" model="ir.ui.view">
+        <field name="name">project.task.view.todo.activity</field>
+        <field name="model">project.task</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <activity string="To-dos">
+                <field name="user_ids"/>
+                <templates>
+                    <div class="w-100" t-name="activity-box" style="display: inline-grid; grid-template-columns: auto max-content;">
+                        <div>
+                            <span t-att-title="record.name.value">
+                                <field name="name" display="full" class="w-100 o_text_block align-middle"/>
+                            </span>
+                        </div>
+                        <field name="user_ids" widget="many2many_avatar_user" readonly="True"/>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+    <!-- Todo Search  -->
+    <record id="project_task_view_todo_search" model="ir.ui.view">
+        <field name="name">project.task.view.todo.search</field>
+        <field name="model">project.task</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <search string="Todos">
+                <field name="name"/>
+                <field name="tag_ids"/>
+                <field name="user_ids"/>
+                <field name="personal_stage_type_ids" string="Stage"/>
+                <filter string="Starred" name="starred_tasks" domain="[('priority', '=', '1')]"/>
+                <separator/>
+                <filter name="open_tasks" string="Open" domain="[('is_closed', '=', False)]"/>
+                <filter name="closed_tasks" string="Closed" domain="[('is_closed', '=', True)]"/>
+                <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
+                <separator/>
+                <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
+                        domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today"
+                        domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Tags" name="tags" help="By assigned tags" context="{'group_by':'tag_ids'}"/>
+                    <filter string="Assignees" name="user_ids" context="{'group_by': 'user_ids'}"/>
+                    <filter string="Stage" name="stage" help="By personal stages" context="{'group_by':'personal_stage_type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Todo main action + view links-->
+    <record id="project_task_action_todo" model="ir.actions.act_window">
+        <field name="name">To-dos</field>
+        <field name="res_model">project.task</field>
+        <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False), ('parent_id', '=', False)]</field>
+        <field name="view_mode">kanban,form,list,activity</field>
+        <field name="search_view_id" ref="project_task_view_todo_search"/>
+        <field name="context">{'search_default_open_tasks': 1, 'list_view_ref': 'project_todo.project_task_view_todo_tree', 'default_project_id': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No to-do found. Let's create one!
+            </p><p>
+                Keep your work organized by using memos and to-do lists.
+                Your to-do items are private by default, but you can choose to share them with others by adding them as assignees.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_action_todo_kanban_view">
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_task_view_todo_kanban"/>
+        <field name="act_window_id" ref="project_task_action_todo"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_action_todo_form_view">
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_task_view_todo_form"/>
+        <field name="act_window_id" ref="project_task_action_todo"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_action_todo_tree_view">
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="project_task_view_todo_tree"/>
+        <field name="act_window_id" ref="project_task_action_todo"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_action_todo_activity_view">
+        <field name="view_mode">activity</field>
+        <field name="view_id" ref="project_task_view_todo_activity"/>
+        <field name="act_window_id" ref="project_task_action_todo"/>
+    </record>
+
+    <!-- Todo pre-loading action -->
+    <record id="project_task_preload_action_todo" model="ir.actions.server">
+        <field name="name">menu load To-dos</field>
+        <field name="path">to-do</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            model._ensure_onboarding_todo(); action = env["ir.actions.actions"]._for_xml_id("project_todo.project_task_action_todo")
+        </field>
+    </record>
+
+    <!-- Conversion actions-->
+    <record id="project_task_action_convert_todo_to_task" model="ir.actions.act_window">
+        <field name="name">Convert to Task</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'dialog_size': 'medium'}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="project_task_action_convert_todo_to_task_form_view">
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_task_view_todo_conversion_form"/>
+        <field name="act_window_id" ref="project_task_action_convert_todo_to_task"/>
+    </record>
+
+</odoo>

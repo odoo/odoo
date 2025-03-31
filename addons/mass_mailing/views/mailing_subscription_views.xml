@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mailing_subscription_view_form" model="ir.ui.view">
+        <field name="name">mailing.subscription.view.form</field>
+        <field name="model">mailing.subscription</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <form string="Mailing List Subscription">
+                <sheet>
+                    <group>
+                        <field name="list_id"/>
+                        <field name="is_blacklisted" invisible="1"/>
+                        <label for="contact_id" class="oe_inline"/>
+                        <div class="o_row o_row_readonly">
+                            <i class="fa fa-ban text-danger" role="img" title="This email is blacklisted for mass mailings"
+                                aria-label="Blacklisted" invisible="not is_blacklisted" groups="base.group_user"></i>
+                            <field name="contact_id"/>
+                        </div>
+                        <field name="create_date" string="Subscription Date"/>
+                        <field name="opt_out_datetime" readonly="1"/>
+                        <field name="opt_out"/>
+                        <field name="opt_out_reason_id"/>
+                        <field name="message_bounce" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_view_graph" model="ir.ui.view">
+        <field name="name">mailing.subscription.view.graph</field>
+        <field name="model">mailing.subscription</field>
+        <field name="arch" type="xml">
+            <graph js_class="subscription_graph" string="Mailing List Subscriptions" type="pie" sample="1">
+                <field name="opt_out_datetime" interval="week"/>
+                <!-- Hide the bounce measure from the measures dropdown -->
+                <field name="message_bounce" type="measure" invisible="1"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_view_pivot" model="ir.ui.view">
+        <field name="name">mailing.subscription.view.pivot</field>
+        <field name="model">mailing.subscription</field>
+        <field name="arch" type="xml">
+            <pivot string="Mailing List Subscriptions" sample="1">
+                <field name="opt_out_datetime" interval="week" type="row"/>
+                <field name="list_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_view_tree" model="ir.ui.view">
+        <field name="name">mailing.subscription.view.list</field>
+        <field name="model">mailing.subscription</field>
+        <field name="arch" type="xml">
+            <list string="Mailing List Subscriptions" create="0" type="object" action="open_mailing_contact">
+                <field name="create_date" string="Subscription Date"/>
+                <field name="contact_id" string="Mailing Contact"/>
+                <field name="is_blacklisted" optional="hide"/>
+                <field name="list_id"/>
+                <field name="opt_out_datetime" readonly="1"/>
+                <field name="opt_out_reason_id"/>
+                <field name="message_bounce" optional="hide" sum="Total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_view_search" model="ir.ui.view">
+        <field name="name">mailing.subscription.view.search</field>
+        <field name="model">mailing.subscription</field>
+        <field name="arch" type="xml">
+           <search string="Mailing List Subscriptions">
+                <field name="list_id"/>
+                <field name="opt_out_reason_id"/>
+                <field name="contact_id"/>
+                <field name="opt_out_datetime"/>
+                <filter string="Subscription Date" name="filter_create_date" date="create_date" default_period="month"/>
+                <separator/>
+                <filter string="Unsubscription Date" name="filter_opt_out_datetime" date="opt_out_datetime" default_period="month"/>
+                <group expand="0" string="Group By">
+                    <filter string="Unsubscription Date" name="group_by_opt_out_datetime" context="{'group_by': 'opt_out_datetime:week'}"/>
+                    <filter string="Mailing List" name="group_by_list_id" context="{'group_by': 'list_id'}"/>
+                    <filter string="Reason" name="group_by_opt_out_reason_id" context="{'group_by': 'opt_out_reason_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="mailing_subscription_action_report_optout" model="ir.actions.act_window">
+        <field name="name">Opt-Out Report</field>
+        <field name="res_model">mailing.subscription</field>
+        <field name="view_mode">graph,pivot,list,form</field>
+        <field name="context">{
+            'search_default_group_by_opt_out_reason_id': 1,
+        }</field>
+        <field name="domain">[('opt_out', '=', True)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet.
+            </p><p>
+                Come back later to discover why contacts unsubscribe.<br/>
+                <a name="%(mass_mailing.mailing_subscription_optout_action)d" type="action" class="text-primary">
+                    <i class="oi oi-arrow-right"/> Configure Opt-out Reasons
+                </a>
+            </p>
+        </field>
+    </record>
+</odoo>

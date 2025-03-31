@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_hr_employee_org_chart" model="ir.actions.act_window">
+        <field name="name">Org Chart</field>
+        <field name="res_model">hr.employee</field>
+        <field name="path">org-chart</field>
+        <field name="view_mode">hierarchy,kanban,list,form,activity,graph,pivot</field>
+        <field name="domain">[]</field>
+        <field name="context">{'chat_icon': True}</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new employee
+            </p><p>
+                Quickly find all the information you need for your employees such as contact data, job position, availability, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(hr_org_chart.action_hr_employee_org_chart)d"
+                    icon="fa-users"
+                    type="action"
+                    context="{'hierarchy_res_id': id}"
+                    invisible="(not parent_id and not child_ids) or parent_id == id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Org Chart</span>
+                    </div>
+                </button>
+            </xpath>
+            <div id="o_work_employee_main" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5 pe-lg-0">
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </div>
+        </field>
+    </record>
+    
+    <record id="hr_employee_view_pivot_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.pivot.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="department_color" type="measure" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="hr_employee_view_graph_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.graph.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="department_color" type="measure" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_employee_hierarchy_view" model="ir.ui.view">
+        <field name="name">hr.employee.view.hierarchy</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <hierarchy child_field="child_ids" js_class="hr_employee_hierarchy" icon="fa-users" draggable="1">
+                <field name="name" />
+                <field name="job_id" />
+                <field name="department_color" />
+                <field name="hr_icon_display" />
+                <field name="department_id" />
+                <templates>
+                    <t t-name="hierarchy-box">
+                        <div t-attf-class="o_hierarchy_node_header d-flex justify-content-center pb-4 o_hierarchy_node_color_{{ record.department_color.raw_value }}"
+                             t-att-title="record.department_id.value"
+                        >
+                            <field name="image_1024" preview_image="image_128" options="{'zoom': true, 'zoom_delay': 1000}" widget="background_image" />
+                        </div>
+                        <div class="d-flex flex-column text-center">
+                            <div class="d-flex">
+                                <field class="fw-bold w-100" name="name" />
+                                <field name="hr_icon_display" class="flex-shrink-0" widget="hr_presence_status" />
+                            </div>
+                            <field name="job_title"/>
+                        </div>
+                    </t>
+                </templates>
+            </hierarchy>
+        </field>
+    </record>
+
+    <record id="hr_employee_public_view_form_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.form.inherit.org_chart</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='o_work_employee_main']" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+        <field name="name">res.users.preferences.view.form.inherit.org_chart</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <div id="o_work_employee_main" position="after">
+                <div id="o_employee_right" class="col-lg-4 px-0 ps-lg-5">
+                    <separator string="Organization Chart"/>
+                    <field name="child_ids" class="position-relative" widget="hr_org_chart" readonly="1" nolabel="1"/>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="act_open_view_employee_list_my_hierarchy_view" model="ir.actions.act_window.view">
+        <field name="sequence" eval="40"/>
+        <field name="view_mode">hierarchy</field>
+        <field name="act_window_id" ref="hr.open_view_employee_list_my"/>
+    </record>
+</odoo>

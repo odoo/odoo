@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_searchbar_input" name="Search">
+    <t t-call="website.website_search_box_input">
+        <t t-set="search_type" t-valuef="all"/>
+        <t t-set="action" t-valuef="/website/search"/>
+        <t t-set="limit" t-valuef="5"/>
+        <t t-set="display_image" t-valuef="true"/>
+        <t t-set="display_description" t-valuef="true"/>
+        <t t-set="display_extra_link" t-valuef="true"/>
+        <t t-set="display_detail" t-valuef="true"/>
+        <t t-set="default_style" t-value="True"/>
+    </t>
+</template>
+<template id="s_searchbar" name="Search">
+    <section class="s_searchbar o_colored_level o_cc o_cc2 pt48 pb48">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <h2>Search on our website</h2>
+                    <p>You will get results from blog posts, products, etc</p>
+                    <t t-snippet-call="website.s_searchbar_input" string="Search Input"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="searchbar_input_snippet_options" inherit_id="website.snippet_options" name="search bar snippet options">
+    <xpath expr="." position="inside">
+        <div data-js="SearchBar" data-selector=".s_searchbar_input">
+            <we-select string="Search within" data-name="scope_opt"
+                    data-attribute-name="searchType" data-apply-to=".search-query">
+                <we-button data-set-search-type="all" data-select-data-attribute="all" data-name="search_all_opt" data-form-action="/website/search">Everything</we-button>
+                <we-button data-set-search-type="pages" data-select-data-attribute="pages" data-name="search_pages_opt" data-form-action="/pages">Pages</we-button>
+            </we-select>
+            <we-select string="Order by" data-name="order_opt" data-attribute-name="orderBy" data-apply-to=".search-query">
+                <we-button data-set-order-by="name asc" data-select-data-attribute="name asc" data-name="order_name_asc_opt">Name (A-Z)</we-button>
+            </we-select>
+            <t t-set="unit">results</t>
+            <we-input string="Suggestions" data-name="limit_opt" data-attribute-name="limit"
+                data-apply-to=".search-query" data-select-data-attribute="" t-att-data-unit="unit"/>
+            <div data-dependencies="limit_opt">
+                <we-checkbox string="Description" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+                    data-apply-to=".search-query"/>
+                <we-checkbox string="Extra Link" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayExtraLink"
+                    data-apply-to=".search-query"/>
+                <we-checkbox string="Detail" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayDetail"
+                    data-apply-to=".search-query"/>
+                <we-checkbox string="Image" data-dependencies="search_all_opt" data-select-data-attribute="true" data-attribute-name="displayImage"
+                    data-apply-to=".search-query"/>
+
+                <we-checkbox string="Content" data-dependencies="search_pages_opt" data-select-data-attribute="true" data-attribute-name="displayDescription"
+                    data-apply-to=".search-query"/>
+            </div>
+            <we-select string="Style">
+                <we-button data-set-searchbar-style="default">Default Input Style</we-button>
+                <we-button data-set-searchbar-style="light">Light</we-button>
+            </we-select>
+        </div>
+    </xpath>
+    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside" t-translation="off">, .s_searchbar_input</xpath>
+</template>
+
+<record id="website.s_searchbar_000_js" model="ir.asset">
+    <field name="name">Searchbar 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_searchbar/000.js</field>
+</record>
+
+<record id="website.s_searchbar_000_xml" model="ir.asset">
+    <field name="name">Searchbar 000 XML</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_searchbar/000.xml</field>
+</record>
+
+</odoo>

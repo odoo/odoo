@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.PickerContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-PickerContent-picker')]" position="before">
+            <div t-if="Object.keys(props.pickers).length > 1" class="o-mail-PickerContent-tab d-flex m-1">
+                <nav class="btn-group w-100">
+                    <button t-if="props.pickers.emoji" class="btn btn-secondary" t-on-click="() => this.props.state.picker = this.props.PICKERS.EMOJI" t-att-class="{ 'active': props.state.picker === this.props.PICKERS.EMOJI }">
+                        Emoji
+                    </button>
+                    <button t-if="props.pickers.gif" class="btn btn-secondary" t-on-click="() => this.props.state.picker = this.props.PICKERS.GIF" t-att-class="{ 'active': props.state.picker === this.props.PICKERS.GIF }">
+                        GIFs
+                    </button>
+                </nav>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('o-mail-PickerContent-emojiPicker')]" position="after">
+            <div t-if="props.state.picker === this.props.PICKERS.GIF" class="d-flex align-items-center w-100">
+                <GifPicker t-if="store.hasGifPickerFeature" PICKERS="props.PICKERS" onSelect="props.pickers.gif" close="props.close" state="props.state"/>
+                <div t-elif="store.self.isAdmin" class="d-flex flex-column align-items-center justify-content-center m-3">
+                    <span class="o-mail-PickerContent-bigEmoji">🧑‍🍳🌶️</span>
+                    <span class="fs-5 text-muted">Want to spice up your conversations with GIFs? Activate the feature in the settings!</span>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

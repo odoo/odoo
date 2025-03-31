@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FormView">
+        <div t-att-class="className" t-ref="root">
+            <div class="o_form_view_container">
+                <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="display">
+                    <t t-set-slot="control-panel-create-button">
+                        <t t-if="canCreate">
+                            <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
+                        </t>
+                    </t>
+
+                    <t t-set-slot="layout-buttons">
+                        <t t-if="env.inDialog">
+                            <t t-if="footerArchInfo">
+                                <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="footerArchInfo">
+                                    <t t-set-slot="default_buttons">
+                                        <t t-call="{{ props.buttonTemplate }}"/>
+                                    </t>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <t t-call="{{ props.buttonTemplate }}"/>
+                            </t>
+                        </t>
+                    </t>
+
+                    <t t-set-slot="layout-actions">
+                        <t t-if="!env.isSmall and buttonBoxTemplate">
+                            <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+                        </t>
+                    </t>
+
+                    <t t-set-slot="control-panel-additional-actions">
+                        <CogMenu t-props="this.cogMenuProps">
+                            <t t-if="env.isSmall and statusBarDropdownItemsTemplate">
+                                <t t-call="{{ statusBarDropdownItemsTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+                            </t>
+                        </CogMenu>
+                        <t t-if="env.isSmall and buttonBoxTemplate">
+                            <t t-call="{{ buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+                        </t>
+                    </t>
+
+                    <t t-set-slot="control-panel-status-indicator">
+                        <t t-if="canEdit">
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" />
+                        </t>
+                    </t>
+                    <t t-set-slot="control-panel-create-button">
+                        <t t-if="canCreate">
+                            <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create">New</button>
+                        </t>
+                    </t>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                </Layout>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.FormView.Buttons">
+        <div t-if="model.root.isInEdition" class="o_form_buttons_edit d-flex gap-1">
+            <button type="button" class="btn btn-primary o_form_button_save" data-hotkey="s" t-on-click.stop="() => this.saveButtonClicked({closable: true})">
+                Save
+            </button>
+            <button type="button" class="btn btn-secondary o_form_button_cancel" data-hotkey="j" t-on-click.stop="discard">
+                Discard
+            </button>
+            <button t-if="props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="props.removeRecord" data-hotkey="x">
+                Remove
+            </button>
+        </div>
+        <div t-elif="canCreate" class="o_form_buttons_view">
+            <button type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="create">
+                New
+            </button>
+        </div>
+    </t>
+
+    <t t-name="web.DefaultButtonsSlot">
+        <t t-slot="default_buttons"></t>
+    </t>
+</templates>

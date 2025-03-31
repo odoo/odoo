@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo>
+<data noupdate="1">
+    <!-- Applicant-related subtypes for messaging / Chatter -->
+    <record id="mt_applicant_new" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+        <field name="description">Applicant created</field>
+    </record>
+    <record id="mt_applicant_stage_changed" model="mail.message.subtype">
+        <field name="name">Stage Changed</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
+        <field name="description">Stage changed</field>
+    </record>
+    <record id="mt_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="default" eval="True"/>
+    </record>
+
+    <!-- Job-related subtypes for messaging / Chatter -->
+    <record id="mt_job_new" model="mail.message.subtype">
+        <field name="name">Job Position created</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="hidden" eval="True"/>
+        <field name="description">Job Position created</field>
+    </record>
+    <record id="mt_job_applicant_stage_changed" model="mail.message.subtype">
+        <field name="name">Applicant Stage Changed</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_applicant_stage_changed"/>
+        <field name="relation_field">job_id</field>
+    </record>
+    <record id="mt_job_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="True"/>
+        <field name="parent_id" ref="mt_applicant_hired"/>
+        <field name="relation_field">job_id</field>
+    </record>
+    <record id="mt_job_applicant_new" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+        <field name="parent_id" ref="mt_applicant_new" />
+        <field name="relation_field">job_id</field>
+    </record>
+
+    <!-- Department-related (parent) subtypes for messaging / Chatter -->
+    <record id="mt_department_new" model="mail.message.subtype">
+        <field name="name">Job Position Created</field>
+        <field name="res_model">hr.department</field>
+        <field name="sequence" eval="1"/>
+        <field name="relation_field">department_id</field>
+        <field name="default">False</field>
+    </record>
+
+</data></odoo>

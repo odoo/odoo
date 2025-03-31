@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem name="Marketing Card"
+        id="card_menu"
+        web_icon="marketing_card,static/description/icon.png"
+        sequence="270"
+        groups="marketing_card.marketing_card_group_user"/>
+
+    <menuitem name="Campaigns"
+        id="card_campaign_menu"
+        parent="card_menu"
+        sequence="0"
+        action="card_campaign_action"
+        groups="marketing_card.marketing_card_group_user"/>
+
+    <!-- Technical -->
+    <menuitem name="Marketing Card"
+        id="marketing_card_menu_technical"
+        parent="base.menu_custom"
+        groups="marketing_card.marketing_card_group_manager,base.group_no_one"
+        sequence="4"/>
+
+    <menuitem name="Card Template"
+        id="cards_template_menu"
+        parent="marketing_card.marketing_card_menu_technical"
+        groups="marketing_card.marketing_card_group_manager,base.group_no_one"
+        action="card_template_action"/>
+</odoo>

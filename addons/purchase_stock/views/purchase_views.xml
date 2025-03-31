@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="purchase_order_view_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_rfq_send']" position="after">
+                <button name="action_view_picking" 
+                    string="Receive Products" class="oe_highlight" type="object" 
+                    invisible="is_shipped or state not in ('purchase', 'done') or incoming_picking_count == 0" 
+                    data-hotkey="y" groups="stock.group_stock_user"/>
+            </xpath>
+            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
+                <attribute name="invisible">state not in ('purchase', 'done') or mail_reminder_confirmed or not date_planned or effective_date</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button type="object"
+                    name="action_view_picking"
+                    class="oe_stat_button"
+                    icon="fa-truck" invisible="incoming_picking_count == 0" groups="stock.group_stock_user">
+                    <field name="incoming_picking_count" widget="statinfo" string="Receipt" help="Incoming Shipments"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="is_shipped" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list//field[@name='date_planned']" position="after">
+                <field name="move_dest_ids" column_invisible="True"/>
+            </xpath>
+            <xpath expr="//page/field[@name='order_line']/list/field[@name='product_qty']" position="after">
+                <field name="forecasted_issue" column_invisible="True"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or not is_storable" class="text-danger"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or not is_storable"/>
+            </xpath>
+            <xpath expr="//div[@name='date_planned_div']" position="inside">
+                <div>
+                    <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" invisible="state in ['purchase', 'done'] or not partner_id">
+                        <span invisible="on_time_rate &lt; 0"><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
+                        <span invisible="on_time_rate &gt;= 0">No On-time Delivery Data</span>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='receipt_reminder_email']" position="attributes">
+                <attribute name="invisible">effective_date</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reminder']" position="attributes">
+                <attribute name="invisible">effective_date</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reminder']" position="after">
+                <field name="effective_date" invisible="not effective_date"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">
+                <field name="move_ids"/>
+            </xpath>
+            <field name="invoice_status" position="before">
+                <field name="receipt_status" invisible="state not in ('purchase', 'done')"/>
+            </field>
+            <xpath expr="//field[@name='order_line']/form//field[@name='analytic_distribution']" position="before">
+                <field name="propagate_cancel" groups="base.group_no_one"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list//field[@name='analytic_distribution']" position="before">
+                <field name="propagate_cancel" groups="base.group_no_one" optional="hide"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list//field[@name='qty_received']" position="attributes">
+                <attribute name="column_invisible">parent.state not in ('purchase', 'done')</attribute>
+                <attribute name="readonly">product_type == 'consu'</attribute>
+            </xpath>
+            <xpath expr="//page[@name='purchase_delivery_invoice']/group/group" position="inside">
+                <field name="default_location_dest_id_usage" invisible="1"/>
+                <field name="incoterm_id" readonly="state == 'done'"/>
+                <field name="incoterm_location"  readonly="state == 'done'"/>
+            </xpath>
+            <xpath expr="//div[@name='reminder']" position="after">
+                <field name="picking_type_id" domain="[('code','=','incoming'), '|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]" options="{'no_create': True}" groups="stock.group_stock_multi_locations" readonly="state in ['cancel', 'done', 'purchase']"/>
+                <field name="dest_address_id" groups="stock.group_stock_multi_locations" invisible="default_location_dest_id_usage != 'customer'" readonly="state in ['cancel', 'done', 'purchase']" required="default_location_dest_id_usage == 'customer'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_view_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.line.form.inherit</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_lines']" position="after">
+                <separator string="Stock Moves"/>
+                <field name="move_ids"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_view_tree_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.list.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="before">
+                <field name="effective_date" column_invisible="True"/>
+                <field name="receipt_status" optional="hide" widget="badge"
+                decoration-success="date_planned and (date_planned &gt; datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') or receipt_status=='full' and effective_date &lt;= date_planned)"
+                decoration-danger="date_planned and (date_planned &lt; effective_date or date_planned &lt; datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and receipt_status!='full' and effective_date &lt;= date_planned)"
+                decoration-warning="date_planned and date_planned &gt;= datetime.datetime.combine(datetime.date.today(), datetime.time(0,0,0)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and date_planned &lt;= datetime.datetime.combine(datetime.date.today(), datetime.time(23,59,59)).to_utc().strftime('%Y-%m-%d %H:%M:%S') and receipt_status!='full'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

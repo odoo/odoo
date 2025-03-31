@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="act_stock_return_picking" model="ir.actions.act_window">
+        <field name="name">Return</field>
+        <field name="res_model">stock.return.picking</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_stock_return_picking_form" model="ir.ui.view">
+        <field name="name">Return lines</field>
+        <field name="model">stock.return.picking</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="picking_id" invisible="1" force_save="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="product_return_moves">
+                    <list editable="bottom" create="1" decoration-warning="not move_id">
+                        <field name="move_quantity" column_invisible="1"/>
+                        <field name="product_id" force_save="1"/>
+                        <field name="quantity" decoration-danger="move_quantity &lt; quantity"/>
+                        <field name="uom_id" groups="uom.group_uom"/>
+                        <field name="move_id" column_invisible="True"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_create_returns" string="Return" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="action_create_returns_all" string="Return All" type="object" class="btn-primary"/>
+                    <button name="action_create_exchanges" string="Return for Exchange" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="x" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

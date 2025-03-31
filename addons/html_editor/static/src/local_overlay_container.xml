@@ -1,0 +1,14 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.LocalOverlayContainer">
+        <div class="o-wysiwyg-local-overlay position-relative h-0 w-0" t-ref="localOverlay"/>
+        <div class="o-wysiwyg-local-overlay position-relative h-0 w-0">
+            <t t-foreach="Components.entries" t-as="C" t-key="C[0]">
+                <div class="oe-local-overlay" t-att-data-oe-local-overlay-id="C[0]">
+                    <ErrorHandler onError="error => this.handleComponentError(error, C)">
+                        <t t-component="C[1].Component" t-props="C[1].props"/>
+                    </ErrorHandler>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

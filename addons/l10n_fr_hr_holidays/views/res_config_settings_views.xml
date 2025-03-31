@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.hr</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block name="work_organization_setting_container" position="after">
+                <field name="company_country_code" invisible="1"/>
+                <block title="French Time Off Localization" invisible="company_country_code != 'FR'">
+                    <setting company_dependent="1" help="Set the time off type used as the company Paid Time Off to compute part-timers leave duration">
+                        <field name="l10n_fr_reference_leave_type"
+                            class="o_light_label"
+                            domain="[('company_id', 'in', [company_id, False])]"
+                            context="{'default_company_id': company_id}"/>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+
+    <menuitem id="hr_holidays_menu_configuration"
+        name="Settings"
+        parent="hr_holidays.menu_hr_holidays_configuration"
+        sequence="10"
+        action="hr.hr_config_settings_action"
+        groups="base.group_system"/>
+</odoo>

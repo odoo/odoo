@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.proxy.user</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='account_vendor_bills']" position="after">
+                <block title="Italian Electronic Invoicing" invisible="country_code != 'IT'" id='account_edi'>
+                    <setting id="italian_edi">
+                        <div class="group-content">
+                            <field name="l10n_it_edi_proxy_current_state" invisible="1"/>
+                            <span class="o_form_label">
+                                Fattura Elettronica mode
+                            </span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
+                            <div class="text-muted">
+                                In demo mode Odoo will just simulate the sending of invoices to the government.<br/>
+                                In test mode (experimental) Odoo will send the invoices to a non-production service.
+                                Saving this change will direct all companies on this database to this use this configuration.
+                                Once registered for testing or official, the mode cannot be changed.
+                            </div>
+                            <field name="l10n_it_edi_demo_mode"
+                                    widget="radio"
+                                    options="{'horizontal': true}"/>
+                        </div>
+                        <div class="mt8 content-group" invisible="l10n_it_edi_proxy_current_state == 'active' or l10n_it_edi_proxy_current_state == 'demo' and l10n_it_edi_demo_mode == 'demo'">
+                            <span class="o_form_label">Allow Odoo to process invoices</span>
+                            <div class="text-muted">
+                                By checking this box, I accept that Odoo may process my invoices.
+                            </div>
+                            <div class="content-group">
+                                <field name="l10n_it_edi_register"/>
+                            </div>
+
+                        </div>
+                        <div class="text-success mt8" invisible="l10n_it_edi_proxy_current_state in ['inactive', 'demo']">
+                            An Official or Test service has been registered.
+                        </div>
+                        <div class="text-success mt8" invisible="l10n_it_edi_proxy_current_state != 'demo' or l10n_it_edi_demo_mode != 'demo'">
+                            A Demo service is in use.
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

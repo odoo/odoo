@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.web.geoloclaize</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='base_geolocalize_warning']" position="replace">
+                <div id="geolocalize_params"
+                    class="content-group"
+                    invisible="not module_base_geolocalize">
+                    API: <field name="geoloc_provider_id"/>
+                    <field name="geoloc_provider_techname" invisible="1"/>
+                    <div invisible="geoloc_provider_techname != 'googlemap'">
+                        Key: <field name='geoloc_provider_googlemap_key'/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

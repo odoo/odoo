@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ActionPanel">
+        <ResizablePanel t-if="props.resizable and !env.inChatWindow and !env.inChatter" class="classNames" handleSide="'start'" initialWidth="props.initialWidth ?? store.discuss.INSPECTOR_WIDTH" minWidth="props.minWidth ?? store.discuss.INSPECTOR_WIDTH">
+            <t t-call="mail.ActionPanel.content"/>
+        </ResizablePanel>
+        <div t-else="" t-att-class="classNames">
+            <t t-call="mail.ActionPanel.content"/>
+        </div>
+    </t>
+
+    <t t-name="mail.ActionPanel.content">
+        <div class="o-mail-ActionPanel-header position-sticky top-0 pt-2 pb-1 d-flex flex-column bg-inherit smaller" t-att-class="{ 'px-1': env.inChatWindow, 'pe-2': !env.inChatWindow }">
+            <div class="d-flex align-items-baseline gap-1">
+                <button t-if="env.closeActionPanel" class="btn p-1 opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="env.closeActionPanel">
+                    <i class="oi oi-arrow-left fa-fw"/>
+                </button>
+                <i t-if="props.icon" class="text-muted opacity-50" t-att-class="props.icon"/>
+                <p t-if="props.title" class="fw-bold text-uppercase m-0 text-muted opacity-75 flex-grow-1" t-esc="props.title"/>
+            </div>
+            <t t-slot="header"/>
+        </div>
+        <div class="px-1 d-flex flex-column flex-grow-1 bg-inherit">
+            <t t-slot="default"/>
+        </div>
+    </t>
+
+</templates>

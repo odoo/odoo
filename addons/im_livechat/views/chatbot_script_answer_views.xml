@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="chatbot_script_answer_view_form" model="ir.ui.view">
+        <field name="name">chatbot.script.answer.view.form</field>
+        <field name="model">chatbot.script.answer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="script_step_id" invisible="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="chatbot_script_answer_view_tree" model="ir.ui.view">
+        <field name="name">chatbot.script.answer.view.list</field>
+        <field name="model">chatbot.script.answer</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="script_step_id"/>
+                <field name="name"/>
+                <field name="redirect_link" string="Optional Link"/>
+            </list>
+        </field>
+    </record>
+
+</data></odoo>

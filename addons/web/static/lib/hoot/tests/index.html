@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>HOOT internal tests</title>
+
+        <!-- Source map -->
+        <script type="importmap">
+            {
+                "imports": {
+                    "@odoo/hoot-dom": "/web/static/lib/hoot-dom/hoot-dom.js",
+                    "@odoo/hoot-mock": "/web/static/lib/hoot/hoot-mock.js",
+                    "@odoo/hoot": "/web/static/lib/hoot/hoot.js",
+                    "@odoo/owl": "/web/static/lib/hoot/tests/hoot-owl-module.js",
+                    "@web/../lib/hoot-dom/helpers/dom": "/web/static/lib/hoot-dom/helpers/dom.js",
+                    "@web/../lib/hoot-dom/helpers/events": "/web/static/lib/hoot-dom/helpers/events.js",
+                    "@web/../lib/hoot-dom/helpers/time": "/web/static/lib/hoot-dom/helpers/time.js",
+                    "@web/../lib/hoot-dom/hoot_dom_utils": "/web/static/lib/hoot-dom/hoot_dom_utils.js",
+                    "/web/static/lib/hoot-dom/helpers/dom": "/web/static/lib/hoot-dom/helpers/dom.js",
+                    "/web/static/lib/hoot-dom/helpers/events": "/web/static/lib/hoot-dom/helpers/events.js",
+                    "/web/static/lib/hoot-dom/helpers/time": "/web/static/lib/hoot-dom/helpers/time.js",
+                    "/web/static/lib/hoot-dom/hoot_dom_utils": "/web/static/lib/hoot-dom/hoot_dom_utils.js",
+                    "/web/static/lib/hoot-dom/hoot-dom": "/web/static/lib/hoot-dom/hoot-dom.js",
+                    "/web/static/lib/hoot/core/cleanup": "/web/static/lib/hoot/core/cleanup.js",
+                    "/web/static/lib/hoot/core/config": "/web/static/lib/hoot/core/config.js",
+                    "/web/static/lib/hoot/core/expect": "/web/static/lib/hoot/core/expect.js",
+                    "/web/static/lib/hoot/core/fixture": "/web/static/lib/hoot/core/fixture.js",
+                    "/web/static/lib/hoot/core/job": "/web/static/lib/hoot/core/job.js",
+                    "/web/static/lib/hoot/core/logger": "/web/static/lib/hoot/core/logger.js",
+                    "/web/static/lib/hoot/core/runner": "/web/static/lib/hoot/core/runner.js",
+                    "/web/static/lib/hoot/core/suite": "/web/static/lib/hoot/core/suite.js",
+                    "/web/static/lib/hoot/core/tag": "/web/static/lib/hoot/core/tag.js",
+                    "/web/static/lib/hoot/core/test": "/web/static/lib/hoot/core/test.js",
+                    "/web/static/lib/hoot/core/url": "/web/static/lib/hoot/core/url.js",
+                    "/web/static/lib/hoot/hoot_utils": "/web/static/lib/hoot/hoot_utils.js",
+                    "/web/static/lib/hoot/hoot-mock": "/web/static/lib/hoot/hoot-mock.js",
+                    "/web/static/lib/hoot/hoot": "/web/static/lib/hoot/hoot.js",
+                    "/web/static/lib/hoot/lib/diff_match_patch": "/web/static/lib/hoot/lib/diff_match_patch.js",
+                    "/web/static/lib/hoot/main_runner": "/web/static/lib/hoot/main_runner.js",
+                    "/web/static/lib/hoot/mock/animation": "/web/static/lib/hoot/mock/animation.js",
+                    "/web/static/lib/hoot/mock/console": "/web/static/lib/hoot/mock/console.js",
+                    "/web/static/lib/hoot/mock/date": "/web/static/lib/hoot/mock/date.js",
+                    "/web/static/lib/hoot/mock/math": "/web/static/lib/hoot/mock/math.js",
+                    "/web/static/lib/hoot/mock/navigator": "/web/static/lib/hoot/mock/navigator.js",
+                    "/web/static/lib/hoot/mock/network": "/web/static/lib/hoot/mock/network.js",
+                    "/web/static/lib/hoot/mock/notification": "/web/static/lib/hoot/mock/notification.js",
+                    "/web/static/lib/hoot/mock/storage": "/web/static/lib/hoot/mock/storage.js",
+                    "/web/static/lib/hoot/mock/sync_values": "/web/static/lib/hoot/mock/sync_values.js",
+                    "/web/static/lib/hoot/mock/window": "/web/static/lib/hoot/mock/window.js",
+                    "/web/static/lib/hoot/tests/local_helpers": "/web/static/lib/hoot/tests/local_helpers.js",
+                    "/web/static/lib/hoot/ui/hoot_buttons": "/web/static/lib/hoot/ui/hoot_buttons.js",
+                    "/web/static/lib/hoot/ui/hoot_colors": "/web/static/lib/hoot/ui/hoot_colors.js",
+                    "/web/static/lib/hoot/ui/hoot_config_menu": "/web/static/lib/hoot/ui/hoot_config_menu.js",
+                    "/web/static/lib/hoot/ui/hoot_copy_button": "/web/static/lib/hoot/ui/hoot_copy_button.js",
+                    "/web/static/lib/hoot/ui/hoot_debug_toolbar": "/web/static/lib/hoot/ui/hoot_debug_toolbar.js",
+                    "/web/static/lib/hoot/ui/hoot_dropdown": "/web/static/lib/hoot/ui/hoot_dropdown.js",
+                    "/web/static/lib/hoot/ui/hoot_job_buttons": "/web/static/lib/hoot/ui/hoot_job_buttons.js",
+                    "/web/static/lib/hoot/ui/hoot_link": "/web/static/lib/hoot/ui/hoot_link.js",
+                    "/web/static/lib/hoot/ui/hoot_log_counters": "/web/static/lib/hoot/ui/hoot_log_counters.js",
+                    "/web/static/lib/hoot/ui/hoot_main": "/web/static/lib/hoot/ui/hoot_main.js",
+                    "/web/static/lib/hoot/ui/hoot_reporting": "/web/static/lib/hoot/ui/hoot_reporting.js",
+                    "/web/static/lib/hoot/ui/hoot_search": "/web/static/lib/hoot/ui/hoot_search.js",
+                    "/web/static/lib/hoot/ui/hoot_side_bar": "/web/static/lib/hoot/ui/hoot_side_bar.js",
+                    "/web/static/lib/hoot/ui/hoot_status_panel": "/web/static/lib/hoot/ui/hoot_status_panel.js",
+                    "/web/static/lib/hoot/ui/hoot_tag_button": "/web/static/lib/hoot/ui/hoot_tag_button.js",
+                    "/web/static/lib/hoot/ui/hoot_technical_value": "/web/static/lib/hoot/ui/hoot_technical_value.js",
+                    "/web/static/lib/hoot/ui/hoot_test_path": "/web/static/lib/hoot/ui/hoot_test_path.js",
+                    "/web/static/lib/hoot/ui/hoot_test_result": "/web/static/lib/hoot/ui/hoot_test_result.js",
+                    "/web/static/lib/hoot/ui/setup_hoot_ui": "/web/static/lib/hoot/ui/setup_hoot_ui.js"
+                }
+            }
+        </script>
+
+        <style>
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+                position: relative;
+                width: 100%;
+            }
+        </style>
+
+        <!-- Test assets -->
+        <script src="/web/static/lib/owl/owl.js"></script>
+        <script src="../hoot.js" type="module" defer></script>
+        <link rel="stylesheet" href="/web/static/lib/hoot/ui/hoot_style.css" />
+        <link rel="stylesheet" href="/web/static/src/libs/fontawesome/css/font-awesome.css" />
+
+        <!-- Test suites -->
+        <script src="./index.js" type="module" defer></script>
+    </head>
+    <body></body>
+</html>

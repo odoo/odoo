@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_efaktur_form_view" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="l10n_id_efaktur.account_move_efaktur_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_id_tax_number']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_id_kode_transaksi']" position="attributes">
+                <attribute name="invisible">not l10n_id_coretax_efaktur_available</attribute>
+                <attribute name="required">l10n_id_coretax_efaktur_available</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_id_replace_invoice_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_id_replace_invoice_id']" position="after">
+                <field name="l10n_id_coretax_efaktur_available" invisible="1"/>
+                <field name="l10n_id_coretax_add_info_07" invisible="l10n_id_kode_transaksi != '07'" string="Additional Information"/>
+                <field name="l10n_id_coretax_facility_info_07" invisible="l10n_id_kode_transaksi != '07'" string="Facility Stamp"/>
+                <field name="l10n_id_coretax_add_info_08" invisible="l10n_id_kode_transaksi != '08'" string="Additional Information"/>
+                <field name="l10n_id_coretax_facility_info_08" invisible="l10n_id_kode_transaksi != '08'" string="Facility Stamp"/>
+                <field name="l10n_id_coretax_custom_doc" invisible="l10n_id_kode_transaksi not in ('07', '08')" string="Custom Documentation"/>
+            </xpath>
+            <xpath expr="//field[@name='l10n_id_efaktur_document']" position="replace">
+                <field name="l10n_id_coretax_document" readonly="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

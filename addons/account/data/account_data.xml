@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
+            <field name="name">Payment Terms</field>
+            <field name="digits">6</field>
+        </record>
+
+        <!-- Open Settings from Purchase Journal to configure mail servers -->
+        <record id="action_open_settings" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module': 'general_settings', 'bin_size': False}</field>
+        </record>
+
+        <!-- TAGS FOR CASH FLOW STATEMENT DIRECT METHOD -->
+
+        <record id="account_tag_operating" model="account.account.tag">
+            <field name="name">Operating Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="account_tag_financing" model="account.account.tag">
+            <field name="name">Financing Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="account_tag_investing" model="account.account.tag">
+            <field name="name">Investing &amp; Extraordinary Activities</field>
+            <field name="applicability">accounts</field>
+        </record>
+
+        <!--
+        Payment terms
+        -->
+        <record id="account_payment_term_immediate" model="account.payment.term">
+            <field name="name">Immediate Payment</field>
+            <field name="note">Payment terms: Immediate Payment</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 0})]"/>
+        </record>
+
+        <record id="account_payment_term_15days" model="account.payment.term">
+            <field name="name">15 Days</field>
+            <field name="note">Payment terms: 15 Days</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 15})]"/>
+        </record>
+
+        <record id="account_payment_term_21days" model="account.payment.term">
+            <field name="name">21 Days</field>
+            <field name="note">Payment terms: 21 Days</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 21})]"/>
+        </record>
+
+        <record id="account_payment_term_30days" model="account.payment.term">
+            <field name="name">30 Days</field>
+            <field name="note">Payment terms: 30 Days</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})]"/>
+        </record>
+
+        <record id="account_payment_term_45days" model="account.payment.term">
+            <field name="name">45 Days</field>
+            <field name="note">Payment terms: 45 Days</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 45})]"/>
+        </record>
+
+        <record id="account_payment_term_end_following_month" model="account.payment.term">
+            <field name="name">End of Following Month</field>
+            <field name="note">Payment terms: End of Following Month</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'delay_type':'days_after_end_of_next_month', 'nb_days': 0})]"/>
+        </record>
+
+        <record id="account_payment_term_30_days_end_month_the_10" model="account.payment.term">
+            <field name="name">10 Days after End of Next Month</field>
+            <field name="note">Payment terms: 10 Days after End of Next Month</field>
+            <field name="line_ids" eval="[Command.clear(), Command.create({'value': 'percent', 'value_amount': 100.0, 'delay_type':'days_after_end_of_next_month', 'nb_days': 10})]"/>
+        </record>
+
+        <record id="account_payment_term_advance_60days" model="account.payment.term">
+            <field name="name">30% Now, Balance 60 Days</field>
+            <field name="note">Payment terms: 30% Now, Balance 60 Days</field>
+            <field name="line_ids" eval="[
+                Command.clear(),
+                Command.create({'value': 'percent', 'value_amount': 30.0, 'nb_days': 0}),
+                Command.create({'value': 'percent', 'value_amount': 70.0, 'nb_days': 60})]"/>
+        </record>
+
+        <record id="account_payment_term_30days_early_discount" model="account.payment.term">
+            <field name="name">2/7 Net 30</field>
+            <field name="note">Payment terms: 30 Days, 2% Early Payment Discount under 7 days</field>
+            <field name="display_on_invoice">True</field>
+            <field name="early_discount">True</field>
+            <field name="discount_percentage">2</field>
+            <field name="discount_days">7</field>
+            <field name="line_ids" eval="[
+                Command.clear(),
+                Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})]"/>
+        </record>
+
+        <record id="account_payment_term_90days_on_the_10th" model="account.payment.term">
+            <field name="name">90 days, on the 10th</field>
+            <field name="note">Payment terms: 90 days, on the 10th</field>
+            <field name="line_ids" eval="[
+                Command.clear(),
+                Command.create({'value': 'percent', 'value_amount': 100.0, 'delay_type': 'days_end_of_month_on_the','nb_days': 90, 'days_next_month': 10})]"/>
+        </record>
+
+        <!-- Account-related subtypes for messaging / Chatter -->
+        <record id="mt_invoice_validated" model="mail.message.subtype">
+            <field name="name">Validated</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="description">Invoice validated</field>
+        </record>
+        <record id="mt_invoice_paid" model="mail.message.subtype">
+            <field name="name">Paid</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="description">Invoice paid</field>
+        </record>
+        <record id="mt_invoice_created" model="mail.message.subtype">
+            <field name="name">Invoice Created</field>
+            <field name="res_model">account.move</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Invoice Created</field>
+        </record>
+
+        <!-- Payment methods -->
+        <record id="account_payment_method_manual_in" model="account.payment.method">
+            <field name="name">Manual Payment</field>
+            <field name="code">manual</field>
+            <field name="payment_type">inbound</field>
+        </record>
+        <record id="account_payment_method_manual_out" model="account.payment.method">
+            <field name="name">Manual Payment</field>
+            <field name="code">manual</field>
+            <field name="payment_type">outbound</field>
+        </record>
+
+        <!-- Partner Trust Property -->
+        <function model="ir.default" name="set" eval="('res.partner', 'trust', 'normal')"/>
+
+        <!-- Share Button in action menu -->
+        <record id="model_account_move_action_share" model="ir.actions.server">
+            <field name="name">Share</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.action_share()</field>
+        </record>
+
+    </data>
+</odoo>

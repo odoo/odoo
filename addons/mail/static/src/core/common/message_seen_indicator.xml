@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageSeenIndicator">
+        <span class="o-mail-MessageSeenIndicator position-relative" t-att-class="{ 'opacity-50': !props.message.hasEveryoneSeen, 'text-primary opacity-75': props.message.hasEveryoneSeen, 'cursor-pointer': props.message.channelMemberHaveSeen.length }" t-att-title="summary" t-attf-class="{{ props.className }}" t-on-click="openDialog">
+            <t t-if="!props.message.isMessagePreviousToLastSelfMessageSeenByEveryone">
+                <i t-if="props.message.hasSomeoneFetched or props.message.hasSomeoneSeen" class="fa fa-check ps-1"/>
+                <i t-if="props.message.hasSomeoneSeen" class="o-second start-0 fa fa-check position-absolute"/>
+            </t>
+        </span>
+    </t>
+
+    <t t-name="mail.MessageSeenIndicatorPopover.card">
+        <div class="o-mail-MessageSeenIndicatorPopover-card d-flex align-items-center gap-2">
+            <span class="o_avatar position-relative o_card_avatar" style="width: 30px;height:30px;">
+                <img t-att-src="member.persona.avatarUrl" class="w-100 h-100 rounded o_object_fit_cover" />
+            </span>
+            <span class="fw-bold" t-esc="member.persona.name"/>
+            <span t-if="member.lastSeenDt" class="ms-auto text-muted small" t-out="member.lastSeenDt"/>
+        </div>
+    </t>
+
+    <t t-name="mail.MessageSeenIndicatorDialog">
+        <Dialog size="'sm'" title.translate="Seen by:" footer="false" withBodyPadding="false">
+            <ul class="list-group list-group-flush list-unstyled py-1" t-ref="content">
+                <li class="list-group-item py-2" t-foreach="props.message.channelMemberHaveSeen" t-as="member" t-key="member.id">
+                    <t t-call="mail.MessageSeenIndicatorPopover.card"/>
+                </li>
+            </ul>
+        </Dialog>
+    </t>
+
+</templates>

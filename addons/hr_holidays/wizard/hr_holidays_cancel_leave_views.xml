@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_holidays_cancel_leave_form" model="ir.ui.view">
+        <field name="model">hr.holidays.cancel.leave</field>
+        <field name="arch" type="xml">
+            <form string="Cancel Time Off">
+                <group>
+                    <field name="leave_id" invisible="1" />
+                    <field name="reason" placeholder="Provide a reason to cancel an approved time off" />
+                </group>
+                <footer>
+                    <button name="action_cancel_leave"
+                            type="object"
+                            class="btn-primary"
+                            string="Cancel Time Off"
+                            accesskey="c" />
+                    <button special="cancel" string="Discard" close="1" accesskey="j" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

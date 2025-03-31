@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ScheduledMessage">
+    <div class="o-mail-Scheduled-Message py-1 mb-2">
+        <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
+            <div class="o-mail-Message-sidebar d-flex flex-shrink-0">
+                <div class="o-mail-Message-avatarContainer position-relative bg-view" t-on-click="ev => this.onClickAuthor(ev)">
+                    <img class="o-mail-Message-avatar w-100 h-100 rounded o_redirect cursor-pointer o_object_fit_cover" t-att-src="props.scheduledMessage.author.avatarUrl"/>
+                </div>
+            </div>
+            <div class="w-100 o-min-width-0">
+                <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
+                    <span class="o-mail-Message-author cursor-pointer o-hover-text-underline" t-on-click="ev => this.onClickAuthor(ev)">
+                        <strong class="me-1 text-truncate o_redirect cursor-pointer" t-out="props.scheduledMessage.author.name"/>
+                    </span>
+                    <small class="o-mail-Message-date text-muted opacity-75" t-att-title="scheduledDate">
+                        <i class="fa fa-paper-plane-o mx-1"/>
+                        <RelativeTime datetime="props.scheduledMessage.scheduled_date"/>
+                    </small>
+                </div>
+                <div class="position-relative d-flex justify-content-end">
+                    <div class="o-mail-Message-content o-min-width-0 w-100">
+                        <div class="o-mail-Message-textContent position-relative d-flex">
+                            <div class="position-relative overflow-x-auto d-inline-block">
+                                <div class="o-mail-Message-bubble rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100"
+                                    t-att-class="{
+                                        'bg-success-light opacity-25': !props.scheduledMessage.is_note and props.scheduledMessage.isSelfAuthored,
+                                        'bg-info-light opacity-25': !props.scheduledMessage.is_note and !props.scheduledMessage.isSelfAuthored 
+                                    }"/>
+                                <div t-on-click="onClick"
+                                    t-attf-class="position-relative text-break o-mail-Message-body #{props.scheduledMessage.is_note ? 'p-1' : 'mb-0 py-2 px-3 align-self-start'}">
+                                    <t t-if="props.scheduledMessage.subject and !props.scheduledMessage.isSubjectThreadName">
+                                        <em class="mb-1 me-2">Subject: <t t-esc="props.scheduledMessage.subject"/></em>
+                                    </t>
+                                    <t t-if="isShort or state.readMore" t-out="props.scheduledMessage.body || ''"/>
+                                    <p t-else="" t-out="truncatedMessage"/>
+                                    <button t-if="!isShort" t-attf-class="btn btn-link #{state.readMore ? '' : 'ps-0'}" t-on-click="() => this.state.readMore = !this.state.readMore">
+                                        <t t-if="state.readMore">
+                                            Read Less
+                                        </t>
+                                        <t t-else="">
+                                            Read More
+                                        </t>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <AttachmentList
+                            t-if="props.scheduledMessage.attachment_ids.length > 0"
+                            attachments="props.scheduledMessage.attachment_ids.map((a) => a)"
+                            unlinkAttachment.bind="onClickAttachmentUnlink"
+                            imagesHeight="props.scheduledMessage.attachment_ids.length === 1 ? 300 : 75"/>
+                    </div>
+                </div>
+                <div class="o-mail-Scheduled-Message-buttons ps-1 d-flex">
+                    <span class="btn btn-link btn-success p-0 me-3" t-if="props.scheduledMessage.editable" t-on-click="onClickSendNow">
+                        <i class="fa fa-send"/> Send Now
+                    </span>
+                    <span class="btn btn-link text-action p-0 me-3" t-if="props.scheduledMessage.editable" t-on-click="onClickEdit">
+                        <i class="fa fa-pencil"/> Edit
+                    </span>
+                    <span class="btn btn-link btn-danger p-0" t-if="props.scheduledMessage.deletable" t-on-click="onClickCancel">
+                        <i class="fa fa-times"/> Cancel
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

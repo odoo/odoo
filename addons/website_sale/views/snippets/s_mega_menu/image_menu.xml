@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_menu_image_menu"
+        name="eCommerce: Menu - Image - Menu"
+        groups="base.group_user"
+    >
+        <section class="s_mega_menu_menu_image_menu py-4 o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row align-items-center">
+                    <t
+                        t-set="categories"
+                        t-value="request.env['product.public.category'].search([
+                            ('parent_id', '=', False)
+                        ])[:1]"
+                    />
+                    <t t-foreach="categories" t-as="category">
+                        <div class="col-12 col-lg-4 py-2 text-center">
+                            <h4 class="o_default_snippet_text">
+                                <a
+                                    t-att-href="'/shop/category/%s' % category.id"
+                                    class="nav-link o_default_snippet_text p-0 text-black"
+                                    t-esc="category.name"
+                                />
+                            </h4>
+                            <nav class="nav flex-column">
+                                <t t-foreach="category.child_id" t-as="sub_category">
+                                    <a
+                                        t-att-href="'/shop/category/%s' % sub_category.id"
+                                        class="nav-link o_default_snippet_text"
+                                        t-esc="sub_category.name"
+                                    />
+                                </t>
+                            </nav>
+                        </div>
+                    </t>
+                    <div class="col-12 col-lg-4 py-2 text-center">
+                        <img
+                            class="img-fluid"
+                            src="/web/image/website.s_mega_menu_menu_image_menu_default_image"
+                            alt="Mega menu default image"
+                        />
+                    </div>
+                    <t
+                        t-set="categories"
+                        t-value="request.env['product.public.category'].search([
+                            ('parent_id', '=', False)
+                        ])[1:2]"
+                    />
+                    <t t-foreach="categories" t-as="category">
+                        <div class="col-12 col-lg-4 py-2 text-center">
+                            <h4 class="o_default_snippet_text">
+                                <a
+                                    t-att-href="'/shop/category/%s' % category.id"
+                                    class="nav-link o_default_snippet_text p-0 text-black"
+                                    t-esc="category.name"
+                                />
+                            </h4>
+                            <nav class="nav flex-column">
+                                <t t-foreach="category.child_id" t-as="sub_category">
+                                    <a
+                                        t-att-href="'/shop/category/%s' % sub_category.id"
+                                        class="nav-link o_default_snippet_text"
+                                        t-esc="sub_category.name"
+                                    />
+                                </t>
+                            </nav>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

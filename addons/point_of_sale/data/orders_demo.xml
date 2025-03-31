@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Closed Session 2 -->
+
+        <record id="pos_closed_session_1" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
+            <field name="name">ClosedSession/0001</field>
+            <field name="config_id" ref="pos_config_main" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="start_at" eval="(DateTime.today() + relativedelta(days=-1)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="stop_at"
+                eval="(DateTime.today() + relativedelta(days=-1, hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+        </record>
+
+        <record id="pos_closed_order_1_1" model="pos.order" forcecreate="False">
+            <field name="session_id" ref="pos_closed_session_1" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="name">ClosedDemo/0001</field>
+            <field name="state">paid</field>
+            <field name="amount_total">4.81</field>
+            <field name="amount_tax">0.0</field>
+            <field name="amount_paid">4.81</field>
+            <field name="amount_return">0.0</field>
+            <field name="pos_reference">Order 00000-001-1001</field>
+            <field name="uuid">01c17cf0-2d57-42bc-9766-08a2b128f071</field>
+        </record>
+
+        <record id="pos_closed_orderline_1_1_1" model="pos.order.line" forcecreate="False">
+            <field name="product_id" ref="wall_shelf" />
+            <field name="price_subtotal">1.98</field>
+            <field name="price_subtotal_incl">1.98</field>
+            <field name="price_unit">1.98</field>
+            <field name="order_id" ref="pos_closed_order_1_1" />
+            <field name="full_product_name">Wall Shelf</field>
+            <field name="uuid">5a584718-5e82-481a-b0c9-edc769c27bca</field>
+        </record>
+
+        <record id="pos_closed_orderline_1_1_2" model="pos.order.line" forcecreate="False">
+            <field name="product_id" ref="small_shelf" />
+            <field name="price_subtotal">2.83</field>
+            <field name="price_subtotal_incl">2.83</field>
+            <field name="price_unit">2.83</field>
+            <field name="order_id" ref="pos_closed_order_1_1" />
+            <field name="full_product_name">Small Shelf</field>
+            <field name="uuid">0282a5b2-d233-4842-8e11-baae81a746c0</field>
+        </record>
+
+        <record id="pos_payment_1" model="pos.payment" forcecreate="False">
+            <field name="payment_method_id" ref="point_of_sale.cash_payment_method_furniture" />
+            <field name="pos_order_id" ref="pos_closed_order_1_1" />
+            <field name="amount">4.81</field>
+            <field name="uuid">18a0c6bf-3679-4c17-93ba-ea3b1d5c558b</field>
+        </record>
+
+        <record id="pos_closed_order_1_2" model="pos.order" forcecreate="False">
+            <field name="session_id" ref="pos_closed_session_1" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="name">ClosedDemo/0002</field>
+            <field name="state">paid</field>
+            <field name="amount_total">6.78</field>
+            <field name="amount_tax">0.0</field>
+            <field name="amount_paid">6.78</field>
+            <field name="amount_return">0.0</field>
+            <field name="pos_reference">Order 00000-001-1002</field>
+            <field name="uuid">66537f57-5df4-47d6-828d-a7679f0a6914</field>
+        </record>
+
+        <record id="pos_closed_orderline_1_2_1" model="pos.order.line" forcecreate="False">
+            <field name="product_id" ref="magnetic_board" />
+            <field name="price_subtotal">1.98</field>
+            <field name="price_subtotal_incl">1.98</field>
+            <field name="price_unit">1.98</field>
+            <field name="order_id" ref="pos_closed_order_1_2" />
+            <field name="full_product_name">Magnetic Board</field>
+            <field name="uuid">d30fe864-6612-4443-976b-75717e5aa896</field>
+        </record>
+
+        <record id="pos_closed_orderline_1_2_2" model="pos.order.line" forcecreate="False">
+            <field name="product_id" ref="letter_tray" />
+            <field name="price_subtotal">4.80</field>
+            <field name="price_subtotal_incl">4.80</field>
+            <field name="price_unit">4.80</field>
+            <field name="order_id" ref="pos_closed_order_1_2" />
+            <field name="full_product_name">Letter Tray</field>
+            <field name="uuid">7d575349-01ec-49b2-a392-74a4b05b853b</field>
+        </record>
+
+        <record id="pos_payment_2" model="pos.payment" forcecreate="False">
+            <field name="payment_method_id" ref="point_of_sale.cash_payment_method_furniture" />
+            <field name="pos_order_id" ref="pos_closed_order_1_2" />
+            <field name="amount">6.78</field>
+            <field name="uuid">5c61e4d2-c41d-4b6b-b5bd-b89edbdb0e79</field>
+        </record>
+
+        <function model="pos.session" name="post_closing_cash_details" eval="[[ref('pos_closed_session_1')], 2225.31]" />
+
+        <function model="pos.session" name="update_closing_control_state_session"
+            eval="[[ref('pos_closed_session_1')], '']" />
+
+        <function model="pos.session" name="action_pos_session_closing_control"
+            eval="[[ref('pos_closed_session_1')]]" />
+
+        <!-- Closed Session 2 -->
+
+        <record id="pos_closed_session_2" model="pos.session" forcecreate="False" context="{'onboarding_creation': True}">
+            <field name="name">ClosedSession/0002</field>
+            <field name="config_id" ref="pos_config_main" />
+            <field name="user_id" ref="base.user_admin" />
+            <field name="start_at" eval="(DateTime.today() + relativedelta(hours=-3)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field name="stop_at" eval="(DateTime.today() + relativedelta(hours=-2)).strftime('%Y-%m-%d %H:%M:%S')" />
+        </record>
+
+        <record id="pos_closed_order_2_1" model="pos.order" forcecreate="False">
+            <field name="session_id" ref="pos_closed_session_2" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="name">ClosedDemo/0003</field>
+            <field name="state">paid</field>
+            <field name="amount_total">9.90</field>
+            <field name="amount_tax">0.0</field>
+            <field name="amount_paid">9.90</field>
+            <field name="amount_return">0.0</field>
+            <field name="pos_reference">Order 00000-002-1001</field>
+            <field name="uuid">b47a316a-e8cb-4222-960d-a0dcae3148a9</field>
+        </record>
+
+        <record id="pos_closed_orderline_2_1_1" model="pos.order.line" forcecreate="False">
+            <field name="name">Closed Orderline 2.1.1</field>
+            <field name="product_id" ref="letter_tray" />
+            <field name="price_subtotal">4.80</field>
+            <field name="price_subtotal_incl">4.80</field>
+            <field name="price_unit">4.80</field>
+            <field name="order_id" ref="pos_closed_order_2_1" />
+            <field name="full_product_name">Letter Tray</field>
+            <field name="uuid">9864fdf2-0f60-4fcd-a99a-9d2a96d121c5</field>
+        </record>
+
+        <record id="pos_closed_orderline_2_1_2" model="pos.order.line" forcecreate="False">
+            <field name="name">Closed Orderline 2.1.2</field>
+            <field name="product_id" ref="product.desk_organizer" />
+            <field name="price_subtotal">5.10</field>
+            <field name="price_subtotal_incl">5.10</field>
+            <field name="price_unit">5.10</field>
+            <field name="order_id" ref="pos_closed_order_2_1" />
+            <field name="full_product_name">Desk Organizer</field>
+            <field name="uuid">7a93836a-d4a9-44a8-8575-5abccbff65ac</field>
+        </record>
+
+        <record id="pos_payment_3" model="pos.payment" forcecreate="False">
+            <field name="payment_method_id" ref="point_of_sale.cash_payment_method_furniture" />
+            <field name="pos_order_id" ref="pos_closed_order_2_1" />
+            <field name="amount">9.90</field>
+            <field name="uuid">4700fd64-b393-4559-89a3-7d5c9c8405f0</field>
+        </record>
+
+        <record id="pos_closed_order_2_2" model="pos.order" forcecreate="False">
+            <field name="session_id" ref="pos_closed_session_2" />
+            <field name="company_id" ref="base.main_company" />
+            <field name="name">ClosedDemo/0004</field>
+            <field name="state">paid</field>
+            <field name="amount_total">8.36</field>
+            <field name="amount_tax">0.0</field>
+            <field name="amount_paid">8.36</field>
+            <field name="amount_return">0.0</field>
+            <field name="pos_reference">Order 00000-002-1002</field>
+            <field name="uuid">a553a976-4b80-431d-b0df-52c327815755</field>
+        </record>
+
+        <record id="pos_closed_orderline_2_2_1" model="pos.order.line" forcecreate="False">
+            <field name="name">Closed Orderline 2.2.1</field>
+            <field name="product_id" ref="magnetic_board" />
+            <field name="price_subtotal">1.98</field>
+            <field name="price_subtotal_incl">1.98</field>
+            <field name="price_unit">1.98</field>
+            <field name="order_id" ref="pos_closed_order_2_2" />
+            <field name="full_product_name">Magnetic Board</field>
+            <field name="uuid">599af560-44b3-4d81-8545-d6a6c7f7f2f8</field>
+        </record>
+
+        <record id="pos_closed_orderline_2_2_2" model="pos.order.line" forcecreate="False">
+            <field name="name">Closed Orderline 2.1.2</field>
+            <field name="product_id" ref="product.monitor_stand" />
+            <field name="price_subtotal">6.38</field>
+            <field name="price_subtotal_incl">6.38</field>
+            <field name="qty">2</field>
+            <field name="price_unit">3.19</field>
+            <field name="order_id" ref="pos_closed_order_2_2" />
+            <field name="full_product_name">Monitor Stand</field>
+            <field name="uuid">49c2abb3-a509-4a89-9f1d-6f3ca98a43f8</field>
+        </record>
+
+        <record id="pos_payment_4" model="pos.payment" forcecreate="False">
+            <field name="payment_method_id" ref="point_of_sale.cash_payment_method_furniture" />
+            <field name="pos_order_id" ref="pos_closed_order_2_2" />
+            <field name="amount">8.36</field>
+            <field name="uuid">91f7f3f8-8a7f-401a-b182-dde06f977e22</field>
+        </record>
+
+        <function model="pos.session" name="post_closing_cash_details"
+                eval="[[ref('pos_closed_session_2')], 2243.57]" />
+
+        <function model="pos.session" name="update_closing_control_state_session"
+            eval="[[ref('pos_closed_session_2')], '']" />
+
+        <function model="pos.session" name="action_pos_session_closing_control"
+            eval="[[ref('pos_closed_session_2')]]" />
+    </data>
+</odoo>

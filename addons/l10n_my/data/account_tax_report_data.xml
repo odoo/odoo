@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report_vat" model="account.report">
+        <field name="name">SST-02 (B2)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.my"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="l10n_my_tax_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="l10n_my_sst_taxable_per_rate" model="account.report.line">
+                <field name="name">11) Total Value of Tax Payable as Per Tax Rate</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_taxable_5" model="account.report.line">
+                        <field name="name">a) Taxable Goods at 5% Rate</field>
+                        <field name="code">SST_5</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_taxable_5_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">A</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_taxable_10" model="account.report.line">
+                        <field name="name">b) Taxable Goods at 10% Rate</field>
+                        <field name="code">SST_10</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_taxable_10_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">B</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_services_other_than_group_h" model="account.report.line">
+                        <field name="name">c) Taxable Services other than from Group H</field>
+                        <field name="code">SST_6</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_services_other_than_group_h_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">C</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_services_group_h" model="account.report.line">
+                        <field name="name">d) Taxable Services from Group H</field>
+                        <field name="code">SST_H</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_services_group_h_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">D</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_tax_payable_total_value" model="account.report.line">
+                <field name="name">12) Total Value of Tax Payable</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">SST_PTV</field>
+                <field name="aggregation_formula">SST_5.balance + SST_10.balance + SST_6.balance + SST_H.balance</field>
+            </record>
+            <record id="l10n_my_sst_tax_deduction" model="account.report.line">
+                <field name="name">13) Amount of Tax Deduction</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="l10n_my_sst_tax_deduction_from_cn" model="account.report.line">
+                        <field name="name">a) Tax Deduction from Credit Note</field>
+                        <field name="code">SST_CN</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_tax_deduction_cn_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CN</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_sale_tax_deduction" model="account.report.line">
+                        <field name="name">b) Sales Tax Deduction</field>
+                        <field name="code">SST_SAD</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_sale_tax_deduction_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SAD</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="l10n_my_sst_service_tax_deduction" model="account.report.line">
+                        <field name="name">c) Service Tax Deduction</field>
+                        <field name="code">SST_SED</field>
+                       <field name="expression_ids">
+                            <record id="l10n_my_sst_service_tax_deduction_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">SED</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_tax_deduction_adjustment" model="account.report.line">
+                <field name="name">13A) Adjustment under Sales Tax Deduction</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">SST_TDA</field>
+                <field name="expression_ids">
+                    <record id="l10n_my_sst_ttax_deduction_adjustment_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">DA</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_tax_payable_total_before_penalty" model="account.report.line">
+                <field name="name">14) Total Tax Payable Before Penalty Imposed</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">SST_PTBP</field>
+                <field name="aggregation_formula">SST_PTV.balance - SST_CN.balance + SST_SAD.balance + SST_SED.balance + SST_TDA.balance</field>
+            </record>
+            <record id="l10n_my_sst_penalty_amount" model="account.report.line">
+                <field name="name">15) Penalty Rate / Penalty Amount</field>
+                <field name="hierarchy_level">0</field>
+                <field name="code">SST_P</field>
+                <field name="expression_ids">
+                    <record id="l10n_my_sst_penalty_amount_tag" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">P</field>
+                    </record>
+                </field>
+            </record>
+            <record id="l10n_my_sst_total_including_penalty" model="account.report.line">
+                <field name="name">16) Total of Tax Payable Inclusive Penalty</field>
+                <field name="hierarchy_level">0</field>
+                <field name="aggregation_formula">SST_PTBP.balance + SST_P.balance</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,126 @@
+<odoo>
+    <record id="stock_picking_batch_pivot" model="ir.ui.view">
+        <field name="name">stock.picking.batch.pivot</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <pivot string="Batch Transfer" class="oe_stock_picking_batch" sample="1">
+                <field name="scheduled_date" type="row"/>
+                <field name="vehicle_id" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_graph" model="ir.ui.view">
+        <field name="name">stock.picking.batch.graph</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="arch" type="xml">
+            <graph string="Graph View" class="oe_stock_picking_batch" sample="1">
+                <field name="scheduled_date" type="row" interval="day"/>
+                <field name="vehicle_category_id" type="row"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_form" model="ir.ui.view">
+        <field name="name">stock.picking.batch.form.inherit.stock.fleet</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='batch_delivery_data']" position="after">
+                <group>
+                    <field name="dock_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="vehicle_id" placeholder="Third Party Provider"/>
+                    <field name="vehicle_category_id" placeholder="semi-truck"/>
+                    <label for='used_weight_percentage' string="Weight" invisible="not vehicle_category_id or not vehicle_weight_capacity"/>
+                        <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id or not vehicle_weight_capacity">
+                            <div class='d-flex flex-row gap-1'>
+                                <field name='estimated_shipping_weight'/>
+                                <span><field name='weight_uom_name'/></span>
+                            </div>
+                            <field name='used_weight_percentage' widget='progressbar'/>
+                        </div>
+
+                    <label for='used_volume_percentage' string="Volume" invisible="not vehicle_category_id or not vehicle_volume_capacity"/>
+                        <div class='d-flex flex-row gap-4' invisible="not vehicle_category_id or not vehicle_volume_capacity">
+                            <div class='d-flex flex-row gap-1'>
+                                <field name='estimated_shipping_volume'/>
+                                <span><field name='volume_uom_name'/></span>
+                            </div>
+                            <field name='used_volume_percentage' widget='progressbar'/>
+                        </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_tree" model="ir.ui.view">
+        <field name="name">stock.picking.batch.list.inherit.stock.fleet</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_tree"/>
+        <field name="arch" type="xml">
+            <data>
+                <field name="user_id" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
+                <field name="user_id" position="after">
+                    <field name="vehicle_category_id" optional="hide"/>
+                    <field name="vehicle_id" optional="hide"/>
+                    <field name="dock_id" optional="hide" groups="stock.group_stock_multi_locations"/>
+                    <field name="used_volume_percentage" optional="hide"/>
+                    <field name="used_weight_percentage" optional="hide"/>
+                </field>
+            </data>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_filter" model="ir.ui.view">
+        <field name="name">stock.picking.batch.filter.inherit.stock.fleet</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="vehicle_id"/>
+                <field name="dock_id"/>
+                <field name="driver_id"/>
+            </field>
+            <xpath expr="//filter[@name='state']" position="after">
+                <filter name="group_by_vehicle_id" string="Vehicle" context="{'group_by':'vehicle_id'}"/>
+                <filter name="group_by_vehicle_category_id" string="Vehicle Category" context="{'group_by':'vehicle_category_id'}"/>
+                <filter name="group_by_scheduled_date" string="Scheduled Date" context="{'group_by':'scheduled_date'}"/>
+                <filter name="group_by_picking_type_id" string="Operation Type" context="{'group_by':'picking_type_id'}"/>
+                <filter name="group_by_dock_id" string="Dock Location" context="{'group_by':'dock_id'}" groups="stock.group_stock_multi_locations"/>
+            </xpath>
+            <xpath expr="//filter[@name='done']" position="after">
+                <filter name="vehicle_id" string="Own Fleet" domain="[('vehicle_id', '!=', False)]"/>
+                <filter name="vehicle_id" string="Third Party Carrier" domain="[('vehicle_id', '=', False), ('vehicle_category_id', '!=', False)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='my_transfers']" position="after">
+                <filter name="scheduled_date" date="scheduled_date" string="Scheduled Date"/>
+                <filter string="Today" name="filter_today" domain="[('scheduled_date', '&gt;=', datetime.datetime.combine(context_today(),
+                    datetime.time(0,0,0))), ('scheduled_date', '&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59)))]"/>
+                <filter string="Tomorrow" name="filter_tomorrow" domain="[('scheduled_date','&gt;=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]" />
+                <filter string="Next 7 Days" name="filter_next_7_days" domain="[('scheduled_date','&gt;=', (context_today() + relativedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_picking_batch_kanban" model="ir.ui.view">
+        <field name="name">stock.picking.batch.kanban.inherit.stock.fleet</field>
+        <field name="model">stock.picking.batch</field>
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//footer" position="replace">
+                    <footer class="pt-0">
+                        <field name="dock_id"/>
+                        <div>
+                            <field name="state" widget="state_selection" class="float-start pt-1 me-1"/>
+                            <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
+                        </div>
+                        <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']" class="ms-auto"/>
+                    </footer>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>
