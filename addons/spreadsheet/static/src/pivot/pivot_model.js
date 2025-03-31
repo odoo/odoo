@@ -586,7 +586,7 @@ export class OdooPivotModel extends PivotModel {
         }
         const field = this.metaData.fields[measure.fieldName];
         if (!field.aggregator) {
-            throw new Error(`Field ${field} doesn't have a default aggregator`);
+            throw new Error(`Field ${measure.fieldName} doesn't have a default aggregator`);
         }
         return `${measure.fieldName}:${field.aggregator}`;
     }
