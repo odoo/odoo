@@ -209,3 +209,46 @@ QUnit.test(
         assert.equal(year.value, "");
     }
 );
+
+QUnit.test("Global filter with same id is not shared between dashboards", async function (assert) {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    serverData.models["spreadsheet.dashboard"].records.push({
+        id: 790,
+        name: "Spreadsheet dup. with Pivot",
+        json_data: JSON.stringify(spreadsheetData),
+        raw: JSON.stringify(spreadsheetData),
+        dashboard_group_id: 1,
+    });
+    serverData.models["spreadsheet.dashboard.group"].records[0].dashboard_ids = [789, 790];
+    const fixture = getFixture();
+    await createSpreadsheetDashboard({ serverData });
+    assert.containsNone(
+        fixture,
+        ".o-filter-value .o_tag_badge_text",
+        "It should not display any filter value"
+    );
+    await click(fixture.querySelector(".o-autocomplete--input.o_input"));
+    await click(fixture.querySelector(".dropdown-item"));
+    assert.containsN(
+        fixture,
+        ".o-filter-value .o_tag_badge_text",
+        1,
+        "It should not display any filter value"
+    );
+    await click(fixture.querySelector(".o_search_panel li:last-child"));
+    assert.containsNone(
+        fixture,
+        ".o-filter-value .o_tag_badge_text",
+        "It should not display any filter value"
+    );
+});
