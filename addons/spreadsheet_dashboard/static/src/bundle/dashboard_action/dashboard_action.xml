@@ -7,7 +7,7 @@
                 <div t-if="status === Status.Loaded"
                     class="o_filter_value_container"
                     t-foreach="filters"
-                    t-key="filter.id"
+                    t-key="activeDashboardId + '_' + filter.id"
                     t-as="filter">
                     <FilterValue
                         filter="filter"
