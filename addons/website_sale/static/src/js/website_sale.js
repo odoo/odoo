@@ -5,7 +5,8 @@ import publicWidget from "@web/legacy/js/public/public_widget";
 import "@website/libs/zoomodoo/zoomodoo";
 import { ProductImageViewer } from "@website_sale/js/components/website_sale_image_viewer";
 import VariantMixin from "@website_sale/js/sale_variant_mixin";
-
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 
 export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     selector: '.oe_website_sale',
@@ -706,6 +707,52 @@ publicWidget.registry.websiteSaleProductPageReviews = publicWidget.Widget.extend
         this.$el.find('.o_portal_chatter_composer').css('top', size);
     },
 });
+
+export class WebsiteSaleStickyReactive extends Interaction {
+    static selector = ".oe_website_sale";
+
+    dynamicContent = {
+        ".o_sticky_reactive": {
+            "t-att-style": () => ({
+                "opacity": "1",
+                "top": `${this.position || 16}px`,
+            }),
+        }
+    };
+
+    setup() {
+        this.position = 16;
+    }
+
+    start() {
+        this._adaptToHeaderChange();
+        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+    }
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+
+    _adaptToHeaderChange() {
+        let position = 16; // Add 1rem equivalent in px to provide a visual gap by default
+
+        for (const el of this.el.ownerDocument.querySelectorAll(".o_top_fixed_element")) {
+            position += el.offsetHeight;
+        }
+
+        if (this.position !== position) {
+            this.position = position;
+            this.updateContent();
+        }
+    }
+}
+registry
+    .category("public.interactions")
+    .add("website.website_sale_sticky_reactive", WebsiteSaleStickyReactive);
 
 export default {
     WebsiteSale: publicWidget.registry.WebsiteSale,

@@ -2700,7 +2700,7 @@
                         >
                             <div
                                 t-if="website_sale_order and website_sale_order.website_order_line"
-                                class="o_total_card card sticky-lg-top"
+                                class="o_total_card o_sticky_reactive card sticky-lg-top "
                             >
                                 <div class="card-body p-0 p-lg-4">
                                     <t t-call="website_sale.total"/>
@@ -2710,7 +2710,7 @@
                         </div>
                         <!-- Full Checkout Summary displayed on all checkout pages | Right Column -->
                         <div t-else="" class="d-none d-lg-block offset-xl-1 col-12 col-lg-5 col-xl-4 rounded">
-                            <div class="o_total_card card sticky-lg-top mb-3 mb-lg-0">
+                            <div class="o_total_card o_sticky_reactive card sticky-lg-top mb-3 mb-lg-0">
                                 <div class="card-body p-lg-4 pt-lg-2">
                                     <div class="d-none d-lg-block">
                                         <t t-call="website_sale.cart_summary_content"/>
