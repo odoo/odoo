@@ -266,13 +266,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not len(self.picking_ids) > 1:
             payloads = [self.process_single_pick()]
 
-            # Container Release payload
-            release_payload = {
-                "is_release_container": True,
-                "container_code": self.pc_container_code_id.name
-            }
-            payloads.append(release_payload)
-
             # Send payloads to API
             for payload in payloads:
                 self.send_payload_to_api(api_url, payload)
@@ -306,6 +299,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     #reload
                     picking._invalidate_cache(['current_state'])
                     _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
+                    # Container Release payload
+                    self.release_container()
         else:
             for picking in self.picking_ids:
                 line_states = set(self.line_ids.filtered(lambda l: l.picking_id == picking).mapped('current_state'))
@@ -338,11 +333,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 _logger.info(f"Picking {picking.name} forced update to '{new_state}' in database.")
 
             # Container Release payload
-            release_payload = {
-                "is_release_container": True,
-                "container_code": self.pc_container_code_id.name
-            }
-            self.send_payload_to_api(api_url, release_payload)
+            self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -351,14 +342,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         container_code = self.pc_container_code_id.name
         warehouse_code = self.warehouse_id.name
         owner_code = self.tenant_code_id.name if self.tenant_code_id else ""
+        site_code = self.site_code_id.name if self.site_code_id else ""
 
-        if not container_code or not warehouse_code or not owner_code:
-            _logger.error("Missing container, warehouse, or owner code.")
+        if not container_code or not warehouse_code or not owner_code or not site_code:
+            _logger.error("Missing container, warehouse, site code or owner code.")
             raise UserError(_("Missing required data to release container."))
 
         # Fetch URLs dynamically from system parameters based on Warehouse Code
-        dev_url = self.env['ir.config_parameter'].sudo().get_param(f'{warehouse_code.lower()}_geekplus_dev_url')
-        prod_url = self.env['ir.config_parameter'].sudo().get_param(f'{warehouse_code.lower()}_geekplus_prod_url')
+        dev_url = self.env['ir.config_parameter'].sudo().get_param('dev_container_release_url')
+        prod_url = self.env['ir.config_parameter'].sudo().get_param('prod_container_release_url')
 
         if not dev_url or not prod_url:
             _logger.error(f"Missing API URL configuration for warehouse {warehouse_code}")
@@ -366,35 +358,23 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         # Select the correct API URL based on the environment
         is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
-        geek_api_url = prod_url if is_production else dev_url
+        release_container_api_url = prod_url if is_production else dev_url
 
-        full_api_url = f"{geek_api_url}?warehouse_code={warehouse_code}&owner_code={owner_code}"
+        _logger.info(f"Releasing container {container_code} via API: {release_container_api_url}")
 
-        _logger.info(f"Releasing container {container_code} via API: {full_api_url}")
-
-        payload = {
-            "header": {
-                "warehouse_code": warehouse_code,
-                "user_id": "admin",
-                "user_key": "Geekplus_2020"
-            },
-            "body": {
-                "container_amount": 1,
-                "container_list": [
-                    {
-                        "container_code": container_code,
-                        "operation_type": 1,
-                        "type": 10
-                    }
-                ]
-            }
+        release_payload = {
+            "is_release_container": True,
+            "container_code": container_code,
+            "site_code":site_code,
+            "tenant_code": owner_code,
+            "warehouse_code": warehouse_code
         }
 
-        _logger.info(f"Container Release Payload: {json.dumps(payload, indent=4)}")
+        _logger.info(f"Container Release Payload: {json.dumps(release_payload, indent=4)}")
 
         try:
-            response = requests.post(full_api_url, headers={'Content-Type': 'application/json'},
-                                     data=json.dumps(payload))
+            response = requests.post(release_container_api_url, headers={'Content-Type': 'application/json'},
+                                     data=json.dumps(release_payload))
             response.raise_for_status()
             _logger.info(f"Container {container_code} successfully released.")
             return True
