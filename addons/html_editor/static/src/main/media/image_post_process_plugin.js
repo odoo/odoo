@@ -40,52 +40,36 @@ export class ImagePostProcessPlugin extends Plugin {
             }
         }
 
-        const data = Object.assign(
-            {
-                glFilter: "",
-                filter: "#0000",
-                forceModification: false,
-            },
-            img.dataset,
-            newDataset
-        );
-        let {
+        const data = getImageTransformationData({ ...img.dataset, ...newDataset });
+        const {
             mimetypeBeforeConversion,
             formatMimetype,
             width,
             height,
             resizeWidth,
             filter,
-            originalSrc,
             glFilter,
             filterOptions,
-            forceModification,
             aspectRatio,
+            quality,
         } = data;
 
         const { postProcessCroppedCanvas, perspective, getHeight } = processContext;
 
-        [width, height, resizeWidth] = [width, height, resizeWidth].map((s) => parseFloat(s));
-        const quality = parseInt("quality" in data ? data.quality : DEFAULT_IMAGE_QUALITY);
-        // todo: 1) rename mimetypeBeforeConversion to originalMimetype in all the dataset
-        //       2) handle migration of the previous odoo versions (either in js or python)
-        const originalMimetype = mimetypeBeforeConversion;
-        // todo: maybe it should be in params and not saved in the dataset as
-        // this information could be inferred from x/y/width/height dataset
-        // properties.
-        aspectRatio = aspectRatio ? getAspectRatio(aspectRatio) : 0;
+        // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
+        const originalImg = await loadImage(data.originalSrc);
+        const originalSrc = originalImg.getAttribute("src");
 
-        // Skip modifications (required to add shapes on animated GIFs).
-        if (isGif(originalMimetype) && !forceModification) {
-            const url = await loadImageDataURL(originalSrc);
-            return () => updateImageAttributes(url);
+        if (shouldPreventGifTransformation(data)) {
+            const [postUrl, postDataset] = await this.postProcessImage(
+                await loadImageDataURL(originalSrc),
+                newDataset,
+                processContext
+            );
+            return () => this.updateImageAttributes(img, postUrl, postDataset);
         }
-
         // Crop
         const container = document.createElement("div");
-        const originalImg = await loadImage(originalSrc);
-        // loadImage may have ended up loading a different src (see: LOAD_IMAGE_404)
-        originalSrc = originalImg.getAttribute("src");
         container.appendChild(originalImg);
         const cropper = await activateCropper(originalImg, aspectRatio, data);
         const croppedCanvas = cropper.getCroppedCanvas(width, height);
@@ -213,7 +197,7 @@ export class ImagePostProcessPlugin extends Plugin {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Quality
-        newDataset.computedMimetype = formatMimetype || originalMimetype;
+        newDataset.computedMimetype = formatMimetype || mimetypeBeforeConversion;
         const dataURL = canvas.toDataURL(newDataset.computedMimetype, quality / 100);
         const newSize = getDataURLBinarySize(dataURL);
         const originalSize = getImageSizeFromCache(originalSrc);
@@ -225,30 +209,67 @@ export class ImagePostProcessPlugin extends Plugin {
             originalImg.width !== processedCanvas.width ||
             originalImg.height !== processedCanvas.height;
 
-        let b64url =
+        let url =
             isChanged || originalSize >= newSize ? dataURL : await loadImageDataURL(originalSrc);
-
+        [url, newDataset] = await this.postProcessImage(url, newDataset, processContext);
+        return () => this.updateImageAttributes(img, url, newDataset);
+    }
+    async postProcessImage(url, newDataset, processContext) {
         for (const cb of this.getResource("process_image_post_handlers")) {
-            const [newUrl, handlerDataset] = (await cb(b64url, newDataset, processContext)) || [];
-            b64url = newUrl || b64url;
+            const [newUrl, handlerDataset] = (await cb(url, newDataset, processContext)) || [];
+            url = newUrl || url;
             newDataset = handlerDataset || newDataset;
         }
-
-        function updateImageAttributes(url) {
-            img.classList.add("o_modified_image_to_save");
-            img.src = url;
-            for (const key in newDataset) {
-                const value = newDataset[key];
-                if (value) {
-                    img.dataset[key] = value;
-                } else {
-                    delete img.dataset[key];
-                }
+        return [url, newDataset];
+    }
+    updateImageAttributes(img, url, newDataset) {
+        img.classList.add("o_modified_image_to_save");
+        img.src = url;
+        for (const key in newDataset) {
+            const value = newDataset[key];
+            if (value) {
+                img.dataset[key] = value;
+            } else {
+                delete img.dataset[key];
             }
         }
-
-        return () => updateImageAttributes(b64url);
     }
+}
+
+export function getImageTransformationData(dataset) {
+    const data = Object.assign(
+        {
+            glFilter: "",
+            filter: "#0000",
+            forceModification: false,
+        },
+        dataset
+    );
+    for (const key of ["width", "height", "resizeWidth"]) {
+        data[key] = parseFloat(data[key]);
+    }
+    if (!("quality" in data)) {
+        data.quality = DEFAULT_IMAGE_QUALITY;
+    }
+    // todo: this information could be inferred from x/y/width/height dataset
+    // properties.
+    data.aspectRatio = data.aspectRatio ? getAspectRatio(data.aspectRatio) : 0;
+    return data;
+}
+
+function shouldTransformImage(data) {
+    return (
+        data.perspective ||
+        data.glFilter ||
+        data.width ||
+        data.height ||
+        data.resizeWidth ||
+        data.aspectRatio
+    );
+}
+
+export function shouldPreventGifTransformation(data) {
+    return isGif(data.mimetypeBeforeConversion) && !shouldTransformImage(data);
 }
 
 export const defaultImageFilterOptions = {
