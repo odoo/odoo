@@ -90,7 +90,6 @@
                                                         <div class="overflow-x-auto" t-if="message.message_type and message.message_type.includes('email')" t-ref="shadowBody"/>
                                                         <t t-elif="state.showTranslation" t-out="message.translationValue"/>
                                                         <t t-elif="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
-                                                        <em t-if="message.edited" class="smaller fw-bold text-500"> (edited)</em>
                                                         <p class="fst-italic text-muted small" t-if="state.showTranslation">
                                                             <t t-if="message.translationSource" t-esc="translatedFromText"/>
                                                         </p>
@@ -129,6 +128,10 @@
             </div>
         </ActionSwiper>
     </t>
+
+<t t-name="mail.Message.edited">
+    <em class="smaller fw-bold text-500"> (edited)</em>
+</t>
 
 <t t-name="mail.Message.actions">
     <div t-if="props.hasActions and message.hasActions and !state.isEditing" class="o-mail-Message-actions d-print-none"
