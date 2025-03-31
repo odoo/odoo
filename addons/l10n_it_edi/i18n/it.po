@@ -433,6 +433,18 @@ msgstr "Imposta Enasarco non trovata per riga con descrizione '%s'"
 #. module: l10n_it_edi
 #. odoo-python
 #: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Error sending file from the Proxy Server to SdI"
+msgstr "Errore nell'invio del file dal Proxy Server al SdI"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Error signing the XML"
+msgstr "Errore nella firma dell'XML"
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
 msgid ""
 "Error uploading the e-invoice file %(file)s.\n"
 "%(error)s"
@@ -1022,6 +1034,12 @@ msgid "Province of the register-of-companies office"
 msgstr "Provincia dell'ufficio del registro delle imprese"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "Proxy Server configuration error"
+msgstr "Errore di configurazione del Server Proxy"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__proxy_type
 msgid "Proxy Type"
 msgstr "Tipo di proxy"
@@ -1045,7 +1063,7 @@ msgstr "Ordine d'acquisto"
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_move__l10n_it_edi_state__requires_user_signature
 msgid "Requires user signature"
-msgstr "Richiede la firma dell'utente"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_edi_state
@@ -1140,9 +1158,6 @@ msgid ""
 "Sending invoices to Public Administration partners is not supported.\n"
 "The IT EDI XML file is generated, please sign the document and upload it through the 'Fatture e Corrispettivi' portal of the Tax Agency."
 msgstr ""
-"L'invio di fatture ai partner della Pubblica Amministrazione non è supportato.\n"
-"Il file XML IT EDI è generato, si prega di firmare il documento e caricarlo attraverso "
-"il portale 'Fatture e Corrispettivi' dell'Agenzia delle Entrate."
 
 #. module: l10n_it_edi
 #. odoo-python
@@ -1267,9 +1282,7 @@ msgstr "La data del documento di origine non può essere nel futuro."
 msgid ""
 "The amount_total %(current_total)s is different than PrezzoTotale "
 "%(expected_total)s for '%(move_name)s'"
-msgstr ""
-"L'amount_total %(current_total)s è diverso da PrezzoTotale "
-"%(expected_total)s per '%(move_name)s'"
+msgstr "L'importo totale %(current_total)s è diverso dal PrezzoTotale %(expected_total)s per '%(move_name)s'"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_liquidation_state__ls
@@ -1406,6 +1419,12 @@ msgid ""
 msgstr ""
 "Il file di fattura elettronica %s è stato inviato al SdI per la convalida.\n"
 "Non è ancora considerato accettato, attendere ulteriori notifiche."
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_move.py:0
+msgid "The e-invoice file %s was signed and sent to the SdI for processing."
+msgstr "Il file fattura %s è stato firmato e inviato al SdI per essere processato."
 
 #. module: l10n_it_edi
 #. odoo-python
