@@ -18,6 +18,8 @@ const unremovableSelectors = [
     ".s_table_of_content_main",
     ".nav-item",
     "header",
+    "main",
+    "footer",
 ].join(", ");
 
 const unremovableNodePredicates = [

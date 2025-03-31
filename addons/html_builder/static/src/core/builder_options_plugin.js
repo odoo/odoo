@@ -15,7 +15,7 @@ export class BuilderOptionsPlugin extends Plugin {
         "builderOverlay",
         "overlayButtons",
     ];
-    static shared = ["getContainers", "updateContainers"];
+    static shared = ["getContainers", "updateContainers", "getPageContainers"];
     resources = {
         step_added_handlers: () => this.updateContainers(),
         clean_for_save_handlers: this.cleanForSave.bind(this),
@@ -71,54 +71,7 @@ export class BuilderOptionsPlugin extends Plugin {
             return;
         }
 
-        const mapElementsToOptions = (options) => {
-            const map = new Map();
-            for (const option of options) {
-                const { selector, exclude, editableOnly } = option;
-                let elements = getClosestElements(this.target, selector);
-                if (!elements.length) {
-                    continue;
-                }
-                elements = elements.filter((el) => checkElement(el, { exclude, editableOnly }));
-
-                for (const element of elements) {
-                    if (map.has(element)) {
-                        map.get(element).push(option);
-                    } else {
-                        map.set(element, [option]);
-                    }
-                }
-            }
-            return map;
-        };
-        const elementToOptions = mapElementsToOptions(this.builderOptions);
-        const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
-
-        // Find the closest element with no options that should still have the
-        // overlay buttons.
-        let element = this.target;
-        while (element && !elementToOptions.has(element)) {
-            if (this.hasOverlayOptions(element)) {
-                elementToOptions.set(element, []);
-                break;
-            }
-            element = element.parentElement;
-        }
-
-        const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
-        const newContainers = [...elementToOptions]
-            .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
-            .map(([element, options]) => ({
-                id: previousElementToIdMap.get(element) || uniqueId(),
-                element,
-                options,
-                headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
-                hasOverlayOptions: this.hasOverlayOptions(element),
-                isRemovable: isRemovable(element),
-                isClonable: isClonable(element),
-                optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
-            }));
-
+        const newContainers = this.computeContainers(this.target);
         // Do not update the containers if they did not change.
         if (newContainers.length === this.lastContainers.length) {
             const previousIds = this.lastContainers.map((c) => c.id);
@@ -145,6 +98,60 @@ export class BuilderOptionsPlugin extends Plugin {
         this.lastContainers = newContainers;
         this.dependencies.history.setStepExtra("optionSelection", this.target);
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
+    }
+
+    computeContainers(target) {
+        const mapElementsToOptions = (options) => {
+            const map = new Map();
+            for (const option of options) {
+                const { selector, exclude, editableOnly } = option;
+                let elements = getClosestElements(target, selector);
+                if (!elements.length) {
+                    continue;
+                }
+                elements = elements.filter((el) => checkElement(el, { exclude, editableOnly }));
+
+                for (const element of elements) {
+                    if (map.has(element)) {
+                        map.get(element).push(option);
+                    } else {
+                        map.set(element, [option]);
+                    }
+                }
+            }
+            return map;
+        };
+        const elementToOptions = mapElementsToOptions(this.builderOptions);
+        const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
+
+        // Find the closest element with no options that should still have the
+        // overlay buttons.
+        let element = target;
+        while (element && !elementToOptions.has(element)) {
+            if (this.hasOverlayOptions(element)) {
+                elementToOptions.set(element, []);
+                break;
+            }
+            element = element.parentElement;
+        }
+
+        const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
+        return [...elementToOptions]
+            .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
+            .map(([element, options]) => ({
+                id: previousElementToIdMap.get(element) || uniqueId(),
+                element,
+                options,
+                headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
+                hasOverlayOptions: this.hasOverlayOptions(element),
+                isRemovable: isRemovable(element),
+                isClonable: isClonable(element),
+                optionsContainerTopButtons: this.getOptionsContainerTopButtons(element),
+            }));
+    }
+
+    getPageContainers() {
+        return this.computeContainers(this.editable.querySelector("main"));
     }
 
     setTarget(target) {
