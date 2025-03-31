@@ -106,9 +106,8 @@ export class ImageCrop extends Component {
         this.initialSrc = src;
         this.aspectRatio = data.aspectRatio || "0/0";
 
-        // todo: there is probably a problem mutating this.media this moment at
-        // it will make a mutation in the currentStep of the history.
-        Object.assign(this.media, await loadImageInfo(this.media));
+        // todo: check that the mutations of loadImage are not problematic (they most probably are).
+        Object.assign(this.media.dataset, await loadImageInfo(this.media));
         const isIllustration = /^\/(?:html|web)_editor\/shape\/illustration\//.test(
             this.media.dataset.originalSrc
         );

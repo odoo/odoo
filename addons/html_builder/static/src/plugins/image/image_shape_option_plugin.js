@@ -7,6 +7,10 @@ import { getShapeURL } from "./image_helpers";
 import { activateCropper, createDataURL, loadImage } from "@html_editor/utils/image_processing";
 import { getValueFromVar } from "@html_builder/utils/utils";
 import { imageShapeDefinitions } from "./image_shapes_definition";
+import {
+    getImageTransformationData,
+    shouldPreventGifTransformation,
+} from "@html_editor/main/media/image_post_process_plugin";
 
 // Regex definitions to apply speed modification in SVG files
 // Note : These regex patterns are duplicated on the server side for
@@ -192,10 +196,12 @@ class ImageShapeOptionPlugin extends Plugin {
         const imgAspectRatio = svg.dataset.imgAspectRatio;
 
         if (isNewShape && !("aspectRatio" in newDataset)) {
+            const data = getImageTransformationData({ ...img.dataset, ...newDataset });
+
             // The togglable ratio is squared by default.
             const shouldBeSquared =
                 this.imageShapes[shapeId].togglableRatio && !img.dataset.aspectRatio;
-            if (shouldBeSquared) {
+            if (shouldBeSquared && !shouldPreventGifTransformation(data)) {
                 newDataset.aspectRatio = "1/1";
             }
         }
