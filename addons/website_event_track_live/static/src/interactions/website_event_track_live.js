@@ -1,82 +1,94 @@
 /* global YT */
 
-import publicWidget from "@web/legacy/js/public/public_widget";
-import TrackSuggestionWidget from "@website_event_track_live/interactions/website_event_track_suggestion";
-import ReplaySuggestionWidget from "@website_event_track_live/interactions/website_event_track_replay_suggestion";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 
-publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
-    selector: '.o_wevent_event_track_live',
-    custom_events: Object.assign({}, publicWidget.Widget.prototype.custom_events, {
-        'video-ended': '_onVideoEnded'
-    }),
+class WebsiteEventTrackLive extends Interaction {
+    static selector = ".o_wevent_event_track_live";
+    dynamicContent = {
+        _root: {
+            "t-on-video-ended": this.onVideoEnded,
+        },
+    };
 
-    start: function () {
-        var self = this;
-        return this._super(...arguments).then(function () {
-            self._setupYoutubePlayer();
-        });
-    },
+    setup() {
+        this.youtubePlayer = null;
+        this.nextSuggestion = null;
+        this.outro = null;
+        this.setupYoutubePlayer();
+    }
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    destroy() {
+        this.youtubePlayer?.destroy();
+        clearInterval(this.timerInterval);
+    }
 
-    _onPlayerReady: function () {
-        this.$('.o_wevent_event_track_live_loading').remove();
-    },
+    onPlayerReady() {
+        if (this.isDestroyed) {
+            return;
+        }
+        this.el.querySelector(".o_wevent_event_track_live_loading").remove();
+    }
 
-    _onPlayerStateChange: function (event) {
+    onPlayerStateChange(event) {
+        if (this.isDestroyed) {
+            return;
+        }
         switch (event.data) {
             case YT.PlayerState.ENDED:
-                this.trigger('video-ended');
+                this.triggerEvent("video-ended");
                 return;
             case YT.PlayerState.PLAYING:
-                this.trigger('video-playing');
+                this.triggerEvent("video-playing");
                 return;
             case YT.PlayerState.PAUSED:
-                this.trigger('video-paused');
+                this.triggerEvent("video-paused");
                 return;
-        };
-    },
+        }
+    }
 
-    _onVideoEnded: function () {
-        this.$el.append($('<div/>', {
-            class: 'owevent_track_suggestion_loading position-absolute w-100'
-        }));
-        var self = this;
-        rpc('/event_track/get_track_suggestion', {
-            track_id: this.$el.data('trackId'),
-        }).then(function (suggestion) {
-            self.nextSuggestion = suggestion;
-            self._showSuggestion();
-        });
-    },
+    async onVideoEnded() {
+        const divEl = document.createElement("div");
+        divEl.classList.add("owevent_track_suggestion_loading", "position-absolute", "w-100");
+        this.insert(divEl, this.el);
+        this.nextSuggestion = await this.waitFor(
+            rpc("/event_track/get_track_suggestion", {
+                track_id: parseInt(this.el.dataset.trackId),
+            })
+        );
+        this.showSuggestion();
+    }
 
-    _onReplay: function () {
+    onReplay() {
         this.youtubePlayer.seekTo(0);
         this.youtubePlayer.playVideo();
-        this.$('.owevent_track_suggestion_loading').remove();
+        this.el.querySelector(".owevent_track_suggestion_loading").remove();
         if (this.outro) {
+            for (const el of this.outro) {
+                el.remove();
+            }
             delete this.outro;
         }
-    },
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    triggerEvent(event) {
+        this.el.dispatchEvent(new Event(event), { bubbles: true });
+    }
 
-    _setupYoutubePlayer: function () {
-        var self = this;
+    setupYoutubePlayer() {
+        const youtubeId = this.el.dataset.youtubeVideoId;
+        const youtubeEl = document.createElement("script");
+        youtubeEl.src = "https://www.youtube.com/iframe_api";
+        this.insert(youtubeEl, document.head);
 
-        var youtubeId = self.$el.data('youtubeVideoId');
-        var $youtubeElement = $('<script/>', {src: 'https://www.youtube.com/iframe_api'});
-        $(document.head).append($youtubeElement);
-
-        window.onYouTubeIframeAPIReady = function () {
-            self.youtubePlayer = new YT.Player('o_wevent_youtube_iframe_container', {
-                height: '100%',
-                width: '100%',
+        window.onYouTubeIframeAPIReady = () => {
+            if (this.isDestroyed) {
+                return;
+            }
+            this.youtubePlayer = new YT.Player("o_wevent_youtube_iframe_container", {
+                height: "100%",
+                width: "100%",
                 videoId: youtubeId,
                 playerVars: {
                     autoplay: 1,
@@ -86,12 +98,12 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
                     widget_referrer: window.location.origin,
                 },
                 events: {
-                    'onReady': self._onPlayerReady.bind(self),
-                    'onStateChange': self._onPlayerStateChange.bind(self)
-                }
+                    onReady: this.onPlayerReady.bind(this),
+                    onStateChange: this.onPlayerStateChange.bind(this),
+                },
             });
         };
-    },
+    }
 
     /**
      * If a new suggestion has been found, a cover containing a replay button
@@ -99,21 +111,30 @@ publicWidget.registry.websiteEventTrackLive = publicWidget.Widget.extend({
      * player when the video ends (in non-full screen mode). If no suggestion
      * has been found, the cover will only contain a replay button.
      */
-    _showSuggestion: function () {
+    showSuggestion() {
         if (!this.outro) {
             if (this.nextSuggestion) {
-                this.outro = new TrackSuggestionWidget(this, this.nextSuggestion);
+                this.outro = this.renderAt(
+                    "website_event_track_live.website_event_track_suggestion",
+                    this.nextSuggestion
+                );
             } else {
-                var data = this.$el.data();
-                this.outro = new ReplaySuggestionWidget(this, {
-                    current_track: {
-                        name: data.trackName,
-                        website_image_url: data.trackWebsiteImageUrl
+                const data = this.el.dataset;
+                this.outro = this.renderAt(
+                    "website_event_track_live.website_event_track_replay_suggestion",
+                    {
+                        current_track: {
+                            name: data.trackName,
+                            wesite_image_url: data.trackWebsiteImageUrl,
+                        },
                     }
-                });
+                );
             }
-            this.outro.appendTo(this.$el);
-            this.outro.on('replay', null, this._onReplay.bind(this));
+            this.addListener(this.outro, "replay", this.onReplay.bind(this));
         }
     }
-});
+}
+
+registry
+    .category("public.interactions")
+    .add("website_event_track_live.WebsiteEventTrackLive", WebsiteEventTrackLive);

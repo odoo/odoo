@@ -3,9 +3,8 @@
 
 <t t-inherit="website_event_track_live.website_event_track_suggestion" t-inherit-mode="extension">
     <xpath expr="//a[hasclass('owevent_track_suggestion_replay')]" position="before">
-        <a t-if="widget.currentTrack.showQuiz" class="btn btn-primary btn-lg me-2 owevent_track_suggestion_quiz"
-           href="#we_track_quiz_container"
-           onclick="$('.o_quiz_js_quiz_container').removeClass('d-none');">
+        <a t-if="current_track.show_quiz" class="btn btn-primary btn-lg me-2 owevent_track_suggestion_quiz"
+           href="#we_track_quiz_container">
             <span>Take the Quiz</span>
         </a>
     </xpath>

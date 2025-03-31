@@ -18,9 +18,11 @@ patch(Quiz.prototype, {
         return data;
     },
     async getTrackSuggestion() {
-        const suggestion = await this.waitFor(rpc('/event_track/get_track_suggestion', {
-            track_id: this.track.id,
-        }));
+        const suggestion = await this.waitFor(
+            rpc("/event_track/get_track_suggestion", {
+                track_id: this.track.id,
+            })
+        );
         this.nextSuggestion = suggestion;
     },
 });
