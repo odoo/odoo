@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
@@ -295,13 +297,16 @@ class ProductPricelist(models.Model):
             instead of current user's company
         :return: a dict {partner_id: pricelist}
         """
+        ProductPricelist = self.env['product.pricelist']
+
+        if not self.env['res.groups']._is_feature_enabled('product.group_product_pricelist'):
+            # Skip pricelist computation if pricelists are disabled.
+            return defaultdict(lambda: ProductPricelist)
+
         # `partner_ids` might be ID from inactive users. We should use active_test
         # as we will do a search() later (real case for website public user).
         Partner = self.env['res.partner'].with_context(active_test=False)
         company_id = self.env.company.id
-
-        IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        ProductPricelist = self.env['product.pricelist']
         pl_domain = self._get_partner_pricelist_multi_search_domain_hook(company_id)
 
         # if no specific property, try to find a fitting pricelist
@@ -314,6 +319,8 @@ class ProductPricelist(models.Model):
                 remaining_partner_ids.append(partner.id)
 
         if remaining_partner_ids:
+            IrConfigParameter = self.env['ir.config_parameter'].sudo()
+
             def convert_to_int(string_value):
                 try:
                     return int(string_value)
