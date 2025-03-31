@@ -76,7 +76,6 @@ export class CRMPartnerAssign extends Interaction {
             {
                 partner_name: this.contactFormEl.querySelector(".partner_name").value,
                 phone: this.contactFormEl.querySelector(".phone").value,
-                mobile: this.contactFormEl.querySelector(".mobile").value,
                 email_from: this.contactFormEl.querySelector(".email_from").value,
                 street: this.contactFormEl.querySelector(".street").value,
                 street2: this.contactFormEl.querySelector(".street2").value,
