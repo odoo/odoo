@@ -2821,11 +2821,10 @@ class MailThread(models.AbstractModel):
                 ('model', '=', message_sudo.model), ('res_id', '=', message_sudo.res_id),
                 ('message_type', 'in', outgoing_types),
                 ('id', '!=', message_sudo.id),
-                ('subtype_id', '!=', note_type.id),  # filters out notes, using subtype which is indexed
             ], limit=16, order='id DESC',
         )
         # filter out internal messages that are not notes, manually because of indexes
-        ancestors = ancestors.filtered(lambda m: not m.is_internal and m.subtype_id and not m.subtype_id.internal)[:3]
+        ancestors = ancestors.filtered(lambda m: not m.is_internal and m.subtype_id)[:3]
         # order frrom oldest to newest
         references = ' '.join(m.message_id for m in (ancestors[::-1] + message_sudo))
         # prepare notification mail values
