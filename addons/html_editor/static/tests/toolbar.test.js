@@ -841,6 +841,17 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     expect(".o-we-toolbar").toHaveCount(0);
 });
 
+test("toolbar shouldn't be visible if can_display_toolbar === false", async () => {
+    const { el } = await setupEditor("<p>[test]<img></p>", {
+        config: { resources: { can_display_toolbar: (namespace) => namespace !== "image" } },
+    });
+
+    expect(".o-we-toolbar").toHaveCount(1);
+    setContent(el, "<p>test[<img>]</p>");
+    await animationFrame();
+    expect(".o-we-toolbar").toHaveCount(0);
+});
+
 describe.tags("desktop");
 describe("toolbar open and close on user interaction", () => {
     describe("mouse", () => {
@@ -1105,6 +1116,12 @@ describe("toolbar open and close on user interaction", () => {
             // Toolbar opens some time after the last keyup
             await advanceTime(500);
             expect(".o-we-toolbar").toHaveCount(1);
+        });
+
+        test("toolbar should not open with a collapsed selection inside a contenteditable=false", async () => {
+            await setupEditor(`<div contenteditable="false"><p>[]test</p></div>`);
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(0);
         });
     });
 });

@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import {
-    ICON_SELECTOR,
+    MEDIA_SELECTOR,
     isIconElement,
     isProtected,
     isProtecting,
@@ -11,8 +11,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
-
-const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } MediaShared
@@ -22,7 +21,7 @@ const MEDIA_SELECTOR = `${ICON_SELECTOR} , .o_image, .media_iframe_video`;
 export class MediaPlugin extends Plugin {
     static id = "media";
     static dependencies = ["selection", "history", "dom", "dialog"];
-    static shared = ["savePendingImages"];
+    static shared = ["savePendingImages", "openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
         allowMediaDialogVideo: true,
@@ -61,14 +60,17 @@ export class MediaPlugin extends Plugin {
         /** Handlers */
         clean_for_save_handlers: ({ root }) => this.cleanForSave(root),
         normalize_handlers: this.normalizeMedia.bind(this),
+        selectionchange_handlers: this.selectAroundIcon.bind(this),
 
         unsplittable_node_predicates: isIconElement, // avoid merge
         clipboard_content_processors: this.clean.bind(this),
         clipboard_text_processors: (text) => text.replace(/\u200B/g, ""),
+
+        before_save_handlers: this.savePendingImages.bind(this),
     };
 
-    get recordInfo() {
-        return this.config.getRecordInfo ? this.config.getRecordInfo() : {};
+    getRecordInfo(editableEl = null) {
+        return this.config.getRecordInfo ? this.config.getRecordInfo(editableEl) : {};
     }
 
     replaceImage() {
@@ -93,7 +95,9 @@ export class MediaPlugin extends Plugin {
                 "contenteditable",
                 el.hasAttribute("contenteditable") ? el.getAttribute("contenteditable") : "false"
             );
-            if (isIconElement(el)) {
+            // Do not update the text if it's already OK to avoid recording a
+            // mutation on Firefox. (Chrome filters them out.)
+            if (isIconElement(el) && el.textContent !== "\u200B") {
                 el.textContent = "\u200B";
             }
         }
@@ -143,8 +147,8 @@ export class MediaPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
-    openMediaDialog(params = {}) {
-        const { resModel, resId, field, type } = this.recordInfo;
+    openMediaDialog(params = {}, editableEl = null) {
+        const { resModel, resId, field, type } = this.getRecordInfo(editableEl);
         const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
             resId,
@@ -166,33 +170,18 @@ export class MediaPlugin extends Plugin {
         return mediaDialogClosedPromise;
     }
 
-    async savePendingImages() {
-        const editableEl = this.editable;
-        const { resModel, resId } = this.recordInfo;
+    async savePendingImages(editableEl = this.editable) {
+        const { resModel, resId } = this.getRecordInfo(editableEl);
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
         const b64Proms = [...editableEl.querySelectorAll(".o_b64_image_to_save")].map(
             async (el) => {
-                const dirtyEditable = el.closest(".o_dirty");
-                if (dirtyEditable && dirtyEditable !== editableEl) {
-                    // Do nothing as there is an editable element closer to the
-                    // image that will perform the `saveB64Image()` call with
-                    // the correct "resModel" and "resId" parameters.
-                    return;
-                }
                 await this.saveB64Image(el, resModel, resId);
             }
         );
         const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
             async (el) => {
-                const dirtyEditable = el.closest(".o_dirty");
-                if (dirtyEditable && dirtyEditable !== editableEl) {
-                    // Do nothing as there is an editable element closer to the
-                    // image that will perform the `saveModifiedImage()` call
-                    // with the correct "resModel" and "resId" parameters.
-                    return;
-                }
                 await this.saveModifiedImage(el, resModel, resId);
             }
         );
@@ -339,6 +328,15 @@ export class MediaPlugin extends Plugin {
             delete el.dataset.bgSrc;
         } else {
             el.setAttribute("src", newAttachmentSrc);
+        }
+    }
+
+    /**
+     * @param {import("@html_editor/core/selection_plugin").SelectionData} param0
+     */
+    selectAroundIcon({ editableSelection: { anchorNode, isCollapsed } }) {
+        if (isCollapsed && closestElement(anchorNode, isIconElement)) {
+            this.dependencies.selection.selectAroundNonEditable();
         }
     }
 }

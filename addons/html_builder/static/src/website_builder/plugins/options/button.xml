@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.Button">
+    <button type="button" class="btn btn-primary"
+        t-att-class="{'active': this.props.isActive}"
+        t-att-title="props.title"
+        t-on-click="() => props.onClick()">
+        <img t-if="props.iconImg" t-att-src="props.iconImg" t-att-alt="props.iconImgAlt"/>
+        <t t-if="props.label"  t-out="props.label"/>
+    </button>
+</t>
+
+</templates>

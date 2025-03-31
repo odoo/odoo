@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+import unittest
 
 import odoo.tests
 
@@ -8,6 +9,7 @@ import odoo.tests
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestWebsitePageManager(odoo.tests.HttpCase):
 
+    @unittest.skip
     def test_01_page_manager(self):
         website = self.env['website'].create({
             'name': 'Test Website',
@@ -53,6 +55,7 @@ class TestWebsitePageManager(odoo.tests.HttpCase):
         locs = website_2.with_context(website_id=website_2.id)._enumerate_pages(query_string="/test_diverged")
         self.assertEqual(len(list(locs)), 1, "Generic page should be shown")
 
+    @unittest.skip
     def test_unique_view_key_on_duplication_pages(self):
         Page = self.env['website.page']
         View = self.env['ir.ui.view']

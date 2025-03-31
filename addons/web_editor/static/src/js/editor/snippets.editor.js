@@ -2646,6 +2646,7 @@ class SnippetsMenu extends Component {
                 var $zone = $(this);
                 var $children = $zone.find('> :not(.oe_drop_zone, .oe_drop_clone)');
 
+                
                 if (!$zone.children().last().is('.oe_drop_zone')) {
                     data = testPreviousSibling($zone[0].lastChild, $zone)
                         || setDropZoneDirection($zone, $zone, toInsertInline, $children.last());

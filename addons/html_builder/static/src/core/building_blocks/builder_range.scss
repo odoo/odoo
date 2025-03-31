@@ -1,0 +1,17 @@
+input[type="range"].o_we_inverted_range {
+    // TODO: improve the style of this
+    transform: rotate(180deg);
+
+    &::-moz-range-track {
+        background-color: $o-we-sidebar-content-field-progress-active-color;
+    }
+    &::-moz-range-progress {
+        background-color: $o-we-sidebar-content-field-progress-color;
+    }
+    &::-ms-fill-lower {
+        background-color: $o-we-sidebar-content-field-progress-color;
+    }
+    &::-ms-fill-upper {
+        background-color: $o-we-sidebar-content-field-progress-active-color;
+    }
+}
