@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_position_form" model="ir.ui.view">
+        <field name="name">account.fiscal.position.form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='account_mapping']" position="after">
+                <page name="l10n_gr_edi_classification" string="MyDATA" invisible="'GR' not in fiscal_country_codes">
+                    <field name="l10n_gr_edi_preferred_classification_ids">
+                        <list editable="bottom" default_order="priority desc">
+                            <field name="priority" widget="handle"/>
+                            <field name="l10n_gr_edi_available_inv_type" column_invisible="1"/>
+                            <field name="l10n_gr_edi_available_cls_category" column_invisible="1"/>
+                            <field name="l10n_gr_edi_available_cls_type" column_invisible="1"/>
+                            <field name="l10n_gr_edi_inv_type"
+                                   widget="dynamic_selection"
+                                   options="{'available_field': 'l10n_gr_edi_available_inv_type'}"/>
+                            <field name="l10n_gr_edi_cls_category"
+                                   widget="dynamic_selection"
+                                   options="{'available_field': 'l10n_gr_edi_available_cls_category'}"/>
+                            <field name="l10n_gr_edi_cls_type"
+                                   widget="dynamic_selection"
+                                   options="{'available_field': 'l10n_gr_edi_available_cls_type'}"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
