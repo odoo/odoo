@@ -837,3 +837,23 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_print_purchase_order_without_state_change(self):
+        """
+        Check that printing a confirmed purchase order does not
+        reset its state.
+        """
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product
+            po_line.product_qty = 1.0
+        po = po_form.save()
+        po.button_confirm()
+        self.assertEqual(po.state, 'purchase')
+        po.print_quotation()
+        self.assertEqual(po.state, 'purchase')
+        po.button_cancel()
+        self.assertEqual(po.state, 'cancel')
+        po.print_quotation()
+        self.assertEqual(po.state, 'cancel')

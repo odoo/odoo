@@ -523,7 +523,7 @@ class PurchaseOrder(models.Model):
         return action
 
     def print_quotation(self):
-        self.write({'state': "sent"})
+        self.filtered(lambda po: po.state == 'draft').write({'state': "sent"})
         return self.env.ref('purchase.report_purchase_quotation').report_action(self)
 
     def button_approve(self, force=False):
