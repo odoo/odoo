@@ -105,17 +105,28 @@ def check_ref_for_python_file(abs_path: str, diff_linenos: set[int]) -> list[str
         return []
 
 
-def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo') -> tuple[str, str] | None:
+def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', init: bool = True) -> tuple[str, str] | None:
+    """Check for references in xml files
+    
+    :param element: the xml element to check
+    :param file_info: the file info of the xml file
+    :param init: whether the file is used to init modules. If yes, we ignore references for the current module's records.
+    """
     if element.tag == 'record':
         record = element
         id_attr = record.attrib.get('id')
-        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and 'forcecreate' not in record.attrib:
-            return 'id', f'{file_info.abs_path}, line {record.sourceline}'
+        if not id_attr:
+            return None
+        is_file_module_ref = '.' not in id_attr or id_attr.startswith(f'{file_info.module_name}.')
+        if not (init and is_file_module_ref) and 'forcecreate' not in record.attrib:
+            return 'inherit_id', f'{file_info.abs_path}, line {record.sourceline}'
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
-        if ref_attr and '.' in ref_attr and not ref_attr.startswith(f'{file_info.module_name}.'):
-            return 'ref', f'{file_info.abs_path}, line {field.sourceline}'
+        if ref_attr:
+            is_file_module_ref = '.' not in ref_attr or ref_attr.startswith(f'{file_info.module_name}.')
+            if not (init and is_file_module_ref):
+                return 'ref', f'{file_info.abs_path}, line {field.sourceline}'
         elif eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
@@ -127,7 +138,10 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo') -
     elif element.tag == 'template':
         template = element
         id_attr = template.attrib.get('inherit_id')
-        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and 'forcecreate' not in template.attrib:
+        if not id_attr:
+            return None
+        is_file_module_ref = '.' not in id_attr or id_attr.startswith(f'{file_info.module_name}.')
+        if not (init and is_file_module_ref) and 'forcecreate' not in template.attrib:
             return 'inherit_id', f'{file_info.abs_path}, line {template.sourceline}'
 
 
@@ -157,22 +171,24 @@ class TestRef(DiffCase):
         issues: dict[str, list[str]] = defaultdict(list)
         for module_name, file_infos in module_files.items():
             manifest = get_manifest(module_name)
-            data_files = set(manifest['data'])  # ignore manifest['demo']
+            data_files = set(manifest['data'])
+            demo_files = set(manifest['demo'])
             for file_info in file_infos:
-                if file_info.module_path not in data_files:
+                if file_info.module_path in demo_files:
                     continue
+                init = file_info.module_path in data_files
                 for element in self.yield_xml_diff_elements(file_info.abs_path):
-                    if issue := check_ref_for_data_xml_element(element, file_info):
+                    if issue := check_ref_for_data_xml_element(element, file_info, init):
                         issues[issue[0]].append(issue[1])
 
         messages = ''
         if issues['id']:
-            messages += '\n\nFound id= for another module without force_create="0":\n' + "\n".join(issues['id'])
+            messages += '\n\nFound id= for another module without force_create:\n' + "\n".join(issues['id'])
         if issues['ref']:
             messages += "\n\nFound ref= for another module:\n" + "\n".join(issues['ref'])
         if issues['eval']:
             messages += "\n\nFound eval uses ref( for another module without raise_if_not_found=False:\n" + "\n".join(issues['eval'])
         if issues['inherit_id']:
-            messages += '\n\nFound inherit_id= for another module without force_create="0":\n' + "\n".join(issues['inherit_id'])
+            messages += '\n\nFound inherit_id= for another module without force_create:\n' + "\n".join(issues['inherit_id'])
 
         self.assertFalse(bool(messages), messages)
