@@ -10,6 +10,7 @@ class TestAnalytics(TestExpenseCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids += cls.env.ref('project.group_project_manager')
         cls.project_plan, _other_plans = cls.env['account.analytic.plan']._get_all_plans()
         cls.analytic_account1, cls.analytic_account2 = cls.env['account.analytic.account'].create([
             {

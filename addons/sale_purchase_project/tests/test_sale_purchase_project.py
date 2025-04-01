@@ -9,6 +9,7 @@ class TestSalePurchaseProject(TestSalePurchase):
 
     def test_pol_analytic_distribution(self):
         """Confirming SO, analytic accounts from the project's SO should be set as Analytic Distribution in POL."""
+        self.env.user.group_ids += self.quick_ref('project.group_project_manager')
         project = self.env['project.project'].create({
             'name': 'SO Project',
             self.analytic_plan._column_name(): self.test_analytic_account_1.id,
