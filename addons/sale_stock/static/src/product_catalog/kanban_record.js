@@ -1,8 +1,8 @@
-import { ProductCatalogKanbanRecord } from "@product/product_catalog/kanban_record";
+import { SaleProductCatalogKanbanRecord } from "@sale/product_catalog/kanban_record";
 import { ProductCatalogSaleOrderLine } from "./sale_order_line/sale_order_line";
 import { patch } from "@web/core/utils/patch";
 
-patch(ProductCatalogKanbanRecord.prototype, {
+patch(SaleProductCatalogKanbanRecord.prototype, {
     updateQuantity(quantity) {
         if (this.env.orderResModel !== "sale.order" || this.productCatalogData.productType == "service") {
             super.updateQuantity(...arguments);

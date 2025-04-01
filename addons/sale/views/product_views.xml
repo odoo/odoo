@@ -134,6 +134,19 @@
         </field>
     </record>
 
+    <record id="product_view_kanban_catalog_sale_only" model="ir.ui.view">
+        <field name="name">product.view.kanban.catalog.sale.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_view_kanban_catalog"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                    <attribute name="js_class">sale_product_kanban_catalog</attribute>
+                    <attribute name="sample">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_category_property_form" model="ir.ui.view">
         <field name="name">product.category.property.form.inherit.sale</field>
         <field name="model">product.category</field>
