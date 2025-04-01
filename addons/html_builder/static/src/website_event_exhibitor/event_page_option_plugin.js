@@ -10,11 +10,13 @@ class EventPageOption extends Plugin {
                 template: "website_event_exhibitor.EventPageFilterOption",
                 selector: "main:has(.o_wevent_event_tags_form)",
                 editableOnly: false,
+                groups: ["website.group_website_designer"],
             }),
             withSequence(20, {
                 template: "website_event_exhibitor.EventPageOption",
                 selector: "main:has(.o_wevent_event)",
                 editableOnly: false,
+                groups: ["website.group_website_designer"],
             }),
         ],
     };

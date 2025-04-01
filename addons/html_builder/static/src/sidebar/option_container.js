@@ -1,8 +1,9 @@
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
 import { ShadowOption } from "@html_builder/plugins/shadow_option";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
+import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
-import { useState } from "@odoo/owl";
 import { useOperation } from "../core/operation_plugin";
 import {
     BaseOptionComponent,
@@ -43,6 +44,34 @@ export class OptionsContainer extends BaseOptionComponent {
                 this.props.editingElement
             ),
         });
+
+        this.hasGroup = {};
+        onWillStart(async () => {
+            await this.updateAccessGroup(this.props.options);
+        });
+        onWillUpdateProps(async (nextProps) => {
+            await this.updateAccessGroup(nextProps.options);
+        });
+    }
+
+    async updateAccessGroup(options) {
+        const proms = [];
+        const groups = [...new Set(options.flatMap((o) => o.groups || []))];
+        for (const group of groups) {
+            proms.push(
+                user.hasGroup(group).then((result) => {
+                    this.hasGroup[group] = result;
+                })
+            );
+        }
+        await Promise.all(proms);
+    }
+
+    hasAccess(groups) {
+        if (!groups) {
+            return true;
+        }
+        return groups.every((group) => this.hasGroup[group]);
     }
 
     get title() {

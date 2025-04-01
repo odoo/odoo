@@ -11,11 +11,13 @@ class HeaderOptionPlugin extends Plugin {
                 editableOnly: false,
                 template: "website.headerTemplateOption",
                 selector: "header",
+                groups: ["website.group_website_designer"],
             }),
             withSequence(100, {
                 editableOnly: false,
                 template: "website.headerElementOption",
                 selector: "header",
+                groups: ["website.group_website_designer"],
             }),
         ],
     };

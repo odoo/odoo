@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 class EventPageOption extends Plugin {
@@ -11,13 +12,15 @@ class EventPageOption extends Plugin {
                 template: "website_event.EventPageOption",
                 selector: this.evenPageSelector,
                 editableOnly: false,
-                title: "Event Page",
+                title: _t("Event Page"),
+                groups: ["website.group_website_designer"],
             }),
             withSequence(20, {
                 template: "website_event.EventMainPageOption",
                 selector: "main:has(#o_wevent_event_main)",
                 editableOnly: false,
-                title: "Event Cover Position",
+                title: _t("Event Cover Position"),
+                groups: ["website.group_website_designer"],
             }),
         ],
         builder_actions: this.getActions(),
