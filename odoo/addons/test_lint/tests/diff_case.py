@@ -150,11 +150,8 @@ class DiffCase(BaseCase):
         _logger.info(f"Checking {abs_path}")
         with open(abs_path, 'rb') as fp:
             previous_line = 1
-            # https://docs.python.org/3/library/xml.etree.elementtree.html#xml.etree.ElementTree.iterparse
-            # The contents of the text and tail attributes are undefined when it emits a “start” event.
-            # They may or may not be present.
             # `list` the iterpase result to promise each element has all the attributes
-            for event, element in list(etree.iterparse(fp, events=("start", "end", "comment"))):
+            for event, element in list(etree.iterparse(fp, events=("start", "end", "comment", "pi"))):
                 if event == "start":
                     # element.sourceline is the line number of the last line of the start tag
                     if any(line in diff_linenos for line in range(previous_line, element.sourceline + 1)):
@@ -169,7 +166,7 @@ class DiffCase(BaseCase):
                     #     >
                     if element.tail:
                         previous_line += element.tail.count('\n')
-                elif event == "comment":
+                else:  # "comment", "pi"
                     previous_line = element.sourceline
                     if element.tail:
                         previous_line += element.tail.count('\n')

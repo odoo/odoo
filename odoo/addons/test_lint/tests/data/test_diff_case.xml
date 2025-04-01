@@ -11,6 +11,7 @@
             <field name="group_ids" eval="[Command.set([])]"/>
             <field name="signature">Administrator</field>
         </record> <!-- end of user admin -->
+
         <!-- user admin settings first line
         second line -->
         <record
@@ -19,5 +20,18 @@
             forcecreate="0">
             <field name="user_id" ref="base.user_admin"/>
         </record>
+
+        <template id="payevent_0004_xml_report">
+            <!-- <Record_Delimiter DocumentID="1.1" DocumentType="PARENT" DocumentName="PAYEVNT" RelatedDocumentID=""/> -->
+            <tns:PAYEVNT
+                xsi:schemaLocation="http://www.sbr.gov.au/ato/payevnt ato.payevnt.0004.2020.01.00.xsd" 
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://www.sbr.gov.au/ato/payevnt"
+            >
+                <tns:Rp>
+                    <tns:SoftwareInformationBusinessManagementSystemId t-esc="employer['SoftwareInformationBusinessManagementSystemId']"/>
+                    <tns:AustralianBusinessNumberId t-esc="employer['AustralianBusinessNumberId']"/>
+                </tns:Rp>
+            </tns:PAYEVNT>
+        </template>
     </data>
 </odoo>

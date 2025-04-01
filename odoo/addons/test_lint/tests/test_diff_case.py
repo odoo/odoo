@@ -15,7 +15,7 @@ class TestDiffCase(DiffCase):
         return diff_linenos
     
     def test_yield_xml_diff_elements(self):
-        abs_path = file_path('test_lint/tests/data/res_users_data.xml')
+        abs_path = file_path('test_lint/tests/data/test_diff_case.xml')
         diff_linenos = self.get_diff_linenos(
             abs_path,
             'model="res.users.settings"',
@@ -51,6 +51,24 @@ class TestDiffCase(DiffCase):
 
         diff_linenos = self.get_diff_linenos(
             abs_path,
+            'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://www.sbr.gov.au/ato/payevnt"',
+            expected_lines=1,
+        )
+        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        self.assertEqual(len(elements), 1)
+        self.assertEqual(elements[0].tag, '{http://www.sbr.gov.au/ato/payevnt}PAYEVNT')
+
+        diff_linenos = self.get_diff_linenos(
+            abs_path,
+            '<tns:Rp>',
+            expected_lines=1,
+        )
+        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        self.assertEqual(len(elements), 1)
+        self.assertEqual(elements[0].tag, '{http://www.sbr.gov.au/ato/payevnt}Rp')
+
+        diff_linenos = self.get_diff_linenos(
+            abs_path,
             '</record> <!-- end of user admin -->',
             '<!-- user admin settings first line',
             'second line -->',
@@ -58,3 +76,14 @@ class TestDiffCase(DiffCase):
         )
         elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
         self.assertFalse(elements)
+
+        # The <?xml version="1.0" encoding="utf-8"?> won't be parsed by iterparse
+        # We don't handle it for simplicity. As a result, it will be treated as part of the first element by the implementation
+        diff_linenos = self.get_diff_linenos(
+            abs_path,
+            '<?xml version="1.0" encoding="utf-8"?>',
+            expected_lines=1,
+        )
+        elements = list(self.yield_xml_diff_elements(abs_path, diff_linenos))
+        self.assertEqual(len(elements), 1)
+        self.assertEqual(elements[0].tag, 'odoo')

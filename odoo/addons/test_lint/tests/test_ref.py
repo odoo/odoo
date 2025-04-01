@@ -2,8 +2,8 @@ import ast
 import typing
 from collections import defaultdict
 
-from odoo.modules.module import get_manifest
 from .diff_case import DiffCase
+from odoo.modules.module import get_manifest
 
 if typing.TYPE_CHECKING:
     from lxml.etree import _Element
