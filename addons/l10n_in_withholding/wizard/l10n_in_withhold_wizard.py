@@ -193,7 +193,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 lambda l: l.account_id.account_type in ('asset_receivable', 'liability_payable') and not l.reconciled)
             (inv_reconc + wh_reconc).reconcile()
         related_record = self.related_move_id or self.related_payment_id
-        withhold.message_post(
+        withhold._message_log(
             body=Markup("%s %s: <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
                 _("TDS created from"),
                 self.type_name,
