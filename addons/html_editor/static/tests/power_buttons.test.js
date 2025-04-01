@@ -8,6 +8,7 @@ import { onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -61,12 +62,19 @@ describe("visibility", () => {
 
     test("should not overlap with long placeholders", async () => {
         const placeholder = "This is a very very very very long placeholder";
+        class TestPowerboxPlugin extends PowerboxPlugin {
+            setup() {
+                super.setup();
+                this.resources.hints.text = placeholder;
+            }
+        }
         const tempP = document.createElement("p");
         tempP.innerText = placeholder;
         tempP.style.width = "fit-content";
-        const { el } = await setupEditor(
-            `<p placeholder="${placeholder}" class="o-we-hint">[]<br></p>`
-        );
+        const Plugins = [...MAIN_PLUGINS.filter((p) => p.id !== "powerbox"), TestPowerboxPlugin];
+        const { el } = await setupEditor("<p>[]<br></p>", {
+            config: { Plugins },
+        });
         el.appendChild(tempP);
         const placeholderWidth = tempP.getBoundingClientRect().width;
         el.removeChild(tempP);
@@ -104,18 +112,16 @@ describe("buttons", () => {
     });
 
     test("should open image selector using power buttons", async () => {
-        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
-            return [
-                {
-                    id: 1,
-                    name: "logo",
-                    mimetype: "image/png",
-                    image_src: "/web/static/img/logo2.png",
-                    access_token: false,
-                    public: true,
-                },
-            ];
-        });
+        onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+            {
+                id: 1,
+                name: "logo",
+                mimetype: "image/png",
+                image_src: "/web/static/img/logo2.png",
+                access_token: false,
+                public: true,
+            },
+        ]);
         await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-file-image-o");
         await animationFrame();
