@@ -173,12 +173,13 @@ export class ProductTemplate extends Base {
         }
         const productTmplRules = this["<-product.pricelist.item.product_tmpl_id"] || [];
         const rulesIds = [...new Set([...productTmplRules])].map((rule) => rule.id);
+        const parentCategoryIds = this.parentCategories;
         const availableRules =
             pricelist.item_ids?.filter(
                 (rule) =>
                     (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
                     (!rule.product_tmpl_id || rule.product_tmpl_id.id === this.id) &&
-                    (!rule.categ_id || rule.categ_id.id === this.categ_id?.id)
+                    (!rule.categ_id || parentCategoryIds.includes(rule.categ_id.id))
             ) || [];
         this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
         return this.uiState.applicablePricelistRules[pricelist.id];
