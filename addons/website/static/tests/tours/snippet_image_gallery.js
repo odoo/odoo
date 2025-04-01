@@ -38,7 +38,7 @@ registerWebsitePreviewTour("snippet_image_gallery_remove", {
     name: 'Image Gallery',
 }), {
     content: "Click on Remove all",
-    trigger: "we-button:has(div:contains('Remove all'))",
+    trigger: "button[data-action-id='removeAllImages']",
     run: "click",
 }, {
     content: "Click on Add Images",
