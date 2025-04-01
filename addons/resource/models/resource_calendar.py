@@ -521,7 +521,8 @@ class ResourceCalendar(models.Model):
             if len(self) == 1 and self.flexible_hours:
                 day_days[start.date()] += interval_hours / self.hours_per_day if self.hours_per_day else 0
             else:
-                day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(meta.mapped('duration_hours'))
+                duration_hours = meta.mapped('duration_hours')
+                day_days[start.date()] += sum(meta.mapped('duration_days')) * interval_hours / sum(duration_hours) if duration_hours else 0
 
         return {
             # Round the number of days to the closest 16th of a day.
