@@ -1,5 +1,5 @@
 import { getValueFromVar, isMobileView } from "@html_builder/utils/utils";
-import { getBgImageURLFromURL, normalizeColor } from "@html_builder/utils/utils_css";
+import { normalizeColor } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -7,6 +7,7 @@ import { backgroundShapesDefinition } from "./background_shapes_definition";
 import { ShapeSelector } from "../shape/shape_selector";
 import { getDefaultColors } from "./background_shape_option";
 import { withSequence } from "@html_editor/utils/resource";
+import { getBgImageURLFromURL } from "@html_editor/utils/image";
 
 export class BackgroundShapeOptionPlugin extends Plugin {
     static id = "backgroundShapeOption";

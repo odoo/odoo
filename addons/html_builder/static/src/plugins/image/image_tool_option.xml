@@ -22,78 +22,7 @@
         <BuilderButton title.translate="Transform the picture" action="'transformImage'" icon="'fa-object-ungroup'" id="'transformImage'" />
         <BuilderButton title.translate="Reset transformation" action="'resetTransformImage'" t-if="this.isActiveItem('transformImage')">Reset</BuilderButton>
     </BuilderRow>
-    <BuilderRow label.translate="Filter">
-        <BuilderSelect>
-            <BuilderSelectItem action="'glFilter'" actionParam="''">None</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'blur'">Blur</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'1977'">1977</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'aden'">Aden</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'brannan'">Brannan</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'earlybird'">EarlyBird</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'inkwell'">Inkwell</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'maven'">Maven</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'toaster'">Toaster</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'walden'">Walden</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'valencia'">Valencia</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'xpro'">Xpro</BuilderSelectItem>
-            <BuilderSelectItem action="'glFilter'" actionParam="'custom'" id="custom_glfilter_opt">Custom</BuilderSelectItem>
-        </BuilderSelect>
-    </BuilderRow>
-    <t t-if="state.isCustomFilter">
-        <BuilderRow level="1" label.translate="Color">
-            <BuilderSelect action="'setCustomFilter'" actionParam="'blend'">
-                <BuilderSelectItem actionValue="'normal'">Normal</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'overlay'">Overlay</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'screen'">Screen</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'multiply'">Multiply</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'lighter'">Add</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'exclusion'">Exclusion</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'darken'">Darken</BuilderSelectItem>
-                <BuilderSelectItem actionValue="'lighten'">Lighten</BuilderSelectItem>
-            </BuilderSelect>
-            <BuilderColorPicker action="'setCustomFilter'" actionParam="'filterColor'" enabledTabs="['custom']" />
-        </BuilderRow>
-        <BuilderRow level="1" label.translate="Saturation">
-            <BuilderRange
-                action="'setCustomFilter'"
-                actionParam="'saturation'"
-                min="-100"
-                max="100"
-                step="10" />
-        </BuilderRow>
-        <BuilderRow level="1" label.translate="Contrast">
-            <BuilderRange
-                action="'setCustomFilter'"
-                actionParam="'contrast'"
-                min="-100"
-                max="100"
-                step="10" />
-        </BuilderRow>
-        <BuilderRow level="1" label.translate="Brightness">
-            <BuilderRange
-                action="'setCustomFilter'"
-                actionParam="'brightness'"
-                min="-100"
-                max="100"
-                step="10" />
-        </BuilderRow>
-        <BuilderRow level="1" label.translate="Sepia">
-            <BuilderRange
-                action="'setCustomFilter'"
-                actionParam="'sepia'"
-                min="0"
-                max="100"
-                step="5" />
-        </BuilderRow>
-        <BuilderRow level="1" label.translate="Blur">
-            <BuilderRange
-                action="'setCustomFilter'"
-                actionParam="'blur'"
-                min="0"
-                max="2000"
-                step="100" />
-        </BuilderRow>
-    </t>
+    <ImageFilterOption />
     <BuilderRow label.translate="Size">
         <BuilderButtonGroup styleAction="'width'">
             <BuilderButton styleActionValue="''" title.translate="Resize Default">Default</BuilderButton>
@@ -102,22 +31,7 @@
             <BuilderButton styleActionValue="'100%'" title.translate="Resize Full">100%</BuilderButton>
         </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderRow label.translate="Format">
-        <BuilderSelect>
-            <t t-foreach="state.formats" t-as="format" t-key="format.id">
-                <BuilderSelectItem className="'o_we_badge_at_end'" action="'setImageFormat'" actionParam="format">
-                    <t t-esc="format.label"/>
-                    <span class="badge rounded-pill text-bg-dark" t-out="format.mimetype.split('/')[1]"/>
-                </BuilderSelectItem>
-            </t>
-        </BuilderSelect>
-    </BuilderRow>
-    <BuilderRow label.translate="Quality" t-if="state.showQuality">
-        <BuilderRange
-            action="'setImageQuality'"
-            min="0"
-            max="100" />
-    </BuilderRow>
+    <ImageFormatOption />
 </t>
 
 <t t-name="html_builder.ImageAndFaOption">

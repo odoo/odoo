@@ -3,10 +3,9 @@ import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { mockImageRequests, testImg } from "./image_test_helpers";
+import { testImg } from "./image_test_helpers";
 
 defineWebsiteModels();
-mockImageRequests();
 
 test("Should set a shape on an image", async () => {
     const { getEditor } = await setupWebsiteBuilder(`
@@ -24,10 +23,7 @@ test("Should set a shape on an image", async () => {
 
     const img = queryFirst(":iframe .test-options-target img");
     expect(":iframe .test-options-target img").toHaveAttribute("data-original-id", "1");
-    expect(":iframe .test-options-target img").toHaveAttribute(
-        "data-computed-mimetype",
-        "image/svg+xml"
-    );
+    expect(":iframe .test-options-target img").toHaveAttribute("data-mimetype", "image/svg+xml");
     expect(img.src.startsWith("data:image/svg+xml;base64,")).toBe(true);
     expect(":iframe .test-options-target img").toHaveAttribute(
         "data-original-src",

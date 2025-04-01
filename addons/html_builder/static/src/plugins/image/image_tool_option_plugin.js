@@ -1,10 +1,7 @@
 import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
-import { normalizeColor } from "@html_builder/utils/utils_css";
 import { ImageToolOption } from "./image_tool_option";
-import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
-import { defaultImageFilterOptions } from "@html_editor/main/media/image_post_process_plugin";
 import { isImageCorsProtected, getMimetype } from "@html_editor/utils/image";
 import { withSequence } from "@html_editor/utils/resource";
 import {
@@ -12,6 +9,7 @@ import {
     IMAGE_TOOL,
     ALIGNMENT_STYLE_PADDING,
 } from "@html_builder/utils/option_sequence";
+import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
@@ -73,7 +71,7 @@ class ImageToolOptionPlugin extends Plugin {
                     const newDataset = Object.fromEntries(
                         cropperDataFieldsWithAspectRatio.map((field) => [field, undefined])
                     );
-                    return await this.dependencies.imagePostProcess.processImage(img, newDataset);
+                    return this.dependencies.imagePostProcess.processImage(img, newDataset);
                 },
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
@@ -94,56 +92,6 @@ class ImageToolOptionPlugin extends Plugin {
                             ""
                         )
                     );
-                },
-            },
-            glFilter: {
-                isApplied: ({ editingElement, params: { mainParam: glFilterName } }) => {
-                    if (glFilterName) {
-                        return editingElement.dataset.glFilter === glFilterName;
-                    } else {
-                        return !editingElement.dataset.glFilter;
-                    }
-                },
-                load: async ({ editingElement: img, params: { mainParam: glFilterName } }) =>
-                    await this.dependencies.imagePostProcess.processImage(img, {
-                        glFilter: glFilterName,
-                    }),
-                apply: ({ loadResult: updateImageAttributes }) => {
-                    updateImageAttributes();
-                },
-            },
-            setCustomFilter: {
-                getValue: ({ editingElement, params: { mainParam: filterProperty } }) => {
-                    const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
-                    return (
-                        filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty]
-                    );
-                },
-                isApplied: ({
-                    editingElement,
-                    params: { mainParam: filterProperty },
-                    value: filterValue,
-                }) => {
-                    const filterOptions = JSON.parse(editingElement.dataset.filterOptions || "{}");
-                    return (
-                        filterValue ===
-                        (filterOptions[filterProperty] || defaultImageFilterOptions[filterProperty])
-                    );
-                },
-                load: async ({
-                    editingElement: img,
-                    params: { mainParam: filterProperty },
-                    value,
-                }) => {
-                    const filterOptions = JSON.parse(img.dataset.filterOptions || "{}");
-                    filterOptions[filterProperty] =
-                        filterProperty === "filterColor" ? normalizeColor(value) : value;
-                    return await this.dependencies.imagePostProcess.processImage(img, {
-                        filterOptions: JSON.stringify(filterOptions),
-                    });
-                },
-                apply: ({ loadResult: updateImageAttributes }) => {
-                    updateImageAttributes();
                 },
             },
             replaceMedia: {

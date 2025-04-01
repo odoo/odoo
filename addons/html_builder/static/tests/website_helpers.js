@@ -37,6 +37,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { patchWithCleanupImg } from "./helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
+import { mockImageRequests } from "./image_test_helpers";
 
 class Website extends models.Model {
     _name = "website";
@@ -91,6 +92,7 @@ export async function setupWebsiteBuilder(
         const pyEnv = await startServer();
         pyEnv["website"].create({});
     }
+    mockImageRequests();
     registry.category("services").remove("website_edit");
     let editor;
     let editableContent;

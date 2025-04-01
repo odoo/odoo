@@ -18,20 +18,6 @@ test("Add image in gallery", async () => {
         },
     ]);
 
-    onRpc("/html_editor/get_image_info", () => {
-        expect.step("get_image_info");
-        return {
-            attachment: {
-                id: 1,
-            },
-            original: {
-                id: 1,
-                image_src: "/web/image/hoot.png",
-                mimetype: "image/png",
-            },
-        };
-    });
-
     onRpc(
         "/web/image/hoot.png",
         () => {
@@ -62,6 +48,19 @@ test("Add image in gallery", async () => {
         </section>
         `
     );
+    onRpc("/html_editor/get_image_info", () => {
+        expect.step("get_image_info");
+        return {
+            attachment: {
+                id: 1,
+            },
+            original: {
+                id: 1,
+                image_src: "/web/image/hoot.png",
+                mimetype: "image/png",
+            },
+        };
+    });
     await contains(":iframe .first_img").click();
     await waitFor("[data-action-id='addImage']");
     expect("[data-action-id='addImage']").toHaveCount(1);
@@ -79,9 +78,15 @@ test("Add image in gallery", async () => {
     );
 
     expect(columnImgs).toEqual([["1", "3", "4", "5", "6"], ["2"]]);
-    expect.verifySteps(["get_image_info"]);
+    expect.verifySteps([
+        "get_image_info",
+        "get_image_info",
+        "get_image_info",
+        "get_image_info",
+        "get_image_info",
+    ]);
     expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(
-        "data-computed-mimetype",
+        "data-mimetype",
         "image/webp"
     );
     expect(":iframe .o_masonry_col img[data-index='6']").toHaveAttribute(

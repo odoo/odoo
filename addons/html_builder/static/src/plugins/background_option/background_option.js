@@ -3,6 +3,8 @@ import { BackgroundImageOption } from "./background_image_option";
 import { BackgroundPositionOption } from "./background_position_option";
 import { BackgroundShapeOption } from "./background_shape_option";
 import { useBackgroundOption } from "./background_hook";
+import { ImageFilterOption } from "../image/image_filter_option";
+import { ImageFormatOption } from "../image/image_format_option";
 
 export class BackgroundOption extends BaseOptionComponent {
     static template = "html_builder.BackgroundOption";
@@ -10,6 +12,8 @@ export class BackgroundOption extends BaseOptionComponent {
         BackgroundImageOption,
         BackgroundPositionOption,
         BackgroundShapeOption,
+        ImageFilterOption,
+        ImageFormatOption,
     };
     static props = {
         withColors: { type: Boolean },
@@ -25,5 +29,8 @@ export class BackgroundOption extends BaseOptionComponent {
         super.setup();
         const { showColorFilter } = useBackgroundOption(this.isActiveItem);
         this.showColorFilter = showColorFilter;
+    }
+    computeMaxDisplayWidth() {
+        return 1920;
     }
 }

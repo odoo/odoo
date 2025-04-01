@@ -6,7 +6,11 @@ import {
     isProtected,
     isProtecting,
 } from "@html_editor/utils/dom_info";
-import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
+import {
+    backgroundImageCssToParts,
+    backgroundImagePartsToCss,
+    getImageSrc,
+} from "@html_editor/utils/image";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
@@ -277,7 +281,7 @@ export class MediaPlugin extends Plugin {
             // Generate alternate sizes and format for reports.
             altData = {};
             const image = document.createElement("img");
-            image.src = isBackground ? el.dataset.bgSrc : el.getAttribute("src");
+            image.src = getImageSrc(el);
             await new Promise((resolve) => image.addEventListener("load", resolve));
             const originalSize = Math.max(image.width, image.height);
             const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
@@ -315,7 +319,7 @@ export class MediaPlugin extends Plugin {
             {
                 res_model: resModel,
                 res_id: parseInt(resId),
-                data: (isBackground ? el.dataset.bgSrc : el.getAttribute("src")).split(",")[1],
+                data: getImageSrc(el).split(",")[1],
                 alt_data: altData,
                 mimetype: isBackground
                     ? el.dataset.mimetype
@@ -329,7 +333,6 @@ export class MediaPlugin extends Plugin {
             parts.url = `url('${newAttachmentSrc}')`;
             const combined = backgroundImagePartsToCss(parts);
             el.style["background-image"] = combined;
-            delete el.dataset.bgSrc;
         } else {
             el.setAttribute("src", newAttachmentSrc);
         }

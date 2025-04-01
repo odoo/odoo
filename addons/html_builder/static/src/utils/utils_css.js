@@ -1,3 +1,4 @@
+import { backgroundImageCssToParts, getBgImageURLFromURL } from "@html_editor/utils/image";
 import { normalizeCSSColor, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 
 let editableWindow = window;
@@ -121,7 +122,6 @@ const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
     "resizeWidth",
     "glFilter",
     "quality",
-    "bgSrc",
     "filterOptions",
     "mimetypeBeforeConversion",
 ]);
@@ -382,58 +382,6 @@ export function getBgImageURLFromEl(el) {
     const parts = backgroundImageCssToParts(window.getComputedStyle(el).backgroundImage);
     const string = parts.url || "";
     return getBgImageURLFromURL(string);
-}
-/**
- * Parse an element's background-image's url.
- *
- * @param {string} string a css value in the form 'url("...")'
- * @returns {string|false} the src of the image or false if not parsable
- */
-export function getBgImageURLFromURL(url) {
-    const match = url.match(/^url\((['"])(.*?)\1\)$/);
-    if (!match) {
-        return "";
-    }
-    const matchedURL = match[2];
-    // Make URL relative if possible
-    const fullURL = new URL(matchedURL, window.location.origin);
-    if (fullURL.origin === window.location.origin) {
-        return fullURL.href.slice(fullURL.origin.length);
-    }
-    return matchedURL;
-}
-/**
- * Extracts url and gradient parts from the background-image CSS property.
- *
- * @param {string} CSS 'background-image' property value
- * @returns {Object} contains the separated 'url' and 'gradient' parts
- */
-export function backgroundImageCssToParts(css) {
-    const parts = {};
-    css = css || "";
-    if (css.startsWith("url(")) {
-        const urlEnd = css.indexOf(")") + 1;
-        parts.url = css.substring(0, urlEnd).trim();
-        const commaPos = css.indexOf(",", urlEnd);
-        css = commaPos > 0 ? css.substring(commaPos + 1) : "";
-    }
-    if (isColorGradient(css)) {
-        parts.gradient = css.trim();
-    }
-    return parts;
-}
-/**
- * Combines url and gradient parts into a background-image CSS property value
- *
- * @param {Object} parts contains the separated 'url' and 'gradient' parts
- * @returns {string} CSS 'background-image' property value
- */
-export function backgroundImagePartsToCss(parts) {
-    let css = parts.url || "";
-    if (parts.gradient) {
-        css += (css ? ", " : "") + parts.gradient;
-    }
-    return css || "none";
 }
 /**
  * Generates a string ID.

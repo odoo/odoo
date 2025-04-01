@@ -10,7 +10,7 @@ import { getBackgroundImageColor } from "./background_image_option";
 
 export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
-    static dependencies = ["builderActions", "media", "coreBuilderAction"];
+    static dependencies = ["builderActions", "media", "style"];
     static shared = ["changeEditingEl"];
     resources = {
         builder_actions: this.getActions(),
@@ -175,7 +175,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         // We use selectStyle so that if when a background image is removed the
         // remaining image matches the o_cc's gradient background, it can be
         // removed too.
-        this.dependencies.coreBuilderAction.setStyle(el, "background-image-url", backgroundURL);
+        this.dependencies.style.setBackgroundImageUrl(el, backgroundURL);
     }
 }
 

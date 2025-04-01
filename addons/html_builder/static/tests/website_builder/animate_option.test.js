@@ -237,6 +237,22 @@ test("animation=onHover should not be visible when the image has a cors protecte
         </div>
     `);
     mockFetch((route) => {
+        if (route === "/html_editor/get_image_info") {
+            return {
+                error: null,
+                result: {
+                    attachment: { id: 1 },
+                    original: {
+                        id: 1,
+                        image_src: "/website/static/src/img/snippets_demo/s_text_image.jpg",
+                        mimetype: "image/jpeg",
+                    },
+                },
+            };
+        }
+        if (route === "/website/static/src/img/snippets_demo/s_text_image.jpg") {
+            return;
+        }
         expect.step(route);
         throw new Error("simulated cors error");
     });

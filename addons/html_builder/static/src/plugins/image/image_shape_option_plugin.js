@@ -264,7 +264,7 @@ class ImageShapeOptionPlugin extends Plugin {
             type: "image/svg+xml",
         });
         const dataURL = await createDataURL(blob);
-        return [dataURL, { ...handlerDataset, computedMimetype: "image/svg+xml" }];
+        return [dataURL, { ...handlerDataset, mimetype: "image/svg+xml" }];
     }
 
     /**

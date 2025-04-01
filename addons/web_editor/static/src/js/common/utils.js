@@ -96,7 +96,7 @@ const DEFAULT_PALETTE = {
  * Set of all the data attributes relative to the background images.
  */
 const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
-    "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
+    "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality",
     "filterOptions",
     "mimetypeBeforeConversion",
 ]);

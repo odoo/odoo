@@ -22,6 +22,16 @@
             <BackgroundImageOption/>
         </BuilderContext>
     </xpath>
+    <xpath expr="//ImageFilterOption" position="replace">
+        <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
+            <ImageFilterOption level="2"/>
+        </BuilderContext>
+    </xpath>
+    <xpath expr="//ImageFormatOption" position="replace">
+        <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
+            <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
+        </BuilderContext>
+    </xpath>
     <xpath expr="//BuilderButton[@action=&quot;'toggleBgImage'&quot;]" position="attributes">
         <attribute name="applyTo">this.websiteBgOptionDomState.applyTo</attribute>
     </xpath>

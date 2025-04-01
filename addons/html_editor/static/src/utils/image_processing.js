@@ -1,6 +1,7 @@
 import { rpc } from "@web/core/network/rpc";
 import { pick } from "@web/core/utils/objects";
 import { loadBundle } from "@web/core/assets";
+import { getImageSrc } from "./image";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
 // initializing the cropper to reuse the previous crop.
@@ -16,7 +17,6 @@ const modifierFields = [
     "originalSrc",
     "resizeWidth",
     "aspectRatio",
-    "bgSrc",
     "mimetypeBeforeConversion",
 ];
 
@@ -154,17 +154,20 @@ export async function activateCropper(image, aspectRatio, dataset) {
 /**
  * Marks an <img> with its attachment data (originalId, originalSrc, mimetype)
  *
- * @param {HTMLImageElement} img the image whose attachment data should be found
+ * @param {HTMLElement} el
  * @param {string} [attachmentSrc=''] specifies the URL of the corresponding
  * attachment if it can't be found in the 'src' attribute.
  */
-export async function loadImageInfo(img, attachmentSrc = "") {
-    const src = attachmentSrc || img.getAttribute("src");
+export async function loadImageInfo(el, attachmentSrc = "") {
+    const newDataset = {};
+    const elSrc = getImageSrc(el);
+
+    const src = attachmentSrc || elSrc;
     // If there is a marked originalSrc, the data is already loaded.
     // If the image does not have the "mimetypeBeforeConversion" attribute, it
     // has to be added.
-    if ((img.dataset.originalSrc && img.dataset.mimetypeBeforeConversion) || !src) {
-        return;
+    if ((el.dataset.originalSrc && el.dataset.mimetypeBeforeConversion) || !src) {
+        return newDataset;
     }
     // In order to be robust to absolute, relative and protocol relative URLs,
     // the src of the img is first converted to an URL object. To do so, the URL
@@ -172,7 +175,7 @@ export async function loadImageInfo(img, attachmentSrc = "") {
     // the URL object if the src of the img is a relative or protocol relative
     // URL. The original attachment linked to the img is then retrieved thanks
     // to the path of the built URL object.
-    let docHref = img.ownerDocument.defaultView.location.href;
+    let docHref = el.ownerDocument.defaultView.location.href;
     if (docHref.startsWith("about:")) {
         docHref = window.location.href;
     }
@@ -181,7 +184,6 @@ export async function loadImageInfo(img, attachmentSrc = "") {
     const relativeSrc = srcUrl.pathname;
 
     const { original } = await rpc("/html_editor/get_image_info", { src: relativeSrc });
-    const newDataset = {};
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using

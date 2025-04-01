@@ -1,6 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
 import { CSS_SHORTHANDS, applyNeededCss, areCssValuesEqual } from "@html_builder/utils/utils_css";
-import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 
 export function withoutTransition(editingElement, callback) {
     if (editingElement.classList.contains("o_we_force_no_transition")) {
@@ -48,23 +47,6 @@ export class CoreBuilderActionPlugin extends Plugin {
 
     getStyleActions() {
         const styleActions = {
-            "background-image-url": {
-                getValue: (el) => {
-                    const value = getStyleValue(el, "background-image");
-                    const match = value.match(/url\(([^)]+)\)/);
-                    return match ? match[1] : "";
-                },
-                apply: (el, value, params) => {
-                    const parts = backgroundImageCssToParts(el.style["background-image"]);
-                    if (value) {
-                        parts.url = `url('${value}')`;
-                    } else {
-                        delete parts.url;
-                    }
-                    // todo: deal with the gradients
-                    setStyle(el, "background-image", backgroundImagePartsToCss(parts), params);
-                },
-            },
             "box-shadow": {
                 getValue: (el, styleName) => {
                     const value = getStyleValue(el, styleName);

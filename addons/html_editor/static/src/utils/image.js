@@ -28,11 +28,7 @@ export function backgroundImageCssToParts(css) {
  * @returns {string} CSS 'background-image' property value
  */
 export function backgroundImagePartsToCss(parts) {
-    let css = parts.url || "";
-    if (parts.gradient) {
-        css += (css ? ", " : "") + parts.gradient;
-    }
-    return css || "none";
+    return [parts.url, parts.gradient].filter(Boolean).join(", ") || "";
 }
 
 /**
@@ -40,15 +36,16 @@ export function backgroundImagePartsToCss(parts) {
  * @returns {string|null} The mimetype of the image.
  */
 export function getMimetype(image) {
-    const src = image.getAttribute("src");
+    const src = getImageSrc(image);
 
     return (
-        image.dataset.computedMimetype ||
+        image.dataset.mimetype ||
         image.dataset.mimetypeBeforeConversion ||
-        (src.endsWith(".png") && "image/png") ||
-        (src.endsWith(".webp") && "image/webp") ||
-        (src.endsWith(".jpg") && "image/jpeg") ||
-        (src.endsWith(".jpeg") && "image/jpeg") ||
+        (src &&
+            ((src.endsWith(".png") && "image/png") ||
+                (src.endsWith(".webp") && "image/webp") ||
+                (src.endsWith(".jpg") && "image/jpeg") ||
+                (src.endsWith(".jpeg") && "image/jpeg"))) ||
         null
     );
 }
@@ -87,4 +84,48 @@ export async function isSrcCorsProtected(src) {
     const dummyImg = document.createElement("img");
     dummyImg.src = src;
     return isImageCorsProtected(dummyImg);
+}
+
+/**
+ * Returns the src of the image, or the src of the background-image if the
+ * element is not an image.
+ *
+ * @param {HTMLElement} el The element to get the src or background-image from.
+ * @returns {string|null} The src of the image.
+ */
+export function getImageSrc(el) {
+    if (el.tagName === "IMG") {
+        return el.getAttribute("src");
+    }
+    if (el.dataset.bgSrc && el.style.backgroundImage.includes(el.dataset.bgSrc)) {
+        return el.dataset.bgSrc;
+    }
+    const url = backgroundImageCssToParts(getComputedStyle(el)["background-image"]).url;
+    // Cache the this value as getComputedStyle can eat performance
+    if (url) {
+        el.dataset.bgSrc = url;
+    } else {
+        delete el.dataset.bgSrc;
+    }
+    return url && getBgImageURLFromURL(url);
+}
+
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+export function getBgImageURLFromURL(url) {
+    const match = url.match(/^url\((['"])(.*?)\1\)$/);
+    if (!match) {
+        return "";
+    }
+    const matchedURL = match[2];
+    // Make URL relative if possible
+    const fullURL = new URL(matchedURL, window.location.origin);
+    if (fullURL.origin === window.location.origin) {
+        return fullURL.href.slice(fullURL.origin.length);
+    }
+    return matchedURL;
 }
