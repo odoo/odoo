@@ -73,8 +73,6 @@ class PaymentTransaction(models.Model):
         :return: The request payload
         :rtype: dict
         """
-        base_url = self.provider_id.get_base_url()
-        public_key = self.provider_id.paymob_public_key
         partner_first_name, partner_last_name = payment_utils.split_partner_name(self.partner_name)
         payment_methods = [self.payment_method_code]
 
@@ -95,12 +93,12 @@ class PaymentTransaction(models.Model):
             'currency': self.currency_id.name,
             'payment_methods': payment_methods,
             'billing_data': {
-                'first_name': partner_first_name or '',
+                'first_name': partner_first_name or partner_last_name or '',
                 'last_name': partner_last_name or '',
                 'email': self.partner_email or '',
                 'street': self.partner_address or '',
                 'state': self.partner_state_id.name or '',
-                'phone_number': self.partner_phone or '',
+                'phone_number': self.partner_phone.replace(' ', '') or '',
                 'country': self.partner_country_id.code or '',
             },
         }

@@ -97,9 +97,9 @@ class PaymentProvider(models.Model):
             'page_size': 500,
             'is_deprecated': 'false',
             'is_standalone': 'false',
-            'is_next': 'yes',
             'is_live': json.dumps(is_live),
         }
+        self.paymob_access_token = None
         paymob_payment_methods = self._paymob_make_request(
             endpoint,
             params=params,
@@ -119,6 +119,15 @@ class PaymentProvider(models.Model):
             # payment methods.
             paymob_payment_methods
         ))
+        if not matched_payment_methods:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _("Payment methods not found"),
+                    'message': _("No matching payment methods were found on your Paymob account"),
+                }
+            }
         for payment_method in matched_payment_methods:
             payment_method_code = const.PAYMOB_PAYMENT_METHODS_MAPPING[
                 payment_method.get('gateway_type')
@@ -286,7 +295,7 @@ class PaymentProvider(models.Model):
         :rtype: str
         :raise ValidationError: If the access token can not be fetched.
         """
-        if fields.Datetime.now() > self.paymob_access_token_expiry:
+        if not self.paymob_access_token or fields.Datetime.now() > self.paymob_access_token_expiry:
             response_content = self._paymob_make_request(
                 '/api/auth/tokens',
                 data={'api_key': self.paymob_api_key},
