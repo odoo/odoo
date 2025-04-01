@@ -20,7 +20,6 @@ class TestUBLRS(TestUBLCommon):
             'vat': 'RS101134702',
             'phone': '+381 23 456 78 91',
             'street': 'Nikole Pašića 30a',
-            'invoice_is_ubl_cii': True,
         })
         cls.company_data['company'].partner_id.l10n_rs_edi_registration_number = '87654321'
 
