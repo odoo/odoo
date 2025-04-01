@@ -76,7 +76,10 @@ class ProductTemplate(models.Model):
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):
         for record in self:
-            if record.type == 'service' and record.service_type == 'timesheet' and \
+            default_uom = self.env['ir.default']._get_model_defaults('product.template').get('uom_id')
+            if default_uom:
+                record.uom_id = self.env['uom.uom'].browse(default_uom)
+            elif record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
                 record.uom_id = self.env.ref('uom.product_uom_hour')
             elif record._origin.uom_id:
@@ -148,7 +151,10 @@ class ProductProduct(models.Model):
     @api.onchange('type', 'service_type', 'service_policy')
     def _onchange_service_fields(self):
         for record in self:
-            if record.type == 'service' and record.service_type == 'timesheet' and \
+            default_uom = self.env['ir.default']._get_model_defaults('product.product').get('uom_id')
+            if default_uom:
+                record.uom_id = self.env['uom.uom'].browse(default_uom)
+            elif record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
                 record.uom_id = self.env.ref('uom.product_uom_hour')
             elif record._origin.uom_id:
