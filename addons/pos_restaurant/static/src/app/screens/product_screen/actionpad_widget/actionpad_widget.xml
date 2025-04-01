@@ -18,7 +18,7 @@
         </xpath>
         <!-- Replace the payment button by the order button -->
         <xpath expr="//div[hasclass('validation')]" position="inside">
-            <div t-if="this.swapButton" class="d-flex gap-2 flex-fill">
+            <div t-if="this.swapButton and currentOrder" class="d-flex gap-2 flex-fill">
                 <button
                     class="submit-order h-100 button btn btn-lg d-flex align-items-center w-50 flex-fill position-relative px-3 highlight btn-primary justify-content-between"
                     t-on-click="() => this.submitOrder()"
