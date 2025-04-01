@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.PaymentPage">
-        <div t-if="state.selection" class="h-100 d-flex flex-wrap p-5 gap-5 align-items-center justify-content-center">
-            <div
-                t-foreach="selfOrder.models['pos.payment.method'].getAll()"
-                t-as="payment_method"
-                t-key="payment_method.id"
-                class="o_kiosk-card border rounded d-flex flex-column align-items-center p-5 justify-content-center bg-white"
-                t-on-click="() => this.selectMethod(payment_method.id)">
-                <div class="h-75 fs-1 p-3 d-flex flex-column justify-content-center align-items-center">
-                    <i class="fa fa-credit-card" aria-hidden="true"></i>
-                </div>
-                <div class="name w-100 d-flex justify-content-center align-items-center h-25">
-                    <span t-esc="payment_method.name" />
+        <div t-if="state.selection" class="d-flex flex-column vh-100 overflow-hidden bg-secondary o_kiosk_fade">
+            <div class="scroll_container position-relative d-flex flex-grow-1 overflow-y-auto justify-content-center my-auto">
+                <div class="o_kiosk_container d-grid gap-4 justify-content-center w-100 p-5 my-auto">
+                    <button
+                        t-foreach="selfOrder.models['pos.payment.method'].getAll()"
+                        t-as="payment_method"
+                        t-key="payment_method.id"
+                        role="button"
+                        class="o_kiosk-card btn btn-light d-flex flex-column align-items-center w-100 py-5 border border-light shadow-sm overflow-hidden"
+                        t-on-click="() => this.selectMethod(payment_method.id)">
+                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                        <span t-esc="payment_method.name" />
+                    </button>
                 </div>
             </div>
         </div>
         <div class="payment-state-container d-flex justify-content-center align-items-center flex-column h-100 px-3 text-center">
-            <h1 class="mb-4">Follow instructions on the terminal</h1>
+            <h1 class="mb-4 fw-bolder">Follow instructions on the terminal</h1>
             <div class="d-inline-flex flex-column border rounded p-4 bg-view mb-3">
                 <i class="fa fa-credit-card-alt fs-1" aria-hidden="true"></i>
             </div>
         </div>
-        <div class="px-3 py-4 d-flex gap-1 justify-content-center">
+        <div class="d-flex justify-content-between p-4 w-100 bg-light border-top border-light">
             <button class="btn btn-primary btn-lg" t-if="state.selection || selectedPaymentMethod.is_online_payment || this.selfOrder.paymentError" t-on-click="() => this.router.back()">Back</button>
             <button class="btn btn-info btn-lg" t-if="!state.selection and selfOrder.paymentError" t-on-click="startPayment">Retry</button>
         </div>

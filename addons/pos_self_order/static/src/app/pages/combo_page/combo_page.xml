@@ -40,8 +40,8 @@
                 </div>
             </section>
             <t t-if="state.selectedProduct">
-                <div class="o-so-product-details d-flex flex-row align-items-start p-3 gap-3">
-                    <div class="o-so-product-details-image ratio ratio-1x1 w-25 flex-shrink-0">
+                <div class="o_so_product_details d-flex flex-row align-items-start p-3 gap-3">
+                    <div class="o_so_product_details_image ratio ratio-1x1 w-25 flex-shrink-0">
                         <div class="placeholder-glow">
                             <div class="placeholder w-100 h-100 bg-300 rounded"/>
                         </div>
@@ -52,7 +52,7 @@
                             loading="lazy"
                             onerror="this.remove()"/>
                     </div>
-                    <div class="o-so-product-details-description">
+                    <div class="o_so_product_details_description">
                         <h2 t-esc="state.selectedProduct.name"/>
                         <small t-if="state.selectedProduct.public_description"
                             class="o_self_order_main_desc d-block mb-3 text-muted"

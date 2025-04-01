@@ -6,10 +6,39 @@ export function clickProduct(productName) {
     };
 }
 
+export function clickKioskProduct(productName) {
+    return {
+        content: `Click on product '${productName}'`,
+        trigger: `.o_kiosk_product_box h3:contains('${productName}')`,
+        run: "click",
+    };
+}
+export function clickKioskCategory(categoryName) {
+    return {
+        content: `Click on category '${categoryName}'`,
+        trigger: `.category_btn:contains('${categoryName}')`,
+        run: "click",
+    };
+}
+
 export function checkReferenceNotInProductName(productName, reference) {
     return {
         content: `Check product label has '${productName}' and not ${reference}`,
         trigger: `.self_order_product_card span:contains('${productName}'):not(:contains("${reference}"))`,
+    };
+}
+export function checkKioskReferenceNotInProductName(productName, reference) {
+    return {
+        content: `Check product label has '${productName}' and not ${reference}`,
+        trigger: `.o_kiosk_product_box h3:contains('${productName}'):not(:contains("${reference}"))`,
+    };
+}
+
+export function clickBack() {
+    return {
+        content: `Click on back button`,
+        trigger: `.btn.btn-back`,
+        run: "click",
     };
 }
 
@@ -22,7 +51,7 @@ export function clickCancel() {
         },
         {
             content: `Click on button Cancel Order`,
-            trigger: `.btn.btn-lg:contains('Cancel Order')`,
+            trigger: `.btn.btn-primary:contains('Cancel Order')`,
             run: "click",
         },
     ];
@@ -32,6 +61,14 @@ export function clickDiscard() {
     return {
         content: "Click on Discard button",
         trigger: ".btn.btn-secondary .oi-chevron-left",
+        run: "click",
+    };
+}
+
+export function clickKioskComboDiscard() {
+    return {
+        content: "Click on Discard button",
+        trigger: ".btn.btn-link .oi-chevron-left",
         run: "click",
     };
 }
@@ -50,6 +87,27 @@ export function setupAttribute(attributes, addToCart = true) {
         steps.unshift({
             content: `Select value ${attr.value} for attribute ${attr.name}`,
             trigger: `div.attribute-row h2:contains("${attr.name}") + div.row div.col label div.name span:contains("${attr.value}")`,
+            run: "click",
+        });
+    }
+
+    return steps;
+}
+
+export function setupKioskAttribute(attributes, addToCart = true) {
+    const steps = [];
+    if (addToCart) {
+        steps.push({
+            content: `Click on 'Add to cart' button`,
+            trigger: `.btn.btn-primary`,
+            run: "click",
+        });
+    }
+
+    for (const attr of attributes) {
+        steps.unshift({
+            content: `Select value ${attr.value} for attribute ${attr.name}`,
+            trigger: `h2:contains("${attr.name}") + .attribute_list button:contains("${attr.value}")`,
             run: "click",
         });
     }
@@ -94,6 +152,28 @@ export function setupCombo(products, addToCart = true) {
 
         if (product.attributes.length > 0) {
             steps.push(...setupAttribute(product.attributes));
+        }
+    }
+
+    if (addToCart) {
+        steps.push({
+            content: `Click on 'Add to cart' button`,
+            trigger: `.btn.btn-primary`,
+            run: "click",
+        });
+    }
+
+    return steps;
+}
+
+export function setupKioskCombo(products, addToCart = true) {
+    const steps = [];
+
+    for (const product of products) {
+        steps.push(clickKioskProduct(product.product));
+
+        if (product.attributes.length > 0) {
+            steps.push(...setupKioskAttribute(product.attributes));
         }
     }
 

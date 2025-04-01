@@ -62,6 +62,12 @@ class PosConfig(models.Model):
         string="Add images",
         help="Image to display on the self order screen",
     )
+    self_ordering_image_background_ids = fields.Many2many(
+        'ir.attachment',
+        string="Set background image",
+        help="Image to be displayed in the background",
+        relation="pos_self_order_background_rels",
+    )
     self_ordering_default_user_id = fields.Many2one(
         "res.users",
         string="Default User",
@@ -111,6 +117,14 @@ class PosConfig(models.Model):
                     'res_model': 'pos.config',
                     'type': 'binary',
                 }) for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']]
+
+            if not vals.get('self_ordering_image_background_ids'):
+                vals['self_ordering_image_background_ids'] = [(0, 0, {
+                    'name': "background.jpg",
+                    'datas': base64.b64encode(file_open(opj("pos_self_order/static/img", "kiosk_background.jpg"), "rb").read()),
+                    'res_model': 'pos.config',
+                    'type': 'binary',
+                })]
 
         return True
 
@@ -274,6 +288,7 @@ class PosConfig(models.Model):
             'pos.config': self.env['pos.config'].search_read([('id', '=', self.id)], config_fields, load=False),
         }
         response['pos.config'][0]['_self_ordering_image_home_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_home_ids)
+        response['pos.config'][0]['_self_ordering_image_background_ids'] = self._get_self_ordering_attachment(self.self_ordering_image_background_ids)
         response['pos.config'][0]['_pos_special_products_ids'] = self._get_special_products().ids
         self.env['pos.session']._load_pos_data_relations('pos.config', response)
 

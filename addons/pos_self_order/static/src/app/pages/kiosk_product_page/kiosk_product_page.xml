@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.KioskProductPage">
+        <div class="o_kiosk_product_page d-flex flex-column vh-100 overflow-hidden o_kiosk_background o_kiosk_fade">
+            <!-- Header -->
+            <div class="text-bg-primary shadow-lg z-1">
+                <t t-set="product" t-value="productTemplate"/>
+                <div class="p-4">
+                    <button class="btn btn-link d-inline border-3 p-2 text-nowrap text-reset" t-on-click="() => this.router.back()">
+                        <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-3 d-none d-md-inline">Discard</span>
+                    </button>
+                </div>
+                <div class="d-flex flex-column gap-4 align-items-center justify-content-between mb-3">
+                    <h1 class="mb-0 fw-bolder text-nowrap text-center text-reset" t-esc="product.name"/>
+                    <div class="product-image rounded-4">
+                        <img height="384" width="384" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attributes -->
+            <div class="attributes d-flex flex-grow-1 flex-column overflow-y-auto px-4 z-0">
+                <div class="text-center px-4 mb-3" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
+                <KioskAttributeSelection t-if="productTemplate.attribute_line_ids.length"  productTemplate="productTemplate" />
+            </div>
+
+            <!-- Quantity -->
+            <div t-if="showQtyButtons"  class="d-flex flex-column align-items-end mb-4 pt-4 px-4">
+                <KioskQuantityWidget value="state.qty"  onQtyDown="() => this.changeQuantity(false)" onQtyUp="() => this.changeQuantity(true)" />
+            </div>
+
+            <div t-if="isArchivedCombination()" class="alert alert-warning m-0 text-center">
+                This combination does not exist.
+            </div>
+
+            <!-- Footer -->
+            <div class="d-flex justify-content-between align-items-center position-relative px-4 py-4 gap-5 bg-white border-top border-light shadow-lg">
+                <div></div>
+                <div class="d-flex align-items-center justify-content-end h-100 flex-grow-1 w-auto">
+                    <div class="d-flex flex-column align-items-start justify-content-center h-100">
+                        <h4 class="fw-bolder text-muted opacity-75">Selection</h4>
+                        <h2 class="o-so-tabular-nums mx-2 fw-bolder text-primary" t-esc="selfOrder.formatMonetary(getProductPrice())" />
+                    </div>
+                </div>
+                <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
+                    <span>Add to cart</span>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>
