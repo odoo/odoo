@@ -80,7 +80,7 @@
                                                             'align-self-start rounded-end-3 rounded-bottom-3': !props.message.composer and !message.is_note,
                                                             'flex-grow-1': props.message.composer,
                                                             }" t-ref="body">
-                                                    <i t-if="message.isEmpty" class="text-muted opacity-75" t-esc="message.inlineBody"/>
+                                                    <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
                                                     <Composer t-elif="props.message.composer" autofocus="true" composer="message.composer" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="message.subject and !message.isSubjectSimilarToThreadName and !message.isSubjectDefault" class="d-block text-muted smaller">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
