@@ -412,7 +412,7 @@ class ImageShapeOptionPlugin extends Plugin {
         if (!shapeId) {
             return _t("None");
         }
-        return _t(this.imageShapes[shapeId].selectLabel || "None");
+        return this.imageShapes[shapeId].selectLabel || _t("None");
     }
     isAnimableShape(shape) {
         if (!shape) {
