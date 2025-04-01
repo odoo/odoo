@@ -213,6 +213,9 @@ PKGS_TO_INSTALL="
     wlr-randr \
     xdotool"
 
+# Prevent Wi-Fi blocking
+apt-get -y remove rfkill
+
 echo "Acquire::Retries "16";" > /etc/apt/apt.conf.d/99acquire-retries
 # KEEP OWN CONFIG FILES DURING PACKAGE CONFIGURATION
 # http://serverfault.com/questions/259226/automatically-keep-current-version-of-config-files-when-apt-get-install
