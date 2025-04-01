@@ -241,6 +241,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         if (snippetSaveOptionEl) {
             snippetSaveOptionEl.dataset.selector += ", .s_searchbar_input";
         }
+        // TODO remove in 18.0
+        const navTabsStyleEl = $html.find(`[data-js="NavTabsStyle"]`)[0];
+        if (navTabsStyleEl) {
+            const divEl = document.createElement("div");
+            divEl.setAttribute("data-js", "TabsNavItems");
+            divEl.setAttribute("data-selector", ".nav-item");
+            navTabsStyleEl.append(divEl);
+        }
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
