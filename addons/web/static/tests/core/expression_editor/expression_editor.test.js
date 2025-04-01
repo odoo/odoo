@@ -447,3 +447,119 @@ test("between operator", async () => {
     await selectOperator("between");
     expect.verifySteps([`id >= 1 and id <= 1`]);
 });
+
+test("next operator", async () => {
+    await makeExpressionEditor({
+        expression: `date`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("next");
+    expect.verifySteps([
+        `date >= context_today().strftime("%Y-%m-%d") and date <= (context_today() + relativedelta(months = 1)).strftime("%Y-%m-%d")`,
+    ]);
+});
+
+test("not_next operator", async () => {
+    await makeExpressionEditor({
+        expression: `datetime`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("not_next");
+    expect.verifySteps([
+        `datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") or datetime > datetime.datetime.combine(context_today() + relativedelta(months = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+    ]);
+});
+
+test("last operator", async () => {
+    await makeExpressionEditor({
+        expression: `datetime`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("last");
+    expect.verifySteps([
+        `datetime >= datetime.datetime.combine(context_today() + relativedelta(months = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S") and datetime <= datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`,
+    ]);
+});
+
+test("not_last operator", async () => {
+    await makeExpressionEditor({
+        expression: `date`,
+        update(expression) {
+            expect.step(expression);
+        },
+    });
+    expect(getOperatorOptions()).toEqual([
+        "is equal",
+        "is not equal",
+        "is greater",
+        "is greater or equal",
+        "is lower",
+        "is lower or equal",
+        "is between",
+        "next",
+        "not next",
+        "last",
+        "not last",
+        "set",
+        "not set",
+    ]);
+    expect.verifySteps([]);
+    await selectOperator("not_last");
+    expect.verifySteps([
+        `date < (context_today() + relativedelta(months = -1)).strftime("%Y-%m-%d") or date > context_today().strftime("%Y-%m-%d")`,
+    ]);
+});
