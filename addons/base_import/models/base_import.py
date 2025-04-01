@@ -619,8 +619,7 @@ class Import(models.TransientModel):
                 if val:
                     if options.get('float_thousand_separator') and options.get('float_decimal_separator'):
                         if options['float_decimal_separator'] == '.' and val.count('.') > 1:
-                            # This is not a float so exit this try
-                            float('a')
+                            raise ValueError
                         val = val.replace(options['float_thousand_separator'], '').replace(options['float_decimal_separator'], '.')
                     # We are now sure that this is a float, but we still need to find the
                     # thousand and decimal separator
@@ -638,8 +637,7 @@ class Import(models.TransientModel):
                             thousand_separator = '.'
                             decimal_separator = ','
                 else:
-                    # This is not a float so exit this try
-                    float('a')
+                    raise ValueError
             if thousand_separator and not options.get('float_decimal_separator'):
                 options['float_thousand_separator'] = thousand_separator
                 options['float_decimal_separator'] = decimal_separator
