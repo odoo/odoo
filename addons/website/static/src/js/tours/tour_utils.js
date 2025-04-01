@@ -201,7 +201,7 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview :iframe .odoo-editor-editable",
     }];
 }
 
@@ -224,7 +224,7 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview :iframe .odoo-editor-editable",
     }];
 }
 
@@ -315,14 +315,14 @@ export function clickOnText(snippet, element, position = "bottom") {
 export function insertSnippet(snippet, position = "bottom") {
     const blockEl = snippet.groupName || snippet.name;
     const insertSnippetSteps = [{
-        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        trigger: ".o_website_preview :iframe .odoo-editor-editable",
         noPrepend: true,
     }];
     const snippetIDSelector = snippet.id ? `[data-snippet-id="${snippet.id}"]` : `[data-snippet-id^="${snippet.customID}_"]`;
     if (snippet.groupName) {
         insertSnippetSteps.push({
             content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            trigger: `#snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
             tooltipPosition: position,
             run: "click",
         },
@@ -330,18 +330,18 @@ export function insertSnippet(snippet, position = "bottom") {
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
             // FIXME `:not(.d-none)` should obviously not be needed but it seems
             // currently needed when using a tour in user/interactive mode.
-            trigger: `:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
+            trigger: `:iframe .o_snippet_preview_wrap ${snippetIDSelector}:not(.d-none)`,
             noPrepend: true,
             tooltipPosition: "top",
             run: "click",
         },
         {
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            trigger: `#snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
         });
     } else {
         insertSnippetSteps.push({
             content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
-            trigger: `#oe_snippets .oe_snippet[name="${blockEl}"].o_we_draggable .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            trigger: `#snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
             tooltipPosition: position,
             run: "drag_and_drop :iframe #wrapwrap > footer",
         });
@@ -452,7 +452,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
             if (options.edition) {
                 tourSteps.unshift({
                     content: "Wait for the edit mode to be started",
-                    trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+                    trigger: ".o_website_preview :iframe .odoo-editor-editable",
                     timeout: 30000,
                 });
             } else {
