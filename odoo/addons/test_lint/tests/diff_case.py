@@ -23,17 +23,8 @@ class FileInfo:
         for addons_path in odoo.addons.__path__
     ]
 
-    def __init__(self, /, *, repo_path: str = '', git_path: str = '', base_version: str = ''):
-        self.base_version: str = base_version
-        """ base version of the git branch """
-
-        self.repo_path: str = repo_path and os.path.normpath(os.path.normcase(repo_path))  # /Users/username/project/odoo
-        """ absolute path of the git repo """
-
-        self.git_path: str = git_path and os.path.normpath(os.path.normcase(git_path))  # odoo/addons/base/models/res_partner.py
-        """ relative path of the file to the git repo_path """
-
-        self.abs_path = os.path.join(self.repo_path, self.git_path)  # /Users/username/project/odoo/odoo/addons/base/models/res_partner.py
+    def __init__(self, abs_path):
+        self.abs_path = abs_path  # /Users/username/project/odoo/odoo/addons/base/models/res_partner.py
         """ absolute path of the file """
 
         self.odoo_path: str = self.parse_odoo_path(self.abs_path)  # base/models/res_partner.py
@@ -120,7 +111,8 @@ def get_diff_linenos(repo_path: str, base_version: str, filter: list[str] | None
         if diff.startswith('diff --git'):
             match = file_regex.match(diff)
             assert match
-            current_file = FileInfo(repo_path=repo_path, git_path=match.group('git_path'), base_version=base_version)
+            abs_path = os.path.join(repo_path, match.group('git_path'))
+            current_file = FileInfo(abs_path)
             diff_linenos[current_file.abs_path] = current_file
         elif diff.startswith('@@'):
             match = line_regex.match(diff)
