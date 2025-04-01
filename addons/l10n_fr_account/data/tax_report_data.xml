@@ -1519,7 +1519,13 @@
                         <field name="name">32 - Total payable</field>
                         <field name="name@fr">32 - Total à payer</field>
                         <field name="code">box_32</field>
-                        <field name="aggregation_formula">box_28.balance + box_29.balance + box_Z5.balance</field>
+                        <field name="expression_ids">
+                            <record id="tax_report_32_balance" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">box_28.balance + box_29.balance + box_Z5.balance</field>
+                            </record> 
+                        </field>
                     </record>
                 </field>
             </record>
