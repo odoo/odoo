@@ -34,23 +34,25 @@ const StorePatch = {
         this.starred = Record.one("Thread");
         this.history = Record.one("Thread");
     },
+    async initialize() {
+        await Promise.all([
+            this.fetchStoreData("failures"),
+            this.fetchStoreData("systray_get_activities"),
+            super.initialize(...arguments),
+        ]);
+    },
     /**
-     * Override to initialise using the lazy_session to initialise the webclient part
+     * Override to group the first fetch with the lazy session fetch if it is not done yet.
      */
-    _fetchStoreDataDebounced() {
-        if (!this.fetchParams.includes("init_messaging")) {
-            return super._fetchStoreDataDebounced();
+    _fetchStoreDataRpc(fetchParams) {
+        if (this.env.services.lazy_session.rpcDone()) {
+            return super._fetchStoreDataRpc(...arguments);
         }
-        this.env.services["lazy_session"].getValue("store_data", (storeData) => {
-            const result = this.insert(storeData);
-            // if the "init_messaging" isn't the only param
-            this.fetchParams = this.fetchParams.filter((param) => param !== "init_messaging");
-            if (this.fetchParams.length > 0) {
-                return super._fetchStoreDataDebounced();
-            }
-            this.fetchDeferred.resolve(result);
-            this.resetFetchState();
-        });
+        return new Promise((resolve, reject) =>
+            this.env.services.lazy_session.getValue("store_data", resolve, {
+                store_fetch_params: fetchParams,
+            })
+        );
     },
     onStarted() {
         super.onStarted(...arguments);

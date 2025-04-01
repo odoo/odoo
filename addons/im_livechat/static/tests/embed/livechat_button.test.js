@@ -54,8 +54,8 @@ test("livechat not available", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
     patchWithCleanup(mailDataHelpers, {
-        async _process_request_for_all(store) {
-            await super._process_request_for_all(...arguments);
+        _process_request_for_all(store) {
+            super._process_request_for_all(...arguments);
             store.add({ livechat_available: false });
         },
     });
@@ -71,8 +71,8 @@ test("clicking on notification opens the chat", async () => {
         action: "display_button_and_text",
     });
     patchWithCleanup(mailDataHelpers, {
-        async _process_request_for_all(store) {
-            await super._process_request_for_all(...arguments);
+        _process_request_for_all(store) {
+            super._process_request_for_all(...arguments);
             store.add(pyEnv["im_livechat.channel.rule"].browse(btnAndTextRuleId), {
                 action: "display_button_and_text",
             });

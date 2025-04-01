@@ -3,7 +3,6 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { Component, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useService } from "@web/core/utils/hooks";
@@ -112,14 +111,17 @@ commandSetupRegistry.add("@", {
     placeholder: _t("Search a conversation"),
 });
 
+/**
+ * @param {string} name
+ * @param {import("models").Store} store
+ */
 async function makeNewChannel(name, store) {
-    const data = await rpc("/discuss/channel/create_channel", {
-        name: name,
-        group_id: store.internalUserGroupId,
-    });
-    const { Thread } = store.insert(data);
-    const [channel] = Thread;
-    channel.open({ focus: true, bypassCompact: true });
+    const { channel } = await store.fetchStoreData(
+        "/discuss/create_channel",
+        { name, group_id: store.internalUserGroupId },
+        { readonly: false, requestData: true }
+    );
+    await channel.open({ focus: true, bypassCompact: true });
 }
 
 export class DiscussCommandPalette {

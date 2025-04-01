@@ -3,13 +3,16 @@ import {
     contains,
     defineMailModels,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     patchUiSize,
     SIZES,
     start,
     startServer,
+    STORE_FETCH_ROUTES,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import {
@@ -29,28 +32,19 @@ test("can create a new channel", async () => {
     const pyEnv = await startServer();
     onRpcBefore((route, args) => {
         if (
-            route.startsWith("/discuss/channel/create_channel") ||
-            route.startsWith("/discuss/channel/messages") ||
-            route.startsWith("/discuss/search") ||
-            (route === "/mail/data" && args.fetch_params.includes("channels_as_member")) ||
-            route === "/mail/inbox/messages"
+            (route.startsWith("/mail") || route.startsWith("/discuss")) &&
+            !STORE_FETCH_ROUTES.includes(route)
         ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
-        if (route.endsWith("lazy_session_info")) {
-            asyncStep("lazy_session_info");
-        }
     });
+    listenStoreFetch(undefined, { logParams: ["/discuss/create_channel"] });
     await start();
-    await waitForSteps([`lazy_session_info`]);
     await openDiscuss();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
-    ]);
+    await waitStoreFetch(
+        ["failures", "systray_get_activities", "init_messaging", "channels_as_member"],
+        { stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'] }
+    );
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebar-item", { text: "abc", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
@@ -64,12 +58,18 @@ test("can create a new channel", async () => {
         ["channel_id", "=", channelId],
         ["partner_id", "=", serverState.partnerId],
     ]);
-    await waitForSteps([
-        `/discuss/channel/create_channel - ${JSON.stringify({
-            name: "abc",
-        })}`,
-        `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":${selfMember.new_message_separator}}}`,
-    ]);
+    await waitStoreFetch([["/discuss/create_channel", { name: "abc" }]], {
+        stepsAfter: [
+            `/discuss/channel/messages - ${JSON.stringify({
+                channel_id: channelId,
+                fetch_params: { limit: 60, around: selfMember.new_message_separator },
+            })}`,
+            `/discuss/channel/members - ${JSON.stringify({
+                channel_id: channelId,
+                known_member_ids: [selfMember.id],
+            })}`,
+        ],
+    });
 });
 
 test("can make a DM chat", async () => {
@@ -77,14 +77,11 @@ test("can make a DM chat", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
     pyEnv["res.users"].create({ partner_id: partnerId });
     onRpcBefore((route, args) => {
-        if (route === "/mail/data" && args.fetch_params.includes("channels_as_member")) {
+        if (
+            (route.startsWith("/mail") || route.startsWith("/discuss")) &&
+            !STORE_FETCH_ROUTES.includes(route)
+        ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
-        }
-        if (route === "/mail/inbox/messages" || route.startsWith("/discuss")) {
-            asyncStep(`${route} - ${JSON.stringify(args)}`);
-        }
-        if (route.endsWith("lazy_session_info")) {
-            asyncStep("lazy_session_info");
         }
     });
     onRpc((params) => {
@@ -96,16 +93,15 @@ test("can make a DM chat", async () => {
             );
         }
     });
+    listenStoreFetch(undefined, {
+        logParams: ["/discuss/get_or_create_chat"],
+    });
     await start();
-    await waitForSteps([`lazy_session_info`]);
+    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     await openDiscuss();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
-    ]);
+    await waitStoreFetch(["channels_as_member"], {
+        stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'],
+    });
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario", count: 0 });
     await click("input[placeholder='Find or start a conversation']");
@@ -113,13 +109,16 @@ test("can make a DM chat", async () => {
     await click("a", { text: "Mario" });
     await contains(".o-mail-DiscussSidebar-item", { text: "Mario" });
     await contains(".o-mail-Message", { count: 0 });
-    const channelId = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
-    await waitForSteps([
-        `/discuss/search - {"term":""}`,
-        `/discuss/search - {"term":"mario"}`,
-        `/discuss/channel/get_or_create_chat - ${JSON.stringify({ partners_to: [partnerId] })}`,
-        `/discuss/channel/messages - {"channel_id":${channelId},"fetch_params":{"limit":60,"around":0}}`,
-    ]);
+    const [channelId] = pyEnv["discuss.channel"].search([["name", "=", "Mario, Mitchell Admin"]]);
+    await waitStoreFetch([["/discuss/get_or_create_chat", { partners_to: [partnerId] }]], {
+        stepsAfter: [
+            `/discuss/channel/messages - ${JSON.stringify({
+                channel_id: channelId,
+                fetch_params: { limit: 60, around: 0 },
+            })}`,
+        ],
+        stepsBefore: [`/discuss/search - {"term":""}`, `/discuss/search - {"term":"mario"}`],
+    });
 });
 
 test("can create a group chat conversation", async () => {

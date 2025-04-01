@@ -4,15 +4,18 @@ import {
     contains,
     defineMailModels,
     insertText,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     patchUiSize,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
+
+import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
 defineMailModels();
@@ -33,15 +36,11 @@ test("auto-select 'Inbox' when discuss had channel as active thread", async () =
 test("show loading on initial opening", async () => {
     // This could load a lot of data (all pinned conversations)
     const def = new Deferred();
-    onRpcBefore("/mail/action", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            asyncStep("before channels_as_member");
             await def;
-        }
-    });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
-            await def;
-        }
+        },
     });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
@@ -50,7 +49,9 @@ test("show loading on initial opening", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin");
     await contains(".o-mail-NotificationItem", { text: "General", count: 0 });
+    await waitForSteps(["before channels_as_member"]);
     def.resolve();
+    await waitStoreFetch("channels_as_member");
     await contains(".o-mail-MessagingMenu .fa.fa-circle-o-notch.fa-spin", { count: 0 });
     await contains(".o-mail-NotificationItem", { text: "General" });
 });

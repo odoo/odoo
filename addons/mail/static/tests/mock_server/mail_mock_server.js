@@ -263,42 +263,6 @@ async function channel_call_leave(request) {
     BusBus._sendmany(notifications);
 }
 
-registerRoute("/discuss/channel/get_or_create_chat", discuss_get_or_create_chat);
-/** @type {RouteCallback} */
-async function discuss_get_or_create_chat(request) {
-    const { partners_to } = await parseRequestParams(request);
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    const channel = DiscussChannel._get_or_create_chat(partners_to);
-    return {
-        channel_id: channel.id,
-        data: new mailDataHelpers.Store(DiscussChannel.browse(channel.id)).get_result(),
-    };
-}
-
-registerRoute("/discuss/channel/create_channel", discuss_create_channel);
-/** @type {RouteCallback} */
-async function discuss_create_channel(request) {
-    const { name, group_id } = await parseRequestParams(request);
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_channel(name, group_id);
-}
-
-registerRoute("/discuss/channel/create_group", discuss_create_group);
-/** @type {RouteCallback} */
-async function discuss_create_group(request) {
-    const kwargs = await parseRequestParams(request);
-    const partners_to = kwargs.partners_to || [];
-    const name = kwargs.name || "";
-
-    /** @type {import("mock_models").DiscussChannel} */
-    const DiscussChannel = this.env["discuss.channel"];
-    return DiscussChannel._create_group(partners_to, name);
-}
-
 registerRoute("/discuss/channel/members", discuss_channel_members);
 /** @type {RouteCallback} */
 async function discuss_channel_members(request) {
@@ -895,13 +859,15 @@ async function mail_thread_update_suggested_recipients(request) {
 registerRoute("/mail/action", mail_action);
 /** @type {RouteCallback} */
 async function mail_action(request) {
-    return (await processRequest.call(this, request)).get_result();
+    const args = await parseRequestParams(request);
+    return processRequest.call(this, args.fetch_params, args.context).get_result();
 }
 
 registerRoute("/mail/data", mail_data);
 /** @type {RouteCallback} */
 export async function mail_data(request) {
-    return (await processRequest.call(this, request)).get_result();
+    const args = await parseRequestParams(request);
+    return processRequest.call(this, args.fetch_params, args.context).get_result();
 }
 
 registerRoute("/discuss/search", search);
@@ -965,22 +931,18 @@ async function mail_thread_subscribe(request) {
     ).get_result();
 }
 
-/** @type {RouteCallback} */
-async function processRequest(request) {
+function processRequest(fetchParams, context) {
     const store = new mailDataHelpers.Store();
-    const args = await parseRequestParams(request);
-    let fetchParams = args.fetch_params;
-    if (args.method === "lazy_session_info") {
-        fetchParams = ["failures", "systray_get_activities", "init_messaging"];
-    }
     for (const fetchParam of fetchParams) {
-        const [name, params] =
+        const [name, params, data_id] =
             typeof fetchParam === "string" || fetchParam instanceof String
-                ? [fetchParam, undefined]
+                ? [fetchParam, undefined, undefined]
                 : fetchParam;
-        mailDataHelpers._process_request_for_all.call(this, store, name, params, args.context);
+        store.data_id = data_id;
+        mailDataHelpers._process_request_for_all.call(this, store, name, params, context);
         mailDataHelpers._process_request_for_internal_user.call(this, store, name, params);
     }
+    store.data_id = null;
     return store;
 }
 
@@ -1069,6 +1031,24 @@ function _process_request_for_all(store, name, params, context = {}) {
             store.add(channel, makeKwArgs({ delete: true }));
         }
     }
+    if (name === "/discuss/get_or_create_chat") {
+        const channelId = DiscussChannel._get_or_create_chat(params.partners_to);
+        store.add(channelId).resolve_data_request({
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
+        });
+    }
+    if (name === "/discuss/create_channel") {
+        const channelId = DiscussChannel._create_channel(params.name, params.group_id);
+        store.add(channelId).resolve_data_request({
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
+        });
+    }
+    if (name === "/discuss/create_group") {
+        const channelId = DiscussChannel._create_group(params.partners_to, params.name);
+        store.add(channelId).resolve_data_request({
+            channel: mailDataHelpers.Store.one(channelId, makeKwArgs({ only_id: true })),
+        });
+    }
 }
 
 function _process_request_for_internal_user(store, name, params) {
@@ -1116,6 +1096,7 @@ const ONE = Symbol("ONE");
 class Store {
     constructor(data, values, as_thread, _delete, kwargs) {
         this.data = new Map();
+        this.data_id = null;
         if (data) {
             this.add(...arguments);
         }
@@ -1313,6 +1294,13 @@ class Store {
         return res;
     }
 
+    resolve_data_request(values) {
+        if (this.data_id) {
+            this.add("DataResponse", { id: this.data_id, _resolve: true, ...values });
+        }
+        return this;
+    }
+
     toJSON() {
         throw Error(
             "Converting Store to JSON is not supported, you might want to call 'get_result()' instead."
@@ -1413,9 +1401,14 @@ class Store {
 }
 
 registerRoute("/web/dataset/call_kw/ir.http/lazy_session_info", async function (request) {
-    return {
-        store_data: (await processRequest.call(this, request)).get_result(),
-    };
+    const { kwargs } = await parseRequestParams(request);
+    const res = {}; // missing super call for simplicity
+    if (kwargs.store_fetch_params) {
+        res.store_data = processRequest
+            .call(this, kwargs.store_fetch_params, kwargs.context)
+            .get_result();
+    }
+    return res;
 });
 
 export const mailDataHelpers = {

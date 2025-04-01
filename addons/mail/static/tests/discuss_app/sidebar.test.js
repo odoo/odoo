@@ -3,13 +3,14 @@ import {
     contains,
     defineMailModels,
     insertText,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     setupChatHub,
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { DISCUSS_SIDEBAR_COMPACT_LS } from "@mail/core/public_web/discuss_app_model";
 import { describe, expect, test } from "@odoo/hoot";
@@ -799,11 +800,9 @@ test("channel - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_channel_open: false,
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-channel .oi-chevron-right");
@@ -942,11 +941,9 @@ test("chat - states: open from the bus", async () => {
         user_id: serverState.userId,
         is_discuss_sidebar_category_chat_open: false,
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarCategory-chat .oi-chevron-right");
@@ -1080,16 +1077,11 @@ test("Can leave channel", async () => {
 test("Do no channel_info after unpin", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "discuss.channel")) {
-            asyncStep("channel_info");
-        }
-    });
+    listenStoreFetch("discuss.channel");
     setupChatHub({ opened: [channelId] });
     await start();
     // ensure onRpc is at least set up properly (because then it is asserted negatively)
-    await waitForSteps(["channel_info"]);
+    await waitStoreFetch("discuss.channel");
     await openDiscuss(channelId);
     await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
     rpc("/mail/message/post", {
@@ -1102,7 +1094,7 @@ test("Do no channel_info after unpin", async () => {
     });
     // weak test, no guarantee that we waited long enough for the potential rpc to be done
     await animationFrame();
-    await waitForSteps([]);
+    await waitStoreFetch();
 });
 
 test.tags("focus required");
@@ -1174,15 +1166,11 @@ test("Update channel data via bus notification", async () => {
 test("sidebar: show loading on initial opening", async () => {
     // This could load a lot of data (all pinned conversations)
     const def = new Deferred();
-    onRpcBefore("/mail/action", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            asyncStep("before channels_as_member");
             await def;
-        }
-    });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
-            await def;
-        }
+        },
     });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
@@ -1192,7 +1180,9 @@ test("sidebar: show loading on initial opening", async () => {
         ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin"
     );
     await contains(".o-mail-DiscussSidebarChannel", { text: "General", count: 0 });
+    await waitForSteps(["before channels_as_member"]);
     def.resolve();
+    await waitStoreFetch("channels_as_member");
     await contains(
         ".o-mail-DiscussSidebarCategory:contains('Channels') .fa.fa-circle-o-notch.fa-spin",
         { count: 0 }

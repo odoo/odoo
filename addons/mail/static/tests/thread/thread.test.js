@@ -7,6 +7,7 @@ import {
     focus,
     insertText,
     isInViewportOf,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -15,6 +16,7 @@ import {
     start,
     startServer,
     triggerEvents,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -288,14 +290,6 @@ test("mark channel as fetched when a new message is loaded", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
-        asyncStep(`lazy_session_info`);
-    });
-    onRpcBefore("/mail/data", (args) => {
-        if (JSON.stringify(args.fetch_params).includes("discuss.channel")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
     onRpcBefore("/discuss/channel/mark_as_read", (args) => {
         expect(args.channel_id).toBe(channelId);
         asyncStep("rpc:mark_as_read");
@@ -305,15 +299,10 @@ test("mark channel as fetched when a new message is loaded", async () => {
         asyncStep("rpc:channel_fetch");
     });
     setupChatHub({ opened: [channelId] });
+    listenStoreFetch(["init_messaging", "discuss.channel"]);
     await start();
+    await waitStoreFetch(["init_messaging", "discuss.channel"]);
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps([
-        `lazy_session_info`,
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [["discuss.channel", [channelId]]],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
     // send after init_messaging because bus subscription is done after init_messaging
     withUser(userId, () =>
         rpc("/mail/message/post", {

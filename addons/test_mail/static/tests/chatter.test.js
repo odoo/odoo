@@ -3,6 +3,7 @@ import {
     contains,
     inputFiles,
     insertText,
+    listenStoreFetch,
     openFormView,
     patchUiSize,
     registerArchs,
@@ -10,6 +11,7 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
@@ -40,14 +42,16 @@ test("Send message button activation (access rights dependent)", async () => {
         `,
     });
     let userAccess = {};
-    onRpc("/mail/data", async (request) => {
-        const { params } = await request.json();
-        if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
-            const res = await mail_data.bind(MockServer.current)(request);
-            res["mail.thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
-            res["mail.thread"][0].hasReadAccess = userAccess.hasReadAccess;
-            return res;
-        }
+    listenStoreFetch("mail.thread", {
+        async onRpc(request) {
+            const { params } = await request.json();
+            if (params.fetch_params.some((fetchParam) => fetchParam[0] === "mail.thread")) {
+                const res = await mail_data.bind(MockServer.current)(request);
+                res["mail.thread"][0].hasWriteAccess = userAccess.hasWriteAccess;
+                res["mail.thread"][0].hasReadAccess = userAccess.hasReadAccess;
+                return res;
+            }
+        },
     });
     await start();
     const simpleId = pyEnv["mail.test.multi.company"].create({ name: "Test MC Simple" });
@@ -64,6 +68,9 @@ test("Send message button activation (access rights dependent)", async () => {
     ) {
         userAccess = { hasReadAccess, hasWriteAccess };
         await openFormView(model, resId);
+        if (resId) {
+            await waitStoreFetch("mail.thread");
+        }
         if (enabled) {
             await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
         } else {
