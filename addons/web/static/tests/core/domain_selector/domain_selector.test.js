@@ -1052,8 +1052,10 @@ test("support properties", async () => {
                 "is lower or equal",
                 "is between",
                 "is not between",
-                "is within",
-                "is not within",
+                "next",
+                "not next",
+                "last",
+                "not last",
                 "set",
                 "not set",
             ],
@@ -2257,27 +2259,27 @@ test(`any/not any operator (readonly) for one2many`, async () => {
     expect(".o_domain_selector").toHaveText(text);
 });
 
-test(`within operator (readonly) for date`, async () => {
+test(`next operator (readonly) for date`, async () => {
     await makeDomainSelector({
         resModel: "partner",
         domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         readonly: true,
     });
-    const text = `Match\nall\nof the following rules:\nDate\nis within\n1\nweeks`;
+    const text = `Match\nall\nof the following rules:\nDate\nnext\n1\nweeks`;
     expect(".o_domain_selector").toHaveText(text);
 });
 
-test(`within operator (readonly) for datetime`, async () => {
+test(`next operator (readonly) for datetime`, async () => {
     await makeDomainSelector({
         resModel: "partner",
         domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(weeks=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
         readonly: true,
     });
-    const text = `Match\nall\nof the following rules:\nDatetime\nis within\n1\nweeks`;
+    const text = `Match\nall\nof the following rules:\nDatetime\nnext\n1\nweeks`;
     expect(".o_domain_selector").toHaveText(text);
 });
 
-test(`within operator (edit) for date`, async () => {
+test(`next operator (edit) for date`, async () => {
     await makeDomainSelector({
         resModel: "partner",
         domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
@@ -2285,7 +2287,7 @@ test(`within operator (edit) for date`, async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is within");
+    expect(getCurrentOperator()).toBe("next");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
@@ -2293,41 +2295,61 @@ test(`within operator (edit) for date`, async () => {
     );
     await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("1%");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
-    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1%");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(1) span`).toHaveText(`"1%"`);
+    expect(
+        `${SELECTORS.valueEditor} ${SELECTORS.editor} ${SELECTORS.clearNotSupported}`
+    ).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor} .fa-exclamation-triangle`).toHaveAttribute(
+        "title",
+        "Positive integer expected"
+    );
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
         `"weeks"`
     );
     expect.verifySteps([
-        `["&", ("date", ">=", (context_today() + relativedelta(weeks = "1%")).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+        `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = "1%")).strftime("%Y-%m-%d"))]`,
+    ]);
+
+    await contains(SELECTORS.clearNotSupported).click();
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    expect.verifySteps([
+        `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
     ]);
 });
 
-test(`within operator (edit) for date with an expression for amount`, async () => {
+test(`next operator (edit) for date with an expression for amount`, async () => {
     await makeDomainSelector({
         resModel: "partner",
-        domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = a)).strftime("%Y-%m-%d"))]`,
+        domain: `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         update(domain) {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is within");
+    expect(getCurrentOperator()).toBe("next");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
-    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("a");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
         `"weeks"`
     );
 
     await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("ab");
-    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("ab");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(1) span`).toHaveText(`"ab"`);
+    expect(
+        `${SELECTORS.valueEditor} ${SELECTORS.editor} ${SELECTORS.clearNotSupported}`
+    ).toHaveCount(1);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
         `"weeks"`
     );
     expect.verifySteps([
-        `["&", ("date", ">=", (context_today() + relativedelta(weeks = "ab")).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+        `["&", ("date", ">=", context_today().strftime("%Y-%m-%d")), ("date", "<=", (context_today() + relativedelta(weeks = "ab")).strftime("%Y-%m-%d"))]`,
     ]);
 });
 
-test(`within operator (edit) for datetime with invalid period`, async () => {
+test(`next operator (edit) for datetime with invalid period`, async () => {
     await makeDomainSelector({
         resModel: "partner",
         domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(a=1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
@@ -2335,7 +2357,7 @@ test(`within operator (edit) for datetime with invalid period`, async () => {
             expect.step(domain);
         },
     });
-    expect(getCurrentOperator()).toBe("is within");
+    expect(getCurrentOperator()).toBe("next");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
     expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) span`).toHaveText("a");
@@ -2349,6 +2371,121 @@ test(`within operator (edit) for datetime with invalid period`, async () => {
     );
     expect.verifySteps([
         `["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+    ]);
+});
+
+test(`last operator (readonly) for date`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("date", ">=", (context_today() + relativedelta(weeks = -1)).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+        readonly: true,
+    });
+    const text = `Match\nall\nof the following rules:\nDate\nlast\n1\nweeks`;
+    expect(".o_domain_selector").toHaveText(text);
+});
+
+test(`last operator (readonly) for datetime`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(weeks = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        readonly: true,
+    });
+    const text = `Match\nall\nof the following rules:\nDatetime\nlast\n1\nweeks`;
+    expect(".o_domain_selector").toHaveText(text);
+});
+
+test(`last operator (edit) for date`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("date", ">=", (context_today() + relativedelta(weeks = -1)).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("last");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("1%");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(1) span`).toHaveText(`"1%"`);
+    expect(
+        `${SELECTORS.valueEditor} ${SELECTORS.editor} ${SELECTORS.clearNotSupported}`
+    ).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor} .fa-exclamation-triangle`).toHaveAttribute(
+        "title",
+        "Positive integer expected"
+    );
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    expect.verifySteps([
+        `["&", ("date", ">=", (context_today() + relativedelta(weeks = "1%")).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+    ]);
+
+    await contains(SELECTORS.clearNotSupported).click();
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    expect.verifySteps([
+        `["&", ("date", ">=", (context_today() + relativedelta(weeks = -1)).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+    ]);
+});
+
+test(`last operator (edit) for date with an expression for amount`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("date", ">=", (context_today() + relativedelta(weeks = -1)).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("last");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+
+    await contains(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).edit("ab");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(1) span`).toHaveText(`"ab"`);
+    expect(
+        `${SELECTORS.valueEditor} ${SELECTORS.editor} ${SELECTORS.clearNotSupported}`
+    ).toHaveCount(1);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"weeks"`
+    );
+    expect.verifySteps([
+        `["&", ("date", ">=", (context_today() + relativedelta(weeks = "ab")).strftime("%Y-%m-%d")), ("date", "<=", context_today().strftime("%Y-%m-%d"))]`,
+    ]);
+});
+
+test(`last operator (edit) for datetime with invalid period`, async () => {
+    await makeDomainSelector({
+        resModel: "partner",
+        domain: `["&", ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(a = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    expect(getCurrentOperator()).toBe("last");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) span`).toHaveText("a");
+    expect(isNotSupportedValue(2)).toBe(true);
+
+    await clearNotSupported();
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}`).toHaveCount(2);
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:first input`).toHaveValue("1");
+    expect(`${SELECTORS.valueEditor} ${SELECTORS.editor}:nth-child(2) select`).toHaveValue(
+        `"days"`
+    );
+    expect.verifySteps([
+        `["&", ("datetime", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`,
     ]);
 });
 

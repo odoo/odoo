@@ -120,19 +120,8 @@ function getDelta(ast, fieldType) {
     return [toValue(amountAST), option];
 }
 
-function getProcessedDelta(val, fieldType, periodShouldBePositive = true) {
-    const delta = getDelta(toAST(val), fieldType);
-    if (delta) {
-        const [amount] = delta;
-        if (
-            Number.isInteger(amount) &&
-            // @ts-ignore
-            ((amount < 0 && periodShouldBePositive) || (amount > 0 && !periodShouldBePositive))
-        ) {
-            return null;
-        }
-    }
-    return delta;
+function getProcessedDelta(val, fieldType) {
+    return getDelta(toAST(val), fieldType);
 }
 
 function getDeltaExpression(value, fieldType) {
@@ -905,70 +894,9 @@ function _removeBetweenOperator(c) {
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// within - is_not_within
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * @param {Condition} c
- * @param {Options} [options={}]
- */
-function _createWithinOperator(c, options = {}) {
-    const { negate, path, operator, value } = c;
-    const fieldType = getFieldType(path, options);
-    if (
-        // @ts-ignore
-        !["between", "is_not_between"].includes(operator) ||
-        !["date", "datetime"].includes(fieldType)
-    ) {
-        return;
-    }
-    let delta;
-    if (isTodayExpr(value[0], fieldType)) {
-        delta = getProcessedDelta(value[1], fieldType);
-    } else if (isTodayExpr(value[1], fieldType)) {
-        delta = getProcessedDelta(value[0], fieldType, false);
-    }
-    if (delta) {
-        return condition(
-            path,
-            operator === "between" ? "within" : "is_not_within",
-            [...delta, fieldType],
-            negate
-        );
-    }
-}
-
-/**
- * @param {Condition} c
- */
-function _removeWithinOperator(c) {
-    const { negate, path, operator, value } = c;
-    // @ts-ignore
-    if (!["within", "is_not_within"].includes(operator)) {
-        return;
-    }
-    const fieldType = value[2];
-    const expressions = [
-        expression(
-            fieldType === "date" ? DATE_TODAY_STRING_EXPRESSION : DATETIME_TODAY_STRING_EXPRESSION
-        ),
-        getDeltaExpression(value, fieldType),
-    ];
-    if (!Number.isInteger(value[0]) || value[0] <= 0) {
-        expressions.reverse();
-    }
-    return condition(
-        path,
-        operator === "within" ? "between" : "is_not_between",
-        expressions,
-        negate
-    );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// set - not_set - starts_with - ends_with
-////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+// set - not_set - starts_with - ends_with - next - not_next - last - not_last //
+/////////////////////////////////////////////////////////////////////////////////
 
 /**
  * @param {Condition} c
@@ -976,8 +904,8 @@ function _removeWithinOperator(c) {
  */
 function _createVirtualOperator(c, options = {}) {
     const { negate, path, operator, value } = c;
+    const fieldType = getFieldType(path, options);
     if (typeof operator === "string" && ["=", "!="].includes(operator)) {
-        const fieldType = getFieldType(path, options);
         if (fieldType) {
             if (fieldType === "boolean" && value === true) {
                 return condition(path, operator === "=" ? "set" : "not_set", value, negate);
@@ -992,6 +920,26 @@ function _createVirtualOperator(c, options = {}) {
         }
         if (value.startsWith("%")) {
             return condition(path, "ends_with", value.slice(1), negate);
+        }
+    }
+    if (
+        ["between", "is_not_between"].includes(operator) &&
+        ["date", "datetime"].includes(fieldType)
+    ) {
+        let delta;
+        let virtualOperator;
+        if (isTodayExpr(value[0], fieldType)) {
+            delta = getProcessedDelta(value[1], fieldType);
+            virtualOperator = operator === "between" ? "next" : "not_next";
+        } else if (isTodayExpr(value[1], fieldType)) {
+            delta = getProcessedDelta(value[0], fieldType);
+            if (delta) {
+                delta[0] = Number.isInteger(delta[0]) ? -delta[0] : delta[0];
+            }
+            virtualOperator = operator === "between" ? "last" : "not_last";
+        }
+        if (delta) {
+            return condition(path, virtualOperator, [...delta, fieldType], negate);
         }
     }
 }
@@ -1015,6 +963,31 @@ function _removeVirtualOperator(c) {
             path,
             "=ilike",
             operator === "starts_with" ? `${value}%` : `%${value}`,
+            negate
+        );
+    }
+    if (["next", "not_next", "last", "not_last"].includes(operator)) {
+        const fieldType = value[2];
+        const val =
+            ["last", "not_last"].includes(operator) && Number.isInteger(value[0])
+                ? [-value[0], value[1], value[2]]
+                : value;
+
+        const expressions = [
+            expression(
+                fieldType === "date"
+                    ? DATE_TODAY_STRING_EXPRESSION
+                    : DATETIME_TODAY_STRING_EXPRESSION
+            ),
+            getDeltaExpression(val, fieldType),
+        ];
+        if (["last", "not_last"].includes(operator)) {
+            expressions.reverse();
+        }
+        return condition(
+            path,
+            ["next", "last"].includes(operator) ? "between" : "is_not_between",
+            expressions,
             negate
         );
     }
@@ -1068,23 +1041,6 @@ function removeBetweenOperators(tree) {
 
 /**
  * @param {Tree} tree
- * @param {Options} [options={}]
- * @returns {Tree}
- */
-function createWithinOperators(tree, options = {}) {
-    return operate(_createWithinOperator, tree, options);
-}
-
-/**
- * @param {Tree} tree
- * @returns {Tree}
- */
-function removeWithinOperators(tree) {
-    return operate(_removeWithinOperator, tree);
-}
-
-/**
- * @param {Tree} tree
  * @param {Options} [options=[]]
  * @returns {Tree}
  */
@@ -1131,11 +1087,7 @@ function removeComplexConditions(tree) {
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return applyTransformations(
-        [createVirtualOperators, createWithinOperators, createBetweenOperators],
-        tree,
-        options
-    );
+    return applyTransformations([createVirtualOperators, createBetweenOperators], tree, options);
 }
 
 /**
@@ -1145,12 +1097,7 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = applyTransformations(
-        [
-            createComplexConditions,
-            removeBetweenOperators,
-            removeWithinOperators,
-            removeVirtualOperators,
-        ],
+        [createComplexConditions, removeBetweenOperators, removeVirtualOperators],
         tree
     );
     return _expressionFromTree(simplifiedTree, options, true);
@@ -1162,12 +1109,7 @@ export function expressionFromTree(tree, options = {}) {
  */
 export function domainFromTree(tree) {
     const simplifiedTree = applyTransformations(
-        [
-            removeBetweenOperators,
-            removeWithinOperators,
-            removeVirtualOperators,
-            removeComplexConditions,
-        ],
+        [removeBetweenOperators, removeVirtualOperators, removeComplexConditions],
         tree
     );
     const domainAST = {
@@ -1186,11 +1128,7 @@ export function treeFromDomain(domain, options = {}) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     const tree = construcTree(domainAST.value, options); // a simple tree
-    return applyTransformations(
-        [createVirtualOperators, createWithinOperators, createBetweenOperators],
-        tree,
-        options
-    );
+    return applyTransformations([createVirtualOperators, createBetweenOperators], tree, options);
 }
 
 /**

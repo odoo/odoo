@@ -1159,5 +1159,5 @@ test("folded domain field with withinh operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Datetime is within 2 months");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Datetime next 2 months");
 });

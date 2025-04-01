@@ -46,8 +46,10 @@ export function getDomainDisplayedOperators(fieldDef) {
                 "<=",
                 "between",
                 "is_not_between",
-                "within",
-                "is_not_within",
+                "next",
+                "not_next",
+                "last",
+                "not_last",
                 "set",
                 "not_set",
             ];
