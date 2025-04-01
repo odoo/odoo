@@ -13,14 +13,20 @@ class MrpProduction(models.Model):
         groups='sales_team.group_sale_salesman')
     sale_line_id = fields.Many2one('sale.order.line', 'Origin sale order line')
 
-    @api.depends('procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id')
+    @api.depends('procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id', 'procurement_group_id.sale_id', 'sale_line_id.order_id')
     def _compute_sale_order_count(self):
         for production in self:
-            production.sale_order_count = len(production.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id | production.sale_line_id.order_id)
+            production.sale_order_count = len(production.get_linked_sale_orders())
+
+    def get_linked_sale_orders(self):
+        return (
+            self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id |
+            self.sale_line_id.order_id |
+            self.procurement_group_id.sale_id)
 
     def action_view_sale_orders(self):
         self.ensure_one()
-        sale_order_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.ids + self.sale_line_id.order_id.ids
+        sale_order_ids = self.get_linked_sale_orders().ids
         action = {
             'res_model': 'sale.order',
             'type': 'ir.actions.act_window',
