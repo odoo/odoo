@@ -23,6 +23,7 @@ test("update presence if IM status changes to offline while this device is onlin
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "offline",
         im_status: "offline",
         partner_id: serverState.partnerId,
     });
@@ -37,6 +38,7 @@ test("update presence if IM status changes to away while this device is online",
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -51,6 +53,7 @@ test("do not update presence if IM status changes to away while this device is a
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: serverState.partnerId,
     });
@@ -65,6 +68,7 @@ test("do not update presence if other user's IM status changes to away", async (
     await makeMockEnv();
     await waitForSteps(["update_presence"]);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: serverState.publicPartnerId,
     });
