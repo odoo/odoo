@@ -16,7 +16,13 @@ export class BuilderSelect extends Component {
         ...basicContainerBuilderComponentProps,
         id: { type: String, optional: true },
         className: { type: String, optional: true },
-        slots: Object,
+        slots: {
+            type: Object,
+            shape: {
+                default: Object, // Content is not optional
+                fixedButton: { type: Object, optional: true },
+            },
+        },
     };
     static components = {
         Dropdown,
@@ -31,9 +37,11 @@ export class BuilderSelect extends Component {
         const buttonRef = useRef("button");
         let currentLabel;
         const updateCurrentLabel = () => {
-            const newHtml = currentLabel || _t("None");
-            if (buttonRef.el && buttonRef.el.innerHTML !== newHtml) {
-                buttonRef.el.innerHTML = newHtml;
+            if (!this.props.slots.fixedButton) {
+                const newHtml = currentLabel || _t("None");
+                if (buttonRef.el && buttonRef.el.innerHTML !== newHtml) {
+                    buttonRef.el.innerHTML = newHtml;
+                }
             }
         };
         useSelectableComponent(this.props.id, {
