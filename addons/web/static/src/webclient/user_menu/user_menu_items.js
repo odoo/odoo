@@ -8,26 +8,12 @@ import { session } from "@web/session";
 import { browser } from "../../core/browser/browser";
 import { registry } from "../../core/registry";
 
-function documentationItem(env) {
-    const documentationURL = "https://www.odoo.com/documentation/master";
-    return {
-        type: "item",
-        id: "documentation",
-        description: _t("Documentation"),
-        href: documentationURL,
-        callback: () => {
-            browser.open(documentationURL, "_blank");
-        },
-        sequence: 10,
-    };
-}
-
 function supportItem(env) {
     const url = session.support_url;
     return {
         type: "item",
         id: "support",
-        description: _t("Support"),
+        description: _t("Help"),
         href: url,
         callback: () => {
             browser.open(url, "_blank");
@@ -89,7 +75,7 @@ export function odooAccountItem(env) {
     return {
         type: "item",
         id: "account",
-        description: _t("My Odoo.com account"),
+        description: _t("My Odoo.com Account"),
         callback: () => {
             rpc("/web/session/account")
                 .then((url) => {
@@ -151,7 +137,6 @@ function logOutItem(env) {
 
 registry
     .category("user_menuitems")
-    .add("documentation", documentationItem)
     .add("support", supportItem)
     .add("shortcuts", shortCutsItem)
     .add("separator", separator)

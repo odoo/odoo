@@ -159,7 +159,7 @@ test("click on odoo account item", async () => {
     stepAllNetworkCalls();
     await contains("button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(1);
-    expect(".o-dropdown--menu .dropdown-item").toHaveText("My Odoo.com account");
+    expect(".o-dropdown--menu .dropdown-item").toHaveText("My Odoo.com Account");
     await contains(".o-dropdown--menu .dropdown-item").click();
     expect.verifySteps(["/web/session/account", "open https://account-url.com"]);
 });
