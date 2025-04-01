@@ -7,14 +7,17 @@
 This module allows you to manage all operations for managing memberships and partnerships.
 ==========================================================================================
 
-You can easily assign grade to members.
+You can easily assign grade to members/partners, with a specific pricelist.
     """,
-    'depends': ['crm'],
+    'depends': ['crm', 'sale'],
     'data': [
         'security/ir.model.access.csv',
         'data/res_partner_grade_data.xml',
+        'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
         'views/res_partner_grade_views.xml',
+        'views/product_template_views.xml',
+        'views/product_pricelist_views.xml',
         'views/partnership_menu.xml',
     ],
     'author': 'Odoo S.A.',
