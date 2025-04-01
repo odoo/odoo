@@ -752,7 +752,8 @@ class StockMove(models.Model):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
-        res['bom_line_id'] = self.bom_line_id.id
+        if self.bom_line_id.bom_id.type == 'phantom':
+            res['bom_line_id'] = self.bom_line_id.id
         return res
 
     def action_open_reference(self):
