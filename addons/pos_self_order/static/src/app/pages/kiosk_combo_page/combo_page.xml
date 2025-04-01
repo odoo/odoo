@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve" >
+    <t t-name="pos_self_order.KioskComboPage">
+         <div class="o_kiosk_combo_page d-flex flex-column vh-100 overflow-hidden bg-secondary">
+
+             <!-- Combo choice -->
+             <div class="bg-white border-bottom border-light" >
+                 <button class="btn btn-secondary btn-lg ms-4 mt-4 text-nowrap" t-on-click="() => this.router.back()">
+                      <span>Discard</span>
+                </button>
+                 <h1 class="mb-0 fw-bolder text-nowrap text-center pt-3" t-esc="currentCombo.name"/>
+                 <div class="d-flex flex-wrap justify-content-center item px-3 py-4 gap-3 overflow-x-auto overflow-y-hidden user-select-none" t-ref="category_list">
+                    <t t-foreach="comboChoices" t-as="combo_id" t-key="combo_id.id">
+                       <t t-set="isSelectedChoice" t-value="combo_id === selectedChoice and !state.showResume" />
+                        <div class="p-2 px-3 position-relative border-bottom border-2 cursor-pointer" t-on-click="()=> this.onChoiceClicked(combo_id_index)" t-att-class="{'border-primary': isSelectedChoice, 'border-transparent': !isSelectedChoice}">
+                           <span class="fs-2 text-nowrap" t-esc="combo_id.name"></span>
+                      </div>
+                    </t>
+                 </div>
+             </div>
+
+             <!-- Product selection -->
+             <div class="d-flex flex-grow-1 justify-content-center position-relative overflow-y-auto  align-items-start "  t-if="!isAttributeSelection() and !this.state.showResume ">
+              <div class="product_list d-flex flex-wrap justify-content-center w-100 px-4"  t-att-class="{'product_list_small': comboItems.length &lt; 5}">
+                <div class="spacer"></div>
+                  <t t-foreach="comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
+                      <t t-set="product" t-value="comboItem.product_id"/>
+                      <t t-set="itemState" t-value="getItemState(comboItem)"/>
+                      <t t-set="itemSelected" t-value="itemState.selected"/>
+                      <t t-set="itemQty" t-value="itemState.qty || 0"/>
+                      <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
+                      <t t-set="extraPrice" t-value="comboItem.extra_price"/>
+                      <button t-on-click="() => this.selectItem(comboItem)" role="button"
+                              class="o_kiosk_product_box d-flex flex-column align-items-center bg-white py-4 px-3 transition-base" t-att-class="{'selected': itemSelected, 'opacity-50': isOutOfStock }">
+                          <img class="object-fit-contain mb-3" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                          <span t-esc="product.name" class="fs-2 fw-bold m-0 text-break"/>
+                          <span t-if="extraPrice" class="fs-2 text-primary fw-bold mt-1">
+                                + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
+                          </span>
+                          <div t-if="isOutOfStock" class="text-center mt-2 fs-lighter">
+                            <div class="fs-lighter bg-secondary rounded p-1 px-3">Out of stock</div>
+                          </div>
+                          <div t-elif="hasMultiItemSelection"  class="item_qty_container d-flex flex-grow-1 align-items-end">
+                              <t t-set="addItemEnabled" t-value="canAddMoreItems()"/>
+                              <div t-if="!itemQty" class="text-primary fs-3 fw-bold pt-4" t-att-class="{'opacity-50':!addItemEnabled}">Add</div>
+                              <div t-else="" class="btn-group">
+                                <button
+                                        type="button"
+                                        t-on-click= "(evt) => this.changeItemQuantity(comboItem, -1, evt)"
+                                        class="btn btn-outline-primary rounded d-flex align-items-center justify-content-center"><i class="fa fa-minus fa-lg fa-fw p-1"/></button>
+                                <div class="o-so-tabular-nums d-flex align-items-center fw-bold px-4 fs-3 " t-esc="itemQty"/>
+                                <button type="button"
+                                        t-on-click = "(evt) => this.changeItemQuantity(comboItem, 1, evt)"
+                                        t-att-disabled="!addItemEnabled"
+                                        class="btn btn-outline-primary rounded d-flex align-items-center justify-content-center"><i class="fa fa-plus fa-lg fa-fw p-1" /></button>
+                              </div>
+                          </div>
+                      </button>
+                  </t>
+                  <div class="spacer"></div>
+              </div>
+           </div>
+
+             <!-- Variant / Attribute selection -->
+             <div t-elif="!this.state.showResume" class="d-flex flex-grow-1 flex-column overflow-y-auto">
+                 <t t-set="product" t-value="currentChoiceState.displayAttributesOfItem.product_id"/>
+
+                 <div class="d-flex flex-column align-items-center justify-content-center p-4">
+                     <div class="my-3 ratio ratio-1x1 w-25" style="max-width: 250px">
+                        <img class="object-fit-contain" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}"  loading="lazy"/>
+                     </div>
+                     <span t-esc="product.name" class="fs-1 fw-bolder m-0"/>
+                     <div t-if="product.public_description" class="mt-2 fs-3 text-center" style="max-width: 90%"   t-out="product.productDescriptionMarkup"/>
+                </div>
+                <KioskAttributeSelection t-if="product.attribute_line_ids.length" productTemplate="product" onSelection="onAttributeSelection" />
+            </div>
+
+           <!-- Confirmation -->
+           <div t-else="" class="d-flex flex-grow-1 flex-column overflow-y-auto p-4">
+               <div class="d-flex flex-column my-auto mx-4">
+                <h1 class="attribute_name mt-5 mb-4 fw-bold">Validate your selection</h1>
+                   <t t-foreach="getSelection()" t-as="selection" t-key="selection.combo_choice_id.id">
+                    <t t-foreach="selection.combo_items" t-as="combo_item" t-key="combo_item.combo_item_id.id">
+                    <div class="d-flex align-items-center pb-3 mb-3 border-bottom border-medium" t-on-click="()=>this.onChoiceClicked(selection_index)" >
+                        <t t-set="product" t-value="combo_item.product_id"/>
+                        <t t-set="item_qty" t-value="combo_item.qty"/>
+                        <t t-set="attributes" t-value="combo_item.attributes"/>
+                        <div class="me-4 ratio ratio-1x1 w-25" style="max-width: 120px">
+                             <img class="object-fit-contain" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                        </div>
+                        <div>
+                             <div class="fs-2 fw-bolder text-break">
+                                 <span t-esc="product.name"/> <span t-if="item_qty &gt; 1" > x <t t-esc="item_qty"/> </span>
+                             </div>
+                             <div t-foreach="attributes" class="mt-2 fs-3" t-as="attrVal" t-key="attrVal.attribute_line_id.id">
+                                <span class="text-muted fw-bold" t-esc="attrVal.attribute_line_id.attribute_id.name" />: <span  class="text-muted" t-esc="attrVal.names" />
+                             </div>
+                         </div>
+
+                    </div>
+                    </t>
+                   </t>
+                   <div class="d-flex justify-content-end mt-4">
+                        <KioskQuantityWidget value="state.qty"  onQtyDown="() => this.changeQuantity(false)" onQtyUp="() => this.changeQuantity(true)" />
+                   </div>
+                </div>
+           </div>
+
+          <div t-if="isArchivedCombination()" class="alert alert-warning m-0 text-center">
+                This combination does not exist.
+          </div>
+
+          <!-- Footer -->
+          <div class="d-flex justify-content-between align-items-center position-relative px-4 py-4 bg-white border-top border-light" >
+                <button class="btn btn-lg btn-secondary " t-on-click="back"  t-att-class="{'invisible': !this.isBackVisible()}" >
+                     <i class="oi oi-chevron-left d-md-none" />
+                     <span>Back</span>
+                </button>
+
+                 <button t-if="!state.showResume" class="btn btn-lg btn-primary" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
+                     <span>Next</span>
+                 </button>
+                <button t-elif="selfOrder.ordering" class="btn btn-lg btn-primary" t-on-click="next" t-att-disabled="!this.isNextEnabled()">
+                     <span >Add to cart</span>
+                 </button>
+
+
+           </div>
+
+         </div>
+
+    </t>
+</templates>

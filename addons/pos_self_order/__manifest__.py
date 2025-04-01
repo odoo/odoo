@@ -83,6 +83,7 @@
             "pos_restaurant/static/src/app/models/restaurant_table.js",
             "point_of_sale/static/src/app/utils/numbers.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
+            "point_of_sale/static/src/app/utils/debug-formatter.js",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

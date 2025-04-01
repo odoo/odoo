@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                 attributes: [],
             },
         ]),
-        Utils.clickBtn("Order"),
+        Utils.clickBtn("Checkout"),
         {
             trigger: '.btn:contains("＋")',
             run: "click",
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("self_combo_selector_category", {
                 attributes: [],
             },
         ]),
-        Utils.clickBtn("Order"),
+        Utils.clickBtn("Checkout"),
         Utils.clickBtn("Pay"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),

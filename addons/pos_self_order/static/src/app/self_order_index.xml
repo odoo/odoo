@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.selfOrderIndex">
-        <div t-if="!selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white">
-            <p>We're currently closed.</p>
+        <div t-if="!selfOrder.session" class="o-self-closed w-100 m-0 text-center bg-black text-white py-2">
+            We're currently closed.
         </div>
         <div t-if="selfOrder.rpcLoading">
             <LoadingOverlay />
@@ -12,16 +12,20 @@
                 <LandingPage />
             </t>
             <t t-set-slot="product_list" route="`/pos-self/${selfOrder.config.id}/products`">
-                <ProductListPage />
+                <ProductListPage t-if="!selfOrder.kioskMode" />
+                <KioskProductListPage t-else="" />
             </t>
             <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
-                <ProductPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
+                <ProductPage productTemplate="selfOrder.models['product.template'].get(url.id)"  t-if="!selfOrder.kioskMode" />
+                <KioskProductPage  t-else="" productTemplate="selfOrder.models['product.template'].get(url.id)"   />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
-                <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
+                <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" t-if="!selfOrder.kioskMode" />
+                <KioskComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" t-else="" />
             </t>
             <t t-set-slot="cart" route="`/pos-self/${selfOrder.config.id}/cart`">
-                <CartPage />
+                <CartPage t-if="!selfOrder.kioskMode"/>
+                <KioskCartPage t-else=""/>
             </t>
             <t t-set-slot="payment" route="`/pos-self/${selfOrder.config.id}/payment`">
                 <PaymentPage />
@@ -31,6 +35,9 @@
             </t>
             <t t-set-slot="location" route="`/pos-self/${selfOrder.config.id}/location`">
                 <EatingLocationPage />
+            </t>
+             <t t-set-slot="category_list" route="`/pos-self/${selfOrder.config.id}/category`">
+                <KioskCategoryListPage />
             </t>
             <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.config.id}/stand_number`">
                 <StandNumberPage />

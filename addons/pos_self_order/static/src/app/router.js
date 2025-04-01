@@ -28,13 +28,18 @@ export class Router extends Component {
         this.activeSlot = "default";
         this.slotProps = {};
         this.routes = {};
+        const lgPrefixRegex = "^(?:/([a-zA-Z]{2}(?:_[a-zA-Z]{2})?))?"; // optional language code: e.g. fr/ or fr_be/
 
         for (const [routeName, slot] of Object.entries(this.props.slots)) {
             const route = slot.route;
             const paramStrings = route.match(/\{\w+:\w+\}/g);
 
             if (!paramStrings) {
-                this.routes[routeName] = { route, paramSpecs: [], regex: new RegExp(`^${route}$`) };
+                this.routes[routeName] = {
+                    route,
+                    paramSpecs: [],
+                    regex: new RegExp(`${lgPrefixRegex}${route}$`),
+                };
                 continue;
             }
 
@@ -44,7 +49,7 @@ export class Router extends Component {
             });
 
             const regex = new RegExp(
-                `^${route
+                `${lgPrefixRegex}${route
                     .split(/\{\w+:\w+\}/)
                     .map((part) => escapeRegExp(part))
                     .join("([^/]+)")}$`
@@ -66,7 +71,7 @@ export class Router extends Component {
         for (const [routeName, { paramSpecs, regex }] of Object.entries(this.routes)) {
             const match = path.match(regex);
             if (match) {
-                const parsedParams = parseParams(match.slice(1), paramSpecs);
+                const parsedParams = parseParams(match.slice(2), paramSpecs);
                 this.router.activeSlot = routeName;
                 this.activeSlot = routeName;
                 this.slotProps = parsedParams;

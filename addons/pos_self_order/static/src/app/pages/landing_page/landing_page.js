@@ -104,12 +104,13 @@ export class LandingPage extends Component {
             return;
         }
         if (
-            this.selfOrder.config.use_presets &&
-            this.selfOrder.models["pos.preset"].length > 1 &&
+            this.selfOrder.hasPresets() &&
             !this.selfOrder.currentOrder.preset_id &&
             this.selfOrder.ordering
         ) {
             this.router.navigate("location");
+        } else if (this.selfOrder.kioskMode && this.selfOrder.models["pos.category"].length > 1) {
+            this.router.navigate("category_list");
         } else {
             this.router.navigate("product_list");
         }

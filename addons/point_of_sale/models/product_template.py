@@ -2,7 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from collections import defaultdict
-from odoo.tools import SQL
+from odoo.tools import SQL, is_html_empty
 from itertools import groupby
 from operator import itemgetter
 from datetime import date
@@ -29,6 +29,13 @@ class ProductTemplate(models.Model):
         string="POS Optional Products",
         help="Optional products are suggested when customers add items to their cart (e.g., adding a burger suggests cold drinks or fries).")
     color = fields.Integer('Color Index', compute="_compute_color", store=True, readonly=False)
+
+    def write(self, vals):
+        # Clear empty public description content to avoid side-effects on product page
+        # when there is no content to display anyway.
+        if vals.get('public_description') and is_html_empty(vals['public_description']):
+            vals['public_description'] = ''
+        return super().write(vals)
 
     @api.depends('pos_categ_ids')
     def _compute_color(self):

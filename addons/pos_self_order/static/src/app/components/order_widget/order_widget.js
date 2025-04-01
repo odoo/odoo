@@ -46,7 +46,7 @@ export class OrderWidget extends Component {
         let disabled = false;
 
         if (currentPage === "product_list") {
-            label = _t("Order");
+            label = _t("Checkout");
             disabled = isNoLine || hasNotAllLinesSent.length == 0;
         } else if (
             payAfter === "meal" &&
@@ -55,7 +55,7 @@ export class OrderWidget extends Component {
             label = _t("Order");
             disabled = isNoLine;
         } else {
-            label = kioskPayment ? _t("Pay") : _t("Order");
+            label = kioskPayment ? _t("Pay") : _t("OrderOrder");
             disabled = !kioskPayment && !isMobilePayment;
         }
 

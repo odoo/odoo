@@ -22,6 +22,16 @@ export class LanguagePopup extends Component {
 
     onClickLanguage(language) {
         cookie.set("frontend_lang", language.code);
-        window.location.reload();
+
+        const currentUrl = new URL(window.location.href);
+        const fullLangCode = this.currentLanguage.code.toLowerCase();
+        const baseLangCode = fullLangCode.split("_")[0];
+        const langPrefixPattern = new RegExp(`^/(?:${fullLangCode}|${baseLangCode})(/|$)`, "i");
+        if (langPrefixPattern.test(currentUrl.pathname)) {
+            currentUrl.pathname = currentUrl.pathname.replace(langPrefixPattern, "/");
+            window.location.href = currentUrl.href;
+        } else {
+            window.location.reload();
+        }
     }
 }

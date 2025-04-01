@@ -68,6 +68,14 @@ export function checkProduct(name, price, quantity) {
     };
 }
 
+export function checkKioskProduct(name, price) {
+    return {
+        content: `Check product card with ${name} and ${price}`,
+        trigger: `.product-item:has(div:contains("${name}")):has(div .o-so-tabular-nums:contains("${price}"))`,
+        run: "click",
+    };
+}
+
 export function checkAttribute(productName, attributes) {
     let attributeString = "";
     let attributeStringReadable = "";

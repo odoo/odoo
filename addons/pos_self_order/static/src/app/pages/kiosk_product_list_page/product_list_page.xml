@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.KioskProductListPage">
+
+       <div class="o_kiosk_product_list_page d-flex flex-column vh-100 overflow-hidden bg-secondary">
+
+         <!-- Categories -->
+         <div class="category_container d-flex flex-nowrap w-100 bg-white border-bottom border-light user-select-none">
+            <div class="category_list d-flex mx-auto px-4 py-4 gap-3 overflow-x-auto overflow-y-hidden" t-ref="category_list">
+               <t t-foreach="categories" t-as="category" t-key="category.id">
+                   <t t-set="isSelectedCategory" t-value="category === selectedCategory"/>
+                   <button t-on-click="() => this.selectCategory(category)"
+                           role="button"
+                           class="category_btn d-flex flex-column align-items-center bg-white border-0"
+                           t-att-class="{'selected': isSelectedCategory}">
+                       <img class="object-cover mb-2 rounded-pill bg-secondary transition-base "
+                        t-attf-src="/web/image/pos.category/#{category.id}/image_128?unique=#{category.write_date}"
+                        t-att-class="{'border-primary': isSelectedCategory}"  draggable="false"/>
+                       <span class="fs-3 text-nowrap" t-att-class="{'fw-bold': isSelectedCategory}"
+                             t-esc="category.name"/>
+                     </button>
+                   </t>
+             </div>
+          </div>
+
+          <!-- Products -->
+           <div class="d-flex flex-grow-1 justify-content-center position-relative overflow-y-auto  align-items-start "
+                t-att-class="{'align-items-end': products.length &lt; 5}">
+              <div class=" d-flex my-auto">
+              <div class="product_list d-flex flex-wrap justify-content-center px-4 "
+                   t-att-class="{'product_list_small': products.length &lt; 5}">
+                <div class="spacer"></div>
+                  <button t-foreach="products"
+                          t-as="product" t-key="product.id"
+                          t-on-click="(evt) => this.selectProduct(product, evt.target)"
+                          role="button"
+                          class="o_kiosk_product_box d-flex flex-column align-items-center bg-white position-relative p-4"
+                          t-att-class="{
+                            'opacity-50' : !product.self_order_available || !isProductAvailable(product)
+                          }">
+                      <img class="object-fit-contain mb-3"  t-attf-src="/web/image/product.template/#{product.id}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                      <span t-esc="product.name" class="fs-2  fw-bold m-0 text-break"/>
+                      <span t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(product))"
+                            class="o-so-tabular-nums mt-1 fs-2 fw-bold text-muted "/>
+                      <div class="text-center mt-2 fs-lighter">
+                          <div t-if="!product.self_order_available"  class="fs-lighter bg-secondary rounded p-1 px-3">Out of stock</div>
+                          <div t-elif="!isProductAvailable(product)" class="fs-lighter bg-secondary rounded p-1 px-3">Unavailable</div>
+                      </div>
+                      <t t-set="qty" t-value="state.quantityByProductTmplId[product.id]" />
+                      <span t-if="qty" t-esc="qty" class="position-absolute top-0 end-0 px-3 py-1 m-3 rounded-pill bg-black text-white fs-5 fw-bold"/>
+                  </button>
+                  <div class="spacer"></div>
+              </div>
+            </div>
+           </div>
+           <OrderWidget t-if="this.selfOrder.ordering" action.bind="review"/>
+       </div>
+    </t>
+</templates>

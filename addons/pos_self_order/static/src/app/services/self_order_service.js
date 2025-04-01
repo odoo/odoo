@@ -260,12 +260,46 @@ export class SelfOrder extends Reactive {
         }
 
         if (Object.entries(comboValues).length > 0) {
+            const freeItems = [];
+            const extraItems = [];
+
+            // Group comboValues by combo_id
+            const groupedByCombo = new Map();
+            for (const item of comboValues) {
+                const comboId = item.combo_item_id.combo_id;
+                if (!groupedByCombo.has(comboId)) {
+                    groupedByCombo.set(comboId, []);
+                }
+                groupedByCombo.get(comboId).push(item);
+            }
+
+            for (const [combo, items] of groupedByCombo) {
+                const maxFree = combo.qty_free;
+                // Split items between free items and extra items.
+                let freeCount = 0;
+                for (const item of items) {
+                    const availableFreeQty = Math.max(0, maxFree - freeCount);
+                    const freeQty = Math.min(item.qty, availableFreeQty);
+                    const extraQty = item.qty - freeQty;
+
+                    if (freeQty > 0) {
+                        freeItems.push({ ...item, qty: freeQty });
+                        freeCount += freeQty;
+                    }
+
+                    if (extraQty > 0) {
+                        extraItems.push({ ...item, qty: extraQty });
+                    }
+                }
+            }
+
             const comboPrices = computeComboItems(
                 product,
-                comboValues,
+                freeItems,
                 this.currentOrder.pricelist_id,
                 this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id")
+                this.models["product.template.attribute.value"].getAllBy("id"),
+                extraItems
             );
 
             values.price_unit = 0;
@@ -281,7 +315,7 @@ export class SelfOrder extends Reactive {
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
                     order_id: this.currentOrder,
-                    qty: values.qty,
+                    qty: comboItem.qty * qty,
                     attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
                         "link",
                         attr,
@@ -441,6 +475,10 @@ export class SelfOrder extends Reactive {
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
 
+    get kioskMode() {
+        return this.config.self_ordering_mode === "kiosk";
+    }
+
     markupDescriptions() {
         for (const product of this.models["product.template"].getAll()) {
             product.public_description = product.public_description
@@ -472,15 +510,7 @@ export class SelfOrder extends Reactive {
             this.productByCategIds["0"] = productWoCat;
         }
 
-        this.currentLanguage = this.config.self_ordering_available_language_ids.find(
-            (l) => l.code === cookie.get("frontend_lang")
-        );
-
-        if (this.config.self_ordering_default_language_id && !this.currentLanguage) {
-            this.currentLanguage = this.config.self_ordering_default_language_id;
-        }
-
-        cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
+        this._initLanguages();
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {
             const printer = this.createPrinter(printerConfig);
@@ -489,6 +519,19 @@ export class SelfOrder extends Reactive {
                 this.kitchenPrinters.push(printer);
             }
         }
+    }
+
+    _initLanguages() {
+        const languages = this.config.self_ordering_available_language_ids;
+        this.currentLanguage = languages.find((l) => l.code === cookie.get("frontend_lang"));
+        if (languages && !this.currentLanguage) {
+            this.currentLanguage = this.config.self_ordering_default_language_id;
+        }
+        languages?.forEach((lg) => {
+            // To display  "Français (BE)"  instead of "French (BE) / Français (BE)"
+            lg.display_name = lg.name.split("/").pop();
+        });
+        cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
     }
 
     createPrinter(printer) {
@@ -552,6 +595,7 @@ export class SelfOrder extends Reactive {
             this.idleTimout && clearTimeout(this.idleTimout);
             this.alertTimeout && clearTimeout(this.alertTimeout);
             this.timeoutPopup?.();
+
             this.idleTimout = setTimeout(() => {
                 if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
                     this.timeoutPopup = this.dialog.add(TimeoutPopup, {});
@@ -849,7 +893,6 @@ export class SelfOrder extends Reactive {
             ? this.currentOrder.preset_id?.pricelist_id
             : this.config.default_pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
-
         let taxes = productTemplate.taxes_id;
 
         if (!product) {
@@ -877,11 +920,14 @@ export class SelfOrder extends Reactive {
     }
     getProductDisplayPrice(productTemplate, product) {
         const taxesData = this.getProductPriceInfo(productTemplate, product);
-        if (this.config.iface_tax_included === "total") {
+        if (this.isTaxesIncludedInPrice()) {
             return taxesData.total_included;
         } else {
             return taxesData.total_excluded;
         }
+    }
+    isTaxesIncludedInPrice() {
+        return this.config.iface_tax_included === "total";
     }
     getLinePrice(line) {
         return this.config.iface_tax_included ? line.price_subtotal_incl : line.price_subtotal;
@@ -919,6 +965,18 @@ export class SelfOrder extends Reactive {
         );
         link.href = png.toDataURL().replace("data:image/jpeg;base64,", "");
         link.click();
+    }
+
+    hasPresets() {
+        return this.config.use_presets && this.models["pos.preset"].length > 1;
+    }
+
+    get kioskBackgroundImage() {
+        const bgImage = this.config._self_ordering_image_background_ids[0];
+        if (bgImage) {
+            return `url(data:image/png;base64,${bgImage.data})`;
+        }
+        return "none";
     }
 }
 

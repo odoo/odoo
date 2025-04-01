@@ -47,11 +47,16 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
             "combo_id": self.desk_accessories_combo.id,
         })
 
-        for mode in ("mobile", "consultation", "kiosk"):
+        for mode in ("mobile", "consultation"):
             self.pos_config.write({"self_ordering_mode": mode})
             # The returned route depend of the pos_config mode
             self_route = self.pos_config._get_self_order_route()
             self.start_tour(self_route, "self_order_pos_closed")
+
+        # Kiosk test
+        self.pos_config.write({"self_ordering_mode": "kiosk"})
+        self_route = self.pos_config._get_self_order_route()
+        self.start_tour(self_route, "kiosk_order_pos_closed")
 
     def test_self_order_config_default_user(self):
         self.pos_config.payment_method_ids = self.pos_config.payment_method_ids.filtered(lambda pm: not pm.is_cash_count)

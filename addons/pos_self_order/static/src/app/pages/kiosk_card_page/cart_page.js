@@ -1,0 +1,142 @@
+import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
+import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_table";
+import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
+import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
+import { ProductCard } from "@pos_self_order/app/components/product_card/product_card";
+
+export class KioskCartPage extends Component {
+    static template = "pos_self_order.KioskCartPage";
+    static components = { PopupTable, OrderWidget, PresetInfoPopup, ProductCard };
+    static props = {};
+
+    setup() {
+        this.selfOrder = useSelfOrder();
+        this.router = useService("router");
+        this.state = useState({
+            selectTable: false,
+            fillInformations: false,
+            cancelConfirmation: false,
+        });
+
+        if (this.lines.length <= 0) {
+            this.router.back();
+        }
+    }
+
+    get lines() {
+        const lines = this.selfOrder.currentOrder.lines;
+        return lines ? lines : [];
+    }
+
+    get optionalProducts() {
+        const optionalProducts =
+            this.selfOrder.currentOrder.lines.flatMap(
+                (line) => line.product_id.product_tmpl_id.pos_optional_product_ids
+            ) || [];
+        return optionalProducts;
+    }
+
+    getLineQty(line) {
+        return line.qty;
+    }
+
+    async pay() {
+        const presets = this.selfOrder.models["pos.preset"].getAll();
+        const config = this.selfOrder.config;
+        const type = config.self_ordering_mode;
+        const orderingMode =
+            config.use_presets && presets.length > 1
+                ? this.selfOrder.currentOrder.preset_id?.service_at
+                : config.self_ordering_service_mode;
+
+        if (this.selfOrder.rpcLoading || !this.selfOrder.verifyCart()) {
+            return;
+        }
+
+        if (!this.selfOrder.currentOrder.presetRequirementsFilled && orderingMode !== "table") {
+            this.state.fillInformations = true;
+            return;
+        }
+
+        if (
+            type === "mobile" &&
+            orderingMode === "table" &&
+            !this.selfOrder.currentTable &&
+            this.selfOrder.config.module_pos_restaurant
+        ) {
+            this.state.selectTable = true;
+            return;
+        } else {
+            this.selfOrder.currentOrder.table_id = this.selfOrder.currentTable;
+        }
+
+        this.selfOrder.rpcLoading = true;
+        await this.selfOrder.confirmOrder();
+        this.selfOrder.rpcLoading = false;
+    }
+
+    proceedInfos(state) {
+        this.state.fillInformations = false;
+        if (state) {
+            this.pay();
+        }
+    }
+
+    selectTable(table) {
+        if (table) {
+            this.selfOrder.currentOrder.table_id = table;
+            this.selfOrder.currentTable = table;
+            this.router.addTableIdentifier(table);
+            this.pay();
+        }
+
+        this.state.selectTable = false;
+    }
+
+    getPrice(line) {
+        const childLines = line.combo_line_ids;
+        if (childLines.length === 0) {
+            return line.getDisplayPrice();
+        } else {
+            let price = 0;
+            for (const child of childLines) {
+                price += child.getDisplayPrice();
+            }
+            return price;
+        }
+    }
+
+    removeLine(line) {
+        this.selfOrder.removeLine(line);
+        if (this.lines.length <= 0) {
+            this.router.back();
+        }
+    }
+
+    changeQuantity(line, increase) {
+        // Update combo first
+        for (const cline of this.selfOrder.currentOrder.lines) {
+            if (cline.combo_parent_id?.uuid === line.uuid) {
+                this.changeQuantity(cline, increase);
+            }
+        }
+
+        if (line.combo_parent_id) {
+            line.qty =
+                (line.qty / line.combo_parent_id.qty) *
+                (line.combo_parent_id.qty + (increase ? 1 : -1));
+        } else {
+            increase ? line.qty++ : line.qty--;
+        }
+
+        if (line.qty <= 0) {
+            this.removeLine(line.uuid);
+        }
+    }
+
+    get displayTaxes() {
+        return !this.selfOrder.isTaxesIncludedInPrice();
+    }
+}

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.KioskCartPage">
+        <div class=" d-flex flex-column vh-100 overflow-hidden bg-secondary"
+             t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto">
+                <div class="d-flex flex-column my-auto mx-4 bg-white p-4 rounded-4 border border-light">
+                   <h1 class="mb-1 fw-bolder">Your Order</h1>
+                    <t t-foreach="lines" t-as="line" t-key="line.uuid">
+                        <div t-if="!line.combo_parent_id" class="product-item d-flex align-items-center pb-4 pt-4 border-bottom border-medium" >
+                            <t t-set="product" t-value="line.product_id"/>
+                            <div class="ms-4 me-5 ratio ratio-1x1 w-25" style="max-width: 120px">
+                                 <img class="object-fit-contain" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                            </div>
+                            <div class="w-100" >
+                                 <div t-esc="product.name" class="fw-bolder text-break fs-2"/>
+                                <div class="fs-3" t-if="line.attribute_value_ids?.length > 0 || line.combo_line_ids.length > 0">
+                                    <t t-if="line.attribute_value_ids?.length > 0" >
+                                        <div t-foreach="line.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="mt-2 ms-3 mb-2" >
+                                             <span>• </span><span class="text-muted fw-bold" t-esc="attrVal.attribute_id.name" />: <span class="text-muted" t-esc="attrVal.name" />
+                                        </div>
+                                    </t>
+                                    <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="mt-2 mb-2" >
+                                        <div>• <t t-esc="cline.product_id.name"/> <t t-set="c_qty" t-value="cline.qty / getLineQty(line)"/> <span t-if="c_qty &gt; 1" > x <t t-esc="c_qty"/></span> </div>
+                                        <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="mt-2 ms-4 ">
+                                            <span>• </span><span class="text-muted fw-bold" t-esc="attrVal.attribute_id.name" />: <span class="text-muted" t-esc="attrVal.name" />
+                                        </div>
+                                    </div>
+                                 </div>
+                                <div class="d-flex w-100 justify-content-between align-items-center mt-4 mt-3">
+                                    <!-- Quantity -->
+                                    <div  class="btn-group">
+                                        <button
+                                                t-if="getLineQty(line) > 1"
+                                                type="button"
+                                                t-on-click= "() => this.changeQuantity(line, false)"
+                                                class="btn btn-outline-primary rounded d-flex align-items-center justify-content-center"><i class="fa fa-minus fa-lg fa-fw p-1"/></button>
+                                        <button
+                                                t-else=""
+                                                type="button"
+                                                t-on-click= "() => this.removeLine(line)"
+                                                class="btn btn-outline-primary rounded d-flex align-items-center justify-content-center"><i class="fa fa-trash-o fa-lg fa-fw p-1"/></button>
+                                        <div class="o-so-tabular-nums d-flex align-items-center fw-bold px-4 fs-3 " t-esc="getLineQty(line)"/>
+                                        <button type="button"
+                                                t-on-click = "() => this.changeQuantity(line, true)"
+                                                class="btn btn-outline-primary rounded d-flex align-items-center justify-content-center"><i class="fa fa-plus fa-lg fa-fw p-1"/></button>
+                                    </div>
+                                    <!-- Price -->
+                                    <div class="line-price o-so-tabular-nums fw-bold me-4 fs-3" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
+                                  </div>
+                                </div>
+                        </div>
+                    </t>
+                    <div class="order-price d-flex flex-column align-items-end mt-3 me-4">
+                      <p class="o-so-tabular-nums mb-0 fs-3 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalWithTax())" /></p>
+                      <p class="o-so-tabular-nums mb-0 mt-1 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalTax())" /></p>
+                    </div>
+                </div>
+            </div>
+            <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>
+        </div>
+        <PopupTable t-if="this.state.selectTable" selectTable.bind="selectTable" />
+        <PresetInfoPopup t-if="this.state.fillInformations" callback.bind="proceedInfos" />
+    </t>
+</templates>
