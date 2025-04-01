@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 class CoursePageOptionPlugin extends Plugin {
@@ -10,7 +11,8 @@ class CoursePageOptionPlugin extends Plugin {
                 template: "website_sales_slides.CoursePageOption",
                 selector: "main:has(.o_wslides_course_header)",
                 editableOnly: false,
-                title: "Course Page",
+                title: _t("Course Page"),
+                groups: ["website.group_website_designer"],
             }),
         ],
     };

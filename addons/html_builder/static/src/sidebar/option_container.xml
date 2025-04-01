@@ -42,7 +42,7 @@
 	    <t t-if="state.isUpToDate">
             <div class="we-bg-options-container pb-3" t-ref="content">
                 <t t-foreach="props.options" t-as="option" t-key="option.id">
-                    <BuilderContext applyTo="option.applyTo">
+                    <BuilderContext applyTo="option.applyTo" t-if="hasAccess(option.groups)">
                         <t t-if="option.OptionComponent" t-component="option.OptionComponent" t-props="option.props || {}"></t>
                         <t t-else="" t-call="{{option.template}}"/>
                     </BuilderContext>
