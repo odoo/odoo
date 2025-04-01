@@ -2476,3 +2476,15 @@ Please change the quantity done or the rounding precision of your unit of measur
             ),
             'readOnly': False,
         }
+
+    def _is_incoming(self):
+        self.ensure_one()
+        return self.location_id.usage in ('customer', 'supplier') or (
+            self.location_id.usage == 'transit' and not self.location_id.company_id
+        )
+
+    def _is_outgoing(self):
+        self.ensure_one()
+        return self.location_dest_id.usage in ('customer', 'supplier') or (
+            self.location_dest_id.usage == 'transit' and not self.location_dest_id.company_id
+        )
