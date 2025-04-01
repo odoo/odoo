@@ -875,7 +875,7 @@
     </record>
 
     <record id="action_merger" model="ir.actions.server">
-        <field name="name">Merge</field>
+        <field name="name">Merge RFQs</field>
         <field name="model_id" ref="purchase.model_purchase_order"/>
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
         <field name='group_ids' eval="[(4, ref('account.group_account_invoice'))]"/>
