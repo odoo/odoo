@@ -257,6 +257,13 @@ export class BlockTab extends Component {
                 dropzoneEl.after(snippetEl);
                 dropzoneEl.classList.add("invisible");
                 this.onDropZoneOver();
+
+                // Preview the snippet correctly.
+                // Note: no async previews, in order to not slow down the drag.
+                this.cancelSnippetPreview = this.shared.history.makeSavePoint();
+                this.resources["on_snippet_preview_handlers"]?.forEach((onSnippetPreview) =>
+                    onSnippetPreview({ snippetEl })
+                );
             },
             dropzoneOut: ({ dropzone }) => {
                 const dropzoneEl = dropzone.el;
@@ -264,11 +271,18 @@ export class BlockTab extends Component {
                     dropzoneEl.classList.remove("o_dropzone_highlighted");
                     return;
                 }
+                // Undo the preview
+                this.cancelSnippetPreview();
+                delete this.cancelSnippetPreview;
+
                 snippetEl.remove();
                 dropzoneEl.classList.remove("invisible");
                 this.onDropZoneOut();
             },
             onDragEnd: ({ x, y, helper, dropzone }) => {
+                // Undo the preview if any.
+                this.cancelSnippetPreview?.();
+
                 this.document.body.classList.remove("oe_dropzone_active");
                 snippetEl.remove();
                 let currentDropzoneEl = dropzone && dropzone.el;
@@ -302,6 +316,7 @@ export class BlockTab extends Component {
 
                 this.state.ongoingInsertion = false;
                 this.onDropZoneStop(); // TODO check if it is the best place.
+                delete this.cancelSnippetPreview;
                 if (!isSnippetGroup) {
                     delete this.cancelDragAndDrop;
                 }
