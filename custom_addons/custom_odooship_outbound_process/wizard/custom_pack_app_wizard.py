@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from email.policy import default
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -25,12 +26,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
     line_ids = fields.One2many('custom.pack.app.wizard.line', 'wizard_id', string='Product Lines')
     pack_bench_id = fields.Many2one('pack.bench.configuration', string='Pack Bench', required=True)
-    package_box_type_id = fields.Many2one(
-        'package.box.configuration', string='Package Box Type',
-        help="Select packaging box for single picking.",
-        required=True
-    )
-    show_package_box_in_lines = fields.Boolean(compute="_compute_show_package_box_in_lines", store=True)
+    # package_box_type_id = fields.Many2one(
+    #     'package.box.configuration', string='Package Box Type',
+    #     help="Select packaging box for single picking.",
+    #     required=True
+    # )
+    show_package_box_in_lines = fields.Boolean(compute="_compute_show_package_box_in_lines",
+                                               default=False,
+                                               store=True)
     picking_id = fields.Many2one('stock.picking', string='Select Receipt')
     tenant_code_id = fields.Many2one(
         'tenant.code.configuration',
@@ -41,6 +44,30 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     updated_line_count = fields.Integer(
         string="Updated Line Count", compute='_compute_updated_line_count', store=True
     )
+    next_package_number = fields.Integer(string='Next Package Number', default=1)
+    confirm_increment = fields.Boolean(string="Confirm Increment")
+
+    def increment_package_number(self):
+        self.ensure_one()
+        self.next_package_number += 1
+        _logger.info(f"Package number incremented to {self.next_package_number}")
+
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'view_mode': 'form',
+            'view_type': 'form',
+            'target': 'new',  # Keeps the wizard open
+        }
+
+    @api.onchange('confirm_increment')
+    def _onchange_confirm_increment(self):
+        for wizard in self:
+            if wizard.confirm_increment:
+                wizard.next_package_number += 1
+                wizard.confirm_increment = False  # Reset it back
+                _logger.info(f"Package number incremented to {wizard.next_package_number}")
 
     @api.depends('line_ids')
     def _compute_updated_line_count(self):
@@ -123,8 +150,45 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         if len(self.picking_ids) == 1:
             picking = self.picking_ids[0]
-            incoterm_location = picking.sale_id.packaging_source_type if picking.sale_id else None
-            # Ensure site code & tenant code match the wizard
+            # incoterm_location = picking.sale_id.packaging_source_type if picking.sale_id else None
+            # # Ensure site code & tenant code match the wizard
+            # site_code = self.site_code_id
+            # tenant_code = self.tenant_code_id
+            #
+            # if incoterm_location:
+            #     package_box = self.env['package.box.configuration'].search([
+            #         ('name', '=', incoterm_location),
+            #         ('site_code_id', '=', site_code.id),
+            #         ('tenant_code_id', '=', tenant_code.id)
+            #     ], limit=1)
+            #     if package_box:
+            #         self.package_box_type_id = package_box.id
+            #         _logger.info(f"Package Box '{package_box.name}' selected based on Incoterm: {incoterm_location}")
+            #     else:
+            #         _logger.warning(f"No package found for Incoterm: {incoterm_location}. Selecting default package.")
+            #
+            # # If no incoterm match or incoterm is empty, select default package
+            # if not incoterm_location or not package_box:
+            #     default_package_box = self.env['package.box.configuration'].search([
+            #         ('is_default_package', '=', True),
+            #         ('site_code_id', '=', site_code.id),
+            #         ('tenant_code_id', '=', tenant_code.id)
+            #     ], limit=1)
+            #
+            #     if default_package_box:
+            #         self.package_box_type_id = default_package_box.id
+            #         _logger.info(f"Default Package Box '{default_package_box.name}' selected.")
+            #     else:
+            #         _logger.warning("No default package box found! Please configure one.")
+
+        # else:  # Multiple picks scenario
+        _logger.info("Multiple picks detected, setting package box per line")
+
+        for line in self.line_ids:
+            if not line.picking_id or not line.picking_id.sale_id:
+                continue  # Skip if no picking or sale order exists
+
+            incoterm_location = line.picking_id.sale_id.packaging_source_type
             site_code = self.site_code_id
             tenant_code = self.tenant_code_id
 
@@ -134,11 +198,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     ('site_code_id', '=', site_code.id),
                     ('tenant_code_id', '=', tenant_code.id)
                 ], limit=1)
+
                 if package_box:
-                    self.package_box_type_id = package_box.id
-                    _logger.info(f"Package Box '{package_box.name}' selected based on Incoterm: {incoterm_location}")
+                    line.package_box_type_id = package_box.id
+                    _logger.info(f"Line Package '{package_box.name}' selected for Incoterm: {incoterm_location}")
                 else:
-                    _logger.warning(f"No package found for Incoterm: {incoterm_location}. Selecting default package.")
+                    _logger.warning(
+                        f"No package found for Incoterm: {incoterm_location}. Selecting default package.")
 
             # If no incoterm match or incoterm is empty, select default package
             if not incoterm_location or not package_box:
@@ -147,50 +213,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     ('site_code_id', '=', site_code.id),
                     ('tenant_code_id', '=', tenant_code.id)
                 ], limit=1)
-
                 if default_package_box:
-                    self.package_box_type_id = default_package_box.id
-                    _logger.info(f"Default Package Box '{default_package_box.name}' selected.")
+                    line.package_box_type_id = default_package_box.id
+                    _logger.info(f"Default Package Box '{default_package_box.name}' assigned to line.")
                 else:
                     _logger.warning("No default package box found! Please configure one.")
-
-        else:  # Multiple picks scenario
-            _logger.info("Multiple picks detected, setting package box per line")
-
-            for line in self.line_ids:
-                if not line.picking_id or not line.picking_id.sale_id:
-                    continue  # Skip if no picking or sale order exists
-
-                incoterm_location = line.picking_id.sale_id.packaging_source_type
-                site_code = self.site_code_id
-                tenant_code = self.tenant_code_id
-
-                if incoterm_location:
-                    package_box = self.env['package.box.configuration'].search([
-                        ('name', '=', incoterm_location),
-                        ('site_code_id', '=', site_code.id),
-                        ('tenant_code_id', '=', tenant_code.id)
-                    ], limit=1)
-
-                    if package_box:
-                        line.package_box_type_id = package_box.id
-                        _logger.info(f"Line Package '{package_box.name}' selected for Incoterm: {incoterm_location}")
-                    else:
-                        _logger.warning(
-                            f"No package found for Incoterm: {incoterm_location}. Selecting default package.")
-
-                # If no incoterm match or incoterm is empty, select default package
-                if not incoterm_location or not package_box:
-                    default_package_box = self.env['package.box.configuration'].search([
-                        ('is_default_package', '=', True),
-                        # ('site_code_id', '=', site_code.id),
-                        # ('tenant_code_id', '=', tenant_code.id)
-                    ], limit=1)
-                    if default_package_box:
-                        line.package_box_type_id = default_package_box.id
-                        _logger.info(f"Default Package Box '{default_package_box.name}' assigned to line.")
-                    else:
-                        _logger.warning("No default package box found! Please configure one.")
 
     def pack_products(self):
         """
@@ -411,7 +438,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "receipt_number": line.picking_id.name,
                     "partner_id": line.picking_id.partner_id.name,
                     "origin": line.picking_id.origin or "N/A",
-                    "package_name": line.package_box_type_id.name,
+                    "package_name": line.package_box_type_id.name +'_' + str(line.product_package_number),
                     "length": line.package_box_type_id.length or "NA",
                     "width": line.package_box_type_id.width or "NA",
                     "height": line.package_box_type_id.height or "NA",
@@ -464,7 +491,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "receipt_number": line.picking_id.name if line.picking_id else "",
             "partner_id": line.picking_id.partner_id.name if line.picking_id.partner_id else "",
             "origin": line.picking_id.origin or "N/A",
-            "package_name": line.package_box_type_id.name if line.package_box_type_id else None,
+            "package_name": line.package_box_type_id.name,
             "length": line.package_box_type_id.length if line.package_box_type_id else "NA",
             "width": line.package_box_type_id.width if line.package_box_type_id else "NA",
             "height": line.package_box_type_id.height if line.package_box_type_id else "NA",
@@ -576,7 +603,8 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         ('pick', 'Pick'),
         ('pack', 'Pack'),
         ('partially_pick', 'Partially Pick')
-    ], tracking=True, default='draft')
+    ], default='draft')
+    product_package_number = fields.Integer(string='Package Number', required=True)
 
     @api.onchange('product_id', 'package_box_type_id')
     def _compute_add_line_boolean(self):
@@ -588,7 +616,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                         'message': _("This item is fragile and must be packed with bubble wrap for protection."),
                     }
                 }
-            if line.product_id and line.package_box_type_id and line.weight:
+            if line.product_id and line.package_box_type_id and line.weight and line.product_package_number and line.wizard_id.show_package_box_in_lines:
                 payload = line.wizard_id.prepare_payload_for_individual_line(line)
                 line.line_added = True
                 json_payload = json.dumps(payload, indent=4)
@@ -677,42 +705,47 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
             else:
                 line.available_quantity = 0.0
 
-    @api.depends('product_id', 'quantity')
+    @api.depends('wizard_id.picking_ids', 'product_id')
     def _compute_remaining_quantity(self):
         for line in self:
-            if line.wizard_id and line.wizard_id.picking_id:
+            if line.wizard_id and line.picking_id:
+                move_lines = self.env['stock.move'].search([
+                    ('picking_id', '=', line.picking_id.id),
+                    ('product_id', '=', line.product_id.id),
+                    ('pc_container_code', '=', line.wizard_id.pc_container_code_id.name)
+                ])
                 total_quantity_selected = sum(
-                    l.quantity for l in line.wizard_id.line_ids if l.product_id == line.product_id)
-                move_lines = line.wizard_id.picking_id.move_ids_without_package.filtered(
-                    lambda m: m.product_id == line.product_id)
-                available_qty = sum(move_lines.mapped('product_uom_qty'))
-                line.remaining_quantity = move_lines.remaining_qty - total_quantity_selected
+                    l.quantity for l in line.wizard_id.line_ids
+                    if l.product_id == line.product_id and l.picking_id == line.picking_id
+                )
+                total_available = sum(move_lines.mapped('remaining_qty'))
+                line.remaining_quantity = total_available - total_quantity_selected
             else:
                 line.remaining_quantity = 0.0
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
-        """
-        When a product is selected:
-        - If weight exists on the product, fetch and assign it.
-        - If weight does NOT exist, prompt the user to enter it manually.
-        - Once entered, update the product's weight permanently for future use.
-        """
         if self.product_id:
             if not self.wizard_id.pack_bench_id:
                 raise ValidationError("Please select a Pack Bench first before proceeding with packing.")
+
+            # Fetch weight from product
             if not self.product_id.weight or self.product_id.weight <= 0.0:
                 return {
                     'warning': {
                         'title': _("Missing Weight"),
-                        'message': _("The selected product '%s' does not have a weight. "
-                                     "Please enter the weight manually.") % self.product_id.name
+                        'message': _(
+                            "The selected product '%s' does not have a weight. Please enter it manually.") % self.product_id.name
                     }
                 }
             else:
-                # If weight exists, fetch it from the product and assign it
                 self.weight = self.product_id.weight
 
+            # Automatically assign package number from wizard
+            if self.wizard_id.next_package_number:
+                self.product_package_number = self.wizard_id.next_package_number
+
+            # Auto-select box type if needed
             self.wizard_id._auto_select_package_box_type()
 
     @api.onchange('weight')

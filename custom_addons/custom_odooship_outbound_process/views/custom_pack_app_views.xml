@@ -22,10 +22,12 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="picking_ids" widget="many2many_tags"/>
                         </group>
                         <group>
 <!--                            <field name="automation_bulk_manual"/>-->
-                            <field name="site_code_id" invisible="1"/>
+                            <field name="site_code_id"/>
+                            <field name="user_id"/>
                         </group>
                     </group>
                     <notebook>
@@ -70,6 +72,7 @@
             <field name="arch" type="xml">
                 <tree string="Pack App">
                     <field name="name"/>
+                    <field name="picking_ids" widget="many2many_tags"/>
 <!--                <field name="automation_bulk_manual"/>-->
                 <field name="pack_app_line_ids" widget="many2many_tags"/>
                 </tree>

@@ -4,7 +4,6 @@
 from odoo import models, fields, api, _
 
 
-
 class PackAPP(models.Model):
     _name = 'custom.pack.app'
     _description = 'PC container Barcode Configuration.'
@@ -13,7 +12,7 @@ class PackAPP(models.Model):
     pc_container_status = fields.Selection([('release', 'Release'),
                                      ('occupied', 'Occupied'),],
                                     string='PC container Status', default='release')
-    site_code_id = fields.Many2one('site.code.configuration', string='Site Code', store=True)
+    site_code_id = fields.Many2one('site.code.configuration', string='Site Code')
     pack_app_line_ids = fields.One2many(
         comodel_name='custom.pack.app.line',
         inverse_name='pack_app_line_id',
@@ -31,7 +30,8 @@ class PackAPP(models.Model):
         ('manual','Manual'),
     ], string='Automation Bulk Manual')
     pc_container_code_ids = fields.Many2many('pc.container.barcode.configuration', string='PC Totes')
-
+    picking_ids = fields.Many2many('stock.picking', string='Pick Numbers', store=True)
+    user_id = fields.Many2one('res.users', string='Created By', default=lambda self: self.env.user, readonly=True)
 
     @api.model_create_multi
     def create(self, vals_list):
