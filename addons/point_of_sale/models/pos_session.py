@@ -416,7 +416,9 @@ class PosSession(models.Model):
         return True
 
     def get_session_orders(self):
-        return self.order_ids
+        return self.order_ids.filtered(lambda o:
+            not(o.preset_time and o.preset_time.date() > fields.Date.today())
+        )
 
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
