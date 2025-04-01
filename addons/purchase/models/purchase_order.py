@@ -741,6 +741,8 @@ class PurchaseOrder(models.Model):
             raise UserError(_("In selected purchase order to merge these details must be same\nVendor, currency, destination, dropship address and agreement"))
         bunches_of_rfq_to_be_merge = [rfqs for rfqs in bunches_of_rfq_to_be_merge if len(rfqs) > 1]
 
+        merged_rfq_ids = []
+
         for rfqs in bunches_of_rfq_to_be_merge:
             if len(rfqs) <= 1:
                 continue
@@ -784,15 +786,21 @@ class PurchaseOrder(models.Model):
                 rfqs.filtered(lambda r: r.state != 'cancel').button_cancel()
                 oldest_rfq._merge_alternative_po(rfqs)
 
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'success',
-                'message': _('purchase orders merged'),
-                'next': {'type': 'ir.actions.act_window_close'},
-            }
+                # Keep the oldest RFQ IDs
+                merged_rfq_ids.append(oldest_rfq.id)
+
+        action = {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'list,kanban,form',
+            'res_model': 'purchase.order',
         }
+        if len(merged_rfq_ids) == 1:
+            action['res_id'] = merged_rfq_ids[0]
+            action['view_mode'] = 'form'
+        else:
+            action['name'] = _("Merged RFQs")
+            action['domain'] = [('id', 'in', merged_rfq_ids)]
+        return action
 
     def _merge_alternative_po(self, rfqs):
         pass
