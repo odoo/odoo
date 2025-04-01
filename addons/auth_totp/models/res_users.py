@@ -63,14 +63,17 @@ class ResUsers(models.Model):
     def _get_session_token_fields(self):
         return super()._get_session_token_fields() | {'totp_secret'}
 
-    def _totp_check(self, code):
-        sudo = self.sudo()
-        key = base64.b32decode(sudo.totp_secret)
-        match = TOTP(key).match(code)
-        if match is None:
-            _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
-            raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
-        _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
+    def _check_credentials(self, credentials, env):
+        if credentials['type'] == 'totp':
+            sudo = self.sudo()
+            key = base64.b32decode(sudo.totp_secret)
+            match = TOTP(key).match(credentials['token'])
+            if match is None:
+                _logger.info("2FA check: FAIL for %s %r", self, sudo.login)
+                raise AccessDenied(_("Verification failed, please double-check the 6-digit code"))
+            _logger.info("2FA check: SUCCESS for %s %r", self, sudo.login)
+        else:
+            return super()._check_credentials(credentials, env)
 
     def _totp_try_setting(self, secret, code):
         if self.totp_enabled or self != self.env.user:
