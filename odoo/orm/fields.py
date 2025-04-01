@@ -1192,6 +1192,13 @@ class Field(typing.Generic[T]):
     # SQL generation methods
     #
 
+    def can_be_null(self, model: BaseModel, alias: str, query: Query) -> bool:
+        """ Return whether the field in the table ``alias`` can be NULL. """
+        return (self not in model.env.registry.not_null_fields) or (
+            # a left join alias can be NULL, thus self may also be NULL in this case
+            alias in query._joins and query._joins[alias][0].code == 'LEFT JOIN'
+        )
+
     def to_sql(self, model: BaseModel, alias: str, flush: bool = True) -> SQL:
         """ Return an :class:`SQL` object that represents the value of the given
         field from the given table alias.
@@ -1267,7 +1274,7 @@ class Field(typing.Generic[T]):
             return SQL("%s%s%s", sql_field, SQL_OPERATORS[operator], value)
 
         # nullability
-        can_be_null = self not in model.env.registry.not_null_fields
+        can_be_null = self.can_be_null(model, alias, query)
 
         # operator: in (equality)
         if operator in ('in', 'not in'):

@@ -1031,7 +1031,7 @@ class TestSearchRelated(TransactionCase):
                         OR "test_new_api_related_foo"."bar_id" IN (
                             SELECT "test_new_api_related_bar"."id"
                             FROM "test_new_api_related_bar"
-                            WHERE ("test_new_api_related_bar"."name" IN %s OR "test_new_api_related_bar"."name" IS NULL)
+                            WHERE "test_new_api_related_bar"."name" IN %s
                         )
                     )
                 )

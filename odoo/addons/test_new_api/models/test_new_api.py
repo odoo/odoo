@@ -495,7 +495,7 @@ class Test_New_ApiRelated_Bar(models.Model):
     _name = 'test_new_api.related_bar'
     _description = 'test_new_api.related_bar'
 
-    name = fields.Char()
+    name = fields.Char(required=True)
 
 
 class Test_New_ApiRelated_Inherits(models.Model):
