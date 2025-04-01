@@ -32,7 +32,7 @@ export class BoothRegistration extends Interaction {
             }),
         },
         "button.o_wbooth_registration_submit": {
-            "t-att-disabled": () => this.isSelectionEmpty,
+            "t-att-disabled": () => !this.isSelectionEmpty,
         },
     };
 
@@ -165,7 +165,7 @@ export class BoothRegistration extends Interaction {
         }
         this.updateBoothsList();
         this.showBoothCategoryDescription();
-        this.isSelectionEmpty = !!this.countSelectedBooths().length;
+        this.isSelectionEmpty = !!this.countSelectedBooths();
     }
 
     /**
@@ -183,7 +183,7 @@ export class BoothRegistration extends Interaction {
      */
     onBoothChange(ev, currentTargetEl) {
         currentTargetEl.closest(".form-check").classList.remove("text-danger");
-        this.isSelectionEmpty = !!this.countSelectedBooths().length;
+        this.isSelectionEmpty = !!this.countSelectedBooths();
     }
 
     async onSubmitClick() {
