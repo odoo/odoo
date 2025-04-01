@@ -74,7 +74,7 @@ export class ProductCatalogKanbanModel extends RelationalModel {
         const maxSeq = allSections.find(sec => sec.sequence > minSeq)?.sequence ?? Infinity;
 
         return records.filter(record => {
-            const seq = record.productCatalogData?.sequence ?? 0;
+            const seq = record.productCatalogData?.sequence;
             return seq > minSeq && seq < maxSeq;
         });
     }

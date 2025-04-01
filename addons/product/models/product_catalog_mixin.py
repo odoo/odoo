@@ -143,3 +143,10 @@ class ProductCatalogMixin(models.AbstractModel):
         :param str section_name: The name of the section to create.
         """
         return None
+
+    def _reorder_product_catalog_order_sections(self, sections):
+        """ Reorder the sections in the product catalog.
+        Must be overrided by each model using this mixin.
+        :param list sections: The sections to reorder.
+        """
+        return None

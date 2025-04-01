@@ -16,11 +16,12 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         this.state = useState({
             ...this.state,
             sectionOfTags: {},
-            sectionOfSections: {},
+            sectionOfSections: new Map(),
             isAddingSection: false,
             newSectionName: "",
         });
         this.sectionInput = useRef("sectionInputRef");
+        this.onDrop = this.onDrop.bind(this);
     }
 
     updateActiveValues() {
@@ -36,16 +37,9 @@ export class ProductCatalogSearchPanel extends SearchPanel {
             order_id: this.env.model.config.context.order_id,
         });
 
-
-        let sectionMap = new Map();
-
-        sections.forEach(section => {
-            if (section.name) {
-                sectionMap.set(section.name, { id: section.id, sequence: section.sequence });
-            }
-        });
-
-        this.state.sectionOfSections = sectionMap;
+        this.state.sectionOfSections = new Map(
+            sections.map(({ id, name, sequence }) => [id, { name, sequence }])
+        );
         this.env.model.config.context.sections = sections;
     }
 
@@ -57,10 +51,7 @@ export class ProductCatalogSearchPanel extends SearchPanel {
 
     async createSection() {
         const sectionName = this.state.newSectionName.trim();
-        if (!sectionName) {
-            this.state.isAddingSection = false;
-            return;
-        }
+        if (!sectionName) return (this.state.isAddingSection = false);
 
         await rpc("/product/catalog/create_section", {
             res_model: this.env.model.config.context.product_catalog_order_model,
@@ -112,13 +103,48 @@ export class ProductCatalogSearchPanel extends SearchPanel {
         })
     }
 
-    toggleSectionSelection(sectionName) {
-        this.env.model.config.context.selected_section = {
-            name: sectionName,
-            sequence: this.state.sectionOfSections.get(sectionName)?.sequence,
-        };
-
+    toggleSectionSelection(sectionId) {
+        const section = this.state.sectionOfSections.get(sectionId);
+        if (section) {
+            this.env.model.config.context.selected_section = {
+                name: section.name, sequence: section.sequence
+            };
+        }
         this.env.model.load();
     }
 
+    onDragStart(sectionId, ev) {
+        ev.dataTransfer.setData("text/plain", sectionId);
+    }
+
+    onDragOver(ev) {
+        ev.preventDefault();
+    }
+
+    onDrop(targetSecId, ev) {
+        ev.preventDefault();
+        const draggedSecId = ev.dataTransfer.getData("text/plain");
+        if (draggedSecId !== targetSecId) this.reorderSections(draggedSecId, targetSecId);
+    }
+
+    async reorderSections(draggedSecId, targetSecId) {
+        [draggedSecId, targetSecId] = [Number(draggedSecId), Number(targetSecId)];
+
+        const draggedSection = this.state.sectionOfSections.get(draggedSecId);
+        const targetSection = this.state.sectionOfSections.get(targetSecId);
+        if (!draggedSection || !targetSection) return;
+
+        [draggedSection.sequence, targetSection.sequence] =
+            [targetSection.sequence, draggedSection.sequence];
+
+        await rpc("/product/catalog/reorder_sections", {
+            res_model: this.env.model.config.context.product_catalog_order_model,
+            order_id: this.env.model.config.context.order_id,
+            sections: [
+                { id: draggedSecId, sequence: draggedSection.sequence },
+                { id: targetSecId, sequence: targetSection.sequence }
+            ],
+        });
+        this.loadSections();
+    }
 }

@@ -12,17 +12,28 @@
                 >
                     <header
                         class="o_search_panel_section_header pt-4 pb-2 text-uppercase cursor-default">
+
                         <b>All Sections</b>
+                        <i t-attf-class="fa fa-filter o_search_panel_section_icon ms-5"/>
                     </header>
-                    <li t-foreach="[...this.state.sectionOfSections.keys()]" t-as="secName" t-key="secName"
+                    <li t-foreach="[...this.state.sectionOfSections.keys()]" t-as="secId" t-key="secId"
                         class="o_search_panel_filter_value list-group-item p-0 mb-1 border-0 cursor-pointer"
+                        draggable="true"
+                        t-on-dragstart="(e)=>onDragStart(secId, e)"
+                        t-on-dragover="(e)=>onDragOver(e)"
+                        t-on-drop="(e)=>onDrop(secId, e)"
                         >
+                        <t t-set="secName" t-value="this.state.sectionOfSections.get(secId)?.name"/>
+                         <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="o_row_handle oi oi-draggable ui-sortable-handle" t-on-click.stop="" />
                         <label
-                        t-on-click="() => this.toggleSectionSelection(secName)"
-                            class="o_search_panel_label form-check-label d-flex align-items-center justify-content-between w-100 cursor-pointer"
-                            t-att-class="this.env.model.config.context.selected_section.name == secName ? 'fw-bold' : ''">
+                        t-on-click="() => this.toggleSectionSelection(secId)"
+                            class="o_search_panel_label form-check-label d-flex align-items-center ms-2 justify-content-between w-100 cursor-pointer"
+                            t-att-class="this.env.model.config.context.selected_section?.name == secName ? 'fw-bold' : ''">
                             <span class="o_search_panel_label_title text-truncate" t-out="secName" />
                         </label>
+                        <i t-attf-class="fa fa-filter o_search_panel_section_icon me-4"/>
+                        </div>
                     </li>
                     <t t-if="this.state.isAddingSection">
                         <input type="text" class="o_section_input" placeholder="Enter section name"

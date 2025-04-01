@@ -47,6 +47,14 @@ class ProductCatalogController(Controller):
 
     @route('/product/catalog/get_sections', auth='user', type='jsonrpc', readonly=True)
     def product_catalog_order_get_sections(self, res_model, order_id, **kwargs):
+        """ Returns the sections of the product catalog.
+
+        :param string res_model: The order model.
+        :param int order_id: The order id.
+        :rtype: list
+        :return:
+        """
+
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._get_product_catalog_order_sections(**kwargs)
 
@@ -55,3 +63,7 @@ class ProductCatalogController(Controller):
         order = request.env[res_model].browse(order_id)
         return order.with_company(order.company_id)._create_product_catalog_order_section(section_name, **kwargs)
 
+    @route('/product/catalog/reorder_sections', auth='user', type='jsonrpc')
+    def product_catalog_order_reorder_sections(self, res_model, order_id, sections, **kwargs):
+        order = request.env[res_model].browse(order_id)
+        return order.with_company(order.company_id)._reorder_product_catalog_order_sections(sections, **kwargs)

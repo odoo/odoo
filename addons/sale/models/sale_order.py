@@ -2219,8 +2219,12 @@ class SaleOrder(models.Model):
             "order_id": self.id,
             "name": name,
             "display_type": "line_section",
-            "sequence": ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
+            "sequence": ((self.order_line and self.order_line[-1].sequence + 1) or 10),
         })
+
+    def _reorder_product_catalog_order_sections(self, sections):
+        for section in sections:
+            self.order_line.filtered(lambda l: l.id == section['id']).sequence = section['sequence']
 
     #=== TOOLING ===#
 
