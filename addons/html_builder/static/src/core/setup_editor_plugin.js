@@ -69,9 +69,8 @@ export class SetupEditorPlugin extends Plugin {
     }
 
     setContenteditable() {
-        const editableEls = this.getEditableElements(
-            '.oe_structure.oe_empty, [data-oe-type="html"]'
-        );
+        // TODO: Should be imp, we need to check _getReadOnlyAreas etc
+        const editableEls = this.getEditableElements(".o_editable");
         editableEls.forEach((el) => el.setAttribute("contenteditable", !el.matches(":empty")));
     }
 
