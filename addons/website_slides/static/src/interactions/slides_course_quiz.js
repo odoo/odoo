@@ -2,9 +2,9 @@
     import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
     import { renderToElement } from "@web/core/utils/render";
     import { session } from "@web/session";
-    import CourseJoin from '@website_slides/js/slides_course_join';
-    import QuestionFormWidget from '@website_slides/js/slides_course_quiz_question_form';
-    import { SlideCoursePage } from '@website_slides/js/slides_course_page';
+    import CourseJoin from '@website_slides/interactions/slides_course_join';
+    import QuestionFormWidget from '@website_slides/interactions/slides_course_quiz_question_form';
+    import { SlideCoursePage } from '@website_slides/interactions/slides_course_page';
     import { rpc } from "@web/core/network/rpc";
     import { SlideQuizFinishDialog } from "@website_slides/js/public/components/slide_quiz_finish_dialog/slide_quiz_finish_dialog";
     import { user } from "@web/core/user";
