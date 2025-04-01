@@ -79,7 +79,6 @@ export class BuilderColorPicker extends Component {
         ...basicContainerBuilderComponentProps,
         noTransparency: { type: Boolean, optional: true },
         enabledTabs: { type: Array, optional: true },
-        disabledTabs: { type: Array, optional: true },
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
@@ -109,7 +108,6 @@ export class BuilderColorPicker extends Component {
                 colorPrefix: "color-prefix-",
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
-                disabledTabs: this.props.disabledTabs,
             },
             {
                 onClose: onPreviewRevert,

@@ -18,16 +18,16 @@
                                 title="Primary"
                                 action="'customizeWebsiteColor'"
                                 actionParam="'o-color-1'"
-                                disabledTabs="['gradient']"/>
+                                enabledTabs="['solid', 'custom']"/>
                             <BuilderColorPicker
                                 title="Secondary"
                                 action="'customizeWebsiteColor'"
                                 actionParam="'o-color-2'"
-                                disabledTabs="['gradient']"/>
+                                enabledTabs="['solid', 'custom']"/>
                             <BuilderColorPicker
                                 action="'customizeWebsiteColor'"
                                 actionParam="'o-color-3'"
-                                disabledTabs="['gradient']"/>
+                                enabledTabs="['solid', 'custom']"/>
                         </div>
                     </div>
                     <div class="d-flex flex-column h-100 justify-content-between">
@@ -36,11 +36,11 @@
                             <BuilderColorPicker
                                 action="'customizeWebsiteColor'"
                                 actionParam="'o-color-4'"
-                                disabledTabs="['gradient']"/>
+                                enabledTabs="['solid', 'custom']"/>
                             <BuilderColorPicker
                                 action="'customizeWebsiteColor'"
                                 actionParam="'o-color-5'"
-                                disabledTabs="['gradient']"/>
+                                enabledTabs="['solid', 'custom']"/>
                         </div>
                     </div>
                     <div class="d-flex flex-column h-100">
@@ -113,20 +113,20 @@
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-text`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                 </BuilderRow>
                                 <BuilderRow label.translate="Headings">
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-headings`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                     <t t-set-slot="collapse">
                                         <t t-foreach="[2, 3, 4, 5, 6]" t-as="j" t-key="j">
                                             <BuilderRow label="`Headings ${j}`">
                                                 <BuilderColorPicker
                                                     action="'customizeWebsiteColor'"
                                                     actionParam="`o-cc${preset.id}-h${j}`"
-                                                    disabledTabs="['gradient']"/>
+                                                    enabledTabs="['solid', 'custom']"/>
                                             </BuilderRow>
                                         </t>
                                     </t>
@@ -135,27 +135,27 @@
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-link`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                 </BuilderRow>
                                 <BuilderRow label.translate="Primary Buttons">
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-btn-primary`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-btn-primary-border`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                 </BuilderRow>
                                 <BuilderRow label.translate="Secondary Buttons">
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-btn-secondary`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
                                         actionParam="`o-cc${preset.id}-btn-secondary-border`"
-                                        disabledTabs="['gradient']"/>
+                                        enabledTabs="['solid', 'custom']"/>
                                 </BuilderRow>
                             </t>
                         </BuilderRow>
