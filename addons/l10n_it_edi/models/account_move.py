@@ -1550,7 +1550,7 @@ class AccountMove(models.Model):
             move.l10n_it_edi_header = False
             to_upload = {'filename': filename, 'xml': content}
             if move.commercial_partner_id._l10n_it_edi_is_public_administration():
-                to_upload = {'destination_code': move.commercial_partner_id.l10n_it_pa_index}
+                to_upload['destination_code'] = move.commercial_partner_id.l10n_it_pa_index
             move.l10n_it_edi_state = 'being_sent'
             files_to_upload.append(to_upload)
             filename_move[filename] = move
