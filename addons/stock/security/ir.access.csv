@@ -1,0 +1,106 @@
+id,model_id,group_id/id,operation,domain,name
+access_procurement_group_group_user,procurement.group,base.group_user,rwc,,procurement.group
+access_stock_warehouse_group_stock_manager,stock.warehouse,stock.group_stock_manager,rwcd,,stock.warehouse.manager
+access_stock_warehouse_group_user,stock.warehouse,base.group_user,r,,stock.warehouse.user
+access_stock_warehouse_global,stock.warehouse,,rwcd,"[('company_id', 'in', company_ids)]",Warehouse multi-company
+access_stock_location_group_partner_manager,stock.location,base.group_partner_manager,r,,stock.location.partner.manager
+access_stock_location_group_stock_manager,stock.location,stock.group_stock_manager,rwcd,,stock.location.manager
+access_stock_location_group_user,stock.location,base.group_user,r,,stock.location.all.user
+access_stock_location_group_stock_user,stock.location,stock.group_stock_user,rw,,stock.location.user
+access_stock_location_global,stock.location,,rwcd,"[('company_id', 'in', company_ids + [False])]",Location multi-company
+access_stock_picking_group_stock_user,stock.picking,stock.group_stock_user,rwcd,,stock.picking user
+access_stock_picking_group_stock_manager,stock.picking,stock.group_stock_manager,rwcd,,stock.picking manager
+access_stock_picking_global,stock.picking,,rwcd,"[('company_id', 'in', company_ids)]",stock_picking multi-company
+access_stock_picking_type_group_user,stock.picking.type,base.group_user,r,,stock.picking.type all users
+access_stock_picking_type_group_stock_user,stock.picking.type,stock.group_stock_user,r,,stock.picking.type user
+access_stock_picking_type_group_stock_manager,stock.picking.type,stock.group_stock_manager,rwcd,,stock.picking.type manager
+access_stock_picking_type_global,stock.picking.type,,rwcd,"[('company_id','in', company_ids)]",Stock Operation Type multi-company
+access_stock_lot_group_stock_user,stock.lot,stock.group_stock_user,rwcd,,stock.lot user
+access_stock_lot_global,stock.lot,,rwcd,"[('company_id', 'in', company_ids + [False])]",Stock Production Lot multi-company
+access_stock_move_group_stock_manager,stock.move,stock.group_stock_manager,rwcd,,stock.move manager
+access_stock_move_group_stock_user,stock.move,stock.group_stock_user,rwc,,stock.move user
+access_stock_move_global,stock.move,,rwcd,"[('company_id', 'in', company_ids)]",stock_move multi-company
+access_product_product_group_stock_user,product.product,stock.group_stock_user,r,,product_product_stock_user
+access_product_product_group_stock_manager,product.product,stock.group_stock_manager,rwcd,,product.product stock_manager
+access_product_template_group_stock_user,product.template,stock.group_stock_user,r,,product.template stock user
+access_product_template_group_stock_manager,product.template,stock.group_stock_manager,rwcd,,product.template stock_manager
+access_uom_uom_group_stock_manager,uom.uom,stock.group_stock_manager,rwcd,,uom.uom stock_manager
+access_product_category_group_stock_manager,product.category,stock.group_stock_manager,rwcd,,product.category stock_manager
+access_product_supplierinfo_group_stock_manager,product.supplierinfo,stock.group_stock_manager,rwcd,,product.supplierinfo stock_manager
+access_product_pricelist_group_stock_manager,product.pricelist,stock.group_stock_manager,rwcd,,product.pricelist stock_manager
+access_res_partner_group_stock_manager,res.partner,stock.group_stock_manager,rwc,,res_partner group_stock_manager
+access_product_pricelist_item_group_stock_manager,product.pricelist.item,stock.group_stock_manager,rwcd,,product.pricelist.item stock_manager
+access_product_tag_group_stock_manager,product.tag,stock.group_stock_manager,rwcd,,product.tag.stock.manager
+access_stock_warehouse_orderpoint_group_stock_user,stock.warehouse.orderpoint,stock.group_stock_user,r,,stock.warehouse.orderpoint
+access_stock_warehouse_orderpoint_group_stock_manager,stock.warehouse.orderpoint,stock.group_stock_manager,rwcd,,stock.warehouse.orderpoint system
+access_stock_warehouse_orderpoint_global,stock.warehouse.orderpoint,,rwcd,"[('company_id', 'in', company_ids)]",stock_warehouse.orderpoint multi-company
+access_stock_quant_group_stock_user,stock.quant,stock.group_stock_user,rwc,,stock.quant user
+access_stock_quant_group_user,stock.quant,base.group_user,r,,stock.quant all users
+access_stock_quant_global,stock.quant,,rwcd,"[('company_id', 'in', company_ids + [False])]",stock_quant multi-company
+access_stock_quant_package_group_user,stock.quant.package,base.group_user,r,,stock.quant.package all users
+access_stock_quant_package_group_stock_manager,stock.quant.package,stock.group_stock_manager,rwcd,,stock.quant.package stock manager
+access_stock_quant_package_group_stock_user,stock.quant.package,stock.group_stock_user,rwcd,,stock.quant.package stock user
+access_stock_quant_package_global,stock.quant.package,,rwcd,"[('company_id', 'in', company_ids + [False])]",stock_quant_package multi-company
+access_stock_package_level_group_user,stock.package_level,base.group_user,r,,stock.package_level all users
+access_stock_package_level_group_stock_manager,stock.package_level,stock.group_stock_manager,rwcd,,stock.package_level stock manager
+access_stock_package_level_group_stock_user,stock.package_level,stock.group_stock_user,rwcd,,stock.package_level stock user
+access_stock_rule_group_stock_user,stock.rule,stock.group_stock_user,r,,stock_rule user
+access_stock_rule_group_stock_manager,stock.rule,stock.group_stock_manager,rwcd,,stock_rule stock manager
+access_stock_rule_group_user,stock.rule,base.group_user,r,,stock.rule.flow internal
+access_stock_rule_global,stock.rule,,rwcd,"[('company_id', 'in', company_ids + [False])]",product_pulled_flow multi-company
+access_stock_route_group_stock_manager,stock.route,stock.group_stock_manager,rwcd,,stock.route
+access_stock_route_group_user,stock.route,base.group_user,r,,stock.route
+access_stock_route_global,stock.route,,rwcd,"[('company_id', 'in', company_ids + [False])]",stock_route multi-company
+access_stock_move_line_group_stock_manager,stock.move.line,stock.group_stock_manager,rwcd,,stock.move.line manager
+access_stock_move_line_group_stock_user,stock.move.line,stock.group_stock_user,rwcd,,stock.move.line user
+access_stock_move_line_group_user,stock.move.line,base.group_user,rwcd,,stock.move.line all users
+access_stock_move_line_global,stock.move.line,,rwcd,"[('company_id', 'in', company_ids + [False])]",stock_move_line multi-company
+access_stock_putaway_rule_group_user,stock.putaway.rule,base.group_user,r,,stock.putaway.rule all users
+access_stock_putaway_rule_group_stock_manager,stock.putaway.rule,stock.group_stock_manager,rwcd,,stock.putaway.rule all managers
+access_stock_putaway_rule_global,stock.putaway.rule,,rwcd,"[('company_id','in', company_ids)]",Stock Operation Type multi-company
+access_product_removal_group_user,product.removal,base.group_user,r,,product.removal all users
+access_barcode_nomenclature_group_stock_user,barcode.nomenclature,stock.group_stock_user,r,,barcode.nomenclature.stock.user
+access_barcode_nomenclature_group_stock_manager,barcode.nomenclature,stock.group_stock_manager,rwcd,,barcode.nomenclature.stock.manager
+access_barcode_rule_group_stock_user,barcode.rule,stock.group_stock_user,r,,barcode.rule.stock.user
+access_barcode_rule_group_stock_manager,barcode.rule,stock.group_stock_manager,rwcd,,barcode.rule.stock.manager
+access_stock_scrap_group_stock_user,stock.scrap,stock.group_stock_user,rwc,,stock.scrap.user
+access_stock_scrap_group_stock_manager,stock.scrap,stock.group_stock_manager,rwcd,,stock.scrap.manager
+access_stock_scrap_global,stock.scrap,,rwcd,"[('company_id', 'in', company_ids)]",stock_scrap_company multi-company
+access_stock_scrap_reason_tag_group_stock_user,stock.scrap.reason.tag,stock.group_stock_user,rwc,,stock.scrap.reason.tag.user
+access_stock_scrap_reason_tag_group_stock_manager,stock.scrap.reason.tag,stock.group_stock_manager,rwcd,,stock.scrap.reason.tag.manager
+access_product_attribute_group_stock_manager,product.attribute,stock.group_stock_manager,rwcd,,product.attribute manager
+access_product_attribute_value_group_stock_manager,product.attribute.value,stock.group_stock_manager,rwcd,,product.attribute manager value
+access_update_product_attribute_value_group_stock_manager,update.product.attribute.value,stock.group_stock_manager,rwc,,update.product.attribute.value
+access_product_template_attribute_value_group_stock_manager,product.template.attribute.value,stock.group_stock_manager,rwcd,,product.product.attribute manager value
+access_product_template_attribute_exclusion_group_stock_manager,product.template.attribute.exclusion,stock.group_stock_manager,rwcd,,product.attribute manager filter line
+access_product_template_attribute_line_group_stock_manager,product.template.attribute.line,stock.group_stock_manager,rwcd,,product.attribute manager line
+access_report_stock_quantity_group_user,report.stock.quantity,base.group_user,r,,access_report_stock_quantity
+access_report_stock_quantity_global,report.stock.quantity,,rwcd,"[('company_id', 'in', company_ids)]",report_stock_quantity_flow multi-company
+access_stock_traceability_report_group_stock_user,stock.traceability.report,stock.group_stock_user,rwc,,access.stock.traceability.report
+access_stock_return_picking_line_group_stock_user,stock.return.picking.line,stock.group_stock_user,rwcd,,access.stock.return.picking.line
+access_stock_return_picking_group_stock_user,stock.return.picking,stock.group_stock_user,rwc,,access.stock.return.picking
+access_stock_backorder_confirmation_line_group_stock_user,stock.backorder.confirmation.line,stock.group_stock_user,rwc,,access.stock.backorder.confirmation.line
+access_stock_backorder_confirmation_group_stock_user,stock.backorder.confirmation,stock.group_stock_user,rwc,,access.stock.backorder.confirmation
+access_stock_quantity_history_group_stock_user,stock.quantity.history,stock.group_stock_user,rwc,,access.stock.quantity.history
+access_stock_rules_report_group_stock_user,stock.rules.report,stock.group_stock_user,rwc,,access.stock.rules.report
+access_stock_warn_insufficient_qty_scrap_group_stock_user,stock.warn.insufficient.qty.scrap,stock.group_stock_user,rwc,,access.stock.warn.insufficient.qty.scrap
+access_product_replenish_group_stock_user,product.replenish,stock.group_stock_user,rwc,,access.product.replenish
+access_stock_package_destination_group_stock_user,stock.package.destination,stock.group_stock_user,rwc,,access.stock.package.destination
+access_stock_orderpoint_snooze_group_stock_user,stock.orderpoint.snooze,stock.group_stock_user,rwcd,,access_stock_orderpoint_snooze
+access_stock_package_type_group_stock_user,stock.package.type,stock.group_stock_user,r,,access_stock_package_type_user
+access_stock_package_type_group_stock_manager,stock.package.type,stock.group_stock_manager,rwcd,,access_stock_package_type_manager
+access_stock_storage_category_group_user,stock.storage.category,base.group_user,r,,stock.storage.category.user
+access_stock_storage_category_group_stock_manager,stock.storage.category,stock.group_stock_manager,rwcd,,stock.storage.category.manager
+access_stock_storage_category_global,stock.storage.category,,rwcd,"[('company_id', 'in', company_ids + [False])]",stock_storage_category multi-company
+access_stock_storage_category_capacity_group_user,stock.storage.category.capacity,base.group_user,r,,stock.storage.category.capacity.user
+access_stock_storage_category_capacity_group_stock_manager,stock.storage.category.capacity,stock.group_stock_manager,rwcd,,stock.storage.category.capacity.manager
+access_stock_inventory_conflict_group_stock_manager,stock.inventory.conflict,stock.group_stock_manager,rwc,,stock.inventory.conflict
+access_stock_inventory_warning_group_stock_manager,stock.inventory.warning,stock.group_stock_manager,rwc,,stock.inventory.warning
+access_stock_inventory_adjustment_name_group_stock_manager,stock.inventory.adjustment.name,stock.group_stock_manager,rwc,,stock.inventory.adjustment.name.manager
+access_stock_inventory_adjustment_name_group_stock_user,stock.inventory.adjustment.name,stock.group_stock_user,rwc,,stock.inventory.adjustment.name.user
+access_stock_request_count_group_stock_manager,stock.request.count,stock.group_stock_manager,rwc,,stock.request.count
+access_stock_replenishment_info_group_stock_manager,stock.replenishment.info,stock.group_stock_manager,rwc,,stock.replenishment.info
+access_picking_label_type_group_stock_user,picking.label.type,stock.group_stock_user,rwc,,picking.label.type.user
+access_lot_label_layout_group_stock_user,lot.label.layout,stock.group_stock_user,rwc,,lot.label.layout.user
+access_stock_replenishment_option_group_stock_user,stock.replenishment.option,stock.group_stock_user,rwc,,stock.replenishment.option
+access_stock_quant_relocate_group_stock_manager,stock.quant.relocate,stock.group_stock_manager,rwc,,access.stock.quant.relocate

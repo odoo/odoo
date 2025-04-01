@@ -1,0 +1,21 @@
+id,model_id,group_id/id,operation,domain,name
+access_im_livechat_channel_group_public,im_livechat.channel,base.group_public,r,,im_livechat.channel
+access_im_livechat_channel_group_portal,im_livechat.channel,base.group_portal,r,,im_livechat.channel
+access_im_livechat_channel_group_user,im_livechat.channel,base.group_user,r,,im_livechat.channel
+access_im_livechat_channel_im_livechat_group_user,im_livechat.channel,im_livechat.im_livechat_group_user,r,,im_livechat.channel.user
+access_im_livechat_channel_im_livechat_group_manager,im_livechat.channel,im_livechat.im_livechat_group_manager,rwcd,,im_livechat.channel.manager
+access_im_livechat_report_channel_im_livechat_group_manager,im_livechat.report.channel,im_livechat.im_livechat_group_manager,r,,im_livechat.report.channel
+access_im_livechat_report_operator_im_livechat_group_manager,im_livechat.report.operator,im_livechat.im_livechat_group_manager,r,,im_livechat.report.operator
+access_im_livechat_channel_rule_group_public,im_livechat.channel.rule,base.group_public,r,,im_livechat.channel.rule
+access_im_livechat_channel_rule_group_portal,im_livechat.channel.rule,base.group_portal,r,,im_livechat.channel.rule
+access_im_livechat_channel_rule_group_user,im_livechat.channel.rule,base.group_user,r,,im_livechat.channel.rule
+access_im_livechat_channel_rule_im_livechat_group_user,im_livechat.channel.rule,im_livechat.im_livechat_group_user,rwc,,im_livechat.channel.rule
+access_im_livechat_channel_rule_im_livechat_group_manager,im_livechat.channel.rule,im_livechat.im_livechat_group_manager,rwcd,,im_livechat.channel.rule
+access_im_livechat_expertise_group_user,im_livechat.expertise,base.group_user,r,,im_livechat.expertise.internal.user
+access_im_livechat_expertise_im_livechat_group_manager,im_livechat.expertise,im_livechat.im_livechat_group_manager,rwcd,,im_livechat.expertise.manager
+access_chatbot_script_im_livechat_group_manager,chatbot.script,im_livechat.im_livechat_group_manager,rwcd,,chatbot.script.user
+access_chatbot_script_step_im_livechat_group_manager,chatbot.script.step,im_livechat.im_livechat_group_manager,rwcd,,chatbot.script.step.user
+access_chatbot_script_answer_im_livechat_group_manager,chatbot.script.answer,im_livechat.im_livechat_group_manager,rwcd,,chatbot.script.answer.user
+access_chatbot_message_im_livechat_group_manager,chatbot.message,im_livechat.im_livechat_group_manager,rwcd,,chatbot.script.user
+access_discuss_channel_im_livechat_group_user,discuss.channel,im_livechat.im_livechat_group_user,r,"[('channel_type', '=', 'livechat')]",discuss.channel: livechat users can read all livechat channels
+access_discuss_channel_member_im_livechat_group_user,discuss.channel.member,im_livechat.im_livechat_group_user,rc,"[('channel_id.channel_type', '=', 'livechat')]",discuss.channel.member: livechat users can read all livechat channel members and can invite anyone

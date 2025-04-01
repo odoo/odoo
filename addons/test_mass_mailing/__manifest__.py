@@ -16,7 +16,7 @@ test_mail. """,
         'test_mail_sms',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

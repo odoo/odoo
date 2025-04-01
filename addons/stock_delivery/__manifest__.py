@@ -13,7 +13,6 @@ When creating invoices from picking, the system is able to add and compute the s
 """,
     'depends': ['sale_stock', 'delivery'],
     'data': [
-        'security/ir.model.access.csv',
         'views/product_template_view.xml',
         'views/delivery_view.xml',
         'views/delivery_portal_template.xml',
@@ -27,6 +26,7 @@ When creating invoices from picking, the system is able to add and compute the s
         'views/stock_rule_views.xml',
         'views/stock_move_line_views.xml',
         'report/product_templates.xml',
+        'security/ir.access.csv',
     ],
     'demo': ['data/delivery_demo.xml'],
     'installable': True,

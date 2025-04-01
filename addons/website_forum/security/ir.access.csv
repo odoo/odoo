@@ -1,0 +1,30 @@
+id,model_id,group_id/id,operation,domain,name
+access_forum_forum_group_public,forum.forum,base.group_public,r,"[('privacy', '=', 'public')]",Website forum: Public user can only access to public forum
+access_forum_forum_group_portal,forum.forum,base.group_portal,r,"[
+            '|',
+                ('privacy', 'in', ['public', 'connected']),
+                '&',
+                    ('privacy', '=', 'private'),
+                    ('authorized_group_id', 'in', user.all_group_ids.ids)]",Website forum: User can only access to public (or authorized) forum
+access_forum_forum_group_user,forum.forum,base.group_user,r,"[
+            '|',
+                ('privacy', 'in', ['public', 'connected']),
+                '&',
+                    ('privacy', '=', 'private'),
+                    ('authorized_group_id', 'in', user.all_group_ids.ids)]",Website forum: User can only access to public (or authorized) forum
+access_forum_forum_group_erp_manager,forum.forum,base.group_erp_manager,rwcd,,Website forum: All access for manager
+access_forum_forum_group_website_designer,forum.forum,website.group_website_designer,c,,Website forum: Website designer can create private forum
+access_forum_post_group_public,forum.post,base.group_public,r,"[('forum_id.privacy', '=', 'public')]",Website forum post: Public user can only access to public post
+access_forum_post_group_portal,forum.post,base.group_portal,rwcd,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]",Website forum post: User can only access to public (or authorized) post
+access_forum_post_group_user,forum.post,base.group_user,rwcd,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]",Website forum post: User can only access to public (or authorized) post
+access_forum_post_group_erp_manager,forum.post,base.group_erp_manager,rwcd,,Website forum post : All access for manager
+access_forum_post_vote_group_public,forum.post.vote,base.group_public,r,,forum.post.vote.public
+access_forum_post_vote_group_portal,forum.post.vote,base.group_portal,rwc,,orum.post.vote.portal
+access_forum_post_vote_group_user,forum.post.vote,base.group_user,rwcd,,forum.post.vote.user
+access_forum_post_reason_group_public,forum.post.reason,base.group_public,r,,forum.post.reason.public
+access_forum_post_reason_group_portal,forum.post.reason,base.group_portal,r,,forum.post.reason.portal
+access_forum_post_reason_group_user,forum.post.reason,base.group_user,rwcd,,forum.post.reason.user
+access_forum_tag_group_public,forum.tag,base.group_public,rc,"[('forum_id.privacy', '=', 'public')]",Website forum tag: Public user can only access to tag linked to public forum
+access_forum_tag_group_portal,forum.tag,base.group_portal,rc,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]",Website forum tag: User can only access to tag linked to public (or authorized) forum
+access_forum_tag_group_user,forum.tag,base.group_user,rwcd,"['|', ('forum_id.privacy', 'in', ['public', 'connected']), '&', ('forum_id.privacy', '=', 'private'), ('forum_id.authorized_group_id', 'in', user.all_group_ids.ids)]",Website forum tag: User can only access to tag linked to public (or authorized) forum
+access_forum_tag_group_erp_manager,forum.tag,base.group_erp_manager,rwcd,,Website forum tag : Manager user can access to all tags

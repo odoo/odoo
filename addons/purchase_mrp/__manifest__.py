@@ -18,7 +18,7 @@ from purchase order.
         'views/purchase_order_views.xml',
         'views/mrp_production_views.xml',
         'views/stock_orderpoint_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/purchase_mrp_demo.xml',

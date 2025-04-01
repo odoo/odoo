@@ -21,7 +21,6 @@
     ],
     'data': [
         'security/project_security.xml',
-        'security/ir.model.access.csv',
         'security/ir.model.access.xml',
         'data/digest_data.xml',
         'report/project_task_burndown_chart_report_views.xml',
@@ -55,6 +54,7 @@
         'wizard/project_task_type_delete_views.xml',
         'wizard/project_project_stage_delete_views.xml',
         'views/project_menus.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/mail_template_demo.xml',

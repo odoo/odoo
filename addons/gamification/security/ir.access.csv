@@ -1,0 +1,40 @@
+id,model_id,group_id/id,operation,domain,name
+access_gamification_goal_group_user,gamification.goal,base.group_user,rw,"[
+                '|',
+                    ('user_id','=',user.id),
+                    '&',
+                        ('challenge_id.user_ids','in',user.id),
+                        ('challenge_id.visibility_mode','=','ranking')]",User can only see his/her goals or goal from the same challenge in board visibility
+access_gamification_goal_group_erp_manager_cd,gamification.goal,base.group_erp_manager,cd,,Goal Manager
+access_gamification_goal_group_erp_manager_rw,gamification.goal,base.group_erp_manager,rw,,Manager can see any goal
+access_gamification_goal_group_portal,gamification.goal,base.group_portal,rw,"[
+                '|',
+                    ('user_id','=',user.id),
+                    '&',
+                        ('challenge_id.user_ids','in',user.id),
+                        ('challenge_id.visibility_mode','=','ranking')]",User can only see his/her goals or goal from the same challenge in board visibility
+access_gamification_goal_global,gamification.goal,,rwcd,"[('user_id.company_id', 'in', company_ids)]",Multicompany rule on challenges
+access_gamification_goal_definition_group_user,gamification.goal.definition,base.group_user,r,,Goal Definition Employee
+access_gamification_goal_definition_group_erp_manager,gamification.goal.definition,base.group_erp_manager,rwcd,,Goal Definition Manager
+access_gamification_goal_definition_group_portal,gamification.goal.definition,base.group_portal,r,,Goal Definition Portal
+access_gamification_challenge_group_user,gamification.challenge,base.group_user,r,,Goal Challenge Employee
+access_gamification_challenge_group_erp_manager,gamification.challenge,base.group_erp_manager,rwcd,,Goal Challenge Manager
+access_gamification_challenge_group_portal,gamification.challenge,base.group_portal,r,,Goal Challenge Portal
+access_gamification_challenge_line_group_user,gamification.challenge.line,base.group_user,r,,Challenge Line Employee
+access_gamification_challenge_line_group_erp_manager,gamification.challenge.line,base.group_erp_manager,rwcd,,Challenge Line Manager
+access_gamification_challenge_line_group_portal,gamification.challenge.line,base.group_portal,r,,Challenge Line Portal
+access_gamification_badge_group_user,gamification.badge,base.group_user,r,,Badge Employee
+access_gamification_badge_group_erp_manager,gamification.badge,base.group_erp_manager,rwcd,,Badge Manager
+access_gamification_badge_group_portal,gamification.badge,base.group_portal,r,,Badge Portal
+access_gamification_badge_group_public,gamification.badge,base.group_public,r,,Badge Public
+access_gamification_badge_user_group_user,gamification.badge.user,base.group_user,rwc,,Badge-user Employee
+access_gamification_badge_user_group_erp_manager,gamification.badge.user,base.group_erp_manager,rwcd,,Badge-user Manager
+access_gamification_badge_user_group_portal,gamification.badge.user,base.group_portal,rwc,,Badge-user Portal
+access_gamification_badge_user_group_public,gamification.badge.user,base.group_public,r,,Badge-user Public
+access_gamification_karma_rank_group_public,gamification.karma.rank,base.group_public,r,,gamification.karma.rank.access.all
+access_gamification_karma_rank_group_portal,gamification.karma.rank,base.group_portal,r,,gamification.karma.rank.access.all
+access_gamification_karma_rank_group_user,gamification.karma.rank,base.group_user,r,,gamification.karma.rank.access.all
+access_gamification_karma_rank_group_system,gamification.karma.rank,base.group_system,rwcd,,gamification.karma.rank.access.user.manager
+access_gamification_karma_tracking_group_system,gamification.karma.tracking,base.group_system,rwcd,,gamification.karma.tracking.access.user.manager
+access_gamification_goal_wizard_group_user,gamification.goal.wizard,base.group_user,rwc,,access.gamification.goal.wizard
+access_gamification_badge_user_wizard_group_user,gamification.badge.user.wizard,base.group_user,rwc,,access.gamification.badge.user.wizard

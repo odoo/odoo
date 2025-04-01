@@ -27,11 +27,10 @@ this event.
         'data/event_sale_data.xml',
         'data/mail_templates.xml',
         'report/event_sale_report_views.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'security/event_security.xml',
         'wizard/event_edit_registration.xml',
         'wizard/event_configurator_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/event_sale_demo.xml',

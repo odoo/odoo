@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data noupdate="1">
         <record model="ir.module.category" id="base.module_category_services_timesheets">
-            <field name="description" />
+            <field name="description"/>
             <field name="sequence">13</field>
         </record>
 
@@ -46,85 +45,9 @@
             <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         </record>
 
-        <record id="timesheet_line_rule_user" model="ir.rule">
-            <field name="name">account.analytic.line.timesheet.user</field>
-            <field name="model_id" ref="analytic.model_account_analytic_line"/>
-            <field name="domain_force">[
-                ('user_id', '=', user.id),
-                ('project_id', '!=', False),
-                '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('message_partner_ids', 'in', [user.partner_id.id])
-            ]</field>
-            <field name="groups" eval="[(4, ref('group_hr_timesheet_user'))]"/>
-        </record>
-
-        <record id="timesheet_line_rule_approver" model="ir.rule">
-            <field name="name">account.analytic.line.timesheet.approver</field>
-            <field name="model_id" ref="analytic.model_account_analytic_line" />
-            <field name="domain_force">[
-                ('project_id', '!=', False),
-                '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
-            ]</field>
-            <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]" />
-        </record>
-
-        <record id="timesheet_line_rule_manager" model="ir.rule">
-            <field name="name">account.analytic.line.timesheet.manager</field>
-            <field name="model_id" ref="analytic.model_account_analytic_line"/>
-            <field name="domain_force">[('project_id', '!=', False)]</field>
-            <field name="groups" eval="[(4, ref('group_timesheet_manager')), (4, ref('project.group_project_manager'))]"/>
-        </record>
-
         <record id="project.group_project_manager" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]"/>
         </record>
 
-        <record model="ir.rule" id="timesheets_analysis_report_comp_rule">
-            <field name="name">Timesheets Analysis Report multi-company</field>
-            <field name="model_id" ref="model_timesheets_analysis_report"/>
-            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
-        </record>
-
-        <record id="timesheet_analysis_report_department_manager" model="ir.rule">
-            <field name="name">Timesheets Analysis Report user</field>
-            <field name="model_id" ref="model_timesheets_analysis_report"/>
-            <field name="domain_force">[
-                ('has_department_manager_access', '=', True),
-            ]</field>
-            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        </record>
-
-        <record id="timesheet_analysis_report_user" model="ir.rule">
-            <field name="name">Timesheets Analysis Report user</field>
-            <field name="model_id" ref="model_timesheets_analysis_report"/>
-            <field name="domain_force">[
-                ('user_id', '=', user.id),
-                '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('message_partner_ids', 'in', [user.partner_id.id])
-            ]</field>
-            <field name="groups" eval="[(4, ref('group_hr_timesheet_user'))]"/>
-        </record>
-
-        <record id="timesheet_analysis_report_approver" model="ir.rule">
-            <field name="name">Timesheets Analysis Report approver</field>
-            <field name="model_id" ref="model_timesheets_analysis_report"/>
-            <field name="domain_force">[
-                '|',
-                    ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
-            ]</field>
-            <field name="groups" eval="[(4, ref('group_hr_timesheet_approver'))]"/>
-        </record>
-
-        <record id="timesheet_analysis_report_manager" model="ir.rule">
-            <field name="name">Timesheets Analysis Report manager</field>
-            <field name="model_id" ref="model_timesheets_analysis_report"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_timesheet_manager')), (4, ref('project.group_project_manager'))]"/>
-        </record>
-    </data>
+        </data>
 </odoo>

@@ -14,9 +14,7 @@ This module contains all the common features of Sales Management and eCommerce.
         'utm',
     ],
     'data': [
-        'security/ir.model.access.csv',
         'security/res_groups.xml',
-        'security/ir_rules.xml',
 
         'report/account_invoice_report_views.xml',
         'report/ir_actions_report_templates.xml',
@@ -55,7 +53,8 @@ This module contains all the common features of Sales Management and eCommerce.
         'views/sale_portal_templates.xml',
         'views/utm_campaign_views.xml',
 
-        'views/sale_menus.xml',  # Last because referencing actions defined in previous files
+        'views/sale_menus.xml',  # Last because referencing actions defined in previous files,
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/product_demo.xml',

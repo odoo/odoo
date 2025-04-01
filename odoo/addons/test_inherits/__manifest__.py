@@ -8,8 +8,8 @@
     'website': 'http://www.camptocamp.com',
     'depends': ['base'],
     'data': [
-        'ir.model.access.csv',
         'demo_data.xml',
+        'ir.access.csv',
     ],
     'installable': True,
     'license': 'LGPL-3',

@@ -1,0 +1,34 @@
+id,model_id,group_id/id,operation,domain,name
+access_event_type_group_event_registration_desk,event.type,event.group_event_registration_desk,r,,event.type.registration
+access_event_type_group_event_manager,event.type,event.group_event_manager,rwcd,,event.type.manager
+access_event_type_ticket_group_event_registration_desk,event.type.ticket,event.group_event_registration_desk,r,,event.type.ticket.registration
+access_event_type_ticket_group_event_manager,event.type.ticket,event.group_event_manager,rwcd,,event.type.ticket.manager
+access_event_event_group_event_registration_desk,event.event,event.group_event_registration_desk,r,,event.event.registration
+access_event_event_group_event_user,event.event,event.group_event_user,rwc,,event.event.user
+access_event_event_group_event_manager,event.event,event.group_event_manager,rwcd,,event.event.manager
+access_event_event_global,event.event,,rwcd,"[('company_id', 'in', company_ids + [False])]",Event: multi-company
+access_event_event_ticket_group_event_registration_desk,event.event.ticket,event.group_event_registration_desk,r,,event.event.ticket.registration
+access_event_event_ticket_group_event_user,event.event.ticket,event.group_event_user,rwcd,,event.event.ticket.user
+access_event_event_ticket_global,event.event.ticket,,rwcd,"[('event_id.company_id', 'in', company_ids + [False])]",Event/Ticket: multi-company
+access_event_registration_group_event_registration_desk,event.registration,event.group_event_registration_desk,rwc,,event.registration.registration
+access_event_registration_group_event_manager,event.registration,event.group_event_manager,rwcd,,event.registration.manager
+access_event_registration_global,event.registration,,rwcd,"[('company_id', 'in', company_ids + [False])]",Event/Registration: multi-company
+access_event_mail_group_event_registration_desk,event.mail,event.group_event_registration_desk,r,,event.mail.registration
+access_event_mail_group_event_user,event.mail,event.group_event_user,rwcd,,event.mail.user
+access_event_mail_registration_group_event_registration_desk,event.mail.registration,event.group_event_registration_desk,r,,event.mail.registration.registration
+access_event_mail_registration_group_event_manager,event.mail.registration,event.group_event_manager,rwcd,,event.mail.registration.manager
+access_event_type_mail_group_event_registration_desk,event.type.mail,event.group_event_registration_desk,r,,event.type.mail.registration
+access_event_type_mail_group_event_manager,event.type.mail,event.group_event_manager,rwcd,,event.type.mail.manager
+access_event_stage_group_event_registration_desk,event.stage,event.group_event_registration_desk,r,,event.stage.registration
+access_event_stage_group_event_manager,event.stage,event.group_event_manager,rwcd,,event.stage.manager
+access_event_tag_category_group_event_registration_desk,event.tag.category,event.group_event_registration_desk,r,,event.tag.category.registration
+access_event_tag_category_group_event_user,event.tag.category,event.group_event_user,rwcd,,event.tag.category.user
+access_event_tag_group_event_registration_desk,event.tag,event.group_event_registration_desk,r,,event.tag.user
+access_event_tag_group_event_user,event.tag,event.group_event_user,rwc,,event.tag.user
+access_event_tag_group_event_manager,event.tag,event.group_event_manager,rwcd,,event.tag.manager
+access_event_question_group_event_manager,event.question,event.group_event_manager,rwcd,,event.question
+access_event_question_group_event_user,event.question,event.group_event_user,rwcd,,event.question.user
+access_event_question_answer_group_event_user_rwcd,event.question.answer,event.group_event_user,rwcd,,event.question.answer
+access_event_question_answer_group_event_user_rwcd1,event.question.answer,event.group_event_user,rwcd,,event.question.answer.user
+access_event_question_answer_group_event_registration_desk,event.question.answer,event.group_event_registration_desk,rw,,event.question.answer.registration
+access_event_registration_answer_group_event_registration_desk,event.registration.answer,event.group_event_registration_desk,rwcd,,event.registration.answer

@@ -9,8 +9,6 @@
     'description': "Create leads from event registrations.",
     'depends': ['event', 'crm'],
     'data': [
-        'security/event_crm_security.xml',
-        'security/ir.model.access.csv',
         'data/crm_lead_merge_template.xml',
         'data/ir_action_data.xml',
         'data/ir_cron_data.xml',
@@ -18,6 +16,7 @@
         'views/event_registration_views.xml',
         'views/event_lead_rule_views.xml',
         'views/event_event_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/event_crm_demo.xml',

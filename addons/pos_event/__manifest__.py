@@ -7,12 +7,12 @@
     'summary': 'Link module between Point of Sale and Event',
     'depends': ['point_of_sale', 'event_product'],
     'data': [
-        'security/ir.model.access.csv',
         'data/point_of_sale_data.xml',
         'data/event_product_data.xml',
         'views/event_registration_views.xml',
         'views/event_event_views.xml',
         'views/pos_order_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/event_product_demo.xml',

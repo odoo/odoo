@@ -1,0 +1,5 @@
+id,model_id,group_id/id,operation,domain,name
+access_iap_account_group_system,iap.account,base.group_system,rwcd,"['|', ('company_ids', '=', False), ('company_ids', 'in', company_ids)]",User IAP Account
+access_iap_account_group_user,iap.account,base.group_user,rc,"['|', ('company_ids', '=', False), ('company_ids', 'in', company_ids)]",User IAP Account
+access_iap_service_group_system,iap.service,base.group_system,rwcd,,iap.service.manager
+access_iap_service_group_user,iap.service,base.group_user,r,,iap.service.user

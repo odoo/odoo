@@ -12,9 +12,9 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
     'category': 'Website/Website',
     'depends': ['website', 'mass_mailing', 'google_recaptcha'],
     'data': [
-        'security/ir.model.access.csv',
         'data/ir_model_data.xml',
         'views/snippets_templates.xml',
+        'security/ir.access.csv',
     ],
     'auto_install': ['website', 'mass_mailing'],
     'assets': {

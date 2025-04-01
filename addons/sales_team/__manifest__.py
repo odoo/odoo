@@ -13,12 +13,12 @@ Using this application you can manage Sales Teams with CRM and/or Sales
     'depends': ['base', 'mail'],
     'data': [
         'security/sales_team_security.xml',
-        'security/ir.model.access.csv',
         'data/crm_team_data.xml',
         'views/crm_tag_views.xml',
         'views/crm_team_views.xml',
         'views/crm_team_member_views.xml',
         'views/mail_activity_views.xml',
+        'security/ir.access.csv',
         ],
     'demo': [
         'data/crm_team_demo.xml',

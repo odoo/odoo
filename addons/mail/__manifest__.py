@@ -101,8 +101,6 @@ For more specific needs, you may also assign custom-defined actions
         'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
         'data/ir_actions_client.xml',
-        'security/mail_security.xml',
-        'security/ir.model.access.csv',
         'views/discuss_public_templates.xml',
         'views/mail_alias_domain_views.xml',
         'views/mail_alias_views.xml',
@@ -123,6 +121,7 @@ For more specific needs, you may also assign custom-defined actions
         "data/mail_canned_response_data.xml",
         'data/mail_templates_invite.xml',
         'data/web_tour_tour.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/discuss_channel_demo.xml',

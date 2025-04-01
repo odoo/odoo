@@ -30,7 +30,6 @@ Main Features
     ],
     'data': [
         'security/fleet_security.xml',
-        'security/ir.model.access.csv',
         'views/fleet_vehicle_model_views.xml',
         'views/fleet_vehicle_views.xml',
         'views/fleet_vehicle_cost_views.xml',
@@ -42,7 +41,8 @@ Main Features
         'data/fleet_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_activity_type_data.xml',
-        'wizard/fleet_vehicle_send_mail_views.xml'
+        'wizard/fleet_vehicle_send_mail_views.xml',
+        'security/ir.access.csv',
     ],
 
     'demo': ['data/fleet_demo.xml'],

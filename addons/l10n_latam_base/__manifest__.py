@@ -54,7 +54,7 @@ This module is compatible with base_vat module in order to be able to validate V
         'views/res_partner_view.xml',
         'views/l10n_latam_identification_type_view.xml',
         'views/portal_address_templates.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_frontend': [

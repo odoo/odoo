@@ -19,7 +19,6 @@ Help your customers with this chat, and analyse their feedback.
         """,
     'data': [
         "security/im_livechat_channel_security.xml",
-        "security/ir.model.access.csv",
         "data/mail_templates.xml",
         "data/im_livechat_channel_data.xml",
         "data/im_livechat_chatbot_data.xml",
@@ -37,7 +36,8 @@ Help your customers with this chat, and analyse their feedback.
         "views/digest_views.xml",
         "views/webclient_templates.xml",
         "report/im_livechat_report_channel_views.xml",
-        "report/im_livechat_report_operator_views.xml"
+        "report/im_livechat_report_operator_views.xml",
+        'security/ir.access.csv',
     ],
     'demo': [
         "demo/im_livechat_channel/im_livechat_channel.xml",

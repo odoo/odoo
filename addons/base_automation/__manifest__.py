@@ -17,10 +17,10 @@ trigger an automatic reminder email.
     """,
     'depends': ['base', 'digest', 'resource', 'mail', 'sms'],
     'data': [
-        'security/ir.model.access.csv',
         'data/base_automation_data.xml',
         'data/digest_data.xml',
         'views/base_automation_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
         <record model="ir.module.category" id="base.module_category_marketing_events">
@@ -31,21 +30,5 @@
 
     <data noupdate="1">
         <!-- Multi - Company Rules -->
-        <record model="ir.rule" id="event_event_company_rule">
-            <field name="name">Event: multi-company</field>
-            <field name="model_id" ref="model_event_event"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        </record>
-        <record model="ir.rule" id="event_registration_company_rule">
-            <field name="name">Event/Registration: multi-company</field>
-            <field name="model_id" ref="model_event_registration"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        </record>
-        <record id="ir_rule_event_event_ticket_company" model="ir.rule">
-            <field name="name">Event/Ticket: multi-company</field>
-            <field name="model_id" ref="model_event_event_ticket"/>
-            <field name="domain_force">[('event_id.company_id', 'in', company_ids + [False])]</field>
-        </record>
-
-    </data>
+        </data>
 </odoo>

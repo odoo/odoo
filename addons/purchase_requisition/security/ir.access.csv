@@ -1,0 +1,10 @@
+id,model_id,group_id/id,operation,domain,name
+access_purchase_requisition_group_purchase_user,purchase.requisition,purchase.group_purchase_user,rwcd,,purchase.requisition
+access_purchase_requisition_group_purchase_manager,purchase.requisition,purchase.group_purchase_manager,r,,purchase.requisition manager
+access_purchase_requisition_global,purchase.requisition,,rwcd,"[('company_id', 'in', company_ids)]",Purchase Requisition multi-company
+access_purchase_requisition_line_group_purchase_user,purchase.requisition.line,purchase.group_purchase_user,rwcd,,purchase.requisition.line
+access_purchase_requisition_line_group_purchase_manager,purchase.requisition.line,purchase.group_purchase_manager,r,,purchase.requisition.line manager
+access_purchase_requisition_line_global,purchase.requisition.line,,rwcd,"[('company_id', 'in', company_ids)]",Purchase requisition Line multi-company
+access_purchase_requisition_alternative_warning_group_purchase_user,purchase.requisition.alternative.warning,purchase.group_purchase_user,rwcd,, purchase.requisition.alternative.warning
+access_purchase_requisition_create_alternative_group_purchase_user,purchase.requisition.create.alternative,purchase.group_purchase_user,rwcd,, purchase.requisition.create.alternative
+access_purchase_order_group_group_purchase_user,purchase.order.group,purchase.group_purchase_user,rwcd,, purchase.order.group

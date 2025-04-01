@@ -1,0 +1,239 @@
+id,model_id,group_id/id,operation,domain,name
+access_fetchmail_server_group_system,fetchmail.server,base.group_system,rwcd,,fetchmail.server
+access_mail_message_group_public,mail.message,base.group_public,r,,mail.message.all
+access_mail_message_group_portal,mail.message,base.group_portal,rwcd,,mail.message.portal
+access_mail_message_group_user,mail.message,base.group_user,rwcd,,mail.message.user
+access_mail_message_schedule_group_system,mail.message.schedule,base.group_system,rwcd,,mail.message.scheduled.system
+access_mail_mail_group_system,mail.mail,base.group_system,rwcd,,mail.mail.system
+access_mail_followers_group_user,mail.followers,base.group_user,r,,mail.followers.user
+access_mail_followers_group_system,mail.followers,base.group_system,rwcd,,mail.followers.system
+access_mail_notification_group_portal,mail.notification,base.group_portal,r,,mail.notification.portal
+access_mail_notification_group_user_rc,mail.notification,base.group_user,rc,,mail.notification.user
+access_mail_notification_group_user_w,mail.notification,base.group_user,w,"[('res_partner_id', '=', user.partner_id.id)]",mail.notifications: group_user: write its own entries
+access_mail_notification_group_system_rcd,mail.notification,base.group_system,rcd,, mail.notification.system
+access_mail_notification_group_system_w,mail.notification,base.group_system,w,"[('res_partner_id', '=', user.partner_id.id)]",mail.notifications: group_user: write its own entries
+access_discuss_channel_group_public,discuss.channel,base.group_public,r,"
+                [
+                    ""|"",
+                        ""&"",
+                            (""channel_type"", ""!="", ""channel""),
+                            ""|"",
+                                (""is_member"", ""="", True),
+                                (""parent_channel_id.is_member"", ""="", True),
+                        ""&"",
+                            (""channel_type"", ""="", ""channel""),
+                            ""|"",
+                                (""group_public_id"", ""="", False),
+                                (""group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel: can access channels (as member or as group allowed)
+access_discuss_channel_group_portal,discuss.channel,base.group_portal,r,"
+                [
+                    ""|"",
+                        ""&"",
+                            (""channel_type"", ""!="", ""channel""),
+                            ""|"",
+                                (""is_member"", ""="", True),
+                                (""parent_channel_id.is_member"", ""="", True),
+                        ""&"",
+                            (""channel_type"", ""="", ""channel""),
+                            ""|"",
+                                (""group_public_id"", ""="", False),
+                                (""group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel: can access channels (as member or as group allowed)
+access_discuss_channel_group_user,discuss.channel,base.group_user,rwc,"
+                [
+                    ""|"",
+                        ""&"",
+                            (""channel_type"", ""!="", ""channel""),
+                            ""|"",
+                                (""is_member"", ""="", True),
+                                (""parent_channel_id.is_member"", ""="", True),
+                        ""&"",
+                            (""channel_type"", ""="", ""channel""),
+                            ""|"",
+                                (""group_public_id"", ""="", False),
+                                (""group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel: can access channels (as member or as group allowed)
+access_discuss_channel_group_system,discuss.channel,base.group_system,rwcd,,discuss.channel: admin full access
+access_discuss_channel_member_group_public_wd,discuss.channel.member,base.group_public,wd,"
+                [
+                    ('is_self', '=', True),
+                    ""|"",
+                        (""channel_id.channel_type"", ""!="", ""channel""),
+                        ""|"",
+                            (""channel_id.group_public_id"", ""="", False),
+                            (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel.member: access their own entries
+access_discuss_channel_member_group_public_r,discuss.channel.member,base.group_public,r,"
+                [
+                    ""|"",
+                        ""&"",
+                            (""channel_id.channel_type"", ""!="", ""channel""),
+                            ""|"",
+                                (""channel_id.is_member"", ""="", True),
+                                (""channel_id.parent_channel_id.is_member"", ""="", True),
+                        ""&"",
+                            (""channel_id.channel_type"", ""="", ""channel""),
+                            ""|"",
+                                (""channel_id.group_public_id"", ""="", False),
+                                (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel.member: read members of accessible channels
+access_discuss_channel_member_group_public_c,discuss.channel.member,base.group_public,c,"
+                [
+                    ('is_self', '=', True),
+                    ('channel_id.channel_type', '=', 'channel'),
+                    '|',
+                        ('channel_id.group_public_id', '=', False),
+                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                ]
+            ",discuss.channel.member: can join group restricted channels when group is matching
+access_discuss_channel_member_group_portal_wd,discuss.channel.member,base.group_portal,wd,"
+                [
+                    ('is_self', '=', True),
+                    ""|"",
+                        (""channel_id.channel_type"", ""!="", ""channel""),
+                        ""|"",
+                            (""channel_id.group_public_id"", ""="", False),
+                            (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel.member: access their own entries
+access_discuss_channel_member_group_portal_r,discuss.channel.member,base.group_portal,r,"
+                [
+                    ""|"",
+                        ""&"",
+                            (""channel_id.channel_type"", ""!="", ""channel""),
+                            ""|"",
+                                (""channel_id.is_member"", ""="", True),
+                                (""channel_id.parent_channel_id.is_member"", ""="", True),
+                        ""&"",
+                            (""channel_id.channel_type"", ""="", ""channel""),
+                            ""|"",
+                                (""channel_id.group_public_id"", ""="", False),
+                                (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel.member: read members of accessible channels
+access_discuss_channel_member_group_portal_c,discuss.channel.member,base.group_portal,c,"
+                [
+                    ('is_self', '=', True),
+                    ('channel_id.channel_type', '=', 'channel'),
+                    '|',
+                        ('channel_id.group_public_id', '=', False),
+                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                ]
+            ",discuss.channel.member: can join group restricted channels when group is matching
+access_discuss_channel_member_group_user_wd,discuss.channel.member,base.group_user,wd,"
+                [
+                    ('is_self', '=', True),
+                    ""|"",
+                        (""channel_id.channel_type"", ""!="", ""channel""),
+                        ""|"",
+                            (""channel_id.group_public_id"", ""="", False),
+                            (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel.member: access their own entries
+access_discuss_channel_member_group_user_r,discuss.channel.member,base.group_user,r,"
+                [
+                    ""|"",
+                        ""&"",
+                            (""channel_id.channel_type"", ""!="", ""channel""),
+                            ""|"",
+                                (""channel_id.is_member"", ""="", True),
+                                (""channel_id.parent_channel_id.is_member"", ""="", True),
+                        ""&"",
+                            (""channel_id.channel_type"", ""="", ""channel""),
+                            ""|"",
+                                (""channel_id.group_public_id"", ""="", False),
+                                (""channel_id.group_public_id"", ""in"", user.all_group_ids.ids),
+                ]
+            ",discuss.channel.member: read members of accessible channels
+access_discuss_channel_member_group_user_c,discuss.channel.member,base.group_user,c,"
+                [
+                    ('is_self', '=', True),
+                    ('channel_id.channel_type', '=', 'channel'),
+                    '|',
+                        ('channel_id.group_public_id', '=', False),
+                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                ]
+            ",discuss.channel.member: can join group restricted channels when group is matching
+access_discuss_channel_member_group_user_c1,discuss.channel.member,base.group_user,c,"
+                [
+                    ('is_self', '=', False),
+                    ('channel_id.channel_type', '=', 'channel'),
+                    '|',
+                        ('channel_id.group_public_id', '=', False),
+                        ('channel_id.group_public_id', 'in', user.all_group_ids.ids)
+                ]
+            ",discuss.channel.member: internal users can invite others in group restricted channels when group is matching
+access_discuss_channel_member_group_user_c2,discuss.channel.member,base.group_user,c,"
+                [
+                    ('is_self', '=', False),
+                    ('channel_id.channel_type', 'not in', ('channel', 'chat')),
+                    ('channel_id.is_member', '=', True)
+                ]
+            ",discuss.channel.member: internal users can invite others in channels they are member of
+access_discuss_channel_member_group_system,discuss.channel.member,base.group_system,rwcd,,discuss.channel.member: admin can manipulate all entries
+access_discuss_channel_rtc_session_group_system,discuss.channel.rtc.session,base.group_system,rwcd,,discuss.channel.rtc.session.system
+access_res_role_group_user,res.role,base.group_user,r,,res.role.user
+access_res_role_group_erp_manager,res.role,base.group_erp_manager,rwcd,,res.role.admin
+access_mail_alias_group_user,mail.alias,base.group_user,r,,mail.alias.user
+access_mail_alias_group_system,mail.alias,base.group_system,rwcd,,mail.alias.system
+access_mail_alias_domain_group_user,mail.alias.domain,base.group_user,r,,mail.alias.domain.user
+access_mail_alias_domain_group_erp_manager,mail.alias.domain,base.group_erp_manager,rwcd,,mail.alias.domain.system
+access_mail_gateway_allowed_group_system,mail.gateway.allowed,base.group_system,rwcd,,mail.gateway.allowed.system
+access_mail_message_reaction_group_system,mail.message.reaction,base.group_system,rwcd,,mail.message.reaction.system
+access_mail_message_subtype_group_public,mail.message.subtype,base.group_public,r,"[('internal', '=', False)]",mail.message.subtype: portal/public: read public subtypes
+access_mail_message_subtype_group_portal,mail.message.subtype,base.group_portal,r,"[('internal', '=', False)]",mail.message.subtype: portal/public: read public subtypes
+access_mail_message_subtype_group_user,mail.message.subtype,base.group_user,r,,mail.message.subtype.user
+access_mail_message_subtype_group_system,mail.message.subtype,base.group_system,rwcd,,mail.message.subtype.system
+access_mail_presence_group_system,mail.presence,base.group_system,rwcd,,mail.presence
+access_mail_tracking_value_group_system,mail.tracking.value,base.group_system,rwcd,,mail.tracking.value.system
+access_publisher_warranty_contract_group_system,publisher_warranty.contract,base.group_system,rwcd,,publisher.warranty.contract.all
+access_mail_template_group_user_r,mail.template,base.group_user,r,,mail.template
+access_mail_template_group_user_wcd,mail.template,base.group_user,wcd,"['|', ('create_uid', '=', user.id), ('user_id', '=', user.id)]",Employees can only modify templates they have created or been assigned
+access_mail_template_group_mail_template_editor_r,mail.template,mail.group_mail_template_editor,r,,mail.template_editor
+access_mail_template_group_mail_template_editor_wcd,mail.template,mail.group_mail_template_editor,wcd,,Mail Template Editors - Edit All Templates
+access_mail_template_group_system_r,mail.template,base.group_system,r,,mail.template_system
+access_mail_template_group_system_wcd,mail.template,base.group_system,wcd,,Mail Template Editors - Edit All Templates
+access_mail_canned_response_group_user_c,mail.canned.response,base.group_user,c,,mail.canned.response
+access_mail_canned_response_group_user_r,mail.canned.response,base.group_user,r,"['|', ('create_uid', '=', user.id), ('group_ids', 'in', user.all_group_ids.ids)]",Canned response: User read: own or in groups
+access_mail_canned_response_group_user_wd,mail.canned.response,base.group_user,wd,"[('create_uid', '=', user.id)]",Canned response: User write/unlink: own only
+access_mail_canned_response_group_mail_canned_response_admin,mail.canned.response,mail.group_mail_canned_response_admin,rwcd,,Canned response: admin can do all
+access_mail_activity_group_user_rc,mail.activity,base.group_user,rc,,mail.activity.user
+access_mail_activity_group_user_wd,mail.activity,base.group_user,wd,"['|', ('user_id', '=', user.id), ('create_uid', '=', user.id)]",mail.activity: user: write/unlink only (created or assigned)
+access_mail_activity_plan_group_user,mail.activity.plan,base.group_user,r,,mail.activity.plan.user
+access_mail_activity_plan_group_system,mail.activity.plan,base.group_system,rwcd,,Administrators can access all activity plans.
+access_mail_activity_plan_template_group_user,mail.activity.plan.template,base.group_user,r,,mail.activity.plan.template.user
+access_mail_activity_plan_template_group_system,mail.activity.plan.template,base.group_system,rwcd,,Administrators can access all activity plan templates.
+access_mail_activity_schedule_group_user,mail.activity.schedule,base.group_user,rwc,,mail.activity.schedule.user
+access_mail_activity_type_group_user,mail.activity.type,base.group_user,r,,mail.activity.type.user
+access_mail_activity_type_group_system,mail.activity.type,base.group_system,rwcd,,mail.activity.type.system
+access_mail_blacklist_group_system,mail.blacklist,base.group_system,rwcd,,access_mail_blacklist_system
+access_mail_followers_edit_group_user,mail.followers.edit,base.group_user,rwc,,access.mail.followers.edit
+access_mail_compose_message_group_user,mail.compose.message,base.group_user,rwc,,access.mail.compose.message
+access_mail_compose_message_global,mail.compose.message,,rw,"[('create_uid', '=', user.id)]",Mail Compose Message Rule
+access_mail_resend_message_group_user,mail.resend.message,base.group_user,rwc,,access.mail.resend.message
+access_mail_resend_partner_group_user,mail.resend.partner,base.group_user,rwc,,access.mail.resend.partner
+access_mail_template_preview_group_user,mail.template.preview,base.group_user,rwc,,access.mail.template.preview
+access_mail_blacklist_remove_group_system,mail.blacklist.remove,base.group_system,rwcd,,acesss.mail.blacklist.remove.system
+access_mail_guest_group_user,mail.guest,base.group_user,r,,mail.guest
+access_mail_guest_group_system,mail.guest,base.group_system,rwcd,,mail.guest
+access_mail_ice_server_group_system,mail.ice.server,base.group_system,rwcd,,mail.ice.server.system
+access_res_users_settings_volumes_group_user,res.users.settings.volumes,base.group_user,rwcd,"[('user_setting_id.user_id', '=', user.id)]",res.users.settings.volumes: access their own entries
+access_res_users_settings_volumes_group_system,res.users.settings.volumes,base.group_system,rwcd,,Administrators can access all User Settings volumes.
+access_mail_template_reset_group_mail_template_editor,mail.template.reset,mail.group_mail_template_editor,rwcd,,access.mail.template.reset
+access_ir_actions_report_group_user,ir.actions.report,base.group_user,r,,ir.actions.report.access.user
+access_mail_link_preview_group_erp_manager,mail.link.preview,base.group_erp_manager,rwcd,,mail.link.preview.admin
+access_mail_message_link_preview_group_erp_manager,mail.message.link.preview,base.group_erp_manager,rwcd,,mail.link.preview.erp_manager
+access_discuss_gif_favorite_group_user,discuss.gif.favorite,base.group_user,rwcd,"[('create_uid', '=', user.id)]",Discuss.gif.favorite: User access
+access_discuss_gif_favorite_group_erp_manager,discuss.gif.favorite,base.group_erp_manager,rwcd,,Discuss.gif.favorite: admin full access
+access_discuss_voice_metadata_group_system,discuss.voice.metadata,base.group_system,rwcd,,discuss.voice.metadata.user
+access_mail_push_group_system,mail.push,base.group_system,rwcd,,access.mail.push.system
+access_mail_push_device_group_system,mail.push.device,base.group_system,rwcd,,access.mail.push.device.system
+access_mail_message_translation_group_system,mail.message.translation,base.group_system,rwcd,,mail.message.translation
+access_mail_scheduled_message_group_user,mail.scheduled.message,base.group_user,rwcd,,access.mail.scheduled.message
+access_mail_scheduled_message_global,mail.scheduled.message,,wc,"[('create_uid', '=', user.id)]",

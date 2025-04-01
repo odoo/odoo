@@ -1,0 +1,31 @@
+id,model_id,group_id/id,operation,domain,name
+access_fleet_vehicle_model_fleet_group_user,fleet.vehicle.model,fleet.fleet_group_user,r,,fleet_vehicle_model_access_right
+access_fleet_vehicle_model_fleet_group_manager,fleet.vehicle.model,fleet.fleet_group_manager,rwcd,,fleet_vehicle_model_access_right
+access_fleet_vehicle_tag_fleet_group_user,fleet.vehicle.tag,fleet.fleet_group_user,r,,fleet_vehicle_tag_access_right
+access_fleet_vehicle_tag_fleet_group_manager,fleet.vehicle.tag,fleet.fleet_group_manager,rwcd,,fleet_vehicle_tag_access_right
+access_fleet_vehicle_state_fleet_group_user,fleet.vehicle.state,fleet.fleet_group_user,r,,fleet_vehicle_state_access_right
+access_fleet_vehicle_state_fleet_group_manager,fleet.vehicle.state,fleet.fleet_group_manager,rwcd,,fleet_vehicle_state_access_right
+access_fleet_vehicle_model_brand_fleet_group_user,fleet.vehicle.model.brand,fleet.fleet_group_user,r,,fleet_vehicle_model_brand_access_right
+access_fleet_vehicle_model_brand_fleet_group_manager,fleet.vehicle.model.brand,fleet.fleet_group_manager,rwcd,,fleet_vehicle_model_brand_access_right
+access_fleet_vehicle_model_category_fleet_group_user,fleet.vehicle.model.category,fleet.fleet_group_user,r,,fleet_vehicle_model_category_access_right
+access_fleet_vehicle_model_category_fleet_group_manager,fleet.vehicle.model.category,fleet.fleet_group_manager,rwcd,,fleet_vehicle_model_brand_category_right
+access_fleet_vehicle_fleet_group_user,fleet.vehicle,fleet.fleet_group_user,rwcd,,fleet_vehicle_access_right
+access_fleet_vehicle_fleet_group_manager,fleet.vehicle,fleet.fleet_group_manager,rwcd,,Administrator has all rights on vehicle
+access_fleet_vehicle_global,fleet.vehicle,,rwcd,"[('company_id', 'in', company_ids + [False])]",Fleet vehicle: Multi Company
+access_fleet_vehicle_log_services_fleet_group_user,fleet.vehicle.log.services,fleet.fleet_group_user,r,,fleet_vehicle_log_services_access_right
+access_fleet_vehicle_log_services_fleet_group_manager,fleet.vehicle.log.services,fleet.fleet_group_manager,rwcd,,Administrator has all rights on vehicle's services
+access_fleet_vehicle_log_services_global,fleet.vehicle.log.services,,rwcd,"[('company_id', 'in', company_ids + [False])]",Fleet log services: Multi Company
+access_fleet_vehicle_log_contract_fleet_group_user,fleet.vehicle.log.contract,fleet.fleet_group_user,rwcd,,fleet_vehicle_log_contract_access_right
+access_fleet_vehicle_log_contract_fleet_group_manager,fleet.vehicle.log.contract,fleet.fleet_group_manager,rwcd,,Administrator has all rights on vehicle's contracts
+access_fleet_vehicle_log_contract_global,fleet.vehicle.log.contract,,rwcd,"[('company_id', 'in', company_ids + [False])]",Fleet vehicle log contract: Multi Company
+access_fleet_service_type_fleet_group_user,fleet.service.type,fleet.fleet_group_user,r,,fleet_service_type_access_right
+access_fleet_service_type_fleet_group_manager,fleet.service.type,fleet.fleet_group_manager,rwcd,,fleet_service_type_access_right
+access_fleet_vehicle_odometer_fleet_group_user,fleet.vehicle.odometer,fleet.fleet_group_user,rwcd,,fleet_vehicle_odometer_access_right
+access_fleet_vehicle_odometer_fleet_group_manager,fleet.vehicle.odometer,fleet.fleet_group_manager,rwcd,,Administrator has all rights on vehicle's vehicle's odometer
+access_fleet_vehicle_odometer_global,fleet.vehicle.odometer,,rwcd,"[('vehicle_id.company_id', 'in', company_ids + [False])]",Fleet odometer: Multi Company
+access_mail_activity_type_fleet_group_manager,mail.activity.type,fleet.fleet_group_manager,rwcd,,mail.activity.type.fleet.manager
+access_fleet_vehicle_assignation_log_fleet_group_user,fleet.vehicle.assignation.log,fleet.fleet_group_user,rwcd,,fleet_vehicle_assignation_log fleet_group_user
+access_fleet_vehicle_cost_report_fleet_group_manager,fleet.vehicle.cost.report,fleet.fleet_group_manager,r,,fleet_vehicle_cost_report_access_right
+access_fleet_vehicle_cost_report_global,fleet.vehicle.cost.report,,rwcd,"[('company_id', 'in', company_ids + [False])]",Costs Analysis: Multi Company
+access_fleet_vehicle_send_mail_fleet_group_manager,fleet.vehicle.send.mail,fleet.fleet_group_manager,rwc,,access.fleet.vehicle.send.mail
+access_fleet_vehicle_odometer_report_fleet_group_manager,fleet.vehicle.odometer.report,fleet.fleet_group_manager,rwcd,,fleet_vehicle_odometer_report_access_right

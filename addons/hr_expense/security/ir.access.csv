@@ -1,0 +1,61 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_expense_group_user_rwcd,hr.expense,base.group_user,rwcd,"[
+                '|', '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
+                     '&', ('employee_id.user_id', '=', user.id), ('state', '=', 'draft')
+            ]",Employee Expense
+access_hr_expense_group_user_r,hr.expense,base.group_user,r,"[
+                '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'draft'),
+                     '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['submitted', 'approved', 'refused'])
+            ]",Employees can't modify an expense that is not in draft state
+access_hr_expense_group_hr_expense_team_approver_rwcd,hr.expense,hr_expense.group_hr_expense_team_approver,rwcd,"['|', '|', '|', '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+                ('employee_id', 'child_of', user.employee_ids.ids),
+                ('employee_id.expense_manager_id', '=', user.id),
+                ('manager_id', '=', user.id)]",Team Approver Expense
+access_hr_expense_group_hr_expense_team_approver_rwcd1,hr.expense,hr_expense.group_hr_expense_team_approver,rwcd,"[
+                '|', '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
+                     '&', ('employee_id.user_id', '=', user.id), ('state', '=', 'draft')
+            ]",Employee Expense
+access_hr_expense_group_hr_expense_team_approver_r,hr.expense,hr_expense.group_hr_expense_team_approver,r,"[
+                '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'draft'),
+                     '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['submitted', 'approved', 'refused'])
+            ]",Employees can't modify an expense that is not in draft state
+access_hr_expense_group_hr_expense_manager,hr.expense,hr_expense.group_hr_expense_manager,rwcd,,Manager Expense
+access_hr_expense_group_account_invoice_rwc,hr.expense,account.group_account_invoice,rwc,"[
+                '|', '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['draft', 'submitted', 'approved', 'refused']),
+                     '&', ('employee_id.user_id', '=', user.id), ('state', '=', 'draft')
+            ]",Employee Expense
+access_hr_expense_group_account_invoice_r,hr.expense,account.group_account_invoice,r,"[
+                '|', '&', ('employee_id.user_id', '=', user.id), ('state', '!=', 'draft'),
+                     '&', ('employee_id.expense_manager_id', '=', user.id), ('state', 'in', ['submitted', 'approved', 'refused'])
+            ]",Employees can't modify an expense that is not in draft state
+access_hr_expense_group_account_user,hr.expense,account.group_account_user,rwcd,,Manager Expense
+access_hr_expense_group_hr_expense_user,hr.expense,hr_expense.group_hr_expense_user,rwcd,,Manager Expense
+access_hr_expense_global,hr.expense,,rwcd,"[('company_id', 'in', company_ids)]",Expense multi company rule
+access_product_product_group_hr_expense_manager,product.product,hr_expense.group_hr_expense_manager,rwcd,,product.product.hr.expense.user
+access_product_template_group_hr_expense_manager,product.template,hr_expense.group_hr_expense_manager,rwcd,,product.template.hr.expense.user
+access_uom_uom_group_hr_expense_team_approver,uom.uom,hr_expense.group_hr_expense_team_approver,rwcd,,uom.uom.hr.expense.user
+access_account_journal_group_hr_expense_team_approver,account.journal,hr_expense.group_hr_expense_team_approver,r,,account.journal.user
+access_account_move_group_hr_expense_team_approver,account.move,hr_expense.group_hr_expense_team_approver,r,"[('line_ids.expense_id', '!=', False)]",Expense Team Approver Account Move
+access_account_move_line_group_hr_expense_team_approver,account.move.line,hr_expense.group_hr_expense_team_approver,r,"[('expense_id', '!=', False)]",Expense Team Approver Account Move Line
+access_account_analytic_line_group_hr_expense_team_approver,account.analytic.line,hr_expense.group_hr_expense_team_approver,rwcd,,account.analytic.line.user
+access_mail_activity_type_group_hr_expense_manager,mail.activity.type,hr_expense.group_hr_expense_manager,rwcd,,mail.activity.type.expense.user
+access_hr_expense_refuse_wizard_group_hr_expense_team_approver,hr.expense.refuse.wizard,hr_expense.group_hr_expense_team_approver,rwc,,access.hr.expense.refuse.wizard
+access_hr_expense_approve_duplicate_group_hr_expense_team_approver,hr.expense.approve.duplicate,hr_expense.group_hr_expense_team_approver,rwc,,access.hr.expense.approve.duplicate
+access_hr_expense_split_wizard_group_user,hr.expense.split.wizard,base.group_user,rwc,"[
+                ('expense_id.state', '=', 'draft'),
+                '|', ('expense_id.employee_id.user_id', '=', user.id), ('expense_id.manager_id', '=', user.id),
+            ]",Employee Expense Split
+access_hr_expense_split_wizard_group_hr_expense_team_approver,hr.expense.split.wizard,hr_expense.group_hr_expense_team_approver,rwc,"[
+                ('expense_id.state', 'in', ['draft', 'submitted']),
+                ('expense_id.manager_id', 'in', [user.id, False])
+            ]",Approver Expense Split
+access_hr_expense_split_wizard_group_hr_expense_user,hr.expense.split.wizard,hr_expense.group_hr_expense_user,rwc,"[
+                ('expense_id.state', 'in', ['draft', 'submitted']),
+                '|', ('expense_id.employee_id.user_id', '!=', user.id), ('expense_id.manager_id', 'in', [user.id, False])
+            ]",All approver Expense Split
+access_hr_expense_split_wizard_group_hr_expense_manager,hr.expense.split.wizard,hr_expense.group_hr_expense_manager,rwc,"[('expense_id.state', 'in', ['draft', 'submitted'])]",Manager Expense Split
+access_hr_expense_split_wizard_group_account_invoice,hr.expense.split.wizard,account.group_account_invoice,rwc,"[('expense_id.state', 'in', ('draft', 'submitted', 'approved'))]",Accountant Expense Split
+access_hr_expense_split_group_user,hr.expense.split,base.group_user,rwcd,,access.hr.expense.split.manager
+access_hr_expense_post_wizard_group_account_invoice,hr.expense.post.wizard,account.group_account_invoice,rwcd,,access.hr.expense.post.wizard

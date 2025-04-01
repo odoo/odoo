@@ -76,7 +76,6 @@ Master Data:
     ],
     'auto_install': ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'data/l10n_latam_identification_type_data.xml',
         'data/l10n_ar_afip_responsibility_type_data.xml',
         'data/account_chart_template_data2.xml',
@@ -101,6 +100,7 @@ Master Data:
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
         'report/invoice_report_view.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/exento_demo.xml',

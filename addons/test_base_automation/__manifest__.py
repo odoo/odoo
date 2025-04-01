@@ -12,7 +12,7 @@ present in a separate module as it contains models used only to perform
 tests independently to functional aspects of other models.""",
     'depends': ['base_automation'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_tests': [

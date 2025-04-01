@@ -1,0 +1,149 @@
+id,model_id,group_id/id,operation,domain,name
+access_decimal_precision_group_system,decimal.precision,base.group_system,rw,,decimal.precision configuration
+access_ir_access_group_erp_manager,ir.access,base.group_erp_manager,rwcd,,ir_access_group_erp_manager
+access_ir_attachment_group_user,ir.attachment,base.group_user,rwcd,,ir_attachment group_user
+access_ir_cron_group_system,ir.cron,base.group_system,rwcd,,ir_cron group_cron
+access_ir_cron_progress_group_system,ir.cron.progress,base.group_system,rwcd,,ir_cron_progress group_cron
+access_ir_cron_trigger_group_system,ir.cron.trigger,base.group_system,rwcd,,ir_cron_trigger group_cron
+access_ir_exports_group_allow_export,ir.exports,base.group_allow_export,rwcd,,ir_exports group_system
+access_ir_exports_line_group_user,ir.exports.line,base.group_user,rwcd,,ir_exports_line group_system
+access_ir_model_group_erp_manager,ir.model,base.group_erp_manager,rwcd,,ir_model group_erp_manager
+access_ir_model_constraint_group_erp_manager,ir.model.constraint,base.group_erp_manager,rwd,,ir_model_constraint group_erp_manager
+access_ir_model_relation_group_erp_manager,ir.model.relation,base.group_erp_manager,rwcd,,ir_model_relation group_erp_manager
+access_ir_model_data_group_erp_manager,ir.model.data,base.group_erp_manager,rwcd,,ir_model_data group_erp_manager
+access_ir_model_fields_group_erp_manager,ir.model.fields,base.group_erp_manager,rwcd,,ir_model_fields group_erp_manager
+access_ir_model_fields_selection_group_erp_manager,ir.model.fields.selection,base.group_erp_manager,rwcd,,ir_model_fields_selection group_erp_manager
+access_ir_module_category_group_erp_manager,ir.module.category,base.group_erp_manager,r,,ir_module_category group_user
+access_ir_module_module_group_system,ir.module.module,base.group_system,rwcd,,ir_module_module group_user
+access_ir_module_module_dependency_group_system,ir.module.module.dependency,base.group_system,rwcd,,ir_module_module_dependency group_system
+access_ir_module_module_exclusion_group_system,ir.module.module.exclusion,base.group_system,rwcd,,ir_module_module_exclusion group_system
+access_ir_sequence_group_user,ir.sequence,base.group_user,r,,ir_sequence group_user
+access_ir_sequence_group_system,ir.sequence,base.group_system,rwcd,,ir_sequence group_system
+access_ir_sequence_date_range_group_user,ir.sequence.date_range,base.group_user,r,,ir_sequence_date_range group_user
+access_ir_sequence_date_range_group_system,ir.sequence.date_range,base.group_system,rwcd,,ir_sequence_date_range group_system
+access_ir_ui_menu_group_user,ir.ui.menu,base.group_user,r,,ir_ui_menu group_user
+access_ir_ui_menu_group_system,ir.ui.menu,base.group_system,rwcd,,ir_ui_menu group_system
+access_ir_ui_view_group_system,ir.ui.view,base.group_system,rwcd,,ir_ui_view group_system
+access_reset_view_arch_wizard_group_system,reset.view.arch.wizard,base.group_system,rwc,,reset_view_arch_wizard group_system
+access_reset_view_arch_wizard_group_erp_manager,reset.view.arch.wizard,base.group_erp_manager,rwc,,access.reset.view.arch.wizard
+access_ir_ui_view_custom_group_system,ir.ui.view.custom,base.group_system,rwcd,,ir_ui_view_custom_group_user
+access_ir_ui_view_custom_global,ir.ui.view.custom,,rwcd,"[('user_id','=',user.id)]",ir.ui.view_custom rule
+access_ir_default_group_user_r,ir.default,base.group_user,r,,ir_default group_user
+access_ir_default_group_user_wcd,ir.default,base.group_user,wcd,"[('user_id','=',user.id)]",Defaults: alter personal defaults
+access_ir_default_group_system_r,ir.default,base.group_system,r,,ir_default group_system
+access_ir_default_group_system_wcd,ir.default,base.group_system,wcd,,Defaults: alter all defaults
+access_res_company_group_erp_manager,res.company,base.group_erp_manager,rwcd,,company rule erp manager
+access_res_company_group_public,res.company,base.group_public,r,"[('id','in', company_ids)]",company rule public
+access_res_company_group_portal,res.company,base.group_portal,r,"[('id','in', company_ids)]",company rule portal
+access_res_company_group_user,res.company,base.group_user,r,"[('id','in', company_ids)]",company rule employee
+access_res_country_group_public,res.country,base.group_public,r,,res_country group_user_all
+access_res_country_group_portal,res.country,base.group_portal,r,,res_country group_user_all
+access_res_country_group_user,res.country,base.group_user,r,,res_country group_user_all
+access_res_country_group_partner_manager,res.country,base.group_partner_manager,r,,res_country group_user
+access_res_country_group_system,res.country,base.group_system,rwcd,,res_country_group_system
+access_res_country_state_group_public,res.country.state,base.group_public,r,,res_country_state group_user_all
+access_res_country_state_group_portal,res.country.state,base.group_portal,r,,res_country_state group_user_all
+access_res_country_state_group_user,res.country.state,base.group_user,r,,res_country_state group_user_all
+access_res_country_state_group_partner_manager,res.country.state,base.group_partner_manager,rwcd,,res_country_state group_user
+access_res_country_group_group_public,res.country.group,base.group_public,r,,res_country_group group_user_all
+access_res_country_group_group_portal,res.country.group,base.group_portal,r,,res_country_group group_user_all
+access_res_country_group_group_user,res.country.group,base.group_user,r,,res_country_group group_user_all
+access_res_country_group_group_partner_manager,res.country.group,base.group_partner_manager,rwcd,,res_country_group group_user
+access_res_currency_group_public,res.currency,base.group_public,r,,res_currency group_all
+access_res_currency_group_portal,res.currency,base.group_portal,r,,res_currency group_all
+access_res_currency_group_user,res.currency,base.group_user,r,,res_currency group_all
+access_res_currency_group_system,res.currency,base.group_system,rwcd,,res_currency group_system
+access_res_currency_rate_group_public,res.currency.rate,base.group_public,r,,res_currency_rate group_all
+access_res_currency_rate_group_portal,res.currency.rate,base.group_portal,r,,res_currency_rate group_all
+access_res_currency_rate_group_user,res.currency.rate,base.group_user,r,,res_currency_rate group_all
+access_res_currency_rate_group_system,res.currency.rate,base.group_system,rwcd,,res_currency_rate group_system
+access_res_currency_rate_global,res.currency.rate,,rwcd,"['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]",multi-company currency rate rule
+access_res_groups_group_erp_manager,res.groups,base.group_erp_manager,rwcd,,res_groups group_erp_manager
+access_res_groups_group_user,res.groups,base.group_user,r,,res_groups group_user
+access_res_lang_group_public,res.lang,base.group_public,r,,res_lang group_all
+access_res_lang_group_portal,res.lang,base.group_portal,r,,res_lang group_all
+access_res_lang_group_user,res.lang,base.group_user,r,,res_lang group_all
+access_res_lang_group_system,res.lang,base.group_system,rwcd,,res_lang group_user
+access_res_partner_group_public,res.partner,base.group_public,r,"[('id', 'child_of', user.commercial_partner_id.id)]",res_partner: portal/public: read access on my commercial partner
+access_res_partner_group_portal,res.partner,base.group_portal,r,"[('id', 'child_of', user.commercial_partner_id.id)]",res_partner: portal/public: read access on my commercial partner
+access_res_partner_group_partner_manager,res.partner,base.group_partner_manager,rwcd,,res_partner group_partner_manager
+access_res_partner_group_user,res.partner,base.group_user,r,,res_partner group_user
+access_res_partner_global,res.partner,,rwcd,"['|', '|', ('partner_share', '=', False), ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]",res.partner company
+access_res_partner_bank_group_user,res.partner.bank,base.group_user,r,,res_partner_bank group_user
+access_res_partner_bank_group_partner_manager,res.partner.bank,base.group_partner_manager,rwcd,,res_partner_bank group_partner_manager
+access_res_partner_bank_global,res.partner.bank,,rwcd,"[('company_id', 'in', company_ids + [False])]",Partner bank company rule
+access_res_partner_category_group_user,res.partner.category,base.group_user,r,,res_partner_category group_user
+access_res_partner_category_group_partner_manager,res.partner.category,base.group_partner_manager,rwcd,,res_partner_category group_partner_manager
+access_res_partner_industry_group_user,res.partner.industry,base.group_user,r,,res_partner_industry group_user
+access_res_partner_industry_group_system,res.partner.industry,base.group_system,rwcd,,res_partner_industry group_system
+access_res_users_group_public,res.users,base.group_public,r,,res_users all
+access_res_users_group_portal,res.users,base.group_portal,r,"[('commercial_partner_id', '=', user.commercial_partner_id.id)]",portal user access
+access_res_users_group_user,res.users,base.group_user,r,,res_users all
+access_res_users_group_erp_manager,res.users,base.group_erp_manager,rwcd,,res_users group_erp_manager
+access_res_users_global,res.users,,rwcd,"['|', ('share', '=', False), ('company_ids', 'in', company_ids)]",user rule
+access_res_users_deletion_group_erp_manager,res.users.deletion,base.group_erp_manager,rwcd,,res_users_deletion group_erp_manager
+access_res_users_log_group_system,res.users.log,base.group_system,rc,,res_users_log_all
+access_res_users_log_global,res.users.log,,wcd,"[('create_uid','=', user.id)]",res.users.log per user
+access_res_users_identitycheck_group_user,res.users.identitycheck,base.group_user,rwc,,id check employees
+access_res_users_identitycheck_group_portal,res.users.identitycheck,base.group_portal,rwc,,id check portal
+access_res_users_identitycheck_global,res.users.identitycheck,,rwcd,"[('create_uid', '=', user.id)]",users can only access their own id check
+access_res_users_apikeys_group_user,res.users.apikeys,base.group_user,r,"[('user_id', '=', user.id)]",Users can read and delete their own keys
+access_res_users_apikeys_group_portal,res.users.apikeys,base.group_portal,r,"[('user_id', '=', user.id)]",Users can read and delete their own keys
+access_res_users_apikeys_group_system,res.users.apikeys,base.group_system,r,,Administrators can view user keys to revoke them
+access_res_users_apikeys_description_group_user,res.users.apikeys.description,base.group_user,rc,,API key wizard employees
+access_res_users_apikeys_description_group_portal,res.users.apikeys.description,base.group_portal,rc,,API key wizard
+access_res_users_apikeys_show_group_user,res.users.apikeys.show,base.group_user,rc,,API key result employees
+access_res_users_settings_group_user,res.users.settings,base.group_user,rwcd,"[('user_id', '=', user.id)]",res.users.settings: access their own entries
+access_res_users_settings_group_system,res.users.settings,base.group_system,rwcd,,Administrators can access all User Settings.
+access_ir_asset_group_system,ir.asset,base.group_system,rwcd,,ir_asset_group_system
+access_ir_actions_actions_group_system,ir.actions.actions,base.group_system,rwcd,,ir_actions_group_system
+access_ir_actions_act_window_group_system,ir.actions.act_window,base.group_system,rwcd,,ir_actions_act_window_system
+access_ir_actions_act_window_close_group_system,ir.actions.act_window_close,base.group_system,rwcd,,ir_actions_act_window_close_group_system
+access_ir_actions_report_group_system,ir.actions.report,base.group_system,rwcd,,ir_actions_report_group_system
+access_ir_actions_todo_group_system,ir.actions.todo,base.group_system,rwcd,,ir_actions_todo group system
+access_ir_actions_act_window_view_group_system,ir.actions.act_window.view,base.group_system,rwcd,,ir_actions_act_window_view_group_system
+access_ir_actions_act_url_group_system,ir.actions.act_url,base.group_system,rwcd,,ir_actions_act_url_group_system
+access_ir_actions_server_group_system,ir.actions.server,base.group_system,rwcd,,ir_actions_server_group_system
+access_ir_embedded_actions_group_user_rc,ir.embedded.actions,base.group_user,rc,,ir_embedded_actions_group_user
+access_ir_embedded_actions_group_user_wd,ir.embedded.actions,base.group_user,wd,"[('user_id', 'in', [user.id, False])]",Users can modify or delete embedded actions that they have created or that are shared
+access_ir_embedded_actions_group_system,ir.embedded.actions,base.group_system,wd,,Admins have all the rights on embedded actions
+access_ir_actions_client_group_system,ir.actions.client,base.group_system,rwcd,,ir_actions_client all
+access_res_bank_group_system,res.bank,base.group_system,rwcd,,res_bank_group_system
+access_res_bank_group_partner_manager,res.bank,base.group_partner_manager,rwcd,,res_bank_group_partner_manager
+access_res_bank_group_user,res.bank,base.group_user,r,,res_bank user
+access_ir_filters_group_erp_manager,ir.filters,base.group_erp_manager,rwcd,,ir.filters.admin.all.rights
+access_ir_filters_group_user_rwc,ir.filters,base.group_user,rwc,"[('user_id','in',[False,user.id])]",ir.filters.owner
+access_ir_filters_group_user_d,ir.filters,base.group_user,d,"[('user_id', '=', user.id)]",ir.filters.own.rule.delete
+access_ir_filters_group_portal,ir.filters,base.group_portal,rwcd,"[('user_id', '=', user.id)]",ir.filter: portal/public
+access_ir_filters_group_public,ir.filters,base.group_public,rwcd,"[('user_id', '=', user.id)]",ir.filter: portal/public
+access_ir_config_parameter_group_system,ir.config_parameter,base.group_system,rwcd,,ir_config_parameter_system
+access_ir_mail_server_group_system,ir.mail_server,base.group_system,rwcd,,ir_mail_server
+access_ir_logging_group_erp_manager,ir.logging,base.group_erp_manager,rwcd,,ir_logging admin
+access_report_paperformat_group_user,report.paperformat,base.group_user,r,,ir_actions_report_paperformat group_portal
+access_report_paperformat_group_system,report.paperformat,base.group_system,rwcd,,ir_actions_report_paperformat group_system
+access_report_layout_group_user,report.layout,base.group_user,rwcd,,access_report_layout
+access_wizard_ir_model_menu_create_group_system,wizard.ir.model.menu.create,base.group_system,rwc,,access.wizard.ir.model.menu.create
+access_ir_demo_group_system,ir.demo,base.group_system,rwc,,access.ir.demo
+access_ir_demo_failure_group_system,ir.demo_failure,base.group_system,rwc,,access.ir.demo_failure
+access_ir_demo_failure_wizard_group_system,ir.demo_failure.wizard,base.group_system,rwc,,access.ir.demo_failure.wizard
+access_res_config_group_system,res.config,base.group_system,rwc,,access.res.config
+access_res_config_settings_group_system,res.config.settings,base.group_system,rwc,,access.res.config.settings
+access_change_password_wizard_group_erp_manager,change.password.wizard,base.group_erp_manager,rwc,,access.change.password.wizard
+access_change_password_user_group_erp_manager,change.password.user,base.group_erp_manager,rwc,,access.change.password.user
+access_change_password_user_global,change.password.user,,rwcd,"[('create_uid', '=', user.id)]",change user password rule
+access_change_password_own_group_user,change.password.own,base.group_user,rwcd,,access.change.password.own
+access_change_password_own_global,change.password.own,,rwcd,"[('create_uid', '=', user.id)]",change own password
+access_base_module_update_group_system,base.module.update,base.group_system,rwc,,access.base.module.update
+access_base_language_install_group_system,base.language.install,base.group_system,rwc,,access.base.language.install
+access_base_language_import_group_system,base.language.import,base.group_system,rwc,,access.base.language.import
+access_base_module_upgrade_group_system,base.module.upgrade,base.group_system,rwc,,access.base.module.upgrade
+access_base_module_uninstall_group_system,base.module.uninstall,base.group_system,rwc,,access.base.module.uninstall
+access_base_language_export_group_user,base.language.export,base.group_user,rwc,,access.base.language.export
+access_base_partner_merge_line_group_partner_manager,base.partner.merge.line,base.group_partner_manager,rwcd,,access.base.partner.merge.line
+access_base_partner_merge_automatic_wizard_group_partner_manager,base.partner.merge.automatic.wizard,base.group_partner_manager,rwc,,access.base.partner.merge.automatic.wizard
+access_ir_profile_group_system,ir.profile,base.group_system,rwcd,,ir_profile
+access_base_enable_profiling_wizard_group_system,base.enable.profiling.wizard,base.group_system,rwc,,access.base.enable.profiling.wizard
+access_res_device_group_user,res.device,base.group_user,r,"[('user_id', '=', user.id)]",Users can read only their own devices
+access_res_device_group_system,res.device,base.group_system,r,,Administrators can read all devices
+access_res_device_log_group_user,res.device.log,base.group_user,r,"[('user_id', '=', user.id)]",Users can read only their own device logs
+access_res_device_log_group_system,res.device.log,base.group_system,r,,Administrators can read all device logs

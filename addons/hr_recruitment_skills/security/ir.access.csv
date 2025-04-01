@@ -1,0 +1,7 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_applicant_skill_group_hr_recruitment_interviewer,hr.applicant.skill,hr_recruitment.group_hr_recruitment_interviewer,rwcd,"[
+            '|',
+                ('applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ('applicant_id.interviewer_ids', 'in', user.id),
+        ]",Applicant Skill: Interviewer
+access_hr_applicant_skill_group_hr_recruitment_user,hr.applicant.skill,hr_recruitment.group_hr_recruitment_user,rwcd,,Applicant Skill: Officer

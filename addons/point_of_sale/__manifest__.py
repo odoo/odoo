@@ -11,7 +11,6 @@
     'uninstall_hook': 'uninstall_hook',
     'data': [
         'security/point_of_sale_security.xml',
-        'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
         'data/digest_data.xml',
         'data/pos_note_data.xml',
@@ -54,7 +53,8 @@
         'views/res_config_settings_views.xml',
         'views/customer_display_index.xml',
         'views/account_move_views.xml',
-        'views/pos_session_sales_details.xml'
+        'views/pos_session_sales_details.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/demo_data.xml',

@@ -13,7 +13,6 @@
     'category': 'Accounting/Localizations',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/italy.html',
     'data': [
-        'security/ir.model.access.csv',
         'data/invoice_it_template.xml',
         'views/l10n_it_edi_doi_declaration_of_intent_views.xml',
         'views/account_move_views.xml',
@@ -21,6 +20,7 @@
         'views/res_partner_views.xml',
         'views/sale_ir_actions_report_templates.xml',
         'views/sale_order_views.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

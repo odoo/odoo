@@ -10,8 +10,6 @@
     'depends': ['mrp'],
     'data': [
         'data/mrp_subcontracting_data.xml',
-        'security/mrp_subcontracting_security.xml',
-        'security/ir.model.access.csv',
         'views/mrp_bom_views.xml',
         'views/res_partner_views.xml',
         'views/stock_warehouse_views.xml',
@@ -23,6 +21,7 @@
         'views/subcontracting_portal_views.xml',
         'views/subcontracting_portal_templates.xml',
         'views/stock_location_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/mrp_subcontracting_demo.xml',

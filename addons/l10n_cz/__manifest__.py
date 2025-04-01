@@ -33,7 +33,7 @@ Tento modul definuje:
         'views/account_move_views.xml',
         'views/report_template.xml',
         'views/tax_office_view.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

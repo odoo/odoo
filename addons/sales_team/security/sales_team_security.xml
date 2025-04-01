@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <record id="base.module_category_sales_sales" model="ir.module.category">
             <field name="description">Helps you handle your quotations, sale orders and invoicing.</field>
@@ -26,23 +25,8 @@
             <field name="sequence">30</field>
             <field name="comment">the user will have an access to the sales configuration as well as statistic reports.</field>
             <field name="category_id" ref="base.module_category_sales_sales"/>
-            <field name="implied_ids" eval="[(4, ref('group_sale_salesman_all_leads')),
-                         (4, ref('mail.group_mail_canned_response_admin'))]"/>
+            <field name="implied_ids" eval="[(4, ref('group_sale_salesman_all_leads')),                          (4, ref('mail.group_mail_canned_response_admin'))]"/>
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-    <data noupdate="1">
-        <record id="crm_rule_all_salesteam" model="ir.rule">
-            <field name="name">All Salesteam</field>
-            <field ref="sales_team.model_crm_team" name="model_id"/>
-            <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
-        </record>
-
-        <record model="ir.rule" id="sale_team_comp_rule">
-            <field name="name">Sales Team multi-company</field>
-            <field name="model_id" ref="model_crm_team"/>
-            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
-        </record>
-    </data>
-</odoo>
+    </odoo>

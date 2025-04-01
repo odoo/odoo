@@ -16,7 +16,6 @@ of this module is to allow the display of a customer portal without having
 a dependency towards website editing and customization capabilities.""",
     'depends': ['web', 'web_editor', 'http_routing', 'mail', 'auth_signup'],
     'data': [
-        'security/ir.model.access.csv',
         'data/mail_template_data.xml',
         'data/mail_templates.xml',
         'views/address_templates.xml',
@@ -25,6 +24,7 @@ a dependency towards website editing and customization capabilities.""",
         'views/res_config_settings_views.xml',
         'wizard/portal_share_views.xml',
         'wizard/portal_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web._assets_primary_variables': [

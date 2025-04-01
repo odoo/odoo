@@ -47,13 +47,11 @@ Ask questions, get answers, no distractions
         'views/website_profile_templates.xml',
         'views/snippets/snippets.xml',
 
-        'security/ir.model.access.csv',
-        'security/ir_rule_data.xml',
-
         'data/gamification_badge_data_question.xml',
         'data/gamification_badge_data_answer.xml',
         'data/gamification_badge_data_participation.xml',
         'data/gamification_badge_data_moderation.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/forum_tag_demo.xml',

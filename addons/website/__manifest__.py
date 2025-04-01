@@ -27,7 +27,6 @@
     'data': [
         # security.xml first, data.xml need the group to exist (checking it)
         'security/website_security.xml',
-        'security/ir.model.access.csv',
         'data/image_library.xml',
         'data/ir_asset.xml',
         'data/ir_cron_data.xml',
@@ -196,6 +195,7 @@
         'wizard/website_robots.xml',
         # Replaces a post_init_hook that should be run on upgrade too.
         'data/update_theme_images.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/website_demo.xml',

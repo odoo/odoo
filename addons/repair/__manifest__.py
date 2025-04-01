@@ -22,8 +22,6 @@ The following topics are covered by this module:
 """,
     'depends': ['sale_stock', 'sale_management'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/repair_security.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'views/product_views.xml',
         'views/stock_move_views.xml',
@@ -35,6 +33,7 @@ The following topics are covered by this module:
         'report/repair_reports.xml',
         'report/repair_templates_repair_order.xml',
         'data/repair_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': ['data/repair_demo.xml'],
     'post_init_hook': '_create_warehouse_data',

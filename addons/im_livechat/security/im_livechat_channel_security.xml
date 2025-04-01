@@ -1,8 +1,7 @@
-<?xml version="1.0"?>
 <odoo>
         <record id="module_category_im_livechat" model="ir.module.category">
             <field name="name">Live Chat</field>
-            <field name="sequence" eval="20" />
+            <field name="sequence" eval="20"/>
         </record>
 
         <record id="im_livechat_group_user" model="res.groups">
@@ -22,24 +21,4 @@
             <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
-    <data noupdate="1">
-        <record id="ir_rule_discuss_channel_im_livechat_group_user" model="ir.rule">
-            <field name="name">discuss.channel: livechat users can read all livechat channels</field>
-            <field name="model_id" ref="mail.model_discuss_channel"/>
-            <field name="groups" eval="[(4, ref('im_livechat_group_user'))]"/>
-            <field name="domain_force">[('channel_type', '=', 'livechat')]</field>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-
-        <record id="ir_rule_discuss_channel_member_im_livechat_group_user" model="ir.rule">
-            <field name="name">discuss.channel.member: livechat users can read all livechat channel members and can invite anyone</field>
-            <field name="model_id" ref="mail.model_discuss_channel_member"/>
-            <field name="groups" eval="[(4, ref('im_livechat_group_user'))]"/>
-            <field name="domain_force">[('channel_id.channel_type', '=', 'livechat')]</field>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
-        </record>
-    </data>
-</odoo>
+    </odoo>

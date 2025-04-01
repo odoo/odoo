@@ -17,9 +17,8 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'views/website_livechat_view.xml',
         'views/website_visitor_views.xml',
         'views/im_livechat_channel_add.xml',
-        'security/ir.model.access.csv',
-        'security/website_livechat.xml',
         'data/website_livechat_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/website_livechat_chatbot_demo.xml',

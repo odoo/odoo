@@ -17,7 +17,6 @@ You could use this simplified accounting in case you work with an (external) acc
     'depends': ['base_setup', 'onboarding', 'product', 'analytic', 'portal', 'digest'],
     'data': [
         'security/account_security.xml',
-        'security/ir.model.access.csv',
         'data/account_data.xml',
         'data/digest_data.xml',
         'views/account_report.xml',
@@ -87,6 +86,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'views/account_lock_exception_views.xml',
         'views/report_templates.xml',
         'wizard/account_merge_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/account_demo.xml',

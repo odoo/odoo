@@ -1,0 +1,36 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_job_group_hr_recruitment_interviewer,hr.job,hr_recruitment.group_hr_recruitment_interviewer,r,,hr.job.interviewer
+access_hr_job_group_hr_recruitment_user,hr.job,hr_recruitment.group_hr_recruitment_user,rwcd,,User: All Applicants
+access_hr_applicant_group_hr_recruitment_interviewer,hr.applicant,hr_recruitment.group_hr_recruitment_interviewer,rw,"[
+            '|',
+                ('job_id.interviewer_ids', 'in', user.id),
+                ('interviewer_ids', 'in', user.id),
+        ]",Applicant Interviewer
+access_hr_applicant_group_hr_recruitment_user,hr.applicant,hr_recruitment.group_hr_recruitment_user,rwcd,,User: All Applicants
+access_hr_applicant_global,hr.applicant,,rwcd,"[('company_id', 'in', company_ids + [False])]",Applicant multi company rule
+access_hr_talent_pool_group_hr_recruitment_user,hr.talent.pool,hr_recruitment.group_hr_recruitment_user,rwcd,,User: All Talent Pools
+access_hr_recruitment_stage_group_hr_recruitment_interviewer,hr.recruitment.stage,hr_recruitment.group_hr_recruitment_interviewer,r,,hr.recruitment.stage.interviewer
+access_hr_recruitment_stage_group_hr_recruitment_user,hr.recruitment.stage,hr_recruitment.group_hr_recruitment_user,r,,hr.recruitment.stage.user
+access_hr_recruitment_stage_group_hr_recruitment_manager,hr.recruitment.stage,hr_recruitment.group_hr_recruitment_manager,rwcd,,hr.recruitment.stage.manager
+access_hr_recruitment_degree_group_hr_recruitment_user,hr.recruitment.degree,hr_recruitment.group_hr_recruitment_user,rwcd,,hr.recruitment.degree
+access_hr_applicant_refuse_reason_group_hr_recruitment_interviewer,hr.applicant.refuse.reason,hr_recruitment.group_hr_recruitment_interviewer,r,,hr.applicant.refuse.reason.interviewer
+access_hr_applicant_refuse_reason_group_hr_recruitment_user,hr.applicant.refuse.reason,hr_recruitment.group_hr_recruitment_user,rwcd,,hr.applicant.refuse.reason
+access_res_partner_group_hr_recruitment_user,res.partner,hr_recruitment.group_hr_recruitment_user,rwcd,,res.partner.user
+access_calendar_event_group_hr_recruitment_user,calendar.event,hr_recruitment.group_hr_recruitment_user,rwcd,,calendar.event.hruser
+access_hr_recruitment_source_group_hr_recruitment_user,hr.recruitment.source,hr_recruitment.group_hr_recruitment_user,rwcd,,hr.recruitment.source
+access_hr_recruitment_source_group_user,hr.recruitment.source,base.group_user,r,,hr.recruitment.source
+access_hr_applicant_category_group_user,hr.applicant.category,base.group_user,rwc,,hr.applicant_category
+access_hr_applicant_category_group_hr_recruitment_user,hr.applicant.category,hr_recruitment.group_hr_recruitment_user,rwcd,,hr.applicant_category
+access_calendar_event_type_group_hr_recruitment_user,calendar.event.type,hr_recruitment.group_hr_recruitment_user,rwc,,calendar.event.type.officer
+access_applicant_get_refuse_reason_group_hr_recruitment_user,applicant.get.refuse.reason,hr_recruitment.group_hr_recruitment_user,rwc,,access.applicant.get.refuse.reason
+access_applicant_get_refuse_reason_group_hr_recruitment_interviewer,applicant.get.refuse.reason,hr_recruitment.group_hr_recruitment_interviewer,rwc,,access.applicant.get.refuse.reason.interviewer
+access_applicant_send_mail_group_hr_recruitment_user,applicant.send.mail,hr_recruitment.group_hr_recruitment_user,rwc,,access.applicant.send.mail
+access_applicant_send_mail_group_hr_recruitment_interviewer,applicant.send.mail,hr_recruitment.group_hr_recruitment_interviewer,rwc,,access.applicant.send.mail.interviewer
+access_mail_activity_plan_group_hr_recruitment_manager_r,mail.activity.plan,hr_recruitment.group_hr_recruitment_manager,r,,mail.activity.plan.hr.recruitment.manager
+access_mail_activity_plan_group_hr_recruitment_manager_wcd,mail.activity.plan,hr_recruitment.group_hr_recruitment_manager,wcd,"[('res_model', '=', 'hr.applicant')]",Manager can manage applicant plans
+access_mail_activity_plan_template_group_hr_recruitment_manager_r,mail.activity.plan.template,hr_recruitment.group_hr_recruitment_manager,r,,mail.activity.plan.template.hr.recruitment.manager
+access_mail_activity_plan_template_group_hr_recruitment_manager_wcd,mail.activity.plan.template,hr_recruitment.group_hr_recruitment_manager,wcd,"[('plan_id.res_model', '=', 'hr.applicant')]",Manager can manage applicant plan templates
+access_hr_job_platform_group_hr_recruitment_manager,hr.job.platform,hr_recruitment.group_hr_recruitment_manager,rwcd,,access.hr.job.platform
+access_talent_pool_add_applicants_group_hr_recruitment_user,talent.pool.add.applicants,hr_recruitment.group_hr_recruitment_user,rwcd,,access.talent.pool.add.applicants
+access_job_add_applicants_group_hr_recruitment_user,job.add.applicants,hr_recruitment.group_hr_recruitment_user,rwcd,,access.job.add.applicants
+access_mail_message_group_hr_recruitment_user,mail.message,hr_recruitment.group_hr_recruitment_user,rwcd,,User: All Chatter

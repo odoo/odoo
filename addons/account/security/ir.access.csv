@@ -1,0 +1,152 @@
+id,model_id,group_id/id,operation,domain,name
+access_account_cash_rounding_group_account_readonly,account.cash.rounding,account.group_account_readonly,r,,account.cash.rounding
+access_account_cash_rounding_group_account_invoice,account.cash.rounding,account.group_account_invoice,rwcd,,account.cash.rounding
+access_res_partner_group_account_manager,res.partner,account.group_account_manager,r,,res_partner group_account_manager
+access_res_currency_group_account_manager,res.currency,account.group_account_manager,rwcd,,res.currency account manager
+access_res_currency_rate_group_account_manager,res.currency.rate,account.group_account_manager,rwcd,,res.currency.rate account manager
+access_account_invoice_report_group_account_readonly,account.invoice.report,account.group_account_readonly,r,,account.invoice.report_user
+access_account_invoice_report_group_account_invoice,account.invoice.report,account.group_account_invoice,r,,account.invoice.report_billing
+access_account_invoice_report_group_account_manager,account.invoice.report,account.group_account_manager,r,,account.invoice.report
+access_account_invoice_report_global,account.invoice.report,,rwcd,"[('company_id', 'in', company_ids)]",Invoice Analysis multi-company
+access_account_incoterms_group_user,account.incoterms,base.group_user,r,,account.incoterms all
+access_account_incoterms_group_account_manager,account.incoterms,account.group_account_manager,rwcd,,account.incoterms manager
+access_account_secure_entries_wizard_group_account_manager,account.secure.entries.wizard,account.group_account_manager,rwc,,access.account.secure.entries.wizard
+access_account_lock_exception_group_user,account.lock_exception,base.group_user,r,,account.lock_exception
+access_account_lock_exception_group_account_manager,account.lock_exception,account.group_account_manager,rc,,account.lock_exception manager
+access_account_fiscal_position_group_account_manager,account.fiscal.position,account.group_account_manager,rwcd,,account.fiscal.position account.manager
+access_account_fiscal_position_group_user,account.fiscal.position,base.group_user,r,,account.fiscal.position all
+access_account_fiscal_position_global,account.fiscal.position,,rwcd,"[('company_id', 'parent_of', company_ids)]",Account fiscal Mapping company rule
+access_account_fiscal_position_tax_group_account_manager,account.fiscal.position.tax,account.group_account_manager,rwcd,,account.fiscal.position.tax account.manager
+access_account_fiscal_position_tax_group_user,account.fiscal.position.tax,base.group_user,r,,account.fiscal.position.tax all
+access_account_fiscal_position_account_group_account_manager,account.fiscal.position.account,account.group_account_manager,rwcd,,account.fiscal.position account.manager
+access_account_fiscal_position_account_group_user,account.fiscal.position.account,base.group_user,r,,account.fiscal.position all
+access_product_product_group_account_readonly,product.product,account.group_account_readonly,r,,product.product.account.user
+access_product_product_group_account_manager,product.product,account.group_account_manager,rwcd,,product.product.account.manager
+access_product_template_group_account_manager,product.template,account.group_account_manager,rwcd,,product.template.account.manager
+access_account_bank_statement_group_account_readonly,account.bank.statement,account.group_account_readonly,r,,account.bank.statement.group.invoice
+access_account_bank_statement_group_account_invoice,account.bank.statement,account.group_account_invoice,r,,account.bank.statement.group.invoice
+access_account_bank_statement_group_account_basic,account.bank.statement,account.group_account_basic,rwcd,,account.bank.statement
+access_account_bank_statement_global,account.bank.statement,,rwcd,"[('company_id', 'in', company_ids + [False])]",Account bank statement company rule
+access_account_bank_statement_line_group_account_readonly,account.bank.statement.line,account.group_account_readonly,r,,account.bank.statement.line.group.invoice
+access_account_bank_statement_line_group_account_invoice,account.bank.statement.line,account.group_account_invoice,r,,account.bank.statement.line.group.invoice
+access_account_bank_statement_line_group_account_basic,account.bank.statement.line,account.group_account_basic,rwcd,,account.bank.statement.line
+access_account_bank_statement_line_global,account.bank.statement.line,,rwcd,"[('company_id', 'in', company_ids)]",Account bank statement line company rule
+access_account_move_line_group_account_manager,account.move.line,account.group_account_manager,r,,All Journal Items
+access_account_move_line_group_account_readonly,account.move.line,account.group_account_readonly,r,,Readonly Move Line
+access_account_move_line_group_account_invoice,account.move.line,account.group_account_invoice,rwcd,,All Journal Items
+access_account_move_line_group_portal,account.move.line,base.group_portal,r,"[('parent_state', 'not in', ('cancel', 'draft')), ('move_id.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('move_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]",Portal Invoice Lines
+access_account_move_line_global,account.move.line,,rwcd,"[('company_id', 'in', company_ids)]",Entry lines
+access_account_move_group_account_manager,account.move,account.group_account_manager,r,,All Journal Entries
+access_account_move_group_account_readonly,account.move,account.group_account_readonly,r,,Readonly Move
+access_account_move_group_account_invoice,account.move,account.group_account_invoice,rwcd,,All Journal Entries
+access_account_move_group_portal,account.move,base.group_portal,r,"[('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), ('message_partner_ids','child_of',[user.commercial_partner_id.id])]",Portal Personal Account Invoices
+access_account_move_global,account.move,,rwcd,"[('company_id', 'in', company_ids)]",Account Entry
+access_account_analytic_line_group_account_manager,account.analytic.line,account.group_account_manager,r,,account.analytic.line.billing.user
+access_account_analytic_line_group_account_readonly,account.analytic.line,account.group_account_readonly,r,,account.analytic.line.readonly.user
+access_account_analytic_line_group_account_invoice,account.analytic.line,account.group_account_invoice,rwcd,,account.analytic.line.billing.user
+access_account_analytic_account_group_user,account.analytic.account,base.group_user,r,,account.analytic.account
+access_account_analytic_account_group_account_user,account.analytic.account,account.group_account_user,rwcd,,account.analytic.account accountant
+access_account_analytic_plan_group_account_user,account.analytic.plan,account.group_account_user,rwcd,,account.analytic.plan accountant
+access_account_analytic_applicability_group_account_user,account.analytic.applicability,account.group_account_user,rwcd,,account.analytic.applicability accountant
+access_account_analytic_distribution_model_group_account_readonly,account.analytic.distribution.model,account.group_account_readonly,r,,account.analytic.distribution invoice
+access_account_analytic_distribution_model_group_account_invoice,account.analytic.distribution.model,account.group_account_invoice,rwcd,,account.analytic.distribution invoice
+access_account_journal_group_account_readonly,account.journal,account.group_account_readonly,r,,account.journal
+access_account_journal_group_account_manager,account.journal,account.group_account_manager,rwcd,,account.journal
+access_account_journal_group_account_invoice,account.journal,account.group_account_invoice,r,,account.journal invoice
+access_account_journal_global,account.journal,,rwcd,"[('company_id', 'parent_of', company_ids)]",Journal multi-company
+access_account_journal_group_group_account_invoice,account.journal.group,account.group_account_invoice,r,,account.journal.group invoice
+access_account_journal_group_group_account_readonly,account.journal.group,account.group_account_readonly,r,,account.journal.group readonly
+access_account_journal_group_group_account_manager,account.journal.group,account.group_account_manager,rwcd,,account.journal.group manager
+access_account_journal_group_global,account.journal.group,,rwcd,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]",Multi-ledger multi-company
+access_account_group_group_account_basic,account.group,account.group_account_basic,r,,account.group.basic
+access_account_group_group_account_manager,account.group,account.group_account_manager,rwcd,,account.group
+access_account_group_group_account_readonly,account.group,account.group_account_readonly,r,,account.group
+access_account_group_global,account.group,,rwcd,"[('company_id', 'parent_of', company_ids)]",Account Group multi-company
+access_account_root_group_account_manager,account.root,account.group_account_manager,r,,account.root
+access_account_root_group_account_readonly,account.root,account.group_account_readonly,r,,account.root
+access_account_code_mapping_group_account_readonly,account.code.mapping,account.group_account_readonly,r,,account.code.mapping
+access_account_code_mapping_group_account_manager,account.code.mapping,account.group_account_manager,rw,,account.code.mapping
+access_account_account_group_account_manager,account.account,account.group_account_manager,rwcd,,account.account
+access_account_account_group_account_readonly,account.account,account.group_account_readonly,r,,account.account.readonly
+access_account_account_group_user,account.account,base.group_user,r,,account.account user
+access_account_account_group_partner_manager,account.account,base.group_partner_manager,r,,account.account partner manager
+access_account_account_group_account_invoice,account.account,account.group_account_invoice,r,,account.account invoice
+access_account_account_global,account.account,,rwcd,"[('company_ids', 'parent_of', company_ids)]",Account multi-company
+access_account_tax_group_user,account.tax,base.group_user,r,,account.tax internal user
+access_account_tax_group_account_readonly,account.tax,account.group_account_readonly,r,,account.tax
+access_account_tax_group_account_invoice,account.tax,account.group_account_invoice,r,,account.tax
+access_account_tax_group_account_manager,account.tax,account.group_account_manager,rwcd,,account.tax
+access_account_tax_global,account.tax,,rwcd,"[('company_id', 'parent_of', company_ids)]",Tax multi-company
+access_account_account_tag_group_user,account.account.tag,base.group_user,r,,account.account.tag internal user
+access_account_account_tag_group_account_user,account.account.tag,account.group_account_user,rwcd,,account.account.tag
+access_account_account_tag_group_account_readonly,account.account.tag,account.group_account_readonly,r,,account.account.tag
+access_account_account_tag_group_account_invoice,account.account.tag,account.group_account_invoice,r,,account.account.tag
+access_account_tax_repartition_line_group_user,account.tax.repartition.line,base.group_user,r,,account.tax repartition.line.user
+access_account_tax_repartition_line_group_account_readonly,account.tax.repartition.line,account.group_account_readonly,r,,account.tax repartition.line.invoice
+access_account_tax_repartition_line_group_account_invoice,account.tax.repartition.line,account.group_account_invoice,r,,account.tax repartition.line.invoice
+access_account_tax_repartition_line_group_account_manager,account.tax.repartition.line,account.group_account_manager,rwcd,,account.tax repartition.line.manager
+access_account_tax_repartition_line_global,account.tax.repartition.line,,rwcd,"['|',('company_id','=',False), ('company_id', 'parent_of', company_ids)]",Tax Repartition multi-company
+access_account_tax_group_group_user,account.tax.group,base.group_user,r,,account.tax.group internal user
+access_account_tax_group_group_account_readonly,account.tax.group,account.group_account_readonly,r,,account.tax.group
+access_account_tax_group_group_account_invoice,account.tax.group,account.group_account_invoice,r,,account.tax.group
+access_account_tax_group_group_account_manager,account.tax.group,account.group_account_manager,rwcd,,account.tax.group
+access_account_tax_group_global,account.tax.group,,rwcd,"[('company_id', 'parent_of', company_ids)]",Tax group multi-company
+access_account_reconcile_model_group_account_readonly,account.reconcile.model,account.group_account_readonly,r,,account.reconcile.model.readonly
+access_account_reconcile_model_group_account_invoice,account.reconcile.model,account.group_account_invoice,rc,,account.reconcile.model.billing
+access_account_reconcile_model_group_account_user,account.reconcile.model,account.group_account_user,rwcd,,account.reconcile.model
+access_account_reconcile_model_global,account.reconcile.model,,rwcd,"[('company_id', 'parent_of', company_ids)]",Account reconcile model template company rule
+access_account_reconcile_model_line_group_account_readonly,account.reconcile.model.line,account.group_account_readonly,r,,account.reconcile.model.line.readonly
+access_account_reconcile_model_line_group_account_invoice,account.reconcile.model.line,account.group_account_invoice,rc,,account.reconcile.model.line.billing
+access_account_reconcile_model_line_group_account_user,account.reconcile.model.line,account.group_account_user,rwcd,,account.reconcile.model.line
+access_account_reconcile_model_line_global,account.reconcile.model.line,,rwcd,"[('company_id', 'parent_of', company_ids)]",Account reconcile model_line template company rule
+access_account_reconcile_model_partner_mapping_group_account_readonly,account.reconcile.model.partner.mapping,account.group_account_readonly,r,,account.reconcile.model.partner.mapping.readonly
+access_account_reconcile_model_partner_mapping_group_account_invoice,account.reconcile.model.partner.mapping,account.group_account_invoice,rc,,account.reconcile.model.partner.mapping.billing
+access_account_reconcile_model_partner_mapping_group_account_user,account.reconcile.model.partner.mapping,account.group_account_user,rwcd,,account.reconcile.model.partner.mapping
+access_account_partial_reconcile_group_account_readonly,account.partial.reconcile,account.group_account_readonly,r,,account.partial.reconcile.readonly
+access_account_partial_reconcile_group_account_invoice,account.partial.reconcile,account.group_account_invoice,rwcd,,account.partial.reconcile.group.invoice
+access_account_partial_reconcile_group_account_user,account.partial.reconcile,account.group_account_user,rwcd,,account.partial.reconcile
+access_account_full_reconcile_group_account_readonly,account.full.reconcile,account.group_account_readonly,r,,account.full.reconcile.group.invoice
+access_account_full_reconcile_group_account_invoice,account.full.reconcile,account.group_account_invoice,rwcd,,account.full.reconcile.group.invoice
+access_account_full_reconcile_group_account_user,account.full.reconcile,account.group_account_user,rwcd,,account.full.reconcile
+access_account_payment_term_group_user,account.payment.term,base.group_user,r,,account.payment.term partner manager
+access_account_payment_term_group_portal,account.payment.term,base.group_portal,r,,account.payment.term
+access_account_payment_term_group_account_manager,account.payment.term,account.group_account_manager,rwcd,,account.payment.term
+access_account_payment_term_global,account.payment.term,,rwcd,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]",Account payment term company rule
+access_account_payment_term_line_group_user,account.payment.term.line,base.group_user,r,,account.payment.term.line partner manager
+access_account_payment_term_line_group_account_manager,account.payment.term.line,account.group_account_manager,rwcd,,account.payment.term.line
+access_account_payment_method_line_group_user,account.payment.method.line,base.group_user,r,,account.payment.method.line
+access_account_payment_method_line_group_account_invoice,account.payment.method.line,account.group_account_invoice,rwcd,,account.payment.method.line
+access_account_payment_method_group_user,account.payment.method,base.group_user,r,,account.payment.method
+access_account_payment_method_group_account_invoice,account.payment.method,account.group_account_invoice,rwd,,account.payment.method
+access_account_payment_group_account_readonly,account.payment,account.group_account_readonly,r,,account.payment
+access_account_payment_group_account_invoice,account.payment,account.group_account_invoice,rwcd,,account.payment
+access_account_payment_global,account.payment,,rwcd,"[('company_id', 'in', company_ids)]",Account payment company rule
+access_account_payment_register_group_account_invoice,account.payment.register,account.group_account_invoice,rwc,,access.account.payment.register
+access_account_automatic_entry_wizard_group_account_user,account.automatic.entry.wizard,account.group_account_user,rwc,,access.account.automatic.entry.wizard
+access_account_autopost_bills_wizard_group_account_invoice,account.autopost.bills.wizard,account.group_account_invoice,rwc,,access.account.autopost.bills.wizard
+access_account_resequence_wizard_group_account_manager,account.resequence.wizard,account.group_account_manager,rwc,,access.account.resequence.wizard
+access_validate_account_move_group_account_invoice,validate.account.move,account.group_account_invoice,rwc,,access.validate.account.move
+access_account_move_reversal_group_account_invoice,account.move.reversal,account.group_account_invoice,rwc,,access.account.move.reversal
+access_account_financial_year_op_group_account_manager,account.financial.year.op,account.group_account_manager,rwc,,access.account.financial.year.op
+access_account_setup_bank_manual_config_group_account_manager,account.setup.bank.manual.config,account.group_account_manager,rwc,,access.account.setup.bank.manual.config
+access_account_move_send_wizard_group_account_invoice,account.move.send.wizard,account.group_account_invoice,rwcd,,Readonly Invoice Send and Print (single)
+access_account_move_send_batch_wizard_group_account_invoice,account.move.send.batch.wizard,account.group_account_invoice,rwcd,,Readonly Invoice Send and Print (batch)
+access_account_accrued_orders_wizard_group_account_user,account.accrued.orders.wizard,account.group_account_user,rwc,,account.account.accrued.orders.wizard
+access_account_report_group_account_basic,account.report,account.group_account_basic,r,,account.report.basic
+access_account_report_group_account_readonly,account.report,account.group_account_readonly,r,,account.report.readonly
+access_account_report_group_account_manager,account.report,account.group_account_manager,rwcd,,account.report.ac.user
+access_account_report_line_group_account_basic,account.report.line,account.group_account_basic,r,,account.report.line.basic
+access_account_report_line_group_account_readonly,account.report.line,account.group_account_readonly,r,,account.report.line.readonly
+access_account_report_line_group_account_manager,account.report.line,account.group_account_manager,rwcd,,account.report.line.ac.user
+access_account_report_expression_group_account_basic,account.report.expression,account.group_account_basic,r,,account.report.expression.basic
+access_account_report_expression_group_account_readonly,account.report.expression,account.group_account_readonly,r,,account.report.expression.readonly
+access_account_report_expression_group_account_manager,account.report.expression,account.group_account_manager,rwcd,,account.report.expression.ac.user
+access_account_report_column_group_account_basic,account.report.column,account.group_account_basic,r,,account.report.column.basic
+access_account_report_column_group_account_readonly,account.report.column,account.group_account_readonly,r,,account.report.column.readonly
+access_account_report_column_group_account_manager,account.report.column,account.group_account_manager,rwcd,,account.report.column.ac.user
+access_account_report_external_value_group_account_readonly,account.report.external.value,account.group_account_readonly,r,,account.report.external.value.readonly
+access_account_report_external_value_group_account_manager,account.report.external.value,account.group_account_manager,rwcd,,account.report.external.value.ac.user
+access_account_report_external_value_global,account.report.external.value,,rwcd,"[('company_id', 'in', company_ids)]",Report External Value multi-company
+access_account_merge_wizard_group_account_manager,account.merge.wizard,account.group_account_manager,rwcd,,account.merge.wizard
+access_account_merge_wizard_line_group_account_manager,account.merge.wizard.line,account.group_account_manager,rwcd,,account.merge.wizard.line
+access_res_partner_bank_group_account_invoice,res.partner.bank,account.group_account_invoice,r,,Billing: Allow accessing employee bank accounts

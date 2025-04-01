@@ -6,7 +6,7 @@
     'category': 'Hidden/Tests',
     'description': """Tests of field conversions""",
     'depends': ['base'],
-    'data': ['ir.model.access.csv'],
+    'data': ['ir.access.csv'],
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

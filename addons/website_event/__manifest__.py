@@ -37,8 +37,8 @@
         'views/event_menus.xml',
         'views/website_pages_views.xml',
         'views/event_event_add.xml',
-        'security/ir.model.access.csv',
         'security/event_security.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/res_partner_demo.xml',

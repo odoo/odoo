@@ -1,0 +1,5 @@
+id,model_id,group_id/id,operation,domain,name
+access_auth_passkey_key_group_user,auth.passkey.key,base.group_user,rw,"[('create_uid', '=', user.id)]",Passkeys: Users can only access own Passkeys
+access_auth_passkey_key_group_erp_manager_rwd,auth.passkey.key,base.group_erp_manager,rwd,"[('create_uid', '=', user.id)]",Passkeys: Users can only access own Passkeys
+access_auth_passkey_key_group_erp_manager_rd,auth.passkey.key,base.group_erp_manager,rd,,Passkeys: Admins can view and delete other peoples Passkeys
+access_auth_passkey_key_create_group_user,auth.passkey.key.create,base.group_user,rwcd,,access_auth_passkey_key_create

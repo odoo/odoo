@@ -1,0 +1,45 @@
+id,model_id,group_id/id,operation,domain,name
+access_product_category_group_user,product.category,base.group_user,r,,product.category.user
+access_product_category_group_product_manager,product.category,product.group_product_manager,rwcd,,product.category.manager
+access_product_template_group_user,product.template,base.group_user,r,,product.template.user
+access_product_template_group_product_manager,product.template,product.group_product_manager,rwcd,,product.template.manager
+access_product_template_global,product.template,,rwcd," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]",Product multi-company
+access_product_supplierinfo_group_user,product.supplierinfo,base.group_user,r,,product.supplierinfo.user
+access_product_supplierinfo_group_product_manager,product.supplierinfo,product.group_product_manager,rwcd,,product.supplierinfo.manager
+access_product_supplierinfo_global,product.supplierinfo,,rwcd,"['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]",product supplierinfo company rule
+access_product_pricelist_group_user,product.pricelist,base.group_user,r,,product.pricelist.user
+access_product_pricelist_group_partner_manager,product.pricelist,base.group_partner_manager,r,,product.pricelist partner manager
+access_product_pricelist_group_product_manager,product.pricelist,product.group_product_manager,rwcd,,product.pricelist.manager
+access_product_pricelist_global,product.pricelist,,rwcd," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]",product pricelist company rule
+access_product_pricelist_item_group_user,product.pricelist.item,base.group_user,r,,product.pricelist.item.user
+access_product_pricelist_item_group_product_manager,product.pricelist.item,product.group_product_manager,rwcd,,product.pricelist.item.manager
+access_product_pricelist_item_global,product.pricelist.item,,rwcd," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]",product pricelist item company rule
+access_product_product_group_user,product.product,base.group_user,r,,product.product employee
+access_product_product_group_product_manager,product.product,product.group_product_manager,rwcd,,product.product manager
+access_product_attribute_group_user,product.attribute,base.group_user,r,,product.attribute
+access_product_attribute_group_product_manager,product.attribute,product.group_product_manager,rwcd,,product.attribute manager
+access_product_attribute_value_group_user,product.attribute.value,base.group_user,r,,product.attribute value
+access_product_attribute_value_group_product_manager,product.attribute.value,product.group_product_manager,rwcd,,product.attribute value manager
+access_product_attribute_custom_value_group_user,product.attribute.custom.value,base.group_user,r,,product.attribute.custom value manager
+access_product_attribute_custom_value_group_product_manager,product.attribute.custom.value,product.group_product_manager,rwcd,,product.attribute.custom value manager
+access_product_template_attribute_value_group_user,product.template.attribute.value,base.group_user,r,,product.template.attribute value
+access_product_template_attribute_value_group_product_manager,product.template.attribute.value,product.group_product_manager,rwcd,,product.template.attribute value manager
+access_product_template_attribute_exclusion_group_user,product.template.attribute.exclusion,base.group_user,r,,product..template.attribute exclusion
+access_product_template_attribute_exclusion_group_product_manager,product.template.attribute.exclusion,product.group_product_manager,rwcd,,product.template.attribute exclusion manager
+access_product_template_attribute_line_group_user,product.template.attribute.line,base.group_user,r,,product.template.attribute line
+access_product_template_attribute_line_group_product_manager,product.template.attribute.line,product.group_product_manager,rwcd,,product.template.attribute line manager
+access_product_tag_group_user,product.tag,base.group_user,r,,product.tag.user
+access_product_tag_group_product_manager,product.tag,product.group_product_manager,rwcd,,product.tag.manager
+access_product_combo_group_user,product.combo,base.group_user,r,,product.combo.user
+access_product_combo_group_product_manager,product.combo,product.group_product_manager,rwcd,,product.combo.manager
+access_product_combo_global,product.combo,,rwcd,"
+            ['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]
+        ",Product combo multi-company rule
+access_product_combo_item_group_user,product.combo.item,base.group_user,r,,product.combo.item.user
+access_product_combo_item_group_product_manager,product.combo.item,product.group_product_manager,rwcd,,product.combo.item.manager
+access_product_label_layout_group_user,product.label.layout,base.group_user,rwcd,,product.label.layout.user
+access_product_document_group_user,product.document,base.group_user,rwcd,,access_product_document_user
+access_product_document_global,product.document,,rwcd," ['|', ('company_id', 'parent_of', company_ids), ('company_id', '=', False)]",Product multi-company
+access_update_product_attribute_value_group_product_manager,update.product.attribute.value,product.group_product_manager,rwc,,update.product.attribute.value
+access_product_uom_group_product_manager,product.uom,product.group_product_manager,rwcd,,product.uom manager
+access_product_uom_group_user,product.uom,base.group_user,r,,product.uom user

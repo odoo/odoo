@@ -17,12 +17,11 @@ Allows to contact directly the employee in case of unjustified absence.
     """,
     'depends': ['hr', 'hr_holidays', 'sms'],
     'data': [
-        'security/sms_security.xml',
-        'security/ir.model.access.csv',
         'views/hr_employee_views.xml',
         'data/mail_template_data.xml',
         'data/sms_data.xml',
         'data/ir_cron.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',
