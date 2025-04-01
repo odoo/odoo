@@ -122,6 +122,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+<<<<<<< 9726d6b3c5f3038fe4893d138ff9343e85d2ba4e
                                     <t t-foreach="o.move_ids_without_package" t-as="move">
                                         <!-- This flag is true if there are multiple move lines in a move, or if there is at least one tracked move line -->
                                         <t t-set="move_has_multiple_lines" t-value="len(move.move_line_ids) > 1 or any(move_line.lot_id or move_line.lot_name for move_line in move.move_line_ids)"/>
@@ -136,6 +137,33 @@
                                                 <span t-field="move.product_uom" groups="uom.group_uom">units</span>
                                                 <span t-if="move.packaging_uom_id and move.packaging_uom_id != move.product_uom">
                                                     (<span t-field="move.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="move.packaging_uom_id.name"/>)
+||||||| 4f935ebb984a90c56082651e2e25f1d0ed3bb4a2
+                                    <!-- In case you come across duplicated lines, ask NIM or LAP -->
+                                    <tr t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                                        <td>
+                                            <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
+                                            <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking"></span>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="ml.quantity">3.00</span>
+                                            <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
+                                            <span t-if="ml.move_id.packaging_uom_id">
+                                                <span t-if="o.state != 'done'">
+                                                    (<span t-field="ml.move_id.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.packaging_uom_id.name"/>)
+=======
+                                    <!-- In case you come across duplicated lines, ask NIM or LAP -->
+                                    <tr t-foreach="o.move_line_ids_without_package.sorted(lambda ml: (ml.location_id.complete_name, ml.location_dest_id.complete_name))" t-as="ml">
+                                        <td>
+                                            <span t-field="ml.product_id.display_name">Customizable Desk</span><br/>
+                                            <span t-if="ml.product_id.description_picking" t-field="ml.product_id.description_picking"></span>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-field="ml.quantity">3.00</span>
+                                            <span t-field="ml.product_uom_id" groups="uom.group_uom">units</span>
+                                            <span t-if="ml.move_id.packaging_uom_id and ml.move_id.packaging_uom_id != ml.product_uom_id" groups="uom.group_uom">
+                                                <span t-if="o.state != 'done'">
+                                                    (<span t-field="ml.move_id.packaging_uom_qty" t-options='{"widget": "integer"}'/> <span t-field="ml.move_id.packaging_uom_id.name"/>)
+>>>>>>> c7d1a9d9235f3243d1ec6e9d281eef7e1929ed4e
                                                 </span>
                                             </td>
                                             <!-- If a move contains only one move line, the move is summarized in the heading only -->
