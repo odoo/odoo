@@ -54,11 +54,7 @@
     }
 }
 
-.o-mail-NotificationItem-text {
-    font-family: "text-emoji", $font-family-base;
-
-    &:before {
-        // invisible character so that typing status bar has constant height, regardless of text content.
-        content: "\200b"; /* unicode zero width space character */
-    }
+.o-mail-NotificationItem-text:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
 }

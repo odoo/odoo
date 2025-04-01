@@ -38,7 +38,7 @@
                                 <t t-if="message" t-call="mail.message_preview_prefix">
                                     <t t-set="message" t-value="message"/>
                                 </t>
-                                <t t-esc="message?.inlineBody"/>
+                                <t t-out="message?.inlineBody"/>
                             </div>
                         </button>
                     </t>
