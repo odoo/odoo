@@ -8,7 +8,9 @@
         <div t-ref="root" style="overflow: hidden;">
             <div t-att-class="'d-none ' + props.className" t-ref="content"><t t-slot="default" /></div>
             <Dropdown state="this.dropdown">
-                <button class="btn btn-primary" t-ref="button" style="width: 100%; overflow: hidden; text-overflow: ellipsis;" />
+                <button class="btn btn-primary" t-ref="button" style="width: 100%; overflow: hidden; text-overflow: ellipsis;">
+                    <t t-slot="fixedButton"/>
+                </button>
                 <t t-set-slot="content">
                     <t t-slot="default" />
                 </t>
