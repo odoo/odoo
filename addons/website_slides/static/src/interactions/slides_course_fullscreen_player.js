@@ -3,11 +3,11 @@
     import publicWidget from '@web/legacy/js/public/public_widget';
     import { renderToElement } from "@web/core/utils/render";
     import { session } from "@web/session";
-    import { Quiz } from '@website_slides/js/slides_course_quiz';
-    import { SlideCoursePage } from '@website_slides/js/slides_course_page';
+    import { Quiz } from '@website_slides/interactions/slides_course_quiz';
+    import { SlideCoursePage } from '@website_slides/interactions/slides_course_page';
     import { unhideConditionalElements } from '@website/js/content/inject_dom';
-    import { SlideShareDialog } from './public/components/slide_share_dialog/slide_share_dialog';
-    import '@website_slides/js/slides_course_join';
+    import { SlideShareDialog } from '../js/public/components/slide_share_dialog/slide_share_dialog';
+    import '@website_slides/interactions/slides_course_join';
     import { SIZES, utils as uiUtils } from "@web/core/ui/ui_service";
     import { rpc } from "@web/core/network/rpc";
 
