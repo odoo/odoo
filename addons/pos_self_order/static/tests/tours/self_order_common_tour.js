@@ -7,8 +7,8 @@ registry.category("web_tour.tours").add("self_order_is_close", {
     steps: () => [
         LandingPage.isClosed(),
         Utils.clickBtn("Order Now"),
-        ProductPage.clickProduct("Coca-Cola"),
-        Utils.checkIsNoBtn("Order"),
+        ProductPage.clickKioskProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Checkout"),
     ],
 });
 
@@ -27,7 +27,7 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         // Normal product
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Coca-Cola"),
-        Utils.checkIsNoBtn("Order"),
+        Utils.checkIsNoBtn("Checkout"),
         // Product with attributes
         ProductPage.clickProduct("Desk Organizer"),
         ...ProductPage.setupAttribute(
@@ -42,6 +42,53 @@ registry.category("web_tour.tours").add("self_order_pos_closed", {
         // Combo product
         ProductPage.clickProduct("Office Combo"),
         ...ProductPage.setupCombo(
+            [
+                {
+                    product: "Desk Organizer",
+                    attributes: [
+                        { name: "Size", value: "M" },
+                        { name: "Fabric", value: "Leather" },
+                    ],
+                },
+                {
+                    product: "Combo Product 5",
+                    attributes: [],
+                },
+                {
+                    product: "Combo Product 8",
+                    attributes: [],
+                },
+            ],
+            false
+        ),
+        Utils.checkIsNoBtn("Add to cart"),
+    ],
+});
+
+registry.category("web_tour.tours").add("kiosk_order_pos_closed", {
+    steps: () => [
+        LandingPage.isClosed(),
+        Utils.clickBtn("Order Now"),
+        ProductPage.clickKioskCategory("Miscellaneous"),
+
+        ProductPage.clickKioskProduct("Coca-Cola"),
+        Utils.checkIsNoBtn("Checkout"),
+
+        // Product with attributes
+        ProductPage.clickKioskProduct("Desk Organizer"),
+        ...ProductPage.setupKioskAttribute(
+            [
+                { name: "Size", value: "M" },
+                { name: "Fabric", value: "Leather" },
+            ],
+            false
+        ),
+        Utils.checkIsNoBtn("Add to cart"),
+        ProductPage.clickKioskComboDiscard(),
+        // Combo product
+        ProductPage.clickKioskCategory("Category 2"),
+        ProductPage.clickKioskProduct("Office Combo"),
+        ...ProductPage.setupKioskCombo(
             [
                 {
                     product: "Desk Organizer",
