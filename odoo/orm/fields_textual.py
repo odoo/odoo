@@ -12,7 +12,7 @@ from markupsafe import Markup
 from markupsafe import escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
 
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED, ColoredFormatter
 from odoo.tools import SQL, html_normalize, html_sanitize, sql
 from odoo.tools.misc import SENTINEL, Sentinel
@@ -309,6 +309,19 @@ class BaseString(Field[str | typing.Literal[False]]):
         case of translated fields, this returns the ``jsonb`` dictionary as a whole.
         """
         return Field.to_sql(self, model, alias, flush)
+
+    def expression_getter(self, field_expr):
+        if field_expr == 'display_name.no_error':
+            # when searching by name, ignore AccessError
+            display_getter = super().expression_getter('display_name')
+
+            def getter(record):
+                try:
+                    return display_getter(record)
+                except AccessError:
+                    return ''
+            return getter
+        return super().expression_getter(field_expr)
 
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
         # build the condition
