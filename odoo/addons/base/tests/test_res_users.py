@@ -499,7 +499,7 @@ class TestUsersIdentitycheck(HttpCase):
         form.password = 'admin@odoo'
         # The user clicks the button "Log out from all devices", which triggers a save then a call to the button method
         user_identity_check = form.save()
-        action = user_identity_check.run_check()
+        action = user_identity_check.with_context(password=form.password).run_check()
 
         # Test the session is no longer valid
         # Invalid session -> redirected from /web to /web/login
