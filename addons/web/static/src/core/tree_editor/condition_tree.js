@@ -823,8 +823,12 @@ function normalizeConnector(connector) {
     for (const child of connector.children) {
         addChild(newTree, child);
     }
-    if (newTree.children.length === 1 && !newTree.negate) {
-        return newTree.children[0];
+    if (newTree.children.length === 1) {
+        const child = newTree.children[0];
+        if (newTree.negate) {
+            return { ...child, negate: !child.negate };
+        }
+        return child;
     }
     return newTree;
 }
