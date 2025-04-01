@@ -139,7 +139,7 @@ export class PowerButtonsPlugin extends Plugin {
     getPlaceholderWidth(block) {
         this.dependencies.history.disableObserver();
         const clone = block.cloneNode(true);
-        clone.innerText = clone.getAttribute("placeholder");
+        clone.innerText = clone.getAttribute("o-we-hint-text");
         clone.style.width = "fit-content";
         clone.style.visibility = "hidden";
         this.editable.appendChild(clone);
