@@ -15,6 +15,7 @@ class ResConfigSettings(models.TransientModel):
     group_use_recurring_revenues = fields.Boolean(string="Recurring Revenues", implied_group='crm.group_use_recurring_revenues')
     # Membership
     is_membership_multi = fields.Boolean(string='Multi Teams', config_parameter='sales_team.membership_multi')
+    module_partnership = fields.Boolean("Membership / Partnership")
     # Lead assignment
     crm_use_auto_assignment = fields.Boolean(
         string='Rule-Based Assignment', config_parameter='crm.lead.auto.assignment')
