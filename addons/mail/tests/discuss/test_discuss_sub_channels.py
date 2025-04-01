@@ -56,8 +56,10 @@ class TestDiscussSubChannels(HttpCase):
         parent = self.env["discuss.channel"].create({"name": "General"})
         parent._create_sub_channel()
         sub_channel = parent.sub_channel_ids[0]
+        sub_channel._create_sub_channel()
+        sub_channel_thread = sub_channel.sub_channel_ids[0]
         with self.assertRaises(ValidationError):
-            sub_channel._create_sub_channel()
+            sub_channel_thread._create_sub_channel()
 
     def test_04_sub_channel_panel_search(self):
         bob_user = new_test_user(self.env, "bob_user", groups="base.group_user")

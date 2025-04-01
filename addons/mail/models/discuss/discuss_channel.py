@@ -131,7 +131,7 @@ class DiscussChannel(models.Model):
         if failing_channels := self.sudo().filtered(
             lambda c: c.parent_channel_id
             and (
-                c.parent_channel_id.parent_channel_id
+                c.parent_channel_id.parent_channel_id.parent_channel_id
                 or c.parent_channel_id.channel_type not in ["channel", "group"]
                 or c.parent_channel_id.channel_type != c.channel_type
             )

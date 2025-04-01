@@ -63,7 +63,8 @@ const threadPatch = {
         super.delete(...arguments);
     },
     get hasSubChannelFeature() {
-        return ["channel", "group"].includes(this.channel_type) && !this.parent_channel_id;
+        return ["channel", "group"].includes(this.channel_type) && 
+               (!this.parent_channel_id || !this.parent_channel_id.parent_channel_id);
     },
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;

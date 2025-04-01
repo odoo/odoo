@@ -141,7 +141,19 @@ export class DiscussSidebarChannel extends Component {
     }
 
     get subChannels() {
-        return this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
+        const result = [];
+        const threads = this.env.filteredThreads?.(this.thread.sub_channel_ids) ?? [];
+
+        for (const thread of threads) {
+            result.push(thread);
+
+            if (thread.sub_channel_ids) {
+                const subthreads = this.env.filteredThreads?.(thread.sub_channel_ids) ?? [];
+                result.push(...subthreads);
+            }
+        }
+
+        return result;
     }
 
     showThread(sub) {
