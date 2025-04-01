@@ -51,7 +51,6 @@ export class ColorPicker extends Component {
         applyColorPreview: Function,
         applyColorResetPreview: Function,
         enabledTabs: { type: Array, optional: true },
-        disabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
@@ -59,7 +58,6 @@ export class ColorPicker extends Component {
     static defaultProps = {
         close: () => {},
         enabledTabs: ["solid", "gradient", "custom"],
-        disabledTabs: [],
     };
 
     setup() {
@@ -75,14 +73,11 @@ export class ColorPicker extends Component {
         this.usedCustomColors = this.props.getUsedCustomColors();
     }
 
-    getEnabledTabs() {
-        return this.props.enabledTabs.filter((tab) => !this.props.disabledTabs.includes(tab));
-    }
     getDefaultTab() {
-        if (this.getEnabledTabs().includes(this.props.state.defaultTab)) {
+        if (this.props.enabledTabs.includes(this.props.state.defaultTab)) {
             return this.props.state.defaultTab;
         }
-        return this.getEnabledTabs()[0];
+        return this.props.enabledTabs[0];
     }
 
     get selectedColor() {

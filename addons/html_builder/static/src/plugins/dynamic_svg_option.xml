@@ -4,7 +4,7 @@
 <t t-name="html_builder.DynamicSvgOption">
     <BuilderRow label.translate="Dynamic Colors" action="'svgColor'">
         <t t-foreach="Object.keys(domState.colors)" t-as="colorName" t-key="colorName">
-            <BuilderColorPicker actionParam="colorName" disabledTabs="['gradient']"/>
+            <BuilderColorPicker actionParam="colorName" enabledTabs="['solid', 'custom']"/>
         </t>
     </BuilderRow>
 </t>

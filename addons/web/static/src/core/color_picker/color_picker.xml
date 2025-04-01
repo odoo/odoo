@@ -2,21 +2,21 @@
 <t t-name="web.ColorPicker">
     <div class="o_font_color_selector user-select-none" t-on-pointerdown.stop="() => {}" data-prevent-closing-overlay="true">
         <div class="my-1 d-flex">
-            <t  t-if="this.getEnabledTabs().length > 1">
+            <t  t-if="this.props.enabledTabs.length > 1">
                 <button class="btn btn-sm btn-light ms-1 text-truncate btn-tab"
-                    t-if="this.getEnabledTabs().includes('solid')"
+                    t-if="this.props.enabledTabs.includes('solid')"
                     t-att-class="{active: state.activeTab === 'solid'}"
                     t-on-click="() => this.setTab('solid')">
                     Solid
                 </button>
                 <button class="btn btn-sm btn-light text-truncate btn-tab"
-                    t-if="this.getEnabledTabs().includes('custom')"
+                    t-if="this.props.enabledTabs.includes('custom')"
                     t-att-class="{active: state.activeTab === 'custom'}"
                     t-on-click="() => this.setTab('custom')">
                     Custom
                 </button>
                 <button class="btn btn-sm btn-light text-truncate btn-tab"
-                    t-if="this.getEnabledTabs().includes('gradient')"
+                    t-if="this.props.enabledTabs.includes('gradient')"
                     t-att-class="{active: state.activeTab === 'gradient'}"
                     t-on-click="() => this.setTab('gradient')">
                     Gradient
