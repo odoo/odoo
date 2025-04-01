@@ -77674,6 +77674,8 @@ class Model extends EventBus {
         const start = performance.now();
         console.debug("##### Model creation #####");
         super();
+        this.buffer = new ArrayBuffer(10_000_000);
+        this.view = new Int32Array(this.buffer);
         setDefaultTranslationMethod();
         stateUpdateMessages = repairInitialMessages(data, stateUpdateMessages);
         const workbookData = load(data, verboseImport);
