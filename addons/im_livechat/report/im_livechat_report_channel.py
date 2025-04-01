@@ -26,9 +26,6 @@ class Im_LivechatReportChannel(models.Model):
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in seconds)")
     nbr_speaker = fields.Integer('# of speakers', readonly=True, aggregator="avg", help="Number of different speakers")
     nbr_message = fields.Integer('Average message', readonly=True, aggregator="avg", help="Number of message in the conversation")
-    is_without_answer = fields.Integer('Session(s) without answer', readonly=True, aggregator="sum",
-                                       help="""A session is without answer if the operator did not answer. 
-                                       If the visitor is also the operator, the session will always be answered.""")
     days_of_activity = fields.Integer('Days of activity', aggregator="max", readonly=True, help="Number of days since the first session of the operator")
     is_anonymous = fields.Integer('Is visitor anonymous', readonly=True)
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
@@ -38,6 +35,15 @@ class Im_LivechatReportChannel(models.Model):
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
     is_unrated = fields.Integer('Session not rated', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
+    livechat_failure = fields.Selection(
+        selection=[
+            ("never_answered", "Never Answered"),
+            ("no_one_available", "No one Available"),
+            ("no_failure", "No failure"),
+        ],
+        string="Conversation Failure",
+        readonly=True,
+    )
 
     def init(self):
         # Note : start_date_hour must be remove when the read_group will allow grouping on the hour of a datetime. Don't forget to change the view !
@@ -68,15 +74,7 @@ class Im_LivechatReportChannel(models.Model):
                 EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer,
                 count(distinct C.livechat_operator_id) as nbr_speaker,
                 count(distinct M.id) as nbr_message,
-                CASE 
-                    WHEN EXISTS (select distinct M.author_id FROM mail_message M
-                                    WHERE M.author_id=C.livechat_operator_id
-                                    AND M.res_id = C.id
-                                    AND M.model = 'discuss.channel'
-                                    AND C.livechat_operator_id = M.author_id)
-                    THEN 0
-                    ELSE 1
-                END as is_without_answer,
+                C.livechat_failure,
                 (DATE_PART('day', date_trunc('day', now()) - date_trunc('day', C.create_date)) + 1) as days_of_activity,
                 CASE
                     WHEN C.anonymous_name IS NULL THEN 0

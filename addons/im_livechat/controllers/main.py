@@ -147,6 +147,7 @@ class LivechatController(http.Controller):
             ).sudo().create(channel_vals)
             channel_id = channel.id
             if chatbot_script:
+                channel.livechat_failure = "no_failure"
                 chatbot_script._post_welcome_steps(channel)
             with replace_exceptions(UserError, by=NotFound()):
                 # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
@@ -158,6 +159,7 @@ class LivechatController(http.Controller):
                 )
             channel = channel.with_context(guest=guest)  # a new guest was possibly created
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
+                channel.livechat_failure = "never_answered"
                 channel._broadcast([channel.livechat_operator_id.id])
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
