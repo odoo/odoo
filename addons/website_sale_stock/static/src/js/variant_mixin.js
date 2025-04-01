@@ -21,8 +21,9 @@ import { markup } from "@odoo/owl";
  * @param {Array} combination
  */
 VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
-    if (!combination.is_storable) {
-        return
+    const has_max_combo_quantity = 'max_combo_quantity' in combination
+    if (!combination.is_storable && !has_max_combo_quantity) {
+        return;
     }
 
     if (!$parent.is('.js_main_product') || !combination.product_id) {
@@ -52,6 +53,31 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
+<<<<<<< 55d67c9f8fc34ce7a08264bf7625fd8e486fb248
+||||||| f90bd79e75f911b7d3009a7631f03f6c24733eba
+    combination.has_max_combo_quantity = 'max_combo_quantity' in combination
+    if (combination.product_type === 'combo' && combination.has_max_combo_quantity) {
+        $addQtyInput.data('max', combination.max_combo_quantity || 1);
+        if (combination.max_combo_quantity < 1) {
+            ctaWrapper.classList.replace('d-flex', 'd-none');
+            ctaWrapper.classList.add('out_of_stock');
+        }
+    }
+
+=======
+    if (has_max_combo_quantity) {
+        $addQtyInput.data('max', combination.max_combo_quantity || 1);
+        if (qty > combination.max_combo_quantity) {
+            qty = combination.max_combo_quantity || 1;
+            $addQtyInput.val(qty);
+        }
+        if (combination.max_combo_quantity < 1) {
+            ctaWrapper.classList.replace('d-flex', 'd-none');
+            ctaWrapper.classList.add('out_of_stock');
+        }
+    }
+
+>>>>>>> 430ae4c033c39e2419a954ffc33e9127d2ccc90f
     // needed xml-side for formatting of remaining qty
     combination.formatQuantity = (qty) => {
         if (Number.isInteger(qty)) {
