@@ -301,7 +301,7 @@ class ImageGalleryOption extends Plugin {
 
     slideshow(imageGalleryElement, images) {
         const container = this.getContainer(imageGalleryElement);
-        const currentInterval = imageGalleryElement.querySelector(".carousel").dataset.bsInterval;
+        const currentInterval = imageGalleryElement.querySelector(".carousel")?.dataset.bsInterval;
         const carouselEl = imageGalleryElement.querySelector(".carousel");
         const colorContrast =
             carouselEl && carouselEl.classList.contains("carousel-dark") ? "carousel-dark" : " ";
@@ -313,7 +313,9 @@ class ImageGalleryOption extends Plugin {
             id: "slideshow_" + new Date().getTime(),
             colorContrast,
         });
-        carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
+        if (carouselEl) {
+            carouselEl.removeEventListener("slid.bs.carousel", this.onCarouselSlid);
+        }
         container.replaceChildren(slideshowEl);
         slideshowEl.querySelectorAll("img").forEach((img, index) => {
             img.setAttribute("data-index", index);
