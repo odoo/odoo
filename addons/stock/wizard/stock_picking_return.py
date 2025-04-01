@@ -184,6 +184,8 @@ class StockReturnPicking(models.TransientModel):
             subtype_xmlid='mail.mt_note',
         )
         for return_line in self.product_return_moves:
+            if not return_line.move_id:
+                continue
             return_line._process_line(exchange_picking)
 
         exchange_picking.action_confirm()
@@ -208,7 +210,7 @@ class StockReturnPicking(models.TransientModel):
         self.ensure_one()
         for return_move in self.product_return_moves:
             stock_move = return_move.move_id
-            if not stock_move or stock_move.state == 'cancel' or stock_move.scrapped:
+            if not stock_move:
                 continue
             quantity = stock_move.quantity
             for move in stock_move.move_dest_ids:

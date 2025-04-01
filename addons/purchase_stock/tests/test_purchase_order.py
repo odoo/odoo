@@ -704,3 +704,58 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         stock_move.quantity = 1.0
         picking.button_validate()
         self.assertEqual(picking.move_ids.location_dest_id, sub_location)
+
+    def test_returned_products_update_po(self):
+        """
+        Check that adding products in both the return picking form and the return picking
+        updates the po at validation
+        """
+        vendor = self.env['res.partner'].create({'name': 'Vendor'})
+        product_1 = self.env['product.product'].create({'name': 'ordered-purchase', 'purchase_method': 'purchase'})
+        product_2 = self.env['product.product'].create({'name': 'ordered-receive', 'purchase_method': 'receive'})
+        product_3 = self.env['product.product'].create({'name': 'added-in-return-popup-purchase', 'purchase_method': 'purchase',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})]
+        })
+        product_4 = self.env['product.product'].create({'name': 'added-in-return-popup-receive', 'purchase_method': 'receive',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})]
+        })
+        product_5 = self.env['product.product'].create({'name': 'added-in-return-purchase', 'purchase_method': 'purchase',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})]
+        })
+        product_6 = self.env['product.product'].create({'name': 'added-in-return-receive', 'purchase_method': 'receive',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})]
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [
+                (0, 0, {'product_id': product_1.id, 'product_qty': 10.0, 'price_unit': 10.0}),
+                (0, 0, {'product_id': product_2.id, 'product_qty': 10.0, 'price_unit': 10.0})
+            ]
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.button_validate()
+        self.assertEqual(po.order_line.mapped('qty_received'), [10.0, 10.0], 'Purchase: all products should be received"')
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = product_3
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = product_4
+        return_picking = return_picking_form.save()
+        return_picking.product_return_moves.write({'quantity': 2})
+        res = return_picking.action_create_returns()
+        picking_return = self.env['stock.picking'].browse(res['res_id'])
+        picking_return_form = Form(picking_return)
+        with picking_return_form.move_ids_without_package.new() as move:
+            move.product_id = product_5
+            move.product_uom_qty = 2
+        with picking_return_form.move_ids_without_package.new() as move:
+            move.product_id = product_6
+            move.product_uom_qty = 2
+        picking_return_form.save()
+        picking_return.button_validate()
+        for line, ordered, received, price in zip(po.order_line, [10, 10, 0, 0, 0, 0], [8, 8, -2, -2, -2, -2], [10, 10, 0, 10, 0, 10]):
+            self.assertEqual(line.product_qty, ordered, 'Purchase: ordered quantity should be "%s" instead of "%s"' % (ordered, line.product_qty))
+            self.assertEqual(line.qty_received, received, 'Purchase: received quantity should be "%s" instead of "%s"' % (received, line.qty_received))
+            self.assertEqual(line.price_unit, price, 'Purchase: price should be "%s" instead of "%s"' % (price, line.price_unit))
+        self.assertEqual(len(po.picking_ids), 2, 'Should have only Receipt & Return, no Resupply picking for no-stock products')

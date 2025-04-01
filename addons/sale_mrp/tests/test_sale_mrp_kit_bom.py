@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form, TransactionCase, tagged
+from odoo.tests import Command, Form, TransactionCase, tagged
 
 
 @tagged('post_install', '-at_install')
@@ -13,6 +13,7 @@ class TestSaleMrpKitBom(TransactionCase):
         cls.env.ref('base.user_admin').write({
             'email': 'mitchell.admin@example.com',
         })
+        cls.env.ref('base.group_user').write({'implied_ids': [Command.link(cls.env.ref('product.group_product_variant').id)]})
 
     def _create_product(self, name, storable, price):
         return self.env['product.product'].create({
