@@ -21,6 +21,9 @@ export class StandNumberPage extends Component {
             this.state.standNumber = this.state.standNumber.slice(0, -1);
             return;
         }
+        if (this.state.standNumber.length >= 10) {
+            return;
+        }
         this.state.standNumber += key;
     }
 

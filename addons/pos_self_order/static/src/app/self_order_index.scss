@@ -14,6 +14,26 @@
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes selfOrderModalScale {
+    from {
+        transform: scale(.8);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
 html, body {
     height: 100%;
     overflow: hidden;
@@ -29,23 +49,33 @@ small {
     font-size: .875em;
 }
 
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+.touch-device * {
+    cursor: none !important;
+}
+
+.modal-content {
+    text-wrap: pretty;
+}
+
+.numpad-button:disabled {
+    background-color: $o-gray-100;
+}
+
 .o-so-tabular-nums {
     font-variant: tabular-nums;
 }
 
-.o-so-product-details {
-    .o-so-product-details-image {
-        max-width: clamp(3rem, 25%, o-to-rem(170));
-    }
-
-    .o-so-product-details-description {
-        max-width: o-to-rem(750);
-    }
-}
-
 .o-so-products-row {
     @include make-row();
-
     --gutter-y: 8vw;
 
     > * {
@@ -60,7 +90,6 @@ small {
 
     @include media-breakpoint-up(md) {
         @include row-cols(4);
-
         --gutter-y: 2vw;
     }
 
@@ -68,20 +97,188 @@ small {
         @include o-so-landscape() {
             @include row-cols(6);
         }
-
         @include o-so-portrait() {
             @include row-cols(4);
         }
     }
 }
-ul, ol {
-    padding: 0;
-    margin: 0;
-}
-li {
-    list-style-type: none;
+
+.kiosk{
+    --border-light-color:#e7e9ed;
+
+    .bg-secondary {
+        --background-color: #F4F4F4;
+    }
+
+    .border-light{
+        border-color: var(--border-light-color) !important;
+    }
 }
 
-.touch-device * {
-    cursor: none !important;
+.o_kiosk_background {
+    background-color: mix(white, $o-brand-primary, 85%);
+}
+
+
+.o_kiosk_container {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.o_kiosk_container_small {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@include media-breakpoint-down(md) {
+    .o_kiosk_container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.o_kiosk_language_selector img {
+    height: 2rem;
+}
+
+.o_kiosk_fade {
+    animation: fadeIn 300ms cubic-bezier(.4, 0, .2, 1);
+}
+
+.numpad-button.active, .numpad-button:active {
+    --btn-active-bg: #{$o-gray-300};
+}
+
+.o_so_product_details {
+    .o_so_product_details_image {
+        max-width: clamp(3rem, 25%, o-to-rem(170));
+    }
+
+    .o_so_product_details_description {
+        max-width: o-to-rem(750);
+    }
+}
+
+@include media-breakpoint-up(lg) {
+    @media (orientation: portrait) {
+        body {
+            font-size: 1.2vh;
+        }
+        
+        h1 {
+            font-size: 2.1vh;
+        }
+        
+        h2 {
+            font-size: 1.8vh;
+        }
+        
+        h3 {
+            font-size: 1.5vh;
+        }
+        
+        h4 {
+            font-size: 1.3vh;
+        }
+        
+        h5 {
+            font-size: 1.2vh;
+        }
+        
+        h6 {
+            font-size: 1.0vh; 
+        }
+
+        .btn {
+            font-size: 1.8vh;
+            padding: 1.4vh 2.8vh;
+            border-radius: $border-radius-xl;
+            text-align: center;
+            white-space: normal;
+
+            &:active {
+                transform: scale(0.98);
+                transition: transform 100ms ease;
+            }
+
+            .btn-sm {
+                font-size: 1.575vh;
+                padding: 1.05vh 2.1vh;
+                border-radius: $border-radius-xl;
+            }
+        }
+
+        .btn-group > .btn {
+            padding: 0.9vh 1.35vh;
+        }
+
+        .nav-link {
+            transition: transform 100ms ease;
+        
+            &:active {
+                transform: scale(0.98);
+            }
+        }
+
+        .modal-content {
+            border-radius: $border-radius-xl;
+        }
+
+        .modal-dialog {
+            transform: scale(0.8);
+            animation: selfOrderModalScale 120ms ease-out forwards;
+        }
+    }
+}
+
+@include media-breakpoint-up(xl) {
+    @media (orientation: portrait) {
+        body {
+            font-size: 1.5vh;
+        }
+
+        h1 {
+            font-size: 2.5vh;
+        }
+
+        h2 {
+            font-size: 2.2vh;
+        }
+        
+        h3 {
+            font-size: 1.9vh;
+        }
+        
+        h4 {
+            font-size: 1.6vh;
+        }
+        
+        h5 {
+            font-size: 1.5vh;
+        }
+        
+        h6 {
+            font-size: 1.3vh;
+        }
+
+        .btn {
+            font-size: 2.2vh;
+            padding: 1.8vh 3.4vh;
+            border-radius: $border-radius-lg;
+            text-align: center;
+            white-space: normal;
+            
+            &:active {
+                transform: scale(0.98);
+                transition: transform 100ms ease;
+            }
+
+            .btn-sm {
+                font-size: 1.925vh;
+                padding: 1.35vh 2.55vh;
+                border-radius: $border-radius-xl;
+            }
+        }
+        
+        .btn-group > .btn {
+            padding: 1vh 1.5vh;
+        }
+    }
 }

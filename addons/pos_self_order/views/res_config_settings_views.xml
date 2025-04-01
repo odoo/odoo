@@ -50,9 +50,10 @@
                             <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
                         </div>
                     </setting>
-                    <setting string="Customize Header" help="Add an image to brand your header." invisible="pos_self_ordering_mode == 'nothing'">
-                        <field name="pos_self_ordering_image_brand_name" invisible ="1"/>
-                        <field name="pos_self_ordering_image_brand" class="w-100" filename="pos_self_ordering_image_brand_name"/>
+                    <setting string="Background" help="Personalize the Kiosk background" invisible="pos_self_ordering_mode == 'nothing'">
+                        <field name="pos_self_ordering_image_background_ids"
+                               class="w-100" widget="many2many_binary"
+                               options="{'accepted_file_extensions': 'image/*', 'number_of_files': 1}" />
                     </setting>
                 </block>
             </block>

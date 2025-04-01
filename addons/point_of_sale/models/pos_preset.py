@@ -9,13 +9,15 @@ class PosPreset(models.Model):
     _inherit = ['pos.load.mixin']
     _description = 'Easily load a set of configuration options'
 
-    name = fields.Char(string='Label', required=True)
+    name = fields.Char(string='Label', required=True, translate=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist')
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position')
     identification = fields.Selection([('none', 'Not required'), ('address', 'Address'), ('name', 'Name')], default="none", string='Identification', required=True)
     is_return = fields.Boolean(string='Return mode', default=False, help="All quantity in the cart will be in negative. Ideal for return managment.")
     color = fields.Integer(string='Color', default=0)
-    image_128 = fields.Image(string='Image', max_width=128, max_height=128)
+    image_512 = fields.Image(string='Image', max_width=512, max_height=512)
+    image_128 = fields.Image(string='Image 128', related="image_512", max_width=128, max_height=128, store=True)
+    has_image = fields.Boolean(compute='_compute_has_image')
     count_linked_orders = fields.Integer(compute='_compute_count_linked_orders')
     count_linked_config = fields.Integer(compute='_compute_count_linked_config')
 
@@ -48,7 +50,7 @@ class PosPreset(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['id', 'name', 'pricelist_id', 'fiscal_position_id', 'is_return', 'color', 'image_128', 'identification',
+        return ['id', 'name', 'pricelist_id', 'fiscal_position_id', 'is_return', 'color', 'has_image', 'write_date', 'identification',
             'use_timing', 'slots_per_interval', 'interval_time', 'attendance_ids']
 
     def _compute_count_linked_orders(self):
@@ -61,6 +63,11 @@ class PosPreset(models.Model):
                 '|', ('default_preset_id', 'in', record.ids),
                 ('available_preset_ids', 'in', record.ids)
             ])
+
+    @api.depends('has_image')
+    def _compute_has_image(self):
+        for record in self:
+            record.has_image = bool(record.image_512)
 
     # Slots are created directly here in the form of dates, to avoid polluting
     # the database with a “slots” model. All we need is the slot time, and with the preset

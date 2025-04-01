@@ -8,6 +8,6 @@ export function isShown() {
 export function orderNumberShown() {
     return {
         content: "Check if the order number is shown",
-        trigger: ".number",
+        trigger: ".tracking-number",
     };
 }

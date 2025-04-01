@@ -42,9 +42,17 @@ export function openLanguageSelector() {
     };
 }
 
-export function changeLanguage(language) {
+export function openKioskLanguageSelector() {
+    return {
+        content: `Click on language selector`,
+        trigger: `.o_kiosk_language_selector`,
+        run: "click",
+    };
+}
+
+export function changeKioskLanguage(language) {
     return [
-        openLanguageSelector(),
+        openKioskLanguageSelector(),
         {
             content: `Check that the language is available`,
             trigger: `.self_order_language_popup .btn:contains(${language})`,
@@ -52,7 +60,15 @@ export function changeLanguage(language) {
         },
         {
             content: `Check that the language changed`,
-            trigger: `.self_order_language_selector:contains(${language})`,
+            trigger: `.o_kiosk_language_selector:contains(${language})`,
         },
     ];
+}
+
+export function clickBackBtn() {
+    return {
+        content: `Click back button`,
+        trigger: `.btn.btn-back`,
+        run: "click",
+    };
 }

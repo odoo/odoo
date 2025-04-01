@@ -14,7 +14,7 @@ import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
 import { constructFullProductName, deduceUrl, random5Chars } from "@point_of_sale/utils";
-import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
+import { getOrderLineValues, computeInitialComboPrice } from "./card_utils";
 import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
@@ -65,7 +65,6 @@ export class SelfOrder extends Reactive {
         this.currentCategory = null;
         this.productByCategIds = {};
         this.availableCategories = [];
-        this.categoryList = new Set();
 
         this.initData();
         if (this.config.self_ordering_mode === "kiosk") {
@@ -149,16 +148,14 @@ export class SelfOrder extends Reactive {
             : this.config.self_ordering_service_mode;
     }
 
-    computeAvailableCategories() {
+    getAvailableCategories() {
         let now = luxon.DateTime.now();
         now = now.hour + now.minute / 60;
         const prodByCategIds = this.productByCategIds;
         const availableCategories = this.productCategories
             .filter((c) => prodByCategIds[c.id])
             .sort((a, b) => a.sequence - b.sequence);
-
-        this.categoryList = new Set(availableCategories);
-        this.availableCategories = availableCategories.filter((c) => {
+        return availableCategories.filter((c) => {
             const hourStart = c.hour_after;
             const hourUntil = c.hour_until;
             if (hourStart === hourUntil || (hourStart === 0 && hourUntil === 24)) {
@@ -172,7 +169,10 @@ export class SelfOrder extends Reactive {
                 return !(now >= hourStart && now <= hourUntil);
             }
         });
-        this.currentCategory = this.productCategories[0] || null;
+    }
+    computeAvailableCategories() {
+        this.availableCategories = this.getAvailableCategories();
+        this.currentCategory = this.availableCategories[0] || null;
     }
 
     isCategoryAvailable(categId) {
@@ -205,111 +205,21 @@ export class SelfOrder extends Reactive {
         comboValues = {}
     ) {
         const product = productTemplate.product_variant_ids[0];
-        const productPrice = this.getProductPriceInfo(productTemplate, product);
-        const values = {
-            order_id: this.currentOrder,
-            product_id: product,
-            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
-            qty: qty,
-            note: customer_note || "",
-            price_unit: productPrice.pricelist_price,
-            price_extra: 0,
-        };
-
-        if (Object.entries(selectedValues).length > 0) {
-            const productVariant = this.models["product.product"].find(
-                (prd) =>
-                    prd.product_tmpl_id.id === productTemplate.id &&
-                    prd.product_template_variant_value_ids.every((ptav) =>
-                        Object.values(selectedValues).some((value) => ptav.id == value)
-                    )
-            );
-            if (productVariant) {
-                Object.assign(values, {
-                    product_id: productVariant,
-                    price_unit: productVariant.lst_price,
-                    tax_ids: productVariant.taxes_id.map((tax) => ["link", tax]),
-                });
-            }
-
-            values.attribute_value_ids = Object.entries(selectedValues).reduce(
-                (acc, [attributeId, options]) => {
-                    const optionEntries = Object.entries(
-                        typeof options === "object" ? options : { [options]: true }
-                    ).filter(([, isSelected]) => isSelected); // Only true values
-
-                    optionEntries.forEach(([optionId]) => {
-                        const attrVal = this.models["product.template.attribute.value"].get(
-                            Number(optionId)
-                        );
-                        if (attrVal.attribute_id.create_variant !== "always") {
-                            values.price_extra += attrVal.price_extra;
-                            acc.push(["link", attrVal]);
-                        }
-                    });
-                    return acc;
-                },
-                []
-            );
-
-            if (Object.values(customValues).length > 0) {
-                values.custom_attribute_value_ids = Object.values(customValues)
-                    .filter((c) => c.custom_value !== "")
-                    .map((c) => ["create", c]);
-            }
-        }
-
-        if (Object.entries(comboValues).length > 0) {
-            const comboPrices = computeComboItems(
-                product,
-                comboValues,
-                this.currentOrder.pricelist_id,
-                this.models["decimal.precision"].getAll(),
-                this.models["product.template.attribute.value"].getAllBy("id")
-            );
-
-            values.price_unit = 0;
-            values.combo_id = ["link", product.combo_id];
-            values.combo_line_ids = comboPrices.map((comboItem) => [
-                "create",
-                {
-                    product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
-                    combo_item_id: comboItem.combo_item_id,
-                    price_unit: comboItem.price_unit,
-                    order_id: this.currentOrder,
-                    qty: values.qty,
-                    attribute_value_ids: comboItem.attribute_value_ids?.map((attr) => [
-                        "link",
-                        attr,
-                    ]),
-                    custom_attribute_value_ids: Object.entries(
-                        comboItem.attribute_custom_values
-                    ).map(([id, cus]) => ["create", cus]),
-                },
-            ]);
-        }
-
-        if (values.price_extra > 0) {
-            const price = values.product_id.getPrice(
-                this.currentOrder.pricelist_id,
-                values.qty,
-                values.price_extra
-            );
-
-            values.price_unit = price;
-        }
-
+        const values = getOrderLineValues(
+            this,
+            productTemplate,
+            qty,
+            customer_note,
+            selectedValues,
+            customValues,
+            comboValues
+        );
         const newLine = this.models["pos.order.line"].create(values);
         newLine.full_product_name = constructFullProductName(
             newLine,
             this.models["product.template.attribute.value"].getAllBy("id"),
             product.name
         );
-
         const lineToMerge = this.currentOrder.lines.find(
             (l) => l.canBeMergedWith(newLine) && l.id !== newLine.id
         );
@@ -416,7 +326,10 @@ export class SelfOrder extends Reactive {
             this.selectedOrderUuid = existingOrder.uuid;
             return existingOrder;
         }
+        return this.createNewOrder();
+    }
 
+    createNewOrder() {
         const autoSelectedPresets =
             this.models["pos.preset"].length === 1 && this.config.use_presets;
 
@@ -428,7 +341,7 @@ export class SelfOrder extends Reactive {
             ? this.config.default_preset_id?.pricelist_id
             : this.config.default_pricelist_id;
 
-        const newOrder = this.models["pos.order"].create({
+        return this.models["pos.order"].create({
             company_id: this.company,
             ticket_code: random5Chars(),
             session_id: this.session,
@@ -437,8 +350,10 @@ export class SelfOrder extends Reactive {
             pricelist_id: pricelist,
             preset_id: autoSelectedPresets ? this.config.default_preset_id : false,
         });
-        this.selectedOrderUuid = newOrder.uuid;
-        return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
+    }
+
+    get kioskMode() {
+        return this.config.self_ordering_mode === "kiosk";
     }
 
     markupDescriptions() {
@@ -452,14 +367,20 @@ export class SelfOrder extends Reactive {
     initData() {
         this.productCategories = this.models["pos.category"].getAll();
         this.productByCategIds = this.models["product.template"].getAllBy("pos_categ_ids");
-        const isSpecialProduct = (p) => this.config._pos_special_products_ids.includes(p.id);
+
+        const excludedProductTemplateIds = new Set(
+            this.config._pos_special_products_ids
+                .map((id) => this.models["product.product"].get(id)?.product_tmpl_id?.id)
+                .filter(Boolean)
+        );
+
         for (const category_id in this.productByCategIds) {
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
-                (p) => !isSpecialProduct(p)
+                (p) => !excludedProductTemplateIds.has(p.id)
             );
         }
         const productWoCat = this.models["product.template"].filter(
-            (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
+            (p) => p.pos_categ_ids.length === 0 && !excludedProductTemplateIds.has(p.id)
         );
 
         if (productWoCat.length) {
@@ -471,16 +392,7 @@ export class SelfOrder extends Reactive {
             });
             this.productByCategIds["0"] = productWoCat;
         }
-
-        this.currentLanguage = this.config.self_ordering_available_language_ids.find(
-            (l) => l.code === cookie.get("frontend_lang")
-        );
-
-        if (this.config.self_ordering_default_language_id && !this.currentLanguage) {
-            this.currentLanguage = this.config.self_ordering_default_language_id;
-        }
-
-        cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
+        this._initLanguages();
 
         for (const printerConfig of this.models["pos.printer"].getAll()) {
             const printer = this.createPrinter(printerConfig);
@@ -489,6 +401,19 @@ export class SelfOrder extends Reactive {
                 this.kitchenPrinters.push(printer);
             }
         }
+    }
+
+    _initLanguages() {
+        const languages = this.config.self_ordering_available_language_ids;
+        this.currentLanguage = languages.find((l) => l.code === cookie.get("frontend_lang"));
+        if (languages && !this.currentLanguage) {
+            this.currentLanguage = this.config.self_ordering_default_language_id;
+        }
+        languages?.forEach((lg) => {
+            // To display  "Français (BE)"  instead of "French (BE) / Français (BE)"
+            lg.display_name = lg.name.split("/").pop();
+        });
+        cookie.set("frontend_lang", this.currentLanguage?.code || "en_US");
     }
 
     createPrinter(printer) {
@@ -547,21 +472,18 @@ export class SelfOrder extends Reactive {
             this.ordering = true;
         }
 
-        this.idleTimout = false;
         window.addEventListener("click", (event) => {
-            this.idleTimout && clearTimeout(this.idleTimout);
-            this.alertTimeout && clearTimeout(this.alertTimeout);
+            clearTimeout(this.idleTimout);
             this.timeoutPopup?.();
             this.idleTimout = setTimeout(() => {
                 if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
-                    this.timeoutPopup = this.dialog.add(TimeoutPopup, {});
+                    this.timeoutPopup = this.dialog.add(TimeoutPopup, {
+                        onTimeout: () => {
+                            this.router.navigate("default");
+                        },
+                    });
                 }
-            }, 1 * 1000 * 50);
-            this.alertTimeout = setTimeout(() => {
-                if (this.router.activeSlot !== "payment" && this.router.activeSlot !== "default") {
-                    this.router.navigate("default");
-                }
-            }, 1 * 1000 * 60);
+            }, 1 * 1000 * 90);
         });
     }
 
@@ -849,7 +771,6 @@ export class SelfOrder extends Reactive {
             ? this.currentOrder.preset_id?.pricelist_id
             : this.config.default_pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
-
         let taxes = productTemplate.taxes_id;
 
         if (!product) {
@@ -876,12 +797,20 @@ export class SelfOrder extends Reactive {
         return { pricelist_price: price, ...taxesData };
     }
     getProductDisplayPrice(productTemplate, product) {
+        if (productTemplate.isCombo()) {
+            return computeInitialComboPrice(this, productTemplate);
+        }
+
         const taxesData = this.getProductPriceInfo(productTemplate, product);
-        if (this.config.iface_tax_included === "total") {
+        if (this.isTaxesIncludedInPrice()) {
             return taxesData.total_included;
         } else {
             return taxesData.total_excluded;
         }
+    }
+
+    isTaxesIncludedInPrice() {
+        return this.config.iface_tax_included === "total";
     }
     getLinePrice(line) {
         return this.config.iface_tax_included ? line.price_subtotal_incl : line.price_subtotal;
@@ -919,6 +848,26 @@ export class SelfOrder extends Reactive {
         );
         link.href = png.toDataURL().replace("data:image/jpeg;base64,", "");
         link.click();
+    }
+
+    hasPresets() {
+        return this.config.use_presets && this.models["pos.preset"].length > 1;
+    }
+
+    displayCategoryPage() {
+        if (!this.kioskMode) {
+            return;
+        }
+
+        return this.getAvailableCategories().length > 1;
+    }
+
+    get kioskBackgroundImage() {
+        const bgImage = this.config._self_ordering_image_background_ids[0];
+        if (bgImage) {
+            return `url(data:image/png;base64,${bgImage.data})`;
+        }
+        return "none";
     }
 }
 
