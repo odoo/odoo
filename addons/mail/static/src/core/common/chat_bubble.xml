@@ -11,8 +11,8 @@
                 </t>
             </ImStatus>
             <CountryFlag t-if="thread?.showCorrespondentCountry" country="thread.correspondentCountry" class="'o-mail-ChatBubble-country position-absolute bottom-0 border shadow-sm'"/>
-            <button class="o-mail-ChatHub-bubbleBtn btn bg-view shadow">
-                <img class="o-mail-ChatBubble-avatar rounded-circle o_object_fit_cover" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
+            <button class="o-mail-ChatHub-bubbleBtn btn shadow">
+                <img class="o-mail-ChatBubble-avatar bg-view rounded-circle o_object_fit_cover" t-att-class="{ 'o-big': env.embedLivechat }" t-att-src="thread?.avatarUrl" alt="Thread image" draggable="false"/>
             </button>
         </div>
     </t>
