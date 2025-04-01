@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rating_rating_view_search_livechat" model="ir.ui.view">
+        <field name="name">rating.rating.search.livechat</field>
+        <field name="model">rating.rating</field>
+        <field name="inherit_id" ref="im_livechat.rating_rating_view_search_livechat"/>
+        <field name="arch" type="xml">
+            <xpath expr="//*[@name='my_ratings']" position="before">
+                <filter name="filter_my_team" domain="[('rated_partner_id.user_ids.employee_id.member_of_department', '=', True)]" string="My Team"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

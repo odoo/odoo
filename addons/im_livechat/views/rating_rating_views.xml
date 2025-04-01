@@ -7,17 +7,31 @@
         <field name="mode">primary</field>
         <field name="priority">64</field>
         <field name="arch" type="xml">
-            <xpath expr="//filter[@name='resource']" position="replace">
-                <filter string="Code" name="resource" context="{'group_by':'res_name'}"/>
-            </xpath>
-            <xpath expr="//filter[@name='resource']" position="after">
-                <filter string="Livechat Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
-            </xpath>
-            <xpath expr="/search" position="inside">
-                <filter string="This Week" name="rated_on_filter" domain="[
-                ('rated_on', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1,days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
-                ('rated_on', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1,weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
-            </xpath>
+            <field name="rated_partner_id" position="attributes">
+                <attribute name="string">Agent</attribute>
+            </field>
+            <field name="parent_res_name" position="attributes">
+                <attribute name="string">Channel</attribute>
+            </field>
+            <field name="res_name" position="attributes">
+                <attribute name="string">Conversation</attribute>
+            </field>
+            <field name="rated_partner_id" position="after">
+                <field name="parent_res_name" position="move"/>
+            </field>
+            <field name="res_name" position="after">
+                <field name="feedback"/>
+            </field>
+            <filter name="responsible" position="attributes">
+                <attribute name="string">Agent</attribute>
+            </filter>
+            <filter name="responsible" position="before">
+                <filter string="Channel" name="groupby_livechat_channel" context="{'group_by': 'parent_res_name'}"/>
+                <filter name="rating_text" position="move"/>
+            </filter>
+            <filter name="rated_on_last_7_days" position="before">
+                <filter name="rated_on_last_24_hours" string="Last 24 Hours" domain="[('rated_on', '&gt;', (datetime.datetime.now() - datetime.timedelta(minutes=1)).to_utc())]"/>
+            </filter>
         </field>
     </record>
 
@@ -55,11 +69,55 @@
         <field name="name">im_livechat.rating.rating.view.list</field>
         <field name="model">rating.rating</field>
         <field name="inherit_id" ref="rating.rating_rating_view_tree"/>
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//list" position="attributes">
                 <attribute name="type">object</attribute>
                 <attribute name="action">action_open_rated_object</attribute>
+                <attribute name="default_order">create_date DESC</attribute>
             </xpath>
+            <field name="res_name" position="attributes">
+                <attribute name="string">Conversation</attribute>
+            </field>
+            <field name="parent_res_name" position="replace"/>
+            <field name="rated_partner_id" position="replace">
+                <field name="rated_partner_name" string="Agent"/>
+            </field>
+            <field name="partner_id" position="replace">
+                <field name="partner_name" string="Customer"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="im_livechat.rating_rating_view_pivot" model="ir.ui.view">
+        <field name="name">im_livechat.rating.rating.view.pivot</field>
+        <field name="model">rating.rating</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_pivot"/>
+        <field name="arch" type="xml">
+            <field name="rating" position="attributes">
+                <attribute name="string">Rating (%)</attribute>
+                <attribute name="widget">im_livechat.rating_percentage</attribute>
+            </field>
+            <field name="rated_on" position="attributes">
+                <attribute name="interval">day</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="im_livechat.rating_rating_view_graph" model="ir.ui.view">
+        <field name="name">im_livechat.rating.rating.view.graph</field>
+        <field name="model">rating.rating</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_graph"/>
+        <field name="arch" type="xml">
+            <field name="rated_on" position="attributes">
+                <attribute name="interval">day</attribute>
+            </field>
+            <field name="rating" position="attributes">
+                <attribute name="string">Rating (%)</attribute>
+                <attribute name="widget">im_livechat.rating_percentage</attribute>
+            </field>
         </field>
     </record>
 
@@ -91,17 +149,17 @@
         <field name="domain">[('parent_res_model','=','im_livechat.channel'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_livechat"/>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No customer ratings on live chat session yet
-            </p>
+            <p class="o_view_nocontent_empty_folder">No data yet!</p>
+            <p>Track customer satisfaction through live chat ratings to improve service qualiy and agent performance.</p>
         </field>
+        <field name="context">{"search_default_filter_rated_on": "custom_rated_on_last_30_days"}</field>
     </record>
 
     <record id="rating_rating_action_livechat_report_view_kanban" model="ir.actions.act_window.view">
         <field name="sequence">1</field>
         <field name="view_mode">kanban</field>
         <field name="act_window_id" ref="rating_rating_action_livechat_report"/>
-        <field name="view_id" ref="rating.rating_rating_view_kanban"/>
+        <field name="view_id" ref="im_livechat.rating_rating_view_kanban"/>
     </record>
 
     <record id="rating_rating_action_livechat_report_view_form" model="ir.actions.act_window.view">
@@ -111,4 +169,17 @@
         <field name="view_id" ref="rating.rating_rating_view_form_text"/>
     </record>
 
+    <record id="rating_rating_action_livechat_report_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="im_livechat.rating_rating_action_livechat_report"/>
+        <field name="view_id" ref="im_livechat.rating_rating_view_pivot"/>
+    </record>
+
+    <record id="rating_rating_action_livechat_report_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="im_livechat.rating_rating_action_livechat_report"/>
+        <field name="view_id" ref="im_livechat.rating_rating_view_graph"/>
+    </record>
 </odoo>

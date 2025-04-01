@@ -7,6 +7,7 @@ Bridge between HR and Livechat.""",
     'depends': ['hr', 'im_livechat'],
     'data': [
         'views/discuss_channel_views.xml',
+        'views/rating_rating_views.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',
