@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ir_cron_check_stock_levels" model="ir.cron">
+            <field name="name">Stock Level Check</field>
+            <field name="model_id" ref="model_sales_stock_alert"/>
+            <field name="state">code</field>
+            <field name="code">model.check_stock_levels()</field>
+            <field name="user_id" ref="base.user_root"/>  <!-- Runs as superuser -->
+            <field name="interval_type">minutes</field>
+            <field name="interval_number">30</field>  <!-- Runs every 30 minutes -->
+            <field name="numbercall">-1</field>  <!-- Runs indefinitely -->
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

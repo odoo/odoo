@@ -1,0 +1,434 @@
+Metadata-Version: 2.1
+Name: qrcode
+Version: 6.1
+Summary: QR Code image generator
+Home-page: https://github.com/lincolnloop/python-qrcode
+Author: Lincoln Loop
+Author-email: info@lincolnloop.com
+License: BSD
+Keywords: qr denso-wave IEC18004
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Intended Audience :: Developers
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Multimedia :: Graphics
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: six
+Requires-Dist: colorama ; platform_system == "Windows"
+Provides-Extra: dev
+Requires-Dist: tox ; extra == 'dev'
+Requires-Dist: pytest ; extra == 'dev'
+Requires-Dist: mock ; (python_version < "3") and extra == 'dev'
+Provides-Extra: maintainer
+Requires-Dist: zest.releaser[recommended] ; extra == 'maintainer'
+Provides-Extra: pil
+Requires-Dist: pillow ; extra == 'pil'
+Provides-Extra: test
+Requires-Dist: pytest ; extra == 'test'
+Requires-Dist: pytest-cov ; extra == 'test'
+Requires-Dist: mock ; (python_version < "3") and extra == 'test'
+
+=============================
+Pure python QR Code generator
+=============================
+
+Generate QR codes.
+
+For a standard install (which will include pillow_ for generating images),
+run::
+
+    pip install qrcode[pil]
+
+.. _pillow: https://pypi.python.org/pypi/Pillow
+
+
+What is a QR Code?
+==================
+
+A Quick Response code is a two-dimensional pictographic code used for its fast
+readability and comparatively large storage capacity. The code consists of
+black modules arranged in a square pattern on a white background. The
+information encoded can be made up of any kind of data (e.g., binary,
+alphanumeric, or Kanji symbols)
+
+Usage
+=====
+
+From the command line, use the installed ``qr`` script::
+
+    qr "Some text" > test.png
+
+Or in Python, use the ``make`` shortcut function:
+
+.. code:: python
+
+    import qrcode
+    img = qrcode.make('Some data here')
+
+Advanced Usage
+--------------
+
+For more control, use the ``QRCode`` class. For example:
+
+.. code:: python
+
+    import qrcode
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data('Some data')
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+The ``version`` parameter is an integer from 1 to 40 that controls the size of
+the QR Code (the smallest, version 1, is a 21x21 matrix).
+Set to ``None`` and use the ``fit`` parameter when making the code to determine
+this automatically.
+
+``fill_color`` and ``back_color`` can change the background and the painting
+color of the QR, when using the default image factory.
+
+The ``error_correction`` parameter controls the error correction used for the
+QR Code. The following four constants are made available on the ``qrcode``
+package:
+
+``ERROR_CORRECT_L``
+    About 7% or less errors can be corrected.
+``ERROR_CORRECT_M`` (default)
+    About 15% or less errors can be corrected.
+``ERROR_CORRECT_Q``
+    About 25% or less errors can be corrected.
+``ERROR_CORRECT_H``.
+    About 30% or less errors can be corrected.
+
+The ``box_size`` parameter controls how many pixels each "box" of the QR code
+is.
+
+The ``border`` parameter controls how many boxes thick the border should be
+(the default is 4, which is the minimum according to the specs).
+
+Other image factories
+=====================
+
+You can encode as SVG, or use a new pure Python image processor to encode to
+PNG images.
+
+The Python examples below use the ``make`` shortcut. The same ``image_factory``
+keyword argument is a valid option for the ``QRCode`` class for more advanced
+usage.
+
+SVG
+---
+
+You can create the entire SVG or an SVG fragment. When building an entire SVG
+image, you can use the factory that combines as a path (recommended, and
+default for the script) or a factory that creates a simple set of rectangles.
+
+From your command line::
+
+    qr --factory=svg-path "Some text" > test.svg
+    qr --factory=svg "Some text" > test.svg
+    qr --factory=svg-fragment "Some text" > test.svg
+
+Or in Python:
+
+.. code:: python
+
+    import qrcode
+    import qrcode.image.svg
+
+    if method == 'basic':
+        # Simple factory, just a set of rects.
+        factory = qrcode.image.svg.SvgImage
+    elif method == 'fragment':
+        # Fragment factory (also just a set of rects)
+        factory = qrcode.image.svg.SvgFragmentImage
+    else:
+        # Combined path factory, fixes white space that may occur when zooming
+        factory = qrcode.image.svg.SvgPathImage
+
+    img = qrcode.make('Some data here', image_factory=factory)
+
+Two other related factories are available that work the same, but also fill the
+background of the SVG with white::
+
+    qrcode.image.svg.SvgFillImage
+    qrcode.image.svg.SvgPathFillImage
+
+
+Pure Python PNG
+---------------
+
+Install the following two packages::
+
+    pip install git+git://github.com/ojii/pymaging.git#egg=pymaging
+    pip install git+git://github.com/ojii/pymaging-png.git#egg=pymaging-png
+
+From your command line::
+
+    qr --factory=pymaging "Some text" > test.png
+
+Or in Python:
+
+.. code:: python
+
+    import qrcode
+    from qrcode.image.pure import PymagingImage
+    img = qrcode.make('Some data here', image_factory=PymagingImage)
+
+==========
+Change log
+==========
+
+6.1 (14 January 2019)
+=====================
+
+- Fix short chunks of data not being optimized to the correct mode.
+
+- Tests fixed for Python 3
+
+
+6.0 (23 March 2018)
+===================
+
+- Fix optimize length being ignored in ``QRCode.add_data``.
+
+- Better calculation of the best mask pattern and related optimizations. Big
+  thanks to cryptogun!
+
+
+5.3 (18 May 2016)
+=================
+
+* Fix incomplete block table for QR version 15. Thanks Rodrigo Queiro for the
+  report and Jacob Welsh for the investigation and fix.
+
+* Avoid unnecessary dependency for non MS platforms, thanks to Noah Vesely.
+
+* Make ``BaseImage.get_image()`` actually work.
+
+
+5.2 (25 Jan 2016)
+=================
+
+* Add ``--error-correction`` option to qr script.
+
+* Fix script piping to stdout in Python 3 and reading non-UTF-8 characters in
+  Python 3.
+
+* Fix script piping in Windows.
+
+* Add some useful behind-the-curtain methods for tinkerers.
+
+* Fix terminal output when using Python 2.6
+
+* Fix terminal output to display correctly on MS command line.
+
+5.2.1
+-----
+
+* Small fix to terminal output in Python 3 (and fix tests)
+
+5.2.2
+-----
+
+* Revert some terminal changes from 5.2 that broke Python 3's real life tty
+  code generation and introduce a better way from Jacob Welsh.
+
+
+5.1 (22 Oct 2014)
+=================
+
+* Make ``qr`` script work in Windows. Thanks Ionel Cristian Mărieș
+
+* Fixed print_ascii function in Python 3.
+
+* Out-of-bounds code version numbers are handled more consistently with a
+  ValueError.
+
+* Much better test coverage (now only officially supporting Python 2.6+)
+
+
+5.0 (17 Jun 2014)
+=================
+
+* Speed optimizations.
+
+* Change the output when using the ``qr`` script to use ASCII rather than
+  just colors, better using the terminal real estate.
+
+* Fix a bug in passing bytecode data directly when in Python 3.
+
+* Substation speed optimizations to best-fit algorithm (thanks Jacob Welsh!).
+
+* Introduce a ``print_ascii`` method and use it as the default for the ``qr``
+  script rather than ``print_tty``.
+
+5.0.1
+-----
+
+* Update version numbers correctly.
+
+
+4.0 (4 Sep 2013)
+================
+
+* Made qrcode work on Python 2.4 - Thanks tcely.
+  Note: officially, qrcode only supports 2.5+.
+
+* Support pure-python PNG generation (via pymaging) for Python 2.6+ -- thanks
+  Adam Wisniewski!
+
+* SVG image generation now supports alternate sizing (the default box size of
+  10 == 1mm per rectangle).
+
+* SVG path image generation allows cleaner SVG output by combining all QR rects
+  into a single path. Thank you, Viktor Stískala.
+
+* Added some extra simple SVG factories that fill the background white.
+
+4.0.1
+-----
+
+* Fix the pymaging backend not able to save the image to a buffer. Thanks ilj!
+
+4.0.2
+-----
+
+* Fix incorrect regex causing a comma to be considered part of the alphanumeric
+  set.
+
+* Switch to using setuptools for setup.py.
+
+4.0.3
+-----
+
+* Fix bad QR code generation due to the regex comma fix in version 4.0.2.
+
+4.0.4
+-----
+
+* Bad version number for previous hotfix release.
+
+
+3.1 (12 Aug 2013)
+=================
+
+* Important fixes for incorrect matches of the alpha-numeric encoding mode.
+  Previously, the pattern would match if a single line was alpha-numeric only
+  (even if others wern't). Also, the two characters ``{`` and ``}`` had snuck
+  in as valid characters. Thanks to Eran Tromer for the report and fix.
+
+* Optimized chunking -- if the parts of the data stream can be encoded more
+  efficiently, the data will be split into chunks of the most efficient modes.
+
+3.1.1
+-----
+
+* Update change log to contain version 3.1 changes. :P
+
+* Give the ``qr`` script an ``--optimize`` argument to control the chunk
+  optimization setting.
+
+
+3.0 (25 Jun 2013)
+=================
+
+* Python 3 support.
+
+* Add QRCode.get_matrix, an easy way to get the matrix array of a QR code
+  including the border. Thanks Hugh Rawlinson.
+
+* Add in a workaround so that Python 2.6 users can use SVG generation (they
+  must install ``lxml``).
+
+* Some initial tests! And tox support (``pip install tox``) for testing across
+  Python platforms.
+
+
+2.7 (5 Mar 2013)
+================
+
+* Fix incorrect termination padding.
+
+
+2.6 (2 Apr 2013)
+================
+
+* Fix the first four columns incorrectly shifted by one. Thanks to Josep
+  Gómez-Suay for the report and fix.
+
+* Fix strings within 4 bits of the QR version limit being incorrectly
+  terminated. Thanks to zhjie231 for the report.
+
+
+2.5 (12 Mar 2013)
+=================
+
+* The PilImage wrapper is more transparent - you can use any methods or
+  attributes available to the underlying PIL Image instance.
+
+* Fixed the first column of the QR Code coming up empty! Thanks to BecoKo.
+
+2.5.1
+-----
+
+* Fix installation error on Windows.
+
+
+2.4 (23 Apr 2012)
+=================
+
+* Use a pluggable backend system for generating images, thanks to Branko Čibej!
+  Comes with PIL and SVG backends built in.
+
+2.4.1
+-----
+
+* Fix a packaging issue
+
+2.4.2
+-----
+
+* Added a ``show`` method to the PIL image wrapper so the ``run_example``
+  function actually works.
+
+
+2.3 (29 Jan 2012)
+=================
+
+* When adding data, auto-select the more efficient encoding methods for numbers
+  and alphanumeric data (KANJI still not supported).
+
+2.3.1
+-----
+
+* Encode unicode to utf-8 bytestrings when adding data to a QRCode.
+
+
+2.2 (18 Jan 2012)
+=================
+
+* Fixed tty output to work on both white and black backgrounds.
+
+* Added `border` parameter to allow customizing of the number of boxes used to
+  create the border of the QR code
+
+
+2.1 (17 Jan 2012)
+=================
+
+* Added a ``qr`` script which can be used to output a qr code to the tty using
+  background colors, or to a file via a pipe.
+
+

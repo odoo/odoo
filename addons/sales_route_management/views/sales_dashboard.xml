@@ -1,0 +1,13 @@
+<record id="view_sales_dashboard" model="ir.ui.view">
+    <field name="name">sales.dashboard</field>
+    <field name="model">ir.actions.client</field>
+    <field name="arch" type="xml">
+        <form string="Sales Dashboard">
+            <group>
+                <field name="route_overview"/>
+                <field name="visit_summary"/>
+                <field name="inventory_status"/>
+            </group>
+        </form>
+    </field>
+</record>

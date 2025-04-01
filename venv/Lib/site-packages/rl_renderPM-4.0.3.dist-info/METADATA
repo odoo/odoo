@@ -1,0 +1,36 @@
+Metadata-Version: 2.1
+Name: rl-renderPM
+Version: 4.0.3
+Summary: Bitmap Render Acclerator for ReportLab
+Home-page: http://www.reportlab.com/
+Author: Andy Robinson, Robin Becker, the ReportLab team and the community
+Author-email: reportlab-users@lists2.reportlab.com
+License: BSD license (see LICENSE.txt for details), Copyright (c) 2000-2022, ReportLab Inc.
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Topic :: Printing
+Classifier: Topic :: Text Processing :: Markup
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.7,<4
+Description-Content-Type: text/x-rst
+
+``rl_renderPM`` is a package containing the ReportLab accelerator module
+
+``_renderPM``
+
+which can be used to speedup the ``reportlab.graphics.renderPM`` functions.
+
+The python bitmap render module ``reportlab.graphics.renderPM`` can either use ``rlPyCairo``, ``pycairo`` and ``freetype-py``
+or ``rl_renderPM`` + built in ``freetype`` libraries.
+
+The choice is made by overriding the ``reportlab.rl_settings`` module value ``_renderPMBackend``
+using one of the settings files ``reportlab/local_reportlab_settings.py``, ``reportlab_settings.py`` or  ``~/.reportlab_settings``, which are searched for in that order.
+
+The default value of ``renderPMBackend`` is ``'rlPyCairo'``, but it can be set to ``'_renderPM'`` to use this extension
+which is based on an older library ``libart_lgpl``. 

@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="sales_route_management.list">
+      <field name="name">sales_route_management list</field>
+      <field name="model">sales_route_management.sales_route_management</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="sales_route_management.action_window">
+      <field name="name">sales_route_management window</field>
+      <field name="res_model">sales_route_management.sales_route_management</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="sales_route_management.action_server">
+      <field name="name">sales_route_management server</field>
+      <field name="model_id" ref="model_sales_route_management_sales_route_management"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="sales_route_management" id="sales_route_management.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="sales_route_management.menu_1" parent="sales_route_management.menu_root"/>
+    <menuitem name="Menu 2" id="sales_route_management.menu_2" parent="sales_route_management.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="sales_route_management.menu_1_list" parent="sales_route_management.menu_1"
+              action="sales_route_management.action_window"/>
+    <menuitem name="Server to list" id="sales_route_management" parent="sales_route_management.menu_2"
+              action="sales_route_management.action_server"/>
+-->
+  </data>
+</odoo>

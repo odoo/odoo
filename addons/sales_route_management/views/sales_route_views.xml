@@ -1,0 +1,14 @@
+<record id="view_sales_route_form" model="ir.ui.view">
+    <field name="name">sales.route.form</field>
+    <field name="model">sales.route</field>
+    <field name="arch" type="xml">
+        <form string="Sales Route">
+            <group>
+                <field name="name"/>
+                <field name="region"/>
+                <field name="sales_rep_id"/>
+                <field name="customers"/>
+            </group>
+        </form>
+    </field>
+</record>
