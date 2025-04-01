@@ -515,14 +515,14 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
                 sortedColumn: { groupId: [[], []], measure: "testMeasure", order: "desc" },
                 columns: [],
                 rows: [],
-                measures: [],
+                measures: [{ id: "testMeasure", fieldName: "testMeasure" }],
             },
             2: {
                 name: "test2",
                 sortedColumn: { groupId: [[], [1]], measure: "testMeasure", order: "desc" },
                 columns: [{ fieldName: "product_id" }],
                 rows: [],
-                measures: [],
+                measures: [{ id: "testMeasure", fieldName: "testMeasure" }],
             },
         },
     };
