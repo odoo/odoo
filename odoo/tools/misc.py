@@ -1893,7 +1893,7 @@ def verify_limited_field_access_token(record, field_name, access_token, *, scope
     ) and datetime.datetime.now() < datetime.datetime.fromtimestamp(int(timestamp, 16))
 
 
-def is_list_of(values, type_: type) -> bool:
+def is_list_of(values, type_: type | tuple[type, ...]) -> bool:
     """Return True if the given values is a list / tuple of the given type.
 
     :param values: The values to check
@@ -1911,7 +1911,7 @@ def has_list_types(values, types: tuple[type, ...]) -> bool:
     """
     return (
         isinstance(values, (list, tuple)) and len(values) == len(types)
-        and all(itertools.starmap(isinstance, zip(values, types)))
+        and all(map(isinstance, values, types))
     )
 
 
