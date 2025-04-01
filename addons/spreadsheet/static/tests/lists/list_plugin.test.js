@@ -727,7 +727,6 @@ test("Preload currency of monetary field", async function () {
                 expect(Object.keys(spec).length).toBe(3);
                 expect(spec.currency_id).toEqual({
                     fields: {
-                        display_name: {},
                         name: {},
                         symbol: {},
                         decimal_places: {},
@@ -747,6 +746,7 @@ test("add currency field after the list has been loaded", async function () {
     setCellContent(model, "A1", '=ODOO.LIST(1, 1, "pognon")');
     await waitForDataLoaded(model);
     setCellContent(model, "A2", '=ODOO.LIST(1, 1, "currency_id")');
+    await waitForDataLoaded(model);
     expect(getEvaluatedCell(model, "A2").value).toBe("EUR");
 });
 
