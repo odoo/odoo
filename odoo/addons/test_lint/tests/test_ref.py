@@ -108,16 +108,15 @@ def check_ref_for_python_file(abs_path: str, diff_linenos: set[int]) -> list[str
 def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo') -> tuple[str, str] | None:
     if element.tag == 'record':
         record = element
-        id_attr = record.get('id', None)
-        force_create = record.get('force_create', 'True').lower()
-        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and force_create not in ('0', 'false'):
+        id_attr = record.attrib.get('id')
+        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and 'forcecreate' not in record.attrib:
             return 'id', f'{file_info.abs_path}, line {record.sourceline}'
     elif element.tag == 'field':
         field = element
-        ref_attr = field.get('ref', None)
+        ref_attr = field.attrib.get('ref')
         if ref_attr and '.' in ref_attr and not ref_attr.startswith(f'{file_info.module_name}.'):
             return 'ref', f'{file_info.abs_path}, line {field.sourceline}'
-        elif eval_attr := field.get('eval', None):
+        elif eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
@@ -127,9 +126,8 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo') -
                 return 'eval', visitor.issues[0]
     elif element.tag == 'template':
         template = element
-        id_attr = template.get('inherit_id', None)
-        force_create = template.get('force_create', 'True').lower()
-        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and force_create not in ('0', 'false'):
+        id_attr = template.attrib.get('inherit_id')
+        if id_attr and '.' in id_attr and not id_attr.startswith(f'{file_info.module_name}.') and 'forcecreate' not in template.attrib:
             return 'inherit_id', f'{file_info.abs_path}, line {template.sourceline}'
 
 
