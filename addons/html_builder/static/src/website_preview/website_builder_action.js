@@ -119,6 +119,7 @@ export class WebsiteBuilder extends Component {
 
     async onEditPage() {
         document.querySelector(".o_main_navbar").setAttribute("style", "margin-top: -100%;");
+        await this.iframeLoaded;
         await this.loadAssetsEditBundle();
 
         setTimeout(() => {
@@ -143,6 +144,7 @@ export class WebsiteBuilder extends Component {
     onIframeLoad(ev) {
         history.pushState(null, "", ev.target.contentWindow.location.pathname);
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
+        this.websiteContent.el.setAttribute("is-ready", "true");
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
