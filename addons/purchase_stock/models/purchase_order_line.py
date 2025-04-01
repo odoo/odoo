@@ -160,7 +160,7 @@ class PurchaseOrderLine(models.Model):
             if line.product_id and line.product_id.type == 'consu':
                 rounding = line.product_uom_id.rounding
                 # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
+                if 'previous_product_qty' in self.env.context and float_compare(line.product_qty, line.qty_received, precision_rounding=rounding) < 0:
                     raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
                                       'Create a return first.'))
 
@@ -182,7 +182,7 @@ class PurchaseOrderLine(models.Model):
                     pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit', 'customer'))
                     picking = pickings and pickings[0] or False
                 if not picking:
-                    if not line.product_qty > line.qty_received:
+                    if not line.product_qty > line.qty_received or line.qty_received < 0:
                         continue
                     res = line.order_id._prepare_picking()
                     picking = self.env['stock.picking'].create(res)

@@ -704,3 +704,68 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         stock_move.quantity = 1.0
         picking.button_validate()
         self.assertEqual(picking.move_ids.location_dest_id, sub_location)
+
+    def test_returned_products_update_po(self):
+        """
+        Check that adding products in both the return picking form and the return picking
+        updates the po at validation, price coming from supplier info except for products
+        with a purchase method 'purchase'.
+        """
+        vendor = self.env['res.partner'].create({'name': 'Vendor'})
+        product_1, product_2, product_3, product_4, product_5, product_6 = self.env['product.product'].create([
+            {'name': 'ordered-purchase', 'purchase_method': 'purchase'},
+            {'name': 'ordered-receive', 'purchase_method': 'receive'},
+            {'name': 'added-in-return-popup-purchase', 'purchase_method': 'purchase',
+                'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})],
+            },
+            {'name': 'added-in-return-popup-receive', 'purchase_method': 'receive',
+                'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})],
+            },
+            {'name': 'added-in-return-purchase', 'purchase_method': 'purchase',
+                'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})],
+            },
+            {'name': 'added-in-return-receive', 'purchase_method': 'receive',
+                'seller_ids': [(0, 0, {'partner_id': vendor.id, 'min_qty': 2, 'price': 10})],
+            },
+        ])
+        # create a PO with 2 products (different purchase methods to check prices)
+        po = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [
+                (0, 0, {'product_id': product_1.id, 'product_qty': 10.0, 'price_unit': 10.0}),
+                (0, 0, {'product_id': product_2.id, 'product_qty': 10.0, 'price_unit': 10.0})
+            ]
+        })
+        po.button_confirm()
+        picking = po.picking_ids[0]
+        picking.button_validate()
+        self.assertEqual(po.order_line.mapped('qty_received'), [10.0, 10.0], 'Purchase: all products should be received"')
+        # create a return, adding manually 2 products with different purchase methods
+        return_picking_form = Form(self.env['stock.return.picking'].with_context(active_id=picking.id, active_model='stock.picking'))
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = product_3
+        with return_picking_form.product_return_moves.new() as line:
+            line.product_id = product_4
+        return_picking = return_picking_form.save()
+        return_picking.product_return_moves.write({'quantity': 2})
+        res = return_picking.action_create_returns()
+        # edit picking, adding manually 2 other products with different purchase methods
+        picking_return = self.env['stock.picking'].browse(res['res_id'])
+        picking_return_form = Form(picking_return)
+        with picking_return_form.move_ids_without_package.new() as move:
+            move.product_id = product_5
+            move.product_uom_qty = 2
+        with picking_return_form.move_ids_without_package.new() as move:
+            move.product_id = product_6
+            move.product_uom_qty = 2
+        picking_return_form.save()
+        picking_return.button_validate()
+        self.assertRecordValues(po.order_line, [
+            {'product_id': product_1.id, 'product_qty': 10, 'qty_received': 8, 'price_unit': 10},
+            {'product_id': product_2.id, 'product_qty': 10, 'qty_received': 8, 'price_unit': 10},
+            {'product_id': product_3.id, 'product_qty': 0, 'qty_received': -2, 'price_unit': 0},
+            {'product_id': product_4.id, 'product_qty': 0, 'qty_received': -2, 'price_unit': 10},
+            {'product_id': product_5.id, 'product_qty': 0, 'qty_received': -2, 'price_unit': 0},
+            {'product_id': product_6.id, 'product_qty': 0, 'qty_received': -2, 'price_unit': 10},
+        ])
+        self.assertEqual(len(po.picking_ids), 2, 'Should have only Receipt & Return, no Resupply picking for no-stock products')

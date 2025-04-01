@@ -17,6 +17,16 @@ class StockMove(models.Model):
     sale_line_id = fields.Many2one('sale.order.line', 'Sale Line', index='btree_not_null')
 
     @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'to_refund' in fields and self.env.context.get('default_picking_id'):
+            picking = self.env['stock.picking'].browse(self.env.context.get('default_picking_id'))
+            if picking.sale_id and picking.picking_type_id.code == 'incoming':
+                # for receive-from-customer but not for deliver-for-exchange (return of return): negative quantity in SO line
+                res['to_refund'] = True
+        return res
+
+    @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
         distinct_fields.append('sale_line_id')
@@ -136,6 +146,9 @@ class StockPicking(models.Model):
             ):
                 continue
             product = move.product_id
+            if line := sale_order.order_line.filtered(lambda l: l.product_id == product):
+                move.sale_line_id = line[:1]
+                continue
             quantity = move.quantity
             if move.to_refund:
                 quantity *= -1

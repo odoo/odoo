@@ -184,6 +184,8 @@ class StockReturnPicking(models.TransientModel):
             subtype_xmlid='mail.mt_note',
         )
         for return_line in self.product_return_moves:
+            if not return_line.move_id:
+                continue
             return_line._process_line(exchange_picking)
 
         exchange_picking.action_confirm()

@@ -18,6 +18,16 @@ class StockMove(models.Model):
         'move_id', 'created_purchase_line_id', 'Created Purchase Order Lines', copy=False)
 
     @api.model
+    def default_get(self, fields):
+        res = super().default_get(fields)
+        if 'to_refund' in fields and self.env.context.get('default_picking_id'):
+            picking = self.env['stock.picking'].browse(self.env.context.get('default_picking_id'))
+            if (picking.purchase_id or picking.return_id.purchase_id) and picking.picking_type_id.code == 'outgoing':
+                # for deliver-to-supplier but not for receive-for-exchange (return of return) : negative quantity in PO line
+                res['to_refund'] = True
+        return res
+
+    @api.model
     def _prepare_merge_moves_distinct_fields(self):
         distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
         distinct_fields += ['purchase_line_id', 'created_purchase_line_ids']
