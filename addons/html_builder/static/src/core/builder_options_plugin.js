@@ -201,8 +201,8 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     restoreContainer(revertedStep) {
-        if (revertedStep && revertedStep.extra.optionSelection) {
-            this.updateContainers(revertedStep.extra.optionSelection);
+        if (revertedStep && revertedStep.extraStepInfos.optionSelection) {
+            this.updateContainers(revertedStep.extraStepInfos.optionSelection);
         }
     }
 }

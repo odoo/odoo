@@ -206,7 +206,7 @@ export class HistoryPlugin extends Plugin {
             mutations: [],
             id: this.generateId(),
             previousStepId: undefined,
-            extra: {},
+            extraStepInfos: {},
         });
         /** @type { Map<string, "consumed"|"undo"|"redo"> } */
         this.stepsStates = new Map();
@@ -697,7 +697,7 @@ export class HistoryPlugin extends Plugin {
             selection: {},
             mutations: [],
             previousStepId: undefined,
-            extra: {},
+            extraStepInfos: {},
         });
         this.stageSelection();
         this.dispatchTo("step_added_handlers", {
@@ -1062,7 +1062,7 @@ export class HistoryPlugin extends Plugin {
         let applied = false;
         // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
         const selectionToRestore = this.dependencies.selection.preserveSelection();
-        const extraToRestore = { ...this.currentStep.extra };
+        const extraToRestore = { ...this.currentStep.extraStepInfos };
         return () => {
             if (applied) {
                 return;
@@ -1076,7 +1076,7 @@ export class HistoryPlugin extends Plugin {
             this.handleObserverRecords();
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
             selectionToRestore.restore();
-            this.currentStep.extra = extraToRestore;
+            this.currentStep.extraStepInfos = extraToRestore;
             this.dispatchTo("restore_savepoint_handlers");
         };
     }
@@ -1162,7 +1162,7 @@ export class HistoryPlugin extends Plugin {
     }
 
     setStepExtra(key, value) {
-        this.currentStep.extra[key] = value;
+        this.currentStep.extraStepInfos[key] = value;
     }
 
     getIsCurrentStepModified() {
