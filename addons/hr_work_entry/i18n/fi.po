@@ -3,8 +3,8 @@
 # 	* hr_work_entry
 # 
 # Translators:
-# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Wil Odoo, 2025
+# Wil Odoo, 2024
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-12-24 15:31+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,7 +95,7 @@ msgstr "Yritys"
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__conflict
 msgid "Conflict"
-msgstr "Konflikti"
+msgstr "Ristiriita"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -105,7 +105,7 @@ msgstr "Ristiriitainen"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
-msgstr "Konfliktit"
+msgstr "Ristiriidat"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__country_id
@@ -201,22 +201,22 @@ msgstr "Ulkoinen koodi"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_start
 msgid "From"
-msgstr "Alkaa"
+msgstr "Alkaen"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr "HR-työaikatyyppi"
+msgstr "HR-työkirjaus"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr "HR-työaikatyyppi"
+msgstr "HR-työkirjauksen tyyppi"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__has_work_entries
 msgid "Has Work Entries"
-msgstr "On työkirjauksia"
+msgstr "Sisältää työkirjauksia"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_employee__id
@@ -226,7 +226,7 @@ msgstr "On työkirjauksia"
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_attendance__id
 #: model:ir.model.fields,field_description:hr_work_entry.field_resource_calendar_leaves__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
@@ -234,7 +234,7 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
 msgstr ""
-"Jos aktiivisen kentän arvoksi asetetaan false, voit piilottaa "
+"Jos aktiivisen kentän arvoksi asetetaan epätosi (false), voit piilottaa "
 "työmerkintätyypin poistamatta sitä."
 
 #. module: hr_work_entry
@@ -265,12 +265,12 @@ msgstr "Nimi"
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
 msgid "No data to display"
-msgstr "Ei näytettävää dataa"
+msgstr "Ei näytettäviä tietoja"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
-msgstr "Huomautus: Vahvistettuja työmerkintöjä ei voi muuttaa."
+msgstr "Huomautus: Vahvistettuja työkirjauksia ei voi muokata."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.overtime_work_entry_type
@@ -286,17 +286,17 @@ msgstr "Palkanlaskennan koodi"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves
 msgid "Resource Time Off Detail"
-msgstr "Resurssien vapaa-aika, yksityiskohtaiset tiedot"
+msgstr "Työvoiman vapaiden ja lomien tiedot"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Search Work Entry"
-msgstr "Hae työkirjaus"
+msgstr "Hae työkirjausta"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr "Hae työkirjaustyyppi"
+msgstr "Hae työkirjauksen tyyppiä"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -307,7 +307,7 @@ msgstr "Järjestys"
 #. odoo-javascript
 #: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
 msgid "Solve conflicts first"
-msgstr "Ratkaise konfliktit ensin"
+msgstr "Ratkaise ristiriidat ensin"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -317,7 +317,7 @@ msgstr "Alkupäivä"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_start_before_end
 msgid "Starting time should be before end time."
-msgstr "Aloitusaika tulisi olla ennen lopetusaikaa."
+msgstr "Aloitusajan tulisi olla ennen lopetusaikaa."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -337,23 +337,23 @@ msgstr ""
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "The same code cannot be associated to multiple work entry types."
-msgstr "Samaa koodia ei voi yhdistää useisiin työtehtävien kirjaustyyppeihin."
+msgstr "Samaa koodia ei voi yhdistää useisiin työkirjaustyyppeihin."
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "This work entry is validated. You can't delete it."
-msgstr "Tämä työaikakirjaus on vahvistettu. Et voi poistaa sitä."
+msgstr "Tämä työkirjaus on vahvistettu. Et voi poistaa sitä."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr "Vapaa-ajan vaihtoehdot"
+msgstr "Vapaiden/lomien vaihtoehdot"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
 msgid "To"
-msgstr "Päättyy"
+msgstr "Päättyen"
 
 #. module: hr_work_entry
 #: model_terms:ir.actions.act_window,help:hr_work_entry.hr_work_entry_action
@@ -361,7 +361,7 @@ msgid ""
 "Try to add some records, or make sure that there is no active filter in the "
 "search bar."
 msgstr ""
-"Yritä lisätä joitakin tietueita tai varmista, että hakupalkissa ei ole "
+"Yritä lisätä joitakin kirjauksia tai varmista, että hakupalkissa ei ole "
 "aktiivista suodatinta."
 
 #. module: hr_work_entry
@@ -373,7 +373,7 @@ msgstr "Tyyppi"
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "Undefined"
-msgstr "Ei määritelty"
+msgstr "Määrittelemätön"
 
 #. module: hr_work_entry
 #. odoo-python
@@ -433,7 +433,7 @@ msgstr "Työkirjauksen nimi"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.resource_calendar_leaves_view_search_inherit
 msgid "Work Entry Type"
-msgstr "Työaikatyyppi"
+msgstr "Työkirjauksen tyyppi"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
@@ -449,7 +449,7 @@ msgstr "Työkirjausten tyypit"
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
 msgstr ""
-"Työkirjauksella on oltava lopetustieto. Määritä päättymispäivä tai kesto."
+"Työkirjauksen on päätyttävä johonkin. Määritä päättymispäivä tai kesto."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -458,17 +458,16 @@ msgid ""
 "You can't change the Country of this work entry type cause it's currently "
 "used by the system. You need to delete related working entries first."
 msgstr ""
-"Et voi vaihtaa tämän työaikakirjaustyypin maata, koska järjestelmä käyttää "
-"sitä tällä hetkellä. Sinun on ensin poistettava asiaan liittyvät "
-"työaikakirjaukset."
+"Et voi vaihtaa tämän työkirjaustyypin maata, koska järjestelmä käyttää sitä "
+"tällä hetkellä. Sinun on ensin poistettava asiaan liittyvät työkirjaukset."
 
 #. module: hr_work_entry
 #. odoo-python
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 msgid "You can't change the country of this specific work entry type."
-msgstr "Et voi vaihtaa tämän työaikakirjauksen tyypin maata."
+msgstr "Et voi vaihtaa tämän työkirjauksen tyypin maata."
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr "Sama työntekijä ei voi olla kahteen kertaan."
+msgstr "Sama työntekijää ei voi valita kahteen kertaan."
