@@ -10,6 +10,7 @@ export class MessageActionMenuMobile extends Component {
         "close?",
         "thread?",
         "isFirstMessage?",
+        "isOriginThread",
         "openReactionMenu?",
         "state",
     ];
@@ -39,6 +40,10 @@ export class MessageActionMenuMobile extends Component {
 
     get state() {
         return this.props.state;
+    }
+
+    get isOriginThread() {
+        return this.props.isOriginThread;
     }
 
     async onClickAction(action) {
