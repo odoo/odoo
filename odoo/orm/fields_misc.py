@@ -121,3 +121,12 @@ class Id(Field[IdType | typing.Literal[False]]):
         # do not flush, just return the identifier
         assert self.store, 'id field must be stored'
         return SQL.identifier(alias, self.name)
+
+    def expression_getter(self, field_expr):
+        if field_expr != 'id.origin':
+            return super().expression_getter(field_expr)
+
+        def getter(record):
+            return (id_ := record._ids[0]) or getattr(id_, 'origin', None) or False
+
+        return getter
