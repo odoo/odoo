@@ -3,8 +3,6 @@
     'category': 'Hidden',
     'description': "Instant Messaging Bus allow you to send messages to users, in live.",
     'depends': ['base', 'web'],
-    'data': [
-    ],
     'auto_install': True,
     'assets': {
         'web.assets_backend': [
