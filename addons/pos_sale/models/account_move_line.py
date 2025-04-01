@@ -17,7 +17,7 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     def _get_downpayment_lines(self):
-        # OVERRIDE We still need to find the original downpayment invoice line (the payment was made for)
+        # OVERRIDE  We try to find the original downpayment invoice line where the advance payment was made
 
         downpayment_products = self.env['pos.config'].sudo().search([]).mapped('down_payment_product_id')
         #lines_from_pos = self.filtered(lambda l: l.sale_line_ids and l.price_subtotal < 0 and l.product_id in downpayment_products)
@@ -26,12 +26,27 @@ class AccountMoveLine(models.Model):
         for line in lines_from_pos:
             sale_line = line.move_id.pos_order_ids.lines.filtered(lambda l: l.product_id == line.product_id).sale_order_line_id
             if len(sale_line) > 1: # If multiple downpayments, you have to choose the correct one
-                sale_line =  sale_line.filtered(lambda sl: sl.price_unit == abs(line.price_subtotal))
-                if len(sale_line) > 1:
+                result_sale_line =  sale_line.filtered(lambda sl: sl.price_unit == abs(line.price_subtotal))
+                if not result_sale_line:
                     sale_line = sale_line[0]
+                else:
+                    sale_line = result_sale_line
+                if len(result_sale_line) > 1:
+                    # Make an order between things as there is not direct link between pos order lines and its linked invoice
+                    move_lines = line.move_id.line_ids.filtered(lambda l: l.product_id == line.product_id and
+                                                          line.price_subtotal == l.price_subtotal).sorted(lambda l: l.id).ids
+                    move_line_idx = move_lines.index(line.id)
+                    pos_order_lines = line.move_id.pos_order_ids.lines.filtered(lambda l: l.product_id == line.product_id and
+                                                          line.price_subtotal == l.price_subtotal).sorted(lambda l: l.id)
+                    if len(pos_order_lines) > move_line_idx:
+                        sale_line = pos_order_lines[move_line_idx].sale_order_line_id
+                    else:
+                        sale_line = sale_line[0]
+            lines = self.env['account.move.line']
             if sale_line and sale_line.is_downpayment:
                 # Indirect, but direct to original downpayment
                 lines = sale_line.invoice_lines.filtered(lambda l: l.move_id._is_downpayment())
+                print(sale_line, sale_line.invoice_lines, lines)
                 # Indirect Indirect
                 indirect_line_invoice = sale_line.pos_order_line_ids.order_id.account_move
                 downpayment_invoice = indirect_line_invoice.filtered(lambda inv: inv._is_downpayment())
