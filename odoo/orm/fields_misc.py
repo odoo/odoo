@@ -9,7 +9,7 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.tools import SQL
 
 from .fields import Field
-from .identifiers import IdType
+from .identifiers import IdType, NewId
 
 if typing.TYPE_CHECKING:
     from .models import BaseModel
@@ -126,3 +126,10 @@ class Id(Field[IdType | typing.Literal[False]]):
         # do not flush, just return the identifier
         assert self.store, 'id field must be stored'
         return SQL.identifier(alias, self.name)
+
+    def expression_getter(self, field_expr):
+        if field_expr == 'id.origin':
+            def get_int_id(rec):
+                return (id_ := rec._ids[0]) or (isinstance(id_, NewId) and isinstance(id_.origin, int) and id_.origin) or False
+            return get_int_id
+        return super().expression_getter(field_expr)
