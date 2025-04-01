@@ -779,7 +779,7 @@ class ResUsers(models.Model):
             if not self._fields[fname].relational
         )
         return {
-            "select": SQL("(%s), %s", database_secret, fields),
+            "select": SQL("(%s) as database_secret, %s", database_secret, fields),
             "from": SQL("res_users"),
             "joins": SQL(""),
             "where": SQL("res_users.id = %s", self.id),
@@ -790,6 +790,10 @@ class ResUsers(models.Model):
     def _compute_session_token(self, sid):
         """ Compute a session token given a session id and a user id """
         # retrieve the fields used to generate the session token
+        field_values = self._session_token_get_values()
+        return self._session_token_hash_compute(sid, field_values)
+
+    def _session_token_get_values(self):
         self.env.cr.execute(SQL(
             "SELECT %(select)s FROM %(from)s %(joins)s WHERE %(where)s GROUP BY %(group_by)s",
             **self._get_session_token_query_params(),
@@ -798,10 +802,29 @@ class ResUsers(models.Model):
             self.env.registry.clear_cache()
             return False
         data_fields = self.env.cr.fetchone()
-        # generate hmac key
-        key = (u'%s' % (data_fields,)).encode('utf-8')
+        # create tuple with column name and value, allowing for overrides to manipulate the values
+        cr_description = self.env.cr.description
+        return tuple((column.name, data_fields[index]) for index, column in enumerate(cr_description))
+
+    def _session_token_hash_compute(self, sid, field_values):
+        # Generate hmac key using the column name and its value, only if the value is not None
+        # To avoid invalidating sessions when installing a new feature modifying the session token computation
+        # while not still being used.
+        key_tuple = tuple((k, v) for k, v in field_values if v is not None)
+        # encode the key tuple to a bytestring
+        key = str(key_tuple).encode()
         # hmac the session id
-        data = sid.encode('utf-8')
+        data = sid.encode()
+        h = hmac.new(key, data, sha256)
+        # return the session token with a prefix version
+        return h.hexdigest()
+
+    def _legacy_session_token_hash_compute(self, sid):
+        field_values = self._session_token_get_values()
+        # generate hmac key
+        key = ('%s' % (tuple(f[1] for f in field_values),)).encode()
+        # hmac the session id
+        data = sid.encode()
         h = hmac.new(key, data, sha256)
         # keep in the cache the token
         return h.hexdigest()
