@@ -1701,7 +1701,7 @@ actual arch.
             if type_ != 'action' and type_ != 'object':
                 return
             elif not name:
-                self._raise_view_error(_("Button must have a name"), node)
+                return
             elif type_ == 'object':
                 func = getattr(name_manager.model, name, None)
                 if not func:
