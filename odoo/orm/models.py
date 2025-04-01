@@ -2572,15 +2572,7 @@ class BaseModel(metaclass=MetaModel):
             path_field = model._fields[path_fname]
             if path_field.type != 'many2one':
                 raise ValueError(f'Cannot convert {field} (related={field.related}) to SQL because {path_fname} is not a Many2one')
-
-            comodel = model.env[path_field.comodel_name]
-            coalias = query.make_alias(alias, path_fname)
-            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
-                "%s = %s",
-                model._field_to_sql(alias, path_fname, query),
-                SQL.identifier(coalias, 'id'),
-            ))
-            model, alias = comodel, coalias
+            model, alias = path_field.join(model, alias, query)
 
         return model, model._fields[last_fname], alias
 
@@ -5016,12 +5008,7 @@ class BaseModel(metaclass=MetaModel):
                 terms.append(SQL("%s IS NULL", sql_field))
 
             # LEFT JOIN the comodel table, in order to include NULL values, too
-            coalias = query.make_alias(alias, field_name)
-            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
-                "%s = %s",
-                sql_field,
-                SQL.identifier(coalias, 'id'),
-            ))
+            _comodel, coalias = field.join(self, alias, query)
 
             # delegate the order to the comodel
             reverse = direction.code == 'DESC'
