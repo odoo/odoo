@@ -1,12 +1,13 @@
 import { renderToElement } from "@web/core/utils/render";
-import publicWidget from '@web/legacy/js/public/public_widget';
+import publicWidget from "@web/legacy/js/public/public_widget";
 import { _t } from "@web/core/l10n/translation";
+import { redirect } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 
 var CourseJoinWidget = publicWidget.Widget.extend({
-    template: 'slide.course.join',
+    template: "slide.course.join",
     events: {
-        'click .o_wslides_js_course_join_link': '_onClickJoin',
+        "click .o_wslides_js_course_join_link": "onJoinClick",
     },
 
     /**
@@ -43,112 +44,104 @@ var CourseJoinWidget = publicWidget.Widget.extend({
         this.invitePreview = options.invitePreview;
         this.isPartnerWithoutUser = options.isPartnerWithoutUser;
         this.publicUser = options.publicUser;
-        this.joinMessage = options.joinMessage || _t('Join this Course');
-        this.beforeJoin = options.beforeJoin || function () {return Promise.resolve();};
-        this.afterJoin = options.afterJoin || function () {document.location.reload();};
+        this.joinMessage = options.joinMessage || _t("Join this Course");
+        this.beforeJoin =
+            options.beforeJoin ||
+            function () {
+                return Promise.resolve();
+            };
+        this.afterJoin =
+            options.afterJoin ||
+            function () {
+                document.location.reload();
+            };
     },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickJoin: function (ev) {
+    async onJoinClick(ev) {
         ev.preventDefault();
 
-        if (this.invitePreview || (this.channel.channelEnroll === 'invite' && this.isMemberOrInvited)) {
+        if (
+            this.invitePreview ||
+            (this.channel.channelEnroll === "invite" && this.isMemberOrInvited)
+        ) {
             this.joinChannel(this.channel.channelId);
             return;
         }
 
-        if (this.channel.channelEnroll !== 'invite') {
+        if (this.channel.channelEnroll !== "invite") {
             if (this.publicUser) {
-                this.beforeJoin().then(this._redirectToLogin.bind(this));
+                await this.beforeJoin();
+                this.redirectToLogin.bind(this);
             } else if (!this.isMember) {
                 this.joinChannel(this.channel.channelId);
             }
         }
     },
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * Builds a login page that then redirects to this slide page, or the channel if the course
      * is not configured as public enroll type.
-     *
-     * @private
      */
-    _redirectToLogin: function () {
-        var url;
-        if (this.channel.channelEnroll === 'public') {
-            url = window.location.pathname;
+    redirectToLogin() {
+        const url = new URL(window.location.pathname, window.location.origin);
+        if (this.channel.channelEnroll === "public") {
             if (document.location.href.indexOf("fullscreen") !== -1) {
-                url += '?fullscreen=1';
+                url.searchParams.append("fullscreen", 1);
             }
         } else {
-            url = `/slides/${encodeURIComponent(this.channel.channelId)}`;
+            url.pathname = `/slides/${encodeURIComponent(this.channel.channelId)}`;
         }
-        document.location = `/web/login?redirect=${encodeURIComponent(url)}`;
+        const redirectURL = new URL("/web/login", window.location.origin);
+        redirectURL.searchParams.append("redirect", url.href);
+        redirect(redirectURL.href);
     },
 
     /**
-     * @private
      * @param {Object} $el
      * @param {String} message
      */
     _popoverAlert: function ($el, message) {
         $el.popover({
-            trigger: 'focus',
-            delay: {'hide': 300},
-            placement: 'bottom',
-            container: 'body',
+            trigger: "focus",
+            delay: { hide: 300 },
+            placement: "bottom",
+            container: "body",
             html: true,
             content: function () {
                 return message;
-            }
-        }).popover('show');
+            },
+        }).popover("show");
     },
 
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
     /**
-     * @public
      * @param {integer} channelId
      */
-    joinChannel: function (channelId) {
-        var self = this;
-        rpc('/slides/channel/join', {
+    async joinChannel(channelId) {
+        const data = await rpc("/slides/channel/join", {
             channel_id: channelId,
-        }).then(function (data) {
-            if (!data.error) {
-                self.afterJoin();
-            } else {
-                if (data.error === 'public_user') {
-                    const popupContent = renderToElement('slide.course.join.popupContent', {
-                        channelId: channelId,
-                        courseUrl: encodeURIComponent(document.URL),
-                        errorSignupAllowed: data.error_signup_allowed,
-                        widget: self,
-                    });
-                    self._popoverAlert(self.$el, popupContent);
-                } else if (data.error === 'join_done') {
-                    self._popoverAlert(self.$el, _t('You have already joined this channel'));
-                } else {
-                    self._popoverAlert(self.$el, _t('Unknown error'));
-                }
-            }
         });
+        if (data.error) {
+            if (data.error === "public_user") {
+                const popupContent = renderToElement("slide.course.join.popupContent", {
+                    channelId: channelId,
+                    courseUrl: encodeURIComponent(document.URL),
+                    errorSignupAllowed: data.error_signup_allowed,
+                    widget: this,
+                });
+                this._popoverAlert(this.$el, popupContent);
+            } else if (data.error === "join_done") {
+                this._popoverAlert(this.$el, _t("You have already joined this channel"));
+            } else {
+                this._popoverAlert(this.$el, _t("Unknown error"));
+            }
+        } else {
+            this.afterJoin();
+        }
     },
 });
 
 publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
-    selector: '.o_wslides_js_course_join_link',
+    selector: ".o_wslides_js_course_join_link",
 
     /**
      * @override
@@ -161,15 +154,15 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
         var options = {
             channel: {
                 channelEnroll: data.channelEnroll,
-                channelId: data.channelId
+                channelId: data.channelId,
             },
             inviteHash: data.inviteHash,
             invitePartnerId: data.invitePartnerId,
             invitePreview: data.invitePreview,
             isMemberOrInvited: data.isMemberOrInvited,
-            isPartnerWithoutUser: data.isPartnerWithoutUser
+            isPartnerWithoutUser: data.isPartnerWithoutUser,
         };
-        $('.o_wslides_js_course_join').each(function () {
+        $(".o_wslides_js_course_join").each(function () {
             proms.push(new CourseJoinWidget(self, options).attachTo($(this)));
         });
         return Promise.all(proms);
@@ -178,5 +171,5 @@ publicWidget.registry.websiteSlidesCourseJoin = publicWidget.Widget.extend({
 
 export default {
     courseJoinWidget: CourseJoinWidget,
-    websiteSlidesCourseJoin: publicWidget.registry.websiteSlidesCourseJoin
+    websiteSlidesCourseJoin: publicWidget.registry.websiteSlidesCourseJoin,
 };
