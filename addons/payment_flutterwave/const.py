@@ -31,7 +31,7 @@ SUPPORTED_CURRENCIES = [
 
 # Mapping of transaction states to Flutterwave payment statuses.
 PAYMENT_STATUS_MAPPING = {
-    'pending': ['pending auth'],
+    'pending': ['pending', 'pending auth'],
     'done': ['successful'],
     'cancel': ['cancelled'],
     'error': ['failed'],
