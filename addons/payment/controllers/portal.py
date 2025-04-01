@@ -243,6 +243,7 @@ class PaymentPortal(portal.CustomerPortal):
             **payment_form_values,
             **payment_context,
             **self._get_extra_payment_form_values(**kwargs),
+            'success':  _("Details saved successfully.") if kwargs.get('success') else '',
         }
         return request.render('payment.payment_methods', rendering_context)
 
@@ -394,8 +395,10 @@ class PaymentPortal(portal.CustomerPortal):
             access_token = payment_utils.generate_access_token(
                 tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
             )
-        tx_sudo.landing_route = f'{tx_sudo.landing_route}' \
-                                f'?tx_id={tx_sudo.id}&access_token={access_token}'
+        base_url = f"{tx_sudo.landing_route}?tx_id={tx_sudo.id}&access_token={access_token}"
+        if tx_sudo.landing_route == '/my/payment_method':
+            base_url += '&success=true'
+        tx_sudo.landing_route = base_url
 
     @http.route('/payment/confirmation', type='http', methods=['GET'], auth='public', website=True)
     def payment_confirm(self, tx_id, access_token, **kwargs):
