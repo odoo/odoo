@@ -7,21 +7,17 @@ import {
 import {
     click,
     contains,
+    focus,
     insertText,
+    listenStoreFetch,
     setupChatHub,
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    Command,
-    onRpc,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { asyncStep, Command, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { queryFirst } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
@@ -52,32 +48,15 @@ test("new message from operator displays unread counter", async () => {
         })
     );
     setupChatHub({ opened: [channelId] });
-    onRpc(["/mail/action", "/mail/data"], async (request) => {
-        const { params } = await request.json();
-        if (JSON.stringify(params.fetch_params).includes("init_livechat")) {
-            asyncStep(`${new URL(request.url).pathname} - ${JSON.stringify(params)}`);
-        }
-    });
     onRpc("/discuss/channel/messages", () => asyncStep("/discuss/channel/message"));
     const userId = serverState.userId;
+    listenStoreFetch(["init_messaging", "init_livechat", "discuss.channel"]);
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
-    await waitForSteps([
-        `/mail/action - ${JSON.stringify({
-            fetch_params: [
-                ["init_livechat", livechatChannelId],
-                ["discuss.channel", [channelId]],
-            ],
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-            },
-        })}`,
-        "/discuss/channel/message",
-    ]);
+    await waitStoreFetch(["init_messaging", "init_livechat", "discuss.channel"], {
+        stepsAfter: ["/discuss/channel/message"],
+    });
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -92,19 +71,11 @@ test("new message from operator displays unread counter", async () => {
 test.tags("focus required");
 test("focus on unread livechat marks it as read", async () => {
     const pyEnv = await startServer();
-    const livechatChannelId = await loadDefaultEmbedConfig();
-    onRpc(["/mail/action", "/mail/data"], async (request) => {
-        const { params } = await request.json();
-        asyncStep(`${new URL(request.url).pathname} - ${JSON.stringify(params)}`);
-    });
+    await loadDefaultEmbedConfig();
     const userId = serverState.userId;
+    listenStoreFetch(["init_messaging", "init_livechat"]);
     await start({ authenticateAs: false });
-    await waitForSteps([
-        `/mail/action - ${JSON.stringify({
-            fetch_params: [["init_livechat", livechatChannelId]],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitStoreFetch(["init_messaging", "init_livechat"]);
     await click(".o-livechat-LivechatButton");
     await insertText(".o-mail-Composer-input", "Hello World!");
     await triggerHotkey("Enter");
@@ -120,6 +91,7 @@ test("focus on unread livechat marks it as read", async () => {
             pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.cookie.get("dgid")]]),
         ],
     ]);
+    await waitStoreFetch("init_messaging");
     queryFirst(".o-mail-Composer-input").blur();
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>
@@ -131,6 +103,6 @@ test("focus on unread livechat marks it as read", async () => {
     );
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
     await contains(".o-mail-Message", { text: "Are you there?" });
-    await click(".o-mail-Composer-input");
+    await focus(".o-mail-Composer-input");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
 });

@@ -1,14 +1,13 @@
-import { contains, start, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    contains,
+    listenStoreFetch,
+    start,
+    startServer,
+    waitStoreFetch,
+} from "@mail/../tests/mail_test_helpers";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    Command,
-    onRpc,
-    patchWithCleanup,
-    serverState,
-    waitForSteps,
-} from "@web/../tests/web_test_helpers";
+import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { defineLivechatModels } from "./livechat_test_helpers";
@@ -40,11 +39,9 @@ test("push notifications are Odoo toaster on Android", async () => {
             Command.create({ guest_id: guestId }),
         ],
     });
-    onRpc("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("lazy_session_info");
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps([`lazy_session_info`]);
+    await waitStoreFetch("init_messaging");
     // send after init_messaging because bus subscription is done after init_messaging
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {
