@@ -260,6 +260,15 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
+
+        // TODO remove in 18.0
+        const navTabsStyleEl = $html.find(`[data-js="NavTabsStyle"]`)[0];
+        if (navTabsStyleEl) {
+            const divEl = document.createElement("div");
+            divEl.setAttribute("data-js", "TabsNavItems");
+            divEl.setAttribute("data-selector", ".nav-item");
+            navTabsStyleEl.append(divEl);
+        }
         return super._computeSnippetTemplates(html);
     }
     /**
