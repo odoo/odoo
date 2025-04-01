@@ -241,14 +241,17 @@ class L10nInEwaybill(models.Model):
     )
     def _compute_is_editable(self):
         for ewaybill in self:
-            is_incoming = ewaybill._is_incoming()
-            is_overseas = (
-                ewaybill._get_billing_partner().l10n_in_gst_treatment in ('overseas', 'special_economic_zone')
-            )
-            ewaybill.is_bill_to_editable = not is_incoming
-            ewaybill.is_bill_from_editable = is_incoming
-            ewaybill.is_ship_from_editable = is_incoming and is_overseas
-            ewaybill.is_ship_to_editable = not is_incoming and not is_overseas
+            if ewaybill.account_move_id:
+                ewaybill.is_bill_to_editable = False
+                ewaybill.is_bill_from_editable = False
+                ewaybill.is_ship_from_editable = True
+                ewaybill.is_ship_to_editable = True
+            else:
+                is_incoming = ewaybill._is_incoming()
+                ewaybill.is_bill_to_editable = not is_incoming
+                ewaybill.is_bill_from_editable = is_incoming
+                ewaybill.is_ship_from_editable = not is_incoming
+                ewaybill.is_ship_to_editable = is_incoming
 
     def _compute_content(self):
         dependent_fields = self._get_ewaybill_dependencies()
