@@ -246,6 +246,8 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
+        if not re.match(r"^[a-zA-Z\d\-._~]{1,50}$", endpoint):
+            return _("The Peppol endpoint (%s) is not valid. It should contain only letters and digit.", endpoint)
 
     @api.model
     def _get_edi_builder(self, invoice_edi_format):
