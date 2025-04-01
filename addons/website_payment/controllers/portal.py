@@ -60,7 +60,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
         tx_sudo.is_donation = True
-        breakpoint()
         if use_public_partner:
             fields = tx_sudo._fields
             for key, value in kwargs['partner_details'].items():
@@ -117,7 +116,21 @@ class PaymentPortal(payment_portal.PaymentPortal):
             countries = request.env['res.country'].sudo().search([])
             descriptions = request.httprequest.form.getlist('donation_descriptions')
 
+            # When we click the edit button, the donation_options reset.
+            # We need to set the default values for the donation options
+            # to avoid errors in the template.
             donation_options = json_safe.loads(donation_options) if donation_options else {}
+            donation_options.setdefault('prefilledOptions', "true")
+            donation_options.setdefault('donationAmounts', '["10", "25", "50", "100"]')
+            donation_options.setdefault('descriptions', 'true')
+            if not descriptions:
+                descriptions = [
+                    'A year of cultural awakening.',
+                    'Caring for a baby for 1 month.',
+                    'One year in elementary school.',
+                    'One year in high school.'
+                ]
+
             donation_amounts = json_safe.loads(donation_options.get('donationAmounts', '[]'))
 
             rendering_context.update({

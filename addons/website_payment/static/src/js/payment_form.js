@@ -63,6 +63,16 @@ PaymentForm.include({
                 'email': _t('Email'),
                 'country_id': _t('Country'),
             };
+
+            // This code is added here because setting a custom field as required
+            // in the form does not work. So, we are manually checking if the field is mandatory.
+            document.querySelectorAll('.s_website_form_required').forEach((field) => {
+                const inputEl = field.querySelector('input, select');
+                if (inputEl && inputEl.name) {
+                    mandatoryFields[inputEl.name] = field.textContent.trim();
+                }
+            });
+
             for (const id in mandatoryFields) {
                 const fieldEl = document.querySelector(`input[name="${id}"],select[name="${id}"]`);
                 fieldEl.classList.remove('is-invalid');
@@ -109,23 +119,20 @@ PaymentForm.include({
         transactionRouteParams.amount = parseFloat(
             document.querySelector(".o_payment_form").dataset.amount
         );
-        this.getFormData = (formSelector) => {
+        const getFormData = (formSelector) => {
             const form = document.querySelector(formSelector);
             if (!form) {
                 return {};
             }
             const formData = new FormData(form)
-
             const partnerDetails = {};
-
             formData.forEach((value, key) => {
                 partnerDetails[key] = value;
             });
-
             return partnerDetails;
         };
 
-        const partnerDetails = this.getFormData(".o_payment_field_form");
+        const partnerDetails = getFormData(".o_payment_field_form");
         return document.querySelector('.o_donation_payment_form')
             ? {
             ...transactionRouteParams,

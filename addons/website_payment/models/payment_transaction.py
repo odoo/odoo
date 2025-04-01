@@ -30,12 +30,13 @@ class PaymentTransaction(models.Model):
             msg = [_('Payment received from donation with following details:')]
             for field in field_names:
                 match_key = f'partner_{field}' if f'partner_{field}' in donation_tx._fields else field
-                field_name = donation_tx._fields[match_key].string
-                value = donation_tx[match_key]
-                if value:
-                    if hasattr(value, 'name'):
-                        value = value.name
-                    msg.append(Markup('<br/>- %s: %s') % (field_name, value))
+                if match_key in donation_tx._fields:
+                    field_name = donation_tx._fields[match_key].string
+                    value = donation_tx[match_key]
+                    if value:
+                        if hasattr(value, 'name'):
+                            value = value.name
+                        msg.append(Markup('<br/>- %s: %s') % (field_name, value))
             donation_tx.payment_id._message_log(body=Markup().join(msg))
 
     def _send_donation_email(self, is_internal_notification=False, comment=None, recipient_email=None):

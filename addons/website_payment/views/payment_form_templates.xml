@@ -130,12 +130,9 @@
         </form>
     </template>
 
-    <template id="website_signup_form_options" inherit_id="website.snippet_options">
+    <template id="website_payment_form_options" inherit_id="website.snippet_options">
         <xpath expr="//div[@data-js='WebsiteFormEditor']//we-row//we-select" position="attributes">
             <attribute name="data-name" add="payment_form_opt" />
-        </xpath>
-        <xpath expr="//div[@data-js='AddFieldForm']" position="attributes">
-            <attribute name="data-exclude" add=".o_payment_form_container" />
         </xpath>
     </template>
 
