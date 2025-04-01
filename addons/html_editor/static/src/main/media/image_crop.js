@@ -278,7 +278,6 @@ export class ImageCrop extends Component {
 
     onRotate(degree) {
         this.cropper.rotate(degree);
-        this.resetCropBox();
     }
 
     onFlip(scaleDirection) {
