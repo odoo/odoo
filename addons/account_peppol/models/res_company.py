@@ -86,6 +86,7 @@ class ResCompany(models.Model):
         inverse='_inverse_peppol_purchase_journal_id',
     )
     peppol_external_provider = fields.Char(tracking=True)
+    peppol_can_send = fields.Boolean(compute='_compute_peppol_can_send')
 
     # -------------------------------------------------------------------------
     # HELPER METHODS
@@ -191,6 +192,12 @@ class ResCompany(models.Model):
                     company.account_peppol_phone_number = company.phone
                 except ValidationError:
                     continue
+
+    @api.depends('account_peppol_proxy_state')
+    def _compute_peppol_can_send(self):
+        can_send_domain = self.env['account_edi_proxy_client.user']._get_can_send_domain()
+        for company in self:
+            company.peppol_can_send = company.account_peppol_proxy_state in can_send_domain
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
