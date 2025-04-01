@@ -404,3 +404,26 @@ test("Elements are confined within their container", async () => {
 
     await drop();
 });
+
+test("Focusing is not lost after clicking", async () => {
+    expect.assertions(1);
+
+    class List extends Component {
+        static template = xml`
+            <div t-ref="root" class="root">
+                <input type="checkbox" class="item">Something</input>
+            </div>`;
+        static props = ["*"];
+        setup() {
+            useDraggable({
+                ref: useRef("root"),
+                elements: ".item",
+            });
+        }
+    }
+
+    await mountWithCleanup(List);
+
+    await contains(".item").click();
+    expect(".item").toBeFocused();
+});
