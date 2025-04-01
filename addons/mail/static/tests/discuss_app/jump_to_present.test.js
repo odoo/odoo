@@ -45,6 +45,59 @@ test("Basic jump to present when scrolling to outdated messages", async () => {
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
+test("Jump to present when pressing End", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Message content ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    await contains(".o-mail-Thread");
+    expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
+        PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Thread").clientHeight,
+        { message: "should have enough scroll height to trigger jump to present" }
+    );
+    const thread = document.querySelector(".o-mail-Thread");
+    thread.dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true }));
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
+test("Jump to present when pressing Alt+Down", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (let i = 0; i < 20; i++) {
+        pyEnv["mail.message"].create({
+            body: "Message content ".repeat(100),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 20 });
+    await contains(".o-mail-Thread");
+    expect(document.querySelector(".o-mail-Thread").scrollHeight).toBeGreaterThan(
+        PRESENT_VIEWPORT_THRESHOLD * document.querySelector(".o-mail-Thread").clientHeight,
+        { message: "should have enough scroll height to trigger jump to present" }
+    );
+    const thread = document.querySelector(".o-mail-Thread");
+    thread.dispatchEvent(new KeyboardEvent("keydown", {
+        key: "ArrowDown",
+        altKey: true,
+        bubbles: true,
+    }));
+    await contains(".o-mail-Thread", { scroll: "bottom" });
+});
+
 test("Basic jump to present when scrolling to outdated messages (chatter, DESC)", async () => {
     patchUiSize({ size: SIZES.XXL });
     const pyEnv = await startServer();
