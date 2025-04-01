@@ -3,6 +3,7 @@
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import tagged
+from odoo.tests import Form
 
 
 @tagged('-at_install', 'post_install')
@@ -853,3 +854,63 @@ class TestSaleService(TestCommonSaleTimesheet):
                 hours_delivered,
                 f"{amount} hours delivered should round the same for invoice & timesheet",
             )
+
+    def test_service_product_uom_default(self):
+        """
+        Test that user-defined UoM default is respected when creating a product or product variant
+        """
+        uom_cm = self.env.ref('uom.product_uom_cm')
+        uom_day = self.env.ref('uom.product_uom_day')
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        self.user_manager_company_B.group_ids += (
+            self.env.ref('product.group_product_manager') |
+            self.env.ref('sales_team.group_sale_salesman')
+        )
+        self.env['ir.default'].set('product.template', 'uom_id',
+                                   uom_cm.id, user_id=self.user_manager_company_B.id, company_id=self.user_manager_company_B.company_id.id)
+        self.env['ir.default'].set('product.product', 'uom_id',
+                                   uom_cm.id, user_id=self.user_manager_company_B.id, company_id=self.user_manager_company_B.company_id.id)
+
+        # - product.template
+        product_form = Form(self.env['product.template'].with_user(self.user_manager_company_B))
+        product_form.name = 'product test'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_cm, "UoM default was not respected")
+
+        product_form = Form(self.env['product.template'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_hour, "UoM should be hours for timesheet service when default is not a time unit")
+
+        self.env['ir.default'].set('product.template', 'uom_id',
+                                   uom_day.id, user_id=self.user_manager_company_B.id, company_id=self.user_manager_company_B.company_id.id)
+        product_form = Form(self.env['product.template'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_day, "time UoM default was not respected")
+
+        # - product.product
+        product_form = Form(self.env['product.product'].with_user(self.user_manager_company_B))
+        product_form.name = 'product variant test'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_cm, "UoM default was not respected")
+
+        product_form = Form(self.env['product.product'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_hour, "UoM should be hours for timesheet service when default is not a time unit")
+
+        self.env['ir.default'].set('product.product', 'uom_id',
+                                   uom_day.id, user_id=self.user_manager_company_B.id, company_id=self.user_manager_company_B.company_id.id)
+        product_form = Form(self.env['product.product'].with_user(self.user_manager_company_B))
+        product_form.name = 'timesheet service'
+        product_form.type = 'service'
+        product_form.service_policy = 'delivered_timesheet'
+        product = product_form.save()
+        self.assertEqual(product.uom_id, uom_day, "time UoM default was not respected")
