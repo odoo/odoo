@@ -7,11 +7,15 @@ import {
     click,
     contains,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     setupChatHub,
     start,
     startServer,
+    STORE_FETCH_ROUTES,
     triggerHotkey,
+    userContext,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import {
@@ -81,17 +85,18 @@ test("Only necessary requests are made when creating a new chat", async () => {
     const livechatChannelId = await loadDefaultEmbedConfig();
     const operatorPartnerId = serverState.partnerId;
     onRpcBefore((route, args) => {
-        if (!route.includes("assets") && !route.includes("lazy_session_info")) {
+        if (!route.includes("assets") && !STORE_FETCH_ROUTES.includes(route)) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
         }
     });
+    listenStoreFetch(undefined, { logParams: ["init_livechat"] });
     await start({ authenticateAs: false });
     await contains(".o-livechat-LivechatButton");
-    await waitForSteps([
-        `/mail/action - ${JSON.stringify({
-            fetch_params: [["init_livechat", livechatChannelId]],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
+    await waitStoreFetch([
+        "failures", // called because mail/core/web is loaded in test bundle
+        "systray_get_activities", // called because mail/core/web is loaded in test bundle
+        "init_messaging",
+        ["init_livechat", livechatChannelId],
     ]);
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
@@ -108,31 +113,34 @@ test("Only necessary requests are made when creating a new chat", async () => {
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "Hello!" });
     const [threadId] = pyEnv["discuss.channel"].search([], { order: "id DESC" });
-    await waitForSteps([
-        `/im_livechat/get_session - ${JSON.stringify({
-            channel_id: livechatChannelId,
-            anonymous_name: "Visitor",
-            previous_operator_id: operatorPartnerId,
-            persisted: true,
-        })}`,
-        `/mail/message/post - ${JSON.stringify({
-            post_data: {
-                body: "Hello!",
-                email_add_signature: true,
-                message_type: "comment",
-                subtype_xmlid: "mail.mt_comment",
-            },
-            thread_id: threadId,
-            thread_model: "discuss.channel",
-            context: {
-                lang: "en",
-                tz: "taht",
-                uid: serverState.userId,
-                allowed_company_ids: [1],
-                temporary_id: 0.8200000000000001,
-            },
-        })}`,
-    ]);
+    await waitStoreFetch(
+        [
+            "failures", // called because mail/core/web is loaded in test bundle
+            "systray_get_activities", // called because mail/core/web is loaded in test bundle
+            "init_messaging",
+        ],
+        {
+            stepsBefore: [
+                `/im_livechat/get_session - ${JSON.stringify({
+                    channel_id: livechatChannelId,
+                    anonymous_name: "Visitor",
+                    previous_operator_id: operatorPartnerId,
+                    persisted: true,
+                })}`,
+                `/mail/message/post - ${JSON.stringify({
+                    post_data: {
+                        body: "Hello!",
+                        email_add_signature: true,
+                        message_type: "comment",
+                        subtype_xmlid: "mail.mt_comment",
+                    },
+                    thread_id: threadId,
+                    thread_model: "discuss.channel",
+                    context: { ...userContext(), temporary_id: 0.8200000000000001 },
+                })}`,
+            ],
+        }
+    );
 });
 
 test("do not create new thread when operator answers to visitor", async () => {

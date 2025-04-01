@@ -7,7 +7,7 @@ import {
     inputFiles,
     insertText,
     isInViewportOf,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     openListView,
@@ -18,18 +18,17 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { mockDate, tick } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import {
-    asyncStep,
     Command,
     getService,
     patchWithCleanup,
     preloadBundle,
     serverState,
-    waitForSteps,
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -554,11 +553,9 @@ test("chat window should open when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", async () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     await contains(".o-mail-ChatHub");
     withUser(userId, () =>
         rpc("/mail/message/post", {

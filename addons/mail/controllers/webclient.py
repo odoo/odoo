@@ -36,12 +36,18 @@ class WebclientController(http.Controller):
     @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
         for fetch_param in fetch_params:
-            name, params = (fetch_param, None) if isinstance(fetch_param, str) else fetch_param
+            name, params, data_id = (
+                (fetch_param, None, None)
+                if isinstance(fetch_param, str)
+                else (fetch_param + [None, None])[:3]
+            )
+            store.data_id = data_id
             self._process_request_for_all(store, name, params)
             if not request.env.user._is_public():
                 self._process_request_for_logged_in_user(store, name, params)
             if request.env.user._is_internal():
                 self._process_request_for_internal_user(store, name, params)
+        store.data_id = None
 
     @classmethod
     def _process_request_for_all(self, store: Store, name, params):

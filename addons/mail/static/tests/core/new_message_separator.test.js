@@ -4,7 +4,7 @@ import {
     contains,
     defineMailModels,
     insertText,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     scroll,
@@ -12,17 +12,12 @@ import {
     start,
     startServer,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { click as hootClick, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import {
-    asyncStep,
-    Command,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 
@@ -251,23 +246,10 @@ test("show new message separator when message is received while chat window is c
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/mail/data", (args) => {
-        if (JSON.stringify(args.fetch_params).includes("discuss.channel")) {
-            asyncStep(`/mail/data - ${JSON.stringify(args)}`);
-        }
-    });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
-        asyncStep("init_messaging");
-    });
     setupChatHub({ opened: [channelId] });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps([
-        "init_messaging",
-        `/mail/data - ${JSON.stringify({
-            fetch_params: [["discuss.channel", [channelId]]],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-    ]);
+    await waitStoreFetch("init_messaging");
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-ChatWindow", { count: 0 });
     // send after init_messaging because bus subscription is done after init_messaging

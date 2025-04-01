@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     patchBrowserNotification,
@@ -12,6 +13,7 @@ import {
     startServer,
     triggerEvents,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
@@ -1220,12 +1222,18 @@ test("can open messaging menu even if messaging is not initialized", async () =>
     patchBrowserNotification("default");
     await startServer();
     const def = new Deferred();
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", async () => {
-        await def;
+    listenStoreFetch("init_messaging", {
+        async onRpc() {
+            asyncStep("before init_messaging");
+            await def;
+        },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-NotificationItem", { text: "Turn on notifications" });
+    await waitForSteps(["before init_messaging"]);
+    def.resolve();
+    await waitStoreFetch("init_messaging");
 });
 
 test("can open messaging menu even if channels are not fetched", async () => {
@@ -1233,20 +1241,18 @@ test("can open messaging menu even if channels are not fetched", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const def = new Deferred();
-    onRpcBefore("/mail/action", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
+    listenStoreFetch("channels_as_member", {
+        async onRpc() {
+            asyncStep("before channels_as_member");
             await def;
-        }
-    });
-    onRpcBefore("/mail/data", async (args) => {
-        if (args.fetch_params.includes("channels_as_member")) {
-            await def;
-        }
+        },
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-DiscussSystray", { text: "Loading…" });
+    await waitForSteps(["before channels_as_member"]);
     def.resolve();
+    await waitStoreFetch("channels_as_member");
     await contains(".o-mail-NotificationItem", { text: "General" });
 });
 

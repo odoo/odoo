@@ -72,7 +72,7 @@ class IrHttp(models.AbstractModel):
             'session_info': self.session_info(),
         }
 
-    def lazy_session_info(self):
+    def lazy_session_info(self, **kwargs):
         return {}
 
     def session_info(self):

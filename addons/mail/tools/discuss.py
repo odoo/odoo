@@ -81,6 +81,7 @@ class Store:
 
     def __init__(self, records=None, fields=None, extra_fields=None, as_thread=False, **kwargs):
         self.data = {}
+        self.data_id = None
         if records:
             self.add(records, fields, extra_fields, as_thread=as_thread, **kwargs)
 
@@ -197,6 +198,15 @@ class Store:
             else:
                 res[model_name] = [dict(sorted(record.items())) for record in records.values()]
         return res
+
+    def resolve_data_request(self, **values):
+        """Add values to the store for the current data request.
+
+        Use case: resolve a specific data request from a client."""
+        if not self.data_id:
+            return self
+        self.add_model_values("DataResponse", {"id": self.data_id, "_resolve": True, **values})
+        return self
 
     def _add_values(self, values, model_name, index=None):
         """Adds values to the store for a given model name and index."""

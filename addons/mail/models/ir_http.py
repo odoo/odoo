@@ -3,18 +3,19 @@
 import odoo
 from odoo import models
 from odoo.http import request
-from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store
 
 
 class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
-    def lazy_session_info(self):
-        res = super().lazy_session_info()
-        res["store_data"] = WebclientController._process_request(
-            fetch_params=["failures", "systray_get_activities", "init_messaging"],
-            context=request.context)
+    def lazy_session_info(self, **kwargs):
+        res = super().lazy_session_info(**kwargs)
+        if fetch_params := kwargs.get("store_fetch_params"):
+            routing_map = request.env["ir.http"].routing_map()
+            map_adapter = routing_map.bind_to_environ(request.httprequest.environ)
+            endpoint, _args = map_adapter.match(path_info="/mail/data")
+            res["store_data"] = endpoint(fetch_params=fetch_params, context=request.context)
         return res
 
     def session_info(self):

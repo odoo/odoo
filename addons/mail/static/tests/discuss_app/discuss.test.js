@@ -6,6 +6,7 @@ import {
     defineMailModels,
     editInput,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
@@ -14,7 +15,9 @@ import {
     SIZES,
     start,
     startServer,
+    STORE_FETCH_ROUTES,
     triggerHotkey,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
@@ -44,26 +47,20 @@ defineMailModels();
 test("sanity check", async () => {
     await startServer();
     onRpcBefore((route, args) => {
-        if (route === "/mail/data" && args?.fetch_params?.includes("channels_as_member")) {
+        if (
+            (route.startsWith("/mail") || route.startsWith("/discuss")) &&
+            !STORE_FETCH_ROUTES.includes(route)
+        ) {
             asyncStep(`${route} - ${JSON.stringify(args)}`);
-        }
-        if (route.startsWith("/mail/inbox") || route.startsWith("/discuss")) {
-            asyncStep(`${route} - ${JSON.stringify(args)}`);
-        }
-        if (route.endsWith("lazy_session_info")) {
-            asyncStep("lazy_session_info");
         }
     });
+    listenStoreFetch();
     await start();
-    await waitForSteps([`lazy_session_info`]);
+    await waitStoreFetch(["failures", "systray_get_activities", "init_messaging"]);
     await openDiscuss();
-    await waitForSteps([
-        `/mail/data - ${JSON.stringify({
-            fetch_params: ["channels_as_member"],
-            context: { lang: "en", tz: "taht", uid: serverState.userId, allowed_company_ids: [1] },
-        })}`,
-        '/mail/inbox/messages - {"fetch_params":{"limit":30}}',
-    ]);
+    await waitStoreFetch(["channels_as_member"], {
+        stepsAfter: ['/mail/inbox/messages - {"fetch_params":{"limit":30}}'],
+    });
     await contains(".o-mail-DiscussSidebar");
     await contains("h4:contains(Your inbox is empty)");
 });
@@ -1095,13 +1092,11 @@ test("out-of-focus notif on needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1137,13 +1132,11 @@ test("receive new chat message: out of odoo focus (notification, chat)", async (
             }
         },
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new message with odoo out-of-focused
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1177,13 +1170,11 @@ test("no out-of-focus notif on non-needaction message in channel", async () => {
             }
         },
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
     await contains(".o-mail-ChatWindow", { count: 0 });
-    await waitForSteps(["init_messaging"]);
     // simulate receving new message
     withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1302,13 +1293,11 @@ test("out-of-focus notif takes new inbox messages into account", async () => {
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await openDiscuss();
     const titleService = getService("title");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1338,13 +1327,11 @@ test("out-of-focus notif on needaction message in group chat contributes only on
         ],
         channel_type: "group",
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await openDiscuss();
     const titleService = getService("title");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1371,16 +1358,14 @@ test("inbox notifs shouldn't play sound nor open chat bubble", async () => {
     const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     pyEnv["discuss.channel"].create({ name: "general", channel_type: "channel" });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
     patchWithCleanup(OutOfFocusService.prototype, {
         _playSound() {
             asyncStep("play_sound");
         },
     });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     // simulate receiving a new needaction message with odoo out-of-focused
     const adminId = serverState.partnerId;
     await withUser(userId, () =>
@@ -1422,12 +1407,10 @@ test("receive new message plays sound", async () => {
             return super.play(soundEffectName, ...args);
         },
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1470,12 +1453,10 @@ test("message sound on receiving new message (push notif enabled)", async () => 
             return super.play(soundEffectName, ...args);
         },
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
+    await waitStoreFetch("init_messaging");
     await contains(".o_menu_systray i[aria-label='Messages']");
-    await waitForSteps(["init_messaging"]);
     // simulate receiving a new message
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -1537,14 +1518,12 @@ test("should auto-pin chat when receiving a new DM", async () => {
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", () => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
     await openDiscuss();
+    await waitStoreFetch("init_messaging");
     await contains(".o-mail-DiscussSidebarCategory-chat");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Demo" });
-    await waitForSteps(["init_messaging"]);
     // simulate receiving the first message on channel 11
     withUser(userId, () =>
         rpc("/mail/message/post", {

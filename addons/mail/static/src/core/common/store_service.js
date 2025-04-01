@@ -85,8 +85,7 @@ export class Store extends BaseStore {
     openInviteThread = Record.one("Thread");
     emojiLoader = loader;
 
-    fetchDeferred = new Deferred();
-    /** @type {[string | [string, any]]} */
+    /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = [];
     fetchReadonly = true;
     fetchSilent = true;
@@ -192,15 +191,29 @@ export class Store extends BaseStore {
     /**
      * @param {string} name
      * @param {any} params
+     * @param {Object} [options={}]
+     * @param {boolean} [options.requestData=false] when set to true, the return promise will
+     *  resolve only when the requested data are returned (the data might come later, from another
+     *  RPC or a bus notification for example). When set to false (the default), the return promise
+     *  will resolve as soon as the RPC is done. This is intended to be true only for requests that
+     *  will be resolved server side with `resolve_data_request`.
+     * @param {boolean} [options.readonly=true] when set to false, the server will open a read-write
+     *  cursor to process this request which is necessary if the request is expected to change data.
+     * @param {boolean} [options.silent=true]
      * @returns {Deferred}
      */
-    async fetchStoreData(name, params, { readonly = true, silent = true } = {}) {
-        this.fetchParams.push(params ? [name, params] : name);
+    async fetchStoreData(
+        name,
+        params,
+        { requestData = false, readonly = true, silent = true } = {}
+    ) {
+        const dataRequest = this.DataResponse.createRequest();
+        dataRequest._autoResolve = !requestData;
+        this.fetchParams.push([name, params, dataRequest]);
         this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
-        const fetchDeferred = this.fetchDeferred;
         this._fetchStoreDataDebounced();
-        return fetchDeferred;
+        return dataRequest._resultDef;
     }
 
     /** Import data received from init_messaging */
@@ -249,28 +262,51 @@ export class Store extends BaseStore {
     }
 
     _fetchStoreDataDebounced() {
-        const fetchDeferred = this.fetchDeferred;
-        rpc(
-            this.fetchReadonly ? "/mail/data" : "/mail/action",
-            { fetch_params: this.fetchParams, context: user.context },
-            {
-                silent: this.fetchSilent,
-            }
+        const fetchParams = this.fetchParams;
+        this._fetchStoreDataRpc(
+            fetchParams.map(([name, params, dataRequest]) => {
+                if (dataRequest._autoResolve) {
+                    /**
+                     * Auto-resolve requests don't need to pass any data request id as the server is
+                     * expected to not return anything specific for them. It would work if id are
+                     * given but it's more bytes on the network and more noise in the logs/tests.
+                     */
+                    if (params !== undefined) {
+                        return [name, params];
+                    } else {
+                        // In a similar reasoning, also remove empty params.
+                        return name;
+                    }
+                } else {
+                    return [name, params, dataRequest.id];
+                }
+            })
         ).then(
             (data) => {
-                const recordsByModel = this.insert(data);
-                fetchDeferred.resolve(recordsByModel);
+                this.insert(data);
+                for (const [, , dataRequest] of fetchParams) {
+                    if (dataRequest._autoResolve) {
+                        dataRequest._resolve = true;
+                    }
+                }
             },
-            (error) => fetchDeferred.reject(error)
+            (error) => {
+                for (const [, , dataRequest] of fetchParams) {
+                    dataRequest._resultDef.reject(error);
+                }
+            }
         );
-        this.resetFetchState();
-    }
-
-    resetFetchState() {
-        this.fetchDeferred = new Deferred();
         this.fetchParams = [];
         this.fetchReadonly = true;
         this.fetchSilent = true;
+    }
+
+    _fetchStoreDataRpc(fetchParams) {
+        return rpc(
+            this.fetchReadonly ? "/mail/data" : "/mail/action",
+            { fetch_params: fetchParams, context: user.context },
+            { silent: this.fetchSilent }
+        );
     }
 
     /**
@@ -575,15 +611,15 @@ export class Store extends BaseStore {
     }
 
     async joinChat(id, forceOpen = false) {
-        const { channel_id, data } = await rpc("/discuss/channel/get_or_create_chat", {
-            partners_to: [id],
-        });
-        this.store.insert(data);
-        const thread = this.store.Thread.get({ id: channel_id, model: "discuss.channel" });
+        const { channel } = await this.fetchStoreData(
+            "/discuss/get_or_create_chat",
+            { partners_to: [id] },
+            { readonly: false, requestData: true }
+        );
         if (forceOpen) {
-            await thread.openChatWindow({ focus: true });
+            await channel.open({ focus: true });
         }
-        return thread;
+        return channel;
     }
 
     async openChat(person) {

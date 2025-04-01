@@ -2,20 +2,15 @@ import {
     contains,
     defineMailModels,
     insertText,
-    onRpcBefore,
+    listenStoreFetch,
     openDiscuss,
     openFormView,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import {
-    asyncStep,
-    Command,
-    serverState,
-    waitForSteps,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
 import { press } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
@@ -34,11 +29,9 @@ test("Receiving a new message out of discuss app should open a chat bubble", asy
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     // send after init_messaging because bus subscription is done after init_messaging
     // simulate receving new message
     withUser(userId, () =>
@@ -62,11 +55,9 @@ test("Receiving a new message in discuss app should open a chat bubble after lea
         ],
         channel_type: "chat",
     });
-    onRpcBefore("/web/dataset/call_kw/ir.http/lazy_session_info", (args) => {
-        asyncStep("init_messaging");
-    });
+    listenStoreFetch("init_messaging");
     await start();
-    await waitForSteps(["init_messaging"]);
+    await waitStoreFetch("init_messaging");
     // send after init_messaging because bus subscription is done after init_messaging
     await openDiscuss();
     // simulate receiving new message
