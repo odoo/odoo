@@ -21,8 +21,9 @@ import { markup } from "@odoo/owl";
  * @param {Array} combination
  */
 VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
-    if (!combination.is_storable) {
-        return
+    const has_max_combo_quantity = 'max_combo_quantity' in combination
+    if (!combination.is_storable && !has_max_combo_quantity) {
+        return;
     }
 
     if (!$parent.is('.js_main_product') || !combination.product_id) {
@@ -52,9 +53,12 @@ VariantMixin._onChangeCombinationStock = function (ev, $parent, combination) {
         }
     }
 
-    combination.has_max_combo_quantity = 'max_combo_quantity' in combination
-    if (combination.product_type === 'combo' && combination.has_max_combo_quantity) {
+    if (has_max_combo_quantity) {
         $addQtyInput.data('max', combination.max_combo_quantity || 1);
+        if (qty > combination.max_combo_quantity) {
+            qty = combination.max_combo_quantity || 1;
+            $addQtyInput.val(qty);
+        }
         if (combination.max_combo_quantity < 1) {
             ctaWrapper.classList.replace('d-flex', 'd-none');
             ctaWrapper.classList.add('out_of_stock');
