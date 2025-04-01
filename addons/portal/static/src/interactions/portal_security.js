@@ -172,13 +172,11 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
                         return false;
                     }
                     let result;
-                    await ormService.write("res.users.identitycheck", [checkId], {
-                        password: inputEl.value,
-                    });
                     try {
-                        result = await ormService.call("res.users.identitycheck", "run_check", [
-                            checkId,
-                        ]);
+                        result = await ormService.call("res.users.identitycheck", "run_check",
+                            [ checkId ],
+                            { 'context': {'password': inputEl.value} },
+                        );
                     } catch {
                         inputEl.classList.add("is-invalid");
                         inputEl.setCustomValidity(_t("Check failed"));
