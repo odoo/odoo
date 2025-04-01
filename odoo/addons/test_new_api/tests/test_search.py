@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.fields import Command
 from odoo.tests import TransactionCase
 
@@ -1132,7 +1133,7 @@ class TestFlushSearch(TransactionCase):
         self.assertEqual(self.env['test_new_api.custom.table_query_sql'].search([]).sum_quantity, 25)
 
 
-class TestDatePartNumber(TransactionCase):
+class TestDatePartNumber(TransactionExpressionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -1168,25 +1169,29 @@ class TestDatePartNumber(TransactionCase):
             result = Person.search([('birthday.iso_week_number', '=', '6')])
             self.assertEqual(result, self.person)
 
+    def test_datetime_filtered(self):
+        Person = self.env["test_new_api.person"].with_context(active_test=False)
+        self.assertEqual(self._search(Person, [('birthday.month_number', '=', 2)]), self.person)
+
     def test_many2one(self):
-        result = self.env["test_new_api.lesson"].search([('teacher_id.birthday.month_number', '=', 2)])
+        result = self._search(self.env["test_new_api.lesson"], [('teacher_id.birthday.month_number', '=', 2)])
         self.assertEqual(result, self.lesson)
 
     def test_many2many(self):
-        result = self.env["test_new_api.lesson"].search([('attendee_ids.birthday.month_number', '=', 2)])
+        result = self._search(self.env["test_new_api.lesson"], [('attendee_ids.birthday.month_number', '=', 2)])
         self.assertEqual(result, self.lesson)
 
     def test_related_field(self):
-        result = self.env["test_new_api.lesson"].search([('teacher_birthdate.month_number', '=', 2)])
+        result = self._search(self.env["test_new_api.lesson"], [('teacher_birthdate.month_number', '=', 2)])
         self.assertEqual(result, self.lesson)
 
     def test_inherit(self):
         account = self.env["test_new_api.person.account"].create({"person_id": self.person.id, "activation_date": "2020-03-09"})
 
-        result = self.env["test_new_api.person.account"].search([('activation_date.quarter_number', '=', 1)])
+        result = self._search(self.env["test_new_api.person.account"], [('activation_date.quarter_number', '=', 1)])
         self.assertEqual(result, account)
 
-        result = self.env["test_new_api.person.account"].search([('person_id.birthday.month_number', '=', 2)])
+        result = self._search(self.env["test_new_api.person.account"], [('person_id.birthday.month_number', '=', 2)])
         self.assertEqual(result, account)
 
 
