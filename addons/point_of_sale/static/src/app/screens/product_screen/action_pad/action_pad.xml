@@ -2,12 +2,12 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.ActionpadWidget">
-        <div class="actionpad d-flex flex-column gap-2" t-if="currentOrder">
+        <div class="actionpad d-flex flex-column gap-2">
             <div t-if="ui.isSmall" class="d-flex gap-2">
                 <BackButton t-if="!props.showActionButton and pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
                 <t t-if="props.onClickMore">
                     <SelectPartnerButton partner="props.partner"/>
-                    <button t-if="pos.config.use_presets"
+                    <button t-if="pos.config.use_presets and currentOrder"
                         class="btn btn-secondary btn-lg flex-shrink-0 border-0"
                         t-attf-class="{{`o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
                         t-on-click="() => this.pos.selectPreset()">
