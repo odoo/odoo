@@ -133,7 +133,9 @@ class StockPicking(models.Model):
     @api.depends('move_ids')
     def _compute_has_kits(self):
         for picking in self:
-            picking.has_kits = any(picking.move_ids.mapped('bom_line_id'))
+            picking.has_kits = any(
+                move.bom_line_id.bom_id and move.bom_line_id.bom_id.type == 'phantom' for move in picking.move_ids
+            )
 
     @api.depends('group_id')
     def _compute_mrp_production_ids(self):
