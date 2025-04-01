@@ -487,11 +487,6 @@ class ResPartner(models.Model):
             days_since_oldest_invoice = (fields.Date.context_today(self) - oldest_invoice_date).days
             partner.days_sales_outstanding = ((partner.credit / total_invoiced_tax_included) * days_since_oldest_invoice) if total_invoiced_tax_included else 0
 
-    def _compute_journal_item_count(self):
-        AccountMoveLine = self.env['account.move.line']
-        for partner in self:
-            partner.journal_item_count = AccountMoveLine.search_count([('partner_id', 'in', partner.ids)])
-
     def _compute_available_invoice_template_pdf_report_ids(self):
         moves = self.env['account.move']
 
@@ -542,12 +537,10 @@ class ResPartner(models.Model):
         compute='_credit_debit_get', search=_debit_search, string='Total Payable',
         help="Total amount you have to pay to this vendor.",
         groups='account.group_account_invoice,account.group_account_readonly')
-    debit_limit = fields.Monetary('Payable Limit')
     total_invoiced = fields.Monetary(compute='_invoice_total', string="Total Invoiced",
         groups='account.group_account_invoice,account.group_account_readonly')
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency") # currency of amount currency
-    journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
         domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
@@ -726,7 +719,7 @@ class ResPartner(models.Model):
     @api.model
     def _commercial_fields(self):
         return super(ResPartner, self)._commercial_fields() + \
-            ['debit_limit', 'property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
+            ['property_account_payable_id', 'property_account_receivable_id', 'property_account_position_id',
              'property_payment_term_id', 'property_supplier_payment_term_id', 'credit_limit']
 
     def action_view_partner_invoices(self):
