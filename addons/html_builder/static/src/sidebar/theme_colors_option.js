@@ -39,11 +39,12 @@ export class ThemeColorsOption extends BaseOptionComponent {
 
     getPresets() {
         const presets = [];
+        const unquote = (string) => string.substring(1, string.length - 1);
         for (let i = 1; i <= 5; i++) {
             const preset = {
                 id: i,
                 background: this.getColor(`o-cc${i}-bg`),
-                backgroundGradient: this.getColor(`o-cc${i}-bg-gradient`),
+                backgroundGradient: unquote(this.getColor(`o-cc${i}-bg-gradient`)),
                 text: this.getColor(`o-cc${i}-text`),
                 headings: this.getColor(`o-cc${i}-headings`),
                 primaryBtn: this.getColor(`o-cc${i}-btn-primary`),

@@ -4,7 +4,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { isCSSColor } from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
@@ -42,15 +42,37 @@ export class CustomizeWebsitePlugin extends Plugin {
                 apply: () => this.stuffHappened(),
             },
             customizeWebsiteColor: {
-                getValue: ({ param: { mainParam: color } }) => {
+                getValue: ({ param: { mainParam: color, gradientColor } }) => {
                     const style = this.document.defaultView.getComputedStyle(
                         this.document.documentElement
                     );
+                    if (gradientColor) {
+                        const gradientValue = this.getWebsiteVariableValue(gradientColor);
+                        if (gradientValue) {
+                            return gradientValue.substring(1, gradientValue.length - 1); // Unquote
+                        }
+                    }
                     return getCSSVariableValue(color, style);
                 },
-                load: async ({ param: { mainParam: color }, value }) => {
-                    await this.customizeWebsiteColors({ [color]: value });
-                    await this.reloadBundles();
+                load: async ({ param: { mainParam: color, gradientColor }, value }) => {
+                    if (gradientColor) {
+                        let colorValue = "";
+                        let gradientValue = "";
+                        if (isColorGradient(value)) {
+                            gradientValue = value;
+                        } else {
+                            colorValue = value;
+                        }
+                        await this.customizeWebsiteColors({
+                            [color]: colorValue,
+                        });
+                        await this.customizeWebsiteVariables({
+                            [gradientColor]: gradientValue,
+                        }); // reloads bundles
+                    } else {
+                        await this.customizeWebsiteColors({ [color]: value });
+                        await this.reloadBundles();
+                    }
                 },
                 apply: () => this.stuffHappened(),
             },
@@ -203,11 +225,11 @@ export class CustomizeWebsitePlugin extends Plugin {
         };
     }
     stuffHappened() {
-        // TODO Find a way to be inside history... and to get options redrawn.
-        this.dispatchTo("step_added_handlers", {
-            step: {},
-            stepCommonAncestor: this.document.body,
-            isPreviewing: false,
+        // TODO Once applyCustomMutation supports an async mode, actually
+        // implement correct apply and revert in each caller.
+        this.dependencies.history.applyCustomMutation({
+            apply: () => {},
+            revert: () => {},
         });
     }
     getWebsiteVariableValue(variable) {

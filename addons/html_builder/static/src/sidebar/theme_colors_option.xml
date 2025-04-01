@@ -107,7 +107,8 @@
                                 <BuilderRow label.translate="Background">
                                     <BuilderColorPicker
                                         action="'customizeWebsiteColor'"
-                                        actionParam="`o-cc${preset.id}-bg`"/>
+                                        actionParam="{ mainParam: `o-cc${preset.id}-bg`, gradientColor: `o-cc${preset.id}-bg-gradient` }"
+                                    />
                                 </BuilderRow>
                                 <BuilderRow label.translate="Text">
                                     <BuilderColorPicker
