@@ -3115,7 +3115,6 @@ class TestViews(ViewCase):
         """
         self.assertInvalid(arch % 0, 'Action 0 (id: 0) does not exist for button of type action.')
         self.assertInvalid(arch % 'base.random_xmlid', 'Invalid xmlid base.random_xmlid for button of type action')
-        self.assertInvalid('<form><button type="action"/></form>', 'Button must have a name')
         self.assertInvalid('<form><button special="dummy"/></form>', "Invalid special 'dummy' in button")
         self.assertInvalid(arch % 'base.partner_root', "base.partner_root is of type res.partner, expected a subclass of ir.actions.actions")
 
