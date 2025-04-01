@@ -824,7 +824,7 @@ class ResPartner(models.Model):
         except LockError:
             _logger.debug('Another transaction already locked partner rows. Cannot update partner ranks.')
             return
-        records = self.sudo()
+        records = self.sudo().with_context(tracking_disable=True)
         for record in records:
             record[field] += n
 
