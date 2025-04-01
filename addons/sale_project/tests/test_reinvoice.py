@@ -12,6 +12,7 @@ class TestReInvoice(TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.user.group_ids += cls.quick_ref('project.group_project_manager')
 
         cls.analytic_plan = cls.env['account.analytic.plan'].create({
             'name': 'Plan',
