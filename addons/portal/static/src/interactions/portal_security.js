@@ -61,7 +61,7 @@ export class PortalSecurity extends Interaction {
             )
         );
 
-        const { duration } = await this.bindService("field").loadFields("res.users.apikeys.description", {
+        const { duration } = await this.services.field.loadFields("res.users.apikeys.description", {
             fieldNames: ["duration"],
         });
 
@@ -74,7 +74,7 @@ export class PortalSecurity extends Interaction {
             confirmLabel: _t("Confirm"),
             confirm: async ({ inputEl }) => {
                 const formData = Object.fromEntries(new FormData(inputEl.closest("form")));
-                const wizardId = await this.sevices.orm.create("res.users.apikeys.description", [{
+                const wizardId = await this.services.orm.create("res.users.apikeys.description", [{
                     name: formData['description'],
                     duration: formData['duration']
                 }]);
