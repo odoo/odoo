@@ -1,4 +1,4 @@
-import {websiteSlidesQuizNoFullscreen} from "@website_slides/js/slides_course_quiz";
+import {websiteSlidesQuizNoFullscreen} from "@website_slides/interactions/slides_course_quiz";
 
 websiteSlidesQuizNoFullscreen.include({
     _extractChannelData: function (slideData) {
