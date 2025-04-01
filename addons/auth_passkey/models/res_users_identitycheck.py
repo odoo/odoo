@@ -18,7 +18,7 @@ class ResUsersIdentitycheck(models.TransientModel):
         if self.auth_method == 'webauthn':
             try:
                 credential = {
-                    'webauthn_response': self.password,
+                    'webauthn_response': self.env.context.get('password'),
                     'type': 'webauthn',
                 }
                 self.create_uid._check_credentials(credential, {'interactive': True})
