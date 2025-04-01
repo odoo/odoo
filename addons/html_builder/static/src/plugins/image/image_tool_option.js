@@ -34,6 +34,9 @@ export class ImageToolOption extends BaseOptionComponent {
     }
     computeMaxDisplayWidth(img) {
         const window = img.ownerDocument.defaultView;
+        if (!window) {
+            return;
+        }
         const computedStyles = window.getComputedStyle(img);
         const displayWidth = parseFloat(computedStyles.getPropertyValue("width"));
         const gutterWidth =
