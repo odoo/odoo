@@ -487,14 +487,7 @@ class Many2one(_Relational):
         # value is a Domain
 
         if self.auto_join:
-            coalias = query.make_alias(alias, self.name)
-            # auto_join bypasses checks to join the field
-            # for the comodel, the access is not bypassed
-            query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
-                "%s = %s",
-                sql_field,
-                SQL.identifier(coalias, 'id'),
-            ))
+            comodel, coalias = self.join(model, alias, query)
 
             sql = value._to_sql(comodel, coalias, query)
             if operator == 'any':
@@ -511,6 +504,19 @@ class Many2one(_Relational):
         # execute search and generate condition with a SQL query
         domain_query = comodel.with_context(active_test=False)._search(value)
         return self.condition_to_sql(fname, operator, domain_query, model, alias, query)
+
+    def join(self, model: BaseModel, alias: str, query: Query) -> tuple[BaseModel, str]:
+        """ Add a LEFT JOIN to ``query`` by following field ``self``,
+        and return the joined table's corresponding model and alias.
+        """
+        comodel = model.env[self.comodel_name]
+        coalias = query.make_alias(alias, self.name)
+        query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
+            "%s = %s",
+            model._field_to_sql(alias, self.name, query),
+            SQL.identifier(coalias, 'id'),
+        ))
+        return (comodel, coalias)
 
 
 class _RelationalMulti(_Relational):
