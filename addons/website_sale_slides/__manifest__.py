@@ -22,7 +22,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'website_sale_slides/static/src/js/**/*',
+            'website_sale_slides/static/src/interactions/**/*',
             'website_sale_slides/static/src/xml/**/*',
         ],
         'web.assets_tests': [
