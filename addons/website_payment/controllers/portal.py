@@ -60,6 +60,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             amount=amount, currency_id=currency_id, partner_id=partner_id, **kwargs
         )
         tx_sudo.is_donation = True
+        breakpoint()
         if use_public_partner:
             fields = tx_sudo._fields
             for key, value in kwargs['partner_details'].items():

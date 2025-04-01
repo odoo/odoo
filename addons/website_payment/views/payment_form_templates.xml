@@ -57,12 +57,12 @@
                 <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email"  data-fill-with="email" t-attf-class="form-control s_website_form_input #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
             </div>
             <t t-set="country_id" t-value="partner_details.get('country_id')"/>
-            <div  data-name="Field" t-attf-class="s_website_form_field s_website_form_custom mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+            <div data-name="Field" t-attf-class="s_website_form_field s_website_form_custom mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country" data-type="many2one">
                 <label class="s_website_form_label col-form-label fw-bold" for="country_id">
                     <span class="s_website_form_label_content">Country</span>
                     <span class="s_website_form_mark"> *</span>
                 </label>
-                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select s_website_form_input #{error.get('country_id') and 'is-invalid' or ''}">
+                <select t-att-disabled="'1' if country_id and partner_id else None" name="country_id" t-attf-class="form-select s_website_form_input #{error.get('country_id') and 'is-invalid' or ''}">
                     <option value="">Country...</option>
                     <t t-foreach="countries" t-as="c">
                         <option t-att-value="c.id" t-att-selected="c.id == (country_id or -1)">
