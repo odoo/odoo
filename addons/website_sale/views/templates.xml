@@ -1748,7 +1748,19 @@
 
     <template id="product_price">
         <div
+<<<<<<< e934a3a8c9e92d2c8fb3f8a0518ae4190bdadf55
             name="product_price"
+||||||| 884130330b600b4356c640cb679c2bb8fdb833a0
+            t-if="not combination_info['prevent_zero_price_sale']"
+            itemprop="offers"
+            itemscope="itemscope"
+            itemtype="http://schema.org/Offer"
+            t-attf-class="product_price mt-2 mb-3 d-inline-block"
+=======
+            itemprop="offers"
+            itemscope="itemscope"
+            itemtype="http://schema.org/Offer"
+>>>>>>> bac558c54b831dbf9d931250f515f421f53a68d5
             t-attf-class="product_price mt-2 mb-3 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-block'}}"
         >
             <div name="product_price_container" class="css_editable_mode_hidden h3">
@@ -1773,11 +1785,21 @@
                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                     </bdi>
                 </del>
+<<<<<<< e934a3a8c9e92d2c8fb3f8a0518ae4190bdadf55
             </div>
             <div
                 t-if="editable"
                 name="product_list_price_container"
                 class="css_non_editable_mode_hidden decimal_precision h3"
+||||||| 884130330b600b4356c640cb679c2bb8fdb833a0
+            </h3>
+            <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
+=======
+            </h3>
+            <h3
+                t-if="editable"
+                class="css_non_editable_mode_hidden decimal_precision"
+>>>>>>> bac558c54b831dbf9d931250f515f421f53a68d5
                 t-att-data-precision="str(website.currency_id.decimal_places)"
             >
                 <span t-field="product.list_price"
