@@ -1074,6 +1074,13 @@ function _process_request_for_internal_user(store, name, params) {
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }
+    if (name === "mentions") {
+        if (params.channel_id) {
+            this.env["res.partner"].get_mention_suggestions_from_channel(store, params.channel_id, params.term, params.limit || 8);
+        } else {
+            this.env["res.partner"].get_mention_suggestions(store, params.term, params.limit || 8);
+        }
+    }
     if (name === "res.role") {
         const roleIds = this.env["res.role"].search(
             [["name", "ilike", params.term || ""]],
