@@ -35,6 +35,7 @@ class EventRegistration(models.Model):
         'event.event', string='Event', required=True, tracking=True, index=True)
     event_ticket_id = fields.Many2one(
         'event.event.ticket', string='Ticket Type', ondelete='restrict', tracking=True, index='btree_not_null')
+    event_has_tickets = fields.Boolean("Event has tickets", compute="_compute_event_has_tickets")
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
@@ -50,6 +51,12 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=4)
     company_name = fields.Char(
         string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=5)
+    # slots
+    is_multi_slots = fields.Boolean(string="Is Event Multi Slots", related="event_id.is_multi_slots")
+    event_slot_id = fields.Many2one(
+        "event.slot", string="Slot", domain="[('event_id', '=', event_id)]",
+        ondelete='restrict', tracking=True, index="btree_not_null",
+        compute="_compute_event_slot_id", store=True, readonly=False)
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
@@ -94,6 +101,7 @@ class EventRegistration(models.Model):
     def _check_seats_availability(self):
         registrations_confirmed = self.filtered(lambda registration: registration.state in ('open', 'done'))
         registrations_confirmed.event_id._check_seats_availability()
+        registrations_confirmed.event_id._check_slot_seats_availability()
         registrations_confirmed.event_ticket_id._check_seats_availability()
 
     def default_get(self, fields):
@@ -158,6 +166,18 @@ class EventRegistration(models.Model):
     def _compute_date_range(self):
         for registration in self:
             registration.event_date_range = registration.event_id._get_date_range_str(registration.partner_id.lang)
+
+    @api.depends('event_id', 'event_id.event_ticket_ids')
+    def _compute_event_has_tickets(self):
+        for registration in self:
+            registration.event_has_tickets = bool(registration.event_id.event_ticket_ids)
+
+    @api.depends('event_id')
+    def _compute_event_slot_id(self):
+        """ Resets the selected slot if the event is changed in the attendee form. """
+        for registration in self:
+            if registration.event_id != registration.event_slot_id.event_id:
+                registration.event_slot_id = False
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):
@@ -251,6 +271,7 @@ class EventRegistration(models.Model):
         # Event(Ticket) models constraints.
         if unarchived := self.filtered(self._active_name):
             unarchived.event_id._check_seats_availability()
+            unarchived.event_id._check_slot_seats_availability()
             unarchived.event_ticket_id._check_seats_availability()
         return res
 

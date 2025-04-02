@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="event.EventSlotCalendarCommonRenderer.event">
+        <span t-if="!isTimeHidden" class="fc-time">
+            <t t-esc="startTime"/> - <t t-esc="endTime"/>
+            <t> </t>
+        </span>
+    </t>
+
+</templates>

@@ -17,7 +17,8 @@ class EventController(Controller):
         if request.env.user._is_public():
             lang = request.cookies.get('frontend_lang')
         event = event.with_context(lang=lang)
-        files = event._get_ics_file()
+        slot_id = int(kwargs['slot_id']) if kwargs.get('slot_id') else False
+        files = event._get_ics_file(slot_id=slot_id)
         if not event.id in files:
             return NotFound()
         content = files[event.id]
@@ -52,8 +53,14 @@ class EventController(Controller):
 
         event_registrations_sudo = event_sudo.registration_ids.filtered(lambda reg: reg.id in registration_ids)
         report_name_prefix = _("Ticket") if responsive_html else _("Badges") if badge_mode else _("Tickets")
-        report_date = format_datetime(request.env, event_sudo.date_begin, tz=event_sudo.date_tz, dt_format='medium')
-        report_name = f"{report_name_prefix} - {event_sudo.name} ({report_date})"
+        report_name = f"{report_name_prefix} - {event_sudo.name}"
+        date_value = False
+        if not event_sudo.is_multi_slots:
+            date_value = event_sudo.date_begin
+        elif len(event_registrations_sudo) == 1:
+            date_value = event_registrations_sudo.event_slot_id.start_datetime
+        if date_value:
+            report_name += f" ({format_datetime(request.env, date_value, tz=event_sudo.date_tz, dt_format='medium')})"
         if len(event_registrations_sudo) == 1:
             report_name += f" - {event_registrations_sudo[0].name}"
 
