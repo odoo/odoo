@@ -374,7 +374,7 @@ def _setup(model: BaseModel):
             # field is translated to avoid converting its column to varchar
             # and losing data
             translate = next((
-                field.args['translate'] for field in reversed(fields_) if 'translate' in field.args
+                field._args__['translate'] for field in reversed(fields_) if 'translate' in field._args__
             ), False)
             if not translate:
                 # patch the field definition by adding an override
@@ -384,7 +384,7 @@ def _setup(model: BaseModel):
             model_cls._fields[name] = fields_[0]
         else:
             Field = type(fields_[-1])
-            add_field(model, name, Field(_base_fields=fields_))
+            add_field(model, name, Field(_base_fields=tuple(fields_)))
 
     # 2. add manual fields
     if model.pool._init_modules:
