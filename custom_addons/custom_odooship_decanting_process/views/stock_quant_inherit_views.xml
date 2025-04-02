@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit Stock Quant Tree View -->
+        <record id="view_stock_quant_tree_inherit_packaging" model="ir.ui.view">
+            <field name="name">stock.quant.tree.inherit.packaging</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree_inventory_editable"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='inventory_quantity']" position="after">
+                    <field name="product_packaging_id"/>
+                    <field name="product_packaging_qty"/>
+                    <field name="inventory_packaging_quantity"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
