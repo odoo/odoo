@@ -24,6 +24,11 @@ class ResPartner(models.Model):
             message.append(_("- State required min 3 and max 50 characters"))
         if self.country_id.code == "IN" and not re.match("^([1-9][0-9]{5})$", self.zip or ""):
             message.append(_("- ZIP code required 6 digits ranging from 100000 to 999999"))
+        if (
+            self.country_id.code == "IN"
+            and not re.match(r"^(?!0+$)([0-9]{2})$", self.state_id.l10n_in_tin or "")
+        ):
+            message.append(_("- State TIN Number must be exactly 2 digits."))
         if message:
             message.insert(0, self.display_name)
         return message
