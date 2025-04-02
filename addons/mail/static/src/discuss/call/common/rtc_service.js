@@ -228,7 +228,8 @@ export class Rtc extends Record {
     timeouts = new Map();
     /** @type {Map<number, number>} timeoutId by sessionId for download pausing delay */
     downloadTimeouts = new Map();
-    iceServers = Record.attr(DEFAULT_ICE_SERVERS, {
+    /** @type {{urls: string[]}[]} */
+    iceServers = Record.attr(undefined, {
         compute() {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
