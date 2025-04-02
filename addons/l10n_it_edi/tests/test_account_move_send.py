@@ -66,7 +66,7 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
                 'odoo.addons.account.models.account_move_send.AccountMoveSend._get_default_extra_edis',
                 _get_default_extra_edis
         ):
-            self.env['account.move.send']._generate_and_send_invoices(invoice1 + invoice2)
+            self.env['account.move.send']._generate_and_send_invoices(invoice1 + invoice2, sending_methods=['email'])
 
         # Asserts
         self.assertEqual((invoice1 + invoice2).mapped('sending_data'), [False, False])
