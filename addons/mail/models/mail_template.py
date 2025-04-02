@@ -49,13 +49,13 @@ class MailTemplate(models.Model):
     model_id = fields.Many2one('ir.model', 'Applies to', ondelete='cascade', domain=_get_non_abstract_models_domain)
     model = fields.Char('Related Document Model', related='model_id.model', index=True, store=True, readonly=True)
     subject = fields.Char('Subject', translate=True, prefetch=True, help="Subject (placeholders may be used here)")
-    email_from = fields.Char('From',
+    email_from = fields.Char('Send From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
-    user_id = fields.Many2one('res.users', string='User', domain="[('share', '=', False)]", help='The template belongs to this user')
+    user_id = fields.Many2one('res.users', string='Owner', domain="[('share', '=', False)]")
     # recipients
     use_default_to = fields.Boolean(
-        'Default recipients',
+        'Default Recipients',
         default=True,
         help="Default recipients of the record:\n"
              "- partner (using id on a partner or the partner_id field) OR\n"
@@ -71,9 +71,7 @@ class MailTemplate(models.Model):
         prefetch=True, translate=True, sanitize='email_outgoing',
     )
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
-                                      'attachment_id', 'Attachments',
-                                      help="You may attach files to this template, to be added to all "
-                                           "emails created from this template")
+                                      'attachment_id', 'Attachments')
     report_template_ids = fields.Many2many(
         'ir.actions.report', relation='mail_template_ir_actions_report_rel',
         column1='mail_template_id',
@@ -98,6 +96,26 @@ class MailTemplate(models.Model):
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
     is_template_editor = fields.Boolean(compute="_compute_is_template_editor")
+
+    # view display
+    has_dynamic_reports = fields.Boolean(compute='_compute_has_dynamic_reports')
+    has_mail_server = fields.Boolean(compute='_compute_has_mail_server')
+
+    @api.depends('model')
+    def _compute_has_dynamic_reports(self):
+        number_of_dynamic_reports_per_model = dict(
+            self.env['ir.actions.report'].sudo()._read_group(
+                domain=[('model', 'in', self.mapped('model'))],
+                groupby=['model'],
+                aggregates=['id:count'],
+                having=[('__count', '>', 0)]))
+        for template in self:
+            template.has_dynamic_reports = template.model in number_of_dynamic_reports_per_model
+
+    def _compute_has_mail_server(self):
+        has_mail_server = bool(self.env['ir.mail_server'].sudo().search([], limit=1))
+        for template in self:
+            template.has_mail_server = has_mail_server
 
     # Overrides of mail.render.mixin
     @api.depends('model')
@@ -270,6 +288,11 @@ class MailTemplate(models.Model):
             template.write({'ref_ir_act_window': action.id})
 
         return True
+
+    def action_open_mail_preview(self):
+        action = self.env.ref('mail.mail_template_preview_action')._get_action_dict()
+        action.update({'name': _('Template Preview: "%(template_name)s"', template_name=self.name)})
+        return action
 
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION

@@ -897,7 +897,6 @@ class MailComposeMessage(models.TransientModel):
         model_id = self.env['ir.model']._get_id(self.model)
         values = {
             'name': self.template_name,
-            'subject': self.subject,
             'body_html': self.body,
             'model_id': model_id,
             'use_default_to': True,
