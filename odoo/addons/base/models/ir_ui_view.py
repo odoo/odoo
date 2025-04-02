@@ -324,7 +324,9 @@ actual arch.
     @api.depends('arch', 'inherit_id')
     def _compute_invalid_locators(self):
         self.invalid_locators = []
-        for view in self.filtered('inherit_id'):
+        for view in self:
+            if not view.inherit_id or not view.arch:
+                continue
             source = view.with_context(ir_ui_view_tree_cut_off_view=view)._get_combined_arch()
             invalid_locators = []
             specs = collections.deque([etree.fromstring(view.arch)])
