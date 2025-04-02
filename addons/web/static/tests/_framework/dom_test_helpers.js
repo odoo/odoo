@@ -333,6 +333,16 @@ export function contains(target, options) {
             await animationFrame();
         },
         /**
+         * @param {InputValue} value
+         */
+        selectDropdownItem: async (value) => {
+            consumeContains();
+            await callClick(click, queryOne(".dropdown-toggle", { root: await nodePromise }));
+            const item = await waitFor(`.dropdown-item:contains(${value})`);
+            await callClick(click, item);
+            await animationFrame();
+        },
+        /**
          * @param {PointerOptions} [options]
          */
         uncheck: async (options) => {
