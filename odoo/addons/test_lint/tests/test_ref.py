@@ -1,6 +1,7 @@
 import ast
 import typing
 from collections import defaultdict
+from typing import Collection
 
 from .diff_case import DiffCase
 from odoo.modules.module import get_manifest
@@ -11,13 +12,16 @@ if typing.TYPE_CHECKING:
 
 
 class EvalRefVisitor(ast.NodeVisitor):
-    def __init__(self, filepath, line=0):
+    def __init__(self, filepath, line=0, protected_xml_ids=None):
         self.issues = []
         self.line = line
         self.filepath = filepath
+        self.protected_xml_ids = protected_xml_ids
 
-    def _is_ref_raise_if_not_found(self, node):
-        """Check if the node is a call to env.ref without raise_if_not_found=False"""
+    def _is_ref_risky(self, node):
+        """Check if the node is risky"""
+        if not node.args or node.args[0].value in self.protected_xml_ids:
+            return False
         raise_if_not_found = True  # default to True
         for keyword in node.keywords:
             if keyword.arg == 'raise_if_not_found':
@@ -28,7 +32,7 @@ class EvalRefVisitor(ast.NodeVisitor):
     def visit_Call(self, node):
         """ check for env.ref calls """
         if isinstance(node.func, ast.Name) and node.func.id == 'ref':
-            if self._is_ref_raise_if_not_found(node):
+            if self._is_ref_risky(node):
                 # for ref() calls, check if the ref is for another module
                 self.issues.append(f'"{self.filepath}", line {self.line}')
         
@@ -36,11 +40,12 @@ class EvalRefVisitor(ast.NodeVisitor):
 
 
 class FileEnvRefVisitor(EvalRefVisitor):
-    def __init__(self, filepath, diff_linenos):
+    def __init__(self, filepath, diff_linenos, protected_xml_ids=None):
         self.issues = []
         self.filepath = filepath
         self.diff_linenos = diff_linenos
         self.env_ref_names = set()  # Track variables that store env.ref
+        self.protected_xml_ids = protected_xml_ids
 
     def _is_node_in_diff(self, node):
         """Check if any line of the node is in the diff"""
@@ -82,56 +87,63 @@ class FileEnvRefVisitor(EvalRefVisitor):
             elif isinstance(current, ast.Name) and current.id == 'env':
                 is_env_ref = True
 
-            if is_env_ref:
-                if self._is_node_in_diff(node) and self._is_ref_raise_if_not_found(node):
-                    self.issues.append(f'"{self.filepath}", line {node.lineno}')
+            if is_env_ref and self._is_node_in_diff(node) and self._is_ref_risky(node):
+                self.issues.append(f'"{self.filepath}", line {node.lineno}')
         elif isinstance(node.func, ast.Name) and node.func.id in self.env_ref_names:
             # Handle stored env.ref calls
-            if self._is_node_in_diff(node) and self._is_ref_raise_if_not_found(node):
+            if self._is_node_in_diff(node) and self._is_ref_risky(node):
                 self.issues.append(f'"{self.filepath}", line {node.lineno}')
 
         self.generic_visit(node)
 
 
-def check_ref_for_python_file(abs_path: str, diff_linenos: set[int]) -> list[str]:
+def check_ref_for_python_file(abs_path: str, diff_linenos: set[int], protected_xml_ids: Collection[str] = ()) -> list[str]:
     with open(abs_path, 'r') as f:
         content = f.read()
     try:
         tree = ast.parse(content)
-        visitor = FileEnvRefVisitor(abs_path, diff_linenos)
+        visitor = FileEnvRefVisitor(abs_path, diff_linenos, protected_xml_ids)
         visitor.visit(tree)
         return visitor.issues
     except SyntaxError:
         return []
 
 
-def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', init: bool = True) -> tuple[str, str] | None:
+def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', init: bool = True, protected_xml_ids: Collection[str] = ()) -> tuple[str, str] | None:
     """Check for references in xml files
     
     :param element: the xml element to check
     :param file_info: the file info of the xml file
     :param init: whether the file is used to init modules. If yes, we ignore references for the current module's records.
+    :param protected_xml_ids: set of already protected xml ids
     """
+
+    def is_ref_risky(ref: str) -> bool:
+        xml_id = ref if '.' in ref else f'{file_info.module_name}.{ref}'
+        if xml_id in protected_xml_ids:
+            return False
+        if init and xml_id.startswith(f'{file_info.module_name}.'):
+            return False
+        return True
+
     if element.tag == 'record':
         record = element
         id_attr = record.attrib.get('id')
         if not id_attr:
             return None
-        is_file_module_ref = '.' not in id_attr or id_attr.startswith(f'{file_info.module_name}.')
-        if not (init and is_file_module_ref) and 'forcecreate' not in record.attrib:
+        if is_ref_risky(id_attr) and 'forcecreate' not in record.attrib:
             return 'inherit_id', f'{file_info.abs_path}, line {record.sourceline}'
     elif element.tag == 'field':
         field = element
         ref_attr = field.attrib.get('ref')
         if ref_attr:
-            is_file_module_ref = '.' not in ref_attr or ref_attr.startswith(f'{file_info.module_name}.')
-            if not (init and is_file_module_ref):
+            if is_ref_risky(ref_attr) and 'forcecreate' not in field.attrib:
                 return 'ref', f'{file_info.abs_path}, line {field.sourceline}'
         elif eval_attr := field.attrib.get('eval'):
             # parse as python ast, check function ref
             # add to issues if ref for another module without raise_if_not_found=False
             tree = ast.parse(eval_attr)
-            visitor = EvalRefVisitor(file_info.abs_path, line=field.sourceline)
+            visitor = EvalRefVisitor(file_info.abs_path, line=field.sourceline, protected_xml_ids=protected_xml_ids)
             visitor.visit(tree)
             if visitor.issues:
                 return 'eval', visitor.issues[0]
@@ -140,19 +152,66 @@ def check_ref_for_data_xml_element(element: '_Element', file_info: 'FileInfo', i
         id_attr = template.attrib.get('inherit_id')
         if not id_attr:
             return None
-        is_file_module_ref = '.' not in id_attr or id_attr.startswith(f'{file_info.module_name}.')
-        if not (init and is_file_module_ref) and 'forcecreate' not in template.attrib:
+        if is_ref_risky(id_attr) and 'forcecreate' not in template.attrib:
             return 'inherit_id', f'{file_info.abs_path}, line {template.sourceline}'
 
 
+def _get_protected_xml_ids():
+    
+    """Get protected records from imported Python files in addons directories.
+    
+    Scans for comments in the format "# PROTECT module.record_name" in Python files
+    that are imported (directly or indirectly) through __init__.py files.
+    
+    Returns:
+        set[str]: Set of protected record external IDs
+    """
+    import tokenize
+    import os
+    import odoo.addons
+    from pathlib import Path
+
+    def get_python_files(package_path):
+        python_files = []
+        for root, _, files in os.walk(package_path):
+            for file in files:
+                if file.endswith(".py"):
+                    full_path = os.path.join(root, file)
+                    python_files.append(full_path)
+        return python_files
+
+    protected = set()
+    for addons_path in odoo.addons.__path__:
+        for addon_path in Path(addons_path).glob('*'):
+            if not addon_path.is_dir():
+                continue
+            for py_file in get_python_files(addon_path):
+                try:
+                    if py_file.endswith('__init__.py') or py_file.endswith('__manifest__.py'):
+                        continue
+                    with tokenize.open(py_file) as f:
+                        tokens = tokenize.generate_tokens(f.readline)
+                        for token in tokens:
+                            if token.type == tokenize.COMMENT and token.string.startswith('# PROTECT '):
+                                external_id = token.string.split('PROTECT ', 1)[1].strip()
+                                if external_id.count('.') == 1:
+                                    protected.add(external_id)
+                except tokenize.TokenError:
+                    continue
+    return protected
+
+
 class TestRef(DiffCase):
+    # protected_xml_ids = set()
+    protected_xml_ids = _get_protected_xml_ids()
+
     def test_env_ref_usage(self):
         """Check for env.ref calls without raise_if_not_found=False"""
         issues = []
         for file_info in self.diff_linenos['python'].values():
             if not file_info.module_name or file_info.module_name.startswith('test_'):
                 continue
-            file_issues = check_ref_for_python_file(file_info.abs_path, file_info.diff_linenos)
+            file_issues = check_ref_for_python_file(file_info.abs_path, file_info.diff_linenos, self.protected_xml_ids)
             if file_issues:
                 issues.extend(file_issues)
 
@@ -178,7 +237,7 @@ class TestRef(DiffCase):
                     continue
                 init = file_info.module_path in data_files
                 for element in self.yield_xml_diff_elements(file_info.abs_path):
-                    if issue := check_ref_for_data_xml_element(element, file_info, init):
+                    if issue := check_ref_for_data_xml_element(element, file_info, init, self.protected_xml_ids):
                         issues[issue[0]].append(issue[1])
 
         messages = ''
