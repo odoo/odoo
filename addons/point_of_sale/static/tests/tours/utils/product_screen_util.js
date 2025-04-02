@@ -93,6 +93,23 @@ export function clickInfoProduct(name) {
         },
     ];
 }
+export function priceOnProductInfoIs(amount) {
+    return [
+        {
+            content: `Check if product info price is ${amount}`,
+            trigger: `.section-product-info-title-price`,
+            run: function () {
+                const priceElement = document.querySelector(`.section-product-info-title-price`);
+                const extractedPrice = parseFloat(
+                    priceElement ? priceElement.textContent.replace(/[^\d.]/g, "") : 0
+                );
+                if (extractedPrice !== parseFloat(amount)) {
+                    throw new Error(`Expected price: ${amount}, but found: ${extractedPrice}`);
+                }
+            },
+        },
+    ];
+}
 export function clickOrderline(productName, quantity = "1.0") {
     return [
         ...clickLine(productName, quantity),
