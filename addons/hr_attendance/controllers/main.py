@@ -74,6 +74,47 @@ class HrAttendance(http.Controller):
         else:
             return request.not_found()
 
+    @http.route('/hr_attendance/get_employees_without_badge', type='jsonrpc', auth='public')
+    def get_employees_without_badge(self, token):
+        """Fetch only employees without a badge (barcode)."""
+        company = self._get_company(token)
+        if not company:
+            return request.not_found()
+        employees = request.env['hr.employee'].sudo().search([
+            ('barcode', '=', False),
+            ('company_id', '=', company.id)
+        ])
+        employee_list = employees.read(['id', 'name'])
+        return {'status': 'success', 'employees': employee_list}
+
+    @http.route('/hr_attendance/set_badge', type='jsonrpc', auth='public')
+    def set_badge(self, employee_id, badge, token):
+        company = self._get_company(token)
+        if company:
+            existing = request.env['hr.employee'].sudo().search([
+                ('barcode', '=', badge),
+                ('id', '!=', employee_id)
+            ], limit=1)
+            if existing:
+                return {'status': 'error', 'message': 'This badge number is already assigned to another employee.'}
+
+            employee = request.env['hr.employee'].sudo().browse(employee_id)
+            employee.sudo().write({'barcode': badge})
+            return {'status': 'success', 'message': 'Badge assigned successfully!'}
+
+    @http.route('/hr_attendance/create_employee', type='jsonrpc', auth='public')
+    def create_employee(self, name, token):
+        company = self._get_company(token)
+        if company:
+            if not name:
+                return {"status": "error", "message": "Missing employee name"}
+            employee = request.env["hr.employee"].sudo().create({
+                "name": name,
+                "company_id": company.id,
+            })
+            return {"status": "success", "message": "Employee created successfully!", "employee_id": employee.id}
+        return {}
+
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='jsonrpc')
     def kiosk_keepalive(self):
         request.session.touch()
