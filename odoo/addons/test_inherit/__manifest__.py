@@ -6,8 +6,8 @@
     'description': """A module to verify the inheritance.""",
     'depends': ['base', 'test_new_api'],
     'data': [
-        'ir.model.access.csv',
         'demo_data.xml',
+        'ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

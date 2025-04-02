@@ -416,9 +416,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         user2 = User.create({'name': 'Boooh', 'login': 'b'})
         user3 = User.create({'name': 'Crrrr', 'login': 'c'})
         # add a rule to not give access to user2
-        self.env['ir.rule'].create({
-            'model_id': self.env['ir.model'].search([('model', '=', 'res.users')]).id,
-            'domain_force': "[('id', '!=', %d)]" % user2.id,
+        self.env['ir.access'].create({
+            'name': 'Global access to forbid access to user2',
+            'model_id': self.env['ir.model']._get('res.users').id,
+            'operation': 'rwcd',
+            'domain': f"[('id', '!=', {user2.id})]",
         })
         # DLE P72: Since we decided that we do not raise security access errors for data to which we had the occassion
         # to put the value in the cache, we need to invalidate the cache for user1, user2 and user3 in order
@@ -585,7 +587,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
     def test_12_unlink_cascade_ir_rule_using_related(self):
         """ Test that `unlink` on many records doesn't raise a RecursionError
-        when there is an ir.rule with a stored related field to compute.
+        when there is an ir.access with a stored related field to compute.
         """
         message = self.env['test_new_api.message'].create({
             'active': False,
@@ -594,11 +596,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             [{'message': message.id}] * 101,
         )
 
-        # Create an ir.rule, which forces to flush field 'active'
-        self.env['ir.rule'].create({
-            'model_id': self.env['ir.model']._get_id('test_new_api.emailmessage'),
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': str([('active', '=', False)]),
+        # add ir.access to force field 'active' to be flushed
+        self.env['ir.access'].create({
+            'model_id': self.env.ref('test_new_api.model_test_new_api_emailmessage').id,
+            'group_id': self.env.ref('base.group_user').id,
+            'operation': 'rwcd',
+            'domain': "[('active', '=', False)]",
         })
 
         message.with_user(self.user_demo).unlink()
@@ -881,8 +884,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env.flush_all()
 
         # alter access rights: regular users cannot read 'records'
-        access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
-        access.perm_read = False
+        access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned_group_user')
+        access.for_read = False
         self.env.flush_all()
 
         # switch to environment with user demo
@@ -1532,8 +1535,8 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.env['ir.default'].set('test_new_api.company', 'tag_id', tag0.id)
 
         # assumption: users don't have access to 'ir.default'
-        accesses = self.env['ir.model.access'].search([('model_id.model', '=', 'ir.default')])
-        accesses.write(dict.fromkeys(['perm_read', 'perm_write', 'perm_create', 'perm_unlink'], False))
+        accesses = self.env['ir.access'].search([('model_id', '=', 'ir.default')])
+        accesses.active = False
 
         # create/modify a record, and check the value for each user
         record = self.env['test_new_api.company'].create({
@@ -1606,13 +1609,10 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         user0.write({'group_ids': [Command.link(self.env.ref('base.group_system').id)]})
         record.with_user(user0).foo = 'yes we can'
 
-        # add ir.rule to prevent access on record
+        # modify ir.access to prevent access on record
         self.assertTrue(user0._is_internal())
-        rule = self.env['ir.rule'].create({
-            'model_id': self.env['ir.model']._get_id(record._name),
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': str([('id', '!=', record.id)]),
-        })
+        access = self.env.ref('test_new_api.access_test_new_api_company_group_user')
+        access.domain = f"[('id', '!=', {record.id})]"
         with self.assertRaises(AccessError):
             record.with_user(user0).foo = 'forbidden'
 
@@ -1951,12 +1951,9 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         """ Test that prefetching non-column fields works in the presence of deleted records. """
         Discussion = self.env['test_new_api.discussion']
 
-        # add an ir.rule that forces reading field 'name'
-        self.env['ir.rule'].create({
-            'model_id': self.env['ir.model']._get(Discussion._name).id,
-            'groups': [self.env.ref('base.group_user').id],
-            'domain_force': "[('name', '!=', 'Super Secret discution')]",
-        })
+        # modify ir.access to force reading field 'name'
+        access = self.env.ref('test_new_api.access_test_new_api_discussion_group_user')
+        access.domain = "[('name', '!=', 'Super Secret discussion')]"
 
         records = Discussion.with_user(self.user_demo).create([
             {'name': 'EXISTING'},
@@ -2358,12 +2355,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # the patches on new_group.all_user_ids should not have changed group.all_user_ids
         self.assertEqual(group.user_ids, user0)
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
         # make discussions unreadable for demo user
-        access = self.env.ref('test_new_api.access_discussion')
-        access.write({'perm_read': False})
+        access = self.env.ref('test_new_api.access_test_new_api_discussion_group_user')
+        access.for_read = False
 
         # create an environment for demo user
         env = self.env(user=self.user_demo)
@@ -2383,12 +2380,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         # with self.assertRaises(AccessError):
         #     message.discussion.name
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_42_new_related(self):
         """ test the behavior of related fields traversing new records. """
         # make discussions unreadable for demo user
-        access = self.env.ref('test_new_api.access_discussion')
-        access.write({'perm_read': False})
+        access = self.env.ref('test_new_api.access_test_new_api_discussion_group_user')
+        access.for_read = False
 
         # create an environment for demo user
         env = self.env(user=self.user_demo)
@@ -3079,10 +3076,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_user.invalidate_recordset(['tags'])
             record_user.read(['tags'])
 
-        # create a passing ir.rule
-        self.env['ir.rule'].create({
+        # create a passing ir.access
+        self.env['ir.access'].create({
             'model_id': self.env['ir.model']._get(record._name).id,
-            'domain_force': "[('id', '=', %d)]" % record.id,
+            'operation': 'rwcd',
+            'domain': f"[('id', '=', {record.id})]",
         })
 
         # prep the following query count by caching access check related data
@@ -3096,13 +3094,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             record_user.invalidate_recordset(['tags'])
             record_user.read(['tags'])
 
-        # create a blocking ir.rule
-        self.env['ir.rule'].create({
+        # create a blocking ir.access
+        self.env['ir.access'].create({
             'model_id': self.env['ir.model']._get(record._name).id,
-            'domain_force': "[('id', '!=', %d)]" % record.id,
+            'operation': 'rwcd',
+            'domain': f"[('id', '!=', {record.id})]",
         })
 
-        # ensure ir.rule is applied even when reading m2m
+        # ensure ir.access is applied even when reading m2m
         with self.assertRaises(AccessError):
             record_user.read(['tags'])
 
@@ -3127,10 +3126,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         line = move.line_ids
         self.assertEqual(move.quantity, 42)
 
-        # create an ir.rule for lines that uses move.quantity
-        self.env['ir.rule'].create({
+        # create an ir.access for lines that uses move.quantity
+        self.env['ir.access'].create({
             'model_id': self.env['ir.model']._get(line._name).id,
-            'domain_force': "[('move_id.quantity', '>=', 0)]",
+            'operation': 'rwcd',
+            'domain': "[('move_id.quantity', '>=', 0)]",
         })
 
         # unlink the line, and check the recomputation of move.quantity
@@ -3604,7 +3604,7 @@ class TestX2many(TransactionExpressionCase):
         })
         self.assertTrue(field.unlink())
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     @users('portal')
     def test_sudo_commands(self):
         """Test manipulating a x2many field using Commands with `sudo` or with another user (`with_user`)
@@ -4394,7 +4394,7 @@ class TestSelectionOndelete(TransactionCase):
         self._unlink_option(self.MODEL_REQUIRED, 'foo')
         self.assertEqual(rec.my_selection, 'foo')
 
-    @mute_logger('odoo.addons.base.models.ir_model')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_write_override_selection(self):
         # test that on override to write that raises an error does not prevent the ondelete
         # policy from executing and cleaning up what needs to be cleaned up

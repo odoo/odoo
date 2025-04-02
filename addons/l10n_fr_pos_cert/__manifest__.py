@@ -31,8 +31,7 @@ The module adds following features:
         'views/res_config_settings_views.xml',
         'report/pos_hash_integrity.xml',
         'data/account_sale_closure_cron.xml',
-        'security/ir.model.access.csv',
-        'security/account_closing_intercompany.xml',
+        'security/ir.access.csv',
     ],
     'post_init_hook': '_setup_inalterability',
     'assets': {

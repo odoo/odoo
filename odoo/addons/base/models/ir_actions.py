@@ -167,11 +167,7 @@ class IrActionsActions(models.Model):
                     # the user may not perform this action
                     continue
                 res_model = action.pop('res_model', None)
-                if res_model and not self.env['ir.model.access'].check(
-                    res_model,
-                    mode='read',
-                    raise_exception=False
-                ):
+                if res_model in self.pool and not self.env[res_model].has_access('read'):
                     # the user won't be able to read records
                     continue
                 actions.append(action)
@@ -761,10 +757,13 @@ class IrActionsServer(models.Model):
 
     @api.depends('state')
     def _compute_available_model_ids(self):
-        allowed_models = self.env['ir.model'].search(
-            [('model', 'in', list(self.env['ir.model.access']._get_allowed_models()))]
-        )
-        self.available_model_ids = allowed_models.ids
+        domain = [
+            ('group_id', 'in', self.env.user._get_group_ids()),
+            ('for_read', '=', True),
+            ('active', '=', True),
+        ]
+        accesses = self.env['ir.access'].search(domain, order='id')
+        self.available_model_ids = accesses.model_id
 
     @api.depends('model_id', 'update_path', 'state')
     def _compute_crud_relations(self):

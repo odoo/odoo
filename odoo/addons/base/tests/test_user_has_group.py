@@ -328,15 +328,15 @@ class TestHasGroup(TransactionCase):
         self.assertFalse(self.registry._Registry__caches['default'], "Writing on group must invalidate user._has_group cache")
 
         populate_cache()
-        # call_cache_clearing_methods is called in res.groups.write to invalidate
-        # cache before calling its parent class method (`odoo.models.Model.write`)
-        # as explain in the `res.group.write` comment.
-        # This verifies that calling `call_cache_clearing_methods()` invalidates
-        # the ormcache of method `user._has_group()`
-        self.env['ir.model.access'].call_cache_clearing_methods()
+        # _clear_caches is called in res.groups.write to invalidate cache before
+        #  calling its parent class method (`odoo.models.Model.write`) as
+        #  explain in the `res.group.write` comment.
+        # This verifies that calling `_clear_caches()` invalidates the ormcache
+        # of method `user._has_group()`
+        self.env['ir.access']._clear_caches()
         self.assertFalse(
             self.registry._Registry__caches['default'],
-            "call_cache_clearing_methods() must invalidate user._has_group cache"
+            "_clear_caches() must invalidate user._has_group cache"
         )
 
     def test_has_group_with_new_id(self):

@@ -14,7 +14,6 @@
         'website_event_track',
     ],
     'data': [
-        'security/ir.model.access.csv',
         'views/event_leaderboard_templates.xml',
         'views/event_quiz_views.xml',
         'views/event_quiz_question_views.xml',
@@ -24,7 +23,8 @@
         'views/event_quiz_templates.xml',
         'views/event_track_templates_page.xml',
         'views/event_event_views.xml',
-        'views/event_type_views.xml'
+        'views/event_type_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/quiz_demo.xml',

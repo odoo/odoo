@@ -21,7 +21,7 @@
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/res_partner_views.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

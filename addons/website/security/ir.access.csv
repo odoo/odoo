@@ -1,0 +1,41 @@
+id,model_id,group_id/id,operation,domain,name
+access_website_group_public,website,base.group_public,r,,website.public
+access_website_group_portal,website,base.group_portal,r,,website.public
+access_website_group_user,website,base.group_user,r,,website.public
+access_website_group_website_designer,website,website.group_website_designer,rwcd,,website.website.designer
+access_website_menu_group_public,website.menu,base.group_public,r,,access_website_menu
+access_website_menu_group_portal,website.menu,base.group_portal,r,,access_website_menu
+access_website_menu_group_user,website.menu,base.group_user,r,,access_website_menu
+access_website_menu_group_website_designer,website.menu,website.group_website_designer,rwcd,,Web Menu Manager
+access_website_menu_global,website.menu,,rwcd,"['|', ('group_ids', '=', False), ('group_ids', 'in', user.all_group_ids.ids)]",Website menu: group_ids
+access_website_rewrite_group_website_designer,website.rewrite,website.group_website_designer,rwcd,,Web Rewrite Manager
+access_website_page_group_website_designer,website.page,website.group_website_designer,rwcd,,Web Page Manager
+access_website_controller_page_group_website_designer,website.controller.page,website.group_website_designer,rwcd,,Web Model Page Manager
+access_website_controller_page_website_page_controller_expose,website.controller.page,website.website_page_controller_expose,r,"[('website_published', '=', True)]",website.controller.page: portal/public: read published pages
+access_ir_ui_view_group_website_restricted_editor,ir.ui.view,website.group_website_restricted_editor,r,,access_website_ir_ui_view_restricted_editor
+access_ir_ui_view_group_website_designer_rwcd,ir.ui.view,website.group_website_designer,rwcd,"[('type', '=', 'qweb')]",website_designer: Manage Website and qWeb view
+access_ir_ui_view_group_website_designer_r,ir.ui.view,website.group_website_designer,r,"[('type', '!=', 'qweb')]",website_designer: global view
+access_ir_ui_view_group_system,ir.ui.view,base.group_system,rwcd,,Administration Settings: Manage all views
+access_ir_asset_group_website_designer,ir.asset,website.group_website_designer,rwcd,,access_website_ir_asset_designer
+access_website_seo_metadata_group_public,website.seo.metadata,base.group_public,r,,access_seo_public
+access_website_seo_metadata_group_portal,website.seo.metadata,base.group_portal,r,,access_seo_public
+access_website_seo_metadata_group_user,website.seo.metadata,base.group_user,r,,access_seo_public
+access_website_seo_metadata_group_website_designer,website.seo.metadata,website.group_website_designer,rwcd,,access_seo_designer
+access_website_page_properties_group_user,website.page.properties,base.group_user,r,,access_website_page_properties
+access_website_page_properties_group_website_designer,website.page.properties,website.group_website_designer,rwcd,,access_website_page_properties
+access_website_page_properties_base_group_user,website.page.properties.base,base.group_user,r,,access_website_page_properties_base
+access_website_page_properties_base_group_website_designer,website.page.properties.base,website.group_website_designer,rwcd,,access_website_page_properties_base
+access_website_visitor_group_website_designer,website.visitor,website.group_website_designer,rwd,,access_website_visitor_designer
+access_website_visitor_group_system,website.visitor,base.group_system,rwd,,access_website_visitor_system
+access_website_track_group_website_designer,website.track,website.group_website_designer,rwcd,,access_website_track_designer
+access_website_track_group_system,website.track,base.group_system,rwcd,,access_website_track_system
+access_website_route_group_website_designer,website.route,website.group_website_designer,rwcd,,access_website_designer_route
+access_theme_ir_ui_view_group_system,theme.ir.ui.view,base.group_system,rwcd,,access_theme_ir_ui_view
+access_theme_ir_asset_group_system,theme.ir.asset,base.group_system,rwcd,,theme_ir_asset_group_system
+access_theme_ir_attachment_group_system,theme.ir.attachment,base.group_system,rwcd,,access_theme_ir_attachment
+access_theme_website_menu_group_system,theme.website.menu,base.group_system,rwcd,,access_theme_website_menu
+access_theme_website_page_group_system,theme.website.page,base.group_system,rwcd,,access_theme_website_page
+access_website_robots_group_website_designer,website.robots,website.group_website_designer,rwc,,access.website.robots
+access_website_snippet_filter_group_system,website.snippet.filter,base.group_system,rwcd,,access_website_dynamic_filter
+access_website_configurator_feature_group_website_designer,website.configurator.feature,website.group_website_designer,rwcd,,access_website_configurator_feature_designer
+access_website_custom_blocked_third_party_domains_group_website_designer,website.custom_blocked_third_party_domains,website.group_website_designer,rwc,,access_website_custom_blocked_third_party_domains

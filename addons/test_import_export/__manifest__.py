@@ -8,7 +8,7 @@
     # website is there only for MockRequest
     'depends': ['web', 'base_import', 'website'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'author': 'Odoo S.A.',

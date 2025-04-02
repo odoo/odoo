@@ -12,8 +12,7 @@
     ],
     'data': [
         # Security
-        'security/ir.model.access.csv',
-        'security/ir_rules.xml',
+        'security/ir_access.xml',
         'security/res_groups.xml',
 
         # Record data
@@ -70,6 +69,7 @@
         'views/snippets/s_mega_menu/multi_menus.xml',
         'views/snippets/s_mega_menu/odoo_menu.xml',
         'views/snippets/s_mega_menu/thumbnails.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/demo.xml',

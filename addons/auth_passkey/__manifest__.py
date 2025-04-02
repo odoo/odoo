@@ -16,8 +16,7 @@ When a user logs in with a Passkey, MFA will not be required.
         'views/auth_passkey_login_templates.xml',
         'views/res_users_identitycheck_views.xml',
         'views/res_users_views.xml',
-        'security/ir.model.access.csv',
-        'security/security.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

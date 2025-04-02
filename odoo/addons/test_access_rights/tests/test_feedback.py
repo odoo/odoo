@@ -87,27 +87,25 @@ class TestSudo(Feedback):
 
 
 class TestACLFeedback(Feedback):
-    """ Tests that proper feedback is returned on ir.model.access errors
-    """
+    """ Tests that proper feedback is returned on ir.access errors """
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        ACL = cls.env['ir.model.access']
-        m = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
-        ACL.search([('model_id', '=', m.id)]).unlink()
-        ACL.create({
+        Access = cls.env['ir.access']
+        model = cls.env['ir.model']._get('test_access_right.some_obj')
+        Access.search([('model_id', '=', model.id)]).unlink()
+        Access.create({
             'name': "read",
-            'model_id': m.id,
+            'model_id': model.id,
             'group_id': cls.group1.id,
-            'perm_read': True,
+            'operation': "r",
         })
-        ACL.create({
+        Access.create({
             'name':  "create-and-read",
-            'model_id': m.id,
+            'model_id': model.id,
             'group_id': cls.group0.id,
-            'perm_read': True,
-            'perm_create': True,
+            'operation': "rc",
         })
         cls.record = cls.env['test_access_right.some_obj'].create({'val': 5})
         # values are in cache, clear them up for the test
@@ -157,6 +155,7 @@ Contact your administrator to request access if necessary."""
             r.read(['val'])
         self.assertEqual(ctx.exception.args[0], expected)
 
+
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
@@ -164,23 +163,20 @@ class TestIRRuleFeedback(Feedback):
     def setUpClass(cls):
         super().setUpClass()
         cls.env.ref('base.group_user').write({'user_ids': [Command.link(cls.user.id)]})
-        cls.model = cls.env['ir.model'].search([('model', '=', 'test_access_right.some_obj')])
+        cls.model = cls.env['ir.model']._get('test_access_right.some_obj')
         cls.record = cls.env['test_access_right.some_obj'].create({
             'val': 0,
         }).with_user(cls.user)
         cls.maxDiff = None
+        cls.env['ir.access'].search([('model_id', '=', cls.model.id)]).unlink()
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        res = self.env['ir.rule'].create({
+        res = self.env['ir.access'].create({
             'name': name,
             'model_id': self.model.id,
-            'groups': [] if global_ else [Command.link(self.group2.id)],
-            'domain_force': domain,
-            'perm_read': False,
-            'perm_write': False,
-            'perm_create': False,
-            'perm_unlink': False,
-            'perm_' + attr: True,
+            'group_id': False if global_ else self.group2.id,
+            'domain': domain,
+            'for_' + attr: True,
         })
         return res
 
@@ -207,7 +203,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -223,7 +219,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -241,7 +237,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -251,6 +247,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_globals_all(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[("val", "=", 78)]', global_=True)
+        self._make_rule('rule 2', '[]')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -260,7 +257,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 1
 
@@ -273,6 +270,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         """
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
         self._make_rule('rule 1', '[(1, "=", 1)]', global_=True)
+        self._make_rule('rule 2', '[]')
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
@@ -282,7 +280,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -302,7 +300,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 - rule 2
 - rule 3
@@ -326,7 +324,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'write' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -338,12 +336,11 @@ If you really, really need access, perhaps you can win over your friendly admini
         then no information about the company is showed.
         """
         ChildModel = self.env['test_access_right.child'].sudo()
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'rule 0',
-            'model_id': self.env['ir.model'].search([('model', '=', ChildModel._name)]).id,
-            'groups': [],
-            'domain_force': '[("parent_id.company_id", "=", user.company_id.id)]',
-            'perm_read': True,
+            'model_id': self.env['ir.model']._get(ChildModel._name).id,
+            'operation': 'rwcd',
+            'domain': '[("parent_id.company_id", "=", user.company_id.id)]',
         })
         self.record.sudo().company_id = self.env['res.company'].create({'name': 'Brosse Inc.'})
         self.user.sudo().company_ids = [Command.link(self.record.company_id.id)]
@@ -357,7 +354,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'read' access to:
 - %s, %s (%s: %s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
@@ -379,7 +376,7 @@ If you really, really need access, perhaps you can win over your friendly admini
 Sorry, %s (id=%s) doesn't have 'read' access to:
 - %s, %s (%s: %s, company=%s)
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.
@@ -419,7 +416,7 @@ Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
 - {record_1._description}, {record_1.display_name} ({record_1._name}: {record_1.id}, company={record_1.company_id.display_name})
 - {record_2._description}, {record_2.display_name} ({record_2._name}: {record_2.id}, company={record_2.company_id.display_name})
 
-Blame the following rules:
+Blame the following accesses:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.

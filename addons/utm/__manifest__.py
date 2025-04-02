@@ -20,7 +20,7 @@ Enable management of UTM trackers: campaign, medium, source.
         'views/utm_stage_views.xml',
         'views/utm_tag_views.xml',
         'views/utm_menus.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/utm_campaign_demo.xml',

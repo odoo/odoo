@@ -15,10 +15,10 @@ This module provides the ability to choose a city from a list (in specific count
 It is primarily used for EDIs that might need a special city code.
         """,
     'data': [
-        'security/ir.model.access.csv',
         'views/base_address_extended.xml',
         'views/res_city_view.xml',
         'views/res_country_view.xml',
+        'security/ir.access.csv',
     ],
     'depends': ['base', 'contacts'],
     'author': 'Odoo S.A.',

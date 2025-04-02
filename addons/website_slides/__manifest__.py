@@ -27,7 +27,6 @@ Featuring
     ],
     'data': [
         'security/website_slides_security.xml',
-        'security/ir.model.access.csv',
         'views/gamification_karma_tracking_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_partner_views.xml',
@@ -59,6 +58,7 @@ Featuring
         'data/slide_data.xml',
         'data/website_data.xml',
         'data/slides_tour.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/res_users_demo.xml',

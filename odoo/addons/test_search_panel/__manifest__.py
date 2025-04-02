@@ -8,7 +8,7 @@
 
     'depends': ['web'],
 
-    'data': ['ir.model.access.csv'],
+    'data': ['ir.access.csv'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

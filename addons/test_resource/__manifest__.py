@@ -7,7 +7,7 @@
     'category': 'Hidden',
     'depends': ['resource'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

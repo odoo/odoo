@@ -21,8 +21,6 @@ Preferences
 """,
     'depends': ['sale', 'stock_account'],
     'data': [
-        'security/sale_stock_security.xml',
-        'security/ir.model.access.csv',
 
         'views/sale_order_views.xml',
         'views/sale_order_line_views.xml',
@@ -40,6 +38,7 @@ Preferences
         'data/sale_stock_data.xml',
 
         'wizard/stock_rules_report_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': ['data/sale_order_demo.xml'],
     'installable': True,

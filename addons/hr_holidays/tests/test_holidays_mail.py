@@ -15,7 +15,7 @@ from odoo.addons.mail.tests.common import MailCase
 class TestHolidaysMail(TestHrHolidaysCommon, MailCase):
     """Test that mails are correctly sent when a timeoff is taken"""
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_email_sent_when_approved(self):
         """ Testing leave request flow: limited type of leave request """
         with freeze_time('2022-01-15'):

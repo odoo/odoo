@@ -324,7 +324,7 @@ class AccountAnalyticLine(models.Model):
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
-            return self.env['ir.rule']._compute_domain(self._name)
+            return self.env['ir.access']._get_access_domain(self._name, 'read')
         return [
             ('message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
             ('project_id.privacy_visibility', '=', 'portal'),

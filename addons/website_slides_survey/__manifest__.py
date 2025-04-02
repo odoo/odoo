@@ -10,8 +10,6 @@
     'installable': True,
     'auto_install': True,
     'data': [
-        'security/ir.model.access.csv',
-        'security/website_slides_survey_security.xml',
         'views/slide_channel_partner_views.xml',
         'views/slide_channel_views.xml',
         'views/slide_slide_partner_views.xml',
@@ -28,6 +26,7 @@
         'data/mail_template_data.xml',
         'data/gamification_data.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/survey_demo.xml',

@@ -52,7 +52,7 @@ class TestORM(TransactionCase):
             record.display_name
             record.unlink()
 
-    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.models', 'odoo.addons.base.models.ir_access')
     def test_access_filtered_records(self):
         """ Verify that accessing filtered records works as expected for non-admin user """
         p1 = self.env['res.partner'].create({'name': 'W'})
@@ -63,11 +63,11 @@ class TestORM(TransactionCase):
             'group_ids': [Command.set([self.ref('base.group_user')])],
         })
 
-        partner_model = self.env['ir.model'].search([('model','=','res.partner')])
-        self.env['ir.rule'].create({
+        self.env['ir.access'].create({
             'name': 'Y is invisible',
-            'domain_force': [('id', '!=', p1.id)],
-            'model_id': partner_model.id,
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'operation': 'rwcd',
+            'domain': [('id', '!=', p1.id)],
         })
 
         # search as unprivileged user

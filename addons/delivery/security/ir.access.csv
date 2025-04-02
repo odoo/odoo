@@ -1,0 +1,12 @@
+id,model_id,group_id/id,operation,domain,name
+access_delivery_carrier_group_sale_salesman,delivery.carrier,sales_team.group_sale_salesman,r,,delivery.carrier
+access_delivery_carrier_group_system,delivery.carrier,base.group_system,r,,delivery.carrier
+access_delivery_carrier_group_sale_manager,delivery.carrier,sales_team.group_sale_manager,rwcd,,delivery.carrier
+access_delivery_carrier_group_partner_manager,delivery.carrier,base.group_partner_manager,r,,delivery.carrier partner_manager
+access_delivery_carrier_global,delivery.carrier,,rwcd,"[('company_id', 'in', company_ids + [False])]",Delivery Carrier multi-company
+access_delivery_zip_prefix_group_sale_salesman,delivery.zip.prefix,sales_team.group_sale_salesman,r,,delivery.zip.prefix
+access_delivery_zip_prefix_group_partner_manager,delivery.zip.prefix,base.group_partner_manager,rwcd,,delivery.zip.prefix
+access_delivery_price_rule_group_sale_salesman,delivery.price.rule,sales_team.group_sale_salesman,r,,delivery.price.rule
+access_delivery_price_rule_group_sale_manager_rwcd,delivery.price.rule,sales_team.group_sale_manager,rwcd,,delivery.price.rule
+access_delivery_price_rule_group_sale_manager_rwcd1,delivery.price.rule,sales_team.group_sale_manager,rwcd,,delivery.price.rule
+access_choose_delivery_carrier_group_sale_salesman,choose.delivery.carrier,sales_team.group_sale_salesman,rwc,,delivery.choose.delivery.carrier

@@ -5,7 +5,7 @@
     'category': 'Hidden/Tests',
     'version': '0.1',
     'depends': ['base', 'web'],
-    'data': ['ir.model.access.csv'],
+    'data': ['ir.access.csv'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

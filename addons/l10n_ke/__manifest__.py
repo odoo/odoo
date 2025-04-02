@@ -20,7 +20,7 @@ This provides a base chart of accounts and taxes template for use in Odoo.
         'data/l10n_ke.item.code.csv',
         'data/account_tax_report_data.xml',
         'data/account_wh_tax_report_data.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

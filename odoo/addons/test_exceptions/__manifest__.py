@@ -6,7 +6,7 @@
     'category': 'Hidden/Tests',
     'description': """A module to generate exceptions.""",
     'depends': ['base'],
-    'data': ['view.xml', 'ir.model.access.csv'],
+    'data': ['view.xml', 'ir.access.csv'],
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

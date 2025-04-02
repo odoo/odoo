@@ -1,0 +1,82 @@
+id,model_id,group_id/id,operation,domain,name
+access_survey_user_input_group_hr_recruitment_manager_rwcd,survey.user_input,hr_recruitment.group_hr_recruitment_manager,rwcd,"[('survey_id.survey_type', '=', 'recruitment')]",Survey user input: recruitment manager: all recruitment
+access_survey_user_input_group_hr_recruitment_manager_r,survey.user_input,hr_recruitment.group_hr_recruitment_manager,r,"[
+                '&', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]",Survey user input: recruitment officer: unrestricted or in restricted users
+access_survey_user_input_group_hr_recruitment_manager_r1,survey.user_input,hr_recruitment.group_hr_recruitment_manager,r,"[
+                '|',
+                    ('applicant_id.interviewer_ids', 'in', user.id),
+                    ('applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]",Survey user input: recruitment interviewer: read survey answers for which they are set as interviewer
+access_survey_user_input_group_hr_recruitment_user_r,survey.user_input,hr_recruitment.group_hr_recruitment_user,r,"[
+                '&', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]",Survey user input: recruitment officer: unrestricted or in restricted users
+access_survey_user_input_group_hr_recruitment_user_r1,survey.user_input,hr_recruitment.group_hr_recruitment_user,r,"[
+                '|',
+                    ('applicant_id.interviewer_ids', 'in', user.id),
+                    ('applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]",Survey user input: recruitment interviewer: read survey answers for which they are set as interviewer
+access_survey_user_input_group_hr_recruitment_interviewer,survey.user_input,hr_recruitment.group_hr_recruitment_interviewer,r,"[
+                '|',
+                    ('applicant_id.interviewer_ids', 'in', user.id),
+                    ('applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]",Survey user input: recruitment interviewer: read survey answers for which they are set as interviewer
+access_survey_user_input_line_group_hr_recruitment_manager_rwcd,survey.user_input.line,hr_recruitment.group_hr_recruitment_manager,rwcd,"[('survey_id.survey_type', '=', 'recruitment')]",Survey user input line: recruitment manager: all recruitment
+access_survey_user_input_line_group_hr_recruitment_manager_r,survey.user_input.line,hr_recruitment.group_hr_recruitment_manager,r,"[
+                '&', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]",Survey user input line: recruitment officer: unrestricted or in restricted users
+access_survey_user_input_line_group_hr_recruitment_manager_r1,survey.user_input.line,hr_recruitment.group_hr_recruitment_manager,r,"[
+                '|',
+                    ('user_input_id.applicant_id.interviewer_ids', 'in', user.id),
+                    ('user_input_id.applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]",Survey user input line: recruitment interviewer: read survey answers for which they are set as interviewer
+access_survey_user_input_line_group_hr_recruitment_user_r,survey.user_input.line,hr_recruitment.group_hr_recruitment_user,r,"[
+                '&', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]",Survey user input line: recruitment officer: unrestricted or in restricted users
+access_survey_user_input_line_group_hr_recruitment_user_r1,survey.user_input.line,hr_recruitment.group_hr_recruitment_user,r,"[
+                '|',
+                    ('user_input_id.applicant_id.interviewer_ids', 'in', user.id),
+                    ('user_input_id.applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]",Survey user input line: recruitment interviewer: read survey answers for which they are set as interviewer
+access_survey_user_input_line_group_hr_recruitment_interviewer,survey.user_input.line,hr_recruitment.group_hr_recruitment_interviewer,r,"[
+                '|',
+                    ('user_input_id.applicant_id.interviewer_ids', 'in', user.id),
+                    ('user_input_id.applicant_id.job_id.interviewer_ids', 'in', user.id),
+                ]",Survey user input line: recruitment interviewer: read survey answers for which they are set as interviewer
+access_survey_survey_group_hr_recruitment_manager_rwcd,survey.survey,hr_recruitment.group_hr_recruitment_manager,rwcd,"[('survey_type', '=', 'recruitment')]",Survey survey: recruitment manager: all recruitment
+access_survey_survey_group_hr_recruitment_manager_r,survey.survey,hr_recruitment.group_hr_recruitment_manager,r,"[('survey_type', '=', 'recruitment'),
+                '|', ('hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]",Survey: recruitment interviewer: send surveys to applicants for which they are set as interviewer
+access_survey_survey_group_hr_recruitment_interviewer,survey.survey,hr_recruitment.group_hr_recruitment_interviewer,r,"[('survey_type', '=', 'recruitment'),
+                '|', ('hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]",Survey: recruitment interviewer: send surveys to applicants for which they are set as interviewer
+access_survey_question_group_hr_recruitment_manager_rwcd,survey.question,hr_recruitment.group_hr_recruitment_manager,rwcd,"[('survey_id.survey_type', '=', 'recruitment')]",Survey question: recruitment manager: all recruitment
+access_survey_question_group_hr_recruitment_manager_r,survey.question,hr_recruitment.group_hr_recruitment_manager,r,"[('survey_id.survey_type', '=', 'recruitment'),
+                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]",Survey: recruitment interviewer: send surveys to applicants for which they are set as interviewer
+access_survey_question_group_hr_recruitment_interviewer,survey.question,hr_recruitment.group_hr_recruitment_interviewer,r,"[('survey_id.survey_type', '=', 'recruitment'),
+                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]",Survey: recruitment interviewer: send surveys to applicants for which they are set as interviewer
+access_survey_question_answer_group_hr_recruitment_manager,survey.question.answer,hr_recruitment.group_hr_recruitment_manager,rwcd,"['|', ('question_id.survey_id.survey_type', '=', 'recruitment'),
+                ('matrix_question_id.survey_id.survey_type', '=', 'recruitment')]",Survey question answer: recruitment manager: all recruitment
+access_survey_invite_group_hr_recruitment_user_rwc,survey.invite,hr_recruitment.group_hr_recruitment_user,rwc,"[
+                '&', ('survey_id.survey_type', '=', 'recruitment'),
+                '|',  ('survey_id.restrict_user_ids', 'in', user.id),
+                        ('survey_id.restrict_user_ids', '=', False)]",Survey invite: recruitment officer: unrestricted or in restricted users
+access_survey_invite_group_hr_recruitment_user_rwc1,survey.invite,hr_recruitment.group_hr_recruitment_user,rwc,"[('survey_id.survey_type', '=', 'recruitment'),
+                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]",Survey invite: recruitment interviewer: send surveys to applicants for which they are set as interviewer
+access_survey_invite_group_hr_recruitment_interviewer,survey.invite,hr_recruitment.group_hr_recruitment_interviewer,rwc,"[('survey_id.survey_type', '=', 'recruitment'),
+                '|', ('survey_id.hr_job_ids.interviewer_ids', 'in', user.id),
+                     ('survey_id.hr_job_ids.application_ids.interviewer_ids', 'in', user.id)
+                ]",Survey invite: recruitment interviewer: send surveys to applicants for which they are set as interviewer
+access_survey_invite_group_hr_recruitment_manager,survey.invite,hr_recruitment.group_hr_recruitment_manager,rwc,"[('survey_id.survey_type', '=', 'recruitment')]",Survey invite: recruitment manager: all recruitment

@@ -19,11 +19,11 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
 For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>
     """,
     'data': [
-        'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/edi_pdf_report.xml',
         'views/res_config_settings_views.xml',
         'wizard/l10n_in_edi_cancel_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         "demo/demo_company.xml",

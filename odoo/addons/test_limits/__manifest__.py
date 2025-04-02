@@ -6,7 +6,7 @@
     'category': 'Hidden/Tests',
     'description': """A module with dummy methods.""",
     'depends': ['base'],
-    'data': ['ir.model.access.csv'],
+    'data': ['ir.access.csv'],
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

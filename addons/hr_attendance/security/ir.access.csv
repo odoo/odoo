@@ -1,0 +1,29 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_attendance_group_hr_attendance_manager,hr.attendance,hr_attendance.group_hr_attendance_manager,rwcd,,Attendance Administrator: Full access
+access_hr_attendance_group_hr_attendance_officer,hr.attendance,hr_attendance.group_hr_attendance_officer,rwcd,"
+                [
+                '|',
+                '&',
+                 ('employee_id.attendance_manager_id', '=', user.id),
+                 ('employee_id.user_id', '=', user.id),
+                '&',
+                ('employee_id.user_id', '!=', user.id),
+                ('employee_id.attendance_manager_id', '=', user.id)
+                ]
+            ",Attendance Officer: Restrict Attendances to managed employees
+access_hr_attendance_group_hr_attendance_own_reader,hr.attendance,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]",Attendance base user: Read his own attendances in other apps
+access_hr_attendance_global,hr.attendance,,rwcd,"['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]",Employee multi company rule
+access_hr_attendance_overtime_group_hr_attendance_manager,hr.attendance.overtime,hr_attendance.group_hr_attendance_manager,rwcd,,Attendance Admin: full access
+access_hr_attendance_overtime_group_hr_attendance_officer,hr.attendance.overtime,hr_attendance.group_hr_attendance_officer,rwcd,"
+                [
+                '|',
+                '&',
+                 ('employee_id.attendance_manager_id', '=', user.id),
+                 ('employee_id.user_id', '=', user.id),
+                '&',
+                ('employee_id.user_id', '!=', user.id),
+                ('employee_id.attendance_manager_id', '=', user.id)
+                ]
+            ",Attendance Officer: Restrict Overtime to managed employees
+access_hr_attendance_overtime_group_hr_attendance_own_reader,hr.attendance.overtime,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]",Attendance base user: Read his own overtime
+access_hr_attendance_overtime_global,hr.attendance.overtime,,rwcd,"['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]",Employee multi company rule

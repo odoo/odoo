@@ -263,7 +263,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write({'collaborator_ids': [Command.create({'partner_id': self.user_portal.partner_id.id})]})
         self.assertTrue(self.project_portal.with_user(self.user_portal)._check_project_sharing_access(), 'The portal user can access to project sharing feature of the portal project.')
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_create_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
 
@@ -356,7 +356,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         Task.create({'name': 'foo', 'tag_ids': [Command.set([self.task_tag.id])]})
         self.assertEqual(task.tag_ids, self.task_tag)
 
-    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.addons.base.models.ir_rule')
+    @mute_logger('odoo.addons.base.models.ir_access')
     def test_edit_task_in_project_sharing(self):
         """ Test when portal user creates a task in project sharing views.
 

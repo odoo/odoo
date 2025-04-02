@@ -1,0 +1,5 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_employee_location_group_hr_user,hr.employee.location,hr.group_hr_user,rwcd,,homeworking: admin
+access_hr_employee_location_group_user,hr.employee.location,base.group_user,rwcd,"[
+                ('employee_id', '=', user.employee_id.id)
+            ]",homeworking: own

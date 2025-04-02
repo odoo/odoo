@@ -1,0 +1,37 @@
+id,model_id,group_id/id,operation,domain,name
+access_hr_employee_category_group_hr_user,hr.employee.category,hr.group_hr_user,rwcd,,hr.employee.category.user
+access_hr_employee_category_group_user,hr.employee.category,base.group_user,r,,hr.employee.category.emp
+access_hr_employee_group_hr_user,hr.employee,hr.group_hr_user,rwcd,,hr.employee user
+access_hr_employee_group_system,hr.employee,base.group_system,r,,hr.employee system user
+access_hr_employee_global,hr.employee,,rwcd,"['|', '|', '|',
+            ('company_id', 'in', company_ids + [False]),
+            ('parent_id.user_id', '=', user.id),
+            ('id', '=', user.employee_id.parent_id.id),
+            ('user_id', '=', user.id)
+        ]",Employee multi company rule
+access_hr_employee_public_group_user,hr.employee.public,base.group_user,r,,hr.employee_public
+access_hr_employee_public_global,hr.employee.public,,rwcd,"['|', '|', '|',
+            ('company_id', 'in', company_ids + [False]),
+            ('parent_id.user_id', '=', user.id),
+            ('id', '=', user.employee_id.parent_id.id),
+            ('user_id', '=', user.id)
+        ]",Employee multi company rule
+access_resource_resource_group_hr_user,resource.resource,hr.group_hr_user,rwcd,,resource.resource.user
+access_hr_department_group_hr_user,hr.department,hr.group_hr_user,rwcd,,hr.department.user
+access_hr_department_group_user,hr.department,base.group_user,rw,,hr.department.employee
+access_hr_department_global,hr.department,,rwcd,"[('company_id', 'in', company_ids + [False])]",Department multi company rule
+access_hr_job_group_hr_user,hr.job,hr.group_hr_user,rwcd,,hr.job user
+access_hr_job_global,hr.job,,rwcd,"[('company_id', 'in', company_ids + [False])]",Job multi company rule
+access_hr_departure_wizard_group_hr_user,hr.departure.wizard,hr.group_hr_user,rwc,,access.hr.departure.wizard
+access_hr_work_location_group_user,hr.work.location,base.group_user,r,,access_hr_work_location_user
+access_hr_work_location_group_hr_manager,hr.work.location,hr.group_hr_manager,rwcd,,access_hr_work_location_manager
+access_hr_departure_reason_group_hr_user,hr.departure.reason,hr.group_hr_user,rwcd,,access_hr_departure_reason_user
+access_hr_departure_reason_global,hr.departure.reason,,rwcd,"[('country_code', 'in', user.env.companies.mapped('country_code') + [False])]",Departure Reason: multi company
+access_hr_contract_type_group_hr_user,hr.contract.type,hr.group_hr_user,rwcd,,hr.contract.type.manager
+access_hr_contract_type_global,hr.contract.type,,rwcd,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.country_id.ids)]",HR Contract Type: Multi Company
+access_mail_activity_plan_group_hr_manager_r,mail.activity.plan,hr.group_hr_manager,r,,mail.activity.plan.hr.manager
+access_mail_activity_plan_group_hr_manager_wcd,mail.activity.plan,hr.group_hr_manager,wcd,"[('res_model', '=', 'hr.employee')]",Manager can edit employee plan
+access_mail_activity_plan_template_group_hr_manager_r,mail.activity.plan.template,hr.group_hr_manager,r,,mail.activity.plan.template.hr.manager
+access_mail_activity_plan_template_group_hr_manager_wcd,mail.activity.plan.template,hr.group_hr_manager,wcd,"[('plan_id.res_model', '=', 'hr.employee')]",Manager can edit employee plan template
+access_res_partner_bank_group_user,res.partner.bank,base.group_user,r,"[('partner_id.employee_ids', '=', False)]",HR: Prevent non HR officers from accessing employee bank accounts
+access_res_partner_bank_group_hr_user,res.partner.bank,hr.group_hr_user,r,,HR: Allow HR officers from accessing employee bank accounts

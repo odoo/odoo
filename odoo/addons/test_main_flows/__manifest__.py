@@ -11,7 +11,7 @@ It will install some main apps and will try to execute the most important action
     'depends': ['web_tour', 'crm', 'sale_timesheet', 'purchase_stock', 'mrp', 'account'],
     'installable': True,
     'post_init_hook': '_auto_install_enterprise_dependencies',
-    'data': ['models/ir.model.access.csv'],
+    'data': ['ir.access.csv'],
     'assets': {
         'web.assets_tests': [
             # inside .

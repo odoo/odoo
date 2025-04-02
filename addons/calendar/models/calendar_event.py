@@ -782,7 +782,7 @@ class CalendarEvent(models.Model):
         if not self.env.su:
             for event in self:
                 if event._check_private_event_conditions():
-                    raise self.env['ir.rule']._make_access_error("write", event)
+                    raise self.env['ir.access']._make_access_error(event, "write")
 
     def _check_private_event_conditions(self):
         """ Checks if the event is private, returning True if the conditions match and False otherwise. """

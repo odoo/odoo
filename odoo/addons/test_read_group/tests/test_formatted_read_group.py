@@ -1306,17 +1306,17 @@ class TestWebReadGroup(common.TransactionCase):
             ]
         )
 
-        # group tasks with some ir.rule on users
+        # group tasks with some ir.access on users
         users_model = self.env['ir.model']._get(mario._name)
-        self.env['ir.rule'].create(
+        self.env['ir.access'].create(
             {
                 'name': 'Only The Lone Wanderer allowed',
                 'model_id': users_model.id,
-                'domain_force': [('id', '=', mario.id)],
+                'domain': [('id', '=', mario.id)],
             },
         )
 
-        # as demo user, ir.rule should apply
+        # as demo user, ir.access should apply
         tasks = tasks.with_user(self.base_user)
         result = tasks.formatted_read_group([], groupby=['user_ids'], aggregates=['__count', 'name:array_agg'])
         self.assertEqual(
@@ -1555,13 +1555,13 @@ class TestWebReadGroup(common.TransactionCase):
         field_info = RelatedFoo.fields_get(['bar_base_ids'], ['groupable'])
         self.assertTrue(field_info['bar_base_ids']['groupable'])
 
-        # With ir.rule on the comodel of the many2many
+        # With ir.access on the comodel of the many2many
         related_base_model = self.env['ir.model']._get('test_read_group.related_base')
-        self.env['ir.rule'].create(
+        self.env['ir.access'].create(
             {
                 'name': 'Only The Lone Wanderer allowed',
                 'model_id': related_base_model.id,
-                'domain_force': str([('name', '!=', 'A')]),
+                'domain': str([('name', '!=', 'A')]),
             },
         )
 
