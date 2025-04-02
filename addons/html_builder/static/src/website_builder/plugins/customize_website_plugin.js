@@ -9,7 +9,7 @@ import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
     static dependencies = ["builderActions", "history", "savePlugin"];
-    static shared = ["makeSCSSCusto"];
+    static shared = ["customizeWebsiteColors", "makeSCSSCusto", "stuffHappened"];
 
     resources = {
         builder_actions: this.getActions(),
@@ -19,7 +19,6 @@ export class CustomizeWebsitePlugin extends Plugin {
     activeViews = {};
     pendingRequests = new Set();
     resolves = {};
-
     getActions() {
         return {
             customizeWebsiteVariable: {
@@ -42,7 +41,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 apply: () => this.stuffHappened(),
             },
             customizeWebsiteColor: {
-                getValue: ({ param: { mainParam: color, gradientColor } }) => {
+                getValue: ({ param: { mainParam: color, colorType, gradientColor } }) => {
                     const style = this.document.defaultView.getComputedStyle(
                         this.document.documentElement
                     );
@@ -54,7 +53,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                     }
                     return getCSSVariableValue(color, style);
                 },
-                load: async ({ param: { mainParam: color, gradientColor }, value }) => {
+                load: async ({ param: { mainParam: color, colorType, gradientColor }, value }) => {
                     if (gradientColor) {
                         let colorValue = "";
                         let gradientValue = "";
@@ -63,14 +62,17 @@ export class CustomizeWebsitePlugin extends Plugin {
                         } else {
                             colorValue = value;
                         }
-                        await this.customizeWebsiteColors({
-                            [color]: colorValue,
-                        });
+                        await this.customizeWebsiteColors(
+                            {
+                                [color]: colorValue,
+                            },
+                            { colorType }
+                        );
                         await this.customizeWebsiteVariables({
                             [gradientColor]: gradientValue,
                         }); // reloads bundles
                     } else {
-                        await this.customizeWebsiteColors({ [color]: value });
+                        await this.customizeWebsiteColors({ [color]: value }, { colorType });
                         await this.reloadBundles();
                     }
                 },

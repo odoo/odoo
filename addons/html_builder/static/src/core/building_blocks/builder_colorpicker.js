@@ -82,6 +82,7 @@ export class BuilderColorPicker extends Component {
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
+        selectedTab: { type: String, optional: true },
     };
     static defaultProps = {
         getUsedCustomColors: () => [],
@@ -96,7 +97,7 @@ export class BuilderColorPicker extends Component {
         const { state, onApply, onPreview, onPreviewRevert } = useColorPickerBuilderComponent();
         this.colorButton = useRef("colorButton");
         this.state = state;
-        this.state.defaultTab = "solid"; // TODO: select the correct tab based on the color
+        this.state.defaultTab = this.props.selectedTab || "solid"; // TODO: select the correct tab based on the color
         useColorPicker(
             "colorButton",
             {

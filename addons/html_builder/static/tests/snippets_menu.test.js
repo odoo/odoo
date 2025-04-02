@@ -44,6 +44,7 @@ test("navigate between builder tab don't fetch snippet description again", async
     expect.verifySteps(["render_public_asset"]);
 
     await contains(".o-website-builder_sidebar .o-snippets-tabs span:contains(THEME)").click();
+    await animationFrame();
     expect(queryOne(".o-website-builder_sidebar .o-snippets-tabs button.active")).toHaveText(
         "THEME"
     );

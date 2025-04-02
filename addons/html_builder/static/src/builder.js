@@ -22,7 +22,7 @@ import { useSetupAction } from "@web/search/action_hook";
 import { InvisibleElementsPanel } from "./sidebar/invisible_elements_panel";
 import { BlockTab } from "./sidebar/block_tab";
 import { CustomizeTab } from "./sidebar/customize_tab";
-import { ThemeTab } from "./sidebar/theme_tab";
+import { ThemeTab } from "@html_builder/website_builder/plugins/theme_tab";
 import { CORE_PLUGINS } from "./core/core_plugins";
 import { EDITOR_COLOR_CSS_VARIABLES, getCSSVariableValue } from "./utils/utils_css";
 

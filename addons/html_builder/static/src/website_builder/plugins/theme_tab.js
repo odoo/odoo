@@ -1,5 +1,5 @@
 import { Component, useState } from "@odoo/owl";
-import { OptionsContainer } from "./option_container";
+import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { useOptionsSubEnv } from "@html_builder/utils/utils";
 
 export class ThemeTab extends Component {
