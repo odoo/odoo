@@ -471,7 +471,7 @@ class TestDomainOptimize(TransactionCase):
     def test_condition_optimize_any(self):
         model = self.env['test_orm.mixed']
 
-        domain = Domain('currency_id', 'any', model.currency_id._search([]))
+        domain = Domain('currency_id', 'any!', model.currency_id._search([]))
         self.assertIs(domain.optimize(model), domain, "Idempotent with a Query value")
 
         self.assertEqual(
@@ -893,7 +893,7 @@ class TestDomainOptimize(TransactionCase):
                 query = model[field_name]._search([])
                 self.assertEqual(
                     (Domain(field_name, 'any', left) | Domain(field_name, 'any', query) | Domain(field_name, 'any', right)).optimize(model, full=True),
-                    Domain(field_name, 'any', left | right) | Domain(field_name, 'any', query),
+                    Domain(field_name, 'any', left | right) | Domain(field_name, 'any!', query),
                     "Don't merge query with domains",
                 )
                 self.assertEqual(

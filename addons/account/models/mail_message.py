@@ -161,12 +161,12 @@ class MailMessage(models.Model):
             operator in ('in', 'not in') and any(isinstance(v, str) for v in value)
         ):
             res_id_domain = [('res_id', 'in', self.env[model]._search([('display_name', operator, value)]))]
-        elif operator in ('any', 'not any'):
+        elif operator in ('any', 'not any', 'any!', 'not any!'):
             if isinstance(value, Domain):
                 query = self.env[model]._search(value)
             else:
                 query = value
-            res_id_domain = [('res_id', 'in' if operator == 'any' else 'not in', query)]
+            res_id_domain = [('res_id', 'in' if operator in ('any', 'any!') else 'not in', query)]
         elif operator in ('in', 'not in'):
             res_id_domain = [('res_id', operator, value)]
         else:

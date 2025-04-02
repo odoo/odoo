@@ -6,6 +6,7 @@ from datetime import date
 from odoo import api, fields, models, tools
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.tools import SQL
 
 
@@ -226,6 +227,6 @@ class IrDefault(models.Model):
         fallback = field.get_company_dependent_fallback(model)
         try:
             record = model.new({field_name: field.convert_to_write(fallback, model)})
-            return bool(record.filtered_domain([(field_expr, operator, value)]))
+            return bool(record.filtered_domain(Domain(field_expr, operator, value)))
         except ValueError:
             return None
