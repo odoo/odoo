@@ -6315,7 +6315,7 @@ class AccountMove(models.Model):
 
         def is_right_company(partner):
             if custom_values.get('company_id'):
-                return partner.company_id in [False, custom_values['company_id']]
+                return partner.company_id.id in [False, custom_values['company_id']]
             return True
 
         # Search for partners in copy.
