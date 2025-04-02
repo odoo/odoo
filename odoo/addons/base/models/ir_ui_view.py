@@ -330,6 +330,8 @@ actual arch.
             specs = collections.deque([etree.fromstring(view.arch)])
             while specs:
                 spec = specs.popleft()
+                if isinstance(spec, etree._Comment):
+                    continue
                 if spec.tag == 'data':
                     specs.extend(spec)
                     continue
