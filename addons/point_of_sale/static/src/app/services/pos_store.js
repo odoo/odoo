@@ -1610,7 +1610,7 @@ export class PosStore extends WithLazyGetterTrap {
                     return;
                 }
 
-                this.printChanges(order, orderChange, reprint);
+                await this.printChanges(order, orderChange, reprint);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
             }
