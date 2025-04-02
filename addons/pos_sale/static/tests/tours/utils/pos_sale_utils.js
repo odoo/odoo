@@ -15,18 +15,22 @@ function selectNthOrder(n) {
     ];
 }
 
-export function settleNthOrder(n) {
-    return [
+export function settleNthOrder(n, hasLot = false) {
+    const steps = [
         ...selectNthOrder(n),
         {
             content: `Choose to settle the order`,
             trigger: `.modal:not(.o_inactive_modal) .selection-item:contains('Settle the order')`,
             run: "click",
         },
-        {
-            trigger: "body:not(:has(.modal))",
-        },
     ];
+    if (hasLot) {
+        steps.push(Dialog.confirm("Ok"));
+    }
+    steps.push({
+        trigger: "body:not(:has(.modal))",
+    });
+    return steps;
 }
 
 export function downPaymentFirstOrder(amount) {

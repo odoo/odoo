@@ -113,10 +113,11 @@ patch(PosStore.prototype, {
             }
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
+            const lotNames = await this.data.call("sale.order.line", "get_lot_names", [line.id]);
             if (
                 newLine.get_product().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
-                line.pack_lot_ids?.length > 0
+                lotNames
             ) {
                 if (!useLoadedLots && !userWasAskedAboutLoadedLots) {
                     useLoadedLots = await ask(this.dialog, {
@@ -128,7 +129,7 @@ patch(PosStore.prototype, {
                 if (useLoadedLots) {
                     newLine.setPackLotLines({
                         modifiedPackLotLines: [],
-                        newPackLotLines: (line.lot_names || []).map((name) => ({
+                        newPackLotLines: (lotNames || []).map((name) => ({
                             lot_name: name,
                         })),
                     });
