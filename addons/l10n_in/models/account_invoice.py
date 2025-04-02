@@ -119,7 +119,7 @@ class AccountMove(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
+    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment')
     def _compute_l10n_in_gst_treatment(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
         for record in indian_invoice:
