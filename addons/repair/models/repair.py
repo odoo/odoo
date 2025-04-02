@@ -645,6 +645,9 @@ class Repair(models.Model):
 
         return {**default_data, **new_default_data}
 
+    def _get_product_catalog_domain(self):
+        return expression.AND([super()._get_product_catalog_domain(), [('type', '=', 'consu')]])
+
     def _get_product_catalog_order_data(self, products, **kwargs):
         product_catalog = super()._get_product_catalog_order_data(products, **kwargs)
         for product in products:
