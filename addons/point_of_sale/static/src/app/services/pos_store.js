@@ -2296,6 +2296,8 @@ export class PosStore extends WithLazyGetterTrap {
             : list.sort((a, b) => {
                   if (b.is_favorite !== a.is_favorite) {
                       return b.is_favorite - a.is_favorite;
+                  } else if (a.pos_sequence !== b.pos_sequence) {
+                      return a.pos_sequence - b.pos_sequence;
                   }
                   return a.name.localeCompare(b.name);
               });

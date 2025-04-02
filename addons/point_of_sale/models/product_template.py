@@ -12,6 +12,14 @@ class ProductTemplate(models.Model):
     _name = 'product.template'
     _inherit = ['product.template', 'pos.load.mixin']
 
+    @api.model
+    def _default_pos_sequence(self):
+        self.env.cr.execute('SELECT MAX(pos_sequence) FROM %s' % self._table)
+        max_sequence = self.env.cr.fetchone()[0]
+        if max_sequence is None:
+            return 1
+        return max_sequence + 1
+
     available_in_pos = fields.Boolean(string='Available in POS', help='Check if you want this product to appear in the Point of Sale.', default=False)
     to_weight = fields.Boolean(string='To Weigh With Scale', help="Check if the product should be weighted using the hardware scale integration.")
     pos_categ_ids = fields.Many2many(
@@ -29,6 +37,12 @@ class ProductTemplate(models.Model):
         string="POS Optional Products",
         help="Optional products are suggested when customers add items to their cart (e.g., adding a burger suggests cold drinks or fries).")
     color = fields.Integer('Color Index', compute="_compute_color", store=True, readonly=False)
+    pos_sequence = fields.Integer(
+        string="POS Sequence",
+        help="Determine the display order in the POS Terminal",
+        default=_default_pos_sequence,
+        copy=False,
+    )
 
     @api.depends('pos_categ_ids')
     def _compute_color(self):
@@ -65,7 +79,7 @@ class ProductTemplate(models.Model):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
-            'write_date','color', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
+            'write_date', 'color', 'pos_sequence', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
             'pos_optional_product_ids'
         ]
 
