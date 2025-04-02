@@ -6311,8 +6311,16 @@ class AccountMove(models.Model):
             )
 
         def is_right_company(partner):
+<<<<<<< 314f7856abeb1520f2ffac9c38e2f9f97e940d10
             if company:
                 return partner.company_id.id in [False, company.id]
+||||||| ae3e283328d5736a81eec42a30e576b278339c80
+            if custom_values.get('company_id'):
+                return partner.company_id in [False, custom_values['company_id']]
+=======
+            if custom_values.get('company_id'):
+                return partner.company_id.id in [False, custom_values['company_id']]
+>>>>>>> 57511020e7497d5bdbce18b7f0003d2b410ff248
             return True
 
         # Search for partner that sent the mail.
