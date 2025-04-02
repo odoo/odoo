@@ -352,7 +352,7 @@ class PosConfig(models.Model):
 
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:
-            self.current_session_id.order_ids.filtered(lambda o: o.state != 'paid').unlink()
+            self.current_session_id.order_ids.filtered(lambda o: o.state == 'draft').unlink()
 
         self._notify('STATUS', {'status': 'closed'})
         return self.current_session_id.action_pos_session_closing_control()
