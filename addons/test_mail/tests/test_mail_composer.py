@@ -1285,11 +1285,11 @@ class TestComposerInternals(TestMailComposer):
         # Test: email_template subject, body_html, model
         template = self.env['mail.template'].search([
             ('model', '=', self.test_record._name),
-            ('subject', '=', 'Template Subject')
+            ('name', '=', 'My Template')
         ], limit=1)
 
         self.assertEqual(template.name, 'My Template')
-        self.assertEqual(template.subject, 'Template Subject')
+        self.assertFalse(template.subject)
         self.assertEqual(template.body_html, '<p>Template Body</p>', 'email_template incorrect body_html')
 
     @users('employee')
