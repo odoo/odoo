@@ -326,13 +326,14 @@ class StockWarehouseOrderpoint(models.Model):
         """
         self = self.filtered(lambda o: not o.route_id)
         rules_groups = self.env['stock.rule']._read_group([
-            ('route_id.product_selectable', '!=', False),
+            '|', ('route_id.product_selectable', '!=', False),
+            ('route_id.product_categ_selectable', '!=', False),
             ('location_dest_id', 'in', self.location_id.ids),
             ('action', 'in', ['pull_push', 'pull']),
             ('route_id.active', '!=', False)
         ], ['location_dest_id', 'route_id'])
         for location_dest, route in rules_groups:
-            orderpoints = self.filtered(lambda o: o.location_id.id == location_dest.id)
+            orderpoints = self.filtered(lambda o: not o.route_id and route in (o.product_id.route_ids | o.product_id.categ_id.route_ids) and o.location_id.id == location_dest.id)
             orderpoints.route_id = route
 
     def _get_lead_days_values(self):
