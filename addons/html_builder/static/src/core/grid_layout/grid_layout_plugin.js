@@ -1,7 +1,12 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
+import {
+    getGridItemProperties,
+    getGridProperties,
+    resizeGrid,
+    setElementToMaxZindex,
+} from "@html_builder/utils/grid_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
 
 const gridItemSelector = ".row.o_grid_mode > div.o_grid_item";
@@ -17,6 +22,9 @@ export class GridLayoutPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
+        on_cloned_handlers: this.onCloned.bind(this),
+        on_snippet_preview_handlers: this.adjustGridItem.bind(this),
+        on_snippet_dropped_handlers: this.adjustGridItem.bind(this),
     };
 
     setup() {
@@ -46,6 +54,45 @@ export class GridLayoutPlugin extends Plugin {
             );
         }
         return buttons;
+    }
+
+    onCloned({ cloneEl }) {
+        if (isGridItem(cloneEl)) {
+            // If it is a grid item, shift the clone by one cell to the right
+            // and to the bottom, wrap to the first column if we reached the
+            // last one.
+            let { rowStart, rowEnd, columnStart, columnEnd } = getGridItemProperties(cloneEl);
+            const columnSpan = columnEnd - columnStart;
+            columnStart = columnEnd === 13 ? 1 : columnStart + 1;
+            columnEnd = columnStart + columnSpan;
+            const newGridArea = `${rowStart + 1} / ${columnStart} / ${rowEnd + 1} / ${columnEnd}`;
+            cloneEl.style.gridArea = newGridArea;
+
+            // Update the z-index and the grid row count.
+            const rowEl = cloneEl.parentElement;
+            setElementToMaxZindex(cloneEl, rowEl);
+            resizeGrid(rowEl);
+        }
+    }
+
+    adjustGridItem({ snippetEl }) {
+        const gridItemEl = snippetEl.closest(".o_grid_item");
+        if (gridItemEl) {
+            // Update the grid item height when previewing and dropping a
+            // snippet in it.
+            const rowEl = gridItemEl.parentElement;
+            const { rowGap, rowSize } = getGridProperties(rowEl);
+            const { rowStart, rowEnd } = getGridItemProperties(gridItemEl);
+            const oldRowSpan = rowEnd - rowStart;
+
+            // Compute the new height.
+            const height = gridItemEl.scrollHeight;
+            const rowSpan = Math.ceil((height + rowGap) / (rowSize + rowGap));
+            gridItemEl.style.gridRowEnd = rowStart + rowSpan;
+            gridItemEl.classList.remove(`g-height-${oldRowSpan}`);
+            gridItemEl.classList.add(`g-height-${rowSpan}`);
+            resizeGrid(rowEl);
+        }
     }
 
     sendGridItemToBack() {

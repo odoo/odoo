@@ -20,6 +20,21 @@ export function getGridProperties(rowEl) {
     return { rowGap: rowGap, rowSize: rowSize, columnGap: columnGap, columnSize: columnSize };
 }
 /**
+ * Returns the grid item properties.
+ *
+ * @private
+ * @param {HTMLElement} gridItemEl the grid item
+ * @returns {Object}
+ */
+export function getGridItemProperties(gridItemEl) {
+    const style = gridItemEl.style;
+    const rowStart = parseInt(style.gridRowStart);
+    const rowEnd = parseInt(style.gridRowEnd);
+    const columnStart = parseInt(style.gridColumnStart);
+    const columnEnd = parseInt(style.gridColumnEnd);
+    return { rowStart, rowEnd, columnStart, columnEnd };
+}
+/**
  * Sets the z-index property of the element to the maximum z-index present in
  * the grid increased by one (so it is in front of all the other elements).
  *
