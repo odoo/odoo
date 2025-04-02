@@ -524,13 +524,6 @@ class ResPartner(models.Model):
             return
         result = {}
         partner = self._origin
-        if partner.parent_id and partner.parent_id != self.parent_id:
-            result['warning'] = {
-                'title': _('Warning'),
-                'message': _('Changing the company of a contact should only be done if it '
-                             'was never correctly set. If an existing contact starts working for a new '
-                             'company then a new contact should be created under that new '
-                             'company. You can use the "Discard" button to abandon this change.')}
         if (partner.type or self.type) == 'contact':
             # for contacts: copy the parent address, if set (aka, at least one
             # value is set in the address: otherwise, keep the one from the
