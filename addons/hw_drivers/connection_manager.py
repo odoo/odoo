@@ -4,6 +4,7 @@
 import logging
 import platform
 import requests
+import subprocess
 from threading import Thread
 import time
 
@@ -12,12 +13,6 @@ from odoo.addons.hw_drivers.tools import helpers, wifi
 
 _logger = logging.getLogger(__name__)
 
-# We use a timeout slightly less than the IoT proxy so
-# that there is a grace period between codes
-PAIRING_CODE_TIMEOUT_SECONDS = 580
-
-MAXIMUM_NUMBER_OF_CODES = 3
-
 
 class ConnectionManager(Thread):
     def __init__(self):
@@ -25,70 +20,96 @@ class ConnectionManager(Thread):
         self.pairing_code = False
         self.pairing_uuid = False
         self.pairing_code_expired = False
-        self.pairing_code_expires = 0
-        self.pairing_code_count = 0
         self.new_database_url = False
+
+        self.iot_box_registered = False
+        self.n_times_polled = -1
+
+        if platform.system() == 'Linux':
+            self.serial_number = helpers.read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+        else:
+            self.serial_number = self._get_serial_number_windows()
+
         requests.packages.urllib3.disable_warnings()
 
-    def run(self):
-        while not self.pairing_code_expired:
-            if self._should_fetch_pairing_code():
-                if time.monotonic() > self.pairing_code_expires:
-                    self._refresh_pairing_code()
-                else:
-                    self._poll_pairing_result()
-            else:
-                self.pairing_code = False
-                self.pairing_uuid = False
-                self.pairing_code_expires = 0
-            time.sleep(10)
+    def _get_serial_number_windows(self):
+        # Get motherboard's uuid (serial number isn't reliable as it's not always present)
+        command = [
+            'powershell',
+            '-Command',
+            "(Get-CimInstance Win32_ComputerSystemProduct).UUID"
+        ]
 
-    def _should_fetch_pairing_code(self):
+        p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
+        if p.returncode == 0:
+            serial = p.stdout.decode().strip()
+            if serial:
+                return serial
+        else:
+            _logger.error("Failed to get Windows IoT serial number")
+
+        return False
+
+    def _register_iot_box(self):
+        """ This method is called to register the IoT Box on odoo.com and get a pairing code"""
+        req = self._call_iot_proxy()
+        if all(key in req for key in ['pairing_code', 'pairing_uuid']):
+            self.pairing_code = req['pairing_code']
+            self.pairing_uuid = req['pairing_uuid']
+            if platform.system() == 'Linux':
+                self._try_print_pairing_code()
+            self.iot_box_registered = True
+
+    def _get_next_polling_interval(self):
+        # To avoid spamming odoo.com with requests we gradually space out the requests
+        # e.g If the pairing code is valid for 2 hours this would lead to max 329 requests
+        # Starting with 15 seconds and ending with 40s interval, staying under 20s for 50 min
+        self.n_times_polled += 1
+        return 14 + 1.01 ** self.n_times_polled
+
+    def run(self):
+        while self._should_poll_to_connect_database():
+            if not self.iot_box_registered:
+                self._register_iot_box()
+
+            self._poll_pairing_result()
+            time.sleep(self._get_next_polling_interval())
+
+    def _should_poll_to_connect_database(self):
         return (
             not helpers.get_odoo_server_url() and
             helpers.get_ip() and
-            not (platform.system() == 'Linux' and wifi.is_access_point())
+            not (platform.system() == 'Linux' and wifi.is_access_point()) and
+            not self.pairing_code_expired
         )
 
-    def _call_iot_proxy(self, pairing_code, pairing_uuid):
+    def _call_iot_proxy(self):
         data = {
-            'jsonrpc': 2.0,
             'params': {
-                'pairing_code': pairing_code,
-                'pairing_uuid': pairing_uuid,
+                'pairing_code': self.pairing_code,
+                'pairing_uuid': self.pairing_uuid,
+                'serial_number': self.serial_number,
             }
         }
 
         try:
             req = requests.post(
-                'https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False, timeout=5
+                'https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box',
+                json=data,
+                timeout=5,
             )
+            req.raise_for_status()
+            if req.json().get('error') == 'expired':
+                self.pairing_code_expired = True
             return req.json().get('result', {})
         except Exception:
             _logger.exception('Could not reach iot-proxy.odoo.com')
             return {}
 
     def _poll_pairing_result(self):
-        result = self._call_iot_proxy(self.pairing_code, self.pairing_uuid)
-        
+        result = self._call_iot_proxy()
         if all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
             self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
-
-    def _refresh_pairing_code(self):
-        if self.pairing_code_count == MAXIMUM_NUMBER_OF_CODES:
-            self.pairing_code_expired = True
-            self.pairing_code = False
-            return
-
-        result = self._call_iot_proxy(pairing_code=None, pairing_uuid=None)
-
-        if all(key in result for key in ['pairing_code', 'pairing_uuid']):
-            self.pairing_code = result['pairing_code']
-            self.pairing_uuid = result['pairing_uuid']
-            self.pairing_code_expires = time.monotonic() + PAIRING_CODE_TIMEOUT_SECONDS
-            self.pairing_code_count += 1
-            if platform.system() == 'Linux':
-                self._try_print_pairing_code()
 
     def _connect_to_server(self, url, token, db_uuid, enterprise_code):
         self.new_database_url = url
