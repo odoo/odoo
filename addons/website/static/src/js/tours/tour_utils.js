@@ -252,7 +252,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
 export function clickOnSave(position = "bottom", timeout = 50000) {
     return [
         {
-            trigger: "#oe_snippets:not(:has(.o_we_ongoing_insertion))",
+            trigger: ".o-snippets-menu:not(:has(.o_we_ongoing_insertion))",
         },
         {
             trigger: "body:not(:has(.o_dialog))",
