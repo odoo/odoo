@@ -78,7 +78,7 @@ export class ToggleBlockPlugin extends Plugin {
             this.updateToggleContentHints(this.editable)
         ),
         mount_component_handlers: this.setupNewToggle.bind(this),
-        normalize_handlers: this.normalize.bind(this),
+        normalize_handlers: withSequence(Infinity, this.normalize.bind(this)),
         selectionchange_handlers: [
             withSequence(1, this.removeSelectedToggleContentHints.bind(this)),
             withSequence(100, this.updateSelectedToggleContentHints.bind(this)),
