@@ -1,23 +1,21 @@
-import { renderToElement } from "@web/core/utils/render";
-import Fullscreen from "@website_slides/interactions/slides_course_fullscreen_player";
+import { patch } from "@web/core/utils/patch";
+import { WebsiteSlidesCoursePageFullscreen } from "@website_slides/interactions/slides_course_page";
 
-Fullscreen.include({
+patch(WebsiteSlidesCoursePageFullscreen.prototype, {
     /**
-     * Extend the _renderSlide method so that slides of category "certification"
+     * Extend the renderSlide method so that slides of category "certification"
      * are also taken into account and rendered correctly
      *
-     * @private
      * @override
      */
-    _renderSlide: function () {
-        var def = this._super.apply(this, arguments);
-        const contentEl = this.el.querySelector(".o_wslides_fs_content");
-        if (this._slideValue.category === "certification") {
-            contentEl.textContent = "";
-            contentEl.append(
-                renderToElement("website.slides.fullscreen.certification", { widget: this })
-            );
+    renderSlide() {
+        const didRender = super.renderSlide();
+        if (didRender) {
+            const contentEl = this.el.querySelector(".o_wslides_fs_content");
+            if (this.slide.category === "certification") {
+                this.renderAt("website.slides.fullscreen.certification", this, contentEl);
+            }
         }
-        return Promise.all([def]);
+        return didRender;
     },
 });
