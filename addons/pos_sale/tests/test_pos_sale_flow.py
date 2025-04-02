@@ -243,6 +243,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({
             'down_payment_product_id': self.downpayment_product.id,
         })
+        sale_order.invoice_ids.action_post()
         self.main_pos_config.open_ui()
         current_session = self.main_pos_config.current_session_id
         order = self.env['pos.order'].create({
@@ -259,7 +260,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                     'price_subtotal': -245,
                     'price_subtotal_incl': -245,
                     'sale_order_origin_id': sale_order.id,
-                    'sale_order_line_id': sale_order.order_line[1].id,
+                    'sale_order_line_id': sale_order.order_line[2].id,
                 }),
                 (0, 0, {
                   'name': "OL/0002",
@@ -271,7 +272,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                   'price_subtotal': -245,
                   'price_subtotal_incl': -245,
                   'sale_order_origin_id': sale_order.id,
-                  'sale_order_line_id': sale_order.order_line[2].id,
+                  'sale_order_line_id': sale_order.order_line[3].id,
                 }),
                 (0, 0, {
                   'name': "OL/0003",
@@ -283,7 +284,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                   'price_subtotal': -490,
                   'price_subtotal_incl': -490,
                   'sale_order_origin_id': sale_order.id,
-                  'sale_order_line_id': sale_order.order_line[3].id,
+                  'sale_order_line_id': sale_order.order_line[4].id,
                 }),
               (0, 0, {
                   'name': "OL/0004",
@@ -307,13 +308,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         order.action_pos_order_invoice()
         invoice_downproduct_lines = order.account_move.line_ids.filtered(lambda l: l.product_id == self.downpayment_product)
-        downpayment_lines = invoice_downproduct_lines._get_downpayment_lines()
-        import pdb;
-        pdb.set_trace()
-
-
-
-
+        for inv_line in invoice_downproduct_lines:
+            orig_downpayment_line = inv_line._get_downpayment_lines()
+            self.assertEqual(orig_downpayment_line.price_subtotal, abs(inv_line.price_subtotal))
 
     def test_settle_order_unreserve_order_lines(self):
         #create a product category that use the closest location for the removal strategy

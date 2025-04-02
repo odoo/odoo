@@ -56,7 +56,7 @@ class PosOrder(models.Model):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
                 if downpayment_lines := sale_lines.filtered(lambda l: l.is_downpayment
-                                                                      and l.display_type not in ('line_note', 'line_section')
+                                                                      and not l.display_type
                                                                       and l.price_unit == abs(line.price_subtotal)
                                                                       and len(l.invoice_lines) <= 1):
                     line.sale_order_line_id = downpayment_lines[0]
