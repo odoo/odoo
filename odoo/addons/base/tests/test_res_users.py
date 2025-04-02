@@ -21,6 +21,7 @@ class UsersCommonCase(TransactionCase):
                 'login': 'user_internal',
                 'password': 'password',
                 'group_ids': [cls.env.ref('base.group_user').id],
+                'tz': 'UTC',
             },
             {
                 'name': 'Portal 1',
@@ -467,6 +468,21 @@ class TestUsers2(UsersCommonCase):
         # Disallow to write a field not in the SELF_WRITEABLE_FIELDS on another user
         with self.assertRaises(AccessError):
             other.login = "foo"
+
+    @users('user_internal')
+    def test_self_readable_writeable_fields_preferences_form(self):
+        """Test that a field protected by a `groups='...'` with a group the user doesn't belong to
+        but part of the `SELF_WRITEABLE_FIELDS` is shown in the user profile preferences form and is editable"""
+        my_user = self.env['res.users'].browse(self.env.user.id)
+        self.assertIn(
+            'email',
+            my_user.SELF_WRITEABLE_FIELDS,
+            "This test doesn't make sense if not tested on a field part of the SELF_WRITEABLE_FIELDS"
+        )
+        self.patch(self.env.registry['res.users']._fields['email'], 'groups', 'base.group_system')
+        with Form(my_user, view='base.view_users_form_simple_modif') as UserForm:
+            UserForm.email = "foo@bar.com"
+        self.assertEqual(my_user.email, "foo@bar.com")
 
     @warmup
     def test_write_group_ids_performance(self):
