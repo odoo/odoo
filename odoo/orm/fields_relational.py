@@ -455,7 +455,7 @@ class Many2one(_Relational):
         return sql_field
 
     def condition_to_sql(self, field_expr: str, operator: str, value, model: BaseModel, alias: str, query: Query) -> SQL:
-        if operator not in ('any', 'not any') or field_expr != self.name:
+        if operator not in ('any', 'not any', 'any!', 'not any!') or field_expr != self.name:
             # for other operators than 'any', just generate condition based on column type
             return super().condition_to_sql(field_expr, operator, value, model, alias, query)
 
@@ -475,10 +475,10 @@ class Many2one(_Relational):
             sql = SQL(
                 "%s%s%s",
                 sql_field,
-                SQL(" IN ") if operator == 'any' else SQL(" NOT IN "),
+                SQL(" IN ") if operator in ('any', 'any!') else SQL(" NOT IN "),
                 subselect,
             )
-            if can_be_null and operator != 'any':
+            if can_be_null and operator in ('not any', 'not any!'):
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
             if self.company_dependent:
                 sql = self._condition_to_sql_company(sql, field_expr, operator, value, model, alias, query)
@@ -486,11 +486,11 @@ class Many2one(_Relational):
 
         # value is a Domain
 
-        if self.auto_join:
+        if self.auto_join or operator in ('any!', 'not any!'):
             comodel, coalias = self.join(model, alias, query)
 
             sql = value._to_sql(comodel, coalias, query)
-            if operator == 'any':
+            if operator in ('any', 'any!'):
                 if can_be_null:
                     return SQL("(%s IS NOT NULL AND %s)", sql_field, sql)
                 else:
@@ -749,9 +749,9 @@ class _RelationalMulti(_Relational):
         # update the operator to 'any'
         if operator in ('in', 'not in'):
             operator = 'any' if operator == 'in' else 'not any'
-        assert operator in ('any', 'not any'), \
+        assert operator in ('any', 'not any', 'any!', 'not any!'), \
             f"Relational field {self} expects 'any' operator"
-        exists = operator == 'any'
+        exists = operator in ('any', 'any!')
 
         # check the value and execute the query
         if isinstance(value, COLLECTION_TYPES):
@@ -778,16 +778,16 @@ class _RelationalMulti(_Relational):
             # wrap SQL into a simple query
             comodel = comodel.sudo()
             value = Domain('id', 'any', value)
-        coquery = self._get_query_for_condition_value(model, comodel, value)
+        coquery = self._get_query_for_condition_value(model, comodel, operator, value)
         return self._condition_to_sql_relational(model, alias, exists, coquery, query)
 
-    def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, value: Domain | Query) -> Query:
+    def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, operator: str, value: Domain | Query) -> Query:
         """ Return Query run on the comodel with the field.domain injected."""
         field_domain = self.get_comodel_domain(model)
         if isinstance(value, Domain):
             domain = value & field_domain
             comodel = comodel.with_context(**self.context)
-            if self.auto_join:
+            if self.auto_join or operator in ('any!', 'not any!'):
                 # bypass access rules for auto-join
                 query = comodel._where_calc(domain)
             else:
@@ -1114,7 +1114,7 @@ class One2many(_RelationalMulti):
                         lines = browse(command[2] if command[0] == Command.SET else [])
                         self._update_cache(recs[-1], lines._ids)
 
-    def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, value) -> Query:
+    def _get_query_for_condition_value(self, model: BaseModel, comodel: BaseModel, operator, value) -> Query:
         inverse_field = comodel._fields[self.inverse_name]
         if inverse_field not in comodel.env.registry.not_null_fields:
             # In the condition, one must avoid subqueries to return
@@ -1124,13 +1124,13 @@ class One2many(_RelationalMulti):
             if isinstance(value, Domain):
                 value &= Domain(inverse_field.name, 'not in', {False})
             else:
-                coquery = super()._get_query_for_condition_value(model, comodel, value)
+                coquery = super()._get_query_for_condition_value(model, comodel, operator, value)
                 coquery.add_where(SQL(
                     "%s IS NOT NULL",
                     comodel._field_to_sql(coquery.table, inverse_field.name, coquery),
                 ))
                 return coquery
-        return super()._get_query_for_condition_value(model, comodel, value)
+        return super()._get_query_for_condition_value(model, comodel, operator, value)
 
     def _condition_to_sql_relational(self, model: BaseModel, alias: str, exists: bool, coquery: Query, query: Query) -> SQL:
         if coquery.is_empty():

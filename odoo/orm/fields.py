@@ -1365,15 +1365,15 @@ class Field(typing.Generic[T]):
         # operator: any
         # Note: relational operators overwrite this function for a more specific
         # behaviour, here we check just the field against the subselect.
-        # Example usage: ('id', 'any', Query | SQL)
-        if operator in ('any', 'not any'):
+        # Example usage: ('id', 'any!', Query | SQL)
+        if operator in ('any!', 'not any!'):
             if isinstance(value, Query):
                 subselect = value.subselect()
             elif isinstance(value, SQL):
                 subselect = SQL("(%s)", value)
             else:
-                raise TypeError(f"condition_to_sql() operator 'any' accepts SQL or Query, got {value}")
-            sql_operator = SQL_OPERATORS["in" if operator == "any" else "not in"]
+                raise TypeError(f"condition_to_sql() operator 'any!' accepts SQL or Query, got {value}")
+            sql_operator = SQL_OPERATORS["in" if operator == "any!" else "not in"]
             return SQL("%s%s%s", sql_field, sql_operator, subselect)
 
         raise NotImplementedError(f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}")

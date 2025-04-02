@@ -475,7 +475,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _search_res_users_settings_id(self, operator, operand):
-        return [('res_users_settings_ids', operator, operand)]
+        return Domain('res_users_settings_ids', operator, operand)
 
     @api.onchange('login')
     def on_change_login(self):

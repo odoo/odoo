@@ -358,10 +358,10 @@ class HrEmployee(models.Model):
         self.search([])._compute_current_version_id()
 
     def _search_version_id(self, operator, value):
-        if operator == 'any':
-            return [('current_version_id', operator, value)]
-        domain = [('id', operator, value)]
-        return [('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))]
+        if operator in ('any', 'any!'):
+            return Domain('current_version_id', operator, value)
+        domain = Domain('id', operator, value)
+        return Domain('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))
 
     def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None, flush: bool = True) -> SQL:
         """This is required to search for the related fields of version_id as version_id is not stored"""

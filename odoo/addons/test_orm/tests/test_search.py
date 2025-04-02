@@ -862,6 +862,7 @@ class TestSearchAny(TransactionCase):
 
         # warmup
         model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+        model.search(Domain('foo_id', 'any!', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
         with self.assertQueries(["""
             SELECT "test_orm_related"."id"
@@ -892,6 +893,37 @@ class TestSearchAny(TransactionCase):
             ORDER BY "test_orm_related"."id"
         """]):
             model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."name" IN %s
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_id', 'any!', Domain('name', '=', 'a')))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related"."id"
+            FROM "test_orm_related"
+            LEFT JOIN "test_orm_related_foo" AS "test_orm_related__foo_id"
+                ON ("test_orm_related"."foo_id" = "test_orm_related__foo_id"."id")
+            WHERE (
+                "test_orm_related"."foo_id" IS NOT NULL
+                AND "test_orm_related__foo_id"."bar_id" IN (
+                    SELECT "test_orm_related_bar"."id"
+                    FROM "test_orm_related_bar"
+                    WHERE "test_orm_related_bar"."name" IN %s
+                    AND "test_orm_related_bar"."id" < %s
+                )
+            ) AND "test_orm_related"."id" < %s
+            ORDER BY "test_orm_related"."id"
+        """]):
+            model.search(Domain('foo_id', 'any!', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
 
     def test_one2many_any(self):
         model = self.env['test_orm.related_foo'].with_user(self.env.ref('base.user_admin'))
@@ -933,6 +965,41 @@ class TestSearchAny(TransactionCase):
             ORDER BY "test_orm_related_foo"."id"
         """]):
             model.search(Domain('foo_ids', 'any', Domain('foo_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any!', Domain('name', '=', 'a')))
+
+        with self.assertQueries(["""
+            SELECT "test_orm_related_foo"."id"
+            FROM "test_orm_related_foo"
+            WHERE "test_orm_related_foo"."id" IN (
+                SELECT "test_orm_related"."foo_id"
+                FROM "test_orm_related"
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."foo_id" IN (
+                        SELECT "test_orm_related_foo"."id"
+                        FROM "test_orm_related_foo"
+                        WHERE "test_orm_related_foo"."name" IN %s
+                        AND "test_orm_related_foo"."id" < %s
+                    )
+                )
+            ) AND "test_orm_related_foo"."id" < %s
+            ORDER BY "test_orm_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any!', Domain('foo_id', 'any', Domain('name', '=', 'a'))))
 
     def test_many2many_any(self):
         model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
