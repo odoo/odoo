@@ -453,6 +453,42 @@ test("Can import/export filters", async function () {
     });
 });
 
+test("Can import/export filters of only list", async function () {
+    const spreadsheetData = {
+        version: 16,
+        lists: {
+            1: {
+                id: 1,
+                columns: ["foo", "contact_name"],
+                domain: [],
+                model: "partner",
+                orderBy: [],
+                context: {},
+                fieldMatching: {
+                    41: { type: "date", chain: "date" },
+                    42: { type: "date", chain: "date" },
+                },
+            },
+        },
+        globalFilters: [LAST_YEAR_LEGACY_FILTER, LAST_YEAR_GLOBAL_FILTER],
+    };
+    const { model } = await createModelWithDataSource({ spreadsheetData });
+
+    let listDomain = model.getters.getListComputedDomain("1");
+    expect(listDomain.length).toBe(7, {
+        message: "it should have updated the list domain",
+    });
+
+    const newModel = new Model(model.exportData(), {
+        custom: model.config.custom,
+    });
+
+    listDomain = newModel.getters.getListComputedDomain("1");
+    expect(listDomain.length).toBe(7, {
+        message: "it should have updated the list domain",
+    });
+});
+
 test("Relational filter with undefined value", async function () {
     const { model } = await createSpreadsheetWithPivot();
     await addGlobalFilter(
