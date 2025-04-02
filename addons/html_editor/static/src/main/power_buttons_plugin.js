@@ -77,7 +77,8 @@ export class PowerButtonsPlugin extends Plugin {
             const btn = this.document.createElement("button");
             let className = "power_button btn px-2 py-1 cursor-pointer";
             if (icon) {
-                className += ` fa ${icon}`;
+                let iconLibrary = icon.includes("fa-") ? "fa" : "oi";
+                className += ` ${iconLibrary} ${icon}`;
             } else {
                 const span = this.document.createElement("span");
                 span.textContent = text;

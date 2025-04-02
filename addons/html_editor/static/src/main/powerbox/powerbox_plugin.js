@@ -125,7 +125,7 @@ export class PowerboxPlugin extends Plugin {
         power_buttons: withSequence(100, {
             commandId: "openPowerbox",
             description: _t("More options"),
-            icon: "fa-ellipsis-v",
+            icon: "oi-ellipsis-v",
         }),
         hints: {
             text: _t('Type "/" for commands'),

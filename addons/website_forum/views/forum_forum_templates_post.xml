@@ -455,7 +455,7 @@
 
 <template id="post_dropdown">
     <a class="btn opacity-50 opacity-100-hover px-2" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="fa fa-ellipsis-h"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
+        <i class="oi oi-ellipsis-h"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
     </a>
     <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
         <t t-if="post_id == question">
@@ -567,7 +567,7 @@
                 </div>
                 <div t-if="can_interact_with_post" class="dropdown ms-auto">
                     <a class="btn text-muted" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-h"/>
+                        <i class="oi oi-ellipsis-h"/>
                     </a>
                     <div class="dropdown-menu">
                         <t t-set="comment_url" t-valuef="/forum/#{ slug(forum) }/post/#{ slug(object) }/comment/#{ slug(message) }"/>

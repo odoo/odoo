@@ -10,7 +10,7 @@
                 <div>
                     <span t-esc="type.name"/>
                     <span t-if="type.template_ids.length > 0" class="dropdown float-end">
-                        <i class="fa fa-ellipsis-v fa-fw" data-bs-toggle="dropdown"/>
+                        <i class="oi oi-ellipsis-v oi-fw" data-bs-toggle="dropdown"/>
                         <div class="dropdown-menu">
                             <t t-foreach="type.template_ids" t-as="template" t-key="template.id">
                                 <div data-tooltip="This action will send an email."
