@@ -2,9 +2,10 @@ import { renderToElement } from "@web/core/utils/render";
 import { isMobileView } from "@html_builder/utils/utils";
 import {
     addBackgroundGrid,
-    setElementToMaxZindex,
     getGridProperties,
+    getGridItemProperties,
     resizeGrid,
+    setElementToMaxZindex,
 } from "@html_builder/utils/grid_layout_utils";
 
 // TODO move them elsewhere.
@@ -289,11 +290,9 @@ export class BuilderOverlay {
     getSizingGridConfig() {
         const rowEl = this.overlayTarget.closest(".row");
         const gridProp = getGridProperties(rowEl);
-
-        const rowStart = this.overlayTarget.style.gridRowStart;
-        const rowEnd = this.overlayTarget.style.gridRowEnd;
-        const columnStart = this.overlayTarget.style.gridColumnStart;
-        const columnEnd = this.overlayTarget.style.gridColumnEnd;
+        const { rowStart, rowEnd, columnStart, columnEnd } = getGridItemProperties(
+            this.overlayTarget
+        );
 
         const valuesN = [];
         const valuesS = [];
