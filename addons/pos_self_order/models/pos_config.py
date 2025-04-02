@@ -303,7 +303,7 @@ class PosConfig(models.Model):
         # Classic data loading
         for model in self._load_self_data_models():
             try:
-                response[model] = self.env[model]._post_read_pos_self_data(self.env[model]._load_pos_self_data(response))
+                response[model] = self.env[model].with_context(config_id=self.id)._post_read_pos_self_data(self.env[model]._load_pos_self_data(response))
                 self.env['pos.session']._load_pos_data_relations(model, response)
             except AccessError:
                 response[model] = self.env[model]._load_pos_self_data_fields(self.id)
@@ -349,7 +349,7 @@ class PosConfig(models.Model):
 
     def action_close_kiosk_session(self):
         if self.current_session_id and self.current_session_id.order_ids:
-            self.current_session_id.order_ids.filtered(lambda o: o.state != 'paid').unlink()
+            self.current_session_id.order_ids.filtered(lambda o: o.state == 'draft').unlink()
 
         self._notify('STATUS', {'status': 'closed'})
         return self.current_session_id.action_pos_session_closing_control()
