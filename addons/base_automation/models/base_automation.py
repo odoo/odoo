@@ -1034,8 +1034,8 @@ class BaseAutomation(models.Model):
         # we can search for the records to trigger
         # find the relative dates
         relative_offset = DATE_RANGE[automation.trg_date_range_type] * automation.trg_date_range
-        relative_until = until + relative_offset
-        relative_last_run = last_run + relative_offset
+        relative_until = until - relative_offset
+        relative_last_run = last_run - relative_offset
         if date_field.type == 'date':
             # find records that have a date in past, but were not yet executed that day
             time_domain = Domain(date_field.name, '>', relative_last_run.date()) & Domain(date_field.name, '<=', relative_until.date())
