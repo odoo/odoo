@@ -870,7 +870,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
             unformat(
                 `<div data-embedded="toggleBlock" data-oe-protected="true" contenteditable="false" data-embedded-props='{ "toggleBlockId": "1" }'>
                     <div data-embedded-editable="title">
-                        <p>Hello[]World</p>
+                        <div class="o-paragraph">Hello[]World</div>
                     </div>
                     <div data-embedded-editable="content">
                         <p>asdf</p>
@@ -883,10 +883,13 @@ describe("Insert (paste, drop) inside toggle title", () => {
             }
         );
         await embeddedToggleMountedPromise;
+        expect("[data-embedded-editable='title']").toHaveInnerHTML(`
+            <div class="o-paragraph">HelloWorld</div>
+        `);
         editor.shared.dom.insert(parseHTML(editor.document, `<p>New</p>`));
         addStep(editor);
         expect("[data-embedded-editable='title']").toHaveInnerHTML(`
-            <p>HelloNewWorld</p>
+            <div class="o-paragraph">HelloNewWorld</div>
         `);
         editor.shared.dom.insert(
             parseHTML(editor.document, `<div class="oe_unbreakable">brol</div>`)
@@ -899,7 +902,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
                         <button class="btn p-0 border-0 align-items-center justify-content-center btn-light"><i class="fa align-self-center fa-caret-right"></i></button>
                         <div class="flex-fill ms-1">
                             <div data-embedded-editable="title" data-oe-protected="false" contenteditable="true">
-                                <p>HelloNew</p>
+                                <div class="o-paragraph">HelloNew</div>
                             </div>
                         </div>
                     </div>
@@ -910,7 +913,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
                     </div>
                 </div>
                 <div class="oe_unbreakable">brol</div>
-                <p>[]World</p>
+                <div class="o-paragraph">[]World</div>
             `)
         );
     });
