@@ -16,8 +16,8 @@ class AccountFiscalPositionL10nArTax(models.Model):
     fiscal_position_id = fields.Many2one('account.fiscal.position', required=True, ondelete='cascade')
     # ponemos default a los selectio porque al ser requeridos si no se comporta raro y parece que elige uno por defecto
     # pero que no esta seleccionado
-    webservice = fields.Selection(
-        [('rentas_cordoba', 'Rentas Cordoba')],
+    data_source = fields.Selection(
+        [('data_source_cordoba', 'Web Service Córdoba')],
     )
     tax_template_domain = fields.Char(compute='_compute_tax_template_domain')
     default_tax_id = fields.Many2one('account.tax', required=True)
@@ -38,7 +38,7 @@ class AccountFiscalPositionL10nArTax(models.Model):
     def _get_missing_taxes(self, partner, date):
         taxes = self.env['account.tax']
         for rec in self:
-            if rec.webservice:
+            if rec.data_source:
                 taxes += rec._get_tax_from_ws(partner, date)
             else:
                 taxes += rec.default_tax_id
@@ -85,7 +85,7 @@ class AccountFiscalPositionL10nArTax(models.Model):
         self.ensure_one()
         from_date = date + relativedelta(day=1)
         to_date = from_date + relativedelta(days=-1, months=+1)
-        aliquot, ref = getattr(self, '_get_%s_data' % self.webservice)(partner, date, to_date)
+        aliquot, ref = getattr(self, '_get_%s_data' % self.data_source)(partner, date, to_date)
         # devolvemos None si es no inscripto
         if aliquot is None:
             tax = self.default_tax_id
@@ -102,7 +102,7 @@ class AccountFiscalPositionL10nArTax(models.Model):
         })
         return tax
 
-    def _get_rentas_cordoba_data(self, partner, date, to_date):
+    def _get_data_source_cordoba_data(self, partner, date, to_date):
         """ Obtener alícuotas desde app.rentascordoba.gob.ar
         :param partner: El partner sobre el cual trabajamos
         :param date: La fecha del comprobante
