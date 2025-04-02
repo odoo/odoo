@@ -14,7 +14,7 @@
                     string="Product"
                     readonly="state in ('purchase', 'to approve', 'cancel')"
                     required="not display_type"
-                    context="{'partner_id': parent.partner_id}"
+                    context="{'partner_id': parent.partner_id, 'is_purchase': True}"
                     widget="pol_product_many2one"/>
                 <field name="product_template_attribute_value_ids" column_invisible="1"/>
                 <field name="product_no_variant_attribute_value_ids" column_invisible="1"/>

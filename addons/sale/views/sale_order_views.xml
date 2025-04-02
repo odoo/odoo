@@ -627,6 +627,8 @@
                                     context="{
                                         'default_lst_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                        'partner_id': parent.partner_id,
+                                        'is_sale': True
                                     }"
                                     optional="hide"
                                     widget="sol_product_many2one"/>
@@ -637,6 +639,8 @@
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                        'partner_id': parent.partner_id,
+                                        'is_sale': True
                                     }"
                                     optional="show"
                                     widget="sol_product_many2one"

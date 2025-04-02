@@ -1127,6 +1127,8 @@
                                            'default_currency_id': currency_id or company_currency_id,
                                            'default_display_type': 'product',
                                            'quick_encoding_vals': quick_encoding_vals,
+                                           'move_type': move_type,
+                                           'partner_id': partner_id,
                                        }" readonly="state != 'draft'">
                                     <list name="journal_items" editable="bottom" string="Journal Items" default_order="sequence, id">
                                         <control>
