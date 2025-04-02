@@ -1054,6 +1054,8 @@ class BaseAutomation(models.Model):
         # get the time information and find the records
         last_run = automation.last_run or datetime.datetime.fromtimestamp(0, tz=None)
         is_date_automation_last = date_field.name == "date_automation_last" and "create_date" in Model._fields
+        range_sign = 1 if automation.trg_date_range_mode == 'before' else -1
+        date_range = range_sign * automation.trg_date_range
 
         def get_record_dt(record):
             # the field can be a date or datetime, cast always to a datetime
@@ -1081,12 +1083,12 @@ class BaseAutomation(models.Model):
                 calendar = self._get_calendar(automation, record)
                 if calendar.id not in past_until:
                     past_until[calendar.id] = calendar.plan_days(
-                        - automation.trg_date_range,
+                        date_range,
                         until,
                         compute_leaves=True,
                     )
                     past_last_run[calendar.id] = calendar.plan_days(
-                        - automation.trg_date_range,
+                        date_range,
                         last_run,
                         compute_leaves=True,
                     )
@@ -1096,8 +1098,7 @@ class BaseAutomation(models.Model):
 
         # we can search for the records to trigger
         # find the relative dates
-        value_sign = 1 if automation.trg_date_range_mode == 'after' else -1
-        relative_offset = DATE_RANGE[automation.trg_date_range_type] * value_sign * abs(automation.trg_date_range)
+        relative_offset = DATE_RANGE[automation.trg_date_range_type] * date_range
         relative_until = until + relative_offset
         relative_last_run = last_run + relative_offset
         if date_field.type == 'date':
