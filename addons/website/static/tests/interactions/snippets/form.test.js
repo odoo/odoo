@@ -297,6 +297,34 @@ test("form submit result cleaned but not removed on stop", async () => {
     expect(queryOne("#s_website_form_result").children.length).toEqual(0);
 });
 
+test("successful form with message on success", async () => {
+    await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                <div class="container-fluid">
+                    <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="message" data-success-page="/contactus-thank-you">
+                        <div class="s_website_form_rows row s_col_no_bgcolor">
+                            <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                                <div style="width: 200px;" class="s_website_form_label"/>
+                                <span id="s_website_form_result"></span>
+                                <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="s_website_form_end_message d-none">Yeah</div>
+                </div>
+            </section>
+        </div>
+    `);
+    onRpc("/website/form/mail.mail", async () => {
+        return {"id": 7};
+    }, {"pure": true});
+    await click("a.s_website_form_send");
+    await advanceTime(400); // Debounce delay.
+    expect(queryOne(".s_website_form_end_message")).not.toHaveClass(['d-none']);
+    expect(queryOne(".s_website_form form")).toHaveClass(['d-none']);
+});
+
 test("form prefilled conditional", async () => {
     onRpc("res.users", "read", ({ parent }) => {
         const result = parent();
