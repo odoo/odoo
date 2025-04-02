@@ -107,7 +107,14 @@
                             attachments="attachments"
                             unlinkAttachment.bind="unlinkAttachment"
                             imagesHeight="100"
+                            attachmentsLimit="displayLimit"
                         />
+                        <t t-if="attachments.length > displayLimit or !state.showAllAttachments">
+                            <button t-att-class="state.showAllAttachments ? 'btn btn-primary' : 'btn btn-secondary'" t-on-click="toggelshowAllAttachments">
+                                <t t-if="state.showAllAttachments">Show More</t>
+                                <t t-else="">Show Less</t>
+                            </button>
+                        </t>
                         <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                             <t t-set-slot="toggler">
                                 <button class="btn btn-link" type="button" t-att-disabled="!state.thread.hasWriteAccess">

@@ -32,7 +32,7 @@ class ImageActions extends Component {
  */
 export class AttachmentList extends Component {
     static components = { ImageActions };
-    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
+    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?", "attachmentsLimit?"];
     static template = "mail.AttachmentList";
 
     setup() {
