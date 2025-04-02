@@ -10,7 +10,7 @@
                     </t>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
                         <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover align-items-center p-0" t-att-title="MORE">
-                            <i class="fa fa-ellipsis-v m-2 fa-fw" t-att-class="{ 'fa-lg': !isSmall }"/>
+                            <i class="oi oi-ellipsis-v m-2 oi-fw" t-att-class="{ 'oi-large': !isSmall }"/>
                         </button>
                         <t t-set-slot="content">
                             <DropdownItem t-foreach="callActions.actions.slice(isMobileOS ? 3 : 4)" t-as="action" t-key="action_index" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" attrs="{ title: action.name }" onSelected="action.select">

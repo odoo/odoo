@@ -260,7 +260,7 @@ test("Signature widget works inside of a dropdown", async () => {
     await contains(".o_field_widget[name=display_name] input").edit("test");
 
     // open the signature dialog
-    await contains(".o_statusbar_buttons button:has(.fa-ellipsis-v").click();
+    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v").click();
     await contains(".o_widget_signature button.o_sign_button").click();
     await waitFor(".modal .modal-body");
 

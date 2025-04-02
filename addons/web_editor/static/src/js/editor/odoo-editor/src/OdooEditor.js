@@ -418,10 +418,10 @@ export class OdooEditor extends EventTarget {
         const isRTL = this.options.direction === "rtl";
         for (const direction of ['row', 'column']) {
             // Create the containers and the menu toggler.
-            const iconClass = (direction === 'row') ? 'fa-ellipsis-v' : 'fa-ellipsis-h';
+            const iconClass = (direction === 'row') ? 'oi-ellipsis-v' : 'oi-ellipsis-h';
             const ui = parser.parseFromString(`<div class="o_table_ui o_${direction}_ui" style="visibility: hidden;">
                 <div>
-                    <span class="o_table_ui_menu_toggler fa ${iconClass}"></span>
+                    <span class="o_table_ui_menu_toggler oi ${iconClass}"></span>
                     <div class="o_table_ui_menu"></div>
                 </div>
             </div>`, 'text/html').body.firstElementChild;
