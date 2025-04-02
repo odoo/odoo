@@ -7,12 +7,12 @@ class FooterOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                // TODO: groups="website.group_website_designer"
-                editableOnly: false,
                 template: "html_builder.FooterWidthOption",
                 selector: "#wrapwrap > footer",
                 applyTo:
                     ":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)",
+                editableOnly: false,
+                groups: ["website.group_website_designer"],
             },
         ],
     };
