@@ -7,6 +7,8 @@ export class KioskBarcodeScanner extends BarcodeScanner {
         ...BarcodeScanner.props,
         barcodeSource: String,
         token: String,
+        kioskMode: String,
+        fromTrialMode: Boolean,
     };
     static template = "hr_attendance.BarcodeScanner";
     setup() {
