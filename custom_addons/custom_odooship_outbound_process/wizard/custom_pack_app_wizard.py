@@ -415,61 +415,58 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         Processes the pack operation when there is only one pick number.
         Returns the formatted payload.
         """
-        grouped_lines = {}
+        product_lines = []
         total_weight = 0
 
         for line in self.line_ids:
-            sku_code = line.product_id.default_code
-            product_weight = line.weight  # Default weight to 1 if not defined
-
-            if sku_code not in grouped_lines:
-                grouped_lines[sku_code] = {
-                    "sku_code": sku_code,
-                    "name": line.product_id.name,
-                    "quantity": line.quantity,
-                    "remaining_quantity": 0,
-                    "weight": product_weight,
-                    "picking_id": line.picking_id.name if line.picking_id else "",
-                    "customer_name": line.picking_id.partner_id.name or "",
-                    "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
-                    "customer_email": line.picking_id.partner_id.email,
-                    "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
-                    "site_code": line.site_code_id.name if line.site_code_id else "",
-                    "receipt_number": line.picking_id.name,
-                    "partner_id": line.picking_id.partner_id.name,
-                    "origin": line.picking_id.origin or "N/A",
-                    "package_name": line.package_box_type_id.name +'_' + str(line.product_package_number),
-                    "length": line.package_box_type_id.length or "NA",
-                    "width": line.package_box_type_id.width or "NA",
-                    "height": line.package_box_type_id.height or "NA",
-                    "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
-                    "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
-                    "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
-                    "customer_reference":line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "N/A",
-                    "incoterm_location": line.incoterm_location or "N/A",
-                    "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
-                    "carrier":line.picking_id.sale_id.carrier or "N/A",
-                    "hs_code": line.product_id.hs_code or "N/A",
-                    "cost_price": line.product_id.standard_price or "0.0",
-                    "sale_price": line.product_id.list_price or "0.0",
-                }
-
-            grouped_lines[sku_code]["quantity"] += line.quantity
-            grouped_lines[sku_code]["remaining_quantity"] += line.remaining_quantity
-            grouped_lines[sku_code]["weight"] += product_weight * line.quantity
+            product_weight = line.weight
             total_weight += product_weight * line.quantity
 
+            product_lines.append({
+                "sku_code": line.product_id.default_code,
+                "name": line.product_id.name,
+                "quantity": line.quantity,
+                "remaining_quantity": line.remaining_quantity,
+                "weight": product_weight * line.quantity,
+                "picking_id": line.picking_id.name if line.picking_id else "",
+                "customer_name": line.picking_id.partner_id.name or "",
+                "shipping_address": f"{line.picking_id.partner_id.name},{line.picking_id.partner_id.street or ''}",
+                "customer_email": line.picking_id.partner_id.email,
+                "tenant_code": line.tenant_code_id.name if line.tenant_code_id else "",
+                "site_code": line.site_code_id.name if line.site_code_id else "",
+                "receipt_number": line.picking_id.name,
+                "partner_id": line.picking_id.partner_id.name,
+                "origin": line.picking_id.origin or "N/A",
+                "package_name": line.package_box_type_id.name + '_' + str(line.product_package_number),
+                "length": line.package_box_type_id.length or "NA",
+                "width": line.package_box_type_id.width or "NA",
+                "height": line.package_box_type_id.height or "NA",
+                "sales_order_number": line.picking_id.sale_id.name if line.picking_id.sale_id else "N/A",
+                "sales_order_carrier": line.picking_id.sale_id.service_type if line.picking_id.sale_id else "N/A",
+                "sales_order_origin": line.picking_id.sale_id.origin if line.picking_id.sale_id else "N/A",
+                "customer_reference": line.picking_id.sale_id.client_order_ref if line.picking_id.sale_id else "N/A",
+                "incoterm_location": line.incoterm_location or "N/A",
+                "status": line.picking_id.sale_id.post_category if line.picking_id.sale_id else "N/A",
+                "carrier": line.picking_id.sale_id.carrier or "N/A",
+                "hs_code": line.product_id.hs_code or "N/A",
+                "cost_price": line.product_id.standard_price or "0.0",
+                "sale_price": line.product_id.list_price or "0.0",
+            })
+
         return {
-            "header": {"user_id": "system", "user_key": "system", "warehouse_code": self.warehouse_id.name},
+            "header": {
+                "user_id": "system",
+                "user_key": "system",
+                "warehouse_code": self.warehouse_id.name
+            },
             "body": {
                 "receipt_list": [{
-                    "product_lines": list(grouped_lines.values()),
+                    "product_lines": product_lines,
                     "pack_bench_number": self.pack_bench_id.name,
                     "pack_bench_ip": self.pack_bench_id.printer_ip,
                 }]
             }
         }
-
 
     def prepare_payload_for_individual_line(self, line):
         """
