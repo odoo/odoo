@@ -836,6 +836,23 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         with self.assertRaises(ValueError):
             Domain('foo', 'xxx', 'bar')
 
+        # special case for any* operators
+        for operator in ('any*', 'not any*'):
+            # default behavior
+            Domain('foo', operator, [])
+            with self.assertRaises(ValueError):
+                Domain([('foo', operator, [])])
+
+            # strict behavior
+            with self.assertRaises(ValueError):
+                Domain('foo', operator, [], strict=True)
+            with self.assertRaises(ValueError):
+                Domain([('foo', operator, [])], strict=True)
+
+            # non-strict behavior
+            Domain('foo', operator, [], strict=False)
+            Domain([('foo', operator, [])], strict=False)
+
         # &| operators create new instances
         and_domain_2 = and_domain
         and_domain_2 &= Domain('x', '>', 3)
