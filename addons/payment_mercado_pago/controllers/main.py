@@ -79,9 +79,6 @@ class MercadoPagoController(http.Controller):
     def make_mp_transacton(self, payment_method_id, payer, provider_id, reference, transaction_amount, token=None, issuer_id=None):
         provider_sudo = request.env['payment.provider'].sudo().browse(provider_id)
         tx_sudo = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
-        headers = {'Content-Type': 'application/json',
-                   'Authorization': f'Bearer {provider_sudo.mercado_pago_access_token}',
-                   'X-Idempotency-Key': payment_utils.generate_idempotency_key(tx_sudo)}
 
         payload = {
             "transaction_amount": transaction_amount,
@@ -95,7 +92,7 @@ class MercadoPagoController(http.Controller):
         response_content = provider_sudo._mercado_pago_make_request(endpoint='/v1/payments', payload=payload, method='POST', idempotency_key=payment_utils.generate_idempotency_key(tx_sudo))
 
         tx_sudo._handle_notification_data(
-            'mercado_pago', dict(response_content, merchantReference=reference),  # Match the transaction
+            'mercado_pago', dict(response_content, merchantReference=reference, **self.card_payment_values(token, issuer_id)),  # Match the transaction
         )
 
     def card_payment_values(self, token, issuer_id):

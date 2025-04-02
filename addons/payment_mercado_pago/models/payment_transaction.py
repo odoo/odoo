@@ -145,11 +145,6 @@ class PaymentTransaction(models.Model):
             raise ValidationError("Mercado Pago: " + _("Received data with missing payment id."))
         self.provider_reference = payment_id
 
-        # Verify the notification data.
-        verified_payment_data = self.provider_id._mercado_pago_make_request(
-            f'/v1/payments/{self.provider_reference}', method='GET'
-        ) #i don;t think it's neede d
-
         # Update the payment method.
         payment_method_type = notification_data.get('payment_type_id', '')
         for odoo_code, mp_codes in const.PAYMENT_METHODS_MAPPING.items():
@@ -174,6 +169,8 @@ class PaymentTransaction(models.Model):
             self._set_pending()
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['done']:
             self._set_done()
+            if self.tokenize:
+                self._mercado_pago_tokenize_from_notification_data({'email': notification_data['payer']['email'], 'token': notification_data.get('token'), 'issuer_id': notification_data.get('issuer_id'), 'payment_method_id': notification_data.get('payment_method_id')})
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['canceled']:
             self._set_canceled()
         elif payment_status in const.TRANSACTION_STATUS_MAPPING['error']:
@@ -204,3 +201,50 @@ class PaymentTransaction(models.Model):
         return "Mercado Pago: " + const.ERROR_MESSAGE_MAPPING.get(
             status_detail, const.ERROR_MESSAGE_MAPPING['cc_rejected_other_reason']
         )
+
+    def _mercado_pago_tokenize_from_notification_data(self, notification_data):
+
+        response = self.provider_id._mercado_pago_make_request(
+            f'/v1/customers/search', method='GET', payload=notification_data['email']
+        )
+        if not response['results']:
+            response = self.provider_id._mercado_pago_make_request(
+                f'/v1/customers', method='POST', payload=notification_data['email']
+            )
+            customer_id = response['id']
+        else:
+            customer_id = response['results'][0]['id']
+        #assosiate card with customer
+        payload = {
+            "token": notification_data['token'],
+            "issuer_id": int(notification_data['issuer_id']),
+            "payment_method_id": notification_data['payment_method_id']
+        }
+        response = self.provider_id._mercado_pago_make_request(f'/v1/customers/{customer_id}/cards', method='POST', payload=payload)
+        card_id = response['id']
+        last_four_digits = response.get('last_four_digits')
+        #generate a card token
+        response = self.provider_id._mercado_pago_make_request(f'/v1/card_tokens', method='POST', payload={'card_id': card_id})
+
+        token = self.env['payment.token'].create({
+            'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
+            'payment_details': last_four_digits,
+            'partner_id': self.partner_id.id,
+            'provider_ref': response['id'],
+            'mercado_pago_customer_id': customer_id,
+        })
+        self.write({
+            'token_id': token,
+            'tokenize': False,
+        })
+        _logger.info(
+            "Created token with id %(token_id)s for partner with id %(partner_id)s from "
+            "transaction with reference %(ref)s",
+            {
+                'token_id': token.id,
+                'partner_id': self.partner_id.id,
+                'ref': self.reference,
+            },
+        )
+        return
