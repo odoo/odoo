@@ -51,8 +51,14 @@
                             class="btn-primary ms-1"
                             display="always"/>
                 </header>
-                <field name="create_date" string="Date" />
-                <field name="reference"/>
+                <field name="create_date" string="Date" decoration-muted="1" />
+                <field name="reference" class="fw-bolder"
+                    decoration-muted="1"
+                    decoration-danger="is_scrap"
+                    decoration-success="picking_code == 'incoming'"
+                    decoration-info="picking_code == 'outgoing'"
+                    decoration-primary="picking_code == 'mrp_operation'"
+                    decoration-warning="is_inventory" />
                 <field name="account_move_id" optional="hide" groups="account.group_account_user"/>
                 <button name="action_open_journal_entry" groups="account.group_account_user" type="object" title="Journal Entry" icon="fa-book" invisible="not account_move_id"/>
                 <field name="product_id" />
@@ -63,7 +69,7 @@
                 <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" optional="hide"/>
                 <field name="unit_cost" optional="hide"/>
                 <field name="currency_id" column_invisible="True" />
-                <field name="value" sum="Total Value" optional="show"/>
+                <field name="value" sum="Total Value" optional="show" class="fw-bolder" decoration-danger="value &lt; 0" decoration-success="value &gt; 0" />
                 <field name="description" optional="hide"/>
                 <field name="remaining_value" type="measure" optional="hide" sum="Total Remaining Value"/>
                 <groupby name="product_id">
