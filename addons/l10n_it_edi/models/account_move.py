@@ -1224,6 +1224,11 @@ class AccountMove(models.Model):
             if amount_total := sum(float(x) for x in get_text(tree, './/ImportoPagamento', many=True) if x):
                 message_to_log.append(_("Total amount from the XML File: %s", amount_total))
 
+            # l10n_it_payment_method
+            if payment_method := get_text(data['xml_tree'], '//DatiPagamento/DettaglioPagamento/ModalitaPagamento'):
+                if payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code():
+                    self.l10n_it_payment_method = payment_method
+
             # Bank account. <2.4.2.13>
             if self.move_type not in ('out_invoice', 'in_refund'):
                 if acc_number := get_text(tree, './/DatiPagamento/DettaglioPagamento/IBAN'):
