@@ -475,7 +475,7 @@
                     <input type="hidden" name="op" value="password"/>
                     <div class="mb-3">
                         <label for="current">Password:</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
+                        <input type="password" t-attf-class="form-control toggle-password form-control-sm {{ 'is-invalid' if get_error(errors, 'password.old') else '' }}"
                                id="current" name="old"
                                autocomplete="current-password" required="required"/>
                         <div class="invalid-feedback">
@@ -484,7 +484,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="new">New Password:</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
+                        <input type="password" t-attf-class="form-control toggle-password form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new1') else '' }}"
                                id="new" name="new1"
                                autocomplete="new-password" required="required"/>
                         <div class="invalid-feedback">
@@ -493,7 +493,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="new2">Verify New Password:</label>
-                        <input type="password" t-attf-class="form-control form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
+                        <input type="password" t-attf-class="form-control toggle-password form-control-sm {{ 'is-invalid' if get_error(errors, 'password.new2') else '' }}"
                                id="new2" name="new2"
                                autocomplete="new-password" required="required"/>
                         <div class="invalid-feedback">
