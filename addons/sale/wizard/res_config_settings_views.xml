@@ -80,18 +80,18 @@
                                         name="action_enable_payment_provider"
                                         type="object"
                                         class="btn-primary"
-                                        invisible="primary_provider_code != 'stripe'"
+                                        invisible="onboarding_payment_method != 'stripe'"
                                     />
                                     <button
                                         string="Activate Razorpay"
                                         name="action_enable_payment_provider"
                                         type="object"
                                         class="btn-primary"
-                                        invisible="primary_provider_code != 'razorpay'"
+                                        invisible="onboarding_payment_method != 'razorpay'"
                                     />
                                     <div
                                         title="Stripe Connect is not available in your country, please use another payment provider."
-                                        invisible="primary_provider_code in ('stripe', 'razorpay')"
+                                        invisible="onboarding_payment_method in ('stripe', 'razorpay')"
                                     >
                                         <button
                                             string="Activate Stripe"
@@ -119,7 +119,7 @@
                                     class="btn-primary col-auto"
                                 >
                                     <field
-                                        name="first_provider_label"
+                                        name="primary_provider_label"
                                         nolabel="1"
                                         class="oe_inline"
                                     />

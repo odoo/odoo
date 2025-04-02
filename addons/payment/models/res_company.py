@@ -8,26 +8,38 @@ class ResCompany(models.Model):
 
     payment_onboarding_payment_method = fields.Selection(
         string="Selected onboarding payment method",
-        selection=[
-            ('paypal', "PayPal"),
-            ('stripe', "Stripe"),
-            ('manual', "Manual"),
-            ('other', "Other"),
-        ])
+        selection=[('razorpay', "Razorpay"), ('stripe', "Stripe")],
+        compute="_compute_payment_onboarding_payment_method",
+        store=True,
+    )
 
-    def _run_payment_onboarding_step(self, menu_id=None, provider_code=None):
+    @api.depends('country_id', 'currency_id')
+    def _compute_payment_onboarding_payment_method(self):
+        for company in self:
+            if company.currency_id.name == 'INR':
+                company.payment_onboarding_payment_method = 'razorpay'
+            elif company.country_id.is_stripe_supported_country:
+                company.payment_onboarding_payment_method = 'stripe'
+            else:
+                company.payment_onboarding_payment_method = False
+
+    def _run_payment_onboarding_step(self, menu_id=None):
         """ Install the suggested payment modules and configure the providers.
 
         It's checked that the current company has a Chart of Account.
 
         :param int menu_id: The menu from which the user started the onboarding step, as an
                             `ir.ui.menu` id
-        :param str provider_code: The code of the payment provider to configure
         :return: The action returned by `action_stripe_connect_account` or
                  `action_razorpay_redirect_to_oauth_url`
         :rtype: dict
         """
         self.env.company.get_chart_of_accounts_or_fail()
+
+        if not self.payment_onboarding_payment_method:
+            return {}
+
+        provider_code = self.payment_onboarding_payment_method
 
         self._install_modules([f'payment_{provider_code}'])
 

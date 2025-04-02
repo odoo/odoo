@@ -19,7 +19,7 @@
                                 <field name="providers_state" invisible="1"/>
                                 <div
                                     class="oe_inline"
-                                    invisible="primary_provider_code != 'stripe'"
+                                    invisible="onboarding_payment_method != 'stripe'"
                                 >
                                     <button
                                         string="Activate Stripe"
@@ -30,7 +30,7 @@
                                 </div>
                                 <div
                                     class="oe_inline"
-                                    invisible="primary_provider_code != 'razorpay'"
+                                    invisible="onboarding_payment_method != 'razorpay'"
                                 >
                                     <button
                                         string="Activate Razorpay"
@@ -41,7 +41,7 @@
                                 </div>
                                 <div class="oe_inline"
                                      title="Stripe Connect is not available in your country, please use another payment provider."
-                                     invisible="primary_provider_code in ('stripe', 'razorpay')">
+                                     invisible="onboarding_payment_method in ('stripe', 'razorpay')">
                                     <button string="Activate Stripe" class="btn-primary" disabled=""/>
                                 </div>
                                 <button type="action"
@@ -57,7 +57,7 @@
                                         class="btn-primary col-auto"
                                 >
                                     <field
-                                        name="first_provider_label"
+                                        name="primary_provider_label"
                                         nolabel="1"
                                         class="oe_inline"
                                     />
