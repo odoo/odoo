@@ -8,6 +8,8 @@
             <field name="arch" type="xml">
                 <field name="bank_bic" position="after">
                     <field name="l10n_ch_display_qr_bank_options" invisible="1"/>
+                    <!-- invisible field added because it is used as a conditional
+                    expression for the visibility of l10n_ch_qr_iban -->
                     <field name="l10n_ch_qr_iban" invisible="not l10n_ch_display_qr_bank_options"/>
                 </field>
             </field>
