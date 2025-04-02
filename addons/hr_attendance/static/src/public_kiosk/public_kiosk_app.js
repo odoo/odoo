@@ -14,6 +14,7 @@ import { KioskBarcodeScanner } from "@hr_attendance/components/kiosk_barcode/kio
 import { browser } from "@web/core/browser/browser";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { NewEmployeeDialog } from "@hr_attendance/components/new_employee_dialog/new_employee_dialog";
 import { session } from "@web/session";
 
 class kioskAttendanceApp extends Component{
@@ -26,6 +27,7 @@ class kioskAttendanceApp extends Component{
         kioskMode: { type: String },
         barcodeSource: { type: String },
         fromTrialMode: { type: Boolean },
+        activeDisplay: { type: String },
     };
     static components = {
         KioskBarcodeScanner,
@@ -38,6 +40,7 @@ class kioskAttendanceApp extends Component{
     };
 
     setup() {
+        this.dialogService = useService("dialog");
         this.barcode = useService("barcode");
         this.notification = useService("notification");
         this.ui = useService("ui");
@@ -88,6 +91,10 @@ class kioskAttendanceApp extends Component{
         } else {
             this.state.active_display = "main";
         }
+    }
+
+    newSetUp() {
+        this.dialogService.add(NewEmployeeDialog, { 'token': this.props.token });
     }
 
     async setSetting(mode) {

@@ -8,6 +8,7 @@ export class CardLayout extends Component {
         fromTrialMode: { type: Boolean, optional: true },
         companyImageUrl: { type: String },
         kioskReturn: { type: Function },
+        activeDisplay: { type: String },
     };
     static defaultProps = {
         kioskModeClasses: "",

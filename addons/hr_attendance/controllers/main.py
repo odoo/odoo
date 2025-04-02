@@ -74,6 +74,49 @@ class HrAttendance(http.Controller):
         else:
             return request.not_found()
 
+    @http.route('/hr_attendance/get_employees_without_badge', type='jsonrpc', auth='public')
+    def get_employees_without_badge(self, token, query=None):
+        """Fetch only employees without a badge (barcode)."""
+        company = self._get_company(token)
+        if company:
+            domain = [('barcode', '=', False), ('company_id', '=', company.id)]
+            if query:
+                domain.append(('name', 'ilike', query))
+            employee_list = request.env['hr.employee'].sudo().search_read(
+                domain,
+                ['id', 'name'],
+                limit=20,
+            )
+            return {'status': 'success', 'employees': employee_list}
+        return {}
+
+    @http.route('/hr_attendance/set_badge', type='jsonrpc', auth='public')
+    def set_badge(self, employee_id, badge, token):
+        company = self._get_company(token)
+        if company:
+            existing = request.env['hr.employee'].sudo().search_count([
+                ('barcode', '=', badge),
+                ('id', '!=', employee_id)
+            ], limit=1)
+            if existing:
+                return {'status': 'error', 'message': _('This badge number is already assigned to another employee.')}
+
+            employee = request.env['hr.employee'].sudo().browse(employee_id)
+            employee.sudo().write({'barcode': badge})
+            return {'status': 'success'}
+        return {}
+
+    @http.route('/hr_attendance/create_employee', type='jsonrpc', auth='public')
+    def create_employee(self, name, token):
+        company = self._get_company(token)
+        if company:
+            request.env["hr.employee"].sudo().create({
+                "name": name,
+                "company_id": company.id,
+            })
+            return True
+        return False
+
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='jsonrpc')
     def kiosk_keepalive(self):
         request.session.touch()
