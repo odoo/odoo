@@ -979,6 +979,9 @@ action = {
             "trigger": "on_time",
             "model_id": model.id,
             "trg_date_id": model.field_id.filtered(lambda f: f.name == 'date_automation_last').id,
+            "trg_date_range": 2,
+            "trg_date_range_type": "minutes",
+            "trg_date_range_mode": "after",
         })
 
         with (
@@ -989,15 +992,15 @@ action = {
                 past_date = now - datetime.timedelta(1)
                 self.env["base.automation.lead.test"].create([{
                     'name': f'lead {i}',
-                    # 2 without a date, 8 set in past, 5 set in future
+                    # 2 without a date, 8 set in past, 5 set in future (10, 11, ... minutes after now)
                     'date_automation_last': False if i < 2 else past_date if i < 10 else now + datetime.timedelta(minutes=i),
                 } for i in range(15)])
-            with common.freeze_time('2020-01-01 03:01:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+            with common.freeze_time('2020-01-01 03:02:01'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # process records
                 self.automation_cron.method_direct_trigger()
                 self.assertEqual(mock.call_count, 10)
                 self.assertEqual(automation.last_run, self.env.cr.now())
-            with common.freeze_time('2020-01-01 03:11:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
+            with common.freeze_time('2020-01-01 03:13:59'), patch.object(self.env.cr, '_now', datetime.datetime.now()):
                 # 2 in the future (because of timing)
                 # 10 previously done records because we use the date_automation_last as trigger without delay
                 self.automation_cron.method_direct_trigger()
