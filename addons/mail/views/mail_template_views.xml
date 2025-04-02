@@ -5,93 +5,100 @@
             <field name="name">email.template.form</field>
             <field name="model">mail.template</field>
             <field name="arch" type="xml">
-                <form string="Templates">
+                <form string="Templates" class="o_mail_template_form_view">
                     <header>
                         <field name="ref_ir_act_window" invisible="1"/>
                         <field name="template_fs" invisible="1"/>
                         <field name="is_template_editor" invisible="1"/>
                         <button string="Preview"
-                                name="%(mail_template_preview_action)d" type="action"
+                                name="action_open_mail_preview" type="object"
                                 class="btn-primary" target="new"/>
                         <button string="Reset Template"
                                 name="%(mail_template_reset_action)d" type="action"
                                 groups="mail.group_mail_template_editor"
                                 invisible="not template_fs"/>
-                        <button string="Add Context Action"
-                                class="btn btn-secondary"
-                                name="create_action" type="object"
-                                groups="base.group_system"
-                                invisible="ref_ir_act_window"
-                                help="Display an option on related documents to open a composition wizard with this template"/>
-                        <button string="Remove Context Action"
-                                class="btn btn-secondary"
-                                name="unlink_action" type="object"
-                                groups="base.group_no_one"
-                                invisible="not ref_ir_act_window"
-                                help="Remove the contextual action to use this template on related documents"/>
+                        <t groups="base.group_no_one">
+                            <button string="Add Context Action"
+                                    class="btn btn-secondary"
+                                    name="create_action" type="object"
+                                    groups="base.group_system"
+                                    invisible="ref_ir_act_window"
+                                    help="Display an option on related documents to open a composition wizard with this template"/>
+                            <button string="Remove Context Action"
+                                    class="btn btn-secondary"
+                                    name="unlink_action" type="object"
+                                    invisible="not ref_ir_act_window"
+                                    help="Remove the contextual action to use this template on related documents"/>
+                        </t>
                     </header>
                     <sheet>
                         <div class="oe_title">
                             <label for="name"/>
-                            <h1><field name="name" class="w-100"
+                            <h1><field name="name" class="w-100" string="Template Name"
                                 required="1" placeholder='e.g. "Welcome email"'/></h1>
                             <group>
-                                <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                                <field name="model_id" groups="!base.group_no_one" invisible="context.get('default_model')" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
+                                <field name="model_id" groups="base.group_no_one" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                                 <field name="subject" options="{'dynamic_placeholder': true}"
                                        placeholder='e.g. "Welcome to MyCompany" or "Nice to meet you, {{ object.name }}"'/>
                                 <field name="model" invisible="1"/>
                             </group>
                         </div>
                         <notebook>
-                            <page string="Content" name="content">
+                            <page string="Body" name="content">
                                 <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html_mail" class="oe-bordered-editor"
+                                    placeholder="Write your message here..."
                                     options="{'codeview': true, 'dynamic_placeholder': true, 'allowCommandVideo': false}"
                                     readonly="not can_write and id"/>
-                                <div class="d-flex align-items-center gap-3">
-                                    <field name="attachment_ids" widget="many2many_binary" class="m-0"/>
-                                    <div class="text-muted">Write /field to insert dynamic content</div>
-                                </div>
+                                <div invisible="not can_write" class="fst-italic text-muted">Tip: Write /field to insert dynamic content!</div>
                             </page>
-                            <page string="Email Configuration" name="email_configuration">
-                                <group>
-                                    <field name="email_from"
-                                            placeholder="Override author's email"/>
-                                    <field name="use_default_to"/>
-                                    <field name="email_to" invisible="use_default_to"
-                                            placeholder="Comma-separated recipient addresses"/>
-                                    <field name="partner_to" invisible="use_default_to"
-                                            placeholder="Comma-separated ids of recipient partners"/>
-                                    <field name="email_cc" invisible="use_default_to"
-                                            placeholder="Comma-separated carbon copy recipients addresses"/>
-                                    <field name="reply_to"
-                                            placeholder="Email address to which replies will be redirected when sending emails in mass"/>
-                                    <field name="scheduled_date" string="Scheduled Send Date"/>
-                                </group>
-                            </page>
-                            <page string="Settings" name="email_settings">
+                            <page string="Settings" name="email_configuration" groups="base.group_no_one">
                                 <group col="2">
                                     <group>
-                                        <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
-                                        <field name="mail_server_id"/>
+                                        <separator string="Sender &amp; Recipients"/>
+                                        <field name="email_from" placeholder="Sender's email"/>
+                                        <field name="use_default_to"/>
+                                        <field name="email_to" invisible="use_default_to"
+                                                placeholder="Comma-separated recipient addresses"/>
+                                        <field name="partner_to" invisible="use_default_to"
+                                                placeholder="Comma-separated ids of recipient partners"/>
+                                        <field name="email_cc" invisible="use_default_to"
+                                                placeholder="Comma-separated carbon copy of recipients addresses"/>
+                                        <field name="reply_to" placeholder="Capture replies in the chatter"/>
+                                    </group>
+                                    <group>
+                                        <separator string="Technical"/>
+                                        <field name="lang" placeholder="{{ object.partner_id.lang }}" options="{'dynamic_placeholder': true}"/>
+                                        <field name="has_mail_server" invisible="1"/>
+                                        <field name="mail_server_id" invisible="not has_mail_server" placeholder="By order of server priority"/>
                                         <field name="auto_delete"/>
-                                        <field name="report_template_ids" domain="[('model','=',model)]"
-                                            widget="many2many_tags"
-                                            options="{'no_create': True}"/>
+                                        <field name="scheduled_date" string="Scheduled Send Date" placeholder="Send Instantly" options="{'dynamic_placeholder': true}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Options" name="email_settings">
+                                <group col="2">
+                                    <group>
+                                        <field name="has_dynamic_reports" invisible="1"/>
+                                        <field name="attachment_ids" widget="many2many_binary"/>
+                                        <field name="report_template_ids" widget="many2many_tags"
+                                            domain="[('model','=',model)]"
+                                            invisible="not has_dynamic_reports"
+                                            options="{'no_create': True}"
+                                            placeholder="None"/>
                                     </group>
                                     <group>
                                         <field name="user_id" widget="many2one_avatar_user"
                                             readonly="not is_template_editor"
                                             invisible="not is_template_editor"
-                                            placeholder="Shared with all users."
-                                            help="If set, will restrict the template to this specific user.
-                                                  If not set, shared with all users."/>
-                                        <field name="description"/>
+                                            placeholder="Shared with all users"/>
+                                        <field name="description" placeholder="Describe when this template should be used"/>
                                     </group>
                                 </group>
                             </page>
                         </notebook>
-                       </sheet>
+                    </sheet>
                 </form>
             </field>
         </record>

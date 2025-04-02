@@ -5,25 +5,24 @@
             <field name="name">mail.template.preview.view.form</field>
             <field name="model">mail.template.preview</field>
             <field name="arch" type="xml">
-                <form string="Email Preview">
+                <form string="Email Preview" class="o_mail_template_preview_form_view">
                     <sheet>
-                        <div class="oe_title">
-                            <h3>Preview of <field name="mail_template_id" readonly="1" nolabel="1" options="{'no_open': True}"/></h3>
-                        </div>
                         <div class="alert alert-danger" role="alert" invisible="not error_msg">
                             <field name="error_msg" widget="text"/>
                         </div>
+                        <field name="mail_template_id" invisible="1"/>
                         <field name="no_record" invisible="1"/>
 
                         <group>
-                            <label for="resource_ref" string="Test Record: "/>
+                            <label for="resource_ref" string="Test Record"/>
                             <field name="resource_ref" nolabel="1"
                                    options="{'hide_model': True, 'no_create': True, 'no_open': True}"
                                    readonly="False"
                                    invisible="no_record"/>
                             <b invisible="not no_record" class="text-warning">No record for this model</b>
 
-                            <field name="lang" string="Force a Language:" placeholder="Select a language"/>
+                            <field name="has_several_languages_installed" invisible="1"/>
+                            <field name="lang" invisible="not has_several_languages_installed" string="Force a Language" placeholder="Select a language"/>
 
                             <field name="subject"/>
                             <field name="email_from" invisible="not email_from"/>
@@ -34,7 +33,8 @@
                             <field name="scheduled_date" invisible="not scheduled_date"/>
 
                             <field name="body_html" widget="html" colspan="2" nolabel="1" options="{'safe': True}"/>
-                            <field name="attachment_ids" widget="many2many_binary"/>
+                            <field name="has_attachments" invisible="1"/>
+                            <field name="attachment_ids" invisible="not has_attachments" widget="many2many_binary"/>
                         </group>
                     </sheet>
                     <footer>
