@@ -1,5 +1,5 @@
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { defineModels, fields, models } from "@web/../tests/web_test_helpers";
+import { defineModels, fields, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
 export class ProjectProject extends models.Model {
     _name = "project.project";
@@ -33,8 +33,17 @@ export class ProjectProject extends models.Model {
     }
 
     get_template_tasks(projectId) {
-        return ProjectTask._records.filter(
-            (task) => task.project_id === projectId && task.is_template
+        return this.env["project.task"].search_read(
+            [
+                ["project_id", "=", projectId],
+                ["is_template", "=", true],
+            ],
+            ["id", "name"],
+            makeKwArgs({
+                context: {
+                    active_test: false,
+                },
+            })
         );
     }
 }

@@ -457,10 +457,11 @@
                                         'default_parent_id': id,
                                         'default_partner_id': partner_id,
                                         'default_milestone_id': allow_milestones and milestone_id,
-                                        'default_active': not is_template,
+                                        'default_active': not is_template and not context.get('propagate_not_active'),
                                         'default_is_template': False,
                                         'kanban_view_ref': 'project.project_sub_task_view_kanban_mobile',
                                         'closed_X2M_count': closed_subtask_count,
+                                        'propagate_not_active': is_template or context.get('propagate_not_active'),
                                    }"
                                    widget="subtasks_one2many">
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']" open_form_view="True">
@@ -1304,9 +1305,9 @@
             <field name="inherit_id" ref="project_task_view_tree_base"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[not(@name='name') and not(@name='project_id')]" position="attributes">
-                    <attribute name="optional">hide</attribute>
-                </xpath>
+                <field name="project_id" position="attributes">
+                    <attribute name="readonly">False</attribute>
+                </field>
             </field>
         </record>
 

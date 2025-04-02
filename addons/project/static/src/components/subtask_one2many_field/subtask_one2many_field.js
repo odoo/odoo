@@ -18,7 +18,12 @@ export class SubtaskOne2ManyField extends X2ManyField {
                 views: [[false, "form"]],
                 res_id: record.resId,
                 res_model: this.list.resModel,
-                context: pick(this.props.context, "active_test", "default_project_id"),
+                context: pick(
+                    this.props.context,
+                    "active_test",
+                    "default_project_id",
+                    "propagate_not_active"
+                ),
             },
             {
                 props: { resIds: this.list.resIds },
