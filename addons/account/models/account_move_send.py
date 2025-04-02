@@ -301,8 +301,10 @@ class AccountMoveSend(models.AbstractModel):
         return True
 
     @api.model
-    def _is_applicable_to_move(self, method, move):
+    def _is_applicable_to_move(self, method, move, **context):
         """ TO OVERRIDE - """
+        if method == 'email':
+            return bool(context.get('mail_partner_ids')) or bool(move.partner_id.commercial_partner_id.email)
         return True
 
     @api.model
@@ -411,7 +413,7 @@ class AccountMoveSend(models.AbstractModel):
         to_send_mail = {
             move: move_data
             for move, move_data in moves_data.items()
-            if 'email' in move_data['sending_methods'] and self._is_applicable_to_move('email', move)
+            if 'email' in move_data['sending_methods'] and self._is_applicable_to_move('email', move, mail_partner_id=move_data['mail_partner_ids'])
         }
         self._send_mails(to_send_mail)
 
@@ -667,7 +669,7 @@ class AccountMoveSend(models.AbstractModel):
         self._check_invoice_report(moves, **custom_settings)
         assert all(
             sending_method in dict(self.env['res.partner']._fields['invoice_sending_method'].selection)
-            for sending_method in custom_settings.get('sending_methods', [])
+            for sending_method in (custom_settings.get('sending_methods') or [])
         ) if 'sending_methods' in custom_settings else True
 
     @api.model

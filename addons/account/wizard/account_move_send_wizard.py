@@ -131,7 +131,7 @@ class AccountMoveSendWizard(models.TransientModel):
         for wizard in self:
             preferred_method = self._get_default_sending_method(wizard.move_id)
             need_fallback = not self._is_applicable_to_move(preferred_method, wizard.move_id)
-            fallback_method = need_fallback and ('email' if self._is_applicable_to_move('email', wizard.move_id) else 'manual')
+            fallback_method = need_fallback and 'email'
             wizard.sending_method_checkboxes = {
                 method_key: {
                     'checked': method_key == preferred_method if not need_fallback else method_key == fallback_method,

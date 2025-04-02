@@ -19,10 +19,8 @@ class AccountMoveSend(models.AbstractModel):
 
         def filter_peppol_state(moves, states):
             return peppol_partner(moves.filtered(
-                lambda m: self.env['res.partner']._get_peppol_verification_state(
-                    peppol_partner(m).peppol_endpoint,
-                    peppol_partner(m).peppol_eas,
-                    moves_data[m]['invoice_edi_format']) in states))
+                lambda m: peppol_partner(m).peppol_verification_state in states
+            ))
 
         alerts = super()._get_alerts(moves, moves_data)
         # Check for invalid peppol partners.
@@ -104,20 +102,21 @@ class AccountMoveSend(models.AbstractModel):
         else:
             return super()._is_applicable_to_company(method, company)
 
-    def _is_applicable_to_move(self, method, move):
+    def _is_applicable_to_move(self, method, move, **context):
         # EXTENDS 'account'
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
-            invoice_edi_format = partner._get_peppol_edi_format()
+            invoice_edi_format = context.get('invoice_edi_format') or partner._get_peppol_edi_format()
+            partner.button_account_peppol_check_partner_endpoint(company=move.company_id)  # external call tp Peppol SML
             return all([
                 self._is_applicable_to_company(method, move.company_id),
-                self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_edi_format) == 'valid',
+                partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
                 move._need_ubl_cii_xml(invoice_edi_format)
                 or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
             ])
         else:
-            return super()._is_applicable_to_move(method, move)
+            return super()._is_applicable_to_move(method, move, **context)
 
     def _hook_if_errors(self, moves_data, allow_raising=True):
         # EXTENDS 'account'
@@ -139,35 +138,36 @@ class AccountMoveSend(models.AbstractModel):
         params = {'documents': []}
         invoices_data_peppol = {}
         for invoice, invoice_data in invoices_data.items():
-            if 'peppol' in invoice_data['sending_methods'] and self._is_applicable_to_move('peppol', invoice):
-                if invoice_data.get('ubl_cii_xml_attachment_values'):
-                    xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
-                    filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-                elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'done'):
-                    xml_file = invoice.ubl_cii_xml_id.raw
-                    filename = invoice.ubl_cii_xml_id.name
-                else:
-                    invoice.peppol_move_state = 'skipped'
-                    continue
-
-                partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
+            partner = invoice.partner_id.commercial_partner_id.with_company(invoice.company_id)
+            if 'peppol' in invoice_data['sending_methods']:
                 if not partner.peppol_eas or not partner.peppol_endpoint:
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
                     continue
 
-                if self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_data['invoice_edi_format']) != 'valid':
+                if partner.peppol_verification_state != 'valid':
                     invoice.peppol_move_state = 'error'
                     invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                     continue
 
-                receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
-                params['documents'].append({
-                    'filename': filename,
-                    'receiver': receiver_identification,
-                    'ubl': b64encode(xml_file).decode(),
-                })
-                invoices_data_peppol[invoice] = invoice_data
+                if self._is_applicable_to_move('peppol', invoice, invoice_edi_format=invoice_data['invoice_edi_format']):
+                    if invoice_data.get('ubl_cii_xml_attachment_values'):
+                        xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                        filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+                    elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'done'):
+                        xml_file = invoice.ubl_cii_xml_id.raw
+                        filename = invoice.ubl_cii_xml_id.name
+                    else:
+                        invoice.peppol_move_state = 'skipped'
+                        continue
+
+                    receiver_identification = f"{partner.peppol_eas}:{partner.peppol_endpoint}"
+                    params['documents'].append({
+                        'filename': filename,
+                        'receiver': receiver_identification,
+                        'ubl': b64encode(xml_file).decode(),
+                    })
+                    invoices_data_peppol[invoice] = invoice_data
 
         if not params['documents']:
             return
