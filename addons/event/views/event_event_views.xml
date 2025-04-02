@@ -40,6 +40,13 @@
                                 help="Total Registrations for this Event">
                             <field name="seats_taken" widget="statinfo" string="Attendees"/>
                         </button>
+                        <button name="%(event.act_event_slot_from_event)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-calendar"
+                                invisible="not is_multi_slots">
+                            <field name="slot_count" widget="statinfo" string="Slots"/>
+                        </button>
                     </div>
                     <field name="active" invisible="1"/>
                     <field name="company_id" invisible="1"/>
@@ -58,6 +65,7 @@
                             <field name="date_begin" string="Date" widget="daterange" options="{'end_date_field': 'date_end'}" />
                             <field name="date_end" invisible="1" />
                             <field name="date_tz"/>
+                            <field name="is_multi_slots" string="Multiple Slots"/>
                             <field name="lang"/>
                             <field name="event_type_id" string="Template"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}"/>
@@ -71,7 +79,10 @@
                             <label for="seats_limited" string="Limit Registrations"/>
                             <div>
                                 <field name="seats_limited"/>
-                                <span invisible="not seats_limited" required="not seats_limited">to <field name="seats_max" class="oe_inline o_input_9ch"/> Attendees</span>
+                                <span invisible="not seats_limited" required="not seats_limited">
+                                    to <field name="seats_max" class="oe_inline o_input_9ch"/> Attendees
+                                    <span invisible="not is_multi_slots"> per slot</span>
+                                </span>
                             </div>
                         </group>
                     </group>
