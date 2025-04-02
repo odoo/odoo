@@ -270,3 +270,10 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.show_hr_icon_display = employee.company_id.hr_presence_control_attendance or bool(employee.user_id)
         return res
+
+    def open_barcode_scanner(self):
+        return {
+            "type": "ir.actions.client",
+            "tag": "employee_barcode_scanner",
+            "name": "Badge Scanner"
+        }

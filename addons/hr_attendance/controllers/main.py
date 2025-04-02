@@ -88,6 +88,43 @@ class HrAttendance(http.Controller):
         else:
             return request.not_found()
 
+    @http.route('/hr_attendance/get_employees_without_badge', type='jsonrpc', auth='public')
+    def get_employees_without_badge(self, token, name=None, limit=20):
+        """Fetch only employees without a badge (barcode)."""
+        company = self._get_company(token)
+        if company:
+            domain = Domain([('barcode', '=', False), ('company_id', '=', company.id)])
+            if name:
+                domain = Domain.AND([domain, [('name', 'ilike', name)]])
+            employee_list = request.env['hr.employee'].search_read(
+                domain,
+                ['id', 'name'],
+                limit=limit,
+            )
+            return {'status': 'success', 'employees': employee_list}
+        return {}
+
+    @http.route('/hr_attendance/set_badge', type='jsonrpc', auth='public')
+    def set_badge(self, employee_id, badge, token):
+        company = self._get_company(token)
+        if company:
+            employee = request.env['hr.employee'].browse(employee_id)
+            if employee:
+                employee.write({'barcode': badge})
+                return {'status': 'success'}
+        return {}
+
+    @http.route('/hr_attendance/create_employee', type='jsonrpc', auth='public')
+    def create_employee(self, name, token):
+        company = self._get_company(token)
+        if company:
+            request.env["hr.employee"].create({
+                "name": name,
+                "company_id": company.id,
+            })
+            return True
+        return False
+
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='jsonrpc')
     def kiosk_keepalive(self):
         request.session.touch()
@@ -207,22 +244,6 @@ class HrAttendance(http.Controller):
                  LIMIT 1
                 ''', user_id=request.env.user.id))
         return bool(request.env.cr.fetchone()[0])
-
-    @http.route('/hr_attendance/is_fresh_db', type="jsonrpc", auth="public")
-    def is_fresh_db(self, token):
-        company = self._get_company(token)
-        if company:
-            users = request.env['res.users'].sudo().search([])
-            return len(users) == 1 and not users[0].employee_id.barcode
-        return False
-
-    @http.route('/hr_attendance/set_user_barcode', type="jsonrpc", auth="public")
-    def set_user_barcode(self, token, barcode):
-        company = self._get_company(token)
-        if company and self.is_fresh_db(token):
-            request.env.user.employee_id.barcode = barcode
-            return True
-        return False
 
     @http.route('/hr_attendance/set_settings', type="jsonrpc", auth="public")
     def set_attendance_settings(self, token, mode):
