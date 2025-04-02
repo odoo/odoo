@@ -974,7 +974,7 @@ test("shouldn't drag above max level", async () => {
                     expect.step("end");
                     expect(element).toHaveAttribute("id", "dragged");
                     expect(element.parentElement.closest("#parent")).toBe(null);
-                    expect(".o_nested_sortable_placeholder.d-none").toHaveCount(1);
+                    expect(element.previousSibling).toHaveClass("o_nested_sortable_placeholder");
                 },
             });
         }
