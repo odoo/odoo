@@ -82,6 +82,9 @@ export class Builder extends Component {
                 },
                 reloadEditor: this.props.reloadEditor,
                 resources: {
+                    trigger_dom_updated: () => {
+                        editorBus.trigger("DOM_UPDATED");
+                    },
                     on_mobile_preview_clicked: () => {
                         editorBus.trigger("DOM_UPDATED");
                     },

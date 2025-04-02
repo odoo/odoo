@@ -54,6 +54,10 @@ export class CustomizeWebsitePlugin extends Plugin {
                     return getCSSVariableValue(color, style);
                 },
                 load: async ({ param: { mainParam: color, colorType, gradientColor }, value }) => {
+                    const getAction = this.dependencies.builderActions.getAction;
+                    const oldValue = getAction("customizeWebsiteColor").getValue({
+                        param: { mainParam: color, colorType, gradientColor },
+                    });
                     if (gradientColor) {
                         let colorValue = "";
                         let gradientValue = "";
@@ -75,8 +79,32 @@ export class CustomizeWebsitePlugin extends Plugin {
                         await this.customizeWebsiteColors({ [color]: value }, { colorType });
                         await this.reloadBundles();
                     }
+                    return oldValue;
                 },
-                apply: () => this.stuffHappened(),
+                apply: ({ param, value, loadResult: oldValue }) => {
+                    this.dependencies.history.addCustomMutation({
+                        apply: () => {
+                            this.services.ui.block({ delay: 2500 });
+                            const getAction = this.dependencies.builderActions.getAction;
+                            getAction("customizeWebsiteColor")
+                                .load({ param, value })
+                                .then(() => {
+                                    this.dispatchTo("trigger_dom_updated");
+                                })
+                                .finally(() => this.services.ui.unblock());
+                        },
+                        revert: () => {
+                            this.services.ui.block({ delay: 2500 });
+                            const getAction = this.dependencies.builderActions.getAction;
+                            getAction("customizeWebsiteColor")
+                                .load({ param, value: oldValue })
+                                .then(() => {
+                                    this.dispatchTo("trigger_dom_updated");
+                                })
+                                .finally(() => this.services.ui.unblock());
+                        },
+                    });
+                },
             },
             switchTheme: {
                 load: async () => {

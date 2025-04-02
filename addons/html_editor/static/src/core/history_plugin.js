@@ -104,6 +104,7 @@ export class HistoryPlugin extends Plugin {
     static id = "history";
     static dependencies = ["selection", "sanitize"];
     static shared = [
+        "addCustomMutation",
         "applyCustomMutation",
         "addExternalStep",
         "addStep",
