@@ -16,7 +16,7 @@ export class FormViewDialog extends Component {
         nextRecordsContext: { type: Object, optional: true },
         readonly: { type: Boolean, optional: true },
         onRecordSaved: { type: Function, optional: true },
-        onRecordBeforeSaved: { type: Function, optional: true },
+        onRecordSave: { type: Function, optional: true },
         onRecordDiscarded: { type: Function, optional: true },
         removeRecord: { type: Function, optional: true },
         resId: { type: [Number, Boolean], optional: true },
@@ -29,7 +29,6 @@ export class FormViewDialog extends Component {
     };
     static defaultProps = {
         onRecordSaved: () => {},
-        onRecordBeforeSaved: () => {},
         preventCreate: false,
         preventEdit: false,
         isToMany: false,
@@ -62,18 +61,22 @@ export class FormViewDialog extends Component {
             preventEdit: this.props.preventEdit,
             discardRecord: this.discardRecord.bind(this),
             saveRecord: async (record, { saveAndNew }) => {
-                await this.props.onRecordBeforeSaved(record);
-                const saved = await record.save({ reload: false });
-                if (saved) {
-                    this.currentResId = record.resId;
-                    await this.props.onRecordSaved(record);
-                    if (saveAndNew) {
-                        this.currentResId = false;
-                        const context = this.props.nextRecordsContext || this.props.context || {};
-                        await record.model.load({ resId: false, context });
-                    } else {
-                        this.props.close();
+                let saved;
+                if (this.props.onRecordSave) {
+                    saved = await this.props.onRecordSave(record);
+                } else {
+                    saved = await record.save({ reload: false });
+                    if (saved) {
+                        this.currentResId = record.resId;
+                        await this.props.onRecordSaved(record);
                     }
+                }
+                if (saveAndNew) {
+                    this.currentResId = false;
+                    const context = this.props.nextRecordsContext || this.props.context || {};
+                    await record.model.load({ resId: false, context });
+                } else {
+                    this.props.close();
                 }
                 return saved;
             },
