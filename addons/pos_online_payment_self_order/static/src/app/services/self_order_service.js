@@ -7,6 +7,12 @@ patch(SelfOrder.prototype, {
         await super.setup(...args);
         this.onlinePaymentStatus = null;
         this.data.connectWebSocket("ONLINE_PAYMENT_STATUS", ({ status, data }) => {
+            if (
+                data["pos.order"].length === 0 ||
+                data["pos.order"][0].uuid !== this.currentOrder.uuid
+            ) {
+                return;
+            }
             this.models.loadData(data, [], false);
             this.onlinePaymentStatus = status;
             this.paymentError = status === "fail";
