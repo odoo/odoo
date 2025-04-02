@@ -276,8 +276,6 @@ export async function waitForChannels(channels, { operation = "add" } = {}) {
  * @returns {Promise<void>}
  */
 export async function waitNotifications(...expectedNotifications) {
-    await runAllTimers();
-
     const remaining = new Set(expectedNotifications);
 
     await waitUntil(
