@@ -29,6 +29,6 @@ class PaymentPortalSelfOrder(PaymentPortal):
             'status': status,  # progress, success, fail
             'data': {
                 'pos.order': pos_order.read(pos_order._load_pos_self_data_fields(pos_order.config_id.id), load=False),
-                'pos.payment': pos_order.payment_ids.read(pos_order._load_pos_self_data_fields(pos_order.config_id.id), load=False),
+                'pos.payment': pos_order.payment_ids.read(pos_order.payment_ids._load_pos_self_data_fields(pos_order.config_id.id), load=False),
             }
         })
