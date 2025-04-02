@@ -5,10 +5,6 @@ import {
     unhideConditionalElements,
 } from "@website/utils/misc";
 
-// TODO: remove this export after refactor of `slides_course_fullscreen_player.js`
-// into Interaction
-export { unhideConditionalElements };
-
 document.addEventListener("DOMContentLoaded", () => {
     // Transfer cookie/session data as HTML element's attributes so that CSS
     // selectors can be based on them.
