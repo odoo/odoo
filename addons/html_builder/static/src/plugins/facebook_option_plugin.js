@@ -90,13 +90,13 @@ class FacebookOptionPlugin extends Plugin {
             return;
         }
         // Fetches the default url for facebook page from website config
-        const res = this.services.orm.read(
+        const res = await this.services.orm.read(
             "website",
             [this.services.website.currentWebsite.id],
             ["social_facebook"]
         );
-        if (res && res[0].social_facebook) {
-            this.facebookUrl = res[0].social_facebook;
+        if (res) {
+            this.facebookUrl = res[0].social_facebook || "https://www.facebook.com/Odoo";
 
             // WARNING: the call to ignoreDOMMutations is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
