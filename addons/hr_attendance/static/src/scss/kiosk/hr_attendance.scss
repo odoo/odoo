@@ -105,3 +105,78 @@
     height: 100vh;
     overflow: hidden;
 }
+
+.o_select_employee{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    @include media-breakpoint-down(sm){
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.o_select_employee_display {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+
+    &:focus-within {
+        border-color: $input-focus-border-color;
+        box-shadow: 0 0 0 0.25rem rgba($primary, 0.25);
+    }
+
+    img {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.5rem;
+    }
+}
+
+.o_select_employee_option {
+    width: 100%;
+    position: relative;
+    .o-autocomplete--input {
+        width: 100%;
+        font-family: $input-font-family;
+        @include font-size($input-font-size);
+        font-weight: $input-font-weight;
+        line-height: $input-line-height;
+        color: $input-color;
+        border: 0px;
+        appearance: none;
+        @include transition($input-transition);
+
+        &:focus {
+            outline: none; // remove default blue outline
+        }
+    }
+
+    .o-autocomplete--dropdown-menu {
+        position: absolute !important;
+        width:110%;
+        left:-5% !important;
+        top:42px !important;
+        max-height: 300px!important;
+        overflow-y: auto;
+        .dropdown-item {
+            padding: map-get($spacers, 2);
+            font-size: $input-font-size;
+        }
+    }
+
+    .o-autocomplete--dropdown-item a[aria-selected="true"]{
+        background-color: #f0f0f0 !important;
+    }
+
+    .dropdown-caret-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+}

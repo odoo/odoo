@@ -57,6 +57,12 @@
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
             </xpath>
+            <xpath expr="//field[@name='barcode']" position="attributes">
+                <attribute name="string">RFID/Badge Number</attribute>
+            </xpath>
+            <xpath expr="//button[@name='generate_random_barcode']" position="after">
+                <button name="open_barcode_scanner" string="Read a badge" type="object" class="btn btn-link" invisible="barcode"/>
+            </xpath>
         </field>
     </record>
 
