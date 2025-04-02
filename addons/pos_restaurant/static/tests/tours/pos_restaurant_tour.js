@@ -565,3 +565,18 @@ registry.category("web_tour.tours").add("FinishResidualOrder", {
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_multiple_preparation_printer_different_categories", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Product 1"),
+            ProductScreen.clickDisplayedProduct("Product 2"),
+            ProductScreen.clickOrderButton(),
+            Dialog.bodyIs("Failed in printing Printer 1, Printer 2 changes of the order"),
+            Dialog.confirm(),
+        ].flat(),
+});
