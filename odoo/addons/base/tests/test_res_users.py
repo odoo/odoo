@@ -22,6 +22,7 @@ class UsersCommonCase(TransactionCase):
                 'login': 'user_internal',
                 'password': 'password',
                 'groups_id': [cls.env.ref('base.group_user').id],
+                'tz': 'UTC',
             },
             {
                 'name': 'Portal 1',
@@ -474,6 +475,21 @@ class TestUsers2(UsersCommonCase):
         ]).write({'share': True})
 
         self.env['res.groups']._update_user_groups_view()
+
+    @users('user_internal')
+    def test_self_readable_writeable_fields_preferences_form(self):
+        """Test that a field protected by a `groups='...'` with a group the user doesn't belong to
+        but part of the `SELF_WRITEABLE_FIELDS` is shown in the user profile preferences form and is editable"""
+        my_user = self.env['res.users'].browse(self.env.user.id)
+        self.assertIn(
+            'email',
+            my_user.SELF_WRITEABLE_FIELDS,
+            "This test doesn't make sense if not tested on a field part of the SELF_WRITEABLE_FIELDS"
+        )
+        self.patch(self.env.registry['res.users']._fields['email'], 'groups', 'base.group_system')
+        with Form(my_user, view='base.view_users_form_simple_modif') as UserForm:
+            UserForm.email = "foo@bar.com"
+        self.assertEqual(my_user.email, "foo@bar.com")
 
 
 @tagged('post_install', '-at_install', 'res_groups')
