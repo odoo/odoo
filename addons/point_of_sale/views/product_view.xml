@@ -21,7 +21,7 @@
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
         <field name="view_mode">kanban,list,form,activity</field>
-        <field name="context">{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True, 'create_variant_never': 'no_variant', '_pos_self_order': True}</field>
+        <field name="context">{'search_default_filter_to_availabe_pos': 1, 'default_available_in_pos': True, 'create_variant_never': 'no_variant', '_pos_self_order': True, 'list_view_ref': 'point_of_sale.product_template_tree_view_point_of_sale'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create new product
@@ -158,6 +158,20 @@
             </field>
             <field name="pos_categ_ids" position="after">
                 <field name="available_in_pos" groups="point_of_sale.group_pos_user" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    <record id="product_template_tree_view_point_of_sale" model="ir.ui.view">
+        <field name="name">product.template.view.list.point_of_sale</field>
+        <field name="mode">primary</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="point_of_sale.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <list position="attributes">
+                <attribute name="default_order">pos_sequence</attribute>
+            </list>
+            <field name="is_favorite" position="before">
+                <field name="pos_sequence" widget="handle" nolabel="1"/>
             </field>
         </field>
     </record>
