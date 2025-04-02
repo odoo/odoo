@@ -111,21 +111,10 @@ export async function setupWebsiteBuilder(
     });
 
     patchWithCleanup(WebsiteBuilder.prototype, {
-        setup() {
-            super.setup();
+        setIframeLoaded() {
+            super.setIframeLoaded();
             originalIframeLoaded = this.iframeLoaded;
-        },
-        get systrayProps() {
-            return {
-                onNewPage: this.onNewPage.bind(this),
-                onEditPage: this.onEditPage.bind(this),
-                iframeLoaded: iframeLoaded,
-            };
-        },
-        get menuProps() {
-            const props = super.menuProps;
-            props.iframeLoaded = iframeLoaded;
-            return props;
+            this.iframeLoaded = iframeLoaded;
         },
         async loadAssetsEditBundle() {
             // To instantiate interactions in the iframe test we need to
