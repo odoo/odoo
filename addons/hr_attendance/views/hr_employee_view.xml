@@ -224,7 +224,7 @@
         <field name="name">hr.attendance.list</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <list sample="1">
+            <list sample="1" js_class="attendance_banner_list_view">
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
