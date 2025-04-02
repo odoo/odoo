@@ -134,6 +134,20 @@ export class EditMenuDialog extends Component {
             onDrop: this._moveMenu.bind(this),
             isAllowed: this._isAllowedMove.bind(this),
             useElementSize: true,
+            /**
+             * @param {DOMElement} element - moved element
+             * @param {DOMElement} parent - parent element of where the element was moved
+             * @param {DOMElement} placeholder - hint element showing the current position
+             */
+            onMove: ({element, placeholder, parent}) => {
+                // Adapt the dragged menu item to match the width and position
+                // of the placeholder.
+                element.style.width = getComputedStyle(placeholder).width;
+                element.style.marginLeft =
+                    parent && (element.parentElement === this.menuEditor.el)
+                    ? "2rem"
+                    : "";
+            },
         });
     }
 
