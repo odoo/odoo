@@ -126,9 +126,9 @@ class StatusPage extends Component {
                             <td class="col-3"><i class="me-1 fa fa-fw fa-id-card"/>Name</td>
                             <td class="col-3" t-out="state.data.hostname"/>
                         </tr>
-                        <tr t-if="state.data.odoo_server_url">
+                        <tr t-if="state.data.server_status">
                             <td class="col-3"><i class="me-1 fa fa-fw fa-database"/>Database</td>
-                            <td class="col-3" t-out="state.data.odoo_server_url"/>
+                            <td class="col-3" t-out="state.data.server_status"/>
                         </tr>
                     </tbody>
                 </table>
