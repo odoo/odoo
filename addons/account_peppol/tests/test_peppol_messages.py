@@ -49,7 +49,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'name': 'Wintermute',
             'city': 'Charleroi',
             'country_id': cls.env.ref('base.be').id,
-            'invoice_sending_method': 'peppol',
             'peppol_eas': '0208',
             'peppol_endpoint': '3141592654',
         }, {
@@ -57,7 +56,6 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'city': 'Namur',
             'email': 'Namur@company.com',
             'country_id': cls.env.ref('base.be').id,
-            'invoice_sending_method': 'peppol',
             'peppol_eas': '0208',
             'peppol_endpoint': '2718281828',
         }])
@@ -191,6 +189,11 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             {
                 'mimetype': 'application/pdf',
                 'name': 'INV_2023_00001.pdf',
+                'placeholder': True,
+            },
+            {
+                'mimetype': 'application/xml',
+                'name': 'INV_2023_00001_ubl_bis3.xml',
                 'placeholder': True,
             },
         ])
@@ -382,12 +385,13 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'invoice_edi_format': 'ubl_bis3',
         }])
         # but not valid for company 2
-        new_partner.with_company(company_2).peppol_verification_state = False
+        new_partner.with_company(company_2).invoice_edi_format = 'nlcius'
+        new_partner.button_account_peppol_check_partner_endpoint(company=company_2)
         self.assertRecordValues(new_partner.with_company(company_2), [{
-            'peppol_verification_state': False,
+            'peppol_verification_state': 'not_valid_format',
             'peppol_eas': '0208',
             'peppol_endpoint': '0477472701',
-            'invoice_edi_format': False,
+            'invoice_edi_format': 'nlcius',
         }])
         move_1 = self.create_move(new_partner)
         move_2 = self.create_move(new_partner)
@@ -401,7 +405,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').with_company(company_2).method_direct_trigger()
         # only move 1 & 2 should be processed, move_3 is related to an invalid partner (with regard to company_2) thus should fail to send
-        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'skipped'])
+        self.assertEqual((move_1 + move_2 + move_3).mapped('peppol_move_state'), ['processing', 'processing', 'error'])
 
     def test_available_peppol_sending_methods(self):
         company_us = self.setup_other_company()['company']  # not a valid Peppol country
@@ -413,3 +417,63 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         self.assertFalse('facturx' in self.valid_partner.available_peppol_edi_formats)
         self.valid_partner.invoice_sending_method = 'email'
         self.assertTrue('facturx' in self.valid_partner.available_peppol_edi_formats)
+
+    def test_peppol_default_ubl_bis3_single(self):
+        """In single invoice sending, if a partner is set on 'by Peppol' sending method,
+        and has no specific e-invoice format, we should default on BIS3
+        and generate invoices without errors.
+        """
+        self.valid_partner.invoice_edi_format = False
+
+        move = self.create_move(self.valid_partner)
+        move.action_post()
+        wizard = self.create_send_and_print(move, default=True)
+        self.assertTrue(wizard.sending_methods and 'peppol' in wizard.sending_methods)
+        self.assertEqual(wizard.invoice_edi_format, 'ubl_bis3')
+        wizard.action_send_and_print()
+        self.assertTrue(move.ubl_cii_xml_id)
+        self.assertEqual(move.peppol_move_state, 'processing')
+
+    def test_peppol_default_ubl_bis3_multi(self):
+        """In multi-sending, if a partner is set on 'by Peppol' sending method, and
+        has no specific e-invoice format, we should default on BIS3
+        and generate invoices without errors.
+        """
+        self.valid_partner.invoice_edi_format = False
+
+        move_1 = self.create_move(self.valid_partner)
+        move_2 = self.create_move(self.valid_partner)
+        moves = (move_1 + move_2)
+        moves.action_post()
+        wizard = self.create_send_and_print(moves, default=True)
+        self.assertEqual(wizard.summary_data, {
+            'email': {'count': 2, 'label': 'by Email'},
+            'peppol': {'count': 2, 'label': 'by Peppol'},
+        })
+        wizard.action_send_and_print()
+        with self.enter_registry_test_mode():
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+
+        self.assertEqual(len(moves.ubl_cii_xml_id), 2)
+        self.assertEqual(moves.mapped('peppol_move_state'), ['processing', 'processing'])
+
+    def test_silent_error_while_creating_xml(self):
+        """When in multi/async mode, the generation of XML can fail silently (without raising).
+        This needs to be reflected as an error and put the move in Peppol Error state.
+        """
+        def mocked_export_invoice_constraints(self, invoice, vals):
+            return {'test_error_key': 'test_error_description'}
+
+        self.valid_partner.invoice_edi_format = 'ubl_bis3'
+        move_1 = self.create_move(self.valid_partner)
+        move_2 = self.create_move(self.valid_partner)
+        (move_1 + move_2).action_post()
+
+        wizard = self.create_send_and_print(move_1 + move_2)
+        with patch(
+            'odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20.AccountEdiXmlUbl_20._export_invoice_constraints',
+            mocked_export_invoice_constraints
+        ), self.enter_registry_test_mode():
+            wizard.action_send_and_print()
+            self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
+        self.assertEqual(move_1.peppol_move_state, 'error')
