@@ -245,11 +245,14 @@ class SmsComposer(models.TransientModel):
     def _action_send_sms_mass(self, records=None):
         records = records if records is not None else self._get_records()
 
-        sms_record_values = self._prepare_mass_sms_values(records)
-        sms_all = self._prepare_mass_sms(records, sms_record_values)
-        if sms_all and self.mass_keep_log and records and isinstance(records, self.pool['mail.thread']):
-            log_values = self._prepare_mass_log_values(records, sms_record_values)
-            records._message_log_batch(**log_values)
+        sms_record_values_filtered = self._filter_out_and_handle_revoked_sms_values(self._prepare_mass_sms_values(records))
+        records_filtered = records.filtered(lambda record: record.id in sms_record_values_filtered)
+        if self.mass_keep_log and sms_record_values_filtered and isinstance(records_filtered, self.pool['mail.thread']):
+            log_values = self._prepare_mass_log_values(records_filtered, sms_record_values_filtered)
+            mail_messages = records_filtered._message_log_batch(**log_values)
+            for idx, record in enumerate(records_filtered):
+                sms_record_values_filtered[record.id]['mail_message_id'] = mail_messages[idx].id
+        sms_all = self._prepare_mass_sms(records_filtered, sms_record_values_filtered)
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
@@ -259,6 +262,14 @@ class SmsComposer(models.TransientModel):
     # ------------------------------------------------------------
     # Mass mode specific
     # ------------------------------------------------------------
+
+    def _filter_out_and_handle_revoked_sms_values(self, sms_values_all):
+        """Meant to be overridden to filter out and handle sms that must not be sent.
+
+        :param dict sms_values_all: sms values by res_id
+        :return dict: filtered sms_vals_all
+        """
+        return sms_values_all
 
     def _get_blacklist_record_ids(self, records, recipients_info):
         """ Get a list of blacklisted records. Those will be directly canceled
