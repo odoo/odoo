@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { CSS_SHORTHANDS, applyNeededCss, areCssValuesEqual } from "@html_builder/utils/utils_css";
+import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 
 export function withoutTransition(editingElement, callback) {
     if (editingElement.classList.contains("o_we_force_no_transition")) {
@@ -15,6 +16,7 @@ export function withoutTransition(editingElement, callback) {
 
 export class CoreBuilderActionPlugin extends Plugin {
     static id = "coreBuilderAction";
+    static shared = ["setStyle"];
     resources = {
         builder_actions: this.getActions(),
         builder_style_actions: this.getStyleActions(),
@@ -46,9 +48,26 @@ export class CoreBuilderActionPlugin extends Plugin {
 
     getStyleActions() {
         const styleActions = {
+            "background-image-url": {
+                getValue: (el) => {
+                    const value = getStyleValue(el, "background-image");
+                    const match = value.match(/url\(([^)]+)\)/);
+                    return match ? match[1] : "";
+                },
+                apply: (el, value, param) => {
+                    const parts = backgroundImageCssToParts(el.style["background-image"]);
+                    if (value) {
+                        parts.url = `url('${value}')`;
+                    } else {
+                        delete parts.url;
+                    }
+                    // todo: deal with the gradients
+                    setStyle(el, "background-image", backgroundImagePartsToCss(parts), param);
+                },
+            },
             "box-shadow": {
-                getValue: ({ editingElement: el, param }) => {
-                    const value = getStyleValue(el, param);
+                getValue: (el, styleName) => {
+                    const value = getStyleValue(el, styleName);
                     const inset = value.includes("inset");
                     let values = value
                         .replace(/,\s/g, ",")
@@ -59,11 +78,10 @@ export class CoreBuilderActionPlugin extends Plugin {
                     values = values.join(" ").replace(color, "").trim();
                     return `${color} ${values}${inset ? " inset" : ""}`;
                 },
-                apply: setStyleValue,
             },
             "border-width": {
-                getValue: ({ editingElement: el, param }) => {
-                    let value = getStyleValue(el, param);
+                getValue: (el, styleName) => {
+                    let value = getStyleValue(el, styleName);
                     if (value.endsWith("px")) {
                         value = value
                             .split(/\s+/g)
@@ -77,23 +95,17 @@ export class CoreBuilderActionPlugin extends Plugin {
                     }
                     return value;
                 },
-                apply: setStyleValue,
             },
             "row-gap": {
-                getValue: ({ editingElement: el, param }) =>
-                    parseInt(getStyleValue(el, param)) || 0,
-                apply: setStyleValue,
+                getValue: (el, styleName) => parseInt(getStyleValue(el, styleName)) || 0,
             },
             "column-gap": {
-                getValue: ({ editingElement: el, param, value }) =>
-                    parseInt(getStyleValue(el, param)) || 0,
-                apply: setStyleValue,
+                getValue: (el, styleName) => parseInt(getStyleValue(el, styleName)) || 0,
             },
             width: {
                 // using inline style instead of computed because of the
                 // messy %-px convertion and the messy auto keyword).
-                getValue: ({ editingElement: el, param, value }) => el.style.width,
-                apply: setStyleValue,
+                getValue: (el) => el.style.width,
             },
         };
         for (const borderWidthPropery of CSS_SHORTHANDS["border-width"]) {
@@ -103,48 +115,50 @@ export class CoreBuilderActionPlugin extends Plugin {
     }
 
     getStyleAction() {
-        const getValue = (...args) => {
-            const { editingElement, param } = args[0];
+        const getValue = (el, styleName) =>
+            // const { editingElement, param } = args[0];
             // Disable all transitions for the duration of the style check
             // as we want to know the final value of a property to properly
             // update the UI.
-            return withoutTransition(editingElement, () => {
-                const customStyle = this.customStyleActions[param.mainParam];
+            withoutTransition(el, () => {
+                const customStyle = this.customStyleActions[styleName];
                 if (customStyle) {
-                    return customStyle.getValue(...args);
+                    return customStyle.getValue(el, styleName);
                 } else {
-                    return getStyleValue(editingElement, param);
+                    return getStyleValue(el, styleName);
                 }
             });
-        };
         return {
-            getValue,
+            getValue: ({ editingElement, param = {} }) => getValue(editingElement, param.mainParam),
             isApplied: ({ editingElement, param = {}, value }) => {
-                const currentValue = getValue({ editingElement, param });
+                const currentValue = getValue(editingElement, param.mainParam);
                 return currentValue === value;
             },
-            apply: (...args) => {
-                const { editingElement, param = {}, value } = args[0];
-                // Disable all transitions for the duration of the method as many
-                // comparisons will be done on the element to know if applying a
-                // property has an effect or not. Also, changing a css property via the
-                // editor should not show any transition as previews would not be done
-                // immediately, which is not good for the user experience.
-                withoutTransition(editingElement, () => {
-                    const customStyle = this.customStyleActions[param.mainParam];
-                    if (customStyle) {
-                        customStyle.apply(...args);
-                    } else {
-                        setStyleValue({ editingElement, param, value });
-                    }
-                });
+            apply: ({ editingElement, param = {}, value }) => {
+                param = { ...param };
+                const styleName = param.mainParam;
+                delete param.mainParam;
+                this.setStyle(editingElement, styleName, value, param);
             },
             // TODO clean() is missing !!
         };
     }
+    setStyle(element, styleName, styleValue, params) {
+        // Disable all transitions for the duration of the method as many
+        // comparisons will be done on the element to know if applying a
+        // property has an effect or not. Also, changing a css property via the
+        // editor should not show any transition as previews would not be done
+        // immediately, which is not good for the user experience.
+        withoutTransition(element, () => {
+            const customSetStyle = this.customStyleActions[styleName]?.apply;
+            customSetStyle
+                ? customSetStyle(element, styleValue, params)
+                : setStyle(element, styleName, styleValue, params);
+        });
+    }
 }
 
-function getStyleValue(el, { mainParam: styleName } = {}) {
+function getStyleValue(el, styleName) {
     const computedStyle = window.getComputedStyle(el);
     const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
     const cssValues = cssProps.map((cssProp) => computedStyle.getPropertyValue(cssProp).trim());
@@ -160,11 +174,7 @@ function getStyleValue(el, { mainParam: styleName } = {}) {
     return cssValues.join(" ");
 }
 
-function setStyleValue({
-    editingElement: el,
-    param: { mainParam: styleName, extraClass, force = false, allowImportant = true } = {},
-    value,
-}) {
+function setStyle(el, styleName, value, { extraClass, force = false, allowImportant = true } = {}) {
     const computedStyle = window.getComputedStyle(el);
     const cssProps = CSS_SHORTHANDS[styleName] || [styleName];
     // Always reset the inline style first to not put inline style on an
@@ -215,13 +225,6 @@ function setStyleValue({
             applyAllCSS(values);
         }
     }
-}
-
-export function getGeneralStyle(param) {
-    return {
-        getValue: (editingElement) => getStyleValue(editingElement, param),
-        apply: setStyleValue,
-    };
 }
 
 export const classAction = {

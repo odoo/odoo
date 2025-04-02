@@ -1,10 +1,5 @@
 import { getValueFromVar } from "@html_builder/utils/utils";
-import {
-    backgroundImageCssToParts,
-    backgroundImagePartsToCss,
-    getBgImageURLFromEl,
-    isBackgroundImageAttribute,
-} from "@html_builder/utils/utils_css";
+import { getBgImageURLFromEl, isBackgroundImageAttribute } from "@html_builder/utils/utils_css";
 import { Plugin } from "@html_editor/plugin";
 import { removeOnImageChangeAttrs } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
@@ -15,7 +10,7 @@ import { getBackgroundImageColor } from "./background_image_option";
 
 export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
-    static dependencies = ["builderActions", "media"];
+    static dependencies = ["builderActions", "media", "coreBuilderAction"];
     static shared = ["changeEditingEl"];
     resources = {
         builder_actions: this.getActions(),
@@ -167,34 +162,20 @@ export class BackgroundImageOptionPlugin extends Plugin {
     }
     /**
      *
-     * @param {HTMLElement} editingElement
+     * @param {HTMLElement} el
      * @param {String} backgroundURL
      */
-    setImageBackground(editingElement, backgroundURL) {
-        const parts = backgroundImageCssToParts(editingElement.style["background-image"]);
+    setImageBackground(el, backgroundURL) {
         if (backgroundURL) {
-            parts.url = `url('${backgroundURL}')`;
-            editingElement.classList.add("oe_img_bg", "o_bg_img_center");
+            el.classList.add("oe_img_bg", "o_bg_img_center");
         } else {
-            delete parts.url;
-            editingElement.classList.remove(
-                "oe_img_bg",
-                "o_bg_img_center",
-                "o_modified_image_to_save"
-            );
+            el.classList.remove("oe_img_bg", "o_bg_img_center", "o_modified_image_to_save");
         }
-        const combined = backgroundImagePartsToCss(parts);
         // TODO: check this comment
         // We use selectStyle so that if when a background image is removed the
         // remaining image matches the o_cc's gradient background, it can be
         // removed too.
-        this.dependencies.builderActions.getAction("styleAction").apply({
-            editingElement: editingElement,
-            param: {
-                mainParam: "background-image",
-            },
-            value: combined,
-        });
+        this.dependencies.coreBuilderAction.setStyle(el, "background-image-url", backgroundURL);
     }
 }
 

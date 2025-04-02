@@ -17,25 +17,23 @@ class ColorStylePlugin extends Plugin {
     getStyleActions() {
         return {
             "background-color": {
-                getValue: ({ editingElement }) =>
-                    this.dependencies.color.getElementColors(editingElement)["backgroundColor"],
-                apply: ({ editingElement, value }) => {
+                getValue: (el) => this.dependencies.color.getElementColors(el)["backgroundColor"],
+                apply: (el, value) => {
                     const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
                     if (match) {
                         value = `bg-${match[1]}`;
                     }
-                    this.dependencies.color.colorElement(editingElement, value, "backgroundColor");
+                    this.dependencies.color.colorElement(el, value, "backgroundColor");
                 },
             },
             color: {
-                getValue: ({ editingElement }) =>
-                    this.dependencies.color.getElementColors(editingElement)["color"],
-                apply: ({ editingElement, value }) => {
+                getValue: (el) => this.dependencies.color.getElementColors(el)["color"],
+                apply: (el, value) => {
                     const match = value.match(/var\(--([a-zA-Z0-9-_]+)\)/);
                     if (match) {
                         value = `text-${match[1]}`;
                     }
-                    this.dependencies.color.colorElement(editingElement, value, "color");
+                    this.dependencies.color.colorElement(el, value, "color");
                 },
             },
         };
