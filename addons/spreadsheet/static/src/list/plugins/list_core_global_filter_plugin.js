@@ -151,7 +151,7 @@ export class ListCoreGlobalFilterPlugin extends OdooCorePlugin {
      * @param {Object} data
      */
     export(data) {
-        for (const id in this.lists) {
+        for (const id in this.fieldMatchings) {
             data.lists[id].fieldMatching = this.fieldMatchings[id];
         }
     }
