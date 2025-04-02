@@ -1870,7 +1870,7 @@ class StockPicking(models.Model):
             self.env.user, fields.Datetime.now()
         ).replace(hour=0, minute=0, second=0, microsecond=0)
 
-        start_today = start_today.astimezone(pytz.UTC)
+        start_today = start_today.astimezone(pytz.UTC).replace(tzinfo=None)
 
         start_yesterday = start_today + timedelta(days=-1)
         start_day_1 = start_today + timedelta(days=1)
