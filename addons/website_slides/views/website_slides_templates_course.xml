@@ -439,7 +439,10 @@
                                 <i class="fa fa-bars"/>
                             </div>
                             <span t-if="category_id" t-field="category['category'].name"/>
-                            <small t-if="not category['total_slides'] and category_id" class="ms-1 text-muted"><b>(empty)</b></small>
+                            <small t-if="category_id"
+                                   t-att-class="'ms-1 text-muted o_wslides_slide_list_category_empty %s' % ('d-none' if category['total_slides'] else '')">
+                                <b>(empty)</b>
+                            </small>
                         </div>
                         <t t-if="category_id">
                             <div class="d-flex o_not_editable">
