@@ -1,22 +1,28 @@
+import { fadeInEffect, fadeOutEffect } from "./fade_in_out_effects";
+import { Interaction } from "@web/public/interaction";
+import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
-import publicWidget from "@web/legacy/js/public/public_widget";
 import SESSION_CHART_COLORS from "@survey/interactions/survey_session_colors";
 
-publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
+export class SurveySessionLeaderboard extends Interaction {
+    static selector = ".o_survey_session_leaderboard";
 
-        this.surveyAccessToken = options.surveyAccessToken;
-        this.$sessionResults = options.sessionResults;
+    setup() {
+        this.leaderboardFadeInOutTime = 400;
+        this.surveyAccessToken = this.el.closest(".o_survey_session_manage").dataset[
+            "surveyAccessToken"
+        ];
+        this.sessionResults = this.el.parentElement.querySelector(".o_survey_session_results");
+        this.fadeInOutTime = 400;
+        this.BAR_MIN_WIDTH = "3rem";
+        this.BAR_WIDTH = "24rem";
+        this.BAR_HEIGHT = "3.8rem";
+    }
 
-        this.BAR_MIN_WIDTH = '3rem';
-        this.BAR_WIDTH = '24rem';
-        this.BAR_HEIGHT = '3.8rem';
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
+    start() {
+        this.addListener(this.el, "showLeaderboard", this.showLeaderboard);
+        this.addListener(this.el, "hideLeaderboard", this.hideLeaderboard);
+    }
 
     /**
      * Shows the question leaderboard on screen.
@@ -25,112 +31,113 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      * We fade out the $sessionResults to fade in our rendered template.
      *
      * The width of the progress bars is set after the rendering to enable a width css animation.
+     *
+     * @param {CustomEvent} ev CustomEvent triggering the function
      */
-    showLeaderboard: function (fadeOut, isScoredQuestion) {
-        var self = this;
-
-        var resolveFadeOut;
-        var fadeOutPromise;
-        if (fadeOut) {
-            fadeOutPromise = new Promise(function (resolve, reject) { resolveFadeOut = resolve; });
-            self.$sessionResults.fadeOut(400, function () {
-                resolveFadeOut();
+    showLeaderboard(ev) {
+        let resolveFadeOut;
+        let fadeOutPromise;
+        if (ev.detail.fadeOut) {
+            fadeOutPromise = new Promise(function (resolve, reject) {
+                resolveFadeOut = resolve;
             });
+            fadeOutEffect(
+                this.el.parentElement.querySelector(".o_survey_session_results"),
+                this.fadeInOutTime,
+                () => {
+                    this.el.parentElement.querySelector(".o_survey_session_results").style.display =
+                        "none";
+                    resolveFadeOut();
+                }
+            );
         } else {
             fadeOutPromise = Promise.resolve();
-            // self.$sessionResults.hide();
-            // self.$('.o_survey_session_leaderboard_container').empty();
-            self.$sessionResults.style.display = "none";
-            const leaderboardContainer = self.el.querySelector(".o_survey_session_leaderboard_container");
-            if (leaderboardContainer) {
-                leaderboardContainer.innerHTML = "";
-            }
+            this.el.parentElement.querySelector(".o_survey_session_results").style.display = "none";
+            this.el.querySelector(".o_survey_session_leaderboard_container").innerHTML = "";
         }
 
-        var leaderboardPromise = rpc(`/survey/session/leaderboard/${this.surveyAccessToken}`);
-
-        Promise.all([fadeOutPromise, leaderboardPromise]).then(function (results) {
-            var leaderboardResults = results[1];
-            var $renderedTemplate = $(leaderboardResults);
-            self.$('.o_survey_session_leaderboard_container').append($renderedTemplate);
-
-            self.$('.o_survey_session_leaderboard_item').each(function (index) {
-                var rgb = SESSION_CHART_COLORS[index % 10];
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar')
-                    .css('background-color', `rgba(${rgb},1)`);
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar_question')
-                    .css('background-color', `rgba(${rgb},${0.4})`);
-            });
-
-            self.$el.fadeIn(400, async function () {
-                if (isScoredQuestion) {
-                    await self._prepareScores();
-                    await self._showQuestionScores();
-                    await self._sumScores();
-                    await self._reorderScores();
-                }
-            });
-        });
-    },
+        const leaderboardPromise = rpc(`/survey/session/leaderboard/${this.surveyAccessToken}`);
+        this.waitFor(Promise.all([fadeOutPromise, leaderboardPromise])).then(
+            this.protectSyncAfterAsync((results) => {
+                const leaderboardResults = results[1];
+                const renderedTemplate = document.createElement("div");
+                renderedTemplate.innerHTML = leaderboardResults;
+                this.el
+                    .querySelector(".o_survey_session_leaderboard_container")
+                    .appendChild(renderedTemplate);
+                this.el
+                    .querySelectorAll(".o_survey_session_leaderboard_item")
+                    .forEach((item, index) => {
+                        const rgb = SESSION_CHART_COLORS[index % 10];
+                        item.querySelector(
+                            ".o_survey_session_leaderboard_bar"
+                        ).style.backgroundColor = `rgba(${rgb},1)`;
+                        item.querySelector(
+                            ".o_survey_session_leaderboard_bar_question"
+                        ).style.backgroundColor = `rgba(${rgb},0.4)`;
+                    });
+                fadeInEffect(this.el, this.fadeInOutTime, async () => {
+                    if (ev.detail.isScoredQuestion) {
+                        await this.waitFor(this.prepareScores());
+                        await this.waitFor(this.showQuestionScores());
+                        await this.waitFor(this.sumScores());
+                        await this.waitFor(this.reorderScores());
+                    }
+                });
+            })
+        );
+    }
 
     /**
      * Inverse the process, fading out our template to fade int the $sessionResults.
      */
-    hideLeaderboard: function () {
-        // TODO: restore the fadeIn when refactoring leaderboard
-        // this.$el.fadeOut(400, function () {
-        //     self.$('.o_survey_session_leaderboard_container').empty();
-        //     self.$sessionResults.fadeIn(400);
-        this.el.querySelector(".o_survey_session_leaderboard_container").innerHTML = "";
-    },
+    hideLeaderboard() {
+        fadeOutEffect(this.el, this.fadeInOutTime, () => {
+            this.el.querySelector(".o_survey_session_leaderboard_container").innerHTML = "";
+            fadeInEffect(this.sessionResults, this.fadeInOutTime);
+        });
+    }
 
     /**
      * This method animates the passed jQuery element from 0 points to {totalScore} points.
      * It will create a nice "animated" effect of a counter increasing by {increment} until it
      * reaches the actual score.
      *
-     * @param {$.Element} $scoreEl the element to animate
+     * @param {Element} scoreEl the element to animate
      * @param {Integer} currentScore the currently displayed score
      * @param {Integer} totalScore to total score to animate to
      * @param {Integer} increment the base increment of each animation iteration
      * @param {Boolean} plusSign wether or not we add a "+" before the score
      * @private
      */
-    _animateScoreCounter: function ($scoreEl, currentScore, totalScore, increment, plusSign) {
-        var self = this;
-        setTimeout(function () {
-            var nextScore = currentScore + increment;
-            if (nextScore > totalScore) {
-                nextScore = totalScore;
-            }
-            $scoreEl.text(`${plusSign ? '+ ' : ''}${Math.round(nextScore)} p`);
-
+    async animateScoreCounter(scoreEl, currentScore, totalScore, increment, plusSign) {
+        this.waitForTimeout(() => {
+            const nextScore = Math.min(totalScore, currentScore + increment);
+            scoreEl.textContent = `${plusSign ? "+ " : ""}${Math.round(nextScore)} p`;
             if (nextScore < totalScore) {
-                self._animateScoreCounter($scoreEl, nextScore, totalScore, increment, plusSign);
+                this.animateScoreCounter(scoreEl, nextScore, totalScore, increment, plusSign);
             }
         }, 25);
-    },
+    }
 
     /**
      * Helper to move a score bar from its current position in the leaderboard
      * to a new position.
      *
-     * @param {$.Element} $score the score bar to move
+     * @param {Element} score the score bar to move
      * @param {Integer} position the new position in the leaderboard
      * @param {Integer} offset an offset in 'rem'
      * @param {Integer} timeout time to wait while moving before resolving the promise
      */
-    _animateMoveTo: function ($score, position, offset, timeout) {
-        var animationDone;
-        var animationPromise = new Promise(function (resolve) {
+    async animateMoveTo(score, position, offset, timeout) {
+        let animationDone;
+        const animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
-        $score.css('top', `calc(calc(${this.BAR_HEIGHT} * ${position}) + ${offset}rem)`);
-        setTimeout(animationDone, timeout);
+        score.style.top = `calc(calc(${this.BAR_HEIGHT} * ${position}) + ${offset}rem)`;
+        this.waitForTimeout(animationDone, timeout);
         return animationPromise;
-    },
+    }
 
     /**
      * Takes the leaderboard prior to the current question results
@@ -141,27 +148,25 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      *
      * @private
      */
-    _prepareScores: function () {
-        var self = this;
-        var animationDone;
-        var animationPromise = new Promise(function (resolve) {
+    async prepareScores() {
+        let animationDone;
+        const animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
-        setTimeout(function () {
-            this.$('.o_survey_session_leaderboard_bar').each(function () {
-                var currentScore = parseInt($(this)
-                    .closest('.o_survey_session_leaderboard_item')
-                    .data('currentScore'))
+        this.waitForTimeout(() => {
+            this.el.querySelectorAll(".o_survey_session_leaderboard_bar").forEach((bar) => {
+                const currentScore = parseInt(
+                    bar.closest(".o_survey_session_leaderboard_item").dataset["currentScore"]
+                );
                 if (currentScore && currentScore !== 0) {
-                    $(this).css('transition', `width 1s cubic-bezier(.4,0,.4,1)`);
-                    $(this).css('width', self.BAR_MIN_WIDTH);
+                    bar.style.transition = "width 1s cubic-bezier(.4,0,.4,1)";
+                    bar.style.width = this.BAR_MIN_WIDTH;
                 }
             });
-            setTimeout(animationDone, 1000);
+            this.waitForTimeout(animationDone, 1000);
         }, 300);
-
         return animationPromise;
-    },
+    }
 
     /**
      * Now that we have summed the score for the current question to the total score
@@ -177,30 +182,27 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      *
      * @private
      */
-    _reorderScores: function () {
-        var self = this;
-        var animationDone;
-        var animationPromise = new Promise(function (resolve) {
+    async reorderScores() {
+        let animationDone;
+        const animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
-        setTimeout(function () {
-            self.$('.o_survey_session_leaderboard_item').each(async function () {
-                var $score = $(this);
-                var currentPosition = parseInt($(this).data('currentPosition'));
-                var newPosition = parseInt($(this).data('newPosition'));
+        this.waitForTimeout(() => {
+            this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach(async (item) => {
+                const currentPosition = parseInt(item.dataset.currentPosition);
+                const newPosition = parseInt(item.dataset.newPosition);
                 if (currentPosition !== newPosition) {
-                    var offset = newPosition > currentPosition ? 2 : -2;
-                    await self._animateMoveTo($score, newPosition, offset, 300);
-                    $score.css('transition', 'top ease-in-out .1s');
-                    await self._animateMoveTo($score, newPosition, offset * -0.3, 100);
-                    await self._animateMoveTo($score, newPosition, 0, 0);
+                    const offset = newPosition > currentPosition ? 2 : -2;
+                    await this.waitFor(this.animateMoveTo(item, newPosition, offset, 300));
+                    item.style.transition = "top ease-in-out .1s";
+                    await this.waitFor(this.animateMoveTo(item, newPosition, offset * -0.3, 100));
+                    await this.waitFor(this.animateMoveTo(item, newPosition, 0, 0));
                     animationDone();
                 }
             });
         }, 1800);
-
         return animationPromise;
-    },
+    }
 
     /**
      * Will display the score for the current question.
@@ -213,45 +215,39 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      *
      * @private
      */
-    _showQuestionScores: function () {
-        var self = this;
-        var animationDone;
-        var animationPromise = new Promise(function (resolve) {
+    async showQuestionScores() {
+        let animationDone;
+        const animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
-        setTimeout(function () {
-            this.$('.o_survey_session_leaderboard_bar_question').each(function () {
-                var $barEl = $(this);
-                var width = `calc(calc(100% - ${self.BAR_WIDTH}) * ${$barEl.data('widthRatio')} + ${self.BAR_MIN_WIDTH})`;
-                $barEl.css('transition', 'width 1s ease-out');
-                $barEl.css('width', width);
+        this.waitForTimeout(() => {
+            this.el
+                .querySelectorAll(".o_survey_session_leaderboard_bar_question")
+                .forEach((barEl) => {
+                    const width = `calc(calc(100% - ${this.BAR_WIDTH}) * ${barEl.dataset.widthRatio} + ${this.BAR_MIN_WIDTH})`;
+                    barEl.style.transition = "width 1s ease-out";
+                    barEl.style.width = width;
 
-                var $scoreEl = $barEl
-                    .find('.o_survey_session_leaderboard_bar_question_score')
-                    .text('0 p');
-                var questionScore = parseInt($barEl.data('questionScore'));
-                if (questionScore && questionScore > 0) {
-                    var increment = parseInt($barEl.data('maxQuestionScore') / 40);
-                    if (!increment || increment === 0){
-                        increment = 1;
+                    const scoreEl = barEl.querySelector(
+                        ".o_survey_session_leaderboard_bar_question_score"
+                    );
+                    scoreEl.textContent = "0 p";
+                    const questionScore = parseInt(barEl.dataset.questionScore);
+                    if (questionScore && questionScore > 0) {
+                        let increment = parseInt(barEl.dataset.maxQuestionScore / 40);
+                        if (!increment || increment === 0) {
+                            increment = 1;
+                        }
+                        scoreEl.textContent = "+ 0 p";
+                        this.waitForTimeout(() => {
+                            this.animateScoreCounter(scoreEl, 0, questionScore, increment, true);
+                        }, 400);
                     }
-                    $scoreEl.text('+ 0 p');
-                    console.log($barEl.data('maxQuestionScore'));
-                    setTimeout(function () {
-                        self._animateScoreCounter(
-                            $scoreEl,
-                            0,
-                            questionScore,
-                            increment,
-                            true);
-                    }, 400);
-                }
-                setTimeout(animationDone, 1400);
-            });
+                    this.waitForTimeout(animationDone, 1400);
+                });
         }, 300);
-
         return animationPromise;
-    },
+    }
 
     /**
      * After displaying the score for the current question, we sum the total score
@@ -279,56 +275,62 @@ publicWidget.registry.SurveySessionLeaderboard = publicWidget.Widget.extend({
      *
      * @private
      */
-    _sumScores: function () {
-        var self = this;
-        var animationDone;
-        var animationPromise = new Promise(function (resolve) {
+    async sumScores() {
+        let animationDone;
+        const animationPromise = new Promise(function (resolve) {
             animationDone = resolve;
         });
         // values that felt the best after a lot of testing
-        var growthAnimation = 'cubic-bezier(.5,0,.66,1.11)';
-        setTimeout(function () {
-            this.$('.o_survey_session_leaderboard_item').each(function () {
-                var currentScore = parseInt($(this).data('currentScore'));
-                var updatedScore = parseInt($(this).data('updatedScore'));
-                var increment = parseInt($(this).data('maxQuestionScore') / 40);
-                if (!increment || increment === 0){
+        const growthAnimation = "cubic-bezier(.5,0,.66,1.11)";
+        this.waitForTimeout(() => {
+            this.el.querySelectorAll(".o_survey_session_leaderboard_item").forEach((item) => {
+                const currentScore = parseInt(item.dataset.currentScore);
+                const updatedScore = parseInt(item.dataset.updatedScore);
+                let increment = parseInt(item.dataset.maxQuestionScore / 40);
+                if (!increment || increment === 0) {
                     increment = 1;
                 }
-                self._animateScoreCounter(
-                    $(this).find('.o_survey_session_leaderboard_score'),
+                this.animateScoreCounter(
+                    item.querySelector(".o_survey_session_leaderboard_score"),
                     currentScore,
                     updatedScore,
                     increment,
-                    false);
+                    false
+                );
 
-                var maxUpdatedScore = parseInt($(this).data('maxUpdatedScore'));
-                var baseRatio = maxUpdatedScore ? updatedScore / maxUpdatedScore : 1;
-                var questionScore = parseInt($(this).data('questionScore'));
-                var questionRatio = questionScore /
-                    (updatedScore && updatedScore !== 0 ? updatedScore : 1);
-                // we keep a min fixed with of 3rem to be able to display "+ 5 p"
-                // even if the user already has 1.000.000 points
-                var questionWith = `calc(calc(calc(100% - ${self.BAR_WIDTH}) * ${questionRatio * baseRatio}) + ${self.BAR_MIN_WIDTH})`;
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar_question')
-                    .css('transition', `width ease .5s ${growthAnimation}`)
-                    .css('width', questionWith);
+                const maxUpdatedScore = parseInt(item.dataset.maxUpdatedScore);
+                const baseRatio = maxUpdatedScore ? updatedScore / maxUpdatedScore : 1;
+                const questionScore = parseInt(item.dataset.questionScore);
+                const questionRatio =
+                    questionScore / (updatedScore && updatedScore !== 0 ? updatedScore : 1);
+                // we keep a min fixed width of 3rem to be able to display "+ 5 p"
+                // even if the user already has 1,000,000 points
+                const questionWidth = `calc(calc(calc(100% - ${this.BAR_WIDTH}) * ${
+                    questionRatio * baseRatio
+                }) + ${this.BAR_MIN_WIDTH})`;
+                const questionBar = item.querySelector(
+                    ".o_survey_session_leaderboard_bar_question"
+                );
+                questionBar.style.transition = `width ease .5s ${growthAnimation}`;
+                questionBar.style.width = questionWidth;
 
-                var updatedScoreRatio = 1 - questionRatio;
-                var updatedScoreWidth = `calc(calc(100% - ${self.BAR_WIDTH}) * ${updatedScoreRatio * baseRatio})`;
-                $(this)
-                    .find('.o_survey_session_leaderboard_bar')
-                    .css('min-width', '0px')
-                    .css('transition', `width ease .5s ${growthAnimation}`)
-                    .css('width', updatedScoreWidth);
+                const updatedScoreRatio = 1 - questionRatio;
+                const updatedScoreWidth = `calc(calc(100% - ${this.BAR_WIDTH}) * ${
+                    updatedScoreRatio * baseRatio
+                })`;
+                const scoreBar = item.querySelector(".o_survey_session_leaderboard_bar");
+                scoreBar.style.minWidth = "0px";
+                scoreBar.style.transition = `width ease .5s ${growthAnimation}`;
+                scoreBar.style.width = updatedScoreWidth;
 
-                setTimeout(animationDone, 500);
+                this.waitForTimeout(animationDone, 500);
             });
         }, 1400);
 
         return animationPromise;
     }
-});
+}
 
-export default publicWidget.registry.SurveySessionLeaderboard;
+registry
+    .category("public.interactions")
+    .add("survey.survey_session_leaderboard", SurveySessionLeaderboard);

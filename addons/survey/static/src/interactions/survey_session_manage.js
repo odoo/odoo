@@ -2,7 +2,6 @@ import { preloadBackground } from "@survey/js/survey_preload_image_mixin";
 import publicWidget from "@web/legacy/js/public/public_widget";
 import SurveySessionChart from "@survey/interactions/survey_session_chart";
 import SurveySessionTextAnswers from "@survey/interactions/survey_session_text_answers";
-import SurveySessionLeaderBoard from "@survey/interactions/survey_session_leaderboard";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
@@ -52,7 +51,6 @@ export class SurveySessionManage extends Interaction {
         const setupPromises = [];
         setupPromises.push(this._setupTextAnswers());
         setupPromises.push(this._setupChart());
-        setupPromises.push(this._setupLeaderboard());
         await Promise.all(setupPromises);
     }
 
@@ -63,6 +61,7 @@ export class SurveySessionManage extends Interaction {
             this.el.classList.remove("invisible");
             return;
         }
+        this.leaderboardEl = this.el.querySelector(".o_survey_session_leaderboard");
         // general survey props
         this.surveyId = parseInt(this.el.dataset["surveyId"]);
         this.surveyHasConditionalQuestions = this.el.dataset["surveyHasConditionalQuestions"];
@@ -122,7 +121,14 @@ export class SurveySessionManage extends Interaction {
             this.setShowAnswers(true);
             if (this.sessionShowLeaderboard && this.isScoredQuestion) {
                 this.currentScreen = "leaderboard";
-                this.leaderBoard.showLeaderboard(false, this.isScoredQuestion);
+                this.leaderboardEl.dispatchEvent(
+                    new CustomEvent("showLeaderboard", {
+                        detail: {
+                            fadeOut: false,
+                            isScoredQuestion: this.isScoredQuestion,
+                        },
+                    })
+                );
             } else {
                 this.currentScreen = "results";
                 this.refreshResults();
@@ -201,8 +207,14 @@ export class SurveySessionManage extends Interaction {
                             .querySelector(".o_survey_session_navigation_next")
                             .classList.add("d-none");
                     }
-                    // TODO reactivate fadeout after refactoring leaderboard
-                    this.leaderBoard.showLeaderboard(false, this.isScoredQuestion);
+                    this.leaderboardEl.dispatchEvent(
+                        new CustomEvent("showLeaderboard", {
+                            detail: {
+                                fadeOut: true,
+                                isScoredQuestion: this.isScoredQuestion,
+                            },
+                        })
+                    );
                 }
                 break;
             default:
@@ -238,8 +250,8 @@ export class SurveySessionManage extends Interaction {
                 }
                 break;
             case "results":
-                if (this.leaderBoard) {
-                    this.leaderBoard.hideLeaderboard();
+                if (this.isScoredQuestion || this.isLastQuestion) {
+                    this.leaderboardEl.dispatchEvent(new Event("hideLeaderboard"));
                 }
                 // when showing results, stop refreshing answers
                 clearInterval(this.resultsRefreshInterval);
@@ -557,31 +569,6 @@ export class SurveySessionManage extends Interaction {
             });
 
             return this.resultsChart.attachTo(this.el.querySelector(".o_survey_session_chart"));
-        } else {
-            return Promise.resolve();
-        }
-    }
-
-    /**
-     * Leaderboard of all the attendees based on their score.
-     * see SurveySessionLeaderBoard widget doc for more information.
-     * TODO: refactor when converting SurveySessionLeaderBoard widget
-     */
-    _setupLeaderboard() {
-        if (this.leaderBoard) {
-            this.leaderBoard.setElement(null);
-            this.leaderBoard.destroy();
-            delete this.leaderBoard;
-        }
-        if (this.isScoredQuestion || this.isLastQuestion) {
-            this.leaderBoard = new SurveySessionLeaderBoard(this, {
-                surveyAccessToken: this.surveyAccessToken,
-                sessionResults: this.el.querySelector(".o_survey_session_results"),
-            });
-
-            return this.leaderBoard.attachTo(
-                this.el.querySelector(".o_survey_session_leaderboard")
-            );
         } else {
             return Promise.resolve();
         }
