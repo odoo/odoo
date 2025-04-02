@@ -72,7 +72,7 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
-    def get_mention_suggestions_from_channel(self, channel_id, search, limit=8):
+    def _get_mention_suggestions_from_channel(self, store: Store, channel_id, search, limit=8):
         """Return 'limit'-first partners' such that the name or email matches a 'search' string.
         Prioritize partners that are also (internal) users, and then extend the research to all partners.
         Only members of the given channel are returned.
@@ -101,15 +101,15 @@ class ResPartner(models.Model):
                 ]
             )
         partners = self._search_mention_suggestions(domain, limit, extra_domain)
+        store.add(partners)
         members_domain = [("channel_id", "=", channel.id), ("partner_id", "in", partners.ids)]
         members = self.env["discuss.channel.member"].search(members_domain)
         member_fields = [
             Store.One("channel_id", [], as_thread=True, rename="thread"),
             *self.env["discuss.channel.member"]._to_store_persona([]),
         ]
-        store = Store(members, member_fields).add(partners)
+        store.add(members, member_fields)
         store.add(channel, {"group_public_id": channel.group_public_id.id if channel.group_public_id else None})
         if allowed_group:
             for p in partners:
                 store.add(p, {"group_ids": [("ADD", (allowed_group & p.user_ids.all_group_ids).ids)]})
-        return store.get_result()

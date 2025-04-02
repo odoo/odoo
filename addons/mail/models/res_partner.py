@@ -272,14 +272,13 @@ class ResPartner(models.Model):
 
     @api.readonly
     @api.model
-    def get_mention_suggestions(self, search, limit=8):
+    def _get_mention_suggestions(self, store: Store, search, limit=8):
         """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
             Prioritize partners that are also (internal) users, and then extend the research to all partners.
-            The return format is a list of partner data (as per returned by `_to_store()`).
         """
         domain = self._get_mention_suggestions_domain(search)
         partners = self._search_mention_suggestions(domain, limit)
-        return Store(partners).get_result()
+        store.add(partners)
 
     @api.model
     def _get_mention_suggestions_domain(self, search):

@@ -3,11 +3,13 @@ import {
     contains,
     defineMailModels,
     insertText,
+    listenStoreFetch,
     onRpcBefore,
     openDiscuss,
     openFormView,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, expect, describe, test } from "@odoo/hoot";
 import { Deferred, tick } from "@odoo/hoot-mock";
@@ -128,21 +130,19 @@ test('display partner mention suggestions on typing "@" in chatter', async () =>
 
 test("Do not fetch if search more specific and fetch had no result", async () => {
     await startServer();
-    onRpc("res.partner", "get_mention_suggestions", () => {
-        asyncStep("get_mention_suggestions");
-    });
+    listenStoreFetch(["mentions", "res.role"]);
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click("button", { text: "Send message" });
     await insertText(".o-mail-Composer-input", "@");
     await contains(".o-mail-Composer-suggestion", { count: 3 }); // Mitchell Admin, Hermit, Public user
     await contains(".o-mail-Composer-suggestion", { text: "Mitchell Admin" });
-    await waitForSteps(["get_mention_suggestions"]);
+    await waitStoreFetch(["mentions", "res.role"]);
     await insertText(".o-mail-Composer-input", "x");
     await contains(".o-mail-Composer-suggestion", { count: 0 });
-    await waitForSteps(["get_mention_suggestions"]);
+    await waitStoreFetch(["mentions", "res.role"]);
     await insertText(".o-mail-Composer-input", "x");
-    await waitForSteps([]);
+    await waitStoreFetch([]);
 });
 
 test("show other channel member in @ mention", async () => {

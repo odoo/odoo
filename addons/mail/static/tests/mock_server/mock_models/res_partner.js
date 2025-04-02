@@ -47,8 +47,8 @@ export class ResPartner extends webModels.ResPartner {
      * @param {string} [search]
      * @param {number} [limit]
      */
-    get_mention_suggestions(search, limit = 8) {
-        const kwargs = getKwArgs(arguments, "search", "limit");
+    get_mention_suggestions(store, search, limit = 8) {
+        const kwargs = getKwArgs(arguments, "store", "search", "limit");
         search = kwargs.search || "";
         limit = kwargs.limit || 8;
 
@@ -101,9 +101,9 @@ export class ResPartner extends webModels.ResPartner {
             const partners = this._filter([["id", "not in", mainMatchingPartnerIds]]);
             extraMatchingPartnerIds = mentionSuggestionsFilter(partners, search, remainingLimit);
         }
-        return new mailDataHelpers.Store(
+        store.add(
             this.browse(mainMatchingPartnerIds.concat(extraMatchingPartnerIds))
-        ).get_result();
+        );
     }
 
     /**
@@ -111,8 +111,8 @@ export class ResPartner extends webModels.ResPartner {
      * @param {string} [search]
      * @param {number} [limit]
      */
-    get_mention_suggestions_from_channel(channel_id, search, limit = 8) {
-        const kwargs = getKwArgs(arguments, "channel_id", "search", "limit");
+    get_mention_suggestions_from_channel(store, channel_id, search, limit = 8) {
+        const kwargs = getKwArgs(arguments, "store", "channel_id", "search", "limit");
         channel_id = kwargs.channel_id;
         search = kwargs.search || "";
         limit = kwargs.limit || 8;
@@ -144,7 +144,6 @@ export class ResPartner extends webModels.ResPartner {
             channel_id,
             extraDomain
         );
-        const store = new mailDataHelpers.Store();
         const memberIds = DiscussChannelMember.search([
             ["channel_id", "=", channel_id],
             ["partner_id", "in", partners],
@@ -171,7 +170,6 @@ export class ResPartner extends webModels.ResPartner {
             };
             store.add(this.browse(partnerId), data);
         }
-        return store.get_result();
     }
 
     compute_im_status(partner) {

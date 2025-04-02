@@ -66,6 +66,15 @@ class DiscussChannelWebclientController(WebclientController):
             )
             store.add(channel).resolve_data_request(channel=Store.One(channel, []))
 
+    @classmethod
+    def _get_mention_partners(self, store: Store, term, channel_id, limit=8):
+        if channel_id:
+            request.env["res.partner"]._get_mention_suggestions_from_channel(
+                store, channel_id, term, limit=limit
+            )
+        else:
+            super()._get_mention_partners(store, term, channel_id, limit)
+
 
 class ChannelController(http.Controller):
     @http.route("/discuss/channel/members", methods=["POST"], type="jsonrpc", auth="public", readonly=True)

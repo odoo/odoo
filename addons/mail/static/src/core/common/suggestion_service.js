@@ -37,8 +37,8 @@ export class SuggestionService {
         switch (delimiter) {
             case "@": {
                 await Promise.all([
-                    this.fetchPartners(cleanedSearchTerm, thread, { abortSignal }),
-                    this.store.fetchStoreData("res.role", { term: cleanedSearchTerm }),
+                    this.fetchPartners(cleanedSearchTerm, thread),
+                    this.store.fetchStoreData("res.role", { term }),
                 ]);
                 break;
             }
@@ -87,21 +87,15 @@ export class SuggestionService {
      * @param {string} term
      * @param {import("models").Thread} [thread]
      */
-    async fetchPartners(term, thread, { abortSignal } = {}) {
-        const kwargs = { search: term };
+    async fetchPartners(term, thread) {
+        let channel_id = undefined;
         if (thread?.model === "discuss.channel") {
-            kwargs.channel_id = thread.id;
+            channel_id = thread.id;
         }
-        const data = await this.makeOrmCall(
-            "res.partner",
-            thread?.model === "discuss.channel"
-                ? "get_mention_suggestions_from_channel"
-                : "get_mention_suggestions",
-            [],
-            kwargs,
-            { abortSignal }
-        );
-        this.store.insert(data);
+        this.store.fetchStoreData("mentions", {
+            term,
+            channel_id,
+        });
     }
 
     /**
