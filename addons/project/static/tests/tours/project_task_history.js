@@ -163,6 +163,10 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         trigger: "button.o_form_button_save",
         run: "click",
     },
+    {
+        content: "Wait the form is saved",
+        trigger: ".o_form_saved",
+    },
         ...changeDescriptionContentAndSave("0"),
         ...changeDescriptionContentAndSave("1"),
         ...changeDescriptionContentAndSave("2"),
