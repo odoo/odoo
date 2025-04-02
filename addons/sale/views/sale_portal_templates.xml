@@ -539,13 +539,13 @@
                             <t t-foreach="lines_to_report" t-as="line">
 
                                 <t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal"/>
-
+                                <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
                                 <tr
                                     t-att-class="'fw-bold o_line_section' if (
                                         line.display_type == 'line_section'
                                         or line.product_type == 'combo'
                                     )
-                                    else 'fst-italic o_line_note' if line.display_type == 'line_note'
+                                    else 'fst-italic o_line_note' if is_note
                                     else ''"
                                 >
                                     <t
@@ -591,7 +591,7 @@
                                         <t t-set="current_section" t-value="line"/>
                                         <t t-set="current_subtotal" t-value="0"/>
                                     </t>
-                                    <t t-if="line.display_type == 'line_note'">
+                                    <t t-if="is_note">
                                         <td colspan="99">
                                             <span t-field="line.name"/>
                                         </td>
