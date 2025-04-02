@@ -217,3 +217,21 @@ class TestMessageController(MailControllerThreadCommon):
         self.assertEqual(len(mail), 1)
         header = literal_eval(mail.headers)
         self.assertEqual(header.get('X-Msg-Cc-Add'), ','.join(partner_cc.mapped('email_formatted')))
+
+    def test_read_subscription_data_internal_subtypes(self):
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        subtype_internal = self.env.ref("mail.mt_note")
+        subtype_public = self.env.ref("mail.mt_comment")
+        for partner, internal_expected in (
+            (self.partner_portal, False),
+            (self.partner_employee, True),
+        ):
+            with self.subTest(partner=partner, internal_expected=internal_expected):
+                follower = self.env["mail.followers"].create({
+                    "partner_id": partner.id,
+                    "res_model": "res.partner",
+                    "res_id": self.test_public_record.id,
+                })
+                result = self.make_jsonrpc_request("/mail/read_subscription_data", {"follower_id": follower.id})
+                self.assertIn(subtype_public.id, result["subtype_ids"])
+                self.assertEqual(subtype_internal.id in result["subtype_ids"], internal_expected)
