@@ -212,3 +212,55 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         payment_2.action_post()
         action_window = payment_2.print_checks()
         self.assertEqual(action_window['context']['default_next_check_number'], '2147483649', "Check number should have been incremented without error.")
+
+    def test_draft_invoice_payment_check_printing(self):
+        nb_invoices_to_test = 2
+
+        accounting_installed = self.env['account.move']._get_invoice_in_payment_state() == 'in_payment'
+        if not accounting_installed:
+            self.skipTest('Accounting not installed')  # There is an implicit outstanding account in this case, which makes it avoid the error
+
+        bank_journal = self.company_data['default_journal_bank']
+        bank_journal.write({
+            'check_manual_sequencing': True,
+            'check_next_number': '00042',
+        })
+
+        payment_method_line_check = bank_journal.outbound_payment_method_line_ids\
+            .filtered(lambda l: l.code == 'check_printing')
+        payment_method_line_check.payment_account_id = None  # Needed to trigger the error
+
+        # Create 2 draft customer invoices.
+        in_invoices = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2025-01-01',
+            'invoice_date': '2025-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': []
+            })]
+        } for _ in range(nb_invoices_to_test)])
+
+        # Create payment
+        action_register_payment = in_invoices.action_force_register_payment()
+        self.assertTrue(action_register_payment)
+
+        wizard = self.env[action_register_payment['res_model']].with_context(
+            action_register_payment['context'],
+            active_model='account.move.line',
+        ).create({
+            'group_payment': True,
+            'payment_method_line_id': payment_method_line_check.id,
+        })
+        payment = wizard._create_payments()
+        self.assertRecordValues(payment, [{
+            'payment_method_line_id': payment_method_line_check.id,
+            'check_amount_in_words': payment.currency_id.amount_to_text(100.0 * nb_invoices_to_test),
+            'check_number': '00042',
+        }])
+
+        # Print the check
+        report_pages = payment._check_get_pages()
+        self.assertEqual(len(report_pages), 1)

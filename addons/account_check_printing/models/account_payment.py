@@ -249,7 +249,7 @@ class AccountPayment(models.Model):
         self.ensure_one()
 
         def prepare_vals(invoice, partials=None, current_amount=0):
-            number = ' - '.join([invoice.name, invoice.ref] if invoice.ref else [invoice.name])
+            number = ' - '.join([invoice.name, invoice.ref] if invoice.ref else [invoice.name or '/'])
 
             if invoice.is_outbound() or invoice.move_type == 'in_receipt':
                 invoice_sign = 1
