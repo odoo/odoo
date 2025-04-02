@@ -298,7 +298,7 @@ class ResPartner(models.Model):
         recursive=True, index=True)
     commercial_company_name = fields.Char('Company Name Entity', compute='_compute_commercial_company_name',
                                           store=True)
-    company_name = fields.Char('Company Name')
+    company_name = fields.Char("Company Name", store=True, compute='_compute_company_name')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
@@ -332,6 +332,14 @@ class ResPartner(models.Model):
     @api.depends('name', 'user_ids.share', 'image_128', 'is_company', 'type')
     def _compute_avatar_128(self):
         super()._compute_avatar_128()
+
+    @api.depends('parent_id')
+    def _compute_company_name(self):
+        for partner in self:
+            if partner.parent_id:
+                partner.company_name = partner.parent_id.name
+            else:
+                partner.company_name = ''
 
     def _compute_avatar(self, avatar_field, image_field):
         partners_with_internal_user = self.filtered(lambda partner: partner.user_ids - partner.user_ids.filtered('share'))
@@ -867,17 +875,19 @@ class ResPartner(models.Model):
             partner._handle_first_contact_creation()
         return partners
 
-    def create_company(self):
+    def _create_company(self, company_name):
         self.ensure_one()
-        if self.company_name:
-            # Create parent company
-            values = dict(name=self.company_name, is_company=True, vat=self.vat)
-            values.update(self._update_fields_values(self._address_fields()))
-            new_company = self.create(values)
-            # Set new company as my parent
-            self.write({
-                'parent_id': new_company.id,
-                'child_ids': [Command.update(partner_id, dict(parent_id=new_company.id)) for partner_id in self.child_ids.ids]
+        # Create parent company
+        values = dict(name=company_name, is_company=True, vat=self.vat)
+        values.update(self._update_fields_values(self._address_fields()))
+        new_company = self.create(values)
+        # Set new company as my parent
+        self.write({
+                "parent_id": new_company.id,
+                "child_ids": [
+                    Command.update(partner_id, dict(parent_id=new_company.id))
+                    for partner_id in self.child_ids.ids
+                ],
             })
         return True
 
