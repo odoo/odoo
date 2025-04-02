@@ -4,6 +4,8 @@ from odoo import api, Command, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import format_amount
+from odoo.tools.misc import split_every
+
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
@@ -142,15 +144,23 @@ class ProductTemplate(models.Model):
 
     def _force_default_sale_tax(self, companies):
         default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
-        for product_grouped_by_tax in self.grouped('taxes_id').values():
-            product_grouped_by_tax.taxes_id += default_customer_taxes
-        self.invalidate_recordset(['taxes_id'])
+        if not default_customer_taxes:
+            return
+        links = [Command.link(t.id) for t in default_customer_taxes]
+        for sub_ids in split_every(self.env.cr.IN_MAX, self.ids):
+            chunk = self.browse(sub_ids)
+            chunk.write({'taxes_id': links})
+            chunk.invalidate_recordset(['taxes_id'])
 
     def _force_default_purchase_tax(self, companies):
         default_supplier_taxes = companies.filtered('account_purchase_tax_id').account_purchase_tax_id
-        for product_grouped_by_tax in self.grouped('supplier_taxes_id').values():
-            product_grouped_by_tax.supplier_taxes_id += default_supplier_taxes
-        self.invalidate_recordset(['supplier_taxes_id'])
+        if not default_supplier_taxes:
+            return
+        links = [Command.link(t.id) for t in default_supplier_taxes]
+        for sub_ids in split_every(self.env.cr.IN_MAX, self.ids):
+            chunk = self.browse(sub_ids)
+            chunk.write({'supplier_taxes_id': links})
+            chunk.invalidate_recordset(['supplier_taxes_id'])
 
     def _force_default_tax(self, companies):
         self._force_default_sale_tax(companies)
