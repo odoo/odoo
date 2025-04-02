@@ -151,7 +151,7 @@ export class ToolbarPlugin extends Plugin {
             groupId: "expand_toolbar",
             commandId: "expandToolbar",
             description: _t("Expand toolbar"),
-            icon: "fa-ellipsis-v",
+            icon: "oi-ellipsis-v",
         },
         toolbar_namespaces: withSequence(100, {
             id: "compact",

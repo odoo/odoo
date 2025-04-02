@@ -207,7 +207,7 @@ export const stepUtils = {
                 isActive: ["auto", "mobile"],
                 trigger: ".o_statusbar_buttons",
                 run: (actions) => {
-                    const node = hoot.queryFirst(".o_statusbar_buttons button:has(.fa-ellipsis-v)");
+                    const node = hoot.queryFirst(".o_statusbar_buttons button:has(.oi-ellipsis-v)");
                     if (node) {
                         hoot.click(node);
                     }

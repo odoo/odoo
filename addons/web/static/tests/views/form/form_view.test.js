@@ -3129,7 +3129,7 @@ test(`buttons should be in .o_statusbar_buttons in form view header on mobile`, 
     });
 
     expect(`.o_statusbar_buttons > button:eq(0)`).toHaveAttribute("name", "0");
-    await contains(".o_statusbar_buttons .dropdown-toggle:has(.fa-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons .dropdown-toggle:has(.oi-ellipsis-v)").click();
     expect(`.o-dropdown--menu div.o_field_widget`).toHaveAttribute("name", "foo");
 });
 
@@ -12245,7 +12245,7 @@ test(`statusbar buttons are correctly rendered in mobile`, async () => {
 
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Confirm");
     // open the dropdown
-    await contains(".o_statusbar_buttons button:has(.fa-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
     expect(".o-dropdown--menu:visible").toHaveCount(1, { message: "dropdown should be visible" });
     expect(".o-dropdown--menu button").toHaveCount(1, {
         message: "should have 1 button in the dropdown",
@@ -12275,11 +12275,11 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
 
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
     // Now there should an action dropdown, because there are two visible buttons
-    expect(".o_statusbar_buttons button:has(.fa-ellipsis-v)").toHaveCount(1, {
+    expect(".o_statusbar_buttons button:has(.oi-ellipsis-v)").toHaveCount(1, {
         message: "should have 'More' dropdown",
     });
 
-    await contains(".o_statusbar_buttons button:has(.fa-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
     expect(".o-dropdown--menu button").toHaveCount(1, {
         message: "should have 1 button in the dropdown",
     });
@@ -12287,7 +12287,7 @@ test(`statusbar widgets should appear in the CogMenu dropdown`, async () => {
     // change display_name to update buttons modifiers and make one button visible
     await contains(".o_field_widget[name=name] input").edit("first record");
     expect(".o_statusbar_buttons button:eq(0)").toHaveText("Attach document");
-    expect(".o_statusbar_buttons button:has(.fa-ellipsis-v)").toHaveCount(0, {
+    expect(".o_statusbar_buttons button:has(.oi-ellipsis-v)").toHaveCount(0, {
         message: "shouldn't have 'More' dropdown",
     });
 });
@@ -12476,7 +12476,7 @@ test("attach_document widget also works inside a dropdown", async () => {
         `,
     });
 
-    await contains(".o_statusbar_buttons button:has(.fa-ellipsis-v)").click();
+    await contains(".o_statusbar_buttons button:has(.oi-ellipsis-v)").click();
     await contains(".o_attach_document").click();
     await manuallyDispatchProgrammaticEvent(fileInput, "change");
     await animationFrame();

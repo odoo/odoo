@@ -181,11 +181,11 @@
         'o-mail-Message-openActionMobile p-2 mt-n2 rounded-circle user-select-none': isMobileOS and !mobileExpanded,
         'me-n2': isMobileOS and !mobileExpanded and isAlignedRight,
         'ms-n2': isMobileOS and !mobileExpanded and !isAlignedRight,
-        'px-2 py-0': !isMobileOS,
+        'px-1 py-0': !isMobileOS,
         'rounded-start-1': !isMobileOS and isReverse,
         'rounded-end-1': !isMobileOS and !isReverse,
     }">
-        <i class="fa fa-lg fa-ellipsis-v" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw': isMobileOS }" tabindex="1"/>
+        <i class="oi oi-large oi-ellipsis-v" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw': isMobileOS }" tabindex="1"/>
     </button>
 </t>
 
