@@ -5050,7 +5050,13 @@ class BaseModel(metaclass=MetaModel):
         default the returned query object is not actually executed, and it can
         be injected as a value in a domain in order to generate sub-queries.
         """
-        self.browse().check_access('read')
+        if isinstance(domain, domains.DomainPrivileged):
+            domain = domain.domain
+            su = True
+        else:
+            su = self.env.su
+        if not su:
+            self.browse().check_access('read')
 
         # deletegate to _where_calc
         query = self._where_calc(domain)
@@ -5058,7 +5064,7 @@ class BaseModel(metaclass=MetaModel):
             return query
 
         # security access domain
-        if self.env.su:
+        if su:
             sec_domain = Domain.TRUE
         else:
             sec_domain = self.env['ir.rule']._compute_domain(self._name, 'read')

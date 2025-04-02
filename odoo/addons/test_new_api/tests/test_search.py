@@ -853,6 +853,7 @@ class TestSearchAny(TransactionCase):
 
         # warmup
         model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+        model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a')).privileged()))
 
         with self.assertQueries(["""
             SELECT "test_new_api_related"."id"
@@ -883,6 +884,37 @@ class TestSearchAny(TransactionCase):
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            LEFT JOIN "test_new_api_related_foo" AS "test_new_api_related__foo_id"
+                ON ("test_new_api_related"."foo_id" = "test_new_api_related__foo_id"."id")
+            WHERE (
+                "test_new_api_related"."foo_id" IS NOT NULL
+                AND "test_new_api_related__foo_id"."name" IN %s
+            ) AND "test_new_api_related"."id" < %s
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search(Domain('foo_id', 'any', Domain('name', '=', 'a').privileged()))
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            LEFT JOIN "test_new_api_related_foo" AS "test_new_api_related__foo_id"
+                ON ("test_new_api_related"."foo_id" = "test_new_api_related__foo_id"."id")
+            WHERE (
+                "test_new_api_related"."foo_id" IS NOT NULL
+                AND "test_new_api_related__foo_id"."bar_id" IN (
+                    SELECT "test_new_api_related_bar"."id"
+                    FROM "test_new_api_related_bar"
+                    WHERE "test_new_api_related_bar"."name" IN %s
+                    AND "test_new_api_related_bar"."id" < %s
+                )
+            ) AND "test_new_api_related"."id" < %s
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search(Domain('foo_id', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a')).privileged()))
 
     def test_one2many_any(self):
         model = self.env['test_new_api.related_foo'].with_user(self.env.ref('base.user_admin'))
@@ -924,6 +956,41 @@ class TestSearchAny(TransactionCase):
             ORDER BY "test_new_api_related_foo"."id"
         """]):
             model.search(Domain('foo_ids', 'any', Domain('foo_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_foo"."id"
+            FROM "test_new_api_related_foo"
+            WHERE "test_new_api_related_foo"."id" IN (
+                SELECT "test_new_api_related"."foo_id"
+                FROM "test_new_api_related"
+                WHERE (
+                    "test_new_api_related"."foo_id" IS NOT NULL
+                    AND "test_new_api_related"."name" IN %s
+                )
+            ) AND "test_new_api_related_foo"."id" < %s
+            ORDER BY "test_new_api_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('name', '=', 'a').privileged()))
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related_foo"."id"
+            FROM "test_new_api_related_foo"
+            WHERE "test_new_api_related_foo"."id" IN (
+                SELECT "test_new_api_related"."foo_id"
+                FROM "test_new_api_related"
+                WHERE (
+                    "test_new_api_related"."foo_id" IS NOT NULL
+                    AND "test_new_api_related"."foo_id" IN (
+                        SELECT "test_new_api_related_foo"."id"
+                        FROM "test_new_api_related_foo"
+                        WHERE "test_new_api_related_foo"."name" IN %s
+                        AND "test_new_api_related_foo"."id" < %s
+                    )
+                )
+            ) AND "test_new_api_related_foo"."id" < %s
+            ORDER BY "test_new_api_related_foo"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('foo_id', 'any', Domain('name', '=', 'a')).privileged()))
 
     def test_many2many_any(self):
         model = self.env['test_new_api.related'].with_user(self.env.ref('base.user_admin'))
@@ -970,6 +1037,45 @@ class TestSearchAny(TransactionCase):
             ORDER BY "test_new_api_related"."id"
         """]):
             model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a'))))
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_new_api_related_test_new_api_related_foo_rel" AS "test_new_api_related__foo_ids"
+                WHERE "test_new_api_related__foo_ids"."test_new_api_related_id" = "test_new_api_related"."id"
+                AND "test_new_api_related__foo_ids"."test_new_api_related_foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE "test_new_api_related_foo"."name" IN %s
+                )
+            ) AND "test_new_api_related"."id" < %s
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('name', '=', 'a').privileged()))
+
+        with self.assertQueries(["""
+            SELECT "test_new_api_related"."id"
+            FROM "test_new_api_related"
+            WHERE EXISTS (
+                SELECT 1
+                FROM "test_new_api_related_test_new_api_related_foo_rel" AS "test_new_api_related__foo_ids"
+                WHERE "test_new_api_related__foo_ids"."test_new_api_related_id" = "test_new_api_related"."id"
+                AND "test_new_api_related__foo_ids"."test_new_api_related_foo_id" IN (
+                    SELECT "test_new_api_related_foo"."id"
+                    FROM "test_new_api_related_foo"
+                    WHERE "test_new_api_related_foo"."bar_id" IN (
+                        SELECT "test_new_api_related_bar"."id"
+                        FROM "test_new_api_related_bar"
+                        WHERE "test_new_api_related_bar"."name" IN %s
+                        AND "test_new_api_related_bar"."id" < %s
+                    )
+                )
+            ) AND "test_new_api_related"."id" < %s
+            ORDER BY "test_new_api_related"."id"
+        """]):
+            model.search(Domain('foo_ids', 'any', Domain('bar_id', 'any', Domain('name', '=', 'a')).privileged()))
 
 
 class TestFlushSearch(TransactionCase):

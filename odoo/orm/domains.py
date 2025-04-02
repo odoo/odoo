@@ -359,6 +359,14 @@ class Domain:
         """Map a function to each condition and return the combined result"""
         return self
 
+    def privileged(self) -> DomainPrivileged:
+        """Wrap a domain to mark it as already containing priviledged access.
+
+        Such a domain contains already the access rules needed for the user to
+        filter the model.
+        """
+        return DomainPrivileged(self)
+
     def validate(self, model: BaseModel) -> None:
         """Validates that the current domain is correct or raises an exception"""
         # just execute the optimization code that goes through all the fields
@@ -903,6 +911,50 @@ class DomainCondition(Domain):
         return model._condition_to_sql(alias, self.field_expr, self.operator, self.value, query)
 
 
+class DomainPrivileged(Domain):
+    """Wrap an existing domain and indicate that all access rules needed by the
+    user have been already applied.
+    """
+    __slots__ = ('domain',)
+    domain: Domain
+
+    def __new__(cls, domain: Domain):
+        self = object.__new__(cls)
+        self.domain = domain
+        self._opt_level = domain._opt_level
+        return self
+
+    def __eq__(self, other):
+        return isinstance(other, DomainPrivileged) and self.domain == other.domain
+
+    def __hash__(self):
+        return hash(self.domain) + 1
+
+    def __iter__(self):
+        yield self
+
+    def __repr__(self):
+        return f"*{self.domain!r}"
+
+    def is_true(self):
+        return self.domain.is_true()
+
+    def is_false(self):
+        return self.domain.is_false()
+
+    def _negate(self, model):
+        return self.domain._negate(model).privileged()
+
+    def privileged(self):
+        return self
+
+    def _optimize(self, model, full):
+        return self.domain.optimize(model, full=full).privileged()
+
+    def _to_sql(self, model, alias, query):
+        return self.domain._to_sql(model, alias, query)
+
+
 # --------------------------------------------------
 # Optimizations: registration
 # --------------------------------------------------
@@ -968,10 +1020,12 @@ def _optimize_nary_sort_key(domain: Domain) -> tuple[str, str, str]:
         else:
             order = positive_op
         return domain.field_expr, order, operator
-    else:
+    elif hasattr(domain, 'OPERATOR'):
         # in python; '~' > any letter
-        assert hasattr(domain, 'OPERATOR') and isinstance(domain.OPERATOR, str)
+        assert isinstance(domain.OPERATOR, str)
         return '~', '', domain.OPERATOR
+    else:
+        return '~', '', domain.__class__.__name__
 
 
 def nary_optimization(optimization: MergeOptimization):
@@ -1590,6 +1644,17 @@ def _optimize_merge_not_any(cls, conditions, model):
     field_expr = merge_conditions[0].field_expr
     sub_domain = cls.INVERSE([c.value for c in merge_conditions])
     return [DomainCondition(field_expr, 'not any', sub_domain), *other_conditions]
+
+
+@nary_optimization
+def _optimize_privileged(cls, conditions, model):
+    privileged, conditions = partition(lambda d: isinstance(d, DomainPrivileged), conditions)
+    if privileged:
+        if len(privileged) == 1:
+            yield from privileged
+        else:
+            yield cls.apply(d.domain for d in privileged).privileged()
+    yield from conditions
 
 
 @nary_optimization

@@ -13,7 +13,7 @@ from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel, unquote
 
 from .commands import Command
-from .domains import Domain
+from .domains import Domain, DomainPrivileged
 from .fields import IR_MODELS, Field, _logger
 from .fields_reference import Many2oneReference
 from .identifiers import NewId
@@ -447,7 +447,9 @@ class Many2one(_Relational[M]):
 
         # value is a Domain
 
-        if self.auto_join:
+        if (value_privileged := isinstance(value, DomainPrivileged)):
+            value = value.domain
+        if self.auto_join or value_privileged:
             comodel, coalias = self.join(model, alias, query)
 
             sql = value._to_sql(comodel, coalias, query)
@@ -726,13 +728,14 @@ class _RelationalMulti(_Relational[M], typing.Generic[M]):
         """ Return Query run on the comodel with the field.domain injected."""
         field_domain = self.get_comodel_domain(model)
         if isinstance(value, Domain):
+            if (has_access := isinstance(value, DomainPrivileged)):
+                value = value.domain
             domain = value & field_domain
             comodel = comodel.with_context(**self.context)
-            if self.auto_join:
+            if self.auto_join or has_access:
                 # bypass access rules for auto-join
-                query = comodel._where_calc(domain)
-            else:
-                query = comodel._search(domain)
+                domain = domain.privileged()
+            query = comodel._search(domain)
             assert isinstance(query, Query)
             return query
         if isinstance(value, Query):
@@ -1060,7 +1063,11 @@ class One2many(_RelationalMulti[M]):
             # of FALSE.  This may discard expected results, as for
             # instance "id NOT IN (42, NULL)" is never TRUE.
             if isinstance(value, Domain):
-                value &= Domain(inverse_field.name, 'not in', {False})
+                not_null_domain = Domain(inverse_field.name, 'not in', [False])
+                if isinstance(value, DomainPrivileged):
+                    not_null_domain = not_null_domain.privileged()
+                value &= not_null_domain
+                value = value.optimize(comodel)
             else:
                 coquery = super()._get_query_for_condition_value(model, comodel, value)
                 coquery.add_where(SQL(
