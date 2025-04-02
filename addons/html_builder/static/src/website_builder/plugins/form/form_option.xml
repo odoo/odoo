@@ -85,8 +85,11 @@
 </t>
 
 <t t-name="html_builder.website.s_website_form_field_option">
+    <t t-if="domState.elClassList.includes('s_website_form_model_required')">
+        <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" fetchModels="props.fetchModels"/>
+    </t>
     <BuilderRow label.translate="Type">
-        <BuilderSelect t-if="!domState.el.classList.contains('s_website_form_model_required')"
+        <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_model_required')"
             id="'type_opt'" preview="false"
         >
             <div class="we_bg_darker">Custom Field</div>
@@ -115,7 +118,7 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Input Type">
-        <BuilderSelect t-if="!domState.el.classList.contains('s_website_form_custom') and ['char', 'email', 'tel', 'url'].includes(domState.el.dataset.type) and !domState.el.classList.contains('s_website_form_model_required')"
+        <BuilderSelect t-if="!domState.elClassList.includes('s_website_form_custom') and ['char', 'email', 'tel', 'url'].includes(domState.elDataset.type) and !domState.elClassList.includes('s_website_form_model_required')"
             id="'char_input_type_opt'" preview="false" action="'selectType'"
         >
             <BuilderSelectItem actionValue="'char'">Text</BuilderSelectItem>
@@ -193,7 +196,7 @@
         />
     </BuilderRow>
     <BuilderRow label.translate="Required">
-        <BuilderCheckbox t-if="!domState.el.classList.contains('s_website_form_model_required')"
+        <BuilderCheckbox t-if="!domState.elClassList.includes('s_website_form_model_required')"
             id="'required_opt'" preview="false"
             action="'toggleRequired'" actionParam="'s_website_form_required'"
         />
@@ -330,16 +333,16 @@
 	        <BuilderTextInput t-if="isTextConditionValueVisible"
 	            id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_datetime') and !['set', '!set'].includes(domState.el.dataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_datetime') and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_date') and !['set', '!set'].includes(domState.el.dataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_date') and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_datetime') and ['between', '!between'].includes(domState.el.dataset.visibilityComparator)"
+	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_datetime') and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_datetime_between'" dataAttributeAction="'visibilityBetween'" type="'datetime'"
 	        />
-	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_date') and ['between', '!between'].includes(domState.el.getAttribute('data-visibility-comparator'))"
+	        <BuilderDateTimePicker t-if="state.dependencyEl?.closest('.s_website_form_date') and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
 	            id="'hidden_condition_date_between'" dataAttributeAction="'visibilityBetween'" type="'date'"
 	        />
 	    </div>
@@ -355,6 +358,12 @@
             <BuilderSelectItem classAction="''">Input Aligned</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+</t>
+
+<t t-name="html_builder.website.s_website_form_model_required_field_alert">
+    <div class="alert alert-info">
+        <span t-out="state.message"/>
+    </div>
 </t>
 
 <!-- TODO -->

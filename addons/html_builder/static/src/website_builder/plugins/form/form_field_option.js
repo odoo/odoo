@@ -1,15 +1,17 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { FormActionFieldsOption } from "./form_action_fields_option";
-import { getDependencyEl, getMultipleInputs, isFieldCustom } from "./utils";
+import { FormModelRequiredFieldAlert } from "./form_model_required_field_alert";
+import { getDependencyEl, getFieldName, getMultipleInputs, isFieldCustom } from "./utils";
 
 export class FormFieldOption extends BaseOptionComponent {
     static template = "html_builder.website.s_website_form_field_option";
     static props = {
+        fetchModels: Function,
         loadFieldOptionData: Function,
         redrawSequence: { type: Number, optional: true },
     };
-    static components = { FormActionFieldsOption };
+    static components = { FormActionFieldsOption, FormModelRequiredFieldAlert };
 
     setup() {
         super.setup();
@@ -19,7 +21,16 @@ export class FormFieldOption extends BaseOptionComponent {
             conditionValueList: [],
             dependencyEl: null,
         });
-        this.domState = useDomState((el) => ({ el }));
+        this.domState = useDomState((el) => {
+            const modelName = el.closest("form")?.dataset.model_name;
+            const fieldName = getFieldName(el);
+            return {
+                elDataset: { ...el.dataset },
+                elClassList: [...el.classList],
+                fieldName,
+                modelName,
+            };
+        });
         onWillStart(async () => {
             const el = this.env.getEditingElement();
             const fieldOptionData = await this.props.loadFieldOptionData(el);

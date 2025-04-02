@@ -74,6 +74,7 @@ export class FormOptionPlugin extends Plugin {
             {
                 OptionComponent: FormFieldOptionRedraw,
                 props: {
+                    fetchModels: this.fetchModels.bind(this),
                     loadFieldOptionData: this.loadFieldOptionData.bind(this),
                 },
                 selector: ".s_website_form_field",
