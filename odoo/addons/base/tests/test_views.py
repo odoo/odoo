@@ -406,6 +406,14 @@ class TestViewInheritance(ViewCase):
             'active': False,
         })
 
+        child_primary_no_arch = self.View.create({
+            'model': self.model,
+            'name': "child_view",
+            'inherit_id': base_view.id,
+            'priority': 18,
+            'active': False,
+        })
+
         self.assertEqual(
             child_view.invalid_locators,
             [
@@ -426,6 +434,8 @@ class TestViewInheritance(ViewCase):
                 }
             ],
         )
+
+        self.assertEqual(child_primary_no_arch.invalid_locators, False)
 
     def test_invalid_locators_with_valid_xpath(self):
         """ Check ir.ui.view's invalid_locators field is computed correctly."""
