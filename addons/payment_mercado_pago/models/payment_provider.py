@@ -10,6 +10,7 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_mercado_pago import const
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -54,9 +55,9 @@ class PaymentProvider(models.Model):
         url = urls.url_join('https://api.mercadopago.com', endpoint)
         headers = {
             'Authorization': f'Bearer {self.mercado_pago_access_token}',
-            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987',
+            'Content-Type': 'application/json',
             'X-Idempotency-Key': idempotency_key,
-            'Content-Type': 'application/json'
+            'X-Platform-Id': 'dev_cdf1cfac242111ef9fdebe8d845d0987'
         }
         try:
             if method == 'GET':
@@ -106,3 +107,10 @@ class PaymentProvider(models.Model):
             'partner_id': partner.id,
         }
         return json.dumps(inline_form_values)
+
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'mercado_pago').update({
+            'support_tokenization': True,
+        })
