@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getTimeOffset, isTimeFreezed, resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
+import { getTimeOffset, isTimeFrozen, resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
 import { createMock, HootError, isNil } from "../hoot_utils";
 
 /**
@@ -43,7 +43,7 @@ const getDateParams = () => [
     dateParams.at(-1) + getTimeStampDiff() + getTimeOffset(),
 ];
 
-const getTimeStampDiff = () => (isTimeFreezed() ? 0 : $now() - dateTimeStamp);
+const getTimeStampDiff = () => (isTimeFrozen() ? 0 : $now() - dateTimeStamp);
 
 /**
  * @param {string | DateSpecs} dateSpecs
