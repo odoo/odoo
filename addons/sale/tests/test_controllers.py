@@ -20,7 +20,8 @@ class TestAccessRightsControllers(HttpCase, SaleCommon):
     def test_access_controller(self):
         private_so = self.sale_order
         portal_so = self.sale_order.copy()
-        portal_so.message_subscribe(self.user_portal.partner_id.ids)
+        # set portal as customer to give portal access
+        portal_so.partner_id = self.user_portal.partner_id.id
 
         portal_so._portal_ensure_token()
         token = portal_so.access_token
@@ -98,6 +99,8 @@ class TestSaleSignature(HttpCaseWithUserPortal):
             self.env['mail.template'].browse(email_ctx.get('default_template_id')),
             subtype_xmlid='mail.mt_comment',
         )
-        self.assertEqual(sales_order.message_partner_ids, portal_user_partner)
+        self.assertFalse(
+            sales_order.message_partner_ids,
+            'Do not automatically set customer as follower, will be suggested recipient')
 
         self.start_tour("/", 'sale_signature', login="portal")

@@ -19,7 +19,6 @@ class PurchaseOrder(models.Model):
     _name = 'purchase.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
-    _mail_thread_customer = True
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
 
@@ -547,8 +546,6 @@ class PurchaseOrder(models.Model):
                 order.button_approve()
             else:
                 order.write({'state': 'to approve'})
-            if order.partner_id not in order.message_partner_ids:
-                order.message_subscribe([order.partner_id.id])
         return True
 
     def button_cancel(self):

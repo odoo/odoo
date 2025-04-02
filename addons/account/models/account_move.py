@@ -10,13 +10,11 @@ from hashlib import sha256
 from json import dumps
 import logging
 from markupsafe import Markup
-import math
 import re
 import os
 from textwrap import shorten
 
-from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules, tools
-from odoo.fields import Domain
+from odoo import api, fields, models, _, Command, SUPERUSER_ID, modules
 from odoo.tools.sql import column_exists, create_column
 from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
@@ -5241,11 +5239,6 @@ class AccountMove(models.Model):
         draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
         to_post.line_ids._reconcile_marked()
 
-        for invoice in to_post:
-            partner_id = invoice.partner_id
-            subscribers = [partner_id.id] if partner_id and partner_id not in invoice.sudo().message_partner_ids else None
-            invoice.message_subscribe(subscribers)
-
         customer_count, supplier_count = defaultdict(int), defaultdict(int)
         for invoice in to_post:
             if invoice.is_sale_document():
@@ -6318,33 +6311,24 @@ class AccountMove(models.Model):
             )
 
         def is_right_company(partner):
-            if custom_values.get('company_id'):
-                return partner.company_id in [False, custom_values['company_id']]
+            if company:
+                return partner.company_id.id in [False, company.id]
             return True
-
-        # Search for partners in copy.
-        cc_mail_addresses = email_split(msg_dict.get('cc', ''))
-        followers = self._partner_find_from_emails_single(cc_mail_addresses, filter_found=is_right_company, no_create=True)
 
         # Search for partner that sent the mail.
         from_mail_addresses = email_split(msg_dict.get('from', ''))
-        senders = partners = self._partner_find_from_emails_single(from_mail_addresses, filter_found=is_right_company, no_create=True)
+        partners = self._partner_find_from_emails_single(
+            from_mail_addresses, filter_found=lambda p: is_right_company(p) or not p.partner_share, no_create=True,
+        )
+        # if we are in the case when an internal user forwarded the mail manually
+        # search for partners in mail's body
+        if partners and is_internal_partner(partners[0]):
+            # Search for partners in the mail's body.
+            body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
+            partners = self._partner_find_from_emails_single(
+                body_mail_addresses, filter_found=lambda p: is_right_company(p) or p.partner_share, no_create=True,
+            ) if body_mail_addresses else self.env['res.partner']
 
-        # Search for partners using the user.
-        if not senders:
-            user_partners = self.env['res.users'].sudo().search(
-                [('email_normalized', 'in', from_mail_addresses)]
-            ).mapped('partner_id')
-            senders = partners = self.env['res.partner'].search([('id', 'in', user_partners.ids)])
-
-        if partners:
-            # Check we are not in the case when an internal user forwarded the mail manually.
-            if is_internal_partner(partners[0]):
-                # Search for partners in the mail's body.
-                body_mail_addresses = set(email_re.findall(msg_dict.get('body')))
-                partners = self._partner_find_from_emails_single(
-                    body_mail_addresses, filter_found=is_right_company, no_create=True
-                ).filtered(lambda p: not is_internal_partner(p))
         # Little hack: Inject the mail's subject in the body.
         if msg_dict.get('subject') and msg_dict.get('body'):
             msg_dict['body'] = Markup('<div><div><h3>%s</h3></div>%s</div>') % (msg_dict['subject'], msg_dict['body'])
@@ -6353,15 +6337,11 @@ class AccountMove(models.Model):
         values = {
             'name': '/',  # we have to give the name otherwise it will be set to the mail's subject
             'invoice_source_email': from_mail_addresses[0],
-            'partner_id': partners and partners[0].id or False,
+            'partner_id': partners[0].id if partners else False,
         }
         move_ctx = self.with_context(default_move_type=custom_values.get('move_type', 'entry'), default_journal_id=custom_values.get('journal_id'))
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
         move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
-
-        # Assign followers.
-        all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
-        move.message_subscribe(list(all_followers_ids))
         return move
 
     def _message_post_after_hook(self, new_message, message_values):
