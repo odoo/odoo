@@ -3,6 +3,8 @@ import pytz
 
 from collections import namedtuple, defaultdict
 
+import babel.dates
+from markupsafe import Markup
 from datetime import datetime, timedelta, time
 from dateutil.relativedelta import relativedelta
 from math import ceil
@@ -15,7 +17,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_intervals import float_to_time, HOURS_PER_DAY
 from odoo.tools.float_utils import float_round, float_compare
-from odoo.tools.misc import format_date
+from odoo.tools.misc import format_date, get_lang
 from odoo.tools.translate import _
 from odoo.osv import expression
 
@@ -773,7 +775,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
                 elif not self._context.get('import_file'):
-                    holiday_sudo.activity_update()
+                    holiday_sudo.notify_leave_request()
         return holidays
 
     def write(self, values):
@@ -980,7 +982,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             'first_approver_id': False,
             'second_approver_id': False,
         })
-        self.activity_update()
+        self.notify_leave_request()
         return True
 
     def action_approve(self, check_state=True):
@@ -996,7 +998,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         self.filtered(lambda hol: hol.validation_type != 'both').action_validate(check_state)
         if not self.env.context.get('leave_fast_create'):
-            self.activity_update()
+            self.notify_leave_request()
         return True
 
     def _get_leaves_on_public_holiday(self):
@@ -1085,7 +1087,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
         self._validate_leave_request()
         if not self.env.context.get('leave_fast_create'):
-            self.filtered(lambda holiday: holiday.validation_type != 'no_validation').activity_update()
+            self.filtered(lambda holiday: holiday.validation_type != 'no_validation').notify_leave_request()
         return True
 
     def action_refuse(self):
@@ -1106,7 +1108,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                     body=_('Your %(leave_type)s planned on %(date)s has been refused', leave_type=holiday.holiday_status_id.display_name, date=holiday.date_from),
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
-        self.activity_update()
         return True
 
     def _notify_manager(self):
@@ -1169,7 +1170,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
                 )
         leave_sudo = self.sudo()
         leave_sudo.state = 'cancel'
-        leave_sudo.activity_update()
         leave_sudo._post_leave_cancel()
 
     def _post_leave_cancel(self):
@@ -1273,61 +1273,6 @@ Attempting to double-book your time off won't magically make your vacation 2x be
     def _get_to_clean_activities(self):
         return ['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval']
 
-    def activity_update(self):
-        if self.env.context.get('mail_activity_automation_skip'):
-            return False
-
-        to_clean, to_do, to_do_confirm_activity = self.env['hr.leave'], self.env['hr.leave'], self.env['hr.leave']
-        activity_vals = []
-        today = fields.Date.today()
-        model_id = self.env.ref('hr_holidays.model_hr_leave').id
-        confirm_activity = self.env.ref('hr_holidays.mail_act_leave_approval')
-        approval_activity = self.env.ref('hr_holidays.mail_act_leave_second_approval')
-        for holiday in self:
-            if holiday.state in ['confirm', 'validate1']:
-                if holiday.holiday_status_id.leave_validation_type != 'no_validation':
-                    if holiday.state == 'confirm':
-                        activity_type = confirm_activity
-                        note = _(
-                            'New %(leave_type)s Request created by %(user)s',
-                            leave_type=holiday.holiday_status_id.name,
-                            user=holiday.create_uid.name,
-                        )
-                    else:
-                        activity_type = approval_activity
-                        note = _(
-                            'Second approval request for %(leave_type)s',
-                            leave_type=holiday.holiday_status_id.name,
-                        )
-                        to_do_confirm_activity |= holiday
-                    user_ids = holiday.sudo()._get_responsible_for_approval().ids
-                    for user_id in user_ids:
-                        date_deadline = (
-                            (holiday.date_from -
-                             relativedelta(**{activity_type.delay_unit: activity_type.delay_count or 0})).date()
-                            if holiday.date_from else today)
-                        if date_deadline < today:
-                            date_deadline = today
-                        activity_vals.append({
-                            'activity_type_id': activity_type.id,
-                            'automated': True,
-                            'date_deadline': date_deadline,
-                            'note': note,
-                            'user_id': user_id,
-                            'res_id': holiday.id,
-                            'res_model_id': model_id,
-                        })
-            elif holiday.state == 'validate':
-                to_do |= holiday
-            elif holiday.state in ['refuse', 'cancel']:
-                to_clean |= holiday
-        if to_clean:
-            to_clean.activity_unlink(self._get_to_clean_activities(), only_automated=False)
-        if to_do_confirm_activity:
-            to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
-        if to_do:
-            to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
-        self.env['mail.activity'].with_context(short_name=False).create(activity_vals)
 
     ####################################################
     # Messaging methods
@@ -1362,6 +1307,70 @@ Attempting to double-book your time off won't magically make your vacation 2x be
             self.check_access('read')
             return super(HrLeave, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+
+    def notify_leave_request(self):
+        """Notifies the responsible approver(s) when an employee applies for leave."""
+
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        locale = get_lang(self.env).code
+        for holiday in self:
+            if holiday.holiday_status_id.leave_validation_type == 'no_validation':
+                continue
+
+            partner_ids = holiday.sudo()._get_responsible_for_approval().mapped('partner_id')
+
+            if not partner_ids:
+                continue
+
+            subject = _("I'm requesting %(duration)s of %(leave_type)s from %(start_date)s to %(end_date)s",
+                duration=holiday.duration_display,
+                leave_type=holiday.holiday_status_id.name,
+                start_date=holiday.request_date_from,
+                end_date=holiday.request_date_to
+            )
+
+            subtitles = [
+                _('%(employee_name)s requested a time-off \n',
+                    employee_name=holiday.employee_id.name),
+                _('%(start_date)s -> %(end_date)s (%(duration)s)',
+                    start_date=babel.dates.format_date(holiday.request_date_from, 'MMM dd', locale=locale),
+                    end_date=babel.dates.format_date(holiday.request_date_to, 'MMM dd', locale=locale),
+                    duration=holiday.duration_display)
+            ]
+
+            description = [
+                _('Leave Type: %(leave_type)s', leave_type=holiday.holiday_status_id.name),
+                _('%(start_date)s -> %(end_date)s (%(duration)s)',
+                    start_date=holiday.request_date_from,
+                    end_date=holiday.request_date_to,
+                    duration=holiday.duration_display),
+            ]
+
+            if holiday.name:
+                description += [_('Reason: %(description)s', description=holiday.name)]
+
+            body = Markup(
+                "<h6>%(greeting)s</h6>&nbsp;&nbsp;"
+                "<p>%(message)s</p>"
+                "<ul>%(data)s</ul>"
+            ) % {
+                'greeting': _('Dear %(manager)s', manager=', '.join(partner_ids.mapped('name'))),
+                'message': _("I'm requesting a Time Off. I would appreciate if you could approve it whenever possible!"),
+                'data': Markup().join(Markup("<li>%s</li>") % d for d in description)
+            }
+
+            self.env['mail.thread'].sudo().message_notify(
+                partner_ids=partner_ids.ids,
+                model=self._name,
+                res_id=holiday.id,
+                model_description='Time Off',
+                subject=subject,
+                body=body,
+                subtitles=subtitles,
+                email_layout_xmlid='mail.mail_notification_layout',
+            )
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):

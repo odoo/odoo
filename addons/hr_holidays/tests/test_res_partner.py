@@ -65,6 +65,7 @@ class TestPartner(TransactionCase):
             'Return date is the first return date of all users associated with a partner',
         )
         self.leaves[1].action_refuse()
+        self.employees[1]._compute_leave_status()
         self.assertEqual(
             Store(self.partner).get_result()["res.partner"][0]["out_of_office_date_end"],
             False,
