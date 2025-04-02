@@ -3,28 +3,12 @@
     <t t-name="slide.course.join">
         <div>
             <a role="button"
-                class="btn btn-primary o_wslides_js_course_join_link text-uppercase fw-bold"
-                title="Join the Course" aria-label="Join the Course"
+                class="btn btn-primary text-uppercase fw-bold o_wslides_js_course_join_link" title="Join the Course"
+                aria-label="Join the Course" t-att-data-channel-id="channel.id" data-join-after-quiz="true"
                 href="#">
-                <t t-if="widget.channel.channelEnroll == 'public'" t-out="widget.joinMessage"/>
-                <t t-if="widget.channel.channelEnroll == 'invite' and widget.isMemberOrInvited" t-out="widget.joinMessage"/>
+                <t t-if="channel.enroll == 'public'" t-out="joinMessage"/>
+                <t t-if="channel.enroll == 'invite' and channel.isMemberOrInvited" t-out="joinMessage"/>
             </a>
-        </div>
-    </t>
-
-    <t t-name="slide.course.join.popupContent">
-        <div t-if="widget.invitePreview">
-            Please <a t-attf-href="/slides/#{channelId}/identify?invite_partner_id=#{widget.invitePartnerId}&amp;invite_hash=#{widget.inviteHash}">
-            <t t-if="widget.isPartnerWithoutUser">create an account</t><t t-else="">login</t>
-            </a> to join this course
-        </div>
-        <div t-else="">
-            <t t-if="errorSignupAllowed">
-                Please <a t-attf-href="/web/login?redirect=#{courseUrl}">login</a> or <a t-attf-href="/web/signup?redirect=#{courseUrl}">create an account</a> to join this course
-            </t>
-            <t t-else="">
-                Please <a t-attf-href="/web/login?redirect=#{courseUrl}">login</a> to join this course
-            </t>
         </div>
     </t>
 </templates>

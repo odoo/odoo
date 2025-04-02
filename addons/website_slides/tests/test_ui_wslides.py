@@ -331,6 +331,7 @@ class TestUiPublisherYoutube(HttpCaseGamification):
             'group_ids': [(5, 0), (4, self.env.ref('base.group_user').id)]
         })
         self.env.ref('website_slides.slide_channel_demo_3_furn0')._remove_membership(self.env.ref('base.partner_demo').ids)
+        self.env.ref('website_slides.slide_slide_demo_3_1').url += '&start=260'
 
         self.start_tour('/slides', 'course_member_youtube', login=user_demo.login)
 

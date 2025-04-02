@@ -82,6 +82,8 @@ Featuring
         ],
         'web.assets_frontend': [
             'website_slides/static/src/interactions/**/*',
+            'website_slides/static/src/js/slides_course_service.js',
+            'website_slides/static/src/js/utils.js',
             'website_slides/static/src/scss/website_slides.scss',
             'website_slides/static/src/scss/website_slides_profile.scss',
             'website_slides/static/src/scss/slides_slide_fullscreen.scss',
@@ -90,7 +92,6 @@ Featuring
             'website_slides/static/src/xml/slide_management.xml',
             'website_slides/static/src/xml/slide_course_join.xml',
             'website_slides/static/src/xml/slide_course_prerequisite.xml',
-            'website_slides/static/src/xml/slide_quiz_create.xml',
             'website_slides/static/src/xml/slide_quiz.xml',
             'website_slides/static/src/js/public/**/*',
         ],
@@ -176,6 +177,8 @@ Featuring
         'web.assets_unit_tests_setup': [
             'website_slides/static/src/interactions/**/*',
             'website_slides/static/src/js/public/**/*',
+            'website_slides/static/src/js/slides_course_service.js',
+            'website_slides/static/src/js/utils.js',
         ],
         'website.website_builder_assets': [
             'website_slides/static/src/website_builder/**/*',
