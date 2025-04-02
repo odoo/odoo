@@ -78,10 +78,10 @@ class AccountChartTemplate(models.AbstractModel):
         profits_taxes = self.env['account.tax'].with_context(active_test=False).search(profits_domain)
         profits_taxes.l10n_ar_withholding_sequence_id = sequence.id
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, force_create=True):
         """ Luego de que creen los impuestos del archivo account.tax-ar_ri.csv de l10n_ar al instalar el plan de cuentas en la nueva compañìa argentina agregamos en este método las etiquetas que correspondan en los repartition lines. """
         # Llamamos a super para que se creen los impuestos
-        res = super()._load(template_code, company, install_demo)
+        res = super()._load(template_code, company, install_demo, force_create=force_create)
         company = company or self.env.company
         if company.chart_template in ('ar_ri', 'ar_ex', 'ar_base'):
             self.sudo()._l10n_ar_add_wth_sequences(company)
@@ -109,3 +109,4 @@ class AccountChartTemplate(models.AbstractModel):
 
             if self.env.ref('base.module_l10n_ar_withholding').demo:
                 self.env['account.chart.template']._post_load_demo_data(company)
+            self.sudo()._l10n_ar_add_wth_sequences(company)
