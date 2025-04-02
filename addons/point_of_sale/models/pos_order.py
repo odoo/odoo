@@ -166,7 +166,7 @@ class PosOrder(models.Model):
         prec_acc = order.currency_id.decimal_places
 
         # Recompute amount paid because we don't trust the client
-        order.with_context(backend_recomputation=True).write({'amount_paid': order._compute_amount_paid()})
+        order.write({'amount_paid': order._compute_amount_paid()})
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
@@ -526,7 +526,7 @@ class PosOrder(models.Model):
         res = super().write(vals)
         for order in self:
             if vals.get('payment_ids'):
-                order.with_context(backend_recomputation=True)._compute_prices()
+                order._compute_prices()
                 totally_paid_or_more = order.currency_id.compare_amounts(order.amount_paid, order.amount_total)
                 if totally_paid_or_more < 0 and order.state in ['paid', 'done']:
                     raise UserError(_('The paid amount is different from the total amount of the order.'))
@@ -1621,7 +1621,7 @@ class PosOrderLine(models.Model):
             group_id = line._get_procurement_group()
             if not group_id:
                 group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.with_context(backend_recomputation=True).write({'procurement_group_id': group_id})
+                line.order_id.write({'procurement_group_id': group_id})
 
             values = line._prepare_procurement_values(group_id=group_id)
             product_qty = line.qty
