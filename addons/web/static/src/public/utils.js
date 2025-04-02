@@ -176,3 +176,30 @@ export function patchDynamicContent(dynamicContent, replacement) {
         }
     }
 }
+
+/**
+ *
+ * @param {HTMLElement} el
+ * @returns parsed dataset of el
+ */
+export function getDataFromEl(el) {
+    if (!el) {
+        return null;
+    }
+    const data = el.dataset;
+    const parsedData = {};
+    for (const key of Object.keys(data)) {
+        if (data[key] === "True") {
+            parsedData[key] = true;
+        } else if (data[key] === "False") {
+            parsedData[key] = false;
+        } else {
+            try {
+                parsedData[key] = JSON.parse(data[key]);
+            } catch {
+                parsedData[key] = data[key];
+            }
+        }
+    }
+    return parsedData;
+}

@@ -1,175 +1,155 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
-import { session } from "@web/session";
+import { Interaction } from "@web/public/interaction";
 import { renderToElement } from "@web/core/utils/render";
+import { getDataFromEl } from "@web/public/utils";
 import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
 
-/**
- * Global widget for both fullscreen view and non-fullscreen view of a slide course.
- * Contains general methods to update the UI elements (progress bar, sidebar...) as well
- * as method to mark the slide as completed / uncompleted.
- */
-export const SlideCoursePage = publicWidget.Widget.extend({
-    events: {
-        'click button.o_wslides_button_complete': '_onClickComplete',
-    },
+export class WebsiteSlidesCoursePage extends Interaction {
+    dynamicContent = {
+        "button.o_wslides_button_complete": {
+            "t-on-click.prevent": this.onCompleteClick,
+        },
+        ".o_wslides_channel_completion_progressbar": {
+            "t-att-class": () => ({
+                "d-none": this.progressbarCompletion >= 100,
+                "d-flex": this.progressbarCompletion < 100,
+            }),
+        },
+        ".o_wslides_channel_completion_progressbar .progress-bar": {
+            "t-att-style": () => ({ width: `${this.progressbarCompletion}%` }),
+        },
+        ".o_wslides_channel_completion_progressbar .o_wslides_progress_percentage": {
+            "t-out": () => this.progressbarCompletion,
+        },
+        ".o_wslides_channel_completion_completed": {
+            "t-att-class": () => ({ "d-none": this.progressbarCompletion < 100 }),
+        },
+        _root: {
+            "t-on-slide_completed": this.onSlideCompleted,
+            "t-on-slide_mark_completed": this.onSlideMarkCompleted,
+        },
+    };
 
-    custom_events: {
-        'slide_completed': '_onSlideCompleted',
-        'slide_mark_completed': '_onSlideMarkCompleted',
-    },
+    setup() {
+        this.progressbarCompletion = 0;
+    }
 
     /**
      * Collapse the next category when the current one has just been completed
      */
-    collapseNextCategory: function (nextCategoryId) {
-        const categorySection = document.getElementById(`category-collapse-${nextCategoryId}`);
-        if (categorySection?.getAttribute('aria-expanded') === 'false') {
-            categorySection.setAttribute('aria-expanded', true);
-            document.querySelector(`ul[id=collapse-${nextCategoryId}]`).classList.add('show');
+    collapseNextCategory(nextCategoryId) {
+        const categorySectionEl = document.querySelector(`#category-collapse-${nextCategoryId}`);
+        if (categorySectionEl?.getAttribute("aria-expanded") === "false") {
+            categorySectionEl.setAttribute("aria-expanded", true);
+            document.querySelector(`ul[id=collapse-${nextCategoryId}]`).classList.add("show");
         }
-    },
+    }
 
     /**
      * Greens up the bullet when the slide is completed
-     *
-     * @public
      * @param {Object} slide
      * @param {Boolean} completed
      */
-    toggleCompletionButton: function (slide, completed = true) {
-        const $button = this.$(`.o_wslides_sidebar_done_button[data-id="${slide.id}"]`);
+    toggleCompletionButton(slide, completed = true) {
+        const buttonEl = this.el.querySelector(
+            `.o_wslides_sidebar_done_button[data-id="${slide.id}"]`
+        );
 
-        if (!$button.length) {
+        if (!buttonEl) {
             return;
         }
 
-        const newButton = renderToElement('website.slides.sidebar.done.button', {
+        const newButtonEl = renderToElement("website.slides.sidebar.done.button", {
             slideId: slide.id,
-            uncompletedIcon: $button.data('uncompletedIcon') ?? 'fa-circle-thin',
+            uncompletedIcon: getDataFromEl(buttonEl).uncompletedIcon ?? "fa-circle-thin",
             slideCompleted: completed ? 1 : 0,
             canSelfMarkUncompleted: slide.canSelfMarkUncompleted,
             canSelfMarkCompleted: slide.canSelfMarkCompleted,
             isMember: slide.isMember,
         });
-        $button.replaceWith(newButton);
-    },
+        buttonEl.replaceWith(newButtonEl);
+    }
 
     /**
      * Updates the progressbar whenever a lesson is completed
-     *
-     * @public
      * @param {Integer} channelCompletion
      */
-    updateProgressbar: function (channelCompletion) {
-        const completion = Math.min(100, channelCompletion);
-
-        const $completed = $('.o_wslides_channel_completion_completed');
-        const $progressbar = $('.o_wslides_channel_completion_progressbar');
-
-        if (completion < 100) {
-            // Hide the "Completed" text and show the progress bar
-            $completed.addClass('d-none');
-            $progressbar.removeClass('d-none').addClass('d-flex');
-        } else {
-            // Hide the progress bar and show the "Completed" text
-            $completed.removeClass('d-none');
-            $progressbar.addClass('d-none').removeClass('d-flex');
-        }
-
-        $progressbar.find('.progress-bar').css('width', `${completion}%`);
-        $progressbar.find('.o_wslides_progress_percentage').text(completion);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    updateProgressbar(channelCompletion) {
+        this.progressbarCompletion = Math.min(100, channelCompletion);
+    }
 
     /**
      * Once the completion conditions are filled,
      * rpc call to set the relation between the slide and the user as "completed"
-     *
-     * @private
      * @param {Object} slide: slide to set as completed
      * @param {Boolean} completed: true to mark the slide as completed
      *     false to mark the slide as not completed
      */
-    _toggleSlideCompleted: async function (slide, completed = true) {
+    async toggleSlideCompleted(slide, completed = true) {
         if (!!slide.completed === !!completed || !slide.isMember || !slide.canSelfMarkCompleted) {
             // no useless RPC call
             return;
         }
 
-        const data = await rpc(
-            `/slides/slide/${completed ? 'set_completed' : 'set_uncompleted'}`,
-            {slide_id: slide.id},
-        );
+        const data = await rpc(`/slides/slide/${completed ? "set_completed" : "set_uncompleted"}`, {
+            slide_id: slide.id,
+        });
 
         this.toggleCompletionButton(slide, completed);
         this.updateProgressbar(data.channel_completion);
         if (data.next_category_id) {
             this.collapseNextCategory(data.next_category_id);
         }
-    },
+    }
+
     /**
      * Retrieve the slide data corresponding to the slide id given in argument.
      * This method used the "slide_sidebar_done_button" template.
-     *
-     * @private
      * @param {Integer} slideId
      */
-    _getSlide: function (slideId) {
-        return $(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`).data();
-    },
+    getSlide(slideId) {
+        return getDataFromEl(
+            this.el.querySelector(`.o_wslides_sidebar_done_button[data-id="${slideId}"]`)
+        );
+    }
 
-    //--------------------------------------------------------------------------
-    // Handler
-    //--------------------------------------------------------------------------
     /**
      * We clicked on the "done" button.
      * It will make a RPC call to update the slide state and update the UI.
-     *
-     * @private
-     * @param {Event} ev
+     * @param {Event} event
      */
-    _onClickComplete: function (ev) {
-        ev.stopPropagation();
-        ev.preventDefault();
-
-        const $button = $(ev.currentTarget).closest('.o_wslides_sidebar_done_button');
-
-        const slideData = $button.data();
+    onCompleteClick(event) {
+        event.stopPropagation();
+        const buttonEl = event.currentTarget.closest(".o_wslides_sidebar_done_button");
+        const slideData = getDataFromEl(buttonEl);
         const isCompleted = Boolean(slideData.completed);
-
-        this._toggleSlideCompleted(slideData, !isCompleted);
-    },
+        this.toggleSlideCompleted(slideData, !isCompleted);
+    }
 
     /**
      * The slide has been completed, update the UI
-     *
-     * @private
-     * @param {Event} ev
+     * @param {Event} event
      */
-    _onSlideCompleted: function (ev) {
-        const slideId = ev.data.slideId;
-        const completed = ev.data.completed;
-        const slide = this._getSlide(slideId);
+    onSlideCompleted(event) {
+        const slideId = event.detail.slideId;
+        const completed = event.detail.completed;
+        const slide = this.getSlide(slideId);
         if (slide) {
             // Just joined the course (e.g. When "Submit & Join" action), update the UI
             this.toggleCompletionButton(slide, completed);
         }
-        this.updateProgressbar(ev.data.channelCompletion);
-    },
+        this.updateProgressbar(event.detail.channelCompletion);
+    }
 
     /**
      * Make a RPC call to complete the slide then update the UI
-     *
-     * @private
-     * @param {Event} ev
+     * @param {Event} event
      */
-    _onSlideMarkCompleted: function (ev) {
-        if (!session.is_website_user) { // no useless RPC call
-            const slide = this._getSlide(ev.data.id);
-            this._toggleSlideCompleted(slide, true);
+    onSlideMarkCompleted(event) {
+        if (!session.is_website_user) {
+            // no useless RPC call
+            const slide = this.getSlide(event.detail.id);
+            this.toggleSlideCompleted(slide, true);
         }
     }
-});
+}

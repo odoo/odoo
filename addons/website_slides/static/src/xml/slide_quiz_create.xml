@@ -2,21 +2,24 @@
 <templates xml:space="preserve">
 
     <t t-name="slide.quiz.question.input">
-        <div t-attf-class="o_wsildes_quiz_question_input mt-3 #{!widget.update ? 'col' : ''}" t-att-data-id="widget.question.id || ''">
+        <div
+            t-attf-class="o_wsildes_quiz_question_input mt-3 #{!update ? 'col' : ''}"
+            t-att-data-question-id="question.id"
+            t-att-data-update="update ? 'true' : false">
             <form class="mb-3">
                 <div class="o_wslides_quiz_question row align-items-center me-0 mb-2">
                     <div class="input-group">
-                        <span class="input-group-text o_wslides_quiz_question_sequence"><t t-esc="widget.sequence"/></span>
+                        <span class="input-group-text o_wslides_quiz_question_sequence"><t t-out="sequence"/></span>
                         <input type="text" name="question-name" class="form-control col-11" placeholder='e.g. "Which animal cannot fly?"'
-                            t-att-value="widget.question.text"/>
+                            t-att-value="question.text"/>
                     </div>
                 </div>
                 <div class="text-muted mb-2">
                     <span>Select the correct answer below:</span>
                 </div>
                 <div class="list-group">
-                    <t t-if="widget.question.answers" >
-                        <t t-foreach="widget.question.answers" t-as="answer" t-key="answer_index">
+                    <t t-if="question.answers" >
+                        <t t-foreach="question.answers" t-as="answer" t-key="answer_index">
                             <t t-call="slide.quiz.answer.line"/>
                         </t>
                     </t>
@@ -28,7 +31,7 @@
                 </div>
             </form>
             <div>
-                <t t-if="widget.update" t-call="slide.quiz.update.buttons"/>
+                <t t-if="update" t-call="slide.quiz.update.buttons"/>
                 <t t-else="" t-call="slide.quiz.create.buttons"/>
                 <div class="ms-2 d-none text-danger o_wslides_js_quiz_validation_error">
                     <i class="fa fa-close me-1"/>
