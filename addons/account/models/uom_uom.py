@@ -41,6 +41,10 @@ class UomUom(models.Model):
             'uom.product_uom_cubic_meter': 'MTQ',
             'uom.product_uom_cubic_inch': 'INQ',
             'uom.product_uom_cubic_foot': 'FTQ',
+            'uom.product_uom_square_meter': 'MTK',
+            'uom.product_uom_square_foot': 'FTK',
+            'uom.product_uom_yard': 'YRD',
+            'uom.product_uom_millimeter': 'MMT',
         }
         xml_ids = self._get_external_ids().get(self.id, [])
         matches = list(set(xml_ids) & set(mapping.keys()))
