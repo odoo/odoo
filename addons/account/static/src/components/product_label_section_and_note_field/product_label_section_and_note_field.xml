@@ -29,7 +29,14 @@
             </t>
             <t t-else="">
                 <div class="d-flex align-items-center gap-1">
-                    <Many2One t-props="this.m2oProps" cssClass="'w-100'"/>
+                    <Many2One t-props="this.m2oProps" cssClass="'w-100'">
+                        <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                            <span class="d-flex justify-content-between">
+                                <div t-esc="autoCompleteItemScope.record.display_name"/>
+                                <div t-esc="computeTime()" class="text-muted"/>
+                            </span>
+                        </t>
+                    </Many2One>
                     <t t-if="!props.readonly and columnIsProductAndLabel.value and !label">
                         <button
                             class="btn fa fa-bars text-start o_external_button px-1"

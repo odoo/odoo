@@ -235,6 +235,65 @@ class ProductTemplate(models.Model):
         product_accounts['downpayment'] = self.categ_id.property_account_downpayment_categ_id
         return product_accounts
 
+    def _get_prioritized_product_query(self):
+        if self._context.get('journal_type', '') == 'sale':
+            return """
+                SELECT product_id, product_tmpl_id, invoice_date
+                FROM (
+                    SELECT DISTINCT ON (
+                        CASE
+                            WHEN aml.is_downpayment = TRUE THEN dp_tmpl.id
+                            ELSE product.product_tmpl_id
+                        END
+                    )
+                        CASE
+                            WHEN aml.is_downpayment = TRUE THEN sol_dp_product.id
+                            ELSE aml.product_id
+                        END AS product_id,
+
+                        CASE
+                            WHEN aml.is_downpayment = TRUE THEN dp_tmpl.id
+                            ELSE product.product_tmpl_id
+                        END AS product_tmpl_id,
+
+                        am.invoice_date
+                    FROM account_move am
+                    JOIN account_move_line aml ON aml.move_id = am.id
+                    JOIN account_journal journal ON journal.id = am.journal_id
+                    LEFT JOIN product_product product ON product.id = aml.product_id
+                    LEFT JOIN sale_order_line_invoice_rel rel ON rel.invoice_line_id = aml.id
+                    LEFT JOIN sale_order_line order_line ON order_line.id = rel.order_line_id
+                    JOIN sale_order_line sol ON sol.order_id = order_line.order_id
+                    JOIN product_product sol_dp_product ON sol_dp_product.id = sol.product_id
+                    JOIN product_template dp_tmpl ON dp_tmpl.id = sol_dp_product.product_tmpl_id
+                    WHERE am.partner_id = %s
+                        AND am.state = 'posted'
+                        AND journal.type = %s
+                    ORDER BY
+                        CASE
+                            WHEN aml.is_downpayment = TRUE THEN dp_tmpl.id
+                            ELSE product.product_tmpl_id
+                        END
+                ) sub
+                ORDER BY invoice_date DESC;
+            """
+        return super()._get_prioritized_product_query()
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        """
+        Returns the product templates in a prioritized sequence for the sale order line product selection.
+        First, it lists all products that have been invoiced to the specified customer,
+        sorted from the most recent to the oldest invoice date.
+        Afterward, it includes the remaining products in their default order of display.
+        """
+        domain = domain or []
+        if not name and self.env.context.get('partner_id') and self.env.context.get('is_sale'):
+            product_templates = self.env['product.template'].get_prioritized_product_and_time(journal_type='sale', domain=domain, limit=limit)
+            return [(product_template.id, product_template.display_name) for product_template in product_templates]
+        else:
+            return super().name_search(name, domain, operator, limit)
+
     ####################################
     # Product/combo configurator hooks #
     ####################################
