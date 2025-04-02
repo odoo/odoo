@@ -128,7 +128,13 @@
                                     </td>
                                     <td>
                                         <t t-if="move.sale_line_id">
+<<<<<<< f61c6e0990becb6fc369a7b540227b9c1b3a282e
                                             <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxinc * move.product_id.uom_id._compute_quantity(move.quantity, move.sale_line_id.product_uom_id)"/>
+||||||| 3a24f5f00f5fe2c534814512e11b8b59262024fc
+                                            <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxinc * move.quantity"/>
+=======
+                                            <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxexcl * move.quantity + move.sale_line_id.price_tax"/>
+>>>>>>> 70f7c3580bede85ec4db117a8b5accf7c6940aa8
                                         </t>
                                         <t t-else="">
                                             <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)"/>
