@@ -13,7 +13,7 @@
             <div class="d-flex flex-grow-1 flex-wrap mx-1 align-items-center" t-att-class="{
                 'justify-content-end': isInChatWindowAndIsAlignedRight and !env.inComposer,
                         }" role="menu" >
-                <div t-foreach="images" t-as="attachment" t-key="attachment.id"
+                <div t-foreach="images.slice(0, props.attachmentsLimit)" t-as="attachment" t-key="attachment.id"
                      t-att-aria-label="attachment.name"
                      class="o-mail-AttachmentImage d-flex position-relative flex-shrink-0 mw-100 mb-1 me-1 rounded o-viewable"
                      t-att-title="attachment.name"
@@ -40,7 +40,7 @@
             <div class="d-flex flex-wrap mt-1 mx-1">
                 <!-- t-attf-class overridden in extensions -->
                 <div
-                    t-foreach="cards" t-as="attachment" t-key="attachment.id"
+                    t-foreach="props.attachmentsLimit ? (images.length &lt; props.attachmentsLimit ? cards.slice(0, props.attachmentsLimit - images.length) : []) : cards" t-as="attachment" t-key="attachment.id"
                     class="o-mail-AttachmentCard d-flex rounded mb-1 me-1 mw-100 overflow-auto"
                     t-att-class="{
                                'ms-1': isInChatWindowAndIsAlignedRight,

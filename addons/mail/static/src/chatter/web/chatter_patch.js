@@ -111,6 +111,8 @@ patch(Chatter.prototype, {
             showActivities: true,
             showAttachmentLoading: false,
             showScheduledMessages: true,
+            showLimitedAttachments: true,
+            visibleAttachments: 10,
         });
         this.messageSearch = useMessageSearch();
         this.attachmentUploader = useAttachmentUploader(
@@ -329,6 +331,10 @@ patch(Chatter.prototype, {
     },
 
     onClickAddAttachments() {
+        if (this.state.visibleAttachments >= 10) {
+            this.state.showLimitedAttachments = true;
+            this.state.visibleAttachments = 10;
+        }
         if (this.attachments.length === 0) {
             return;
         }
@@ -450,6 +456,28 @@ patch(Chatter.prototype, {
 
     toggleScheduledMessages() {
         this.state.showScheduledMessages = !this.state.showScheduledMessages;
+    },
+
+    get displayLimit() {
+        return this.state.visibleAttachments;
+    },
+
+    toggelShowAllAttachments() {
+        const total = this.attachments.length;
+        const current = this.state.visibleAttachments;
+        if (this.state.showLimitedAttachments) {
+            const next = current + 10;
+            if (next >= total) {
+                this.state.visibleAttachments = total;
+                this.state.showLimitedAttachments = false;
+            } else {
+                this.state.visibleAttachments = next;
+            }
+        }
+        else {
+            this.state.visibleAttachments = 10;
+            this.state.showLimitedAttachments = true;
+        }
     },
 
     async unlinkAttachment(attachment) {
