@@ -110,7 +110,10 @@ class ResourceCalendar(models.Model):
     flexible_hours = fields.Boolean(string="Flexible Hours",
                                     help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).")
     hours_per_week = fields.Float(compute="_compute_hours_per_week", string="Hours per Week", store=True)
-    full_time_required_hours = fields.Float(string="Company Full Time", help="Number of hours to work on the company schedule to be considered as fulltime.")
+    full_time_required_hours = fields.Float(
+        string="Full Time Equivalent",
+        help="Number of hours to work on the company schedule to be considered as fulltime."
+    )
     is_fulltime = fields.Boolean(compute='_compute_work_time_rate', string="Is Full Time")
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', search='_search_work_time_rate',
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
