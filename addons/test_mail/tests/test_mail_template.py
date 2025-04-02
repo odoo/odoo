@@ -17,7 +17,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMailTemplateCommon, cls).setUpClass()
+        super().setUpClass()
         cls.test_record = cls.env['mail.test.lang'].with_context(cls._test_context).create({
             'email_from': 'ignasse@example.com',
             'name': 'Test',
@@ -62,6 +62,17 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
         # Force the attachments of the template to be in the natural order.
         cls.test_template.invalidate_recordset(['attachment_ids'])
 
+        # dynamic reports
+        cls.test_report = cls.env['ir.actions.report'].create([
+            {
+                'name': 'Test Report 3 with variable data on Mail Test Ticket',
+                'model': 'mail.test.ticket.mc',
+                'print_report_name': "'TestReport3 for %s' % object.name",
+                'report_type': 'qweb-pdf',
+                'report_name': 'test_mail.mail_test_ticket_test_variable_template',
+            },
+        ])
+
 
 @tagged('mail_template')
 class TestMailTemplate(TestMailTemplateCommon):
@@ -88,6 +99,19 @@ class TestMailTemplate(TestMailTemplateCommon):
             "Updated res_id, seems strange"
         )
         self.assertEqual(copy.attachment_ids.mapped("res_id"), [copy.id] * 2)
+
+    def test_template_fields(self):
+        """ Test computed fields """
+        # has_dynamic_reports: based on ir.actions.report
+        test_template_lang = self.test_template.with_user(self.user_employee)
+        self.assertFalse(test_template_lang.has_dynamic_reports)
+        test_template_ticket_mc = self.env['mail.template'].with_user(self.user_employee).create({
+            'model_id': self.env['ir.model']._get_id('mail.test.ticket.mc'),
+        })
+        self.assertTrue(test_template_ticket_mc.has_dynamic_reports)
+        # has_mail_server: based on ir.mail_server available
+        self.assertTrue(test_template_lang.has_mail_server)
+        self.assertTrue(test_template_ticket_mc.has_mail_server)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
