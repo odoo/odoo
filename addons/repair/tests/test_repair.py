@@ -928,3 +928,12 @@ class TestRepair(common.TransactionCase):
                 'code': 'ET',
                 'company_id': company.id,
             })
+
+    def test_add_product_from_catalog(self):
+        """Check that only consumable products are available in the catalog."""
+        catalog_action = self.repair0.action_add_from_catalog()
+        domain = catalog_action.get('domain')
+        self.assertEqual(self.product_service_order_repair.type, 'service')
+        self.assertEqual(self.product_consu_order_repair.type, 'consu')
+        self.assertTrue(self.product_consu_order_repair.filtered_domain(domain))
+        self.assertFalse(self.product_service_order_repair.filtered_domain(domain))
