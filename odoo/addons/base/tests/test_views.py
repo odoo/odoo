@@ -465,6 +465,7 @@ class TestViewInheritance(ViewCase):
             'model': self.model,
             'name': "child_view",
             'arch': """<data>
+                <!-- One comment: should be ignored -->
                 <field name="id" position="before">
                     <div class="parasite" />
                 </field>
