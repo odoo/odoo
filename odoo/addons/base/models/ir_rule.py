@@ -148,7 +148,7 @@ class IrRule(models.Model):
 
         rules = self._get_rules(model_name, mode=mode)
         if not rules:
-            return Domain.AND(global_domains)
+            return Domain.AND(global_domains).optimize(model)
 
         # browse user and rules with sudo to avoid access errors!
         eval_context = self._eval_context()
@@ -167,7 +167,7 @@ class IrRule(models.Model):
         # combine global domains and group domains
         if group_domains:
             global_domains.append(Domain.OR(group_domains))
-        return Domain.AND(global_domains)
+        return Domain.AND(global_domains).optimize(model)
 
     def _compute_domain_context_values(self):
         for k in self._compute_domain_keys():
