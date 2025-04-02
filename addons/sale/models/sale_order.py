@@ -38,7 +38,6 @@ class SaleOrder(models.Model):
     _name = 'sale.order'
     _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'utm.mixin']
     _description = "Sales Order"
-    _mail_thread_customer = True
     _order = 'date_order desc, id desc'
     _check_company_auto = True
 
@@ -996,12 +995,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         if 'pricelist_id' in vals and any(so.state == 'sale' for so in self):
             raise UserError(_("You cannot change the pricelist of a confirmed order !"))
-        res = super().write(vals)
-        if vals.get('partner_id'):
-            self.filtered(lambda so: so.state in ('sent', 'sale')).message_subscribe(
-                partner_ids=[vals['partner_id']],
-            )
-        return res
+        return super().write(vals)
 
     #=== ACTION METHODS ===#
 
@@ -1028,7 +1022,6 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """ Opens a wizard to compose an email, with relevant mail template loaded by default """
         self.filtered(lambda so: so.state in ('draft', 'sent')).order_line._validate_analytic_distribution()
-        lang = self.env.context.get('lang')
 
         ctx = {
             'default_model': 'sale.order',
@@ -1045,7 +1038,6 @@ class SaleOrder(models.Model):
         else:
             ctx.update({
                 'force_email': True,
-                'model_description': self.with_context(lang=lang).type_name,
             })
             if not self.env.context.get('hide_default_template'):
                 mail_template = self._find_mail_template()
@@ -1054,8 +1046,6 @@ class SaleOrder(models.Model):
                         'default_template_id': mail_template.id,
                         'mark_so_as_sent': True,
                     })
-                if mail_template and mail_template.lang:
-                    lang = mail_template._render_lang(self.ids)[self.id]
             else:
                 for order in self:
                     order._portal_ensure_token()
@@ -1126,9 +1116,6 @@ class SaleOrder(models.Model):
         if any(order.state != 'draft' for order in self):
             raise UserError(_("Only draft orders can be marked as sent directly."))
 
-        for order in self:
-            order.message_subscribe(partner_ids=order.partner_id.ids)
-
         self.write({'state': 'sent'})
 
     def action_confirm(self):
@@ -1146,11 +1133,6 @@ class SaleOrder(models.Model):
                 raise UserError(error_msg)
 
         self.order_line._validate_analytic_distribution()
-
-        for order in self:
-            if order.partner_id in order.message_partner_ids:
-                continue
-            order.message_subscribe([order.partner_id.id])
 
         self.write(self._prepare_confirmation_values())
 

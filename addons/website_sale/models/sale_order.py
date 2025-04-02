@@ -282,10 +282,6 @@ class SaleOrder(models.Model):
             delivery_method = self._get_preferred_delivery_method(delivery_methods)
             self._set_delivery_method(delivery_method)
 
-        if 'partner_id' in fnames:
-            # Only add the main partner as follower of the order
-            self._message_subscribe([partner_id])
-
     def _cart_add(self, product_id:int, quantity:int|float=1.0, **kwargs):
         """Add quantity of the given product to the current sales order.
 

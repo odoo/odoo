@@ -317,27 +317,6 @@ class TestAccountMove(AccountTestInvoicingCommon):
             with self.assertRaisesRegex(UserError, "You cannot modify the following readonly fields on a posted move"):
                 self.test_move.write({field: False})
 
-    def test_add_followers_on_post(self):
-        # Add some existing partners, some from another company
-        company = self.env['res.company'].create({'name': 'Oopo'})
-        company.flush_recordset()
-        existing_partners = self.env['res.partner'].create([{
-            'name': 'Jean',
-            'company_id': company.id,
-        },{
-            'name': 'Paulus',
-        }])
-        self.test_move.message_subscribe(existing_partners.ids)
-
-        user = new_test_user(self.env, login='jag', groups='account.group_account_invoice')
-
-        move = self.test_move.with_user(user)
-        partner = self.env['res.partner'].create({'name': 'Belouga'})
-        move.partner_id = partner
-
-        move.action_post()
-        self.assertEqual(move.message_partner_ids, self.env.user.partner_id | existing_partners | partner)
-
     def test_misc_move_onchange(self):
         ''' Test the behavior on onchanges for account.move having 'entry' as type. '''
 
