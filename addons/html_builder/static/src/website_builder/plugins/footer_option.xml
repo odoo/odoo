@@ -1,31 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+<t t-name="html_builder.FooterTemplateOption">
+    <BuilderRow label.translate="Template">
+        <BuilderSelect action="'websiteConfigFooter'">
+            <BuilderSelectItem title.translate="Default"
+                actionParam="{ view: 'website.footer_custom', vars: { 'footer-template': 'default' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_default.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Descriptive"
+                actionParam="{ view: 'website.template_footer_descriptive', vars: { 'footer-template': 'descriptive' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_descriptive.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Centered"
+                actionParam="{ view: 'website.template_footer_centered', vars: { 'footer-template': 'centered' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_centered.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Links"
+                actionParam="{ view: 'website.template_footer_links', vars: { 'footer-template': 'links' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_links.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Minimalist"
+                actionParam="{ view: 'website.template_footer_minimalist', vars: { 'footer-template': 'minimalist' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_minimalist.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Contact"
+                actionParam="{ view: 'website.template_footer_contact', vars: { 'footer-template': 'contact' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_contact.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Call-to-action"
+                actionParam="{ view: 'website.template_footer_call_to_action', vars: { 'footer-template': 'call_to_action' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_call_to_action.svg"/>
+            </BuilderSelectItem>
+            <BuilderSelectItem title.translate="Headline"
+                actionParam="{ view: 'website.template_footer_headline', vars: { 'footer-template': 'headline' } }"
+            >
+                <img src="/website/static/src/img/snippets_options/footer_template_headline.svg"/>
+            </BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+</t>
+
 <t t-name="html_builder.FooterWidthOption">
     <BuilderRow label.translate="Content width">
         <BuilderButtonGroup action="'websiteConfig'">
-            <BuilderButton
-                classAction="'o_container_small'"
-                actionParam="{
-                    views: ['website.footer_copyright_content_width_small'],
-                }"
-            >
+            <BuilderButton classAction="'o_container_small'" actionParam="{ views: ['website.footer_copyright_content_width_small'] }">
                 <img src="/website/static/src/img/snippets_options/content_width_small.svg"/>
             </BuilderButton>
-            <BuilderButton
-                classAction="'container'"
-                actionParam="{
-                    views: [],
-                }"
-            >
+            <BuilderButton classAction="'container'" actionParam="{ views: [] }">
                 <img src="/website/static/src/img/snippets_options/content_width_normal.svg"/>
             </BuilderButton>
-            <BuilderButton
-                classAction="'container-fluid'"
-                actionParam="{
-                    views: ['website.footer_copyright_content_width_fluid'],
-                }"
-            >
+            <BuilderButton classAction="'container-fluid'" actionParam="{ views: ['website.footer_copyright_content_width_fluid'] }">
                 <img src="/website/static/src/img/snippets_options/content_width_full.svg"/>
             </BuilderButton>
         </BuilderButtonGroup>
