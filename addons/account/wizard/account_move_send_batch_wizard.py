@@ -42,7 +42,12 @@ class AccountMoveSendBatchWizard(models.TransientModel):
 
             for move in wizard.move_ids:
                 edi_counter += Counter([edi for edi in self._get_default_extra_edis(move)])
-                sending_method_counter += Counter([sending_method for sending_method in self._get_default_sending_methods(move)])
+                sending_settings = self._get_default_sending_settings(move)
+                sending_method_counter += Counter([
+                    sending_method
+                    for sending_method in self._get_default_sending_methods(move)
+                    if self._is_applicable_to_move(sending_method, move, **sending_settings)
+                ])
 
             summary_data = dict()
             for edi, edi_count in edi_counter.items():
@@ -55,14 +60,7 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     @api.depends('summary_data')
     def _compute_alerts(self):
         for wizard in self:
-            moves_data = {
-                move: {
-                    'sending_methods': self._get_default_sending_methods(move),
-                    'invoice_edi_format': self._get_default_invoice_edi_format(move),
-                    'extra_edis': self._get_default_extra_edis(move),
-                }
-                for move in wizard.move_ids
-            }
+            moves_data = {move: self._get_default_sending_settings(move) for move in wizard.move_ids}
             wizard.alerts = self._get_alerts(wizard.move_ids, moves_data)
 
     # -------------------------------------------------------------------------
