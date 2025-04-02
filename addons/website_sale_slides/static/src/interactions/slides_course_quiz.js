@@ -1,14 +1,18 @@
-import {websiteSlidesQuizNoFullscreen} from "@website_slides/interactions/slides_course_quiz";
+import { patch } from "@web/core/utils/patch";
+import { WebsiteSlidesQuizNoFullscreen } from "@website_slides/interactions/slides_course_quiz";
 
-websiteSlidesQuizNoFullscreen.include({
-    _extractChannelData: function (slideData) {
-        return Object.assign({}, this._super.apply(this, arguments), {
-            productId: slideData.productId,
-            enroll: slideData.enroll,
-            currencyName: slideData.currencyName,
-            currencySymbol: slideData.currencySymbol,
-            price: slideData.price,
-            hasDiscountedPrice: slideData.hasDiscountedPrice
-        });
-    }
+patch(WebsiteSlidesQuizNoFullscreen.prototype, {
+    setup() {
+        super.setup();
+        const data = this.el.dataset;
+        if (data.channelId) {
+            this.slidesService.setChannel({
+                productId: Number(data.productId),
+                currencyName: data.currencyName,
+                currencySymbol: data.currencySymbol,
+                price: Number(data.price),
+                hasDiscountedPrice: !!data.hasDiscountedPrice,
+            });
+        }
+    },
 });

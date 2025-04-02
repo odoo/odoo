@@ -9,7 +9,7 @@ export class SlideUnsubscribeDialog extends Component {
     static components = { CheckBox, Dialog };
     static props = {
         channelId: Number,
-        isFollower: { type: String, optional: true },
+        isFollower: { type: Boolean, optional: true },
         visibility: String,
         enroll: { type: String, optional: true },
         close: Function,

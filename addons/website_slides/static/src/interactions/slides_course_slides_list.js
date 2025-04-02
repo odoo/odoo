@@ -1,120 +1,108 @@
-import publicWidget from '@web/legacy/js/public/public_widget';
+import { registry } from "@web/core/registry";
+import { WebsiteSlidesCoursePage } from "./slides_course_page";
 import { _t } from "@web/core/l10n/translation";
-import { SlideCoursePage } from '@website_slides/interactions/slides_course_page';
 
-publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
-    selector: '.o_wslides_slides_list',
+class WebsiteSlidesCourseSlidesList extends WebsiteSlidesCoursePage {
+    static selector = ".o_wslides_slides_list";
 
-    init: function () {
-        this._super(...arguments);
-        this.orm = this.bindService("orm");
-    },
-
-    start: function () {
-        this._super.apply(this,arguments);
-
-        this.channelId = this.$el.data('channelId');
+    setup() {
+        super.setup();
+        this.orm = this.services.orm;
+        this.sortable = this.services.sortable;
+        this.channelId = Number(this.el.dataset.channelId);
         this.bindedSortable = [];
-
-        this._updateHref();
-        this._bindSortable();
-    },
+        this.updateHref();
+        this.bindSortable();
+    }
 
     destroy() {
-        this._unbindSortable();
-        return this._super(...arguments);
-    },
+        this.unbindSortable();
+    }
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------,
-
-    /**
-     * Bind the sortable jQuery widget to both
-     * - course sections
-     * - course slides
-     *
-     * @private
-     */
-    _bindSortable: function () {
+    bindSortable() {
         const sortableBaseParam = {
             clone: false,
-            placeholderClasses: ['o_wslides_slides_list_slide_hilight', 'position-relative', 'mb-1'],
-            onDrop: this._reorderSlides.bind(this),
-            applyChangeOnDrop: true
+            placeholderClasses: [
+                "o_wslides_slides_list_slide_hilight",
+                "position-relative",
+                "mb-1",
+            ],
+            onDrop: this.reorderSlides.bind(this),
+            applyChangeOnDrop: true,
         };
+        const containerEl = this.el.querySelector("ul.o_wslides_js_slides_list_container");
+        this.bindedSortable.push(
+            this.sortable
+                .create({
+                    ...sortableBaseParam,
+                    ref: { el: containerEl },
+                    elements: ".o_wslides_slide_list_category",
+                    handle: ".o_wslides_slide_list_category_header .o_wslides_slides_list_drag",
+                    sortableId: "category",
+                })
+                .enable()
+        );
 
-        const container = this.el.querySelector('ul.o_wslides_js_slides_list_container');
-        this.bindedSortable.push(this.call(
-            "sortable",
-            "create",
-            {
-                ...sortableBaseParam,
-                ref: { el: container },
-                elements: ".o_wslides_slide_list_category",
-                handle: ".o_wslides_slide_list_category_header .o_wslides_slides_list_drag",
-                sortableId: "category",
-            },
-        ).enable());
+        this.bindedSortable.push(
+            this.sortable
+                .create({
+                    ...sortableBaseParam,
+                    ref: { el: containerEl },
+                    elements:
+                        ".o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty):not(.o_not_editable)",
+                    handle: ".o_wslides_slides_list_drag",
+                    connectGroups: true,
+                    groups: ".o_wslides_js_slides_list_container ul",
+                    sortableId: "list",
+                })
+                .enable()
+        );
+    }
 
-        this.bindedSortable.push(this.call(
-            "sortable",
-            "create",
-            {
-                ...sortableBaseParam,
-                ref: { el: container },
-                elements: ".o_wslides_slides_list_slide:not(.o_wslides_js_slides_list_empty):not(.o_not_editable)",
-                handle: ".o_wslides_slides_list_drag",
-                connectGroups: true,
-                groups: ".o_wslides_js_slides_list_container ul",
-                sortableId: "list",
-            },
-        ).enable());
-    },
-
-    _unbindSortable: function () {
-        this.bindedSortable.forEach(sortable => sortable.cleanup());
-    },
+    unbindSortable() {
+        for (const sortable of this.bindedSortable) {
+            sortable.cleanup();
+        }
+    }
 
     /**
      * This method will check that a section is empty/not empty
      * when the slides are reordered and show/hide the
      * "Empty category" placeholder.
-     *
-     * @private
      */
-    _checkForEmptySections: function (){
-        this.$('.o_wslides_slide_list_category').each(function (){
-            var $categoryHeader = $(this).find('.o_wslides_slide_list_category_header');
-            var categorySlideCount = $(this).find('.o_wslides_slides_list_slide:not(.o_not_editable)').length;
-            var $emptyFlagContainer = $categoryHeader.find('.o_wslides_slides_list_drag').first();
-            var $emptyFlag = $emptyFlagContainer.find('small');
-            if (categorySlideCount === 0 && $emptyFlag.length === 0){
-                $emptyFlagContainer.append($('<small>', {
-                    'class': "ms-1 text-muted fw-bold",
-                    text: _t("(empty)")
-                }));
-            } else if (categorySlideCount > 0 && $emptyFlag.length > 0){
-                $emptyFlag.remove();
+    checkForEmptySections() {
+        for (const el of this.el.querySelectorAll(".o_wslides_slide_list_category")) {
+            const categoryHeaderEl = el.querySelector(".o_wslides_slide_list_category_header");
+            const categorySlideCount = el.querySelectorAll(
+                ".o_wslides_slides_list_slide:not(.o_not_editable)"
+            ).length;
+            const emptyFlagContainerEl = categoryHeaderEl.querySelector(
+                ".o_wslides_slides_list_drag"
+            );
+            const emptyFlagEl = emptyFlagContainerEl.querySelector("small");
+            if (categorySlideCount === 0 && !emptyFlagEl) {
+                const smallEl = document.createElement("small");
+                smallEl.classList.add("ms-1", "text-muted", "fw-bold");
+                smallEl.textContent = _t("(empty)");
+                this.insert(smallEl, emptyFlagContainerEl);
+            } else if (categorySlideCount > 0 && emptyFlagEl) {
+                emptyFlagEl.remove();
             }
-        });
-    },
+        }
+    }
 
-    _getSlides: function (){
-        var categories = [];
-        this.$('.o_wslides_js_list_item').each(function (){
-            categories.push(parseInt($(this).data('slideId')));
-        });
+    getSlides() {
+        const categories = [];
+        for (const el of this.el.querySelectorAll(".o_wslides_js_list_item")) {
+            categories.push(parseInt(el.dataset.slideId));
+        }
         return categories;
-    },
-    _reorderSlides: function (){
-        var self = this;
-        this.orm
-            .webResequence("slide.slide", this._getSlides())
-            .then(function (res) {
-                self._checkForEmptySections();
-            });
-    },
+    }
+
+    async reorderSlides() {
+        await this.waitFor(this.orm.webResequence("slide.slide", this.getSlides()));
+        this.checkForEmptySections();
+    }
 
     /**
      * Change links href to fullscreen mode for SEO.
@@ -123,16 +111,16 @@ publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({
      * parameter for SEO purposes.
      *
      * This method then adds the parameter as soon as the page is loaded.
-     *
-     * @private
      */
-    _updateHref: function () {
-        this.$(".o_wslides_js_slides_list_slide_link").each(function (){
-            var href = $(this).attr('href');
-            var operator = href.indexOf('?') !== -1 ? '&' : '?';
-            $(this).attr('href', href + operator + "fullscreen=1");
-        });
+    updateHref() {
+        for (const el of this.el.querySelectorAll(".o_wslides_js_slides_list_slide_link")) {
+            const href = el.href;
+            const operator = href.indexOf("?") !== -1 ? "&" : "?";
+            el.href = href + operator + "fullscreen=1";
+        }
     }
-});
+}
 
-export default publicWidget.registry.websiteSlidesCourseSlidesList;
+registry
+    .category("public.interactions")
+    .add("website_slides.WebsiteSlidesCourseSlidesList", WebsiteSlidesCourseSlidesList);
