@@ -38,8 +38,8 @@ export class ProjectTaskTemplateDropdown extends Component {
     }
 
     async createTaskFromTemplate(templateId) {
-        this.action.doAction(
-            this.orm.call("project.task", "action_create_from_template", [templateId])
-        );
+        this.action.switchView("form", {
+            resId: await this.orm.call("project.task", "action_create_from_template", [templateId]),
+        });
     }
 }

@@ -11,7 +11,7 @@ export function displayTemplateNotificationAction(env, action) {
                 name: "Undo",
                 icon: "fa-undo",
                 onClick: async () => {
-                    const res = env.services.orm.call(
+                    const res = await env.services.orm.call(
                         "project.task",
                         "action_undo_convert_to_template",
                         [taskId]
