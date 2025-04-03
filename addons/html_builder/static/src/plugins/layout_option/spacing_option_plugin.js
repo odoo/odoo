@@ -1,28 +1,76 @@
-import { BaseOptionComponent } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
+import { isBlock } from "@html_editor/utils/blocks";
 import { registry } from "@web/core/registry";
+import { addBackgroundGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
 
-export class SpacingOption extends BaseOptionComponent {
-    static template = "html_builder.SpacingOption";
-    static props = {
-        level: { type: Number, optional: true },
-        applyTo: { type: String, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
-    };
-}
 class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";
+    static dependencies = ["builderActions"];
     resources = {
-        builder_options: [
-            {
-                OptionComponent: SpacingOption,
-                selector: ".s_masonry_block",
-                applyTo: ".o_grid_mode",
-            },
-        ],
+        builder_actions: this.getActions(),
+        savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
+        on_cloned_handlers: this.onCloned.bind(this),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
     };
+
+    getActions() {
+        const builderActions = this.dependencies.builderActions;
+        return {
+            get setGridSpacing() {
+                const styleAction = builderActions.getAction("styleAction");
+                return {
+                    ...styleAction,
+                    apply: (...args) => {
+                        const rowEl = args[0].editingElement;
+                        // Remove the grid preview if any.
+                        let gridPreviewEl = rowEl.querySelector(".o_we_grid_preview");
+                        if (gridPreviewEl) {
+                            gridPreviewEl.remove();
+                        }
+                        // Apply the style action on the grid gaps.
+                        styleAction.apply(...args);
+                        // Add an animated grid preview.
+                        gridPreviewEl = addBackgroundGrid(rowEl, 0);
+                        gridPreviewEl.classList.add("o_we_grid_preview");
+                        setElementToMaxZindex(gridPreviewEl, rowEl);
+                        gridPreviewEl.addEventListener("animationend", () =>
+                            gridPreviewEl.remove()
+                        );
+                    },
+                };
+            },
+        };
+    }
+
+    isMutationRecordSavable(record) {
+        // Do not consider the grid preview in the history.
+        if (record.type === "childList") {
+            const node = record.addedNodes[0] || record.removedNodes[0];
+            if (node.matches && node.matches(".o_we_grid_preview") && isBlock(node)) {
+                return false;
+            }
+        }
+        if (record.type === "attributes") {
+            if (record.target.matches(".o_we_grid_preview")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    removeGridPreviews(el) {
+        el.querySelectorAll(".o_we_grid_preview").forEach((gridPreviewEl) =>
+            gridPreviewEl.remove()
+        );
+    }
+
+    onCloned({ cloneEl }) {
+        this.removeGridPreviews(cloneEl);
+    }
+
+    cleanForSave({ root }) {
+        this.removeGridPreviews(root);
+    }
 }
 
 registry.category("website-plugins").add(SpacingOptionPlugin.id, SpacingOptionPlugin);

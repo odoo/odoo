@@ -3,8 +3,8 @@
 
 <t t-name="html_builder.SpacingOption">
     <BuilderRow label.translate="Spacing (Y, X)" level="props.level" applyTo="props.applyTo">
-        <BuilderNumberInput styleAction="'row-gap'" unit="'px'"/>
-        <BuilderNumberInput styleAction="'column-gap'" unit="'px'"/>
+        <BuilderNumberInput action="'setGridSpacing'" actionParam="'row-gap'" unit="'px'"/>
+        <BuilderNumberInput action="'setGridSpacing'" actionParam="'column-gap'" unit="'px'" max="60"/>
     </BuilderRow>
 </t>
 
