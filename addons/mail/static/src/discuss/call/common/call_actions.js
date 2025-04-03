@@ -13,18 +13,8 @@ callActionsRegistry
         inactiveIcon: "fa-microphone",
         icon: "fa-microphone-slash",
         activeClass: "text-danger",
-        select: (component) => {
-            if (component.rtc.selfSession.isMute) {
-                if (component.rtc.selfSession.is_muted) {
-                    component.rtc.unmute();
-                }
-                if (component.rtc.selfSession.is_deaf) {
-                    component.rtc.undeafen();
-                }
-            } else {
-                component.rtc.mute();
-            }
-        },
+        hotkey: "shift+m",
+        select: (component) => component.rtc.toggleMicrophone(),
         sequence: 10,
     })
     .add("deafen", {
@@ -34,8 +24,8 @@ callActionsRegistry
         inactiveIcon: "fa-headphones",
         icon: "fa-deaf",
         activeClass: "text-danger",
-        select: (component) =>
-            component.rtc.selfSession.is_deaf ? component.rtc.undeafen() : component.rtc.deafen(),
+        hotkey: "shift+d",
+        select: (component) => component.rtc.toggleDeafen(),
         sequence: 20,
     })
     .add("camera-on", {
@@ -126,6 +116,9 @@ function transformAction(component, id, action) {
         /** Name of this action, displayed to the user */
         get name() {
             return typeof action.name === "function" ? action.name(component) : action.name;
+        },
+        get hotkey() {
+            return typeof action.hotkey === "function" ? action.hotkey(component) : action.hotkey;
         },
         get isActive() {
             return action.isActive(component);

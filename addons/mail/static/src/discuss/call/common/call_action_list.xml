@@ -6,7 +6,7 @@
             <div class="o-discuss-CallActionList-bar d-flex align-items-center flex-wrap justify-content-between" t-att-class="{ 'w-100 ps-2 pe-2': isSmall }">
                 <t t-if="isOfActiveCall and rtc.selfSession">
                     <t t-foreach="callActions.actions.slice(0, isMobileOS ? 3 : 4)" t-as="action" t-key="action_index">
-                        <t t-call="discuss.CallActionList.actionButton" />
+                        <CallActionButton action="action" isSmall="isSmall" isActive="action.isActive"/>
                     </t>
                     <Dropdown position="'top-end'" menuClass="'d-flex flex-column py-0'">
                         <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-100 opacity-75-hover align-items-center p-0" t-att-title="MORE">
@@ -57,21 +57,6 @@
                 </button>
             </div>
         </div>
-    </t>
-
-    <t t-name="discuss.CallActionList.actionButton">
-        <button class="btn smaller d-flex m-1 border-0 rounded-circle shadow-none opacity-75-hover align-items-center p-0"
-            t-att-class="{ 'bg-600 opacity-75': !action.available, 'opacity-100': action.available }"
-            t-att-aria-label="action.name"
-            t-att-title="action.name"
-            t-on-click="action.select">
-            <i class="fa fa-fw m-2 fa-fw" t-att-class="{
-                'fa-lg': !isSmall,
-                [action.inactiveIcon]: !action.isActive,
-                [action.icon]: action.isActive or !action.inactiveIcon,
-                [action.activeClass]: action.isActive,
-            }"/>
-        </button>
     </t>
 
 </templates>

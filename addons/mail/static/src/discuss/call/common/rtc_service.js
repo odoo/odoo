@@ -639,9 +639,25 @@ export class Rtc extends Record {
         }
     }
 
+    async toggleDeafen() {
+        if (this.selfSession.is_deaf) {
+            await this.undeafen();
+            if (this.selfSession.is_muted) {
+                await this.unmute();
+            }
+        } else {
+            await this.deafen();
+        }
+    }
+
     async toggleMicrophone() {
-        if (this.localSession.isMute) {
-            await this.unmute();
+        if (this.selfSession.isMute) {
+            if (this.selfSession.is_muted) {
+                await this.unmute();
+            }
+            if (this.selfSession.is_deaf) {
+                await this.undeafen();
+            }
         } else {
             await this.mute();
         }
