@@ -74,10 +74,7 @@ class TestMailingContactToList(MassMailCommon):
             self.assertEqual(contacts.list_ids, mailing)
             create_dates = contacts.subscription_ids.mapped('create_date')
             self.assertTrue(all(date == frozen_time for date in create_dates), "All create dates should be equal to frozen datetime")
-        self.assertEqual(action["type"], "ir.actions.client")
-        self.assertTrue(action.get("params", {}).get("next"), "Should return a notification with a next action")
-        subaction = action["params"]["next"]
-        self.assertEqual(subaction["type"], "ir.actions.act_window_close")
+        self.assertEqual(action["type"], "ir.actions.act_window")
 
 
 @tagged('mailing_list')

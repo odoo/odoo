@@ -115,7 +115,7 @@ class MailingList(models.Model):
         # Prevent archiving used mailing list
         if 'active' in vals and not vals.get('active'):
             mass_mailings = self.env['mailing.mailing'].search_count([
-                ('state', '!=', 'done'),
+                ('state', 'not in', ['done', 'draft']),
                 ('contact_list_ids', 'in', self.ids),
             ])
 
