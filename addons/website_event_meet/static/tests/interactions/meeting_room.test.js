@@ -1,10 +1,7 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, microTick, queryOne } from "@odoo/hoot-dom";
 import {
     contains,
     defineModels,
@@ -270,6 +267,7 @@ test("[click] website_event_meeting_room enable to pin / unpin a room", async ()
     const pinnedButtonEl = queryOne(".o_wevent_meeting_room_is_pinned:first");
     expect(pinnedButtonEl).toHaveClass("o_wevent_meeting_room_pinned");
     await click(pinnedButtonEl);
+    await microTick();
     expect.verifySteps(["rpc"]);
     expect(pinnedButtonEl).not.toHaveClass("o_wevent_meeting_room_pinned");
 });
@@ -289,7 +287,9 @@ test("[click] website_event_meeting_room enable to delete a room", async () => {
     const dropdownEl = deleteButtonEl.parentElement.previousElementSibling;
     await click(dropdownEl);
     await click(deleteButtonEl);
-    await contains(".modal:last:contains(Are you sure you want to close this room?) .modal-footer .btn-primary").click();
+    await contains(
+        ".modal:last:contains(Are you sure you want to close this room?) .modal-footer .btn-primary"
+    ).click();
     expect.verifySteps(["rpc"]);
     expect(deleteButtonEl.closest(".o_wevent_meeting_room_card")).not.toBeVisible();
 });
@@ -308,6 +308,8 @@ test("[click] website_event_meeting_room enable to duplicate a room", async () =
     const dropdownEl = duplicateButtonEl.parentElement.previousElementSibling;
     await click(dropdownEl);
     await click(duplicateButtonEl);
-    await contains(".modal:last:contains(Are you sure you want to duplicate this room?) .modal-footer .btn-primary").click();
+    await contains(
+        ".modal:last:contains(Are you sure you want to duplicate this room?) .modal-footer .btn-primary"
+    ).click();
     expect.verifySteps(["rpc"]);
 });
