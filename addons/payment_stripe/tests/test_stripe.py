@@ -45,7 +45,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with patch(
             'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
-            return_value={'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH', 'status': 'succeeded'},
+            return_value={
+                'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH',
+                'status': 'succeeded',
+                **self.notification_amount_and_currency,
+            },
         ):
             tx._send_capture_request()
         self.assertEqual(
@@ -60,7 +64,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with patch(
             'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
-            return_value={'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH', 'status': 'canceled'},
+            return_value={
+                'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH',
+                'status': 'canceled',
+                **self.notification_amount_and_currency,
+            },
         ):
             tx._send_void_request()
         self.assertEqual(

@@ -7,7 +7,6 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -34,7 +33,7 @@ class MollieController(http.Controller):
                           embedded in the return URL
         """
         _logger.info("handling redirection from Mollie with data:\n%s", pprint.pformat(data))
-        request.env['payment.transaction'].sudo()._handle_notification_data('mollie', data)
+        self._verify_and_handle_notification_data(data)
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', auth='public', methods=['POST'], csrf=False)
@@ -48,7 +47,18 @@ class MollieController(http.Controller):
         """
         _logger.info("notification received from Mollie with data:\n%s", pprint.pformat(data))
         try:
-            request.env['payment.transaction'].sudo()._handle_notification_data('mollie', data)
+            self._verify_and_handle_notification_data(data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
         return ''  # Acknowledge the notification
+
+    @staticmethod
+    def _verify_and_handle_notification_data(data):
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+            'mollie', data
+        )
+        # Verify the notification data.
+        verified_data = tx_sudo.provider_id._mollie_make_request(
+            f'/payments/{tx_sudo.provider_reference}', method="GET"
+        )
+        tx_sudo._handle_notification_data('mollie', verified_data)

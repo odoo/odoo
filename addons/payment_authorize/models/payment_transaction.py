@@ -10,7 +10,6 @@ from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_authorize import const
 from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -196,6 +195,25 @@ class PaymentTransaction(models.Model):
                 "Authorize.Net: " + _("No transaction found matching reference %s.", reference)
             )
         return tx
+
+    def _compare_notification_data(self, notification_data):
+        """ Override of `payment` to compare the transaction based on Authorize data.
+
+        :param dict notification_data: The notification data sent by the provider.
+        :return: None
+        :raise ValidationError: If the transaction's amount and currency don't match the
+            notification data.
+        """
+        if self.provider_code != 'authorize':
+            return super()._compare_notification_data(notification_data)
+
+        tx_details = AuthorizeAPI(self.provider_id).get_transaction_details(
+            notification_data.get('response', {}).get('x_trans_id')
+        )
+        amount = tx_details.get('transaction', {}).get('authAmount')
+        # Authorize supports only one currency per account.
+        currency_code = self.provider_id.available_currency_ids[0].name
+        self._validate_amount_and_currency(amount, currency_code)
 
     def _process_notification_data(self, notification_data):
         """ Override of payment to process the transaction based on Authorize data.
