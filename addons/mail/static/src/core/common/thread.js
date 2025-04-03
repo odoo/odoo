@@ -23,7 +23,6 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
-import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 3;
 const PRESENT_MESSAGE_THRESHOLD = 10;
@@ -66,7 +65,6 @@ export class Thread extends Component {
 
     setup() {
         super.setup();
-        this.escape = escape;
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.registerMessageRef = this.registerMessageRef.bind(this);

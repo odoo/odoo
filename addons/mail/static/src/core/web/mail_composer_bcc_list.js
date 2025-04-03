@@ -1,12 +1,12 @@
 import { MailComposerBccPopover } from "@mail/core/web/mail_composer_bcc_list_popover";
-import { formatList } from "@web/core/l10n/utils";
+
+import { Component, markup } from "@odoo/owl";
+
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
-import { _t } from "@web/core/l10n/translation";
-import { escape } from "@web/core/utils/strings";
+import { htmlFormatList } from "@web/core/utils/html";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-
-import { markup, Component } from "@odoo/owl";
 
 export class MailComposerBccList extends Component {
     static template = "mail.MailComposerBccList";
@@ -24,20 +24,20 @@ export class MailComposerBccList extends Component {
         const records = this.getRecords();
         for (const record of records.slice(0, this.limit)) {
             const partner = record.data;
-            elements.push(`
-                <span class="text-muted" title="${escape(
+            elements.push(
+                markup`<span class="text-muted" title="${
                     partner.email_normalized || _t("no email address")
-                )}">${escape(partner.name)}</span>
-            `);
-        }
-        if (records.length > this.limit) {
-            elements.push(escape(
-                _t("%(recipientCount)s more", {
-                    recipientCount: records.length - this.limit
-                }))
+                }">${partner.name}</span>`
             );
         }
-        return markup(formatList(elements));
+        if (records.length > this.limit) {
+            elements.push(
+                _t("%(recipientCount)s more", {
+                    recipientCount: records.length - this.limit,
+                })
+            );
+        }
+        return htmlFormatList(elements);
     }
 
     /** @returns {Array[Record]} */
@@ -68,12 +68,10 @@ export class MailComposerBccList extends Component {
 
 export const mailComposerBccList = {
     component: MailComposerBccList,
-    relatedFields: (fieldInfo) => {
-        return [
-            { name: "name", type: "char" },
-            { name: "email_normalized", type: "char" }
-        ];
-    },
+    relatedFields: (fieldInfo) => [
+        { name: "name", type: "char" },
+        { name: "email_normalized", type: "char" },
+    ],
 };
 
 registry.category("fields").add("mail_composer_bcc_list", mailComposerBccList);
