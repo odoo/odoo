@@ -71,7 +71,7 @@ export class BasicMany2Many extends Component {
     async _search(searchValue) {
         const tuples = await this.orm.call(this.props.model, "name_search", [], {
             name: searchValue,
-            args: Object.values(this.props.domain).filter((item) => item !== null),
+            domain: Object.values(this.props.domain).filter((item) => item !== null),
             operator: "ilike",
             limit: this.props.limit + 1,
         });

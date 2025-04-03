@@ -67,6 +67,9 @@ export class BuilderMany2Many extends Component {
                 fieldNames: [props.m2oField],
             });
             this.state.searchModel = modelData[props.m2oField].relation;
+            if (!this.state.searchModel) {
+                throw new Error(`m2oField ${props.m2oField} is not a relation field`);
+            }
         } else {
             this.state.searchModel = props.model;
         }
