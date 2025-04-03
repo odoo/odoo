@@ -431,12 +431,14 @@ export class LinkPlugin extends Plugin {
 
                 // Handle selection movement.
                 if (isCursorAtStartOfLink || isCursorAtEndOfLink) {
-                    const block = closestBlock(linkElement);
-                    const linkIndex = [...block.childNodes].indexOf(linkElement);
+                    const [targetNode, targetOffset] = isCursorAtStartOfLink
+                        ? leftPos(linkElement)
+                        : rightPos(linkElement);
                     this.dependencies.selection.setSelection({
-                        anchorNode: block,
-                        anchorOffset: isCursorAtStartOfLink ? linkIndex - 1 : linkIndex + 2,
+                        anchorNode: targetNode,
+                        anchorOffset: isCursorAtStartOfLink ? targetOffset - 1 : targetOffset + 1,
                     });
+                    return;
                 }
             }
         }
