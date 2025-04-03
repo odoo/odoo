@@ -41,7 +41,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [
@@ -90,7 +90,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [
@@ -148,7 +148,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [
@@ -233,7 +233,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [
@@ -272,7 +272,7 @@ class TestSaleDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         })
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.customer.id,
             'picking_policy': 'direct',
             'order_line': [

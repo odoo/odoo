@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import Command
-from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+
+from odoo.fields import Command
 from odoo.tests import tagged
+
+from odoo.addons.hr_expense.tests.common import TestExpenseCommon
+
 
 @tagged('-at_install', 'post_install')
 class TestExpenseMargin(TestExpenseCommon):
@@ -14,7 +17,10 @@ class TestExpenseMargin(TestExpenseCommon):
         product_with_no_cost.write({'expense_policy': 'sales_price'})
 
         # create SO line and confirm SO (with only one line)
-        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order = self.env['sale.order'].with_context(
+            mail_notrack=True,
+            mail_create_nolog=True,
+        ).sudo().create({
             'partner_id': self.partner_a.id,
             'partner_invoice_id': self.partner_a.id,
             'partner_shipping_id': self.partner_a.id,

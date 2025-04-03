@@ -1,10 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from datetime import timedelta
+
 from odoo import fields
-from odoo.tests import common, tagged
+from odoo.fields import Command
+from odoo.tests import tagged
+
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import (
+    ValuationReconciliationTestCommon,
+)
 
 
 @tagged('post_install', '-at_install')
@@ -37,13 +41,13 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         self.env['stock.quant']._update_available_quantity(product_B, self.company_data['default_warehouse'].lot_stock_id, 10)
         self.env['stock.quant']._update_available_quantity(product_C, self.company_data['default_warehouse'].lot_stock_id, 10)
 
-        sale_order = self.env['sale.order'].create({
+        sale_order = self.env['sale.order'].sudo().create({
             'partner_id': self.env['res.partner'].create({'name': 'A Customer'}).id,
             'picking_policy': 'direct',
             'order_line': [
-                (0, 0, {'name': product_A.name, 'product_id': product_A.id, 'customer_lead': product_A.sale_delay, 'product_uom_qty': 5}),
-                (0, 0, {'name': product_B.name, 'product_id': product_B.id, 'customer_lead': product_B.sale_delay, 'product_uom_qty': 5}),
-                (0, 0, {'name': product_C.name, 'product_id': product_C.id, 'customer_lead': product_C.sale_delay, 'product_uom_qty': 5})
+                Command.create({'product_id': product_A.id, 'product_uom_qty': 5}),
+                Command.create({'product_id': product_B.id, 'product_uom_qty': 5}),
+                Command.create({'product_id': product_C.id, 'product_uom_qty': 5})
             ],
         })
 
@@ -91,17 +95,17 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
 
         # In order to test the Commitment Date feature in Sales Orders in Odoo,
         # I copy a demo Sales Order with committed Date on 2010-07-12
-        new_order = self.env['sale.order'].create({
+        new_order = self.env['sale.order'].sudo().create({
             'partner_id': self.env['res.partner'].create({'name': 'A Partner'}).id,
-            'order_line': [(0, 0, {
-                'name': "A product",
-                'product_id': self.env['product.product'].create({
-                    'name': 'A product',
-                    'is_storable': True,
-                }).id,
-                'product_uom_qty': 1,
-                'price_unit': 750,
-            })],
+            'order_line': [
+                Command.create({
+                    'product_id': self.env['product.product'].create({
+                        'name': 'A product',
+                        'is_storable': True,
+                    }).id,
+                    'price_unit': 750,
+                })
+            ],
             'commitment_date': '2010-07-12',
         })
         # I confirm the Sales Order.

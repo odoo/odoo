@@ -3,9 +3,9 @@
 
 from freezegun import freeze_time
 
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
 from odoo import fields
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
@@ -29,21 +29,19 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'property_stock_account_output_categ_id': cls.company_data['default_account_stock_out'].id,
         })
 
-        uom_unit = cls.env.ref('uom.product_uom_unit')
-
         cls.test_product_order = cls.env['product.product'].create({
             'name': "Test product template invoiced on order",
             'standard_price': 42.0,
             'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
-            'uom_id': uom_unit.id,
+            'uom_id': cls.uom_unit.id,
         })
         cls.test_product_delivery = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery',
             'standard_price': 42.0,
             'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
-            'uom_id': uom_unit.id,
+            'uom_id': cls.uom_unit.id,
         })
 
         cls.res_users_stock_user = cls.env['res.users'].create({
@@ -51,7 +49,7 @@ class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
             'login': "su",
             'email': "stockuser@yourcompany.com",
             'group_ids': [(6, 0, [cls.env.ref('stock.group_stock_user').id])],
-            })
+        })
 
     @classmethod
     def collect_company_accounting_data(cls, company):
