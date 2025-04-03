@@ -7,7 +7,7 @@
                 <span class="text-muted opacity-75" t-esc="callInformation"/>
             </t>
             <t t-else="">
-                <span class="o-mail-NotificationMessage-author d-inline text-muted opacity-75" t-if="message.authorName and !message.richBody.includes(escape(message.authorName))" t-esc="message.authorName"/> <span class="text-muted opacity-75" t-out="message.richBody"/>
+                <span class="o-mail-NotificationMessage-author d-inline text-muted opacity-75" t-if="message.authorName and !message.richBody.includes(htmlEscape(message.authorName))" t-esc="message.authorName"/> <span class="text-muted opacity-75" t-out="message.richBody"/>
             </t>
             <span class="o-mail-Message-date o-xsmaller ms-1" t-esc="message.dateSimpleWithDay"/>
         </div>

@@ -1,6 +1,4 @@
-import { markup } from "@odoo/owl";
-
-import { htmlEscape } from "@web/core/utils/html";
+import { htmlEscape, markup } from "@odoo/owl";
 
 /**
  * Safely creates a Document fragment from content. If content was flagged as safe HTML using
@@ -10,16 +8,6 @@ import { htmlEscape } from "@web/core/utils/html";
  */
 export function createDocumentFragmentFromContent(content) {
     return new document.defaultView.DOMParser().parseFromString(htmlEscape(content), "text/html");
-}
-
-/**
- * Applies list join on content and returns a markup result built for HTML.
- *
- * @param {Array<string|ReturnType<markup>>} args
- * @returns {ReturnType<markup>}
- */
-export function htmlJoin(...args) {
-    return markup(args.map((arg) => htmlEscape(arg)).join(""));
 }
 
 /**

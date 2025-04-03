@@ -49,7 +49,7 @@ test("can display a notification with markup content", async () => {
         .category("main_components")
         .get("NotificationContainer");
     await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
-    getService("notification").add(markup("<b>I'm a <i>markup</i> notification</b>"));
+    getService("notification").add(markup`<b>I'm a <i>markup</i> notification</b>`);
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
     expect(".o_notification_content").toHaveInnerHTML("<b>I'm a <i>markup</i> notification</b>");

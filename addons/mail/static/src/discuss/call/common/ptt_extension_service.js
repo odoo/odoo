@@ -1,9 +1,10 @@
+import { parseVersion } from "@mail/utils/common/misc";
+
 import { markup, reactive } from "@odoo/owl";
 
-import { parseVersion } from "@mail/utils/common/misc";
 import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
 export const pttExtensionHookService = {
     start(env) {
@@ -32,10 +33,8 @@ export const pttExtensionHookService = {
                 return _t(
                     "The Push-to-Talk feature is only accessible within tab focus. To enable the Push-to-Talk functionality outside of this tab, we recommend downloading our %(anchor_start)sextension%(anchor_end)s.",
                     {
-                        anchor_start: markup(
-                            `<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`
-                        ),
-                        anchor_end: markup("</a>"),
+                        anchor_start: markup`<a href="${this.downloadURL}" target="_blank" class="text-reset text-decoration-underline">`,
+                        anchor_end: markup`</a>`,
                     }
                 );
             },

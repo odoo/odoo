@@ -1,6 +1,6 @@
 import { rpc } from "@web/core/network/rpc";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { sprintf } from "@web/core/utils/strings";
+import { htmlSprintf } from "@web/core/utils/html";
 import { _t } from "@web/core/l10n/translation";
 import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
 
@@ -273,10 +273,8 @@ export class WebsiteLoader extends Component {
         const messagesList = websiteFeaturesMessages.filter((msg) => {
             if (filteredIds.includes(msg.id)) {
                 if (msg.name) {
-                    const highlight = sprintf(
-                        '<span class="o_website_loader_text_highlight">%s</span>', msg.name
-                    );
-                    msg.description = markup(sprintf(msg.description, highlight));
+                    const highlight = markup`<span class="o_website_loader_text_highlight">${msg.name}</span>`;
+                    msg.description = htmlSprintf(msg.description, highlight);
                 }
                 return true;
             }

@@ -4,7 +4,6 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { escape } from "@web/core/utils/strings";
 import { DataPoint } from "./datapoint";
 import {
     createMany2OneValue,
@@ -15,6 +14,7 @@ import {
     parseServerValue,
 } from "./utils";
 import { FetchRecordError } from "./errors";
+import { htmlJoin } from "@web/core/utils/html";
 
 export class Record extends DataPoint {
     static type = "Record";
@@ -453,11 +453,11 @@ export class Record extends DataPoint {
         const isValid = !this._invalidFields.size;
         if (!isValid && displayNotification) {
             const items = [...this._invalidFields].map(
-                (fieldName) => `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`,
+                (fieldName) => markup`<li>${this.fields[fieldName].string || fieldName}</li>`,
                 this
             );
             this._closeInvalidFieldsNotification = this.model.notification.add(
-                markup(`<ul>${items.join("")}</ul>`),
+                markup`<ul>${htmlJoin(items)}</ul>`,
                 {
                     title: _t("Invalid fields: "),
                     type: "danger",
@@ -488,17 +488,22 @@ export class Record extends DataPoint {
         }
         const context = getFieldContext(this, fieldName);
         if (!resId && displayName !== undefined) {
-            const pair = await this.model.orm.call(resModel, "name_create", [displayName], { context });
+            const pair = await this.model.orm.call(resModel, "name_create", [displayName], {
+                context,
+            });
             return pair && createMany2OneValue(pair);
         }
         if (resId && displayName === undefined) {
             const fieldSpec = { display_name: {} };
             if (this.activeFields[fieldName].related) {
-                Object.assign(fieldSpec, getFieldsSpec(
-                    this.activeFields[fieldName].related.activeFields,
-                    this.activeFields[fieldName].related.fields,
-                    getBasicEvalContext(this.config),
-                ));
+                Object.assign(
+                    fieldSpec,
+                    getFieldsSpec(
+                        this.activeFields[fieldName].related.activeFields,
+                        this.activeFields[fieldName].related.fields,
+                        getBasicEvalContext(this.config)
+                    )
+                );
             }
             const kwargs = {
                 context,
@@ -1047,10 +1052,9 @@ export class Record extends DataPoint {
                 this.dirty = false;
             } else {
                 this.model._closeUrgentSaveNotification = this.model.notification.add(
-                    markup(
-                        _t(
-                            `Heads up! Your recent changes are too large to save automatically. Please click the <i class="fa fa-cloud-upload fa-fw"></i> button now to ensure your work is saved before you exit this tab.`
-                        )
+                    _t(
+                        `Heads up! Your recent changes are too large to save automatically. Please click the %(icon)s button now to ensure your work is saved before you exit this tab.`,
+                        { icon: markup`<i class="fa fa-cloud-upload fa-fw"></i>` }
                     ),
                     { sticky: true }
                 );
@@ -1285,7 +1289,12 @@ export class Record extends DataPoint {
             if (this.fields[fieldName].type === "many2one") {
                 const curVal = toRaw(this.data[fieldName]);
                 const nextVal = changes[fieldName];
-                if (curVal && nextVal && curVal.id === nextVal.id && curVal.display_name === nextVal.display_name) {
+                if (
+                    curVal &&
+                    nextVal &&
+                    curVal.id === nextVal.id &&
+                    curVal.display_name === nextVal.display_name
+                ) {
                     delete changes[fieldName];
                 }
             }

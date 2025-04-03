@@ -1,6 +1,5 @@
 import {
     createDocumentFragmentFromContent,
-    htmlJoin,
     htmlReplace,
     htmlReplaceAll,
     htmlTrim,
@@ -19,14 +18,8 @@ test("createDocumentFragmentFromContent escapes text", () => {
 });
 
 test("createDocumentFragmentFromContent keeps html markup", () => {
-    const doc = createDocumentFragmentFromContent(markup("<p>test</p>"));
+    const doc = createDocumentFragmentFromContent(markup`<p>test</p>`);
     expect(doc.body.innerHTML).toEqual("<p>test</p>");
-});
-
-test("htmlJoin keeps html markup and escapes text", () => {
-    const res = htmlJoin(markup("<p>test</p>"), "<p>test</p>");
-    expect(res.toString()).toBe("<p>test</p>&lt;p&gt;test&lt;/p&gt;");
-    expect(res).toBeInstanceOf(Markup);
 });
 
 test("htmlReplace with text/text/text replaces with escaped text", () => {
@@ -187,7 +180,7 @@ test("htmlTrim escapes text", () => {
 });
 
 test("htmlTrim keeps html markup", () => {
-    const res = htmlTrim(markup(" <p>test</p> "));
+    const res = htmlTrim(markup` <p>test</p> `);
     expect(res.toString()).toBe("<p>test</p>");
     expect(res).toBeInstanceOf(Markup);
 });

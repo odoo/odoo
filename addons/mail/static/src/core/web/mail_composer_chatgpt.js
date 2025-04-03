@@ -1,7 +1,5 @@
 import { ChatGPTPromptDialog } from "@html_editor/main/chatgpt/chatgpt_prompt_dialog";
 
-import { htmlJoin } from "@mail/utils/common/html";
-
 import { Component, markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -24,7 +22,7 @@ export class MailComposerChatGPT extends Component {
                 root.appendChild(content);
                 const { body } = this.props.record.data;
                 this.props.record.update({
-                    body: htmlJoin(body, markup(root.innerHTML)),
+                    body: markup`${body}${markup(root.innerHTML)}`,
                 });
             },
             /**

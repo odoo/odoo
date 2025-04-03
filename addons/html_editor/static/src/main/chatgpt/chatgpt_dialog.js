@@ -84,9 +84,9 @@ export class ChatGPTDialog extends Component {
         let result = "";
         for (const child of fragment.children) {
             this.props.sanitize(child, { IN_PLACE: true });
-            result += child.outerHTML;
+            result = markup`${result}${markup(child.outerHTML)}`;
         }
-        return markup(result);
+        return result;
     }
 
     generate(prompt, callback) {
