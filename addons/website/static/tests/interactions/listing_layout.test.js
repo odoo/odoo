@@ -1,10 +1,7 @@
-import {
-    startInteractions,
-    setupInteractionWhiteList,
-} from "@web/../tests/public/helpers";
+import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
+import { click, microTick, queryOne } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
@@ -39,7 +36,9 @@ test("listing_layout toggle to list mode", async () => {
         </div>
     `);
     onRpc("/website/save_session_layout_mode", async (request) => {
-        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(await request.arrayBuffer())).params;
+        const jsonParams = JSON.parse(
+            new TextDecoder("utf-8").decode(await request.arrayBuffer())
+        ).params;
         expect.step("rpc");
         expect(jsonParams.layout_mode).toBe("list");
         expect(jsonParams.view_id).toBe("123");
@@ -47,9 +46,16 @@ test("listing_layout toggle to list mode", async () => {
     });
     const gridEl = queryOne(".o_website_grid");
     await click("#apply_list");
+    await microTick();
     expect(gridEl).toHaveClass("o_website_list");
     expect(gridEl).not.toHaveClass("o_website_grid");
-    expect(queryOne(".o_website_list > div")).not.toHaveClass(["col-lg-3", "col-md-4", "col-sm-6", "px-2", "col-xs-12"]);
+    expect(queryOne(".o_website_list > div")).not.toHaveClass([
+        "col-lg-3",
+        "col-md-4",
+        "col-sm-6",
+        "px-2",
+        "col-xs-12",
+    ]);
     await deferred;
     expect.verifySteps(["rpc"]);
 });
@@ -80,7 +86,9 @@ test("listing_layout toggle to grid mode", async () => {
         </div>
     `);
     onRpc("/website/save_session_layout_mode", async (request) => {
-        const jsonParams = JSON.parse(new TextDecoder("utf-8").decode(await request.arrayBuffer())).params;
+        const jsonParams = JSON.parse(
+            new TextDecoder("utf-8").decode(await request.arrayBuffer())
+        ).params;
         expect.step("rpc");
         expect(jsonParams.layout_mode).toBe("grid");
         expect(jsonParams.view_id).toBe("123");
@@ -88,9 +96,16 @@ test("listing_layout toggle to grid mode", async () => {
     });
     const listEl = queryOne(".o_website_list");
     await click("#apply_grid");
+    await microTick();
     expect(listEl).toHaveClass("o_website_grid");
     expect(listEl).not.toHaveClass("o_website_list");
-    expect(queryOne(".o_website_grid > div")).toHaveClass(["col-lg-3", "col-md-4", "col-sm-6", "px-2", "col-xs-12"]);
+    expect(queryOne(".o_website_grid > div")).toHaveClass([
+        "col-lg-3",
+        "col-md-4",
+        "col-sm-6",
+        "px-2",
+        "col-xs-12",
+    ]);
     await deferred;
     expect.verifySteps(["rpc"]);
 });
