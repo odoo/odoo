@@ -41,22 +41,27 @@ class Partner extends models.Model {
         { id: 2, display_name: "Second record" },
     ];
     _views = {
-        "form,false": `
+        form: /* xml */ `
             <form>
                 <group>
                     <field name="display_name"/>
                 </group>
-            </form>`,
-        "kanban,false": `
+            </form>
+        `,
+        "kanban,1": /* xml */ `
             <kanban>
                 <templates>
                     <t t-name="card">
                         <field name="display_name"/>
                     </t>
                 </templates>
-            </kanban>`,
-        "list,false": `<list><field name="display_name"/></list>`,
-        "search,false": `<search/>`,
+            </kanban>
+        `,
+        list: /* xml */ `
+            <list>
+                <field name="display_name" />
+            </list>
+        `,
     };
 }
 

@@ -104,8 +104,8 @@ test("Click a link containing an action xml id", async () => {
             expect(action.res_model).toBe("ir.ui.menu");
             expect(action.target).toBe("current");
             expect(action.type).toBe("ir.actions.act_window");
-            expect(action.views).toEqual([[1, "list"]]);
-            expect(action.domain).toEqual([(1, "=", 1)]);
+            expect(action.views).toEqual([[false, "list"]]);
+            expect(action.domain).toEqual([[1, "=", 1]]);
         },
     });
     const env = await makeSpreadsheetMockEnv({ serverData: getMenuServerData() });
@@ -116,7 +116,7 @@ test("Click a link containing an action xml id", async () => {
         action: {
             modelName: "ir.ui.menu",
             views: [[false, "list"]],
-            domain: [(1, "=", 1)],
+            domain: [[1, "=", 1]],
             xmlId: "spreadsheet.action1",
         },
     };

@@ -1,5 +1,5 @@
 import { LunchKanbanRenderer } from "@lunch/views/kanban";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, mailModels } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     contains,
@@ -25,11 +25,10 @@ const lunchInfos = {
 };
 
 async function mountLunchView() {
-    return await mountView(
-        Object.assign({
-            type: "kanban",
-            resModel: "lunch.product",
-            arch: `
+    return mountView({
+        type: "kanban",
+        resModel: "lunch.product",
+        arch: `
             <kanban js_class="lunch_kanban">
                 <templates>
                     <t t-name="card">
@@ -38,8 +37,7 @@ async function mountLunchView() {
                     </t>
                 </templates>
             </kanban>`,
-        })
-    );
+    });
 }
 
 class Product extends models.Model {
@@ -88,7 +86,7 @@ class Order extends models.Model {
     };
 }
 
-const mailModels = defineMailModels();
+defineMailModels();
 defineModels([Product, Location, Order]);
 
 describe.current.tags("desktop");
@@ -178,9 +176,11 @@ test("Location change", async () => {
 
 test("Manager: user change", async () => {
     expect.assertions(8);
-    mailModels
-        .find((m) => m.name === "ResUsers")
-        ._records.push({ id: 1, name: "Johnny Hache" }, { id: 2, name: "David Elora" });
+
+    mailModels.ResUsers._records.push(
+        { id: 1, name: "Johnny Hache" },
+        { id: 2, name: "David Elora" }
+    );
     let userInfos = { ...lunchInfos, is_manager: true };
     let expectedUserId = false; // false as we are requesting for the current user
     onRpc("/lunch/user_location_get", () => {

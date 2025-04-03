@@ -438,7 +438,6 @@ test("many2many kanban: conditional create/delete actions", async () => {
     PartnerType._views = {
         form: '<form><field name="name"/></form>',
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
     Partner._records[0].timmy = [1, 2];
 
@@ -898,7 +897,6 @@ test("many2many list: conditional create/delete actions", async () => {
 
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({
@@ -944,7 +942,6 @@ test("many2many field with link/unlink options (list)", async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({
@@ -983,7 +980,6 @@ test('many2many field with link/unlink options (list, create="0")', async () => 
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({
@@ -1023,7 +1019,6 @@ test("many2many field with link option (kanban)", async () => {
 
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({
@@ -1064,7 +1059,6 @@ test('many2many field with link option (kanban, create="0")', async () => {
     Partner._records[0].timmy = [1, 2];
     PartnerType._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({
@@ -1424,10 +1418,9 @@ test("onchange with 40+ commands for a many2many", async () => {
 
     // create a lot of partner_types that will be linked by the onchange
     const commands = [];
-    for (var i = 0; i < 45; i++) {
-        var id = 100 + i;
-        PartnerType._records.push({ id: id, name: "type " + id });
-        commands.push([4, id]);
+    for (let id = 100; id < 145; id++) {
+        PartnerType._records.push({ id, name: "type " + id });
+        commands.push(Command.link(id));
     }
     Partner._fields.foo = fields.Char({
         default: "My little Foo Value",
@@ -1490,10 +1483,9 @@ test("onchange with 40+ commands for a many2many on desktop", async () => {
 
     // create a lot of partner_types that will be linked by the onchange
     const commands = [];
-    for (var i = 0; i < 45; i++) {
-        var id = 100 + i;
-        PartnerType._records.push({ id: id, name: "type " + id });
-        commands.push([4, id]);
+    for (let id = 100; id < 145; id++) {
+        PartnerType._records.push({ id, name: "type " + id });
+        commands.push(Command.link(id));
     }
     Partner._fields.foo = fields.Char({
         default: "My little Foo Value",
@@ -1695,7 +1687,6 @@ test("many2many kanban: action/type attribute", async () => {
 test("select create with _view_ref as text", async () => {
     PartnerType._views = {
         [["list", "my.little.string"]]: `<list><field name="name"/></list>`,
-        search: `<search />`,
     };
     patchWithCleanup(Many2XAutocomplete.defaultProps, {
         searchLimit: 1,
