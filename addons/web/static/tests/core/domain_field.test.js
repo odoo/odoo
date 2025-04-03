@@ -443,7 +443,6 @@ test("domain field: manually edit domain with textarea", async function () {
                 <field name="bar"/>
                 <field name="foo" widget="domain" options="{'model': 'bar'}"/>
             </form>`,
-        search: `<search />`,
     };
 
     onRpc("search_count", ({ args }) => expect.step(args[0]));
@@ -484,11 +483,10 @@ test("domain field: manually set an invalid domain with textarea", async functio
 
     Partner._views = {
         form: `
-                <form>
-                    <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-        search: `<search />`,
+            <form>
+                <field name="bar"/>
+                <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+            </form>`,
     };
 
     onRpc("/web/domain/validate", async (request) => {
@@ -551,11 +549,10 @@ test("domain field: reload count by clicking on the refresh button", async funct
 
     Partner._views = {
         form: `
-                <form>
-                    <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-        search: `<search />`,
+            <form>
+                <field name="bar"/>
+                <field name="foo" widget="domain" options="{'model': 'bar'}"/>
+            </form>`,
     };
 
     onRpc("/web/domain/validate", () => true);
@@ -745,7 +742,6 @@ test("domain field: edit domain with dynamic content", async function () {
                 <field name="bar"/>
                 <field name="foo" widget="domain" options="{'model': 'bar', 'allow_expressions':True}"/>
             </form>`,
-        search: `<search />`,
     };
 
     onRpc("web_save", ({ args }) => {
@@ -789,7 +785,6 @@ test("domain field: edit through selector (dynamic content)", async function () 
                 <field name="bar"/>
                 <field name="foo" widget="domain" options="{'model': 'bar', 'allow_expressions':True}"/>
             </form>`,
-        search: `<search />`,
     };
 
     onRpc(({ method }) => expect.step(method));

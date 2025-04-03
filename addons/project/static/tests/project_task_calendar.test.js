@@ -12,7 +12,7 @@ defineProjectModels();
 beforeEach(() => {
     mockDate("2024-01-03 12:00:00", +0);
 
-    ProjectTask._views["form,false"] = `
+    ProjectTask._views["form"] = `
         <form>
             <field name="id"/>
             <field name="name"/>
@@ -150,4 +150,4 @@ test("Display closed tasks as past event", async () => {
     await mountView(calendarMountParams);
     expect(".o_event").toHaveCount(4);
     expect(".o_event.o_past_event").toHaveCount(3);
-})
+});
