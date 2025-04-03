@@ -99,8 +99,13 @@ class PaymentTransaction(models.Model):
                 },
             },
         }
+        # PayPal does not accept None set to fields and to avoid users getting errors when email
+        # is not set on company we will add it conditionally since its not a required field.
         if self.partner_email:
             payload['payment_source']['paypal']['email_address'] = self.partner_email
+
+        if company_email := self.provider_id.company_id.email:
+            payload['purchase_units'][0]['payee']['display_data']['business_email'] = company_email
 
         return payload
 
