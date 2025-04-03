@@ -595,3 +595,15 @@ registry.category("web_tour.tours").add("AddMultipleSerialsAtOnce", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pricelist_parent_category_rule", {
+    checkDelay: 50,
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Product with child category"),
+            ProductScreen.selectedOrderlineHas("Product with child category", "1", "50.0"),
+            Chrome.endTour(),
+        ].flat(),
+});
