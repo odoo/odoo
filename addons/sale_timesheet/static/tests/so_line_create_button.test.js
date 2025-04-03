@@ -1,10 +1,10 @@
-import { describe, expect, test, beforeEach } from "@odoo/hoot";
-import { queryOne, click, edit } from "@odoo/hoot-dom";
+import { describe, expect, test } from "@odoo/hoot";
+import { click, edit, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { mountView, onRpc, contains } from "@web/../tests/web_test_helpers";
-import { defineSaleTimesheetModels, saleTimesheetModels } from "./sale_timesheet_test_helpers";
 import { focus, mailModels } from "@mail/../tests/mail_test_helpers";
+import { contains, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { defineSaleTimesheetModels, saleTimesheetModels } from "./sale_timesheet_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -62,26 +62,17 @@ saleTimesheetModels.SaleOrder = SaleOrder;
 
 defineSaleTimesheetModels();
 
-beforeEach(() => {
-    onRpc("get_first_service_line", ({ args }) => {
-        const created_so_id = args[0];
-        const sale_line_id = saleTimesheetModels.SaleOrder._records.find(
-            (so) => so.id === created_so_id
-        ).order_line[0];
-        const product_id = saleTimesheetModels.SaleOrderLine._records.find(
-            (sol) => sol.id === sale_line_id
-        ).product_id;
-        const product_type = saleTimesheetModels.ProductProduct._records.find(
-            (prod) => prod.id === product_id
-        ).type;
-        if (product_type == "service") {
-            expect.step("valid_so");
-            return [sale_line_id];
-        } else {
-            expect.step("invalid_so");
-            return false;
-        }
-    });
+onRpc("get_first_service_line", function ({ args, model }) {
+    const [solId] = this.env[model].browse(args[0])[0].order_line;
+    const productId = this.env["sale.order.line"].browse(solId)[0].product_id;
+    const productType = this.env["product.product"].browse(productId)[0].type;
+    if (productType === "service") {
+        expect.step("valid_so");
+        return [solId];
+    } else {
+        expect.step("invalid_so");
+        return false;
+    }
 });
 
 test("test so_line_create_button widget: valid SO", async () => {

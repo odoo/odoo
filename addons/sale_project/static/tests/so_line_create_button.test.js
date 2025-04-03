@@ -52,19 +52,19 @@ defineModels({ ...mailModels, ...projectModels, SaleOrder, SaleOrderLine, Produc
 
 beforeEach(() => {
     ProjectTask._records[0].partner_id = 1;
-    onRpc("get_first_service_line", ({ args }) => {
-        const created_so_id = args[0];
-        const sale_line_id = SaleOrder._records.find((so) => so.id === created_so_id).order_line[0];
-        const product_id = SaleOrderLine._records.find((sol) => sol.id === sale_line_id).product_id;
-        const product_type = ProductProduct._records.find((prod) => prod.id === product_id).type;
-        if (product_type == "service") {
-            expect.step("valid_so");
-            return [sale_line_id];
-        } else {
-            expect.step("invalid_so");
-            return false;
-        }
-    });
+});
+
+onRpc("get_first_service_line", function ({ args, model }) {
+    const [solId] = this.env[model].browse(args[0])[0].order_line;
+    const productId = this.env["sale.order.line"].browse(solId)[0].product_id;
+    const productType = this.env["product.product"].browse(productId)[0].type;
+    if (productType === "service") {
+        expect.step("valid_so");
+        return [solId];
+    } else {
+        expect.step("invalid_so");
+        return false;
+    }
 });
 
 test("test so_line_create_button widget: valid SO", async () => {
@@ -110,7 +110,7 @@ test("test so_line_create_button widget: valid SO", async () => {
     });
     // As the SO contains at least one service product, it should be validated and created.
     expect.verifySteps(["valid_so"]);
- });
+});
 
 test("test so_line_create_button widget: invalid SO", async () => {
     await mountView({

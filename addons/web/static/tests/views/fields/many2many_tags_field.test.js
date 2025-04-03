@@ -226,9 +226,9 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
     PartnerType._records.push({ id: 13, name: "red", color: 8 });
     onRpc(({ args, method, model, kwargs, route }) => {
         if (route === "/web/dataset/call_kw/partner/web_save") {
-            var commands = args[1].timmy;
-            expect(commands.length).toBe(2);
-            expect(commands.map((cmd) => cmd[0]).join("-")).toBe("4-3");
+            const commands = args[1].timmy;
+            expect(commands).toHaveLength(2);
+            expect(commands.map((cmd) => cmd[0])).toEqual([4, 3]);
             expect(commands.map((cmd) => cmd[1])).toEqual([13, 14], {
                 message: "Should add 13, remove 14",
             });
@@ -732,9 +732,9 @@ test("Many2ManyTagsField can load more than 40 records", async () => {
         relation: "partner",
     });
     Partner._records[0].partner_ids = [];
-    for (var i = 15; i < 115; i++) {
-        Partner._records.push({ id: i, name: "walter" + i });
-        Partner._records[0].partner_ids.push(i);
+    for (let id = 15; id < 115; id++) {
+        Partner._records.push({ id, name: "walter" + id });
+        Partner._records[0].partner_ids.push(id);
     }
     await mountView({
         type: "form",
@@ -1032,11 +1032,8 @@ test("Many2ManyTagsField: select multiple records on desktop", async () => {
         search: '<search><field name="name"/></search>',
     };
 
-    for (var i = 1; i <= 10; i++) {
-        PartnerType._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        PartnerType._records.push({ id, name: "Partner" + id });
     }
 
     await mountView({
@@ -1075,11 +1072,8 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
         search: '<search><field name="name"/></search>',
     };
 
-    for (var i = 1; i <= 10; i++) {
-        PartnerType._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        PartnerType._records.push({ id, name: "Partner" + id });
     }
 
     await mountView({
@@ -1107,11 +1101,8 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
 
 test.tags("desktop");
 test("Many2ManyTagsField: save&new in edit mode doesn't close edit window on desktop", async () => {
-    for (var i = 1; i <= 10; i++) {
-        PartnerType._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        PartnerType._records.push({ id, name: "Partner" + id });
     }
 
     PartnerType._views = {
@@ -1236,16 +1227,12 @@ test("Many2ManyTagsField: Save&New in many2many_tags with default_ keys in conte
 test.tags("desktop");
 test("Many2ManyTagsField: conditional create/delete actions on desktop", async () => {
     Turtle._records[0].partner_ids = [2];
-    for (var i = 1; i <= 10; i++) {
-        Partner._records.push({
-            id: 100 + i,
-            name: "Partner" + i,
-        });
+    for (let id = 101; id <= 110; id++) {
+        Partner._records.push({ id, name: "Partner" + id });
     }
 
     Partner._views = {
         list: '<list><field name="name"/></list>',
-        search: "<search/>",
     };
 
     await mountView({
