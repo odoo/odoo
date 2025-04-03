@@ -33,6 +33,7 @@ import warnings
 from collections import defaultdict, deque
 from concurrent.futures import Future, CancelledError, wait
 from contextlib import contextmanager, ExitStack
+from copy import deepcopy
 from datetime import datetime
 from functools import lru_cache, partial
 from itertools import zip_longest as izip_longest
@@ -942,7 +943,7 @@ class TransactionCase(BaseCase):
             cb._funcs = funcs
             cb.data = data
         for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
-            self.addCleanup(_reset, callback, deque(callback._funcs), dict(callback.data))
+            self.addCleanup(_reset, callback, deque(callback._funcs), deepcopy(callback.data))
 
         # flush everything in setUpClass before introducing a savepoint
         self.env.flush_all()
@@ -2007,12 +2008,12 @@ class HttpCase(TransactionCase):
         :param string login: logged in user which will execute the test. e.g. 'admin', 'demo'
         :param int timeout: maximum time to wait for the test to complete (in seconds). Default is 60 seconds
         :param dict cookies: dictionary of cookies to set before loading the page
-        :param error_checker: function to filter failures out. 
+        :param error_checker: function to filter failures out.
             If provided, the function is called with the error log message, and if it returns `False` the log is ignored and the test continue
             If not provided, every error log triggers a failure
         :param bool watch: open a new browser window to watch the test execution
         :param string success_signal: string signal to wait for to consider the test successful
-        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour. 
+        :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
         """
