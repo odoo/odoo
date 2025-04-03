@@ -20,6 +20,7 @@ import {
 import { useSetupAction } from "@web/search/action_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
+import { rpcBus } from "@web/core/network/rpc";
 
 class Foo extends models.Model {
     bar = fields.Many2one({ relation: "partner" });
@@ -75,14 +76,14 @@ test("save filter", async () => {
         return [7]; // fake serverSideId
     });
 
-    const component = await mountWithSearch(TestComponent, {
+    await mountWithSearch(TestComponent, {
         resModel: "foo",
         context: { someOtherKey: "bar" }, // should not end up in filter's context
         searchViewId: false,
     });
     const clearCacheListener = () => expect.step("CLEAR-CACHES");
-    component.env.bus.addEventListener("CLEAR-CACHES", clearCacheListener);
-    after(() => component.env.bus.removeEventListener("CLEAR-CACHES", clearCacheListener));
+    rpcBus.addEventListener("CLEAR-CACHES", clearCacheListener);
+    after(() => rpcBus.removeEventListener("CLEAR-CACHES", clearCacheListener));
     expect.verifySteps([]);
 
     await toggleSearchBarMenu();
@@ -124,14 +125,14 @@ test("save and edit filter", async () => {
         },
     });
 
-    const component = await mountWithSearch(TestComponent, {
+    await mountWithSearch(TestComponent, {
         resModel: "foo",
         context: { someOtherKey: "bar" }, // should not end up in filter's context
         searchViewId: false,
     });
     const clearCacheListener = () => expect.step("CLEAR-CACHES");
-    component.env.bus.addEventListener("CLEAR-CACHES", clearCacheListener);
-    after(() => component.env.bus.removeEventListener("CLEAR-CACHES", clearCacheListener));
+    rpcBus.addEventListener("CLEAR-CACHES", clearCacheListener);
+    after(() => rpcBus.removeEventListener("CLEAR-CACHES", clearCacheListener));
     expect.verifySteps([]);
 
     await toggleSearchBarMenu();

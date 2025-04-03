@@ -1,5 +1,6 @@
 import { Cache } from "@web/core/utils/cache";
 import { registry } from "@web/core/registry";
+import { rpcBus } from "@web/core/network/rpc";
 
 export const modelDisplayNameService = {
     dependencies: ["orm"],
@@ -17,7 +18,7 @@ export const modelDisplayNameService = {
             (model) => model
         );
 
-        env.bus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
+        rpcBus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
 
         /**
          * @param {string} model

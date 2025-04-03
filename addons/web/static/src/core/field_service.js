@@ -1,6 +1,7 @@
 import { Cache } from "@web/core/utils/cache";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
+import { rpcBus } from "./network/rpc";
 
 /**
  * @typedef {Object} LoadFieldsOptions
@@ -13,19 +14,18 @@ export const fieldService = {
     async: ["loadFields", "loadPath", "loadPropertyDefinitions"],
     start(env, { orm }) {
         const cache = new Cache(
-            (resModel, options) => {
-                return orm
+            (resModel, options) =>
+                orm
                     .call(resModel, "fields_get", [options.fieldNames, options.attributes])
                     .catch((error) => {
                         cache.clear(resModel, options);
                         return Promise.reject(error);
-                    });
-            },
+                    }),
             (resModel, options) =>
                 JSON.stringify([resModel, options.fieldNames, options.attributes])
         );
 
-        env.bus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
+        rpcBus.addEventListener("CLEAR-CACHES", () => cache.invalidate());
 
         /**
          * @param {string} resModel
